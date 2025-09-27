@@ -1,0 +1,109 @@
+{
+    "theory_integration": {
+        "description": "Configuration for integrating theoretical concepts from 7d-00-18.md into Level E experiments",
+        "mass_complexity_analysis": {
+            "enabled": true,
+            "mass_complexity_weight": 1.0,
+            "complexity_metrics": {
+                "gradient_variance_weight": 0.3,
+                "entropy_weight": 0.2,
+                "topological_weight": 0.3,
+                "mode_count_weight": 0.2
+            },
+            "correlation_threshold": 0.7,
+            "significance_level": 0.05
+        },
+        "resonance_classification": {
+            "enabled": true,
+            "universality_threshold": 0.8,
+            "shape_consistency_threshold": 0.7,
+            "connection_ecology_threshold": 0.6,
+            "confidence_threshold": 0.75,
+            "classification_criteria": {
+                "frequency_variation_weight": 0.4,
+                "q_factor_variation_weight": 0.3,
+                "width_consistency_weight": 0.2,
+                "shape_consistency_weight": 0.1
+            }
+        },
+        "anti_epicycles_validation": {
+            "enabled": true,
+            "complexity_threshold": 0.1,
+            "performance_improvement_threshold": 0.05,
+            "parameter_penalty": 0.1,
+            "interaction_penalty": 0.2,
+            "nonlinearity_penalty": 0.3,
+            "coupling_penalty": 0.5
+        },
+        "bvp_integration": {
+            "enabled": true,
+            "bvp_frequency": 1e12,
+            "phase_velocity": 1e15,
+            "coherence_length": 1e-6,
+            "quench_detection": {
+                "amplitude_threshold_factor": 0.8,
+                "gradient_threshold": 0.1,
+                "enable_amplitude_quenches": true,
+                "enable_gradient_quenches": true,
+                "enable_frequency_quenches": true
+            },
+            "envelope_analysis": {
+                "compute_amplitude_stats": true,
+                "compute_phase_stats": true,
+                "compute_gradient_stats": true,
+                "compute_spectral_stats": true
+            }
+        },
+        "theoretical_validation": {
+            "mass_complexity_thesis": {
+                "expected_correlation_range": [0.6, 0.9],
+                "minimum_sample_size": 10,
+                "statistical_test": "pearson",
+                "bootstrap_iterations": 1000
+            },
+            "emergent_vs_fundamental": {
+                "expected_fundamental_ratio": 0.2,
+                "expected_emergent_ratio": 0.8,
+                "classification_accuracy_threshold": 0.85
+            },
+            "anti_epicycles_compliance": {
+                "max_complexity_increase": 0.5,
+                "min_performance_improvement": 0.1,
+                "parsimony_score_threshold": 0.7
+            }
+        },
+        "integration_workflow": {
+            "analysis_order": [
+                "mass_complexity_analysis",
+                "resonance_classification", 
+                "bvp_integration",
+                "anti_epicycles_validation"
+            ],
+            "cross_validation": {
+                "enabled": true,
+                "validation_folds": 5,
+                "random_seed": 42
+            },
+            "output_format": {
+                "save_detailed_results": true,
+                "save_summary_report": true,
+                "save_visualizations": true,
+                "export_format": ["json", "hdf5"]
+            }
+        },
+        "experimental_constraints": {
+            "computational_limits": {
+                "max_field_size": [512, 512, 512],
+                "max_frequency_points": 1000,
+                "max_resonance_modes": 50,
+                "max_iterations": 1000
+            },
+            "physical_constraints": {
+                "frequency_range": [1e6, 1e15],
+                "amplitude_range": [1e-12, 1e-3],
+                "phase_velocity_range": [1e8, 1e18],
+                "coherence_length_range": [1e-9, 1e-3]
+            }
+        }
+    }
+}

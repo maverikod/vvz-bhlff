@@ -24,11 +24,11 @@ Example:
     >>> import bhlff
     >>> from bhlff.core.bvp import BVPCore
     >>> from bhlff.core.domain import Domain
-    >>> 
+    >>>
     >>> # Create domain and BVP core
     >>> domain = Domain(L=10.0, N=256, dimensions=3)
     >>> bvp_core = BVPCore(domain, config)
-    >>> 
+    >>>
     >>> # Solve BVP envelope equation
     >>> import numpy as np
     >>> source = np.zeros((256, 256, 256))
@@ -49,7 +49,7 @@ from .core.bvp_core import BVPCore
 # Version info
 __all__ = [
     "__version__",
-    "__author__", 
+    "__author__",
     "__email__",
     "__license__",
     "Domain",

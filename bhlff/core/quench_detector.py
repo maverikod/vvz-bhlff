@@ -119,9 +119,7 @@ class QuenchDetector:
             "energy_dumped": energy_dumped,
         }
 
-    def _detect_amplitude_quenches(
-        self, envelope: np.ndarray
-    ) -> List[Dict[str, Any]]:
+    def _detect_amplitude_quenches(self, envelope: np.ndarray) -> List[Dict[str, Any]]:
         """
         Detect amplitude-based quench events.
 
@@ -161,9 +159,7 @@ class QuenchDetector:
 
         return quenches
 
-    def _detect_gradient_quenches(
-        self, envelope: np.ndarray
-    ) -> List[Dict[str, Any]]:
+    def _detect_gradient_quenches(self, envelope: np.ndarray) -> List[Dict[str, Any]]:
         """
         Detect gradient-based quench events.
 

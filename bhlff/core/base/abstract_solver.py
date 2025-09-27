@@ -153,9 +153,7 @@ class AbstractSolver(ABC):
                 f"domain shape {self.domain.shape}"
             )
 
-    def compute_residual(
-        self, field: np.ndarray, source: np.ndarray
-    ) -> np.ndarray:
+    def compute_residual(self, field: np.ndarray, source: np.ndarray) -> np.ndarray:
         """
         Compute residual of the governing equation.
 

@@ -101,9 +101,7 @@ class BVPInterface:
 
         return tail_data
 
-    def interface_with_transition_zone(
-        self, envelope: np.ndarray
-    ) -> Dict[str, Any]:
+    def interface_with_transition_zone(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
         Interface BVP with transition zone.
 
@@ -186,9 +184,7 @@ class BVPInterface:
         # Compute field quantities
         amplitude = np.abs(envelope)
         field_gradient = self._compute_field_gradient(envelope)
-        gradient_magnitude_squared = np.sum(
-            [g**2 for g in field_gradient], axis=0
-        )
+        gradient_magnitude_squared = np.sum([g**2 for g in field_gradient], axis=0)
 
         # Compute renormalized coefficients
         renormalized_coefficients = self._compute_renormalized_coefficients(
@@ -230,9 +226,7 @@ class BVPInterface:
         else:  # 3D
             return np.gradient(envelope, dx, dx, dx)
 
-    def _compute_nonlinear_admittance(
-        self, amplitude: np.ndarray
-    ) -> np.ndarray:
+    def _compute_nonlinear_admittance(self, amplitude: np.ndarray) -> np.ndarray:
         """
         Compute nonlinear admittance.
 

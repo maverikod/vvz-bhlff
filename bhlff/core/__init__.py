@@ -25,6 +25,8 @@ from .parameters import Parameters
 from .bvp_core import BVPCore
 from .quench_detector import QuenchDetector
 from .bvp_interface import BVPInterface
+from .bvp_envelope_solver import BVPEnvelopeSolver
+from .bvp_impedance_calculator import BVPImpedanceCalculator
 from .base.abstract_solver import AbstractSolver
 from .base.field import Field
 
@@ -34,6 +36,8 @@ __all__ = [
     "BVPCore",
     "QuenchDetector",
     "BVPInterface",
+    "BVPEnvelopeSolver",
+    "BVPImpedanceCalculator",
     "AbstractSolver",
     "Field",
 ]

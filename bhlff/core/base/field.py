@@ -131,11 +131,13 @@ class Field:
         if self.domain.dimensions == 1:
             return (np.gradient(self.data, self.domain.dx),)
         elif self.domain.dimensions == 2:
-            return np.gradient(self.data, self.domain.dx, self.domain.dx)  # type: ignore
+            grad_x, grad_y = np.gradient(self.data, self.domain.dx, self.domain.dx)
+            return (grad_x, grad_y)
         else:  # 3D
-            return np.gradient(
+            grad_x, grad_y, grad_z = np.gradient(
                 self.data, self.domain.dx, self.domain.dx, self.domain.dx
             )
+            return (grad_x, grad_y, grad_z)
 
     def get_laplacian(self) -> np.ndarray:
         """
@@ -254,8 +256,10 @@ class Field:
             Field: Copy of the field.
         """
         return Field(
-            self.data.copy(), self.domain, self.time, 
-            self.metadata.copy() if self.metadata is not None else {}
+            self.data.copy(),
+            self.domain,
+            self.time,
+            self.metadata.copy() if self.metadata is not None else {},
         )
 
     def set_metadata(self, key: str, value: Any) -> None:

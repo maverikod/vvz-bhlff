@@ -1,0 +1,231 @@
+---
+alwaysApply: true
+---
+
+
+### 1. Корневая структура
+```
+bhlff/
+├── README.md                    # Основная документация проекта
+├── LICENSE                      # Лицензия проекта
+├── pyproject.toml              # Современная конфигурация Python
+├── setup.py                    # Установка пакета
+├── requirements.txt            # Зависимости с точными версиями
+├── .gitignore                  # Игнорируемые файлы
+├── .env.example                # Пример переменных окружения
+├── .venv/                      # Виртуальное окружение
+├── docs/                       # Документация
+├── src/                        # Исходный код
+├── tests/                      # Тесты
+├── configs/                    # Конфигурации
+├── data/                       # Данные
+├── output/                     # Результаты расчетов
+├── scripts/                    # Скрипты
+└── tools/                      # Инструменты разработки
+```
+
+### 2. Структура исходного кода (bhlff/)
+```
+bhlff/
+├── __init__.py                 # Основной пакет
+├── core/                       # Ядро системы
+│   ├── __init__.py
+│   ├── base/                   # Базовые классы и интерфейсы
+│   │   ├── __init__.py
+│   │   ├── abstract_solver.py  # Абстрактный базовый класс решателя
+│   │   ├── field.py            # Базовый класс фазового поля
+│   │   ├── domain.py           # Класс области расчета
+│   │   └── parameters.py       # Управление параметрами
+│   ├── fft/                    # FFT решатели
+│   │   ├── __init__.py
+│   │   ├── fft_solver.py       # Основной FFT решатель
+│   │   ├── frac_laplacian.py   # Фракционный оператор Рисса
+│   │   └── spectral_ops.py     # Спектральные операции
+│   ├── time/                   # Временные интеграторы
+│   │   ├── __init__.py
+│   │   ├── integrators.py      # Временные интеграторы
+│   │   ├── schemes.py          # Схемы интегрирования
+│   │   └── stability.py        # Анализ устойчивости
+│   ├── phase/                  # Фазовое поле
+│   │   ├── __init__.py
+│   │   ├── phase_field.py      # Фазовое поле и его свойства
+│   │   ├── topology.py         # Топологические дефекты
+│   │   ├── winding.py          # Вычисление обмоток
+│   │   └── defects.py          # Дефекты и солитоны
+│   └── physics/                # Физические модели
+│       ├── __init__.py
+│       ├── operators.py        # Физические операторы
+│       ├── boundary.py         # Граничные условия
+│       └── energy.py           # Энергетические функционалы
+├── models/                     # Модели различных уровней
+│   ├── __init__.py
+│   ├── level_a/                # Уровень A: базовые решатели
+│   │   ├── __init__.py
+│   │   ├── validation.py       # Валидация решателей
+│   │   ├── scaling.py          # Масштабирование
+│   │   └── benchmarks.py       # Бенчмарки
+│   ├── level_b/                # Уровень B: фундаментальные свойства
+│   │   ├── __init__.py
+│   │   ├── power_law.py        # Степенные хвосты
+│   │   ├── nodes.py            # Анализ узлов
+│   │   ├── charge.py           # Топологический заряд
+│   │   └── zones.py            # Разделение зон
+│   ├── level_c/                # Уровень C: границы и ячейки
+│   │   ├── __init__.py
+│   │   ├── boundaries.py       # Граничные эффекты
+│   │   ├── resonators.py       # Резонаторы
+│   │   ├── memory.py           # Квенч-память
+│   │   └── beating.py          # Биения мод
+│   ├── level_d/                # Уровень D: многомодовые модели
+│   │   ├── __init__.py
+│   │   ├── superposition.py    # Наложение мод
+│   │   ├── projections.py      # Проекции полей
+│   │   └── streamlines.py      # Линии потока
+│   ├── level_e/                # Уровень E: солитоны и дефекты
+│   │   ├── __init__.py
+│   │   ├── solitons.py         # Солитоны
+│   │   ├── dynamics.py         # Динамика дефектов
+│   │   ├── interactions.py     # Взаимодействия
+│   │   └── formation.py        # Образование дефектов
+│   ├── level_f/                # Уровень F: коллективные эффекты
+│   │   ├── __init__.py
+│   │   ├── multi_particle.py   # Многочастичные системы
+│   │   ├── collective.py       # Коллективные моды
+│   │   ├── transitions.py      # Фазовые переходы
+│   │   └── nonlinear.py        # Нелинейные эффекты
+│   └── level_g/                # Уровень G: космологические модели
+│       ├── __init__.py
+│       ├── cosmology.py        # Космологическая эволюция
+│       ├── structure.py        # Крупномасштабная структура
+│       ├── astrophysics.py     # Астрофизические объекты
+│       └── gravity.py          # Гравитационные эффекты
+├── utils/                      # Утилиты
+│   ├── __init__.py
+│   ├── config/                 # Управление конфигурацией
+│   │   ├── __init__.py
+│   │   ├── loader.py           # Загрузка конфигураций
+│   │   ├── validator.py        # Валидация параметров
+│   │   └── defaults.py         # Значения по умолчанию
+│   ├── io/                     # Ввод-вывод
+│   │   ├── __init__.py
+│   │   ├── hdf5.py             # HDF5 файлы
+│   │   ├── numpy.py            # NumPy файлы
+│   │   └── json.py             # JSON файлы
+│   ├── math/                   # Математические утилиты
+│   │   ├── __init__.py
+│   │   ├── interpolation.py    # Интерполяция
+│   │   ├── integration.py      # Интегрирование
+│   │   └── statistics.py       # Статистика
+│   ├── visualization/          # Визуализация
+│   │   ├── __init__.py
+│   │   ├── plots.py            # Графики
+│   │   ├── animations.py       # Анимации
+│   │   ├── 3d.py               # 3D визуализация
+│   │   └── export.py           # Экспорт графиков
+│   ├── analysis/               # Анализ данных
+│   │   ├── __init__.py
+│   │   ├── statistics.py       # Статистический анализ
+│   │   ├── comparison.py       # Сравнение с теорией
+│   │   ├── quality.py          # Метрики качества
+│   │   └── trends.py           # Трендовый анализ
+│   └── reporting/              # Отчетность
+│       ├── __init__.py
+│       ├── generator.py        # Генерация отчетов
+│       ├── templates.py        # Шаблоны отчетов
+│       └── export.py           # Экспорт отчетов
+└── cli/                        # Командная строка
+    ├── __init__.py
+    ├── main.py                 # Основная команда
+    ├── run.py                  # Запуск экспериментов
+    ├── analyze.py              # Анализ результатов
+    └── report.py               # Генерация отчетов
+```
+
+### 3. Структура тестов (tests/)
+```
+tests/
+├── __init__.py
+├── conftest.py                 # Конфигурация pytest
+├── fixtures/                   # Фикстуры для тестов
+│   ├── __init__.py
+│   ├── domains.py              # Тестовые области
+│   ├── fields.py               # Тестовые поля
+│   └── parameters.py           # Тестовые параметры
+├── unit/                       # Юнит-тесты
+│   ├── __init__.py
+│   ├── test_core/              # Тесты ядра
+│   │   ├── __init__.py
+│   │   ├── test_fft_solver.py
+│   │   ├── test_frac_laplacian.py
+│   │   ├── test_integrators.py
+│   │   └── test_phase_field.py
+│   ├── test_models/            # Тесты моделей
+│   │   ├── __init__.py
+│   │   ├── test_level_a.py
+│   │   ├── test_level_b.py
+│   │   ├── test_level_c.py
+│   │   ├── test_level_d.py
+│   │   ├── test_level_e.py
+│   │   ├── test_level_f.py
+│   │   └── test_level_g.py
+│   └── test_utils/             # Тесты утилит
+│       ├── __init__.py
+│       ├── test_config.py
+│       ├── test_io.py
+│       ├── test_visualization.py
+│       └── test_analysis.py
+├── integration/                # Интеграционные тесты
+│   ├── __init__.py
+│   ├── test_full_pipeline.py   # Полный пайплайн
+│   ├── test_level_integration.py # Интеграция уровней
+│   └── test_performance.py     # Тесты производительности
+└── benchmarks/                 # Бенчмарки
+    ├── __init__.py
+    ├── benchmark_solvers.py    # Бенчмарки решателей
+    ├── benchmark_memory.py     # Бенчмарки памяти
+    └── benchmark_accuracy.py   # Бенчмарки точности
+```
+
+### 4. Структура конфигураций (configs/)
+```
+configs/
+├── default.json                # Конфигурация по умолчанию
+├── level_a/                    # Конфигурации уровня A
+│   ├── validation.json
+│   ├── scaling.json
+│   └── benchmarks.json
+├── level_b/                    # Конфигурации уровня B
+│   ├── power_law.json
+│   ├── nodes.json
+│   ├── charge.json
+│   └── zones.json
+├── level_c/                    # Конфигурации уровня C
+│   ├── boundaries.json
+│   ├── resonators.json
+│   ├── memory.json
+│   └── beating.json
+├── level_d/                    # Конфигурации уровня D
+│   ├── superposition.json
+│   ├── projections.json
+│   └── streamlines.json
+├── level_e/                    # Конфигурации уровня E
+│   ├── solitons.json
+│   ├── dynamics.json
+│   ├── interactions.json
+│   └── formation.json
+├── level_f/                    # Конфигурации уровня F
+│   ├── multi_particle.json
+│   ├── collective.json
+│   ├── transitions.json
+│   └── nonlinear.json
+├── level_g/                    # Конфигурации уровня G
+│   ├── cosmology.json
+│   ├── structure.json
+│   ├── astrophysics.json
+│   └── gravity.json
+└── templates/                  # Шаблоны конфигураций
+    ├── base.json
+    ├── physics.json
+    ├── domain.json
+    └── output.json
+```

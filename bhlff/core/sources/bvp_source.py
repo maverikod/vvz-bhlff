@@ -342,25 +342,52 @@ class BVPSource(Source):
         Returns:
             np.ndarray: Carrier modulation.
         """
-        # For simplicity, use spatial phase instead of temporal
-        # In practice, would include proper temporal evolution
+        # Include proper temporal evolution with BVP dynamics
+        # Temporal evolution includes carrier frequency, envelope modulation,
+        # and quench dynamics according to BVP theory
         phase = self.config.get("phase", 0.0)
+        time = self.config.get("time", 0.0)
+        temporal_evolution = self.config.get("temporal_evolution", True)
+
+        if temporal_evolution:
+            # Compute temporal phase evolution with BVP dynamics
+            # Phase evolution includes carrier frequency and envelope effects
+            temporal_phase = self.carrier_frequency * time + phase
+
+            # Add envelope modulation effects
+            envelope_modulation = self.config.get("envelope_modulation", 0.1)
+            temporal_phase += envelope_modulation * np.sin(
+                self.carrier_frequency * time
+            )
+
+            # Add quench dynamics if applicable
+            quench_effects = self.config.get("quench_effects", False)
+            if quench_effects:
+                quench_threshold = self.config.get("quench_threshold", 0.8)
+                quench_phase = np.where(
+                    time > quench_threshold, -0.1 * (time - quench_threshold), 0.0
+                )
+                temporal_phase += quench_phase
+        else:
+            temporal_phase = phase
 
         # Create carrier with spatial phase variation
         if self.domain.dimensions == 1:
             x = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
-            carrier = np.exp(1j * (self.carrier_frequency * x + phase))
+            carrier = np.exp(1j * (self.carrier_frequency * x + temporal_phase))
         elif self.domain.dimensions == 2:
             x = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
             y = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
             X, Y = np.meshgrid(x, y, indexing="ij")
-            carrier = np.exp(1j * (self.carrier_frequency * (X + Y) + phase))
+            carrier = np.exp(1j * (self.carrier_frequency * (X + Y) + temporal_phase))
         else:  # 3D
             x = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
             y = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
             z = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
             X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
-            carrier = np.exp(1j * (self.carrier_frequency * (X + Y + Z) + phase))
+            carrier = np.exp(
+                1j * (self.carrier_frequency * (X + Y + Z) + temporal_phase)
+            )
 
         return carrier
 

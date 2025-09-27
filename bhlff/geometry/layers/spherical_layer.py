@@ -22,9 +22,7 @@ Example:
 """
 
 import numpy as np
-from typing import Dict, Any, Tuple
-
-from ...core.domain import Domain
+from typing import Tuple
 
 
 class SphericalLayer:
@@ -103,7 +101,7 @@ class SphericalLayer:
         phi = np.linspace(0, 2 * np.pi, self.resolution)
 
         # Create coordinate grids
-        R, THETA, PHI = np.meshgrid(r, theta, phi, indexing='ij')
+        R, THETA, PHI = np.meshgrid(r, theta, phi, indexing="ij")
 
         return R, THETA, PHI
 
@@ -147,10 +145,8 @@ class SphericalLayer:
         Returns:
             float: Volume of the spherical layer.
         """
-        volume = (4.0 / 3.0) * np.pi * (
-            self.outer_radius**3 - self.inner_radius**3
-        )
-        return volume
+        volume = (4.0 / 3.0) * np.pi * (self.outer_radius**3 - self.inner_radius**3)
+        return float(volume)
 
     def get_surface_area(self) -> Tuple[float, float]:
         """

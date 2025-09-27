@@ -88,7 +88,7 @@ class FFTSolver3D:
         """
         # Get 3D frequency arrays
         kx, ky, kz = self.fft_backend.get_frequency_arrays()
-        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing='ij')
+        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
         k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
 
         # Get operator parameters

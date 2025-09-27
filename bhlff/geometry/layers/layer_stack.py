@@ -25,7 +25,6 @@ Example:
 import numpy as np
 from typing import List, Dict, Any, Tuple, Optional
 
-from ...core.domain import Domain
 from .spherical_layer import SphericalLayer
 
 
@@ -219,7 +218,7 @@ class LayerStack:
         for layer in self.layers:
             total_volume += layer.get_volume()
 
-        return total_volume
+        return float(total_volume)
 
     def get_total_surface_area(self) -> float:
         """
@@ -242,9 +241,7 @@ class LayerStack:
 
         return total_area
 
-    def get_layer_containing_point(
-        self, x: float, y: float, z: float
-    ) -> Optional[int]:
+    def get_layer_containing_point(self, x: float, y: float, z: float) -> Optional[int]:
         """
         Get index of layer containing the specified point.
 
@@ -292,7 +289,7 @@ class LayerStack:
         dy = y - self.center[1]
         dz = z - self.center[2]
 
-        return np.sqrt(dx**2 + dy**2 + dz**2)
+        return float(np.sqrt(dx**2 + dy**2 + dz**2))
 
     def get_number_of_layers(self) -> int:
         """
@@ -331,7 +328,4 @@ class LayerStack:
 
     def __repr__(self) -> str:
         """String representation of the layer stack."""
-        return (
-            f"LayerStack(center={self.center}, "
-            f"num_layers={len(self.layers)})"
-        )
+        return f"LayerStack(center={self.center}, " f"num_layers={len(self.layers)})"

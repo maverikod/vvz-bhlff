@@ -26,9 +26,11 @@ Example:
 """
 
 import numpy as np
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 from ..domain import Domain
+from .impedance_core import ImpedanceCore
+from .resonance_detector import ResonanceDetector
 
 
 class BVPImpedanceCalculator:
@@ -50,10 +52,8 @@ class BVPImpedanceCalculator:
     Attributes:
         domain (Domain): Computational domain.
         config (Dict[str, Any]): Impedance calculation configuration.
-        frequency_range (tuple): Frequency range for analysis.
-        frequency_points (int): Number of frequency points.
-        boundary_conditions (str): Boundary condition type.
-        quality_factor_threshold (float): Threshold for quality factor.
+        _impedance_core (ImpedanceCore): Core impedance calculations.
+        _resonance_detector (ResonanceDetector): Resonance peak detection.
     """
 
     def __init__(self, domain: Domain, config: Dict[str, Any]) -> None:
@@ -74,25 +74,23 @@ class BVPImpedanceCalculator:
         """
         self.domain = domain
         self.config = config
-        self._setup_parameters()
+        self._setup_components()
 
-    def _setup_parameters(self) -> None:
+    def _setup_components(self) -> None:
         """
-        Setup impedance calculation parameters.
-
+        Setup impedance calculation components.
+        
         Physical Meaning:
-            Initializes the parameters for impedance calculation
-            from the configuration dictionary.
+            Initializes the core impedance calculation and resonance
+            detection components.
         """
+        self._impedance_core = ImpedanceCore(self.domain, self.config)
+        self._resonance_detector = ResonanceDetector()
+        
+        # Set quality factor threshold from config
         impedance_config = self.config.get("impedance_calculation", {})
-        self.frequency_range = impedance_config.get("frequency_range", (0.1, 10.0))
-        self.frequency_points = impedance_config.get("frequency_points", 1000)
-        self.boundary_conditions = impedance_config.get(
-            "boundary_conditions", "periodic"
-        )
-        self.quality_factor_threshold = impedance_config.get(
-            "quality_factor_threshold", 0.1
-        )
+        quality_threshold = impedance_config.get("quality_factor_threshold", 0.1)
+        self._resonance_detector.set_quality_factor_threshold(quality_threshold)
 
     def compute_impedance(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
@@ -120,21 +118,19 @@ class BVPImpedanceCalculator:
                 - peaks: {ω_n,Q_n} resonance peaks
         """
         # Create frequency array
-        frequencies = np.linspace(
-            self.frequency_range[0], self.frequency_range[1], self.frequency_points
-        )
+        frequency_range = self._impedance_core.frequency_range
+        frequency_points = self._impedance_core.frequency_points
+        frequencies = np.linspace(frequency_range[0], frequency_range[1], frequency_points)
 
-        # Compute admittance Y(ω) from envelope using advanced boundary analysis
-        # Implements full electromagnetic boundary value problem solution
-        # with proper impedance matching and reflection analysis
-        admittance = self._compute_admittance_from_envelope(envelope, frequencies)
+        # Compute admittance Y(ω) from envelope using core operations
+        admittance = self._impedance_core.compute_admittance_from_envelope(envelope, frequencies)
 
         # Compute reflection and transmission coefficients
-        reflection = self._compute_reflection_coefficient(admittance)
-        transmission = self._compute_transmission_coefficient(admittance)
+        reflection = self._impedance_core.compute_reflection_coefficient(admittance)
+        transmission = self._impedance_core.compute_transmission_coefficient(admittance)
 
-        # Find resonance peaks
-        peaks = self._find_resonance_peaks(frequencies, admittance)
+        # Find resonance peaks using advanced detection algorithms
+        peaks = self._resonance_detector.find_resonance_peaks(frequencies, admittance)
 
         return {
             "admittance": admittance,
@@ -142,131 +138,6 @@ class BVPImpedanceCalculator:
             "transmission": transmission,
             "peaks": peaks,
         }
-
-    def _compute_admittance_from_envelope(
-        self, envelope: np.ndarray, frequencies: np.ndarray
-    ) -> np.ndarray:
-        """
-        Compute admittance from envelope.
-
-        Physical Meaning:
-            Computes the frequency-dependent admittance Y(ω)
-            from the BVP envelope using boundary analysis.
-
-        Args:
-            envelope (np.ndarray): BVP envelope.
-            frequencies (np.ndarray): Frequency array.
-
-        Returns:
-            np.ndarray: Admittance Y(ω).
-        """
-        # Advanced electromagnetic boundary analysis
-        # Implements full Maxwell equations solution with proper
-        # boundary conditions and impedance matching
-
-        # Compute admittance as function of frequency using
-        # complete electromagnetic field analysis
-        admittance = np.zeros_like(frequencies, dtype=complex)
-
-        for i, freq in enumerate(frequencies):
-            # Advanced admittance calculation using full electromagnetic analysis
-            # Implements proper boundary value problem with impedance matching
-            # Y(ω) = I(ω)/V(ω) = σ(ω) + jωC(ω) + 1/(jωL(ω))
-            # where σ, C, L are frequency-dependent conductivity, capacitance,
-            # inductance
-
-            # Compute frequency-dependent material properties
-            conductivity = 1.0 + 0.1 * freq  # Frequency-dependent conductivity
-            capacitance = 1.0 / (1.0 + freq**2)  # Frequency-dependent capacitance
-            inductance = 1.0 + 0.05 * freq  # Frequency-dependent inductance
-
-            # Compute complex admittance
-            admittance[i] = (
-                conductivity + 1j * freq * capacitance + 1.0 / (1j * freq * inductance)
-            )
-
-        return admittance
-
-    def _compute_reflection_coefficient(self, admittance: np.ndarray) -> np.ndarray:
-        """
-        Compute reflection coefficient from admittance.
-
-        Physical Meaning:
-            Computes the reflection coefficient R(ω) from
-            the admittance Y(ω).
-
-        Args:
-            admittance (np.ndarray): Admittance Y(ω).
-
-        Returns:
-            np.ndarray: Reflection coefficient R(ω).
-        """
-        # Advanced reflection coefficient calculation using electromagnetic theory
-        # Implements proper boundary value problem with impedance matching
-        # R = (Z_L - Z_0) / (Z_L + Z_0) where Z_L = 1/Y and Z_0 is
-        # characteristic impedance
-        reflection = (1.0 - admittance) / (1.0 + admittance)
-        return reflection
-
-    def _compute_transmission_coefficient(self, admittance: np.ndarray) -> np.ndarray:
-        """
-        Compute transmission coefficient from admittance.
-
-        Physical Meaning:
-            Computes the transmission coefficient T(ω) from
-            the admittance Y(ω).
-
-        Args:
-            admittance (np.ndarray): Admittance Y(ω).
-
-        Returns:
-            np.ndarray: Transmission coefficient T(ω).
-        """
-        # Advanced transmission coefficient calculation using electromagnetic theory
-        # Implements proper boundary value problem with impedance matching
-        # T = 2Z_L / (Z_L + Z_0) where Z_L = 1/Y and Z_0 is characteristic impedance
-        transmission = 2.0 / (1.0 + admittance)
-        return transmission
-
-    def _find_resonance_peaks(
-        self, frequencies: np.ndarray, admittance: np.ndarray
-    ) -> Dict[str, List[float]]:
-        """
-        Find resonance peaks in admittance.
-
-        Physical Meaning:
-            Identifies resonance frequencies and quality factors
-            from the admittance spectrum.
-
-        Args:
-            frequencies (np.ndarray): Frequency array.
-            admittance (np.ndarray): Admittance Y(ω).
-
-        Returns:
-            Dict[str, List[float]]: Resonance peaks including frequencies and
-            quality factors.
-        """
-        # Find peaks in admittance magnitude
-        admittance_magnitude = np.abs(admittance)
-
-        # Simple peak finding (in practice, more sophisticated methods would
-        # be used)
-        peaks = []
-        quality_factors = []
-
-        # Find local maxima
-        for i in range(1, len(admittance_magnitude) - 1):
-            if (
-                admittance_magnitude[i] > admittance_magnitude[i - 1]
-                and admittance_magnitude[i] > admittance_magnitude[i + 1]
-            ):
-                peaks.append(frequencies[i])
-
-                # Calculate quality factor using advanced resonance analysis
-                q_factor = admittance_magnitude[i] / np.mean(admittance_magnitude)
-                quality_factors.append(q_factor)
-
-        return {"frequencies": peaks, "quality_factors": quality_factors}
 
     def get_parameters(self) -> Dict[str, Any]:
         """
@@ -278,17 +149,54 @@ class BVPImpedanceCalculator:
         Returns:
             Dict[str, Any]: Impedance calculation parameters.
         """
-        return {
-            "frequency_range": self.frequency_range,
-            "frequency_points": self.frequency_points,
-            "boundary_conditions": self.boundary_conditions,
-            "quality_factor_threshold": self.quality_factor_threshold,
-        }
+        core_params = self._impedance_core.get_parameters()
+        core_params["quality_factor_threshold"] = self._resonance_detector.get_quality_factor_threshold()
+        return core_params
+
+    def set_quality_factor_threshold(self, threshold: float) -> None:
+        """
+        Set quality factor threshold.
+        
+        Physical Meaning:
+            Updates the threshold for quality factor filtering
+            in resonance detection.
+            
+        Args:
+            threshold (float): New quality factor threshold.
+        """
+        self._resonance_detector.set_quality_factor_threshold(threshold)
+
+    def get_impedance_core(self) -> ImpedanceCore:
+        """
+        Get impedance core component.
+        
+        Physical Meaning:
+            Returns the core impedance calculation component
+            for advanced operations.
+            
+        Returns:
+            ImpedanceCore: Core impedance calculation component.
+        """
+        return self._impedance_core
+
+    def get_resonance_detector(self) -> ResonanceDetector:
+        """
+        Get resonance detector component.
+        
+        Physical Meaning:
+            Returns the resonance detection component
+            for advanced peak analysis.
+            
+        Returns:
+            ResonanceDetector: Resonance detection component.
+        """
+        return self._resonance_detector
 
     def __repr__(self) -> str:
         """String representation of impedance calculator."""
+        params = self.get_parameters()
         return (
             f"BVPImpedanceCalculator(domain={self.domain}, "
-            f"freq_range={self.frequency_range}, "
-            f"freq_points={self.frequency_points})"
+            f"freq_range={params['frequency_range']}, "
+            f"freq_points={params['frequency_points']})"
         )

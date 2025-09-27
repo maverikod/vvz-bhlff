@@ -1,0 +1,31 @@
+# BHLFF Development Dependencies
+# Author: Vasiliy Zdanovskiy
+# email: vasilyvz@gmail.com
+
+# Include core requirements
+-r requirements.txt
+
+# Development tools
+pytest-xdist>=2.4.0
+pre-commit>=2.17.0
+jupyter>=1.0.0
+ipykernel>=6.0.0
+
+# Documentation
+sphinx>=4.5.0
+sphinx-rtd-theme>=1.0.0
+myst-parser>=0.17.0
+sphinx-autodoc-typehints>=1.12.0
+sphinx-copybutton>=0.5.0
+
+# Visualization (optional)
+plotly>=5.0.0
+mayavi>=4.7.0
+vtk>=9.1.0
+pyvista>=0.35.0
+
+# Performance (optional)
+numba>=0.56.0
+# GPU acceleration (uncomment if needed)
+# cupy-cuda11x>=10.0.0
+# cupy-cuda12x>=12.0.0

@@ -1,0 +1,66 @@
+# BHLFF Git Attributes
+# Author: Vasiliy Zdanovskiy
+# email: vasilyvz@gmail.com
+
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Python files
+*.py text eol=lf
+*.pyi text eol=lf
+
+# Configuration files
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+*.ini text eol=lf
+*.cfg text eol=lf
+
+# Documentation
+*.md text eol=lf
+*.rst text eol=lf
+*.txt text eol=lf
+
+# Scripts
+*.sh text eol=lf
+*.bat text eol=crlf
+
+# Data files (binary)
+*.h5 binary
+*.npz binary
+*.pkl binary
+*.pickle binary
+*.mat binary
+
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.svg text eol=lf
+*.eps binary
+*.pdf binary
+
+# Archives
+*.zip binary
+*.tar.gz binary
+*.tar.bz2 binary
+*.7z binary
+
+# Executables
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+
+# Large files (use Git LFS)
+*.h5 filter=lfs diff=lfs merge=lfs -text
+*.npz filter=lfs diff=lfs merge=lfs -text
+*.pkl filter=lfs diff=lfs merge=lfs -text
+*.pickle filter=lfs diff=lfs merge=lfs -text
+
+# Linguist overrides
+docs/ALL.md linguist-documentation
+docs/tech_spec.md linguist-documentation
+docs/coding_standards.md linguist-documentation

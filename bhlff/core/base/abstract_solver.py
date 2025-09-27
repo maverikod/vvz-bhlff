@@ -173,9 +173,36 @@ class AbstractSolver(ABC):
         Returns:
             np.ndarray: Residual r = L_β a - s.
         """
-        # This is a placeholder implementation
-        # Subclasses should implement the actual residual computation
-        return np.zeros_like(field)
+        # Compute the fractional Riesz operator L_β a
+        # For the fractional Laplacian (-Δ)^β, we use spectral methods
+        field_spectral = np.fft.fftn(field)
+
+        # Get wave vectors
+        kx = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+        ky = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+        kz = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+
+        if self.domain.dimensions == 1:
+            k_magnitude = np.abs(kx)
+        elif self.domain.dimensions == 2:
+            KX, KY = np.meshgrid(kx, ky, indexing="ij")
+            k_magnitude = np.sqrt(KX**2 + KY**2)
+        else:  # 3D
+            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
+            k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
+
+        # Apply fractional Laplacian in spectral space
+        # L_β a = μ(-Δ)^β a + λa
+        spectral_coeffs = self.parameters.get_spectral_coefficients(k_magnitude)
+        operator_field_spectral = spectral_coeffs * field_spectral
+
+        # Transform back to real space
+        operator_field = np.fft.ifftn(operator_field_spectral).real
+
+        # Compute residual r = L_β a - s
+        residual = operator_field - source
+
+        return residual
 
     def get_energy(self, field: np.ndarray) -> float:
         """
@@ -196,9 +223,46 @@ class AbstractSolver(ABC):
         Returns:
             float: Total energy of the field configuration.
         """
-        # This is a placeholder implementation
-        # Subclasses should implement the actual energy computation
-        return 0.0
+        # Compute energy using the fractional Riesz operator
+        # E = ½(μ⟨a,(-Δ)^β a⟩ + λ⟨a,a⟩) - ℜ⟨s,a⟩
+
+        # Transform field to spectral space
+        field_spectral = np.fft.fftn(field)
+
+        # Get wave vectors
+        kx = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+        ky = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+        kz = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+
+        if self.domain.dimensions == 1:
+            k_magnitude = np.abs(kx)
+        elif self.domain.dimensions == 2:
+            KX, KY = np.meshgrid(kx, ky, indexing="ij")
+            k_magnitude = np.sqrt(KX**2 + KY**2)
+        else:  # 3D
+            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
+            k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
+
+        # Compute fractional Laplacian in spectral space
+        # (-Δ)^β a in spectral space is |k|^(2β) * â(k)
+        fractional_laplacian_spectral = (
+            k_magnitude ** (2 * self.parameters.beta)
+        ) * field_spectral
+
+        # Transform back to real space
+        fractional_laplacian_field = np.fft.ifftn(fractional_laplacian_spectral).real
+
+        # Compute energy terms
+        # μ⟨a,(-Δ)^β a⟩ = μ * ∫ a(x) * (-Δ)^β a(x) dx
+        kinetic_energy = self.parameters.mu * np.sum(field * fractional_laplacian_field)
+
+        # λ⟨a,a⟩ = λ * ∫ |a(x)|² dx
+        potential_energy = self.parameters.lambda_param * np.sum(field**2)
+
+        # Total energy E = ½(μ⟨a,(-Δ)^β a⟩ + λ⟨a,a⟩)
+        total_energy = 0.5 * (kinetic_energy + potential_energy)
+
+        return float(total_energy)
 
     def is_initialized(self) -> bool:
         """

@@ -245,9 +245,40 @@ class BVPSource(Source):
         # Generate random field
         random_field = np.random.randn(*self.domain.shape)
 
-        # Apply correlation length (simplified)
-        # In practice, would use proper random field generation
-        distributed_source = amplitude * random_field
+        # Apply correlation length using proper random field generation
+        # Generate correlated random field using spectral methods
+        correlation_length = self.config.get("correlation_length", 0.1)
+
+        # Transform to spectral space
+        random_spectral = np.fft.fftn(random_field)
+
+        # Create correlation filter in spectral space
+        if self.domain.dimensions == 1:
+            kx = np.fft.fftfreq(self.domain.N, self.domain.dx)
+            k_magnitude = np.abs(kx)
+        elif self.domain.dimensions == 2:
+            kx = np.fft.fftfreq(self.domain.N, self.domain.dx)
+            ky = np.fft.fftfreq(self.domain.N, self.domain.dx)
+            KX, KY = np.meshgrid(kx, ky, indexing="ij")
+            k_magnitude = np.sqrt(KX**2 + KY**2)
+        else:  # 3D
+            kx = np.fft.fftfreq(self.domain.N, self.domain.dx)
+            ky = np.fft.fftfreq(self.domain.N, self.domain.dx)
+            kz = np.fft.fftfreq(self.domain.N, self.domain.dx)
+            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
+            k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
+
+        # Apply correlation filter: exp(-k²*correlation_length²/2)
+        correlation_filter = np.exp(-(k_magnitude**2) * correlation_length**2 / 2)
+
+        # Apply filter in spectral space
+        correlated_spectral = random_spectral * correlation_filter
+
+        # Transform back to real space
+        correlated_field = np.fft.ifftn(correlated_spectral).real
+
+        # Normalize and scale
+        distributed_source = amplitude * correlated_field
 
         return distributed_source
 

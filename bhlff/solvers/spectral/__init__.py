@@ -17,4 +17,8 @@ Mathematical Foundation:
     Riesz operator and related equations in frequency space.
 """
 
-__all__ = []
+from .fft_solver_3d import FFTSolver3D
+
+__all__ = [
+    "FFTSolver3D",
+]

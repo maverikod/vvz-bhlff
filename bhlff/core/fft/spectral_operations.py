@@ -203,11 +203,11 @@ class SpectralOperations:
             k_squared = k**2
         elif self.domain.dimensions == 2:
             kx, ky = self._frequency_arrays
-            KX, KY = np.meshgrid(kx, ky, indexing='ij')
+            KX, KY = np.meshgrid(kx, ky, indexing="ij")
             k_squared = KX**2 + KY**2
         else:  # 3D
             kx, ky, kz = self._frequency_arrays
-            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing='ij')
+            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
             k_squared = KX**2 + KY**2 + KZ**2
 
         # Apply spectral Laplacian
@@ -258,9 +258,7 @@ class SpectralOperations:
 
         valid_filter_types = ["low_pass", "high_pass", "band_pass", "gaussian"]
         if filter_type not in valid_filter_types:
-            raise ValueError(
-                f"Unsupported filter type: {filter_type}"
-            )
+            raise ValueError(f"Unsupported filter type: {filter_type}")
 
         # Transform to spectral space
         field_spectral = self.fft_backend.fft(field)
@@ -306,11 +304,11 @@ class SpectralOperations:
             k_magnitude = np.abs(k)
         elif self.domain.dimensions == 2:
             kx, ky = self._frequency_arrays
-            KX, KY = np.meshgrid(kx, ky, indexing='ij')
+            KX, KY = np.meshgrid(kx, ky, indexing="ij")
             k_magnitude = np.sqrt(KX**2 + KY**2)
         else:  # 3D
             kx, ky, kz = self._frequency_arrays
-            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing='ij')
+            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
             k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
 
         # Create filter function based on type

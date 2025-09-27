@@ -23,6 +23,7 @@ Example:
 """
 
 import numpy as np
+
 # No additional typing imports needed
 
 from ..domain import Domain

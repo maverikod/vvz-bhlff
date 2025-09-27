@@ -72,9 +72,7 @@ class FFTBackend:
         """
         valid_plan_types = ["ESTIMATE", "MEASURE", "PATIENT", "EXHAUSTIVE"]
         if plan_type not in valid_plan_types:
-            raise ValueError(
-                f"Unsupported FFT plan type: {plan_type}"
-            )
+            raise ValueError(f"Unsupported FFT plan type: {plan_type}")
 
         if precision not in ["float32", "float64"]:
             raise ValueError(f"Unsupported precision: {precision}")

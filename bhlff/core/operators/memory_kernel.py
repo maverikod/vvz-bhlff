@@ -78,9 +78,7 @@ class MemoryKernel:
 
         valid_kernel_types = ["power_law", "exponential", "gaussian"]
         if kernel_type not in valid_kernel_types:
-            raise ValueError(
-                f"Unsupported kernel type: {kernel_type}"
-            )
+            raise ValueError(f"Unsupported kernel type: {kernel_type}")
 
         self._kernel_data: np.ndarray
         self._setup_kernel()

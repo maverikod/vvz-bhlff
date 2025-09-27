@@ -22,6 +22,7 @@ Example:
 """
 
 import numpy as np
+
 # No additional typing imports needed
 
 from ..domain import Domain
@@ -88,10 +89,10 @@ class FractionalLaplacian:
         if self.domain.dimensions == 1:
             k_magnitude = np.abs(kx)
         elif self.domain.dimensions == 2:
-            KX, KY = np.meshgrid(kx, ky, indexing='ij')
+            KX, KY = np.meshgrid(kx, ky, indexing="ij")
             k_magnitude = np.sqrt(KX**2 + KY**2)
         else:  # 3D
-            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing='ij')
+            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
             k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
 
         # Compute spectral coefficients |k|^(2β)
@@ -171,6 +172,4 @@ class FractionalLaplacian:
 
     def __repr__(self) -> str:
         """String representation of the fractional Laplacian."""
-        return (
-            f"FractionalLaplacian(domain={self.domain}, beta={self.beta})"
-        )
+        return f"FractionalLaplacian(domain={self.domain}, beta={self.beta})"

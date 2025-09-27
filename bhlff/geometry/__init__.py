@@ -17,4 +17,9 @@ Mathematical Foundation:
     layers, boundary conditions, and spatial discretization schemes.
 """
 
-__all__ = []
+from .layers import SphericalLayer, LayerStack
+
+__all__ = [
+    "SphericalLayer",
+    "LayerStack",
+]

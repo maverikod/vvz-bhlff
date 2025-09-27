@@ -19,7 +19,12 @@ Mathematical Foundation:
 """
 
 from .base.abstract_solver import AbstractSolver
+from .integrators import TimeIntegrator, BVPModulationIntegrator
+from .spectral import FFTSolver3D
 
 __all__ = [
     "AbstractSolver",
+    "TimeIntegrator",
+    "BVPModulationIntegrator",
+    "FFTSolver3D",
 ]

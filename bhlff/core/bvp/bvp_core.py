@@ -29,7 +29,7 @@ Example:
 import numpy as np
 from typing import Dict, Any
 
-from .domain import Domain
+from ..domain import Domain
 from .quench_detector import QuenchDetector
 from .bvp_envelope_solver import BVPEnvelopeSolver
 from .bvp_impedance_calculator import BVPImpedanceCalculator

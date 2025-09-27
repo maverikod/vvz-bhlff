@@ -24,8 +24,8 @@ from abc import ABC, abstractmethod
 # No additional typing imports needed
 import numpy as np
 
-from ..domain import Domain
-from ..parameters import Parameters
+from ...core.domain import Domain
+from ...core.domain import Parameters
 
 
 class AbstractSolver(ABC):

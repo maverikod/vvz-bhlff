@@ -26,7 +26,7 @@ Example:
 import numpy as np
 from typing import Dict, Any
 
-from .domain import Domain
+from ..domain import Domain
 
 
 class BVPEnvelopeSolver:

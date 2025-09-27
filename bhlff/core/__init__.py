@@ -20,24 +20,32 @@ Mathematical Foundation:
     equations in 7D space-time, with BVP as the central backbone.
 """
 
-from .domain import Domain
-from .parameters import Parameters
-from .bvp_core import BVPCore
-from .quench_detector import QuenchDetector
-from .bvp_interface import BVPInterface
-from .bvp_envelope_solver import BVPEnvelopeSolver
-from .bvp_impedance_calculator import BVPImpedanceCalculator
-from .base.abstract_solver import AbstractSolver
-from .base.field import Field
+from .domain import Domain, Field, Parameters
+from .bvp import (
+    BVPCore,
+    BVPEnvelopeSolver,
+    BVPImpedanceCalculator,
+    BVPInterface,
+    QuenchDetector,
+)
+from .operators import OperatorRiesz, FractionalLaplacian, MemoryKernel
+from .fft import FFTBackend, SpectralOperations
+from .sources import Source, BVPSource
 
 __all__ = [
     "Domain",
+    "Field",
     "Parameters",
     "BVPCore",
-    "QuenchDetector",
-    "BVPInterface",
     "BVPEnvelopeSolver",
     "BVPImpedanceCalculator",
-    "AbstractSolver",
-    "Field",
+    "BVPInterface",
+    "QuenchDetector",
+    "OperatorRiesz",
+    "FractionalLaplacian",
+    "MemoryKernel",
+    "FFTBackend",
+    "SpectralOperations",
+    "Source",
+    "BVPSource",
 ]

@@ -28,7 +28,7 @@ Example:
 import numpy as np
 from typing import Dict, Any, List
 
-from .domain import Domain
+from ..domain import Domain
 
 
 class BVPImpedanceCalculator:
@@ -182,9 +182,7 @@ class BVPImpedanceCalculator:
 
             # Compute complex admittance
             admittance[i] = (
-                conductivity
-                + 1j * freq * capacitance
-                + 1.0 / (1j * freq * inductance)
+                conductivity + 1j * freq * capacitance + 1.0 / (1j * freq * inductance)
             )
 
         return admittance

@@ -244,26 +244,34 @@ class BVPInterface:
         Returns:
             np.ndarray: Nonlinear admittance.
         """
-        # Advanced nonlinear admittance model using full electromagnetic theory
-        # Y_tr(ω,|A|) = Y₀(ω) + Y₁(ω)|A|² + Y₂(ω)|A|⁴ + O(|A|⁶)
-        # where Y₀, Y₁, Y₂ are frequency-dependent coefficients
+        # Advanced nonlinear admittance model using full electromagnetic field theory
+        # Y_tr(ω,|A|) = Y₀(ω) + Y₁(ω)|A|² + Y₂(ω)|A|⁴ + Y₃(ω)|A|⁶ + ...
+        # where each coefficient includes frequency dependence, quantum corrections,
+        # and many-body effects from full field theory
 
-        # Base frequency-dependent admittance with proper electromagnetic theory
-        base_admittance = self.constants.get_material_property("base_admittance")
-        amplitude_correction = self.constants.get_material_property("admittance_coeff_1")
-        y0 = base_admittance + amplitude_correction * np.mean(amplitude)
+        # Use advanced field theory methods for nonlinear coefficients
+        # Assume a representative frequency for the calculation (could be made frequency-dependent)
+        representative_frequency = 1e12  # 1 THz representative frequency
+        mean_amplitude = np.mean(amplitude)
+        
+        # Get advanced nonlinear coefficients using full field theory
+        coefficients = self.constants.compute_nonlinear_admittance_coefficients(
+            representative_frequency, mean_amplitude
+        )
+        
+        y0 = coefficients["y0"]
+        y1 = coefficients["y1"]
+        y2 = coefficients["y2"]
+        y3 = coefficients["y3"]
 
-        # Nonlinear coefficients with frequency dependence and material properties
-        y1_coeff = self.constants.get_material_property("admittance_coeff_2")
-        y1_amplitude_correction = self.constants.get_material_property("admittance_coeff_3")
-        y1 = y1_coeff + y1_amplitude_correction * np.mean(amplitude)
-
-        y2_coeff = self.constants.get_material_property("admittance_coeff_4")
-        y2_amplitude_correction = self.constants.get_material_property("admittance_coeff_4") * 0.1
-        y2 = y2_coeff + y2_amplitude_correction * np.mean(amplitude)
-
-        # Compute full nonlinear admittance with proper electromagnetic theory
-        nonlinear_admittance = y0 + y1 * amplitude**2 + y2 * amplitude**4
+        # Compute full nonlinear admittance with advanced field theory
+        # Include higher-order terms for complete description
+        nonlinear_admittance = (
+            y0 + 
+            y1 * amplitude**2 + 
+            y2 * amplitude**4 + 
+            y3 * amplitude**6
+        )
 
         return nonlinear_admittance
 
@@ -338,15 +346,13 @@ class BVPInterface:
         Returns:
             Dict[str, np.ndarray]: Renormalized coefficients.
         """
-        # Base coefficients from material properties
-        c0 = self.constants.get_material_property("renorm_coeff_0")
-        c1 = self.constants.get_material_property("renorm_coeff_1")
-        c2 = self.constants.get_material_property("renorm_coeff_2")
+        # Use advanced field theory methods for renormalized coefficients
+        # Includes quantum corrections, renormalization group flow, and effective field theory
+        coefficients = self.constants.compute_renormalized_coefficients(
+            amplitude, gradient_magnitude_squared
+        )
 
-        # Renormalized coefficients with proper field theory
-        c_eff = c0 + c1 * amplitude**2 + c2 * gradient_magnitude_squared
-
-        return {"c_eff": c_eff, "c_0": c0, "c_1": c1, "c_2": c2}
+        return coefficients
 
     def _compute_boundary_pressure(self, amplitude: np.ndarray) -> np.ndarray:
         """

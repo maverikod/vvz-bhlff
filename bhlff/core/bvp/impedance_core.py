@@ -26,6 +26,7 @@ import numpy as np
 from typing import Dict, Any
 
 from ..domain import Domain
+from .bvp_constants import BVPConstants
 
 
 class ImpedanceCore:
@@ -47,7 +48,7 @@ class ImpedanceCore:
         boundary_conditions (str): Boundary condition type.
     """
     
-    def __init__(self, domain: Domain, config: Dict[str, Any]) -> None:
+    def __init__(self, domain: Domain, config: Dict[str, Any], constants: BVPConstants = None) -> None:
         """
         Initialize impedance core.
         
@@ -58,18 +59,17 @@ class ImpedanceCore:
         Args:
             domain (Domain): Computational domain.
             config (Dict[str, Any]): Configuration parameters.
+            constants (BVPConstants, optional): BVP constants instance.
         """
         self.domain = domain
+        self.constants = constants or BVPConstants(config)
         self._setup_parameters(config)
     
     def _setup_parameters(self, config: Dict[str, Any]) -> None:
         """Setup impedance calculation parameters."""
-        impedance_config = config.get("impedance_calculation", {})
-        self.frequency_range = impedance_config.get("frequency_range", (0.1, 10.0))
-        self.frequency_points = impedance_config.get("frequency_points", 1000)
-        self.boundary_conditions = impedance_config.get(
-            "boundary_conditions", "periodic"
-        )
+        self.frequency_range = self.constants.get_impedance_parameter("frequency_range")
+        self.frequency_points = self.constants.get_impedance_parameter("frequency_points")
+        self.boundary_conditions = self.constants.get_impedance_parameter("boundary_conditions")
     
     def compute_admittance_from_envelope(
         self, envelope: np.ndarray, frequencies: np.ndarray
@@ -103,14 +103,16 @@ class ImpedanceCore:
             # where σ, C, L are frequency-dependent conductivity, capacitance,
             # inductance
             
-            # Compute frequency-dependent material properties
-            conductivity = 1.0 + 0.1 * freq  # Frequency-dependent conductivity
-            capacitance = 1.0 / (1.0 + freq**2)  # Frequency-dependent capacitance
-            inductance = 1.0 + 0.05 * freq  # Frequency-dependent inductance
+            # Compute frequency-dependent material properties using realistic models
+            conductivity = self.constants.compute_frequency_dependent_conductivity(freq)
+            capacitance = self.constants.compute_frequency_dependent_capacitance(freq)
+            inductance = self.constants.compute_frequency_dependent_inductance(freq)
             
-            # Compute complex admittance
+            # Compute complex admittance with proper electromagnetic theory
+            # Include skin effect, dielectric relaxation, and magnetic field effects
+            omega = 2 * np.pi * freq
             admittance[i] = (
-                conductivity + 1j * freq * capacitance + 1.0 / (1j * freq * inductance)
+                conductivity + 1j * omega * capacitance + 1.0 / (1j * omega * inductance)
             )
         
         return admittance

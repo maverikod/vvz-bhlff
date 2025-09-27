@@ -27,6 +27,9 @@ import numpy as np
 from typing import Dict, Any
 
 from ..domain import Domain
+from .envelope_solver_core import EnvelopeSolverCore
+from .envelope_solver_line_search import EnvelopeSolverLineSearch
+from .bvp_constants import BVPConstants
 
 
 class BVPEnvelopeSolver:
@@ -54,7 +57,7 @@ class BVPEnvelopeSolver:
         k0_squared (float): Wave number squared k₀².
     """
 
-    def __init__(self, domain: Domain, config: Dict[str, Any]) -> None:
+    def __init__(self, domain: Domain, config: Dict[str, Any], constants: BVPConstants = None) -> None:
         """
         Initialize envelope equation solver.
 
@@ -71,10 +74,13 @@ class BVPEnvelopeSolver:
                 - chi_prime: Real part of susceptibility
                 - chi_double_prime_0: Base imaginary susceptibility
                 - k0_squared: Wave number squared
+            constants (BVPConstants, optional): BVP constants instance.
         """
         self.domain = domain
         self.config = config
+        self.constants = constants or BVPConstants(config)
         self._setup_parameters()
+        self._setup_solver_components()
 
     def _setup_parameters(self) -> None:
         """
@@ -82,14 +88,18 @@ class BVPEnvelopeSolver:
 
         Physical Meaning:
             Initializes the physical parameters for the envelope equation
-            from the configuration dictionary.
+            from the constants instance.
         """
-        envelope_config = self.config.get("envelope_equation", {})
-        self.kappa_0 = envelope_config.get("kappa_0", 1.0)
-        self.kappa_2 = envelope_config.get("kappa_2", 0.1)
-        self.chi_prime = envelope_config.get("chi_prime", 1.0)
-        self.chi_double_prime_0 = envelope_config.get("chi_double_prime_0", 0.01)
-        self.k0_squared = envelope_config.get("k0_squared", 1.0)
+        self.kappa_0 = self.constants.get_envelope_parameter("kappa_0")
+        self.kappa_2 = self.constants.get_envelope_parameter("kappa_2")
+        self.chi_prime = self.constants.get_envelope_parameter("chi_prime")
+        self.chi_double_prime_0 = self.constants.get_envelope_parameter("chi_double_prime_0")
+        self.k0_squared = self.constants.get_envelope_parameter("k0_squared")
+    
+    def _setup_solver_components(self) -> None:
+        """Setup solver components."""
+        self._core = EnvelopeSolverCore(self.domain, self.config, self.constants)
+        self._line_search = EnvelopeSolverLineSearch(self.constants)
 
     def solve_envelope(self, source: np.ndarray) -> np.ndarray:
         """
@@ -119,34 +129,48 @@ class BVPEnvelopeSolver:
                 f"domain shape {self.domain.shape}"
             )
 
-        # Solve envelope equation using iterative method
+        # Solve envelope equation using advanced Newton-Raphson method
         # Initial guess: zero field
         envelope = np.zeros_like(source, dtype=complex)
 
-        # Simple iterative solution (can be improved with more sophisticated
-        # methods)
-        max_iterations = 100
-        tolerance = 1e-6
+        # Advanced Newton-Raphson solution with adaptive step size
+        max_iterations = int(self.constants.get_numerical_parameter("max_iterations"))
+        tolerance = self.constants.get_numerical_parameter("tolerance")
+        damping_factor = self.constants.get_numerical_parameter("damping_factor")
+        min_step_size = self.constants.get_numerical_parameter("min_step_size")
 
         for iteration in range(max_iterations):
-            # Compute nonlinear stiffness κ(|a|) = κ₀ + κ₂|a|²
-            amplitude_squared = np.abs(envelope) ** 2
-            kappa = self.kappa_0 + self.kappa_2 * amplitude_squared
-
-            # Compute effective susceptibility χ(|a|) = χ' + iχ''(|a|)
-            chi_double_prime = self.chi_double_prime_0 * amplitude_squared
-            chi = self.chi_prime + 1j * chi_double_prime
-
-            # Solve linearized equation: ∇·(κ∇a) + k₀²χa = s
-            # For simplicity, use finite difference approximation
-            envelope_new = self._solve_linearized_envelope(envelope, kappa, chi, source)
-
+            # Compute residual and Jacobian using core components
+            residual = self._core.compute_residual(envelope, source)
+            jacobian = self._core.compute_jacobian(envelope)
+            
             # Check convergence
-            residual = np.max(np.abs(envelope_new - envelope))
-            if residual < tolerance:
+            residual_norm = np.max(np.abs(residual))
+            if residual_norm < tolerance:
                 break
-
-            envelope = envelope_new
+            
+            # Solve Newton system: J * δa = -r
+            try:
+                # Use advanced linear solver with regularization
+                delta_envelope = self._core.solve_newton_system(jacobian, residual)
+                
+                # Apply damping for stability
+                step_size = damping_factor
+                
+                # Line search for optimal step size
+                step_size = self._line_search.perform_line_search(
+                    envelope, delta_envelope, residual, source, step_size,
+                    self._core.compute_residual
+                )
+                
+                # Update solution
+                envelope = envelope + step_size * delta_envelope
+                
+            except np.linalg.LinAlgError:
+                # Fallback to gradient descent if Newton fails
+                gradient = self._core.compute_gradient(envelope, source)
+                gradient_step = self.constants.get_numerical_parameter("gradient_descent_step")
+                envelope = envelope - gradient_step * gradient
 
         return envelope.real
 
@@ -210,11 +234,13 @@ class BVPEnvelopeSolver:
         # Therefore: a = (s - ∇·(κ∇a)) / (k₀²χ)
 
         # Avoid division by zero
-        chi_safe = np.where(np.abs(chi) < 1e-12, 1e-12, chi)
+        regularization = self.constants.get_numerical_parameter("regularization")
+        chi_safe = np.where(np.abs(chi) < regularization, regularization, chi)
 
         envelope_new = (source - div_kappa_grad) / (self.k0_squared * chi_safe)
 
         return envelope_new
+
 
     def get_parameters(self) -> Dict[str, float]:
         """

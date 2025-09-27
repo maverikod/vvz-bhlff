@@ -33,6 +33,7 @@ from ..domain import Domain
 from .quench_detector import QuenchDetector
 from .bvp_envelope_solver import BVPEnvelopeSolver
 from .bvp_impedance_calculator import BVPImpedanceCalculator
+from .bvp_constants import BVPConstants
 
 
 class BVPCore:
@@ -75,6 +76,7 @@ class BVPCore:
         """
         self.domain = domain
         self.config = config
+        self.constants = BVPConstants(config)
         self._setup_envelope_solver()
         self._setup_quench_detector()
         self._setup_impedance_calculator()
@@ -87,7 +89,7 @@ class BVPCore:
             Initializes the solver for the BVP envelope equation
             with nonlinear stiffness and susceptibility.
         """
-        self._envelope_solver = BVPEnvelopeSolver(self.domain, self.config)
+        self._envelope_solver = BVPEnvelopeSolver(self.domain, self.config, self.constants)
 
     def _setup_quench_detector(self) -> None:
         """
@@ -98,7 +100,7 @@ class BVPCore:
             local thresholds are reached.
         """
         quench_config = self.config.get("quench_detection", {})
-        self._quench_detector = QuenchDetector(quench_config)
+        self._quench_detector = QuenchDetector(quench_config, self.constants)
 
     def _setup_impedance_calculator(self) -> None:
         """
@@ -108,7 +110,7 @@ class BVPCore:
             Initializes the calculator for Y(ω), R(ω), T(ω)
             and peaks {ω_n,Q_n} from BVP envelope.
         """
-        self._impedance_calculator = BVPImpedanceCalculator(self.domain, self.config)
+        self._impedance_calculator = BVPImpedanceCalculator(self.domain, self.config, self.constants)
 
     def solve_envelope(self, source: np.ndarray) -> np.ndarray:
         """
@@ -197,7 +199,7 @@ class BVPCore:
         Returns:
             float: Carrier frequency ω₀.
         """
-        return float(self.config.get("carrier_frequency", 1.85e43))
+        return self.constants.get_envelope_parameter("carrier_frequency")
 
     def get_envelope_parameters(self) -> Dict[str, float]:
         """

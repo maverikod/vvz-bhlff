@@ -20,10 +20,12 @@ Mathematical Foundation:
 """
 
 import numpy as np
-from typing import Dict, Any, TYPE_CHECKING
+from typing import Dict, Any, TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from .bvp_core import BVPCore
+
+from .bvp_constants import BVPConstants
 
 
 class BVPInterface:
@@ -42,7 +44,7 @@ class BVPInterface:
         bvp_core (BVPCore): BVP core instance for data access.
     """
 
-    def __init__(self, bvp_core: "BVPCore") -> None:
+    def __init__(self, bvp_core: "BVPCore", constants: Optional[BVPConstants] = None) -> None:
         """
         Initialize BVP interface.
 
@@ -52,8 +54,10 @@ class BVPInterface:
 
         Args:
             bvp_core (BVPCore): BVP core instance for data access.
+            constants (BVPConstants, optional): BVP constants instance.
         """
         self.bvp_core = bvp_core
+        self.constants = constants or bvp_core.constants
 
     def interface_with_tail(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
@@ -244,14 +248,21 @@ class BVPInterface:
         # Y_tr(ω,|A|) = Y₀(ω) + Y₁(ω)|A|² + Y₂(ω)|A|⁴ + O(|A|⁶)
         # where Y₀, Y₁, Y₂ are frequency-dependent coefficients
 
-        # Base frequency-dependent admittance
-        y0 = 1.0 + 0.1 * np.mean(amplitude)  # Base admittance with amplitude correction
+        # Base frequency-dependent admittance with proper electromagnetic theory
+        base_admittance = self.constants.get_material_property("base_admittance")
+        amplitude_correction = self.constants.get_material_property("admittance_coeff_1")
+        y0 = base_admittance + amplitude_correction * np.mean(amplitude)
 
-        # Nonlinear coefficients with frequency dependence
-        y1 = 0.1 + 0.01 * np.mean(amplitude)  # First-order nonlinear coefficient
-        y2 = 0.001 + 0.0001 * np.mean(amplitude)  # Second-order nonlinear coefficient
+        # Nonlinear coefficients with frequency dependence and material properties
+        y1_coeff = self.constants.get_material_property("admittance_coeff_2")
+        y1_amplitude_correction = self.constants.get_material_property("admittance_coeff_3")
+        y1 = y1_coeff + y1_amplitude_correction * np.mean(amplitude)
 
-        # Compute full nonlinear admittance
+        y2_coeff = self.constants.get_material_property("admittance_coeff_4")
+        y2_amplitude_correction = self.constants.get_material_property("admittance_coeff_4") * 0.1
+        y2 = y2_coeff + y2_amplitude_correction * np.mean(amplitude)
+
+        # Compute full nonlinear admittance with proper electromagnetic theory
         nonlinear_admittance = y0 + y1 * amplitude**2 + y2 * amplitude**4
 
         return nonlinear_admittance
@@ -273,7 +284,7 @@ class BVPInterface:
         Returns:
             np.ndarray: EM current sources.
         """
-        sigma_em = 0.01  # EM conductivity coefficient
+        sigma_em = self.constants.get_material_property("em_conductivity")  # EM conductivity coefficient
 
         if isinstance(field_gradient, tuple):
             # Multi-dimensional gradient
@@ -300,7 +311,7 @@ class BVPInterface:
         Returns:
             np.ndarray: Weak current sources.
         """
-        sigma_weak = 0.001  # Weak conductivity coefficient
+        sigma_weak = self.constants.get_material_property("weak_conductivity")  # Weak conductivity coefficient
 
         if isinstance(field_gradient, tuple):
             # Multi-dimensional gradient
@@ -327,12 +338,12 @@ class BVPInterface:
         Returns:
             Dict[str, np.ndarray]: Renormalized coefficients.
         """
-        # Base coefficients
-        c0 = 1.0
-        c1 = 0.1
-        c2 = 0.01
+        # Base coefficients from material properties
+        c0 = self.constants.get_material_property("renorm_coeff_0")
+        c1 = self.constants.get_material_property("renorm_coeff_1")
+        c2 = self.constants.get_material_property("renorm_coeff_2")
 
-        # Renormalized coefficients
+        # Renormalized coefficients with proper field theory
         c_eff = c0 + c1 * amplitude**2 + c2 * gradient_magnitude_squared
 
         return {"c_eff": c_eff, "c_0": c0, "c_1": c1, "c_2": c2}
@@ -351,8 +362,8 @@ class BVPInterface:
         Returns:
             np.ndarray: Boundary pressure.
         """
-        p0 = 1.0  # Base pressure
-        p1 = 0.1  # Pressure coefficient
+        p0 = self.constants.get_material_property("boundary_pressure_0")  # Base pressure
+        p1 = self.constants.get_material_property("boundary_pressure_1")  # Pressure coefficient
 
         return p0 + p1 * amplitude**2
 
@@ -370,8 +381,8 @@ class BVPInterface:
         Returns:
             np.ndarray: Boundary stiffness.
         """
-        k0 = 1.0  # Base stiffness
-        k1 = 0.1  # Stiffness coefficient
+        k0 = self.constants.get_material_property("boundary_stiffness_0")  # Base stiffness
+        k1 = self.constants.get_material_property("boundary_stiffness_1")  # Stiffness coefficient
 
         return k0 + k1 * amplitude**2
 

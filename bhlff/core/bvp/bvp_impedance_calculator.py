@@ -31,6 +31,7 @@ from typing import Dict, Any
 from ..domain import Domain
 from .impedance_core import ImpedanceCore
 from .resonance_detector import ResonanceDetector
+from .bvp_constants import BVPConstants
 
 
 class BVPImpedanceCalculator:
@@ -56,7 +57,7 @@ class BVPImpedanceCalculator:
         _resonance_detector (ResonanceDetector): Resonance peak detection.
     """
 
-    def __init__(self, domain: Domain, config: Dict[str, Any]) -> None:
+    def __init__(self, domain: Domain, config: Dict[str, Any], constants: BVPConstants = None) -> None:
         """
         Initialize impedance calculator.
 
@@ -71,9 +72,11 @@ class BVPImpedanceCalculator:
                 - frequency_points: Number of frequency points
                 - boundary_conditions: Boundary condition type
                 - quality_factor_threshold: Threshold for quality factor
+            constants (BVPConstants, optional): BVP constants instance.
         """
         self.domain = domain
         self.config = config
+        self.constants = constants or BVPConstants(config)
         self._setup_components()
 
     def _setup_components(self) -> None:
@@ -84,12 +87,11 @@ class BVPImpedanceCalculator:
             Initializes the core impedance calculation and resonance
             detection components.
         """
-        self._impedance_core = ImpedanceCore(self.domain, self.config)
-        self._resonance_detector = ResonanceDetector()
+        self._impedance_core = ImpedanceCore(self.domain, self.config, self.constants)
+        self._resonance_detector = ResonanceDetector(self.constants)
         
-        # Set quality factor threshold from config
-        impedance_config = self.config.get("impedance_calculation", {})
-        quality_threshold = impedance_config.get("quality_factor_threshold", 0.1)
+        # Set quality factor threshold from constants
+        quality_threshold = self.constants.get_impedance_parameter("quality_factor_threshold")
         self._resonance_detector.set_quality_factor_threshold(quality_threshold)
 
     def compute_impedance(self, envelope: np.ndarray) -> Dict[str, Any]:

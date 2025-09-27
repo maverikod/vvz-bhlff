@@ -20,7 +20,9 @@ Mathematical Foundation:
 """
 
 import numpy as np
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
+
+from .bvp_constants import BVPConstants
 
 
 class QuenchDetector:
@@ -44,7 +46,7 @@ class QuenchDetector:
         gradient_threshold (float): Gradient threshold for quench detection.
     """
 
-    def __init__(self, config: Dict[str, Any]) -> None:
+    def __init__(self, config: Dict[str, Any], constants: Optional[BVPConstants] = None) -> None:
         """
         Initialize quench detector with configuration.
 
@@ -57,8 +59,10 @@ class QuenchDetector:
                 - amplitude_threshold: Threshold for amplitude quenches
                 - detuning_threshold: Threshold for detuning quenches
                 - gradient_threshold: Threshold for gradient quenches
+            constants (BVPConstants, optional): BVP constants instance.
         """
         self.config = config
+        self.constants = constants or BVPConstants(config)
         self._setup_thresholds()
 
     def _setup_thresholds(self) -> None:
@@ -69,9 +73,9 @@ class QuenchDetector:
             Initializes the threshold values used for detecting
             different types of quench events.
         """
-        self.amplitude_threshold = self.config.get("amplitude_threshold", 0.8)
-        self.detuning_threshold = self.config.get("detuning_threshold", 0.1)
-        self.gradient_threshold = self.config.get("gradient_threshold", 0.5)
+        self.amplitude_threshold = self.constants.get_quench_threshold("amplitude_threshold")
+        self.detuning_threshold = self.constants.get_quench_threshold("detuning_threshold")
+        self.gradient_threshold = self.constants.get_quench_threshold("gradient_threshold")
 
     def detect_quenches(self, envelope: np.ndarray) -> Dict[str, Any]:
         """

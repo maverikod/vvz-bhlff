@@ -23,7 +23,9 @@ Example:
 """
 
 import numpy as np
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
+
+from .bvp_constants import BVPConstants
 
 
 class ResonanceDetector:
@@ -42,9 +44,15 @@ class ResonanceDetector:
         4. Quality factor estimation using Lorentzian fitting
     """
     
-    def __init__(self) -> None:
-        """Initialize resonance detector."""
-        self.quality_factor_threshold = 0.1
+    def __init__(self, constants: Optional[BVPConstants] = None) -> None:
+        """
+        Initialize resonance detector.
+        
+        Args:
+            constants (BVPConstants, optional): BVP constants instance.
+        """
+        self.constants = constants or BVPConstants()
+        self.quality_factor_threshold = self.constants.get_impedance_parameter("quality_factor_threshold")
     
     def find_resonance_peaks(
         self, frequencies: np.ndarray, admittance: np.ndarray
@@ -101,8 +109,9 @@ class ResonanceDetector:
             Tuple[List[float], List[float]]: Peak frequencies and quality factors.
         """
         # Step 1: Preprocessing - smooth the data to reduce noise
-        magnitude_smooth = self._smooth_signal(magnitude, window_size=5)
-        phase_smooth = self._smooth_signal(phase, window_size=5)
+        window_size = self.constants.get_impedance_parameter("smoothing_window_size")
+        magnitude_smooth = self._smooth_signal(magnitude, window_size=window_size)
+        phase_smooth = self._smooth_signal(phase, window_size=window_size)
         
         # Step 2: Find local maxima with prominence analysis
         magnitude_peaks = self._find_prominent_peaks(magnitude_smooth)
@@ -181,7 +190,8 @@ class ResonanceDetector:
         # Calculate prominence threshold
         mean_magnitude = np.mean(magnitude)
         std_magnitude = np.std(magnitude)
-        prominence_threshold = mean_magnitude + 2 * std_magnitude
+        prominence_multiplier = self.constants.get_impedance_parameter("prominence_threshold_multiplier")
+        prominence_threshold = mean_magnitude + prominence_multiplier * std_magnitude
         
         # Find local maxima with sufficient prominence
         for i in range(2, len(magnitude) - 2):
@@ -219,7 +229,8 @@ class ResonanceDetector:
         phase_diff = np.diff(np.unwrap(phase))
         
         # Find rapid phase changes
-        phase_threshold = np.std(phase_diff) * 2
+        phase_multiplier = self.constants.get_impedance_parameter("phase_threshold_multiplier")
+        phase_threshold = np.std(phase_diff) * phase_multiplier
         
         for i in range(1, len(phase_diff) - 1):
             if abs(phase_diff[i]) > phase_threshold:
@@ -323,10 +334,10 @@ class ResonanceDetector:
             float: Quality factor.
         """
         if peak_idx <= 0 or peak_idx >= len(frequencies) - 1:
-            return 1.0
+            return self.constants.get_impedance_parameter("min_quality_factor")
         
-        # Extract peak region (±20 points around peak)
-        window = 20
+        # Extract peak region around peak
+        window = self.constants.get_impedance_parameter("peak_window_size")
         start_idx = max(0, peak_idx - window)
         end_idx = min(len(frequencies), peak_idx + window + 1)
         
@@ -358,10 +369,13 @@ class ResonanceDetector:
             fwhm = frequencies[right_idx] - frequencies[left_idx]
             if fwhm > 0:
                 q_factor = frequencies[peak_idx] / fwhm
-                return max(1.0, min(1000.0, q_factor))  # Clamp to reasonable range
+                min_q = self.constants.get_impedance_parameter("min_quality_factor")
+                max_q = self.constants.get_impedance_parameter("max_quality_factor")
+                return max(min_q, min(max_q, q_factor))  # Clamp to reasonable range
         
         # Fallback: estimate from peak width
-        return max(1.0, peak_magnitude / np.mean(magnitude))
+        min_q = self.constants.get_impedance_parameter("min_quality_factor")
+        return max(min_q, peak_magnitude / np.mean(magnitude))
     
     def set_quality_factor_threshold(self, threshold: float) -> None:
         """

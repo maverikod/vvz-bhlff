@@ -24,6 +24,7 @@ from .bvp_core import BVPCore
 from .bvp_envelope_solver import BVPEnvelopeSolver
 from .bvp_impedance_calculator import BVPImpedanceCalculator
 from .bvp_interface import BVPInterface
+from .bvp_constants import BVPConstants
 from .quench_detector import QuenchDetector
 
 __all__ = [
@@ -31,5 +32,6 @@ __all__ = [
     "BVPEnvelopeSolver",
     "BVPImpedanceCalculator",
     "BVPInterface",
+    "BVPConstants",
     "QuenchDetector",
 ]

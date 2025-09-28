@@ -33,22 +33,29 @@ Y(ω) = I(ω)/V(ω) = G(ω) + iB(ω)
 
 ### 1. Модель огибающей с граничными условиями
 
-#### Базовое уравнение
+#### 7D Envelope Equation
 ```
-∇·(κ(|a|) ∇a) + k₀²χ(|a|) a = s(x), k₀ = ω₀/c_φ
+∇·(κ(|a|) ∇a) + k₀²χ(|a|) a = s(x,φ,t), k₀ = ω₀/c_φ
 ```
 
-где:
-- **κ(|a|)** - "жёсткость" среды, зависящая от амплитуды
-- **χ(|a|) = χ' + iχ''** - комплексная восприимчивость
-  - χ' - накопление энергии
-  - χ'' - потери и квенч-память
-- **s(x)** - источник возбуждения
+where:
+- **7D coordinates**: (x,φ,t) ∈ M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
+- **U(1)³ phase vector**: a = (a₁, a₂, a₃) with three U(1) components
+- **κ(|a|)** - "stiffness" of medium, depending on amplitude
+- **χ(|a|) = χ' + iχ''** - complex susceptibility
+  - χ' - energy accumulation
+  - χ'' - losses and quench-memory
+- **s(x,φ,t)** - source excitation
 
-#### Энергетический функционал
+#### 7D Energy Functional
 ```
-E[a] = ∫_Ω (κ|∇a|² + k₀²χ'|a|²) dV + E_dissipative
+E[a] = ∫_M₇ (κ|∇a|² + k₀²χ'|a|²) dV₇ + E_dissipative
 ```
+
+where:
+- **7D volume element**: dV₇ = dx³ dφ³ dt
+- **7D gradient**: ∇a = (∇ₓa, ∇_φa, ∂_ta)
+- **U(1)³ phase vector**: a = (a₁, a₂, a₃)
 
 где диссипативная часть включает:
 - Потери на квенчах: ∫_Ω χ''(|a|)|a|² dV

@@ -11,23 +11,28 @@
 
 ### Теоретическая основа
 
-В рамках 7D phase field theory базовые решатели реализуют решение уравнения фракционного оператора Рисса:
+In the framework of 7D phase field theory, basic solvers implement the solution of the fractional Riesz operator equation:
 
-$$\mathcal{L}_\beta a = \mu(-\Delta)^\beta a + \lambda a = s(x)$$
+$$\mathcal{L}_\beta a = \mu(-\Delta)^\beta a + \lambda a = s(x,\phi,t)$$
 
-где:
-- $a(x) \in \mathbb{C}$ - комплексное фазовое поле
-- $\mu > 0$ - коэффициент диффузии
-- $\beta \in (0,2)$ - фракционный порядок
-- $\lambda \geq 0$ - параметр затухания
-- $s(x)$ - источник возбуждения
+where:
+- $a(x,\phi,t) \in \mathbb{C}^3$ - **U(1)³ phase vector field** in 7D space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
+- **Phase vector structure**: a = (a₁, a₂, a₃) with three U(1) components
+- $\mu > 0$ - diffusion coefficient
+- $\beta \in (0,2)$ - fractional order
+- $\lambda \geq 0$ - damping parameter
+- $s(x,\phi,t)$ - source excitation
 
-### Спектральная форма решения
+### 7D Spectral Form Solution
 
-В k-пространстве решение имеет вид:
-$$\widehat{a}(k) = \frac{\widehat{s}(k)}{\mu|k|^{2\beta} + \lambda}$$
+In 7D k-space the solution has the form:
+$$\widehat{a}(k_x, k_\phi, k_t) = \frac{\widehat{s}(k_x, k_\phi, k_t)}{\mu|k|^{2\beta} + \lambda}$$
 
-где $k = \frac{2\pi}{L}m$, $m \in \mathbb{Z}^3$ - дискретные волновые числа.
+where:
+- **7D wave vector**: |k|² = |k_x|² + |k_φ|² + k_t²
+- **k_x** = $\frac{2\pi}{L}m_x$, $m_x \in \mathbb{Z}^3$ - spatial wave numbers
+- **k_φ** = $\frac{2\pi}{L_\phi}m_\phi$, $m_\phi \in \mathbb{Z}^3$ - phase wave numbers
+- **k_t** = $\frac{2\pi}{T}m_t$, $m_t \in \mathbb{Z}$ - temporal frequencies
 
 ## Детальные требования к тестам
 

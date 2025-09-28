@@ -353,61 +353,69 @@ $$
 
 ---
 
-# 1. Математическая модель
+# 1. 7D Mathematical Model
 
-## 1.1. Оператор и стационарная задача
+## 1.1. 7D Space-Time Structure
 
-Пусть $\Omega=[0,L)^3$, периодические ГУ. Поле $a(x)\in\mathbb{C}$.
+The fundamental space-time is **7-dimensional**:
+- **M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ**
+- **3 spatial coordinates** (x, y, z) - conventional geometry
+- **3 phase coordinates** (φ₁, φ₂, φ₃) - internal field states  
+- **1 temporal coordinate** (t) - evolution dynamics
 
-**Оператор Рисса** (фракционный Лаплас):
+## 1.2. 7D Riesz Operator and Stationary Problem
+
+Let M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ, periodic boundary conditions. Field $a(x,\phi,t)\in\mathbb{C}^3$ - **U(1)³ phase vector**.
+
+**7D Riesz Operator** (fractional Laplacian):
 
 $$
 \mathcal{L}_\beta a \;\equiv\; \mu\,(-\Delta)^\beta a \;+\; \lambda\,a,\qquad \mu>0,\; \beta\in(0,2),\; \lambda\ge 0.
 $$
 
-**Стационарная задача:**
+**7D Stationary Problem:**
 
 $$
-\mathcal{L}_\beta a(x)\;=\; s(x),\quad x\in\Omega,\quad \text{периодич. ГУ.}
+\mathcal{L}_\beta a(x,\phi,t)\;=\; s(x,\phi,t),\quad (x,\phi,t)\in M_7,\quad \text{periodic BC.}
 $$
 
-**В частотной области** (дискрет. Фурье):
+**In 7D frequency domain** (discrete Fourier):
 
 $$
-\widehat{a}(k)\;=\;\frac{\widehat{s}(k)}{\mu\,|k|^{2\beta}+\lambda},\qquad k=\frac{2\pi}{L}\,m,\; m\in\mathbb{Z}^3.
+\widehat{a}(k_x, k_\phi, k_t)\;=\;\frac{\widehat{s}(k_x, k_\phi, k_t)}{\mu\,|k|^{2\beta}+\lambda},\qquad |k|^2 = |k_x|^2 + |k_\phi|^2 + k_t^2.
 $$
 
-**Ноль-мода:** если $\lambda=0$, ЗАПРЕЩЕНО $\widehat{s}(0)\ne0$ (иначе сингулярность). Требование: $\widehat{s}(0)=0$ при $\lambda=0$.
+**Zero mode:** if $\lambda=0$, FORBIDDEN $\widehat{s}(0,0,0)\ne0$ (otherwise singularity). Requirement: $\widehat{s}(0,0,0)=0$ when $\lambda=0$.
 
-## 1.2. Линейная во времени задача (для квазистационара)
-
-$$
-\partial_t a(x,t) + \nu\,(-\Delta)^\beta a(x,t) + \lambda\,a(x,t) \;=\; s(x,t),
-$$
-
-где $\nu>0$. В k-пространстве по модам:
+## 1.3. 7D Linear Time-Dependent Problem (for quasi-stationary)
 
 $$
-\partial_t \widehat{a}(k,t) + \alpha_k\,\widehat{a}(k,t)=\widehat{s}(k,t),\quad \alpha_k=\nu|k|^{2\beta}+\lambda.
+\partial_t a(x,\phi,t) + \nu\,(-\Delta)^\beta a(x,\phi,t) + \lambda\,a(x,\phi,t) \;=\; s(x,\phi,t),
 $$
 
-Аналитическое решение на шаге $[t_n,t_{n+1}]$ для $s=\widehat{s}_0 e^{-i\omega t}$ известно:
+where $\nu>0$. In 7D k-space by modes:
 
 $$
-\widehat{a}_{\mathrm{ss}}(k,t)=\frac{\widehat{s}_0 e^{-i\omega t}}{\alpha_k+i\omega}.
+\partial_t \widehat{a}(k_x, k_\phi, k_t) + \alpha_k\,\widehat{a}(k_x, k_\phi, k_t)=\widehat{s}(k_x, k_\phi, k_t),\quad \alpha_k=\nu|k|^{2\beta}+\lambda.
 $$
 
-Используется как эталон для тестов интегратора.
+Analytical solution on step $[t_n,t_{n+1}]$ for $s=\widehat{s}_0 e^{-i\omega t}$ is known:
 
-## 1.3. Энергетический функционал (стационар)
+$$
+\widehat{a}_{\mathrm{ss}}(k_x, k_\phi, k_t)=\frac{\widehat{s}_0 e^{-i\omega t}}{\alpha_k+i\omega}.
+$$
+
+Used as reference for integrator tests.
+
+## 1.4. 7D Energy Functional (stationary)
 
 $$
 \mathcal{E}[a]=\frac{1}{2}\Big(\mu\,\langle a,(-\Delta)^\beta a\rangle + \lambda\,\langle a,a\rangle\Big)-\Re\langle s,a\rangle.
 $$
 
-Решение минимизирует $\mathcal{E}$. Численно контролируем невязку $r=\mathcal{L}_\beta a-s$.
+where the inner product is over 7D space M₇. Solution minimizes $\mathcal{E}$. Numerically control residual $r=\mathcal{L}_\beta a-s$.
 
-## 1.4. Обезразмеривание
+## 1.5. 7D Nondimensionalization
 
 Пусть масштабы: длина $L_0$, время $T_0$, амплитуда $A_0$. Вводим
 
@@ -426,18 +434,23 @@ $$
 
 ---
 
-# 2. Область, сетка, БПФ-соглашения
+# 2. 7D Domain, Grid, FFT Conventions
 
-* Область: $\Omega=[0,L)^3$, $L>0$.
-* Сетка: $N^3$, равномерная, $\Delta=L/N$.
-* Координаты узлов: $x_i = i\Delta,\; i=0,\dots,N-1$ (аналогично по y,z).
-* Дискретные векторы $m=(m_x,m_y,m_z)$, $m_j\in\{ -\lfloor N/2\rfloor,\dots,\lceil N/2\rceil-1\}$.
-* Волновые числа: $k(m)=\frac{2\pi}{L}m$, $|k|=\sqrt{k_x^2+k_y^2+k_z^2}$.
-* **Нормировка FFT** (зафиксировать одну!):
+* **7D Domain**: M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
+* **Spatial grid**: $N_x^3$, uniform, $\Delta_x=L_x/N_x$
+* **Phase grid**: $N_\phi^3$, uniform, $\Delta_\phi=L_\phi/N_\phi$  
+* **Temporal grid**: $N_t$, uniform, $\Delta_t=T/N_t$
+* **Node coordinates**: 
+  - Spatial: $x_i = i\Delta_x,\; i=0,\dots,N_x-1$ (analogously for y,z)
+  - Phase: $\phi_j = j\Delta_\phi,\; j=0,\dots,N_\phi-1$ (analogously for φ₂,φ₃)
+  - Temporal: $t_k = k\Delta_t,\; k=0,\dots,N_t-1$
+* **Discrete vectors**: $m=(m_x,m_y,m_z,m_{\phi_1},m_{\phi_2},m_{\phi_3},m_t)$
+* **7D Wave numbers**: $|k|^2 = |k_x|^2 + |k_\phi|^2 + k_t^2$
+* **7D FFT Normalization** (fix one!):
 
-  * Прямое: $\widehat{a}(m)=\sum_{x} a(x)\,e^{-i k(m)\cdot x}\,\Delta^3$.
-  * Обратное: $a(x)=\frac{1}{L^3}\sum_{m}\widehat{a}(m)\,e^{i k(m)\cdot x}$.
-* Парсеваль: $\sum_x |a|^2 \Delta^3 = \frac{1}{L^3}\sum_m |\widehat a|^2$.
+  * Forward: $\widehat{a}(m)=\sum_{x,\phi,t} a(x,\phi,t)\,e^{-i k(m)\cdot (x,\phi,t)}\,\Delta^7$.
+  * Inverse: $a(x,\phi,t)=\frac{1}{L^7}\sum_{m}\widehat{a}(m)\,e^{i k(m)\cdot (x,\phi,t)}$.
+* Parseval: $\sum_{x,\phi,t} |a|^2 \Delta^7 = \frac{1}{L^7}\sum_m |\widehat a|^2$.
 
 ---
 

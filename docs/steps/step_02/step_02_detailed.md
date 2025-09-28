@@ -1,51 +1,65 @@
-# Step 02: Максимально детализированное задание - Ядро FFT решателя для фракционного оператора Рисса
+# Step 02: 7D FFT Solver for Fractional Riesz Operator
 
-## 🎯 Цель и математическая основа
+## 🎯 Goal and Mathematical Foundation
 
-### Фракционный оператор Рисса
-Реализовать высокоточный спектральный решатель для уравнения:
+### 7D Space-Time Structure
+The fundamental space-time is **7-dimensional**:
+- **M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ**
+- **3 spatial coordinates** (x, y, z) - conventional geometry
+- **3 phase coordinates** (φ₁, φ₂, φ₃) - internal field states  
+- **1 temporal coordinate** (t) - evolution dynamics
+
+### 7D Fractional Riesz Operator
+Implement high-precision spectral solver for 7D equation:
 ```
-L_β a = μ(-Δ)^β a + λa = s(x)
-```
-
-**Параметры:**
-- `μ > 0` - коэффициент диффузии
-- `β ∈ (0,2)` - фракционный порядок  
-- `λ ≥ 0` - параметр затухания
-- `(-Δ)^β` - фракционный лапласиан
-
-### Спектральная форма решения
-В k-пространстве:
-```
-â(k) = ŝ(k) / (μ|k|^(2β) + λ)
+L_β a = μ(-Δ)^β a + λa = s(x,φ,t)
 ```
 
-### Физический смысл
-- **Фракционный порядок β**: определяет дальнодействие взаимодействий
-  - β → 0: локальные взаимодействия
-  - β = 1: классический лапласиан
-  - β → 2: дальнодействующие взаимодействия
-- **Коэффициент μ**: скорость диффузии в фазовом поле
-- **Параметр λ**: затухание/демпфирование мод
+**Parameters:**
+- `μ > 0` - diffusion coefficient
+- `β ∈ (0,2)` - fractional order  
+- `λ ≥ 0` - damping parameter
+- `(-Δ)^β` - fractional Laplacian in 7D space
 
-## 🏗️ Архитектура системы
+### 7D Spectral Form Solution
+In 7D k-space:
+```
+â(k_x, k_φ, k_t) = ŝ(k_x, k_φ, k_t) / (μ|k|^(2β) + λ)
+```
 
-### 1. Основные компоненты
+where:
+- **k_x** - spatial wave vectors (3D)
+- **k_φ** - phase wave vectors (3D) 
+- **k_t** - temporal frequency
+- **|k|² = |k_x|² + |k_φ|² + k_t²** - 7D wave vector magnitude
 
-#### `FFTSolver3D` (src/bhlff/core/fft/fft_solver.py)
+### Physical Meaning
+- **Fractional order β**: determines long-range interactions in 7D
+  - β → 0: local interactions
+  - β = 1: classical Laplacian
+  - β → 2: long-range interactions
+- **Coefficient μ**: phase field diffusion speed in 7D
+- **Parameter λ**: damping/dissipation of modes
+- **7D structure**: enables phase coherence across spatial and phase dimensions
+
+## 🏗️ 7D System Architecture
+
+### 1. Core Components
+
+#### `FFTSolver7D` (src/bhlff/core/fft/fft_solver_7d.py)
 ```python
-class FFTSolver3D:
+class FFTSolver7D:
     """
-    High-precision spectral solver for fractional Riesz operator in 3D periodic domain.
+    High-precision spectral solver for fractional Riesz operator in 7D space-time.
     
     Physical Meaning:
-        Solves the fractional Laplacian equation L_β a = μ(-Δ)^β a + λa = s(x)
-        in 3D periodic domain, representing the evolution of phase field
-        configurations in 7D space-time theory.
+        Solves the fractional Laplacian equation L_β a = μ(-Δ)^β a + λa = s(x,φ,t)
+        in 7D space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ, representing the evolution of
+        phase field configurations with U(1)³ phase structure.
         
     Mathematical Foundation:
-        Implements spectral solution: â(k) = ŝ(k) / (μ|k|^(2β) + λ)
-        where k is the wave vector and |k| is its magnitude.
+        Implements 7D spectral solution: â(k_x, k_φ, k_t) = ŝ(k_x, k_φ, k_t) / (μ|k|^(2β) + λ)
+        where |k|² = |k_x|² + |k_φ|² + k_t² is the 7D wave vector magnitude.
     """
     
     def __init__(self, domain: 'Domain', parameters: Dict[str, Any]):

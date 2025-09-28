@@ -2,30 +2,36 @@
 
 ## Физическая основа и теоретический контекст
 
-### 1. Динамическое уравнение фазового поля в 7D теории
+### 1. 7D Phase Field Dynamic Equation
 
-В рамках 7D фазовой теории поля динамика фазового поля описывается уравнением:
-
-```
-∂a/∂t + ν(-Δ)^β a + λa = s(x,t)
-```
-
-где:
-- `a(x,t)` - фазовое поле в 7D пространстве-времени M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
-- `ν > 0` - коэффициент диффузии (связь с фазовой скоростью c_φ)
-- `β ∈ (0,2)` - фракционный порядок оператора Рисса
-- `λ ≥ 0` - параметр затухания (связь с демпфированием)
-- `s(x,t)` - источник (внешние возбуждения, начальные условия)
-
-### 2. Спектральная форма уравнения
-
-В k-пространстве (после FFT) уравнение принимает вид:
+In the framework of 7D phase field theory, the phase field dynamics is described by the equation:
 
 ```
-∂â/∂t + (ν|k|^(2β) + λ)â = ŝ(k,t)
+∂a/∂t + ν(-Δ)^β a + λa = s(x,φ,t)
 ```
 
-где `â(k,t)` и `ŝ(k,t)` - спектральные компоненты поля и источника.
+where:
+- `a(x,φ,t)` - **U(1)³ phase vector field** in 7D space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
+- **Phase vector structure**: a = (a₁, a₂, a₃) with three U(1) components
+- `ν > 0` - diffusion coefficient (related to phase velocity c_φ)
+- `β ∈ (0,2)` - fractional order of Riesz operator
+- `λ ≥ 0` - damping parameter (related to dissipation)
+- `s(x,φ,t)` - source (external excitations, initial conditions)
+
+### 2. 7D Spectral Form of Equation
+
+In 7D k-space (after FFT) the equation takes the form:
+
+```
+∂â/∂t + (ν|k|^(2β) + λ)â = ŝ(k_x, k_φ, k_t)
+```
+
+where:
+- `â(k_x, k_φ, k_t)` and `ŝ(k_x, k_φ, k_t)` - spectral components of field and source
+- **7D wave vector**: |k|² = |k_x|² + |k_φ|² + k_t²
+- **k_x** - spatial wave vectors (3D)
+- **k_φ** - phase wave vectors (3D)
+- **k_t** - temporal frequency
 
 ### 3. Физический смысл параметров
 

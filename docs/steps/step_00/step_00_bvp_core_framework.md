@@ -1,19 +1,27 @@
-# Step 00: ВБП-каркас - центральная основа системы
+# Step 00: 7D BVP Framework - Central Foundation of the System
 
-## Цель
-Реализовать **Высокочастотное Базовое Поле (ВБП)** как центральный каркас всей системы, согласно теории из 7d-00-18.md.
+## Goal
+Implement the **7D Base High-Frequency Field (BVP)** as the central framework of the entire system, according to the 7D phase field theory.
 
-## Теоретические основы ВБП
+## Theoretical Foundations of 7D BVP
 
-### Постулаты ВБП (аксиоматика)
+### 7D Space-Time Structure
 
-1. **Примат носителя.** Реальная конфигурация — это модуляции высокочастотного носителя (БВП). Все наблюдаемые «моды» — его огибающие и биения.
+The fundamental space-time is **7-dimensional**:
+- **M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ**
+- **3 spatial coordinates** (x, y, z) - conventional geometry
+- **3 phase coordinates** (φ₁, φ₂, φ₃) - internal field states  
+- **1 temporal coordinate** (t) - evolution dynamics
 
-2. **Разделение масштабов.** Существует малый параметр $\varepsilon=\Omega/\omega_0\ll1$: $\omega_0$ — частота БВП; $\Omega$ — характерные частоты огибающей/реакции среды.
+### BVP Postulates (Axiomatics)
 
-3. **Жёсткость БВП.** Энергия БВП доминирует в производных (жёсткостных) членах; фазовая скорость $c_\phi$ велика; носитель слабочувствителен к локальным возмущениям, но меняет **волновое сопротивление** среды через огибающую.
+1. **Carrier Primacy.** Real configuration is modulations of high-frequency carrier (BVP). All observed "modes" are its envelopes and beatings.
 
-4. **U(1)³ фазовая структура.** БВП — это вектор фаз $\Theta_a$ (a=1..3), слабо иерархически связанный с SU(2)/ядром через инвариантные смешанные члены; электрослабые токи рождаются как функционалы огибающей.
+2. **Scale Separation.** Small parameter $\varepsilon=\Omega/\omega_0\ll1$: $\omega_0$ — BVP frequency; $\Omega$ — characteristic envelope/medium response frequencies.
+
+3. **BVP Rigidity.** BVP energy dominates in derivative (stiffness) terms; phase velocity $c_\phi$ is large; carrier is weakly sensitive to local perturbations but changes **wave impedance** of medium through envelope.
+
+4. **U(1)³ Phase Structure.** BVP is vector of phases $\Theta_a$ (a=1..3), weakly hierarchically coupled to SU(2)/core through invariant mixed terms; electroweak currents arise as functionals of envelope.
 
 5. **Квенчи — пороговые события.** При достижении локального порога (амплитуда/детюнинг/градиент) БВП диссипативно «сбрасывает» энергию в среду (рост потерь, изменение Q, зажим пика) — это фиксируем как **локальный переход режима**.
 
@@ -25,19 +33,34 @@
 
 9. **Баланс мощностей.** Поток БВП на внешней границе = (рост статической энергии ядра) + (EM/слабое излучение/потери) + (отражение). Это контролируется интегральной идентичностью.
 
-## Операционная модель ВБП
+## 7D BVP Operational Model
 
-### Уравнение для огибающей ВБП
+### 7D Envelope Equation
 
-Для каждого фазового канала:
+For each phase channel in 7D space-time M₇:
 
-$$\nabla\!\cdot\big(\kappa(|a|)\,\nabla a\big) + k_0^2\,\chi(|a|)\,a \;=\; s(\mathbf{x})$$
+$$\nabla\!\cdot\big(\kappa(|a|)\,\nabla a\big) + k_0^2\,\chi(|a|)\,a \;=\; s(\mathbf{x},\boldsymbol{\phi},t)$$
 
-где:
-- $\kappa(|a|) = \kappa_0 + \kappa_2|a|^2$ — нелинейная жёсткость БВП
-- $\chi(|a|) = \chi' + i\,\chi''(|a|)$ — эффективная восприимчивость с квенчами
-- $\chi''(|a|)$ — потери, рост которых фиксирует квенч
-- $s(\mathbf{x})$ — источники/«зародыши» (квенчи, границы)
+where:
+- **7D coordinates**: $\mathbf{x} \in \mathbb{R}^3$, $\boldsymbol{\phi} \in \mathbb{T}^3$, $t \in \mathbb{R}$
+- $\kappa(|a|) = \kappa_0 + \kappa_2|a|^2$ — nonlinear BVP stiffness
+- $\chi(|a|) = \chi' + i\,\chi''(|a|)$ — effective susceptibility with quenches
+- $\chi''(|a|)$ — losses, growth of which fixes quench
+- $s(\mathbf{x},\boldsymbol{\phi},t)$ — sources/"seeds" (quenches, boundaries)
+
+### 7D Phase Vector Structure
+
+The BVP field is a **vector of three U(1) phases**:
+
+$$\mathbf{\Theta}(\mathbf{x},\boldsymbol{\phi},t) = (\Theta_1, \Theta_2, \Theta_3)$$
+
+Each component $\Theta_a$ represents an independent U(1) phase degree of freedom, and together they form the U(1)³ structure required by the theory.
+
+### 7D Energy Functional
+
+The 7D energy functional includes phase gradients in all dimensions:
+
+$$E[\mathbf{\Theta}] = \int_{M_7} \left( f_\phi^2|\nabla_{\mathbf{x}}\mathbf{\Theta}|^2 + f_\phi^2|\nabla_{\boldsymbol{\phi}}\mathbf{\Theta}|^2 + \beta_4(\Delta\mathbf{\Theta})^2 + \gamma_6|\nabla\mathbf{\Theta}|^6 + \ldots \right) dV_7$$
 
 ### Внешние данные ВБП
 

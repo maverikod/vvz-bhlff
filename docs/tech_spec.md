@@ -223,7 +223,7 @@ $$
 Наблюдаемое/критерии: сходимость по сетке (×2: $N=128\to256\to512$), отсутствие анизотропии; энергобаланс ≤1–3%.
 Вариации: разные схемы дискретизации фракц. оператора.
 
-**A1. Масштабирование и обезразмеривание**
+**A2. Масштабирование и обезразмеривание**
 Цель: проверить корректность безразмерной схемы.
 Постановка: нормировки, единичные тесты, линейные эталоны.
 Критерии: инвариантность профилей при смене базовых масштабов.
@@ -353,7 +353,7 @@ $$
 
 ---
 
-# 1. 7D Mathematical Model
+# 1. 7D Mathematical Model with BVP Framework
 
 ## 1.1. 7D Space-Time Structure
 
@@ -363,7 +363,31 @@ The fundamental space-time is **7-dimensional**:
 - **3 phase coordinates** (φ₁, φ₂, φ₃) - internal field states  
 - **1 temporal coordinate** (t) - evolution dynamics
 
-## 1.2. 7D Riesz Operator and Stationary Problem
+## 1.2. Base High-Frequency Field (BVP) Framework
+
+The **Base High-Frequency Field (BVP)** is the central framework where all observed "modes" are envelope modulations and beatings of the high-frequency carrier.
+
+**BVP Postulates:**
+1. **Carrier Primacy**: Real configuration is modulations of high-frequency carrier (BVP)
+2. **Scale Separation**: Small parameter ε = Ω/ω₀ ≪ 1 where ω₀ is BVP frequency
+3. **BVP Rigidity**: BVP energy dominates in derivative terms; phase velocity c_φ is large
+4. **U(1)³ Phase Structure**: BVP is vector of phases Θ_a (a=1..3)
+5. **Quenches**: Threshold events when BVP dissipatively "dumps" energy into medium
+
+## 1.3. 7D BVP Envelope Equation
+
+For each phase channel in 7D space-time M₇:
+
+$$\nabla\!\cdot\big(\kappa(|a|)\,\nabla a\big) + k_0^2\,\chi(|a|)\,a \;=\; s(\mathbf{x},\boldsymbol{\phi},t)$$
+
+where:
+- **7D coordinates**: $\mathbf{x} \in \mathbb{R}^3$, $\boldsymbol{\phi} \in \mathbb{T}^3$, $t \in \mathbb{R}$
+- $\kappa(|a|) = \kappa_0 + \kappa_2|a|^2$ — nonlinear BVP stiffness
+- $\chi(|a|) = \chi' + i\,\chi''(|a|)$ — effective susceptibility with quenches
+- $\chi''(|a|)$ — losses, growth of which fixes quench
+- $s(\mathbf{x},\boldsymbol{\phi},t)$ — sources/"seeds" (quenches, boundaries)
+
+## 1.4. 7D Riesz Operator and Stationary Problem
 
 Let M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ, periodic boundary conditions. Field $a(x,\phi,t)\in\mathbb{C}^3$ - **U(1)³ phase vector**.
 
@@ -387,7 +411,7 @@ $$
 
 **Zero mode:** if $\lambda=0$, FORBIDDEN $\widehat{s}(0,0,0)\ne0$ (otherwise singularity). Requirement: $\widehat{s}(0,0,0)=0$ when $\lambda=0$.
 
-## 1.3. 7D Linear Time-Dependent Problem (for quasi-stationary)
+## 1.5. 7D Linear Time-Dependent Problem (for quasi-stationary)
 
 $$
 \partial_t a(x,\phi,t) + \nu\,(-\Delta)^\beta a(x,\phi,t) + \lambda\,a(x,\phi,t) \;=\; s(x,\phi,t),
@@ -407,13 +431,32 @@ $$
 
 Used as reference for integrator tests.
 
-## 1.4. 7D Energy Functional (stationary)
+## 1.6. BVP Quench Detection and Memory
+
+**Quench Detection**: Three threshold criteria for BVP energy "dumping":
+- **Amplitude threshold**: $|A| > |A_q|$
+- **Detuning threshold**: $|\omega - \omega_0| > \Delta\omega_q$  
+- **Gradient threshold**: $|\nabla A| > |\nabla A_q|$
+
+**Memory Kernel**: Debye-type memory with passive response:
+$$\Gamma_{\rm mem}(x,\omega)=\sum_j \frac{\gamma_j(x)}{1+i\omega\tau_j(x)}$$
+with passivity condition: $\Re\Gamma_{\rm mem} \ge 0$
+
+## 1.7. 7D Energy Functional (stationary)
 
 $$
 \mathcal{E}[a]=\frac{1}{2}\Big(\mu\,\langle a,(-\Delta)^\beta a\rangle + \lambda\,\langle a,a\rangle\Big)-\Re\langle s,a\rangle.
 $$
 
 where the inner product is over 7D space M₇. Solution minimizes $\mathcal{E}$. Numerically control residual $r=\mathcal{L}_\beta a-s$.
+
+## 1.8. BVP Energy Functional with Envelope
+
+The BVP energy functional includes envelope modulations:
+
+$$E[\mathbf{\Theta}] = \int_{M_7} \left( f_\phi^2|\nabla_{\mathbf{x}}\mathbf{\Theta}|^2 + f_\phi^2|\nabla_{\boldsymbol{\phi}}\mathbf{\Theta}|^2 + \beta_4(\Delta\mathbf{\Theta})^2 + \gamma_6|\nabla\mathbf{\Theta}|^6 + \ldots \right) dV_7$$
+
+where $\mathbf{\Theta}(\mathbf{x},\boldsymbol{\phi},t) = (\Theta_1, \Theta_2, \Theta_3)$ is the U(1)³ phase vector.
 
 ## 1.5. 7D Nondimensionalization
 
@@ -431,6 +474,15 @@ $$
 
 стац.: $\mu L_0^{-2\beta}\tilde{}\,(-\tilde\Delta)^\beta \tilde a + \lambda \tilde a = \tilde s$ с $\tilde s = s/A_0$.
 **Требование инвариантности:** при корректной реализации перенормированные решения совпадают (см. тест A1).
+
+## 1.10. BVP Interface with System Zones
+
+**Tail ←→ BVP**: Tail inherits $S(\omega)$, solves cascade resonators and returns $Y_{\rm tail}(\omega)$, $\{\omega_n,Q_n\}$, $R,T$.
+
+**Transition Zone ←→ BVP**: TZ accepts $Y_{\rm in}$ from tail and outputs nonlinear $Y_{\rm tr}(\omega,|A|)$, plus sources $J_{\rm EM}(\omega;A)$, loss map $\chi''(|A|)$.
+
+**Core ←→ BVP**: Through averaging:
+$$c_i^{\rm eff} = c_i + \alpha_i|A|^2 + \beta_i\frac{|\nabla A|^2}{\omega_0^2}+\dots$$
 
 ---
 
@@ -452,11 +504,36 @@ $$
   * Inverse: $a(x,\phi,t)=\frac{1}{L^7}\sum_{m}\widehat{a}(m)\,e^{i k(m)\cdot (x,\phi,t)}$.
 * Parseval: $\sum_{x,\phi,t} |a|^2 \Delta^7 = \frac{1}{L^7}\sum_m |\widehat a|^2$.
 
+## 2.1. BVP Grid and Envelope Discretization
+
+* **BVP Carrier Frequency**: $\omega_0$ - high-frequency carrier
+* **Envelope Grid**: Coarse grid for envelope $A(x)$ with scale separation $\varepsilon = \Omega/\omega_0 \ll 1$
+* **Quench Detection Grid**: Fine grid for threshold monitoring
+* **Memory Kernel Grid**: Spatial distribution of $\gamma_j(x), \tau_j(x)$ parameters
+
 ---
 
 # 3. Алгоритмы (минимум, что обязан уметь код)
 
-## 3.1. Стационарный решатель (спектральный, прямой)
+## 3.1. BVP Envelope Solver
+
+1. **Envelope Equation Solution**:
+   - Solve $\nabla\!\cdot\big(\kappa(|a|)\,\nabla a\big) + k_0^2\,\chi(|a|)\,a = s(\mathbf{x},\boldsymbol{\phi},t)$
+   - Use iterative scheme for nonlinear $\kappa(|a|), \chi(|a|)$
+   - Monitor convergence of envelope $A(x) = |a(x)|$
+
+2. **Quench Detection**:
+   - Check amplitude threshold: $|A| > |A_q|$
+   - Check detuning threshold: $|\omega - \omega_0| > \Delta\omega_q$
+   - Check gradient threshold: $|\nabla A| > |\nabla A_q|$
+   - Update $\chi''(|A|)$ when thresholds exceeded
+
+3. **Memory Kernel Integration**:
+   - Compute $\Gamma_{\rm mem}(x,\omega)=\sum_j \frac{\gamma_j(x)}{1+i\omega\tau_j(x)}$
+   - Verify passivity: $\Re\Gamma_{\rm mem} \ge 0$
+   - Update effective parameters
+
+## 3.2. Стационарный решатель (спектральный, прямой)
 
 1. Вычислить $\widehat{s}(m)$ БПФ.
 2. Для всех $m$: деноминатор $D(m)=\mu |k(m)|^{2\beta}+\lambda$.
@@ -468,7 +545,7 @@ $$
 5. Обратная БПФ → $a(x)$.
 6. Резерв: вычислить невязку $r(x)=\mu(-\Delta)^\beta a + \lambda a - s$ через FFT (умножая $\widehat a$ на $|k|^{2\beta}$).
 
-## 3.2. Временной решатель (линейный)
+## 3.3. Временной решатель (линейный)
 
 Рекомендуется **точный экспоненциальный интегратор** по модам:
 
@@ -490,15 +567,44 @@ $$
 
 CN безусловно устойчива для линейного члена.
 
+## 3.4. BVP Time Integration with Memory
+
+For BVP with memory kernel:
+
+$$
+\partial_t a + \nu(-\Delta)^\beta a + \lambda a + \sum_j \gamma_j m_j = s
+$$
+
+where $m_j$ are memory variables with evolution:
+$$
+\partial_t m_j + \frac{1}{\tau_j} m_j = \text{source terms}
+$$
+
+Use exponential integrator with memory variable updates.
+
 ---
 
-# 4. Наборы тестов “Уровень A”
+# 4. Наборы тестов "Уровень A"
 
 (**Все тесты обязательны**, оформляются как юнит-тесты; каждый создаёт отчёт JSON + артефакты.)
 
-## A0. Базовая валидация решателей
+## A0. BVP Framework Validation
 
-### A0.1. Плоская волна (стационар)
+**A0.1. BVP Envelope Solver Validation**
+- Test envelope equation solution for known analytical cases
+- Verify quench detection thresholds
+- Check memory kernel passivity condition
+- Validate BVP interface with system zones
+
+**A0.2. BVP Time Integration Validation**
+- Test BVP time integration with memory variables
+- Verify exponential integrator for BVP
+- Check quench event handling in time evolution
+- Validate envelope stability over time
+
+## A1. Базовая валидация решателей
+
+### A1.1. Плоская волна (стационар)
 
 **Цель:** проверить формулу $\widehat a = \widehat s / D$.
 
@@ -510,15 +616,15 @@ CN безусловно устойчива для линейного члена.
   * Ошибка в $L^2$: $E_2 = \|a_\text{num}-a_\text{ref}\|_2 / \|a_\text{ref}\|_2 \le 10^{-12}$.
   * Анизотропия: для всех направлений с одинаковым $|k^\*|$ амплитуды совпадают: $\max$ относит. откл. $\le 10^{-12}$.
 
-### A0.2. Периодический многочастотный источник (стационар)
+### A1.2. Периодический многочастотный источник (стационар)
 
 **Цель:** проверить суперпозицию и отсутствие алиасинга.
 
 * $s(x)=\sum_{j=1}^J c_j e^{i k_j\cdot x}$, $J=10$, случайные целочисл. $k_j$ в пределах Найквиста (без пересечений по модам), $c_j\in\mathbb{C}$.
 * Аналитика: $\widehat a(k_j)=c_j/D(k_j)$, остальное — нули.
-* Метрики: как в A0.1 (порог $10^{-12}$).
+* Метрики: как в A1.1 (порог $10^{-12}$).
 
-### A0.3. Случай “$\lambda=0$” и нулевая мода
+### A1.3. Случай "$\lambda=0$" и нулевая мода
 
 **Цель:** корректная обработка $\widehat s(0)$.
 
@@ -528,7 +634,7 @@ CN безусловно устойчива для линейного члена.
   2. $\lambda=0$, $\widehat s(0)\ne0$ — ОЖИДАЕТСЯ отказ (исключение) с ясным сообщением: *“lambda=0 требует mean(s)=0”*.
 * Приёмка: обнаружение условия, корректные коды возврата/ошибки.
 
-### A0.4. Временной решатель: плоская волна, гармонический источник
+### A1.4. Временной решатель: плоская волна, гармонический источник
 
 **Цель:** проверить интегратор.
 
@@ -542,7 +648,7 @@ CN безусловно устойчива для линейного члена.
 * Алгоритм: запустить до $t_{\text{ss}}=10/(\nu|k^\*|^{2\beta}+\lambda)$, сравнить амплитуду и фазу со значением выше.
 * Метрики: относит. ошибка амплитуды и фазы $\le 10^{-8}$ (CN или экспоненциальный шаг).
 
-### A0.5. Энергетический баланс/невязка (стац.)
+### A1.5. Энергетический баланс/невязка (стац.)
 
 **Цель:** подтвердить решение как минимум функционала и уравнения.
 
@@ -598,7 +704,7 @@ CN безусловно устойчива для линейного члена.
     "omega": 0.0
   },
   "output": {"dir": "out", "save_fields": true, "save_spectra": true, "precision": "float64"},
-  "tests": ["A0.1","A0.2","A0.3","A0.4","A0.5","A1.1","A1.2"],
+  "tests": ["A0.1","A0.2","A1.1","A1.2","A1.3","A1.4","A1.5","A2.1","A2.2"],
   "seed": 42
 }
 ```
@@ -620,10 +726,12 @@ CN безусловно устойчива для линейного члена.
 
 # 8. Критерии приёмки (сводно)
 
-* A0.1–A0.2: $E_2 \le 10^{-12}$, анизотропия ≤ $10^{-12}$.
-* A0.3: корректный FAIL/сообщение при нарушении $\widehat s(0)=0$ при $\lambda=0$.
-* A0.4: ошибка амплитуды и фазы ≤ $10^{-8}$.
-* A0.5: $\|r\|_2/\|s\|_2 \le 10^{-12}$, ортогональность — в допуске.
+* A0.1–A0.2: BVP framework validation passes
+* A1.1–A1.2: $E_2 \le 10^{-12}$, анизотропия ≤ $10^{-12}$.
+* A1.3: корректный FAIL/сообщение при нарушении $\widehat s(0)=0$ при $\lambda=0$.
+* A1.4: ошибка амплитуды и фазы ≤ $10^{-8}$.
+* A1.5: $\|r\|_2/\|s\|_2 \le 10^{-12}$, ортогональность — в допуске.
+* A2.1–A2.2: масштабная инвариантность
 * A1.1–A1.2: инвариантность ≤ $10^{-12}$.
 
 **Все** тесты должны проходить. Любое отклонение — FAIL с отчётом.
@@ -664,7 +772,7 @@ CN безусловно устойчива для линейного члена.
 
 # 11. Итог
 
-Выполнение “Уровень A” подтверждается автоматическим отчётом, где **все** тесты A0.1–A0.5, A1.1–A1.2 имеют статус **PASS** и укладываются в численные допуски, заданные в §8.
+Выполнение "Уровень A" подтверждается автоматическим отчётом, где **все** тесты A0.1–A0.2, A1.1–A1.5, A2.1–A2.2 имеют статус **PASS** и укладываются в численные допуски, заданные в §8.
 
 
 

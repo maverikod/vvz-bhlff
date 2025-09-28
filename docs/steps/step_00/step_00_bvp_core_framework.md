@@ -1,7 +1,7 @@
 # Step 00: 7D BVP Framework - Central Foundation of the System
 
 ## Goal
-Implement the **7D Base High-Frequency Field (BVP)** as the central framework of the entire system, according to the 7D phase field theory.
+Implement the **7D Base High-Frequency Field (BVP)** as the central framework of the entire system, according to the 7D phase field theory and updated technical specification.
 
 ## Theoretical Foundations of 7D BVP
 

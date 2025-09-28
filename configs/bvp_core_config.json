@@ -39,7 +39,18 @@
             "boundary_pressure_0": 1.0,
             "boundary_pressure_1": 0.1,
             "boundary_stiffness_0": 1.0,
-            "boundary_stiffness_1": 0.1
+            "boundary_stiffness_1": 0.1,
+            "phase_amplitude_1": 1.0,
+            "phase_amplitude_2": 1.0,
+            "phase_amplitude_3": 1.0,
+            "phase_frequency_1": 1.0,
+            "phase_frequency_2": 1.0,
+            "phase_frequency_3": 1.0,
+            "su2_coupling_strength": 0.1,
+            "em_coupling": 1.0,
+            "weak_coupling": 0.1,
+            "mixing_angle": 0.23,
+            "gauge_coupling": 0.65
         },
         "numerical_parameters": {
             "max_iterations": 50,
@@ -61,6 +72,23 @@
             "vacuum_permittivity": 8.854187817e-12,
             "planck_constant": 6.62607015e-34,
             "boltzmann_constant": 1.380649e-23
+        },
+        "phase_components": {
+            "amplitude_1": 1.0,
+            "amplitude_2": 1.0,
+            "amplitude_3": 1.0,
+            "frequency_1": 1.0,
+            "frequency_2": 1.0,
+            "frequency_3": 1.0
+        },
+        "su2_coupling": {
+            "coupling_strength": 0.1
+        },
+        "electroweak": {
+            "em_coupling": 1.0,
+            "weak_coupling": 0.1,
+            "mixing_angle": 0.23,
+            "gauge_coupling": 0.65
         }
     }
 }

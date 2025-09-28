@@ -27,13 +27,14 @@ Example:
 """
 
 import numpy as np
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 from ..domain import Domain
 from .quench_detector import QuenchDetector
 from .bvp_envelope_solver import BVPEnvelopeSolver
 from .bvp_impedance_calculator import BVPImpedanceCalculator
 from .bvp_constants import BVPConstants
+from .phase_vector import PhaseVector
 
 
 class BVPCore:
@@ -56,6 +57,7 @@ class BVPCore:
         _envelope_solver (BVPEnvelopeSolver): Envelope equation solver.
         _quench_detector (QuenchDetector): Quench event detector.
         _impedance_calculator (BVPImpedanceCalculator): Impedance calculator.
+        _phase_vector (PhaseVector): U(1)³ phase vector structure.
     """
 
     def __init__(self, domain: Domain, config: Dict[str, Any]) -> None:
@@ -77,9 +79,20 @@ class BVPCore:
         self.domain = domain
         self.config = config
         self.constants = BVPConstants(config)
+        self._setup_phase_vector()
         self._setup_envelope_solver()
         self._setup_quench_detector()
         self._setup_impedance_calculator()
+
+    def _setup_phase_vector(self) -> None:
+        """
+        Setup U(1)³ phase vector structure.
+        
+        Physical Meaning:
+            Initializes the three-component phase vector Θ_a (a=1..3)
+            that represents the fundamental phase structure of the BVP field.
+        """
+        self._phase_vector = PhaseVector(self.domain, self.config, self.constants)
 
     def _setup_envelope_solver(self) -> None:
         """
@@ -249,6 +262,105 @@ class BVPCore:
             Dict[str, Any]: Impedance calculation parameters.
         """
         return self._impedance_calculator.get_parameters()
+
+    def get_phase_vector(self) -> PhaseVector:
+        """
+        Get the U(1)³ phase vector structure.
+        
+        Physical Meaning:
+            Returns the phase vector structure containing the three
+            U(1) phase components Θ_a (a=1..3).
+            
+        Returns:
+            PhaseVector: The U(1)³ phase vector structure.
+        """
+        return self._phase_vector
+
+    def get_phase_components(self) -> List[np.ndarray]:
+        """
+        Get the three U(1) phase components Θ_a (a=1..3).
+        
+        Physical Meaning:
+            Returns the three independent U(1) phase components
+            that form the U(1)³ structure of the BVP field.
+            
+        Returns:
+            List[np.ndarray]: List of three phase components Θ_a.
+        """
+        return self._phase_vector.get_phase_components()
+
+    def get_total_phase(self) -> np.ndarray:
+        """
+        Get the total phase from U(1)³ structure.
+        
+        Physical Meaning:
+            Computes the total phase by combining the three
+            U(1) components with proper SU(2) coupling.
+            
+        Returns:
+            np.ndarray: Total phase field.
+        """
+        return self._phase_vector.get_total_phase()
+
+    def compute_electroweak_currents(self, envelope: np.ndarray) -> Dict[str, np.ndarray]:
+        """
+        Compute electroweak currents as functionals of the envelope.
+        
+        Physical Meaning:
+            Computes electromagnetic and weak currents that are
+            generated as functionals of the BVP envelope through
+            the U(1)³ phase structure.
+            
+        Args:
+            envelope (np.ndarray): BVP envelope |A|.
+            
+        Returns:
+            Dict[str, np.ndarray]: Electroweak currents including:
+                - em_current: Electromagnetic current
+                - weak_current: Weak interaction current
+                - mixed_current: Mixed electroweak current
+        """
+        return self._phase_vector.compute_electroweak_currents(envelope)
+
+    def compute_phase_coherence(self) -> np.ndarray:
+        """
+        Compute phase coherence measure.
+        
+        Physical Meaning:
+            Computes a measure of phase coherence across the
+            U(1)³ structure, indicating the degree of
+            synchronization between the three phase components.
+            
+        Returns:
+            np.ndarray: Phase coherence measure.
+        """
+        return self._phase_vector.compute_phase_coherence()
+
+    def get_su2_coupling_strength(self) -> float:
+        """
+        Get the SU(2) coupling strength.
+        
+        Physical Meaning:
+            Returns the strength of the weak hierarchical
+            coupling to SU(2)/core.
+            
+        Returns:
+            float: SU(2) coupling strength.
+        """
+        return self._phase_vector.get_su2_coupling_strength()
+
+    def set_su2_coupling_strength(self, strength: float) -> None:
+        """
+        Set the SU(2) coupling strength.
+        
+        Physical Meaning:
+            Updates the strength of the weak hierarchical
+            coupling to SU(2)/core.
+            
+        Args:
+            strength (float): New SU(2) coupling strength.
+        """
+        self._phase_vector.set_su2_coupling_strength(strength)
 
     def __repr__(self) -> str:
         """String representation of BVP core."""

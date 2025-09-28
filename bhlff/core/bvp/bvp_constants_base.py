@@ -92,6 +92,24 @@ class BVPConstantsBase:
         
         # Base admittance Y₀ (S)
         self.BASE_ADMITTANCE = material_config.get("base_admittance", 1.0)
+        
+        # U(1)³ phase structure constants
+        self.PHASE_AMPLITUDE_1 = material_config.get("phase_amplitude_1", 1.0)
+        self.PHASE_AMPLITUDE_2 = material_config.get("phase_amplitude_2", 1.0)
+        self.PHASE_AMPLITUDE_3 = material_config.get("phase_amplitude_3", 1.0)
+        
+        self.PHASE_FREQUENCY_1 = material_config.get("phase_frequency_1", 1.0)
+        self.PHASE_FREQUENCY_2 = material_config.get("phase_frequency_2", 1.0)
+        self.PHASE_FREQUENCY_3 = material_config.get("phase_frequency_3", 1.0)
+        
+        # SU(2) coupling strength
+        self.SU2_COUPLING_STRENGTH = material_config.get("su2_coupling_strength", 0.1)
+        
+        # Electroweak coupling constants
+        self.EM_COUPLING = material_config.get("em_coupling", 1.0)
+        self.WEAK_COUPLING = material_config.get("weak_coupling", 0.1)
+        self.MIXING_ANGLE = material_config.get("mixing_angle", 0.23)  # Weinberg angle
+        self.GAUGE_COUPLING = material_config.get("gauge_coupling", 0.65)
     
     def _setup_physical_constants(self) -> None:
         """Setup fundamental physical constants."""
@@ -146,6 +164,19 @@ class BVPConstantsBase:
             "em_conductivity": self.EM_CONDUCTIVITY,
             "weak_conductivity": self.WEAK_CONDUCTIVITY,
             "base_admittance": self.BASE_ADMITTANCE,
+            # U(1)³ phase structure properties
+            "phase_amplitude_1": self.PHASE_AMPLITUDE_1,
+            "phase_amplitude_2": self.PHASE_AMPLITUDE_2,
+            "phase_amplitude_3": self.PHASE_AMPLITUDE_3,
+            "phase_frequency_1": self.PHASE_FREQUENCY_1,
+            "phase_frequency_2": self.PHASE_FREQUENCY_2,
+            "phase_frequency_3": self.PHASE_FREQUENCY_3,
+            "su2_coupling_strength": self.SU2_COUPLING_STRENGTH,
+            # Electroweak properties
+            "em_coupling": self.EM_COUPLING,
+            "weak_coupling": self.WEAK_COUPLING,
+            "mixing_angle": self.MIXING_ANGLE,
+            "gauge_coupling": self.GAUGE_COUPLING,
         }
         return property_map.get(property_name, 0.0)
     

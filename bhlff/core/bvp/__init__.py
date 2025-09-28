@@ -26,6 +26,7 @@ from .bvp_impedance_calculator import BVPImpedanceCalculator
 from .bvp_interface import BVPInterface
 from .bvp_constants import BVPConstants
 from .quench_detector import QuenchDetector
+from .phase_vector import PhaseVector
 
 __all__ = [
     "BVPCore",
@@ -34,4 +35,5 @@ __all__ = [
     "BVPInterface",
     "BVPConstants",
     "QuenchDetector",
+    "PhaseVector",
 ]

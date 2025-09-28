@@ -2,44 +2,47 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-3D FFT solver implementation.
+3D FFT solver implementation with BVP framework integration.
 
 This module implements the 3D FFT solver for the 7D phase field theory,
-providing efficient spectral methods for 3D problems.
+providing efficient spectral methods for 3D problems with full BVP framework
+integration.
 
 Physical Meaning:
-    3D FFT solver implements spectral methods for solving phase field
+    3D FFT solver implements spectral methods for solving BVP envelope
     equations in 3D space, providing efficient computation of fractional
-    operators and related equations.
+    operators and BVP envelope modulations.
 
 Mathematical Foundation:
     Implements 3D spectral methods including FFT-based solvers for the
-    fractional Riesz operator and related equations in 3D frequency space.
+    BVP envelope equation ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x) in 3D frequency space.
 
 Example:
     >>> solver = FFTSolver3D(domain, config)
-    >>> solution = solver.solve(source)
+    >>> bvp_envelope = solver.solve_bvp_envelope(source)
+    >>> quenches = solver.detect_quenches(bvp_envelope)
 """
 
 import numpy as np
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from ...core.domain import Domain
 from ...core.fft import FFTBackend, SpectralOperations
+from ...core.bvp import BVPCore, QuenchDetector
 
 
 class FFTSolver3D:
     """
-    3D FFT solver for phase field equations.
+    3D FFT solver for BVP envelope equations.
 
     Physical Meaning:
-        Implements spectral methods for solving phase field equations
+        Implements spectral methods for solving BVP envelope equations
         in 3D space, providing efficient computation of fractional
-        operators and related equations.
+        operators and BVP envelope modulations.
 
     Mathematical Foundation:
         3D FFT solver implements spectral methods for solving:
-        L_β a = s(x) in 3D frequency space using FFT operations.
+        ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x) in 3D frequency space using FFT operations.
 
     Attributes:
         domain (Domain): Computational domain (must be 3D).
@@ -47,19 +50,23 @@ class FFTSolver3D:
         fft_backend (FFTBackend): FFT backend for operations.
         spectral_ops (SpectralOperations): Spectral operations.
         _spectral_coeffs (np.ndarray): Pre-computed spectral coefficients.
+        bvp_core (Optional[BVPCore]): BVP framework integration.
+        quench_detector (Optional[QuenchDetector]): Quench detection system.
     """
 
-    def __init__(self, domain: Domain, config: Dict[str, Any]) -> None:
+    def __init__(self, domain: Domain, config: Dict[str, Any], bvp_core: Optional[BVPCore] = None) -> None:
         """
-        Initialize 3D FFT solver.
+        Initialize 3D FFT solver with BVP framework integration.
 
         Physical Meaning:
             Sets up the 3D FFT solver with computational domain and
-            configuration parameters for spectral solution methods.
+            configuration parameters for spectral solution methods,
+            with optional BVP framework integration.
 
         Args:
             domain (Domain): Computational domain (must be 3D).
             config (Dict[str, Any]): Solver configuration parameters.
+            bvp_core (Optional[BVPCore]): BVP framework integration.
 
         Raises:
             ValueError: If domain is not 3D.
@@ -72,7 +79,23 @@ class FFTSolver3D:
         self.fft_backend = FFTBackend(domain, config.get("fft_config", {}))
         self.spectral_ops = SpectralOperations(domain, self.fft_backend)
         self._spectral_coeffs: np.ndarray
+        self.bvp_core = bvp_core
+        self.quench_detector: Optional[QuenchDetector] = None
+        
         self._setup_spectral_coefficients()
+        self._setup_bvp_integration()
+
+    def _setup_bvp_integration(self) -> None:
+        """
+        Setup BVP framework integration.
+        
+        Physical Meaning:
+            Initializes BVP framework integration including quench detection
+            system for monitoring BVP envelope threshold events.
+        """
+        if self.bvp_core is not None:
+            quench_config = self.config.get("quench_detection", {})
+            self.quench_detector = QuenchDetector(quench_config)
 
     def _setup_spectral_coefficients(self) -> None:
         """
@@ -322,6 +345,109 @@ class FFTSolver3D:
             SpectralOperations: Spectral operations.
         """
         return self.spectral_ops
+
+    def solve_bvp_envelope(self, source: np.ndarray) -> np.ndarray:
+        """
+        Solve BVP envelope equation using BVP framework.
+
+        Physical Meaning:
+            Solves the BVP envelope equation ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x)
+            using the integrated BVP framework for envelope modulation.
+
+        Mathematical Foundation:
+            Uses BVP envelope solver if available, otherwise falls back
+            to standard spectral solution.
+
+        Args:
+            source (np.ndarray): Source term s(x) in real space.
+
+        Returns:
+            np.ndarray: BVP envelope solution a(x) in real space.
+
+        Raises:
+            ValueError: If source has incompatible shape with domain.
+        """
+        if self.bvp_core is not None:
+            return self.bvp_core.solve_envelope(source)
+        else:
+            # Fallback to standard solution
+            return self.solve(source)
+
+    def detect_quenches(self, envelope: np.ndarray) -> Dict[str, Any]:
+        """
+        Detect quench events in BVP envelope.
+
+        Physical Meaning:
+            Detects quench events when local thresholds are reached
+            in the BVP envelope using the integrated quench detection system.
+
+        Args:
+            envelope (np.ndarray): BVP envelope a(x) to analyze.
+
+        Returns:
+            Dict[str, Any]: Quench detection results including:
+                - quench_locations: Spatial locations of quenches
+                - quench_types: Types of quenches detected
+                - energy_dumped: Energy dumped at each quench
+        """
+        if self.quench_detector is not None:
+            return self.quench_detector.detect_quenches(envelope)
+        else:
+            return {
+                "quench_locations": [],
+                "quench_types": [],
+                "energy_dumped": []
+            }
+
+    def compute_bvp_impedance(self, envelope: np.ndarray) -> Dict[str, Any]:
+        """
+        Compute BVP impedance from envelope.
+
+        Physical Meaning:
+            Calculates Y(ω), R(ω), T(ω), and peaks {ω_n,Q_n}
+            from the BVP envelope using the integrated impedance calculator.
+
+        Args:
+            envelope (np.ndarray): BVP envelope a(x) to analyze.
+
+        Returns:
+            Dict[str, Any]: Impedance analysis results.
+        """
+        if self.bvp_core is not None:
+            return self.bvp_core.compute_impedance(envelope)
+        else:
+            return {
+                "admittance": None,
+                "reflection": None,
+                "transmission": None,
+                "peaks": []
+            }
+
+    def get_bvp_core(self) -> Optional[BVPCore]:
+        """
+        Get the integrated BVP core.
+
+        Physical Meaning:
+            Returns the BVP framework integration if available.
+
+        Returns:
+            Optional[BVPCore]: BVP core integration or None.
+        """
+        return self.bvp_core
+
+    def set_bvp_core(self, bvp_core: BVPCore) -> None:
+        """
+        Set the BVP core integration.
+
+        Physical Meaning:
+            Updates the BVP framework integration and reinitializes
+            the quench detection system.
+
+        Args:
+            bvp_core (BVPCore): BVP framework integration.
+        """
+        self.bvp_core = bvp_core
+        self._setup_bvp_integration()
 
     def __repr__(self) -> str:
         """String representation of the 3D FFT solver."""

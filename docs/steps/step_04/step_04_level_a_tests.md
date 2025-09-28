@@ -1,23 +1,39 @@
-# Step 04: Валидационные тесты уровня A (базовые решатели)
+# Step 04: BVP Framework Validation Tests Level A
 
 ## Цель
-Реализовать полный набор валидационных тестов для проверки корректности базовых решателей и численных алгоритмов.
+Реализовать полный набор валидационных тестов для проверки корректности BVP framework и его интеграции с базовыми решателями.
 
 ## Структура тестов
 
-### A0. Валидация решателей (стационарные/квазистационарные)
+### A0. BVP Framework Validation
 
-#### A0.1. ВБП-модуляция огибающей (стационар)
-- **Цель**: Проверить базовую функциональность ВБП-решателя для огибающей
-- **Постановка**: Периодический T³, уравнение огибающей ВБП ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x)
-- **Наблюдаемое**: Сходимость огибающей по сетке (×2: N=128→256→512), отсутствие анизотропии
-- **Критерии**: Энергобаланс ВБП ≤1–3%, относительная ошибка огибающей ≤10⁻¹²
+#### A0.1. BVP Envelope Solver Validation
+- **Цель**: Проверить базовую функциональность BVP envelope solver
+- **Постановка**: 7D BVP envelope equation ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t)
+- **Наблюдаемое**: Сходимость BVP envelope по сетке (×2: N=128→256→512), отсутствие анизотропии
+- **Критерии**: BVP energy balance ≤1–3%, relative BVP envelope error ≤10⁻¹²
+- **BVP Integration**: Uses BVPCore.solve_envelope() with U(1)³ phase vector
 
-#### A0.2. Многочастотные ВБП-модуляции (стационар)
-- **Цель**: Проверить суперпозицию ВБП-модуляций и отсутствие алиасинга
-- **Постановка**: s(x) = Σⱼ cⱼ modulating BVP envelope, J=10, случайные целочисленные kⱼ
-- **Наблюдаемое**: Аналитическое решение огибающей â(kⱼ) = cⱼ/D_BVP(kⱼ)
-- **Критерии**: Порог ошибки ВБП-модуляций 10⁻¹²
+#### A0.2. BVP Quench Detection Validation
+- **Цель**: Проверить систему детекции квенчей BVP
+- **Постановка**: BVP envelope с пороговыми событиями (amplitude/detuning/gradient)
+- **Наблюдаемое**: Корректная детекция квенчей по трем порогам
+- **Критерии**: Quench detection accuracy ≥99%, false positive rate ≤1%
+- **BVP Integration**: Uses QuenchDetector with three threshold criteria
+
+#### A0.3. BVP U(1)³ Phase Vector Validation
+- **Цель**: Проверить U(1)³ phase vector structure
+- **Постановка**: Three independent U(1) phase components Θ_a (a=1..3)
+- **Наблюдаемое**: Phase vector consistency, electroweak current generation
+- **Критерии**: Phase vector normalization, SU(2) coupling strength
+- **BVP Integration**: Uses PhaseVector with electroweak current computation
+
+#### A0.4. BVP Impedance Calculation Validation
+- **Цель**: Проверить расчет импеданса BVP
+- **Постановка**: BVP envelope boundary conditions, Y(ω), R(ω), T(ω)
+- **Наблюдаемое**: Impedance calculation, resonance peaks {ω_n,Q_n}
+- **Критерии**: Impedance accuracy ≤5%, resonance peak detection
+- **BVP Integration**: Uses BVPImpedanceCalculator for boundary functions
 
 #### A0.3. Случай "λ=0" и нулевая мода
 - **Цель**: Корректная обработка ŝ(0)

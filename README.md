@@ -6,24 +6,26 @@
 [![Tests](https://github.com/vasilyvz/bhlff/workflows/Tests/badge.svg)](https://github.com/vasilyvz/bhlff/actions)
 [![Documentation Status](https://readthedocs.org/projects/bhlff/badge/?version=latest)](https://bhlff.readthedocs.io/en/latest/?badge=latest)
 
-**BHLFF** (Base High-Frequency Field Framework) is a comprehensive implementation of the 7D phase field theory for elementary particles. This framework provides numerical tools for simulating phase field dynamics in 7-dimensional space-time, including topological defects, solitons, and collective phenomena.
+**BHLFF** (Base High-Frequency Field Framework) is a comprehensive implementation of the 7D phase field theory for elementary particles. This framework provides numerical tools for simulating BVP envelope dynamics in 7-dimensional space-time, including topological defects, solitons, and collective phenomena.
 
 ## 🎯 Overview
 
-BHLFF implements the theoretical framework where elementary particles are represented as stable phase field configurations with a three-level structure:
+BHLFF implements the theoretical framework where the **Base High-Frequency Field (BVP)** serves as the central backbone of the entire system. All observed "modes" are envelope modulations and beatings of the high-frequency carrier, with a three-level structure:
 
-- **Core**: High coherence region with topological defects
-- **Transition Zone**: Nonlinear interface between core and tail
-- **Tail**: Pure wave nature described by wave functions
+- **Core**: High coherence region with BVP envelope topological defects
+- **Transition Zone**: Nonlinear interface between core and tail with BVP quench events
+- **Tail**: Pure wave nature described by BVP envelope modulations
 
 ## 🚀 Key Features
 
-- **Fractional Riesz Operator**: High-precision spectral solver for `L_β a = μ(-Δ)^β a + λa`
-- **Multi-level Architecture**: Hierarchical implementation from basic solvers (Level A) to cosmological models (Level G)
-- **BVP Framework**: Base High-Frequency Field as central backbone
-- **Topological Analysis**: Defect detection, charge computation, and stability analysis
-- **Multi-modal Superposition**: Field projections and resonance analysis
-- **Comprehensive Testing**: Automated validation across all theoretical predictions
+- **BVP Framework**: Base High-Frequency Field as central backbone with envelope equation `∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t)`
+- **7D Space-Time**: Full 7D implementation M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ with U(1)³ phase vector structure
+- **Quench Detection**: Three-threshold system for amplitude, detuning, and gradient quench events
+- **Memory Kernel**: Debye-type memory with passivity condition for BVP envelope evolution
+- **Multi-level Architecture**: Hierarchical implementation from BVP validation (Level A) to cosmological models (Level G)
+- **BVP Impedance**: Y(ω), R(ω), T(ω) calculation and resonance peaks {ω_n,Q_n} analysis
+- **Electroweak Currents**: EM and weak current generation from BVP envelope functionals
+- **Comprehensive Testing**: Automated BVP framework validation across all levels A-G
 
 ## 📦 Installation
 
@@ -75,61 +77,99 @@ bhlff/
 
 ## 🧮 Quick Start
 
-### Basic Usage
+### Basic BVP Framework Usage
 
 ```python
 import numpy as np
-from bhlff.core.fft import FFTSolver3D
 from bhlff.core.domain import Domain
+from bhlff.core.bvp import BVPCore
+from bhlff.solvers.spectral import FFTSolver3D
 
 # Create computational domain
-domain = Domain(L=10.0, N=256, dimensions=3)
+domain = Domain(
+    dimensions=3,
+    size=(10.0, 10.0, 10.0),
+    resolution=(256, 256, 256),
+    boundary_conditions="periodic"
+)
 
-# Set up physics parameters
-params = {
-    "mu": 1.0,      # Diffusion coefficient
-    "beta": 1.0,    # Fractional order
-    "lambda": 0.0   # Damping parameter
+# Set up BVP configuration
+bvp_config = {
+    "carrier_frequency": 1.85e43,
+    "envelope_equation": {
+        "kappa_0": 1.0,
+        "kappa_2": 0.1,
+        "chi_prime": 1.0,
+        "chi_double_prime_0": 0.01,
+        "k0_squared": 1.0
+    },
+    "quench_detection": {
+        "amplitude_threshold": 0.8,
+        "detuning_threshold": 0.1,
+        "gradient_threshold": 0.5
+    }
 }
 
-# Create solver
-solver = FFTSolver3D(domain, params)
+# Create BVP core
+bvp_core = BVPCore(domain, bvp_config)
+
+# Create FFT solver with BVP integration
+solver = FFTSolver3D(domain, bvp_config, bvp_core)
 
 # Define source term
-source = np.zeros((256, 256, 256))
+source = np.zeros(domain.shape)
 source[128, 128, 128] = 1.0  # Point source
 
-# Solve the equation
-solution = solver.solve(source)
+# Solve BVP envelope equation
+envelope = solver.solve_bvp_envelope(source)
+
+# Detect quench events
+quenches = solver.detect_quenches(envelope)
+
+# Compute BVP impedance
+impedance = solver.compute_bvp_impedance(envelope)
+
+# Get U(1)³ phase vector
+phase_vector = bvp_core.get_phase_vector()
+phase_components = bvp_core.get_phase_components()
+
+# Compute electroweak currents
+currents = bvp_core.compute_electroweak_currents(envelope)
 ```
 
 ### Command Line Interface
 
 ```bash
-# Run basic validation tests
-bhlff run --level A
+# Run BVP framework validation tests
+bhlff run --level A --bvp
 
-# Analyze power law tails
-bhlff analyze --test B1 --beta 1.0
+# Analyze BVP envelope power law tails
+bhlff analyze --test B1 --bvp --beta 1.0
 
-# Generate comprehensive report
-bhlff report --output results/
+# Test BVP quench detection
+bhlff test --quench-detection --thresholds 0.8,0.1,0.5
+
+# Generate BVP framework report
+bhlff report --bvp --output results/
 ```
 
 ## 🧪 Testing
 
-Run the complete test suite:
+Run the complete BVP framework test suite:
 
 ```bash
-# All tests
-pytest
+# All BVP framework tests
+pytest tests/test_bvp_framework.py -v
 
-# Specific level tests
-pytest -m level_a
-pytest -m level_b
+# BVP integration tests for all levels A-G
+pytest tests/test_bvp_levels_integration.py -v
 
-# Performance tests
-pytest -m slow
+# Specific BVP level tests
+pytest -m level_a --bvp
+pytest -m level_b --bvp
+
+# BVP performance tests
+pytest -m slow --bvp
 ```
 
 ## 📚 Documentation

@@ -1,42 +1,48 @@
-# Step 05: Тесты фундаментальных свойств поля уровня B
+# Step 05: BVP Fundamental Properties Tests Level B
 
 ## Цель
-Реализовать тесты для подтверждения численно базовых свойств безынтервального поля (БВП) в однородной среде с периодическими ГУ.
+Реализовать тесты для подтверждения численно базовых свойств BVP envelope в однородной среде с интеграцией BVP framework.
 
 ## Математическая основа
 
-### Область и оператор
-- Область: Ω = [0,L)³, периодические ГУ
-- Поле: a(x) ∈ ℂ
-- Оператор Рисса: L_β a = μ(-Δ)^β a + λa
-- Стационарная задача: L_β a = s(x)
+### BVP Envelope Equation
+- Область: 7D M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ, периодические ГУ
+- BVP Envelope: a(x,φ,t) ∈ ℂ
+- BVP Equation: ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t)
+- Nonlinear stiffness: κ(|a|) = κ₀ + κ₂|a|²
+- Effective susceptibility: χ(|a|) = χ' + iχ''(|a|)
 
-### Спектральная форма
-- Дискретные волновые числа: k = (2π/L)m, m ∈ ℤ³
-- В k-области: â(k) = ŝ(k)/(μ|k|^(2β) + λ)
+### BVP Spectral Form
+- 7D wave vectors: k = (k_x, k_φ, k_t)
+- BVP spectral solution: â(k) = ŝ(k)/(κ(|a|)|k|² + k₀²χ(|a|))
+- U(1)³ phase structure: Θ = (Θ₁, Θ₂, Θ₃)
 
 ## Структура тестов
 
-### B1. Степенной хвост в однородной среде («космос»)
-- **Цель**: Подтвердить A(r) ∝ r^(2β-3) при λ=0
-- **Постановка**: Точечный дефект (ядро), однородные параметры; стац. задача
-- **Наблюдаемое**: Линейный тренд в log A – log r, R²≥0.99 на ≥1.5 декады; отсутствие узлов
-- **Вариации**: β ∈ [0.5,1.4], разные объёмы, разные ГУ (PML/большой тор)
+### B1. BVP Envelope Power Law Tails
+- **Цель**: Подтвердить BVP envelope A(r) ∝ r^(2β-3) behavior
+- **Постановка**: BVP envelope equation с точечным дефектом, U(1)³ phase vector
+- **Наблюдаемое**: Linear trend in log A – log r, R²≥0.99 на ≥1.5 decades; отсутствие узлов
+- **BVP Integration**: Uses BVPCore.solve_envelope() with quench detection
+- **Вариации**: β ∈ [0.5,1.4], different BVP parameters, different boundary conditions
 
-### B2. Отсутствие сферических стоячих узлов
-- **Цель**: Показать, что в однородной «безынтервальной» среде узловые сферы не формируются
-- **Постановка**: Как B1
-- **Критерии**: Число смен знака ∂_r A ≤ 1; отсутствие периодических нулей A(r) при росте r
+### B2. BVP Envelope Monotonicity
+- **Цель**: Показать, что BVP envelope в однородной среде не формирует узловые сферы
+- **Постановка**: BVP envelope equation с U(1)³ phase structure
+- **Критерии**: Number of sign changes ∂_r A ≤ 1; отсутствие периодических нулей A(r)
+- **BVP Integration**: Uses BVP envelope solver with phase vector validation
 
-### B3. Топологический заряд дефекта
-- **Цель**: Стабилизация «частицы»-ядра
-- **Постановка**: Численно интегрировать ∮∇φ·dl вокруг ядра
+### B3. BVP Topological Charge
+- **Цель**: Стабилизация BVP envelope topological defects
+- **Постановка**: BVP envelope с U(1)³ phase winding, quench detection
 - **Критерии**: 2πq с погрешностью ≤1%; устойчивость к гладким возмущениям
+- **BVP Integration**: Uses PhaseVector.compute_topological_charge() with quench events
 
-### B4. Разделение зон (ядро/переход/хвост)
-- **Цель**: Количественно отделить три зоны
-- **Постановка**: Посчитать индикаторы N,S,C и радиусы r_core, r_tail
-- **Критерии**: Пороги, напр. ядро N>3, S>1; хвост N<0.3, S<0.3
+### B4. BVP Zone Separation
+- **Цель**: Количественно отделить BVP envelope зоны (ядро/переход/хвост)
+- **Постановка**: BVP envelope analysis с impedance calculation
+- **Критерии**: Zone indicators N,S,C и радиусы r_core, r_tail
+- **BVP Integration**: Uses BVPImpedanceCalculator for zone boundary detection
 
 ## Реализация тестов
 

@@ -43,8 +43,8 @@ __license__ = "MIT"
 
 # Core imports
 from .core.domain import Domain
-from .core.parameters import Parameters
-from .core.bvp_core import BVPCore
+from .core.domain.parameters import Parameters
+from .core.bvp.bvp_core import BVPCore
 
 # Version info
 __all__ = [

@@ -1,0 +1,176 @@
+"""
+Author: Vasiliy Zdanovskiy
+email: vasilyvz@gmail.com
+
+Base BVP constants and configuration parameters.
+
+This module defines the base physical constants and configuration parameters
+for the BVP (Base High-Frequency Field) system.
+
+Physical Meaning:
+    Contains the fundamental physical constants and basic configuration
+    parameters required for the BVP system initialization.
+
+Mathematical Foundation:
+    Defines base constants for:
+    - Envelope equation parameters (κ₀, κ₂, χ', χ'')
+    - Basic material properties
+    - Fundamental physical constants
+
+Example:
+    >>> constants = BVPConstantsBase()
+    >>> kappa_0 = constants.get_envelope_parameter('kappa_0')
+    >>> speed_of_light = constants.get_physical_constant('speed_of_light')
+"""
+
+import numpy as np
+from typing import Dict, Any
+
+
+class BVPConstantsBase:
+    """
+    Base physical constants and configuration parameters for BVP system.
+    
+    Physical Meaning:
+        Centralized storage for fundamental physical constants and basic
+        configuration parameters used throughout the BVP system.
+        
+    Mathematical Foundation:
+        Organizes base constants by physical category:
+        - Envelope equation parameters
+        - Basic material properties
+        - Fundamental physical constants
+    """
+    
+    def __init__(self, config: Dict[str, Any] = None) -> None:
+        """
+        Initialize base BVP constants with optional configuration override.
+        
+        Physical Meaning:
+            Sets up fundamental physical constants with values from configuration
+            or uses scientifically accurate defaults.
+            
+        Args:
+            config (Dict[str, Any], optional): Configuration to override defaults.
+        """
+        self.config = config or {}
+        self._setup_envelope_constants()
+        self._setup_basic_material_constants()
+        self._setup_physical_constants()
+    
+    def _setup_envelope_constants(self) -> None:
+        """Setup envelope equation constants."""
+        envelope_config = self.config.get("envelope_equation", {})
+        
+        # Base stiffness coefficient κ₀ (dimensionless)
+        self.KAPPA_0 = envelope_config.get("kappa_0", 1.0)
+        
+        # Nonlinear stiffness coefficient κ₂ (dimensionless)
+        self.KAPPA_2 = envelope_config.get("kappa_2", 0.1)
+        
+        # Real part of susceptibility χ' (dimensionless)
+        self.CHI_PRIME = envelope_config.get("chi_prime", 1.0)
+        
+        # Base imaginary susceptibility χ''₀ (dimensionless)
+        self.CHI_DOUBLE_PRIME_0 = envelope_config.get("chi_double_prime_0", 0.01)
+        
+        # Wave number squared k₀² (1/m²)
+        self.K0_SQUARED = envelope_config.get("k0_squared", 1.0)
+        
+        # Carrier frequency ω₀ (rad/s)
+        self.CARRIER_FREQUENCY = envelope_config.get("carrier_frequency", 1.85e43)
+    
+    def _setup_basic_material_constants(self) -> None:
+        """Setup basic material property constants."""
+        material_config = self.config.get("material_properties", {})
+        
+        # Electromagnetic conductivity σ_EM (S/m)
+        self.EM_CONDUCTIVITY = material_config.get("em_conductivity", 0.01)
+        
+        # Weak interaction conductivity σ_weak (S/m)
+        self.WEAK_CONDUCTIVITY = material_config.get("weak_conductivity", 0.001)
+        
+        # Base admittance Y₀ (S)
+        self.BASE_ADMITTANCE = material_config.get("base_admittance", 1.0)
+    
+    def _setup_physical_constants(self) -> None:
+        """Setup fundamental physical constants."""
+        physical_config = self.config.get("physical_constants", {})
+        
+        # Speed of light (m/s)
+        self.SPEED_OF_LIGHT = physical_config.get("speed_of_light", 299792458.0)
+        
+        # Vacuum permeability (H/m)
+        self.VACUUM_PERMEABILITY = physical_config.get("vacuum_permeability", 4e-7 * np.pi)
+        
+        # Vacuum permittivity (F/m)
+        self.VACUUM_PERMITTIVITY = physical_config.get("vacuum_permittivity", 8.854187817e-12)
+        
+        # Planck constant (J⋅s)
+        self.PLANCK_CONSTANT = physical_config.get("planck_constant", 6.62607015e-34)
+        
+        # Boltzmann constant (J/K)
+        self.BOLTZMANN_CONSTANT = physical_config.get("boltzmann_constant", 1.380649e-23)
+    
+    def get_envelope_parameter(self, parameter_name: str) -> float:
+        """
+        Get envelope equation parameter.
+        
+        Args:
+            parameter_name (str): Name of the parameter.
+            
+        Returns:
+            float: Parameter value.
+        """
+        parameter_map = {
+            "kappa_0": self.KAPPA_0,
+            "kappa_2": self.KAPPA_2,
+            "chi_prime": self.CHI_PRIME,
+            "chi_double_prime_0": self.CHI_DOUBLE_PRIME_0,
+            "k0_squared": self.K0_SQUARED,
+            "carrier_frequency": self.CARRIER_FREQUENCY,
+        }
+        return parameter_map.get(parameter_name, 0.0)
+    
+    def get_basic_material_property(self, property_name: str) -> float:
+        """
+        Get basic material property constant.
+        
+        Args:
+            property_name (str): Name of the material property.
+            
+        Returns:
+            float: Property value.
+        """
+        property_map = {
+            "em_conductivity": self.EM_CONDUCTIVITY,
+            "weak_conductivity": self.WEAK_CONDUCTIVITY,
+            "base_admittance": self.BASE_ADMITTANCE,
+        }
+        return property_map.get(property_name, 0.0)
+    
+    def get_physical_constant(self, constant_name: str) -> float:
+        """
+        Get fundamental physical constant.
+        
+        Args:
+            constant_name (str): Name of the physical constant.
+            
+        Returns:
+            float: Constant value.
+        """
+        constant_map = {
+            "speed_of_light": self.SPEED_OF_LIGHT,
+            "vacuum_permeability": self.VACUUM_PERMEABILITY,
+            "vacuum_permittivity": self.VACUUM_PERMITTIVITY,
+            "planck_constant": self.PLANCK_CONSTANT,
+            "boltzmann_constant": self.BOLTZMANN_CONSTANT,
+        }
+        return constant_map.get(constant_name, 0.0)
+    
+    def __repr__(self) -> str:
+        """String representation of base BVP constants."""
+        return (
+            f"BVPConstantsBase(carrier_freq={self.CARRIER_FREQUENCY}, "
+            f"kappa_0={self.KAPPA_0}, kappa_2={self.KAPPA_2})"
+        )

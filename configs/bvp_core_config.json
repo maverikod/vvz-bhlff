@@ -1,0 +1,66 @@
+{
+    "bvp_core": {
+        "carrier_frequency": 1.85e43,
+        "envelope_equation": {
+            "kappa_0": 1.0,
+            "kappa_2": 0.1,
+            "chi_prime": 1.0,
+            "chi_double_prime_0": 0.01,
+            "k0_squared": 1.0
+        },
+        "quench_detection": {
+            "amplitude_threshold": 0.8,
+            "detuning_threshold": 0.1,
+            "gradient_threshold": 0.5
+        },
+        "impedance_calculation": {
+            "frequency_range": [1e15, 1e20],
+            "frequency_points": 1000,
+            "boundary_conditions": "periodic",
+            "quality_factor_threshold": 0.1,
+            "min_quality_factor": 1.0,
+            "max_quality_factor": 1000.0,
+            "prominence_threshold_multiplier": 2.0,
+            "phase_threshold_multiplier": 2.0,
+            "peak_window_size": 20,
+            "smoothing_window_size": 5
+        },
+        "material_properties": {
+            "em_conductivity": 0.01,
+            "weak_conductivity": 0.001,
+            "base_admittance": 1.0,
+            "admittance_coeff_1": 0.1,
+            "admittance_coeff_2": 0.01,
+            "admittance_coeff_3": 0.001,
+            "admittance_coeff_4": 0.0001,
+            "renorm_coeff_0": 1.0,
+            "renorm_coeff_1": 0.1,
+            "renorm_coeff_2": 0.01,
+            "boundary_pressure_0": 1.0,
+            "boundary_pressure_1": 0.1,
+            "boundary_stiffness_0": 1.0,
+            "boundary_stiffness_1": 0.1
+        },
+        "numerical_parameters": {
+            "max_iterations": 50,
+            "tolerance": 1e-8,
+            "damping_factor": 0.8,
+            "min_step_size": 1e-12,
+            "finite_diff_step": 1e-8,
+            "regularization": 1e-12,
+            "line_search_max_iter": 20,
+            "line_search_beta": 0.5,
+            "line_search_gamma": 1e-4,
+            "armijo_c1": 1e-4,
+            "curvature_c2": 0.9,
+            "gradient_descent_step": 0.1
+        },
+        "physical_constants": {
+            "speed_of_light": 299792458.0,
+            "vacuum_permeability": 1.25663706212e-6,
+            "vacuum_permittivity": 8.854187817e-12,
+            "planck_constant": 6.62607015e-34,
+            "boltzmann_constant": 1.380649e-23
+        }
+    }
+}

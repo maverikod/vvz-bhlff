@@ -348,24 +348,24 @@ class BVPSource(Source):
         phase = self.config.get("phase", 0.0)
         time = self.config.get("time", 0.0)
         temporal_evolution = self.config.get("temporal_evolution", True)
-
+        
         if temporal_evolution:
             # Compute temporal phase evolution with BVP dynamics
             # Phase evolution includes carrier frequency and envelope effects
             temporal_phase = self.carrier_frequency * time + phase
-
+            
             # Add envelope modulation effects
             envelope_modulation = self.config.get("envelope_modulation", 0.1)
-            temporal_phase += envelope_modulation * np.sin(
-                self.carrier_frequency * time
-            )
-
+            temporal_phase += envelope_modulation * np.sin(self.carrier_frequency * time)
+            
             # Add quench dynamics if applicable
             quench_effects = self.config.get("quench_effects", False)
             if quench_effects:
                 quench_threshold = self.config.get("quench_threshold", 0.8)
                 quench_phase = np.where(
-                    time > quench_threshold, -0.1 * (time - quench_threshold), 0.0
+                    time > quench_threshold,
+                    -0.1 * (time - quench_threshold),
+                    0.0
                 )
                 temporal_phase += quench_phase
         else:
@@ -385,9 +385,7 @@ class BVPSource(Source):
             y = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
             z = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
             X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
-            carrier = np.exp(
-                1j * (self.carrier_frequency * (X + Y + Z) + temporal_phase)
-            )
+            carrier = np.exp(1j * (self.carrier_frequency * (X + Y + Z) + temporal_phase))
 
         return carrier
 

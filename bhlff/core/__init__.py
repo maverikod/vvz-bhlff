@@ -20,12 +20,14 @@ Mathematical Foundation:
     equations in 7D space-time, with BVP as the central backbone.
 """
 
-from .domain import Domain, Field, Parameters
+from .domain import Domain, Field
+from .domain.parameters import Parameters
 from .bvp import (
     BVPCore,
     BVPEnvelopeSolver,
     BVPImpedanceCalculator,
     BVPInterface,
+    BVPConstants,
     QuenchDetector,
 )
 from .operators import OperatorRiesz, FractionalLaplacian, MemoryKernel
@@ -34,12 +36,13 @@ from .sources import Source, BVPSource
 
 __all__ = [
     "Domain",
-    "Field",
+    "Field", 
     "Parameters",
     "BVPCore",
     "BVPEnvelopeSolver",
     "BVPImpedanceCalculator",
     "BVPInterface",
+    "BVPConstants",
     "QuenchDetector",
     "OperatorRiesz",
     "FractionalLaplacian",

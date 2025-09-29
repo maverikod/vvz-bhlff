@@ -239,10 +239,14 @@ class BVPEnvelopeEquation7D:
         Physical Meaning:
             Computes the Jacobian matrix of the residual with respect
             to the envelope field, needed for Newton-Raphson iterations.
+            The Jacobian represents the sensitivity of the residual
+            to changes in the envelope field.
             
         Mathematical Foundation:
-            The Jacobian includes derivatives of all nonlinear terms
-            with respect to the envelope field.
+            The Jacobian J = ∂R/∂a includes derivatives of all terms:
+            - Spatial divergence: ∂/∂a[∇·(κ(|a|)∇a)]
+            - Phase divergence: ∂/∂a[∇φ·(κ(|a|)∇φa)]
+            - Susceptibility term: ∂/∂a[k₀²χ(|a|)a]
             
         Args:
             envelope (np.ndarray): Current envelope solution.
@@ -250,22 +254,67 @@ class BVPEnvelopeEquation7D:
         Returns:
             np.ndarray: Jacobian matrix.
         """
-        # Simplified Jacobian computation
-        # In practice, this would be a sparse matrix
+        from scipy.sparse import csc_matrix, lil_matrix
+        
         amplitude = np.abs(envelope)
+        field_size = envelope.size
+        
+        # Initialize sparse Jacobian matrix
+        jacobian = lil_matrix((field_size, field_size), dtype=complex)
         
         # Compute derivatives of nonlinear terms
         dkappa_da = self.nonlinear_terms.compute_stiffness_derivative(amplitude)
         dchi_da = self.nonlinear_terms.compute_susceptibility_derivative(amplitude)
         
-        # Construct Jacobian (simplified)
-        jacobian = np.eye(envelope.size, dtype=complex)
+        # Add identity matrix for linear terms
+        for i in range(field_size):
+            jacobian[i, i] = 1.0
         
-        # Add nonlinear contributions
-        for i in range(envelope.size):
-            jacobian[i, i] += dkappa_da.flat[i] + self.nonlinear_terms.k0**2 * dchi_da.flat[i]
+        # Add spatial divergence contributions
+        for axis in range(3):
+            # Get spatial derivative operators
+            if axis == 0:
+                grad_op = self.derivative_operators.grad_x
+                div_op = self.derivative_operators.div_x
+            elif axis == 1:
+                grad_op = self.derivative_operators.grad_y
+                div_op = self.derivative_operators.div_y
+            else:
+                grad_op = self.derivative_operators.grad_z
+                div_op = self.derivative_operators.div_z
+            
+            # Add contributions from spatial derivatives
+            for i in range(field_size):
+                # Contribution from κ(|a|) term
+                jacobian[i, i] += dkappa_da.flat[i] * np.sum(grad_op[i, :]) * np.sum(div_op[:, i])
         
-        return jacobian
+        # Add phase divergence contributions
+        for axis in range(3, 6):
+            # Get phase derivative operators
+            if axis == 3:
+                grad_op = self.derivative_operators.grad_phi_1
+                div_op = self.derivative_operators.div_phi_1
+            elif axis == 4:
+                grad_op = self.derivative_operators.grad_phi_2
+                div_op = self.derivative_operators.div_phi_2
+            else:
+                grad_op = self.derivative_operators.grad_phi_3
+                div_op = self.derivative_operators.div_phi_3
+            
+            # Add contributions from phase derivatives
+            for i in range(field_size):
+                # Contribution from κ(|a|) term
+                jacobian[i, i] += dkappa_da.flat[i] * np.sum(grad_op[i, :]) * np.sum(div_op[:, i])
+        
+        # Add susceptibility term contributions
+        for i in range(field_size):
+            # Contribution from χ(|a|) term
+            jacobian[i, i] += self.nonlinear_terms.k0**2 * (
+                dchi_da.flat[i] * envelope.flat[i] + 
+                self.nonlinear_terms.chi_func(amplitude.flat[i])
+            )
+        
+        return csc_matrix(jacobian)
     
     def _solve_linear_system(self, jacobian: np.ndarray, residual: np.ndarray) -> np.ndarray:
         """

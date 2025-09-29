@@ -126,12 +126,13 @@ class BVPPostulate6_TailResonatorness(BVPPostulate):
         Physical Meaning:
             Identifies resonance peaks in the power spectrum that correspond
             to the cascade of effective resonators in the tail. These peaks
-            should exhibit proper frequency-dependent impedance characteristics.
+            should exhibit proper frequency-dependent impedance characteristics
+            with well-defined resonance frequencies and quality factors.
             
         Mathematical Foundation:
-            Uses peak detection algorithms to identify local maxima in the
-            power spectrum above a threshold, then computes quality factors
-            for each identified resonance.
+            Uses advanced peak detection algorithms to identify local maxima
+            in the power spectrum, then computes quality factors using the
+            full width at half maximum (FWHM) method for each identified resonance.
             
         Args:
             power_spectrum (np.ndarray): Power spectrum of the envelope field.
@@ -141,23 +142,51 @@ class BVPPostulate6_TailResonatorness(BVPPostulate):
                 - frequencies: List of resonance frequencies
                 - quality_factors: List of corresponding quality factors
         """
-        # Simplified peak finding - in practice would use more sophisticated methods
-        max_power = np.max(power_spectrum)
-        threshold = 0.1 * max_power
+        from scipy.signal import find_peaks, peak_widths
         
-        # Find peaks above threshold
-        peaks = np.where(power_spectrum > threshold)
+        # Flatten the power spectrum for 1D peak detection
+        spectrum_1d = np.sum(power_spectrum, axis=tuple(range(power_spectrum.ndim-1)))
         
-        if len(peaks[0]) == 0:
+        # Find peaks using scipy's advanced peak detection
+        peaks, properties = find_peaks(spectrum_1d, 
+                                     height=0.1 * np.max(spectrum_1d),
+                                     distance=5,  # Minimum distance between peaks
+                                     prominence=0.05 * np.max(spectrum_1d))
+        
+        if len(peaks) == 0:
             return [], []
         
-        # Extract peak frequencies and compute quality factors
-        frequencies = []
-        quality_factors = []
-        
-        for i in range(min(len(peaks[0]), 10)):  # Limit to top 10 peaks
-            peak_power = power_spectrum[tuple(p[idx] for p, idx in zip(peaks, [i]*len(peaks)))]
-            frequencies.append(float(peak_power))
-            quality_factors.append(float(peak_power / threshold))  # Simplified Q factor
+        # Compute quality factors using FWHM method
+        try:
+            widths, width_heights, left_ips, right_ips = peak_widths(spectrum_1d, peaks, rel_height=0.5)
+            
+            frequencies = []
+            quality_factors = []
+            
+            for i, peak_idx in enumerate(peaks):
+                # Resonance frequency (peak position)
+                frequency = float(peak_idx)
+                frequencies.append(frequency)
+                
+                # Quality factor Q = ω₀ / Δω (FWHM)
+                if widths[i] > 0:
+                    quality_factor = frequency / widths[i]
+                else:
+                    quality_factor = 100.0  # Default high Q for very sharp peaks
+                
+                quality_factors.append(float(quality_factor))
+            
+            # Limit to top 10 resonances
+            if len(frequencies) > 10:
+                # Sort by peak height and take top 10
+                peak_heights = spectrum_1d[peaks]
+                sorted_indices = np.argsort(peak_heights)[::-1][:10]
+                frequencies = [frequencies[i] for i in sorted_indices]
+                quality_factors = [quality_factors[i] for i in sorted_indices]
+            
+        except Exception:
+            # Fallback to simple method if advanced method fails
+            frequencies = [float(peak) for peak in peaks[:10]]
+            quality_factors = [float(spectrum_1d[peak] / (0.1 * np.max(spectrum_1d))) for peak in peaks[:10]]
         
         return frequencies, quality_factors

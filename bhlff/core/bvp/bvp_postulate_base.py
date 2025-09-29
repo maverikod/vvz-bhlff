@@ -64,4 +64,4 @@ class BVPPostulate(ABC):
         Raises:
             NotImplementedError: If not implemented by subclass.
         """
-        pass
+        raise NotImplementedError("Subclasses must implement apply method")

@@ -4,13 +4,13 @@ email: vasilyvz@gmail.com
 
 U(1)³ phase vector structure for BVP.
 
-This module implements the U(1)³ phase vector structure Θ_a (a=1..3)
-as required by the 7D phase field theory, providing the fundamental
-phase structure for the Base High-Frequency Field.
+This module implements the main PhaseVector class that coordinates
+the three U(1) phase components and electroweak coupling for the
+Base High-Frequency Field.
 
 Physical Meaning:
-    Implements the three-component phase vector Θ_a (a=1..3) that
-    represents the fundamental phase structure of the BVP field.
+    Implements the three-component phase vector Θ_a (a=1..3)
+    that represents the fundamental phase structure of the BVP field.
     Each component corresponds to a different U(1) symmetry group,
     and together they form the U(1)³ structure required by the theory.
 
@@ -27,11 +27,12 @@ Example:
 """
 
 import numpy as np
-from typing import Dict, Any, Tuple, List
-from abc import ABC, abstractmethod
+from typing import Dict, Any, List
 
-from ..domain import Domain
-from .bvp_constants import BVPConstants
+from ...domain import Domain
+from ..bvp_constants import BVPConstants
+from .phase_components import PhaseComponents
+from .electroweak_coupling import ElectroweakCoupling
 
 
 class PhaseVector:
@@ -52,9 +53,9 @@ class PhaseVector:
         domain (Domain): Computational domain.
         config (Dict[str, Any]): Phase vector configuration.
         constants (BVPConstants): BVP constants instance.
-        theta_components (List[np.ndarray]): Three phase components Θ_a.
+        _phase_components (PhaseComponents): Phase components manager.
+        _electroweak_coupling (ElectroweakCoupling): Electroweak coupling.
         coupling_matrix (np.ndarray): SU(2) coupling matrix.
-        electroweak_coefficients (Dict[str, float]): Electroweak coupling coefficients.
     """
     
     def __init__(self, domain: Domain, config: Dict[str, Any], constants: BVPConstants = None) -> None:
@@ -77,48 +78,13 @@ class PhaseVector:
         self.domain = domain
         self.config = config
         self.constants = constants or BVPConstants(config)
-        self._setup_phase_components()
+        
+        # Initialize components
+        self._phase_components = PhaseComponents(domain, config)
+        self._electroweak_coupling = ElectroweakCoupling(config)
+        
+        # Setup SU(2) coupling
         self._setup_su2_coupling()
-        self._setup_electroweak_coefficients()
-    
-    def _setup_phase_components(self) -> None:
-        """
-        Setup the three U(1) phase components Θ_a (a=1..3).
-        
-        Physical Meaning:
-            Initializes the three independent U(1) phase components
-            that form the U(1)³ structure of the BVP field.
-        """
-        self.theta_components = []
-        
-        # Get phase configuration
-        phase_config = self.config.get("phase_components", {})
-        
-        for a in range(3):  # Three U(1) components
-            # Initialize phase component Θ_a
-            theta_a = np.zeros(self.domain.shape, dtype=complex)
-            
-            # Set amplitude and frequency for this component
-            amplitude = phase_config.get(f"amplitude_{a+1}", 1.0)
-            frequency = phase_config.get(f"frequency_{a+1}", 1.0)
-            
-            # Create spatial phase distribution
-            if self.domain.dimensions == 1:
-                x = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
-                theta_a = amplitude * np.exp(1j * frequency * x)
-            elif self.domain.dimensions == 2:
-                x = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
-                y = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
-                X, Y = np.meshgrid(x, y, indexing="ij")
-                theta_a = amplitude * np.exp(1j * frequency * (X + Y))
-            else:  # 3D
-                x = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
-                y = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
-                z = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
-                X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
-                theta_a = amplitude * np.exp(1j * frequency * (X + Y + Z))
-            
-            self.theta_components.append(theta_a)
     
     def _setup_su2_coupling(self) -> None:
         """
@@ -147,23 +113,6 @@ class PhaseVector:
             "theta_1_theta_3": coupling_strength * 0.05,  # Weaker coupling
         }
     
-    def _setup_electroweak_coefficients(self) -> None:
-        """
-        Setup electroweak coupling coefficients.
-        
-        Physical Meaning:
-            Initializes the coefficients for electroweak currents
-            that are generated as functionals of the envelope.
-        """
-        electroweak_config = self.config.get("electroweak", {})
-        
-        self.electroweak_coefficients = {
-            "em_coupling": electroweak_config.get("em_coupling", 1.0),
-            "weak_coupling": electroweak_config.get("weak_coupling", 0.1),
-            "mixing_angle": electroweak_config.get("mixing_angle", 0.23),  # Weinberg angle
-            "gauge_coupling": electroweak_config.get("gauge_coupling", 0.65),
-        }
-    
     def get_phase_components(self) -> List[np.ndarray]:
         """
         Get the three U(1) phase components Θ_a (a=1..3).
@@ -175,7 +124,7 @@ class PhaseVector:
         Returns:
             List[np.ndarray]: List of three phase components Θ_a.
         """
-        return self.theta_components.copy()
+        return self._phase_components.get_components()
     
     def get_total_phase(self) -> np.ndarray:
         """
@@ -192,20 +141,7 @@ class PhaseVector:
         Returns:
             np.ndarray: Total phase field.
         """
-        # Start with sum of individual components
-        total_phase = np.zeros_like(self.theta_components[0])
-        
-        for theta_a in self.theta_components:
-            total_phase += theta_a
-        
-        # Add SU(2) coupling terms
-        for i, theta_i in enumerate(self.theta_components):
-            for j, theta_j in enumerate(self.theta_components):
-                if i != j:
-                    coupling_strength = self.coupling_matrix[i, j]
-                    total_phase += coupling_strength * theta_i * theta_j
-        
-        return total_phase
+        return self._phase_components.get_total_phase(self.coupling_matrix)
     
     def compute_electroweak_currents(self, envelope: np.ndarray) -> Dict[str, np.ndarray]:
         """
@@ -230,65 +166,10 @@ class PhaseVector:
                 - weak_current: Weak interaction current
                 - mixed_current: Mixed electroweak current
         """
-        # Compute phase gradients in 7D space-time
-        phase_gradients = []
-        for theta_a in self.theta_components:
-            # Compute gradients in all 7 dimensions
-            gradients = []
-            
-            # Spatial gradients ℝ³ₓ
-            if self.domain.dimensions >= 1:
-                gradients.append(np.gradient(theta_a, self.domain.dx, axis=0))
-            if self.domain.dimensions >= 2:
-                gradients.append(np.gradient(theta_a, self.domain.dx, axis=1))
-            if self.domain.dimensions >= 3:
-                gradients.append(np.gradient(theta_a, self.domain.dx, axis=2))
-            
-            # Phase gradients 𝕋³_φ
-            if theta_a.ndim > 3:
-                gradients.append(np.gradient(theta_a, self.domain.dphi, axis=3))  # φ₁
-            if theta_a.ndim > 4:
-                gradients.append(np.gradient(theta_a, self.domain.dphi, axis=4))  # φ₂
-            if theta_a.ndim > 5:
-                gradients.append(np.gradient(theta_a, self.domain.dphi, axis=5))  # φ₃
-            
-            # Temporal gradient ℝₜ
-            if theta_a.ndim > 6:
-                gradients.append(np.gradient(theta_a, self.domain.dt, axis=6))  # t
-            
-            # Compute magnitude of gradient vector in 7D
-            grad_theta = np.sqrt(np.sum([np.abs(g)**2 for g in gradients], axis=0))
-            phase_gradients.append(grad_theta)
-        
-        # Electromagnetic current (primarily from Θ₁)
-        em_gradient = phase_gradients[0]  # Primary EM component
-        em_current = (
-            self.electroweak_coefficients["em_coupling"] * 
-            envelope**2 * 
-            em_gradient
+        phase_components = self._phase_components.get_components()
+        return self._electroweak_coupling.compute_electroweak_currents(
+            envelope, phase_components, self.domain
         )
-        
-        # Weak current (primarily from Θ₂ and Θ₃)
-        weak_gradient = phase_gradients[1] + phase_gradients[2]  # Weak components
-        weak_current = (
-            self.electroweak_coefficients["weak_coupling"] * 
-            envelope**4 * 
-            weak_gradient
-        )
-        
-        # Mixed electroweak current (Weinberg mixing)
-        mixing_angle = self.electroweak_coefficients["mixing_angle"]
-        mixed_current = (
-            self.electroweak_coefficients["gauge_coupling"] * 
-            envelope**3 * 
-            (np.cos(mixing_angle) * em_gradient + np.sin(mixing_angle) * weak_gradient)
-        )
-        
-        return {
-            "em_current": em_current,
-            "weak_current": weak_current,
-            "mixed_current": mixed_current,
-        }
     
     def compute_phase_coherence(self) -> np.ndarray:
         """
@@ -306,16 +187,7 @@ class PhaseVector:
         Returns:
             np.ndarray: Phase coherence measure.
         """
-        # Sum of complex exponentials
-        coherence_sum = np.zeros_like(self.theta_components[0])
-        
-        for theta_a in self.theta_components:
-            coherence_sum += np.exp(1j * np.angle(theta_a))
-        
-        # Normalize by number of components
-        coherence = np.abs(coherence_sum) / 3.0
-        
-        return coherence
+        return self._phase_components.compute_phase_coherence()
     
     def get_su2_coupling_strength(self) -> float:
         """
@@ -367,24 +239,40 @@ class PhaseVector:
         Args:
             envelope (np.ndarray): Solved BVP envelope in 7D space-time.
         """
-        # If envelope is a vector field, extract components
-        if envelope.ndim > self.domain.dimensions:
-            # Envelope has additional dimensions for phase components
-            for a in range(3):
-                if a < envelope.shape[-1]:  # Check if component exists
-                    self.theta_components[a] = envelope[..., a]
-        else:
-            # Single envelope field - distribute to components
-            for a in range(3):
-                # Each component gets a phase-shifted version
-                phase_shift = 2 * np.pi * a / 3
-                self.theta_components[a] = envelope * np.exp(1j * phase_shift)
+        self._phase_components.update_components(envelope)
+    
+    def get_electroweak_coefficients(self) -> Dict[str, float]:
+        """
+        Get electroweak coupling coefficients.
+        
+        Physical Meaning:
+            Returns the current electroweak coupling coefficients
+            used for current calculations.
+            
+        Returns:
+            Dict[str, float]: Electroweak coupling coefficients.
+        """
+        return self._electroweak_coupling.get_electroweak_coefficients()
+    
+    def set_electroweak_coefficients(self, coefficients: Dict[str, float]) -> None:
+        """
+        Set electroweak coupling coefficients.
+        
+        Physical Meaning:
+            Updates the electroweak coupling coefficients
+            used for current calculations.
+            
+        Args:
+            coefficients (Dict[str, float]): New coupling coefficients.
+        """
+        self._electroweak_coupling.set_electroweak_coefficients(coefficients)
     
     def __repr__(self) -> str:
         """String representation of phase vector."""
         coupling_strength = self.get_su2_coupling_strength()
+        em_coupling = self.get_electroweak_coefficients()['em_coupling']
         return (
             f"PhaseVector(domain={self.domain}, "
             f"su2_coupling={coupling_strength:.3f}, "
-            f"em_coupling={self.electroweak_coefficients['em_coupling']:.3f})"
+            f"em_coupling={em_coupling:.3f})"
         )

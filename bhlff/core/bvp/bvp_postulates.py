@@ -26,7 +26,7 @@ from .bvp_postulate_base import BVPPostulate
 from .carrier_primacy_postulate import CarrierPrimacyPostulate
 from .scale_separation_postulate import ScaleSeparationPostulate
 from .bvp_rigidity_postulate import BVPRigidityPostulate
-from .u1_phase_structure_postulate import U1PhaseStructurePostulate
+from .u1_phase_structure import U1PhaseStructurePostulate
 from .quenches_postulate import QuenchesPostulate
 from .tail_resonatorness_postulate import TailResonatornessPostulate
 from .transition_zone_postulate import TransitionZonePostulate

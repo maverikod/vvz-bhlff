@@ -30,6 +30,9 @@ from .quench_detector import QuenchDetector
 from .phase_vector import PhaseVector
 from .bvp_postulates import BVPPostulates
 from .bvp_level_integration import BVPLevelIntegration
+from .quenches_postulate import QuenchesPostulate
+from .resonance_detector import ResonanceDetector
+from .core_renormalization_postulate import CoreRenormalizationPostulate
 
 __all__ = [
     "BVPCore",
@@ -41,4 +44,7 @@ __all__ = [
     "PhaseVector",
     "BVPPostulates",
     "BVPLevelIntegration",
+    "QuenchesPostulate",
+    "ResonanceDetector",
+    "CoreRenormalizationPostulate",
 ]

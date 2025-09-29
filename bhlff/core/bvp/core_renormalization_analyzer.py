@@ -22,6 +22,7 @@ Example:
 
 import numpy as np
 from typing import Dict, Any
+from scipy import ndimage
 
 from ..domain.domain import Domain
 from .bvp_constants import BVPConstants
@@ -233,8 +234,6 @@ class CoreRenormalizationAnalyzer:
             np.ndarray: Boundary points mask.
         """
         # Use morphological operations to find boundary
-        from scipy import ndimage
-        
         # Dilate core mask to find boundary
         dilated = ndimage.binary_dilation(core_mask)
         boundary_mask = dilated & ~core_mask

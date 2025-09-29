@@ -26,12 +26,12 @@ Example:
 import numpy as np
 from typing import Dict, Any, TYPE_CHECKING, Optional
 
-if TYPE_CHECKING:
-    from .bvp_core import BVPCore
-
 from .bvp_constants import BVPConstants
 from .bvp_interface_core import BVPInterfaceCore
 from .bvp_interface_advanced import BVPInterfaceAdvanced
+
+if TYPE_CHECKING:
+    from .bvp_core import BVPCore
 
 
 class BVPInterface:

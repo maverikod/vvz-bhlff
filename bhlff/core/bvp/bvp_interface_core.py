@@ -24,10 +24,10 @@ Example:
 import numpy as np
 from typing import TYPE_CHECKING, Optional
 
+from .bvp_constants import BVPConstants
+
 if TYPE_CHECKING:
     from ..domain import Domain
-
-from .bvp_constants import BVPConstants
 
 
 class BVPInterfaceCore:

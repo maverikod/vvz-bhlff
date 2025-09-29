@@ -27,7 +27,7 @@ Example:
 """
 
 import numpy as np
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 from ..domain import Domain
 from .quench_detector import QuenchDetector
@@ -35,6 +35,8 @@ from .bvp_envelope_solver import BVPEnvelopeSolver
 from .bvp_impedance_calculator import BVPImpedanceCalculator
 from .bvp_constants import BVPConstants
 from .phase_vector import PhaseVector
+from .bvp_phase_operations import BVPPhaseOperations
+from .bvp_parameter_access import BVPParameterAccess
 
 
 class BVPCore:
@@ -83,6 +85,8 @@ class BVPCore:
         self._setup_envelope_solver()
         self._setup_quench_detector()
         self._setup_impedance_calculator()
+        self._setup_phase_operations()
+        self._setup_parameter_access()
 
     def _setup_phase_vector(self) -> None:
         """
@@ -124,6 +128,29 @@ class BVPCore:
             and peaks {ω_n,Q_n} from BVP envelope.
         """
         self._impedance_calculator = BVPImpedanceCalculator(self.domain, self.config, self.constants)
+    
+    def _setup_phase_operations(self) -> None:
+        """
+        Setup phase operations.
+        
+        Physical Meaning:
+            Initializes phase operations for managing the U(1)³
+            phase structure of the BVP field.
+        """
+        self._phase_operations = BVPPhaseOperations(self._phase_vector)
+    
+    def _setup_parameter_access(self) -> None:
+        """
+        Setup parameter access.
+        
+        Physical Meaning:
+            Initializes parameter access for BVP configuration
+            parameters and settings.
+        """
+        self._parameter_access = BVPParameterAccess(
+            self.constants, self._envelope_solver, 
+            self._quench_detector, self._impedance_calculator
+        )
 
     def solve_envelope(self, source: np.ndarray) -> np.ndarray:
         """
@@ -213,68 +240,6 @@ class BVPCore:
         """
         return self._impedance_calculator.compute_impedance(envelope)
 
-    def get_carrier_frequency(self) -> float:
-        """
-        Get the high-frequency carrier frequency.
-
-        Physical Meaning:
-            Returns the frequency ω₀ of the high-frequency carrier
-            that is modulated by the envelope.
-
-        Returns:
-            float: Carrier frequency ω₀.
-        """
-        return self.constants.get_envelope_parameter("carrier_frequency")
-
-    def get_envelope_parameters(self) -> Dict[str, float]:
-        """
-        Get envelope equation parameters.
-
-        Physical Meaning:
-            Returns the parameters κ₀, κ₂, χ', χ'' for the
-            envelope equation.
-
-        Returns:
-            Dict[str, float]: Envelope equation parameters.
-        """
-        return self._envelope_solver.get_parameters()
-
-    def get_quench_thresholds(self) -> Dict[str, float]:
-        """
-        Get quench detection thresholds.
-
-        Physical Meaning:
-            Returns the current threshold values used for quench detection.
-
-        Returns:
-            Dict[str, float]: Quench detection thresholds.
-        """
-        return self._quench_detector.get_thresholds()
-
-    def set_quench_thresholds(self, thresholds: Dict[str, float]) -> None:
-        """
-        Set new quench detection thresholds.
-
-        Physical Meaning:
-            Updates the threshold values used for quench detection.
-
-        Args:
-            thresholds (Dict[str, float]): New threshold values.
-        """
-        self._quench_detector.set_thresholds(thresholds)
-
-    def get_impedance_parameters(self) -> Dict[str, Any]:
-        """
-        Get impedance calculation parameters.
-
-        Physical Meaning:
-            Returns the current parameters for impedance calculation.
-
-        Returns:
-            Dict[str, Any]: Impedance calculation parameters.
-        """
-        return self._impedance_calculator.get_parameters()
-
     def get_phase_vector(self) -> PhaseVector:
         """
         Get the U(1)³ phase vector structure.
@@ -287,92 +252,32 @@ class BVPCore:
             PhaseVector: The U(1)³ phase vector structure.
         """
         return self._phase_vector
-
-    def get_phase_components(self) -> List[np.ndarray]:
+    
+    def get_phase_operations(self) -> BVPPhaseOperations:
         """
-        Get the three U(1) phase components Θ_a (a=1..3).
+        Get the phase operations module.
         
         Physical Meaning:
-            Returns the three independent U(1) phase components
-            that form the U(1)³ structure of the BVP field.
+            Returns the phase operations module for managing
+            the U(1)³ phase structure of the BVP field.
             
         Returns:
-            List[np.ndarray]: List of three phase components Θ_a.
+            BVPPhaseOperations: The phase operations module.
         """
-        return self._phase_vector.get_phase_components()
-
-    def get_total_phase(self) -> np.ndarray:
+        return self._phase_operations
+    
+    def get_parameter_access(self) -> BVPParameterAccess:
         """
-        Get the total phase from U(1)³ structure.
+        Get the parameter access module.
         
         Physical Meaning:
-            Computes the total phase by combining the three
-            U(1) components with proper SU(2) coupling.
+            Returns the parameter access module for accessing
+            BVP configuration parameters and settings.
             
         Returns:
-            np.ndarray: Total phase field.
+            BVPParameterAccess: The parameter access module.
         """
-        return self._phase_vector.get_total_phase()
-
-    def compute_electroweak_currents(self, envelope: np.ndarray) -> Dict[str, np.ndarray]:
-        """
-        Compute electroweak currents as functionals of the envelope.
-        
-        Physical Meaning:
-            Computes electromagnetic and weak currents that are
-            generated as functionals of the BVP envelope through
-            the U(1)³ phase structure.
-            
-        Args:
-            envelope (np.ndarray): BVP envelope |A|.
-            
-        Returns:
-            Dict[str, np.ndarray]: Electroweak currents including:
-                - em_current: Electromagnetic current
-                - weak_current: Weak interaction current
-                - mixed_current: Mixed electroweak current
-        """
-        return self._phase_vector.compute_electroweak_currents(envelope)
-
-    def compute_phase_coherence(self) -> np.ndarray:
-        """
-        Compute phase coherence measure.
-        
-        Physical Meaning:
-            Computes a measure of phase coherence across the
-            U(1)³ structure, indicating the degree of
-            synchronization between the three phase components.
-            
-        Returns:
-            np.ndarray: Phase coherence measure.
-        """
-        return self._phase_vector.compute_phase_coherence()
-
-    def get_su2_coupling_strength(self) -> float:
-        """
-        Get the SU(2) coupling strength.
-        
-        Physical Meaning:
-            Returns the strength of the weak hierarchical
-            coupling to SU(2)/core.
-            
-        Returns:
-            float: SU(2) coupling strength.
-        """
-        return self._phase_vector.get_su2_coupling_strength()
-
-    def set_su2_coupling_strength(self, strength: float) -> None:
-        """
-        Set the SU(2) coupling strength.
-        
-        Physical Meaning:
-            Updates the strength of the weak hierarchical
-            coupling to SU(2)/core.
-            
-        Args:
-            strength (float): New SU(2) coupling strength.
-        """
-        self._phase_vector.set_su2_coupling_strength(strength)
+        return self._parameter_access
 
     def __repr__(self) -> str:
         """String representation of BVP core."""

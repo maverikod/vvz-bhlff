@@ -22,6 +22,7 @@ Example:
 
 import numpy as np
 from typing import Dict, Any, List
+from scipy import ndimage
 
 from ..domain.domain import Domain
 from .bvp_constants import BVPConstants
@@ -110,8 +111,6 @@ class QuenchesDetector:
             np.ndarray: Filtered quench mask.
         """
         # Use morphological operations to filter small regions
-        from scipy import ndimage
-        
         # Remove small connected components
         filtered_mask = ndimage.binary_opening(quench_mask, 
                                             structure=ndimage.generate_binary_structure(3, 1))
@@ -139,8 +138,6 @@ class QuenchesDetector:
         Returns:
             List[tuple]: List of quench center coordinates.
         """
-        from scipy import ndimage
-        
         # Label connected components
         labeled_mask, num_features = ndimage.label(quench_mask)
         

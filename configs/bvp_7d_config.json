@@ -1,0 +1,99 @@
+{
+    "bvp_7d_core": {
+        "carrier_frequency": 1.85e43,
+        "k_0": 1.0,
+        "envelope_equation": {
+            "kappa_0": 1.0,
+            "kappa_2": 0.1,
+            "chi_prime": 1.0,
+            "chi_double_prime_0": 0.01
+        },
+        "quench_detection": {
+            "amplitude_threshold": 0.8,
+            "detuning_threshold": 0.1,
+            "gradient_threshold": 0.5
+        },
+        "impedance_calculation": {
+            "frequency_range": [1e15, 1e20],
+            "resolution": 1000
+        }
+    },
+    "domain_7d": {
+        "spatial": {
+            "L_x": 1.0,
+            "L_y": 1.0,
+            "L_z": 1.0,
+            "N_x": 64,
+            "N_y": 64,
+            "N_z": 64
+        },
+        "phase": {
+            "phi_1_max": 6.283185307179586,
+            "phi_2_max": 6.283185307179586,
+            "phi_3_max": 6.283185307179586,
+            "N_phi_1": 32,
+            "N_phi_2": 32,
+            "N_phi_3": 32
+        },
+        "temporal": {
+            "T_max": 1.0,
+            "N_t": 100,
+            "dt": 0.01
+        }
+    },
+    "bvp_postulates": {
+        "carrier_primacy": {
+            "carrier_frequency": 1.85e43,
+            "frequency_tolerance": 0.1
+        },
+        "scale_separation": {
+            "carrier_frequency": 1.85e43,
+            "max_epsilon": 0.1
+        },
+        "bvp_rigidity": {
+            "min_rigidity_ratio": 0.8
+        },
+        "u1_phase_structure": {
+            "min_phase_coherence": 0.7
+        },
+        "quenches": {
+            "amplitude_threshold": 0.8,
+            "detuning_threshold": 0.1,
+            "gradient_threshold": 0.5
+        },
+        "tail_resonatorness": {
+            "min_resonance_count": 3,
+            "min_quality_factor": 10.0
+        },
+        "transition_zone": {
+            "nonlinear_threshold": 0.5
+        },
+        "core_renormalization": {
+            "renormalization_threshold": 0.1
+        },
+        "power_balance": {
+            "balance_tolerance": 0.05
+        }
+    },
+    "phase_vector": {
+        "su2_coupling_strength": 0.1,
+        "electroweak_mixing_angle": 0.23
+    },
+    "numerical": {
+        "precision": "float64",
+        "max_iterations": 100,
+        "tolerance": 1e-12,
+        "newton_raphson": {
+            "max_iterations": 50,
+            "tolerance": 1e-10
+        }
+    },
+    "output": {
+        "save_fields": true,
+        "save_spectra": true,
+        "save_analysis": true,
+        "save_postulates": true,
+        "format": "hdf5",
+        "compression": "gzip"
+    }
+}

@@ -30,13 +30,16 @@ import numpy as np
 from typing import Dict, Any
 
 from ..domain import Domain
+from ..domain.domain_7d import Domain7D
 from .quench_detector import QuenchDetector
 from .bvp_envelope_solver import BVPEnvelopeSolver
+from .bvp_envelope_equation_7d import BVPEnvelopeEquation7D
 from .bvp_impedance_calculator import BVPImpedanceCalculator
 from .bvp_constants import BVPConstants
 from .phase_vector import PhaseVector
 from .bvp_phase_operations import BVPPhaseOperations
 from .bvp_parameter_access import BVPParameterAccess
+from .bvp_postulates_7d import BVPPostulates7D
 
 
 class BVPCore:
@@ -62,7 +65,7 @@ class BVPCore:
         _phase_vector (PhaseVector): U(1)³ phase vector structure.
     """
 
-    def __init__(self, domain: Domain, config: Dict[str, Any]) -> None:
+    def __init__(self, domain: Domain, config: Dict[str, Any], domain_7d: Domain7D = None) -> None:
         """
         Initialize BVP core with configuration.
 
@@ -79,6 +82,7 @@ class BVPCore:
                 - impedance_calculation: Impedance calculation settings
         """
         self.domain = domain
+        self.domain_7d = domain_7d
         self.config = config
         self.constants = BVPConstants(config)
         self._setup_phase_vector()
@@ -87,6 +91,7 @@ class BVPCore:
         self._setup_impedance_calculator()
         self._setup_phase_operations()
         self._setup_parameter_access()
+        self._setup_7d_components()
 
     def _setup_phase_vector(self) -> None:
         """
@@ -151,6 +156,21 @@ class BVPCore:
             self.constants, self._envelope_solver, 
             self._quench_detector, self._impedance_calculator
         )
+    
+    def _setup_7d_components(self) -> None:
+        """
+        Setup 7D components if 7D domain is available.
+        
+        Physical Meaning:
+            Initializes 7D envelope equation solver and postulates
+            if 7D domain is provided.
+        """
+        if self.domain_7d is not None:
+            self._envelope_equation_7d = BVPEnvelopeEquation7D(self.domain_7d, self.config)
+            self._postulates_7d = BVPPostulates7D(self.domain_7d, self.config)
+        else:
+            self._envelope_equation_7d = None
+            self._postulates_7d = None
 
     def solve_envelope(self, source: np.ndarray) -> np.ndarray:
         """
@@ -278,6 +298,77 @@ class BVPCore:
             BVPParameterAccess: The parameter access module.
         """
         return self._parameter_access
+    
+    def solve_envelope_7d(self, source_7d: np.ndarray) -> np.ndarray:
+        """
+        Solve 7D BVP envelope equation.
+        
+        Physical Meaning:
+            Solves the full 7D envelope equation in space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
+            using the 7D envelope equation solver.
+            
+        Args:
+            source_7d (np.ndarray): 7D source term s(x,φ,t).
+            
+        Returns:
+            np.ndarray: 7D envelope solution a(x,φ,t).
+            
+        Raises:
+            RuntimeError: If 7D domain is not available.
+        """
+        if self._envelope_equation_7d is None:
+            raise RuntimeError("7D domain not available for 7D envelope equation")
+        
+        return self._envelope_equation_7d.solve_envelope(source_7d)
+    
+    def validate_postulates_7d(self, envelope_7d: np.ndarray) -> Dict[str, Any]:
+        """
+        Validate all 9 BVP postulates for 7D field.
+        
+        Physical Meaning:
+            Validates all 9 BVP postulates to ensure the 7D field
+            satisfies the fundamental properties of the BVP framework.
+            
+        Args:
+            envelope_7d (np.ndarray): 7D BVP envelope field.
+            
+        Returns:
+            Dict[str, Any]: Validation results from all postulates.
+            
+        Raises:
+            RuntimeError: If 7D postulates are not available.
+        """
+        if self._postulates_7d is None:
+            raise RuntimeError("7D postulates not available")
+        
+        return self._postulates_7d.validate_all_postulates(envelope_7d)
+    
+    def get_7d_domain(self) -> Domain7D:
+        """
+        Get the 7D domain.
+        
+        Returns:
+            Domain7D: The 7D space-time domain.
+        """
+        return self.domain_7d
+    
+    def get_7d_envelope_equation(self) -> BVPEnvelopeEquation7D:
+        """
+        Get the 7D envelope equation solver.
+        
+        Returns:
+            BVPEnvelopeEquation7D: The 7D envelope equation solver.
+        """
+        return self._envelope_equation_7d
+    
+    def get_7d_postulates(self) -> BVPPostulates7D:
+        """
+        Get the 7D postulates validator.
+        
+        Returns:
+            BVPPostulates7D: The 7D postulates validator.
+        """
+        return self._postulates_7d
 
     def __repr__(self) -> str:
         """String representation of BVP core."""

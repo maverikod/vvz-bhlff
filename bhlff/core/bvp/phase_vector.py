@@ -230,17 +230,34 @@ class PhaseVector:
                 - weak_current: Weak interaction current
                 - mixed_current: Mixed electroweak current
         """
-        # Compute phase gradients
+        # Compute phase gradients in 7D space-time
         phase_gradients = []
         for theta_a in self.theta_components:
-            if self.domain.dimensions == 1:
-                grad_theta = np.gradient(theta_a, self.domain.dx)
-            elif self.domain.dimensions == 2:
-                grad_x, grad_y = np.gradient(theta_a, self.domain.dx, self.domain.dx)
-                grad_theta = np.sqrt(grad_x**2 + grad_y**2)
-            else:  # 3D
-                grad_x, grad_y, grad_z = np.gradient(theta_a, self.domain.dx, self.domain.dx, self.domain.dx)
-                grad_theta = np.sqrt(grad_x**2 + grad_y**2 + grad_z**2)
+            # Compute gradients in all 7 dimensions
+            gradients = []
+            
+            # Spatial gradients ℝ³ₓ
+            if self.domain.dimensions >= 1:
+                gradients.append(np.gradient(theta_a, self.domain.dx, axis=0))
+            if self.domain.dimensions >= 2:
+                gradients.append(np.gradient(theta_a, self.domain.dx, axis=1))
+            if self.domain.dimensions >= 3:
+                gradients.append(np.gradient(theta_a, self.domain.dx, axis=2))
+            
+            # Phase gradients 𝕋³_φ
+            if theta_a.ndim > 3:
+                gradients.append(np.gradient(theta_a, self.domain.dphi, axis=3))  # φ₁
+            if theta_a.ndim > 4:
+                gradients.append(np.gradient(theta_a, self.domain.dphi, axis=4))  # φ₂
+            if theta_a.ndim > 5:
+                gradients.append(np.gradient(theta_a, self.domain.dphi, axis=5))  # φ₃
+            
+            # Temporal gradient ℝₜ
+            if theta_a.ndim > 6:
+                gradients.append(np.gradient(theta_a, self.domain.dt, axis=6))  # t
+            
+            # Compute magnitude of gradient vector in 7D
+            grad_theta = np.sqrt(np.sum([np.abs(g)**2 for g in gradients], axis=0))
             phase_gradients.append(grad_theta)
         
         # Electromagnetic current (primarily from Θ₁)
@@ -334,6 +351,34 @@ class PhaseVector:
         self.su2_coupling_terms["theta_1_theta_2"] = strength * 0.1
         self.su2_coupling_terms["theta_2_theta_3"] = strength * 0.1
         self.su2_coupling_terms["theta_1_theta_3"] = strength * 0.05
+    
+    def update_phase_components(self, envelope: np.ndarray) -> None:
+        """
+        Update phase components from solved envelope.
+        
+        Physical Meaning:
+            Updates the three U(1) phase components Θ_a (a=1..3)
+            from the solved BVP envelope field.
+            
+        Mathematical Foundation:
+            Extracts phase components from the envelope solution
+            and updates the U(1)³ phase structure.
+            
+        Args:
+            envelope (np.ndarray): Solved BVP envelope in 7D space-time.
+        """
+        # If envelope is a vector field, extract components
+        if envelope.ndim > self.domain.dimensions:
+            # Envelope has additional dimensions for phase components
+            for a in range(3):
+                if a < envelope.shape[-1]:  # Check if component exists
+                    self.theta_components[a] = envelope[..., a]
+        else:
+            # Single envelope field - distribute to components
+            for a in range(3):
+                # Each component gets a phase-shifted version
+                phase_shift = 2 * np.pi * a / 3
+                self.theta_components[a] = envelope * np.exp(1j * phase_shift)
     
     def __repr__(self) -> str:
         """String representation of phase vector."""

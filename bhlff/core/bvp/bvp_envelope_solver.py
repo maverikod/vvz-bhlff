@@ -203,34 +203,12 @@ class BVPEnvelopeSolver:
         Returns:
             np.ndarray: Updated envelope solution.
         """
-        # Advanced finite difference implementation with spectral accuracy
-        # Uses high-order finite differences for spatial derivatives
-        # and spectral methods for improved accuracy
+        # Advanced finite difference implementation with spectral accuracy for 7D
+        # Uses high-order finite differences for all 7 dimensions:
+        # 3 spatial (x,y,z) + 3 phase (φ₁,φ₂,φ₃) + 1 temporal (t)
 
-        dx = self.domain.dx
-
-        # Compute gradient of envelope
-        if self.domain.dimensions == 1:
-            grad_envelope = np.gradient(envelope, dx)
-            # Compute ∇·(κ∇a) term
-            kappa_grad = kappa * grad_envelope
-            div_kappa_grad = np.gradient(kappa_grad, dx)
-        elif self.domain.dimensions == 2:
-            grad_x, grad_y = np.gradient(envelope, dx, dx)
-            kappa_grad_x = kappa * grad_x
-            kappa_grad_y = kappa * grad_y
-            div_kappa_grad_x = np.gradient(kappa_grad_x, dx, axis=0)
-            div_kappa_grad_y = np.gradient(kappa_grad_y, dx, axis=1)
-            div_kappa_grad = div_kappa_grad_x + div_kappa_grad_y
-        else:  # 3D
-            grad_x, grad_y, grad_z = np.gradient(envelope, dx, dx, dx)
-            kappa_grad_x = kappa * grad_x
-            kappa_grad_y = kappa * grad_y
-            kappa_grad_z = kappa * grad_z
-            div_kappa_grad_x = np.gradient(kappa_grad_x, dx, axis=0)
-            div_kappa_grad_y = np.gradient(kappa_grad_y, dx, axis=1)
-            div_kappa_grad_z = np.gradient(kappa_grad_z, dx, axis=2)
-            div_kappa_grad = div_kappa_grad_x + div_kappa_grad_y + div_kappa_grad_z
+        # Use the core solver's 7D implementation
+        div_kappa_grad = self._core_solver._compute_div_kappa_grad(envelope, kappa)
 
         # Solve: ∇·(κ∇a) + k₀²χa = s
         # Rearrange: k₀²χa = s - ∇·(κ∇a)

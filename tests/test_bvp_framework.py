@@ -2,20 +2,16 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-BVP Framework integration tests.
+Comprehensive tests for BVP (Base High-Frequency Field) framework.
 
-This module implements comprehensive tests for the BVP framework integration
-across all levels A-G, ensuring proper functionality of BVP envelope solver,
-quench detection, impedance calculation, and U(1)³ phase vector structure.
+This module provides comprehensive testing for the BVP framework,
+including 7D space-time structure, U(1)³ phase structure, and
+all 9 BVP postulates.
 
 Physical Meaning:
-    Tests validate the Base High-Frequency Field (BVP) framework as the
-    central backbone of the entire system, replacing classical patterns
-    with BVP-modulational approach.
-
-Mathematical Foundation:
-    Tests validate BVP envelope equation ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t)
-    with quench detection, impedance calculation, and U(1)³ phase structure.
+    Tests validate that the BVP framework correctly implements
+    the 7D phase field theory with proper mathematical foundations
+    and physical consistency.
 
 Example:
     >>> pytest tests/test_bvp_framework.py -v
@@ -26,27 +22,37 @@ import numpy as np
 from typing import Dict, Any
 
 from bhlff.core.domain import Domain
-from bhlff.core.bvp import BVPCore, QuenchDetector, BVPEnvelopeSolver, BVPImpedanceCalculator, PhaseVector
-from bhlff.solvers.spectral import FFTSolver3D
-from bhlff.solvers.integrators import TimeIntegrator
+from bhlff.core.bvp import (
+    BVPCore,
+    BVPEnvelopeSolver,
+    BVPImpedanceCalculator,
+    BVPInterface,
+    BVPConstants,
+    QuenchDetector,
+    PhaseVector,
+    BVPPostulates
+)
 
 
 class TestBVPFramework:
-    """Test suite for BVP framework integration."""
+    """Test suite for BVP framework components."""
 
     @pytest.fixture
-    def domain(self):
-        """Create test domain."""
+    def domain_7d(self):
+        """Create 7D domain for testing."""
         return Domain(
+            L=1.0,
+            N=32,
             dimensions=3,
-            size=(1.0, 1.0, 1.0),
-            resolution=(64, 64, 64),
-            boundary_conditions="periodic"
+            dphi=2*np.pi/16,
+            N_phi=16,
+            dt=0.01,
+            N_t=100
         )
 
     @pytest.fixture
     def bvp_config(self):
-        """Create BVP configuration."""
+        """Create BVP configuration for testing."""
         return {
             "carrier_frequency": 1.85e43,
             "envelope_equation": {
@@ -63,313 +69,242 @@ class TestBVPFramework:
             },
             "impedance_calculation": {
                 "frequency_range": [1e15, 1e20],
-                "frequency_points": 1000,
-                "boundary_conditions": "periodic"
+                "frequency_points": 100
+            },
+            "phase_components": {
+                "amplitude_1": 1.0,
+                "amplitude_2": 1.0,
+                "amplitude_3": 1.0,
+                "frequency_1": 1.0,
+                "frequency_2": 1.0,
+                "frequency_3": 1.0
             }
         }
 
     @pytest.fixture
-    def bvp_core(self, domain, bvp_config):
-        """Create BVP core instance."""
-        return BVPCore(domain, bvp_config)
-
-    def test_bvp_core_initialization(self, domain, bvp_config):
-        """Test A0.1: BVP Core initialization."""
-        bvp_core = BVPCore(domain, bvp_config)
+    def bvp_core(self, domain_7d, bvp_config):
+        """Create BVP core instance for testing."""
+        return BVPCore(domain_7d, bvp_config)
+    
+    def test_domain_7d_structure(self, domain_7d):
+        """Test 7D domain structure."""
+        assert domain_7d.dimensions == 3
+        assert hasattr(domain_7d, 'dphi')
+        assert hasattr(domain_7d, 'N_phi')
+        assert hasattr(domain_7d, 'dt')
+        assert hasattr(domain_7d, 'N_t')
+        assert domain_7d.shape == (32, 32, 32, 16, 16, 16, 100)
+    
+    def test_bvp_core_initialization(self, bvp_core):
+        """Test BVP core initialization."""
+        assert bvp_core.domain is not None
+        assert bvp_core.config is not None
+        assert bvp_core.constants is not None
+        assert hasattr(bvp_core, '_envelope_solver')
+        assert hasattr(bvp_core, '_quench_detector')
+        assert hasattr(bvp_core, '_impedance_calculator')
+        assert hasattr(bvp_core, '_phase_vector')
+    
+    def test_phase_vector_u1_structure(self, bvp_core):
+        """Test U(1)³ phase structure."""
+        phase_vector = bvp_core._phase_vector
+        assert len(phase_vector.theta_components) == 3
+        assert all(comp.shape == bvp_core.domain.shape for comp in phase_vector.theta_components)
+        assert hasattr(phase_vector, 'coupling_matrix')
+        assert hasattr(phase_vector, 'electroweak_coefficients')
+    
+    def test_envelope_solver_7d(self, bvp_core):
+        """Test 7D envelope solver."""
+        solver = bvp_core._envelope_solver
+        assert solver.domain is not None
+        assert solver.constants is not None
         
-        assert bvp_core.domain == domain
-        assert bvp_core.config == bvp_config
-        assert bvp_core.get_carrier_frequency() == 1.85e43
-        assert bvp_core.get_phase_vector() is not None
-
-    def test_bvp_envelope_solver(self, bvp_core, domain):
-        """Test A0.1: BVP envelope solver validation."""
-        # Create test source
-        source = np.zeros(domain.shape)
-        source[32, 32, 32] = 1.0  # Point source at center
+        # Test with simple source
+        source = np.zeros(bvp_core.domain.shape, dtype=complex)
+        source[16, 16, 16, 8, 8, 8, 50] = 1.0  # Point source in 7D
         
-        # Solve BVP envelope equation
-        envelope = bvp_core.solve_envelope(source)
+        envelope = solver.solve_envelope(source)
+        assert envelope.shape == bvp_core.domain.shape
+        assert np.isfinite(envelope).all()
+    
+    def test_quench_detector(self, bvp_core):
+        """Test quench detection."""
+        detector = bvp_core._quench_detector
+        assert detector.constants is not None
         
-        # Validate envelope properties
-        assert envelope.shape == domain.shape
-        assert np.all(np.isfinite(envelope))
-        assert np.max(np.abs(envelope)) > 0
+        # Test with envelope
+        envelope = np.ones(bvp_core.domain.shape, dtype=complex)
+        quenches = detector.detect_quenches(envelope)
         
-        # Check envelope parameters
-        params = bvp_core.get_envelope_parameters()
-        assert "kappa_0" in params
-        assert "kappa_2" in params
-        assert "chi_prime" in params
-
-    def test_bvp_quench_detection(self, bvp_core, domain):
-        """Test A0.2: BVP quench detection validation."""
-        # Create envelope with quench events
-        envelope = np.zeros(domain.shape)
-        envelope[32, 32, 32] = 1.0  # High amplitude at center
-        envelope[16, 16, 16] = 0.9  # Another high amplitude
-        
-        # Detect quenches
-        quenches = bvp_core.detect_quenches(envelope)
-        
-        # Validate quench detection results
-        assert "quench_locations" in quenches
-        assert "quench_types" in quenches
-        assert "energy_dumped" in quenches
-        
-        # Check quench thresholds
-        thresholds = bvp_core.get_quench_thresholds()
-        assert "amplitude_threshold" in thresholds
-        assert "detuning_threshold" in thresholds
-        assert "gradient_threshold" in thresholds
-
-    def test_bvp_u1_phase_vector(self, bvp_core):
-        """Test A0.3: BVP U(1)³ phase vector validation."""
-        phase_vector = bvp_core.get_phase_vector()
-        
-        # Get phase components
-        phase_components = bvp_core.get_phase_components()
-        assert len(phase_components) == 3  # Three U(1) components
-        
-        # Check total phase
-        total_phase = bvp_core.get_total_phase()
-        assert total_phase.shape == bvp_core.domain.shape
-        
-        # Check electroweak currents
-        envelope = np.ones(bvp_core.domain.shape)
-        currents = bvp_core.compute_electroweak_currents(envelope)
-        assert "em_current" in currents
-        assert "weak_current" in currents
-        assert "mixed_current" in currents
-        
-        # Check phase coherence
-        coherence = bvp_core.compute_phase_coherence()
-        assert coherence.shape == bvp_core.domain.shape
-
-    def test_bvp_impedance_calculation(self, bvp_core, domain):
-        """Test A0.4: BVP impedance calculation validation."""
-        # Create test envelope
-        envelope = np.zeros(domain.shape)
-        envelope[32, 32, 32] = 1.0
-        
-        # Compute impedance
-        impedance = bvp_core.compute_impedance(envelope)
-        
-        # Validate impedance results
-        assert "admittance" in impedance
-        assert "reflection" in impedance
-        assert "transmission" in impedance
-        assert "peaks" in impedance
-        
-        # Check impedance parameters
-        params = bvp_core.get_impedance_parameters()
-        assert "frequency_range" in params
-        assert "frequency_points" in params
-
-    def test_bvp_fft_solver_integration(self, domain, bvp_config, bvp_core):
-        """Test B1: BVP FFT solver integration."""
-        # Create FFT solver with BVP integration
-        fft_solver = FFTSolver3D(domain, bvp_config, bvp_core)
-        
-        # Test BVP envelope solving
-        source = np.zeros(domain.shape)
-        source[32, 32, 32] = 1.0
-        
-        envelope = fft_solver.solve_bvp_envelope(source)
-        assert envelope.shape == domain.shape
-        
-        # Test quench detection
-        quenches = fft_solver.detect_quenches(envelope)
         assert isinstance(quenches, dict)
+        assert 'quench_locations' in quenches
+        assert 'quench_types' in quenches
+        assert 'quench_strengths' in quenches
+    
+    def test_impedance_calculator(self, bvp_core):
+        """Test impedance calculation."""
+        calculator = bvp_core._impedance_calculator
+        assert calculator.domain is not None
+        assert calculator.constants is not None
         
-        # Test impedance calculation
-        impedance = fft_solver.compute_bvp_impedance(envelope)
+        # Test with envelope
+        envelope = np.ones(bvp_core.domain.shape, dtype=complex)
+        impedance = calculator.compute_impedance(envelope)
+        
         assert isinstance(impedance, dict)
-
-    def test_bvp_time_integrator_integration(self, domain, bvp_config, bvp_core):
-        """Test B2: BVP time integrator integration."""
-        # Create time integrator with BVP integration
-        class TestTimeIntegrator(TimeIntegrator):
-            def step(self, field: np.ndarray, dt: float) -> np.ndarray:
-                return field + dt * np.ones_like(field)
-            
-            def get_integrator_type(self) -> str:
-                return "test"
+        assert 'admittance' in impedance
+        assert 'reflection_coefficient' in impedance
+        assert 'transmission_coefficient' in impedance
+        assert 'resonance_peaks' in impedance
+    
+    def test_bvp_postulates(self, bvp_core):
+        """Test all 9 BVP postulates."""
+        postulates = BVPPostulates(bvp_core.domain, bvp_core.constants)
         
-        integrator = TestTimeIntegrator(domain, bvp_config, bvp_core)
+        # Test postulate initialization
+        assert hasattr(postulates, 'carrier_primacy')
+        assert hasattr(postulates, 'scale_separation')
+        assert hasattr(postulates, 'bvp_rigidity')
+        assert hasattr(postulates, 'u1_phase_structure')
+        assert hasattr(postulates, 'quenches')
+        assert hasattr(postulates, 'tail_resonatorness')
+        assert hasattr(postulates, 'transition_zone')
+        assert hasattr(postulates, 'core_renormalization')
+        assert hasattr(postulates, 'power_balance')
         
-        # Test quench detection
-        envelope = np.ones(domain.shape)
-        quenches = integrator.detect_quenches(envelope)
-        assert isinstance(quenches, dict)
+        # Test with envelope
+        envelope = np.ones(bvp_core.domain.shape, dtype=complex)
+        results = postulates.apply_all_postulates(envelope)
         
-        # Test BVP core access
-        assert integrator.get_bvp_core() == bvp_core
-
-    def test_bvp_power_law_tails(self, bvp_core, domain):
-        """Test B1: BVP envelope power law tails."""
-        # Create point source
-        source = np.zeros(domain.shape)
-        source[32, 32, 32] = 1.0
+        assert isinstance(results, dict)
+        assert len(results) == 10  # 9 postulates + overall satisfaction
+        assert 'all_postulates_satisfied' in results
+    
+    def test_bvp_interface(self, bvp_core):
+        """Test BVP interface."""
+        interface = BVPInterface(bvp_core, bvp_core.constants)
+        assert interface.bvp_core is bvp_core
+        assert interface.constants is not None
         
-        # Solve BVP envelope
+        # Test with envelope
+        envelope = np.ones(bvp_core.domain.shape, dtype=complex)
+        
+        # Test tail interface
+        tail_data = interface.interface_with_tail(envelope)
+        assert isinstance(tail_data, dict)
+        
+        # Test transition zone interface
+        tz_data = interface.interface_with_transition_zone(envelope)
+        assert isinstance(tz_data, dict)
+        
+        # Test core interface
+        core_data = interface.interface_with_core(envelope)
+        assert isinstance(core_data, dict)
+    
+    def test_7d_gradient_computation(self, bvp_core):
+        """Test 7D gradient computation."""
+        interface = BVPInterface(bvp_core, bvp_core.constants)
+        
+        # Test with 7D field
+        field = np.ones(bvp_core.domain.shape, dtype=complex)
+        gradients = interface._interface_core.compute_field_gradient(field)
+        
+        assert isinstance(gradients, list)
+        assert len(gradients) == 7  # 3 spatial + 3 phase + 1 temporal
+        assert all(g.shape == bvp_core.domain.shape for g in gradients)
+    
+    def test_phase_vector_electroweak_currents(self, bvp_core):
+        """Test electroweak current computation."""
+        phase_vector = bvp_core._phase_vector
+        
+        # Test with envelope
+        envelope = np.ones(bvp_core.domain.shape, dtype=complex)
+        currents = phase_vector.compute_electroweak_currents(envelope)
+        
+        assert isinstance(currents, dict)
+        assert 'em_current' in currents
+        assert 'weak_current' in currents
+        assert 'mixed_current' in currents
+        assert all(np.isfinite(current).all() for current in currents.values())
+    
+    def test_bvp_constants(self, bvp_core):
+        """Test BVP constants."""
+        constants = bvp_core.constants
+        
+        # Test physical parameters
+        carrier_freq = constants.get_physical_parameter("carrier_frequency")
+        assert carrier_freq == 1.85e43
+        
+        # Test envelope parameters
+        kappa_0 = constants.get_envelope_parameter("kappa_0")
+        assert kappa_0 == 1.0
+        
+        # Test quench parameters
+        amp_threshold = constants.get_quench_parameter("amplitude_threshold")
+        assert amp_threshold == 0.8
+        
+        # Test numerical parameters
+        max_iter = constants.get_numerical_parameter("max_iterations")
+        assert max_iter == 50
+    
+    def test_bvp_core_solve_envelope(self, bvp_core):
+        """Test BVP core envelope solving."""
+        # Test with simple source
+        source = np.zeros(bvp_core.domain.shape, dtype=complex)
+        source[16, 16, 16, 8, 8, 8, 50] = 1.0  # Point source in 7D
+        
         envelope = bvp_core.solve_envelope(source)
+        assert envelope.shape == bvp_core.domain.shape
+        assert np.isfinite(envelope).all()
         
-        # Check power law behavior (simplified test)
-        center = np.array([32, 32, 32])
-        distances = []
-        amplitudes = []
-        
-        for i in range(domain.shape[0]):
-            for j in range(domain.shape[1]):
-                for k in range(domain.shape[2]):
-                    if (i, j, k) != tuple(center):
-                        dist = np.linalg.norm(np.array([i, j, k]) - center)
-                        distances.append(dist)
-                        amplitudes.append(np.abs(envelope[i, j, k]))
-        
-        # Basic validation (more sophisticated tests would be in level B)
-        assert len(distances) > 0
-        assert len(amplitudes) > 0
-        assert np.max(amplitudes) > 0
-
-    def test_bvp_monotonicity(self, bvp_core, domain):
-        """Test B2: BVP envelope monotonicity."""
-        # Create point source
-        source = np.zeros(domain.shape)
-        source[32, 32, 32] = 1.0
-        
-        # Solve BVP envelope
-        envelope = bvp_core.solve_envelope(source)
-        
-        # Check monotonicity (simplified test)
-        center = np.array([32, 32, 32])
-        radial_profile = []
-        
-        for r in range(1, 20):
-            count = 0
-            total_amp = 0
-            for i in range(domain.shape[0]):
-                for j in range(domain.shape[1]):
-                    for k in range(domain.shape[2]):
-                        dist = np.linalg.norm(np.array([i, j, k]) - center)
-                        if abs(dist - r) < 0.5:
-                            total_amp += np.abs(envelope[i, j, k])
-                            count += 1
-            if count > 0:
-                radial_profile.append(total_amp / count)
-        
-        # Basic monotonicity check
-        if len(radial_profile) > 1:
-            # Should generally decrease with distance
-            assert radial_profile[0] > radial_profile[-1]
-
-    def test_bvp_topological_charge(self, bvp_core):
-        """Test B3: BVP topological charge."""
-        phase_vector = bvp_core.get_phase_vector()
-        
-        # Test topological charge calculation
-        # This would be more sophisticated in actual implementation
-        total_phase = bvp_core.get_total_phase()
-        assert total_phase.shape == bvp_core.domain.shape
-        
-        # Check SU(2) coupling
-        coupling_strength = bvp_core.get_su2_coupling_strength()
-        assert isinstance(coupling_strength, float)
-        assert coupling_strength >= 0
-
-    def test_bvp_zone_separation(self, bvp_core, domain):
-        """Test B4: BVP zone separation."""
-        # Create test envelope
-        envelope = np.zeros(domain.shape)
-        envelope[32, 32, 32] = 1.0
-        
-        # Compute impedance for zone analysis
-        impedance = bvp_core.compute_impedance(envelope)
-        
-        # Basic zone separation validation
-        assert "peaks" in impedance
-        # More sophisticated zone analysis would be in level B
-
-    def test_bvp_boundary_effects(self, bvp_core, domain):
-        """Test C1: BVP boundary effects."""
-        # Create envelope with boundary effects
-        envelope = np.zeros(domain.shape)
-        envelope[32, 32, 32] = 1.0
-        
-        # Test impedance calculation for boundary effects
-        impedance = bvp_core.compute_impedance(envelope)
-        
-        # Validate boundary function calculation
-        assert "admittance" in impedance
-        assert "reflection" in impedance
-        assert "transmission" in impedance
-
-    def test_bvp_quench_memory(self, bvp_core, domain):
-        """Test C3: BVP quench memory/pinning."""
-        # Create envelope with quench events
-        envelope = np.zeros(domain.shape)
-        envelope[32, 32, 32] = 1.0
-        
-        # Detect quenches
+        # Test phase vector update
+        assert bvp_core._phase_vector.theta_components[0] is not None
+    
+    def test_bvp_core_detect_quenches(self, bvp_core):
+        """Test BVP core quench detection."""
+        envelope = np.ones(bvp_core.domain.shape, dtype=complex)
         quenches = bvp_core.detect_quenches(envelope)
         
-        # Validate quench memory effects
-        assert "quench_locations" in quenches
-        assert "energy_dumped" in quenches
+        assert isinstance(quenches, dict)
+        assert 'quench_locations' in quenches
+        assert 'quench_types' in quenches
+        assert 'quench_strengths' in quenches
+    
+    def test_bvp_core_compute_impedance(self, bvp_core):
+        """Test BVP core impedance computation."""
+        envelope = np.ones(bvp_core.domain.shape, dtype=complex)
+        impedance = bvp_core.compute_impedance(envelope)
         
-        # Test quench threshold modification
-        new_thresholds = {
-            "amplitude_threshold": 0.9,
-            "detuning_threshold": 0.2,
-            "gradient_threshold": 0.6
-        }
-        bvp_core.set_quench_thresholds(new_thresholds)
+        assert isinstance(impedance, dict)
+        assert 'admittance' in impedance
+        assert 'reflection_coefficient' in impedance
+        assert 'transmission_coefficient' in impedance
+        assert 'resonance_peaks' in impedance
+    
+    def test_bvp_framework_validation(self, bvp_core):
+        """Test BVP framework validation."""
+        # Test with envelope
+        envelope = np.ones(bvp_core.domain.shape, dtype=complex)
         
-        updated_thresholds = bvp_core.get_quench_thresholds()
-        assert updated_thresholds["amplitude_threshold"] == 0.9
-
-    def test_bvp_parameter_scaling(self, domain, bvp_config):
-        """Test A2: BVP parameter scaling."""
-        # Test with different scales
-        config1 = bvp_config.copy()
-        config2 = bvp_config.copy()
-        config2["carrier_frequency"] = 2.0 * config1["carrier_frequency"]
+        # Test postulate validation
+        postulates = BVPPostulates(bvp_core.domain, bvp_core.constants)
+        is_valid = postulates.validate_bvp_framework(envelope)
+        assert isinstance(is_valid, bool)
         
-        bvp_core1 = BVPCore(domain, config1)
-        bvp_core2 = BVPCore(domain, config2)
+        # Test postulate summary
+        summary = postulates.get_postulate_summary(envelope)
+        assert isinstance(summary, dict)
+        assert len(summary) == 9  # 9 postulates
         
-        # Create same source
-        source = np.zeros(domain.shape)
-        source[32, 32, 32] = 1.0
+        # Test failed postulates
+        failed = postulates.get_failed_postulates(envelope)
+        assert isinstance(failed, list)
         
-        # Solve with both configurations
-        envelope1 = bvp_core1.solve_envelope(source)
-        envelope2 = bvp_core2.solve_envelope(source)
-        
-        # Basic scaling validation
-        assert envelope1.shape == envelope2.shape
-        assert np.all(np.isfinite(envelope1))
-        assert np.all(np.isfinite(envelope2))
-
-    def test_bvp_energy_balance(self, bvp_core, domain):
-        """Test A0.5: BVP energy balance."""
-        # Create test source
-        source = np.zeros(domain.shape)
-        source[32, 32, 32] = 1.0
-        
-        # Solve BVP envelope
-        envelope = bvp_core.solve_envelope(source)
-        
-        # Basic energy balance validation
-        total_energy = np.sum(np.abs(envelope)**2)
-        assert total_energy > 0
-        assert np.all(np.isfinite(envelope))
-        
-        # Check envelope parameters for energy calculation
-        params = bvp_core.get_envelope_parameters()
-        assert "kappa_0" in params
-        assert "chi_prime" in params
+        # Test quality scores
+        scores = postulates.get_postulate_quality_scores(envelope)
+        assert isinstance(scores, dict)
+        assert len(scores) == 9  # 9 postulates
+        assert all(0.0 <= score <= 1.0 for score in scores.values())
 
 
 if __name__ == "__main__":

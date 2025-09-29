@@ -64,30 +64,50 @@ class BVPInterfaceCore:
     
     def compute_field_gradient(self, envelope: np.ndarray) -> np.ndarray:
         """
-        Compute field gradient.
+        Compute field gradient in 7D space-time.
         
         Physical Meaning:
-            Computes the spatial gradient of the field envelope using
-            high-order finite difference methods.
+            Computes the gradient of the field envelope in 7D space-time
+            M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ using high-order finite difference methods.
             
         Mathematical Foundation:
-            Computes ∇A using finite difference approximation:
-            ∇A = (∂A/∂x, ∂A/∂y, ∂A/∂z) for 3D fields
+            Computes ∇A using finite difference approximation in 7D:
+            ∇A = (∂A/∂x, ∂A/∂y, ∂A/∂z, ∂A/∂φ₁, ∂A/∂φ₂, ∂A/∂φ₃, ∂A/∂t)
             
         Args:
-            envelope (np.ndarray): Field envelope.
+            envelope (np.ndarray): Field envelope in 7D space-time.
             
         Returns:
-            np.ndarray: Field gradient components.
+            np.ndarray: Field gradient components in 7D.
         """
         dx = self.domain.dx
+        dphi = self.domain.dphi
+        dt = self.domain.dt
         
-        if envelope.ndim == 1:
-            return np.gradient(envelope, dx)
-        elif envelope.ndim == 2:
-            return np.gradient(envelope, dx, dx)
-        else:  # 3D
-            return np.gradient(envelope, dx, dx, dx)
+        # Compute gradients in all 7 dimensions
+        gradients = []
+        
+        # Spatial gradients ℝ³ₓ
+        if self.domain.dimensions >= 1:
+            gradients.append(np.gradient(envelope, dx, axis=0))
+        if self.domain.dimensions >= 2:
+            gradients.append(np.gradient(envelope, dx, axis=1))
+        if self.domain.dimensions >= 3:
+            gradients.append(np.gradient(envelope, dx, axis=2))
+        
+        # Phase gradients 𝕋³_φ
+        if envelope.ndim > 3:
+            gradients.append(np.gradient(envelope, dphi, axis=3))  # φ₁
+        if envelope.ndim > 4:
+            gradients.append(np.gradient(envelope, dphi, axis=4))  # φ₂
+        if envelope.ndim > 5:
+            gradients.append(np.gradient(envelope, dphi, axis=5))  # φ₃
+        
+        # Temporal gradient ℝₜ
+        if envelope.ndim > 6:
+            gradients.append(np.gradient(envelope, dt, axis=6))  # t
+        
+        return gradients
     
     def compute_field_amplitude(self, envelope: np.ndarray) -> np.ndarray:
         """

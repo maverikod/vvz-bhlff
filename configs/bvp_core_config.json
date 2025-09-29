@@ -1,6 +1,16 @@
 {
     "bvp_core": {
         "carrier_frequency": 1.85e43,
+        "domain_7d": {
+            "spatial_dimensions": 3,
+            "spatial_size": 1.0,
+            "spatial_points": 32,
+            "phase_dimensions": 3,
+            "phase_size": 6.283185307179586,
+            "phase_points": 16,
+            "temporal_size": 1.0,
+            "temporal_points": 100
+        },
         "envelope_equation": {
             "kappa_0": 1.0,
             "kappa_2": 0.1,
@@ -79,7 +89,19 @@
             "amplitude_3": 1.0,
             "frequency_1": 1.0,
             "frequency_2": 1.0,
-            "frequency_3": 1.0
+            "frequency_3": 1.0,
+            "phase_shift_1": 0.0,
+            "phase_shift_2": 2.0943951023931953,
+            "phase_shift_3": 4.1887902047863905
+        },
+        "u1_phase_structure": {
+            "theta_1_amplitude": 1.0,
+            "theta_2_amplitude": 1.0,
+            "theta_3_amplitude": 1.0,
+            "theta_1_frequency": 1.0,
+            "theta_2_frequency": 1.0,
+            "theta_3_frequency": 1.0,
+            "phase_coherence_threshold": 0.1
         },
         "su2_coupling": {
             "coupling_strength": 0.1

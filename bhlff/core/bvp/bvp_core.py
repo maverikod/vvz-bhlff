@@ -127,27 +127,39 @@ class BVPCore:
 
     def solve_envelope(self, source: np.ndarray) -> np.ndarray:
         """
-        Solve BVP envelope equation.
+        Solve BVP envelope equation for U(1)³ phase structure.
 
         Physical Meaning:
-            Computes the envelope a(x) of the Base High-Frequency Field
-            that modulates the high-frequency carrier.
+            Computes the envelope a(x,φ,t) of the Base High-Frequency Field
+            in 7D space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ that modulates the high-frequency carrier.
+            The envelope is a vector of three U(1) phase components Θ_a (a=1..3).
 
         Mathematical Foundation:
-            Solves ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x) for the envelope a(x).
+            Solves ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t) for the envelope a(x,φ,t)
+            where a is a vector of three U(1) phase components in 7D space-time.
 
         Args:
-            source (np.ndarray): Source term s(x) in real space.
-                Represents external excitations or initial conditions.
+            source (np.ndarray): Source term s(x,φ,t) in 7D space-time.
+                Represents external excitations or initial conditions in M₇.
 
         Returns:
-            np.ndarray: BVP envelope a(x) in real space.
-                Represents the envelope modulation of the high-frequency carrier.
+            np.ndarray: BVP envelope a(x,φ,t) in 7D space-time.
+                Represents the envelope modulation of the high-frequency carrier
+                as a vector of three U(1) phase components.
 
         Raises:
-            ValueError: If source has incompatible shape with domain.
+            ValueError: If source has incompatible shape with 7D domain.
         """
-        return self._envelope_solver.solve_envelope(source)
+        if source.shape != self.domain.shape:
+            raise ValueError(f"Source shape {source.shape} incompatible with 7D domain shape {self.domain.shape}")
+        
+        # Solve envelope equation for U(1)³ phase structure
+        envelope = self._envelope_solver.solve_envelope(source)
+        
+        # Update phase vector with solved envelope
+        self._phase_vector.update_phase_components(envelope)
+        
+        return envelope
 
     def detect_quenches(self, envelope: np.ndarray) -> Dict[str, Any]:
         """

@@ -2,21 +2,22 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-BVP envelope equation solver module.
+7D BVP envelope equation solver module.
 
-This module implements the solver for the BVP envelope equation with
+This module implements the solver for the 7D BVP envelope equation with
 nonlinear stiffness and susceptibility, providing the core mathematical
-operations for envelope field calculations.
+operations for envelope field calculations in 7D space-time.
 
 Physical Meaning:
-    Solves the envelope equation ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x)
+    Solves the 7D envelope equation in M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ:
+    ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t)
     where κ(|a|) = κ₀ + κ₂|a|² is nonlinear stiffness and
     χ(|a|) = χ' + iχ''(|a|) is effective susceptibility.
 
 Mathematical Foundation:
-    Implements iterative solution of the nonlinear envelope equation
+    Implements iterative solution of the nonlinear 7D envelope equation
     using finite difference methods for the divergence and gradient
-    operations in the equation.
+    operations in all 7 dimensions (3 spatial + 3 phase + 1 temporal).
 
 Example:
     >>> solver = BVPEnvelopeSolver(domain, config)
@@ -34,18 +35,19 @@ from .bvp_constants import BVPConstants
 
 class BVPEnvelopeSolver:
     """
-    Solver for BVP envelope equation.
+    Solver for 7D BVP envelope equation.
 
     Physical Meaning:
-        Solves the nonlinear envelope equation for the Base High-Frequency
-        Field, computing the envelope modulation that satisfies the
-        governing equation with nonlinear stiffness and susceptibility.
+        Solves the nonlinear 7D envelope equation for the Base High-Frequency
+        Field in M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ, computing the envelope modulation
+        that satisfies the governing equation with nonlinear stiffness and susceptibility.
 
     Mathematical Foundation:
-        Solves ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x) where:
+        Solves ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t) where:
         - κ(|a|) = κ₀ + κ₂|a|² is nonlinear stiffness
         - χ(|a|) = χ' + iχ''(|a|) is effective susceptibility
-        - s(x) is the source term
+        - s(x,φ,t) is the source term in 7D space-time
+        - ∇ includes gradients in all 7 dimensions
 
     Attributes:
         domain (Domain): Computational domain.
@@ -103,30 +105,31 @@ class BVPEnvelopeSolver:
 
     def solve_envelope(self, source: np.ndarray) -> np.ndarray:
         """
-        Solve BVP envelope equation.
+        Solve 7D BVP envelope equation.
 
         Physical Meaning:
-            Computes the envelope a(x) of the Base High-Frequency Field
-            that modulates the high-frequency carrier.
+            Computes the envelope a(x,φ,t) of the Base High-Frequency Field
+            in 7D space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ that modulates the high-frequency carrier.
 
         Mathematical Foundation:
-            Solves ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x) for the envelope a(x).
+            Solves ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t) for the envelope a(x,φ,t)
+            where ∇ includes gradients in all 7 dimensions (3 spatial + 3 phase + 1 temporal).
 
         Args:
-            source (np.ndarray): Source term s(x) in real space.
-                Represents external excitations or initial conditions.
+            source (np.ndarray): Source term s(x,φ,t) in 7D space-time.
+                Represents external excitations or initial conditions in M₇.
 
         Returns:
-            np.ndarray: BVP envelope a(x) in real space.
+            np.ndarray: BVP envelope a(x,φ,t) in 7D space-time.
                 Represents the envelope modulation of the high-frequency carrier.
 
         Raises:
-            ValueError: If source has incompatible shape with domain.
+            ValueError: If source has incompatible shape with 7D domain.
         """
         if source.shape != self.domain.shape:
             raise ValueError(
                 f"Source shape {source.shape} incompatible with "
-                f"domain shape {self.domain.shape}"
+                f"7D domain shape {self.domain.shape}"
             )
 
         # Solve envelope equation using advanced Newton-Raphson method

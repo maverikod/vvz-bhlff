@@ -223,7 +223,12 @@ $$
 Наблюдаемое/критерии: сходимость по сетке (×2: $N=128\to256\to512$), отсутствие анизотропии; энергобаланс ≤1–3%.
 Вариации: разные схемы дискретизации фракц. оператора.
 
-**A2. Масштабирование и обезразмеривание**
+**A2. BVP Quench Detection Validation**
+Цель: Валидация системы детекции квенчей BVP.
+Постановка: Тестирование трёх порогов квенчей: амплитуда, детюнинг, градиент.
+Критерии: Корректная детекция пороговых событий; точность определения зон квенчей.
+
+**A3. BVP Scaling and Nondimensionalization**
 Цель: проверить корректность безразмерной схемы.
 Постановка: нормировки, единичные тесты, линейные эталоны.
 Критерии: инвариантность профилей при смене базовых масштабов.
@@ -373,6 +378,10 @@ The **Base High-Frequency Field (BVP)** is the central framework where all obser
 3. **BVP Rigidity**: BVP energy dominates in derivative terms; phase velocity c_φ is large
 4. **U(1)³ Phase Structure**: BVP is vector of phases Θ_a (a=1..3)
 5. **Quenches**: Threshold events when BVP dissipatively "dumps" energy into medium
+6. **Tail Resonatorness**: Tail is cascade of effective resonators/transmission lines with frequency-dependent impedance; spectrum {ω_n, Q_n} is determined by BVP and boundaries
+7. **Transition Zone = Nonlinear Interface**: TZ defines **nonlinear admittance** Y_tr(ω,|A|) and generates effective EM/weak currents J(ω) from envelope
+8. **Core — Averaged Minimum**: Core is minimum of ω₀-averaged energy: BVP "renormalizes" core coefficients (c₂,c₄,c₆ → c_i^eff(|A|,|∇A|)) and sets boundary "pressure/stiffness"
+9. **Power Balance**: BVP flux at external boundary = (growth of static core energy) + (EM/weak radiation/losses) + (reflection). This is controlled by integral identity
 
 ## 1.3. 7D BVP Envelope Equation
 
@@ -458,7 +467,27 @@ $$E[\mathbf{\Theta}] = \int_{M_7} \left( f_\phi^2|\nabla_{\mathbf{x}}\mathbf{\Th
 
 where $\mathbf{\Theta}(\mathbf{x},\boldsymbol{\phi},t) = (\Theta_1, \Theta_2, \Theta_3)$ is the U(1)³ phase vector.
 
-## 1.5. 7D Nondimensionalization
+## 1.9. BVP Operational Model (what we actually compute)
+
+**Representation.** For each phase channel:
+
+$$
+\Theta_a(x,t) \approx \Re\{ a_a(x)\,e^{i\omega_0 t}\}\quad\text{(slow envelope \(a_a\))}
+$$
+
+**Envelope equation** — nonlinear "Helmholtz" on effective medium:
+
+$$
+\nabla\!\cdot\big(\kappa(|a|)\,\nabla a\big) + k_0^2\,\chi(|a|)\,a \;=\; s(\mathbf{x},\boldsymbol{\phi},t)
+$$
+
+**BVP Interface with System Zones:**
+
+- **Tail ←→ BVP**: Tail receives $Y_{\rm out}(\omega)$ from BVP and provides boundary conditions for envelope equation
+- **Transition Zone ←→ BVP**: TZ accepts $Y_{\rm in}$ from tail and outputs nonlinear $Y_{\rm tr}(\omega,|A|)$, plus sources $J_{\rm EM}(\omega;A)$, loss map $\chi''(|A|)$
+- **Core ←→ BVP**: Through averaging: $c_i^{\rm eff} = c_i + \alpha_i|A|^2 + \beta_i\frac{|\nabla A|^2}{\omega_0^2}+\dots$
+
+## 1.10. 7D Nondimensionalization
 
 Пусть масштабы: длина $L_0$, время $T_0$, амплитуда $A_0$. Вводим
 
@@ -485,6 +514,76 @@ $$
 $$c_i^{\rm eff} = c_i + \alpha_i|A|^2 + \beta_i\frac{|\nabla A|^2}{\omega_0^2}+\dots$$
 
 ---
+
+## 1.11. Mini-TZ for Waves-BVP Module
+
+**Input:** $\kappa_0,\chi'_0,\chi''_0,\omega_0$, source map $s(\mathbf{x})$, thresholds $(a_q,\Gamma_q)$.
+
+**Output:** $a(\mathbf{x})$, $Y(\omega)$, $\{\omega_n,Q_n\}$, quench map $D_q(\mathbf{x})$, residual $\chi''_{\rm mem}(\mathbf{x})$, spectrum $|\hat a(\mathbf{k})|$, "patches" morphology.
+
+**What solves your stability thesis:**
+
+High $\kappa$ + short $\ell$ give **rigid, self-sustaining** structure: shells layer, nodes fix, and attempt to "spread" increases energy cost (through $c_i^{\rm eff}$) — therefore stable elements and "quilt" are held.
+
+## 1.12. BVP Filter Cascade Model
+
+**Physical Meaning:**
+    Particle tails are modeled as cascades of filters where each
+    filter has a semi-transparent wall determined by BVP field
+    attenuation. The quality factor of each filter is directly
+    related to the BVP field attenuation across the filter wall.
+
+**Mathematical Model:**
+    Each filter n has a quality factor:
+    
+    Q(n) = Q₀ × (A_high(n)/A_low(n)) × e^(-αn) × n^(-γ)
+    
+    where:
+    - A_high(n)/A_low(n) is the BVP amplitude ratio across the filter wall
+    - α is the exponential decay coefficient (related to BVP coherence length)
+    - γ is the power law decay exponent (related to fractional order β)
+    - n is the filter number from the core (n=1,2,3,...)
+
+**Physical Interpretation:**
+    - **A_high(n)/A_low(n)**: Determined by BVP field attenuation across the semi-transparent wall
+    - **e^(-αn)**: Exponential decay due to accumulated phase errors and BVP field coherence loss
+    - **n^(-γ)**: Power law decay due to non-local BVP field interactions
+    - **Q₀**: Initial quality factor of the first filter (closest to core)
+
+**Connection to BVP Theory:**
+    - **BVP field attenuation** creates the semi-transparent walls of filters
+    - **Non-local interactions** (fractional order β) determine the power law decay
+    - **Coherence length** of BVP field determines the exponential decay
+    - **Filter cascade** represents the transition zone and tail structure
+
+**Implementation Requirements:**
+- Model BVP field attenuation across filter walls
+- Implement quality factor decay Q(n)
+- Calculate total attenuation through filter cascade
+- Validate against particle half-lives
+
+**Configuration:**
+```json
+{
+  "filter_cascade": {
+    "Q0": 1e30,
+    "alpha": 0.01,
+    "gamma": 0.1,
+    "core_radius": 2.8e-15,
+    "attenuation_model": "exponential_power_law",
+    "validation": {
+      "electron_half_life": 6.6e28,
+      "proton_half_life": 1e34
+    }
+  }
+}
+```
+
+**Validation Criteria:**
+- Quality factor decay matches BVP field attenuation
+- Total attenuation through cascade matches particle half-lives
+- Filter cascade length exceeds cosmological scales
+- BVP field coherence length determines decay parameters
 
 # 2. 7D Domain, Grid, FFT Conventions
 
@@ -602,7 +701,7 @@ Use exponential integrator with memory variable updates.
 - Check quench event handling in time evolution
 - Validate envelope stability over time
 
-## A1. Базовая валидация решателей
+## A1. BVP Envelope Solver Validation
 
 ### A1.1. Плоская волна (стационар)
 
@@ -799,13 +898,18 @@ The **Base High-Frequency Field (BVP)** framework serves as the central backbone
 - U(1)³ phase vector validation
 - BVP impedance calculation validation
 
-**A1. BVP-Enhanced Solvers**
-- 7D FFT solver with BVP integration
-- BVP time integrators with memory kernel
+**A1. BVP Envelope Solver Validation**
+- BVP envelope solver validation
 - BVP envelope equation solution
-- BVP quench event handling
+- BVP envelope stability
+- BVP envelope accuracy
 
-**A2. BVP Scaling and Nondimensionalization**
+**A2. BVP Quench Detection Validation**
+- BVP quench detection system validation
+- BVP quench threshold testing
+- BVP quench zone detection
+
+**A3. BVP Scaling and Nondimensionalization**
 - BVP parameter scaling
 - BVP envelope scaling
 - BVP quench threshold scaling
@@ -817,19 +921,24 @@ The **Base High-Frequency Field (BVP)** framework serves as the central backbone
 - BVP envelope monotonicity
 - BVP envelope without spherical standing nodes
 
-**B2. BVP Topological Charge**
+**B2. BVP Spherical Nodes Absence**
+- BVP envelope without spherical standing nodes
+- BVP envelope monotonicity
+- BVP envelope no periodic zeros
+
+**B3. BVP Topological Charge**
 - BVP envelope topological defects
 - BVP phase winding calculations
 - BVP topological stability
 
-**B3. BVP Zone Separation**
+**B4. BVP Zone Separation**
 - BVP envelope core/transition/tail zones
 - BVP envelope zone indicators
 - BVP envelope zone boundaries
 
 ## 12.4. Level C: BVP Boundaries and Resonators
 
-**C1. BVP Boundary Effects**
+**C1. BVP Resonator Structures**
 - BVP envelope boundary conditions
 - BVP envelope resonator formation
 - BVP envelope impedance matching
@@ -843,6 +952,11 @@ The **Base High-Frequency Field (BVP)** framework serves as the central backbone
 - BVP quench memory effects
 - BVP quench pinning
 - BVP quench static envelope
+
+**C4. BVP Mode Beating**
+- BVP envelope mode beating
+- BVP envelope drift velocity
+- BVP envelope pinning suppression
 
 ## 12.5. Level D: BVP Multimode Superposition
 
@@ -878,6 +992,11 @@ The **Base High-Frequency Field (BVP)** framework serves as the central backbone
 - BVP envelope experimental comparison
 - BVP envelope model verification
 
+**E4. BVP Parameter Sensitivity**
+- BVP envelope parameter sensitivity
+- BVP envelope robustness to noise
+- BVP envelope finite-size effects
+
 ## 12.7. Level F: BVP Collective Effects
 
 **F1. BVP Multi-Particle Systems**
@@ -894,6 +1013,11 @@ The **Base High-Frequency Field (BVP)** framework serves as the central backbone
 - BVP envelope nonlinear interactions
 - BVP envelope nonlinear stability
 - BVP envelope nonlinear dynamics
+
+**F4. BVP Particle Collisions**
+- BVP envelope particle collisions
+- BVP envelope collision outcomes
+- BVP envelope collision dynamics
 
 ## 12.8. Level G: BVP Cosmological Models
 
@@ -912,6 +1036,11 @@ The **Base High-Frequency Field (BVP)** framework serves as the central backbone
 - BVP envelope spacetime curvature
 - BVP envelope gravitational lensing
 
+**G4. BVP Particle Inversion**
+- BVP envelope electron/proton/neutron inversion
+- BVP envelope particle passports
+- BVP envelope experimental validation
+
 ## 12.9. BVP Integration Testing
 
 **BVP Integration Tests:**
@@ -928,7 +1057,53 @@ The **Base High-Frequency Field (BVP)** framework serves as the central backbone
 - All levels implement U(1)³ phase vector
 - All levels replace classical patterns with BVP modulations
 
+## 12.10. BVP Class Diagram
 
+**Core Physics/Numerics (core):**
+- **Domain**: torus $[0,L)^3$, periodic BC; stores $L,N,\Delta$ and k-grid. Used in FFT and radial averaging.
+- **Field**: complex field $a(x,t)$ / $\hat a(k,\omega)$, data type float64.
+- **OperatorRiesz**: $\mathcal L_\beta=\mu(-\Delta)^\beta+\lambda$ and $\alpha_k=\nu|k|^{2\beta}+\lambda$. Provides denominator $D(k)$ and applies fractional Laplacian in k-domain.
+- **MemoryKernel** (Debye memory): parameters $\gamma_j(x),\tau_j(x)$, frequency form $\Gamma_{\rm mem}(x,\omega)=\sum \gamma_j/(1+i\omega\tau_j)$ with passivity check $\Re\Gamma_{\rm mem}\ge0$.
+- **Source** (hierarchy):
+  - *GaussianNeutralized* (quasi-point): $s=g_\sigma-\bar g$, auto-zero mode at $\lambda=0$.
+  - *HarmonicSource* ($e^{-i\omega t}$), *TwoToneSource* (beats), *DipoleModulated* (S1 variant for ABCD).
+- **FFTBackend**: direct/inverse FFT with consistent normalization; Parseval check (from level A).
+
+**Medium Geometry:**
+- **SphericalLayer**: layer mask $[R_\ell,R_\ell+\Delta R_\ell]$, stores $\eta_\ell,\gamma_\ell,\tau_\ell$.
+- **LayerStack**: resonator chain (2–5 shells), assembly order.
+- **ReferenceBall**: $\mathcal R_{\rm ref}$ for "port" amplitude/admittance. (Levels C/D use $U_{\rm ref}$, $Y_\ell$).
+
+**Solvers:**
+- **StationarySolver**: $\widehat a=\widehat s/(\mu|k|^{2\beta}+\lambda+i\omega+\Gamma_{\rm mem})$. Works on single $\omega$ or series.
+- **TimeSolver**: exponential integrator / CN for $\partial_t a+\nu(-\Delta)^\beta a+\lambda a+\sum\gamma m=s$ + $m_j$ evolution.
+- **FrequencySweep**: log-step + refinement on $Y(\omega)$ peaks.
+
+**ABCD/Transmission:**
+- **AdmittanceEstimator**: computes $Y_\ell(\omega)$ in layers, prominences/peaks, $Q_n$. (see C-level, block 4.)
+- **LayerTransferMatrix** ($\mathbf T_\ell$): identification by S0/S1;
+  **TransferChain**: $\mathbf T_{\rm tot}=\prod \mathbf T_\ell$, validation with direct calculation.
+
+**Proxy Fields and Windows (level D):**
+- **FieldProjection**: EM/Strong/Weak field projections from BVP envelope.
+- **StreamlineTracker**: field line tracking and visualization.
+- **ModeSuperposition**: multimode superposition analysis.
+
+## 12.11. Model Data Selection
+
+**Paper Criteria:**
+- **PASS-1**: $\Re\{i\omega\widehat\Gamma+\widehat K\}\ge 0$;
+- **FRAC-1**: fundamental $G_\beta(r)\propto r^{2\beta-3}$ (without mass-term);
+- **WAVE-1**: amplitude law in slowly varying medium (cosmo: $|h|\propto (aM_*)^{-1}$);
+- **GEOM-1**: thin lens/thin plate coincides with statics in limiting case;
+- **PERT-1**: Newtonian limit and growth/quasi-statics are consistent;
+- **FON-1/2**: background relations are consistent and physical.
+
+**Mini-Roadmap (e, p, n → theory verification):**
+
+* **Inversion (level G)** for e/p/n: obtain $\hat\theta=\{\beta,L,(R_\ell,\eta_\ell),(\gamma_\ell,\tau_\ell),q\}$, $M_{\rm eff}$, $D,G$, $\{\omega_n,Q_n\}$, leaks between windows.
+* **Validation** against experimental data: masses, charges, magnetic moments, decay rates.
+* **Theory verification**: check consistency with 7D phase field theory predictions.
 
 ---
 

@@ -2,20 +2,21 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-Core envelope solver operations for BVP envelope equation.
+Core 7D envelope solver operations for BVP envelope equation.
 
-This module implements the core mathematical operations for solving the BVP
+This module implements the core mathematical operations for solving the 7D BVP
 envelope equation, including residual computation, Jacobian calculation,
-and Newton-Raphson system solving.
+and Newton-Raphson system solving in 7D space-time.
 
 Physical Meaning:
     Provides the fundamental mathematical operations for solving the nonlinear
-    envelope equation ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x) using advanced
-    numerical methods.
+    7D envelope equation ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t) using advanced
+    numerical methods in M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
 
 Mathematical Foundation:
     Implements Newton-Raphson method with line search and regularization
-    for robust solution of nonlinear envelope equations.
+    for robust solution of nonlinear 7D envelope equations with gradients
+    in all 7 dimensions.
 
 Example:
     >>> core = EnvelopeSolverCore(domain, config)
@@ -32,18 +33,18 @@ from .bvp_constants import BVPConstants
 
 class EnvelopeSolverCore:
     """
-    Core mathematical operations for BVP envelope equation solver.
+    Core mathematical operations for 7D BVP envelope equation solver.
     
     Physical Meaning:
         Implements the core mathematical operations for solving the nonlinear
-        envelope equation using advanced numerical methods.
+        7D envelope equation using advanced numerical methods in M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
         
     Mathematical Foundation:
         Provides residual computation, Jacobian calculation, and Newton-Raphson
-        system solving for the envelope equation.
+        system solving for the 7D envelope equation with gradients in all 7 dimensions.
         
     Attributes:
-        domain (Domain): Computational domain.
+        domain (Domain): 7D computational domain.
         kappa_0 (float): Base stiffness coefficient κ₀.
         kappa_2 (float): Nonlinear stiffness coefficient κ₂.
         chi_prime (float): Real part of susceptibility χ'.
@@ -78,22 +79,22 @@ class EnvelopeSolverCore:
     
     def compute_residual(self, envelope: np.ndarray, source: np.ndarray) -> np.ndarray:
         """
-        Compute residual of the envelope equation.
+        Compute residual of the 7D envelope equation.
         
         Physical Meaning:
-            Computes the residual r = ∇·(κ(|a|)∇a) + k₀²χ(|a|)a - s(x)
-            for the Newton-Raphson method.
+            Computes the residual r = ∇·(κ(|a|)∇a) + k₀²χ(|a|)a - s(x,φ,t)
+            for the Newton-Raphson method in 7D space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
             
         Mathematical Foundation:
             Residual is r = L(a) - s where L(a) is the nonlinear operator
-            of the envelope equation.
+            of the 7D envelope equation with gradients in all 7 dimensions.
             
         Args:
-            envelope (np.ndarray): Current envelope estimate.
-            source (np.ndarray): Source term s(x).
+            envelope (np.ndarray): Current envelope estimate in 7D space-time.
+            source (np.ndarray): Source term s(x,φ,t) in 7D space-time.
             
         Returns:
-            np.ndarray: Residual r = L(a) - s.
+            np.ndarray: Residual r = L(a) - s in 7D space-time.
         """
         # Compute nonlinear stiffness κ(|a|) = κ₀ + κ₂|a|²
         amplitude_squared = np.abs(envelope) ** 2
@@ -228,53 +229,70 @@ class EnvelopeSolverCore:
     
     def _compute_div_kappa_grad(self, envelope: np.ndarray, kappa: np.ndarray) -> np.ndarray:
         """
-        Compute ∇·(κ∇a) using advanced finite differences.
+        Compute ∇·(κ∇a) using advanced finite differences for 7D space-time.
         
         Physical Meaning:
             Computes the divergence of κ times the gradient of the envelope
-            using high-order finite difference methods.
+            using high-order finite difference methods in 7D space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
             
         Mathematical Foundation:
-            Computes ∇·(κ∇a) = ∂/∂x(κ∂a/∂x) + ∂/∂y(κ∂a/∂y) + ∂/∂z(κ∂a/∂z)
+            Computes ∇·(κ∇a) = ∂/∂x(κ∂a/∂x) + ∂/∂y(κ∂a/∂y) + ∂/∂z(κ∂a/∂z) +
+                              ∂/∂φ₁(κ∂a/∂φ₁) + ∂/∂φ₂(κ∂a/∂φ₂) + ∂/∂φ₃(κ∂a/∂φ₃) +
+                              ∂/∂t(κ∂a/∂t)
             using fourth-order finite differences.
             
         Args:
-            envelope (np.ndarray): Envelope field.
-            kappa (np.ndarray): Nonlinear stiffness.
+            envelope (np.ndarray): Envelope field in 7D space-time.
+            kappa (np.ndarray): Nonlinear stiffness in 7D space-time.
             
         Returns:
-            np.ndarray: ∇·(κ∇a) term.
+            np.ndarray: ∇·(κ∇a) term in 7D space-time.
         """
+        # Get grid spacings for 7D
         dx = self.domain.dx
+        dphi = self.domain.dphi
+        dt = self.domain.dt
         
+        # Initialize divergence
+        div_kappa_grad = np.zeros_like(envelope)
+        
+        # Spatial gradients ℝ³ₓ
         if self.domain.dimensions == 1:
-            # Fourth-order finite differences for 1D
-            grad_envelope = np.gradient(envelope, dx)
-            kappa_grad = kappa * grad_envelope
-            div_kappa_grad = np.gradient(kappa_grad, dx)
-            
+            grad_x = np.gradient(envelope, dx, axis=0)
+            kappa_grad_x = kappa * grad_x
+            div_kappa_grad += np.gradient(kappa_grad_x, dx, axis=0)
         elif self.domain.dimensions == 2:
-            # Fourth-order finite differences for 2D
-            grad_x, grad_y = np.gradient(envelope, dx, dx)
+            grad_x, grad_y = np.gradient(envelope, dx, dx, axis=(0, 1))
             kappa_grad_x = kappa * grad_x
             kappa_grad_y = kappa * grad_y
-            
-            # Use fourth-order finite differences
-            div_kappa_grad_x = self._fourth_order_gradient(kappa_grad_x, dx, axis=0)
-            div_kappa_grad_y = self._fourth_order_gradient(kappa_grad_y, dx, axis=1)
-            div_kappa_grad = div_kappa_grad_x + div_kappa_grad_y
-            
-        else:  # 3D
-            # Fourth-order finite differences for 3D
-            grad_x, grad_y, grad_z = np.gradient(envelope, dx, dx, dx)
+            div_kappa_grad += np.gradient(kappa_grad_x, dx, axis=0)
+            div_kappa_grad += np.gradient(kappa_grad_y, dx, axis=1)
+        else:  # 3D spatial
+            grad_x, grad_y, grad_z = np.gradient(envelope, dx, dx, dx, axis=(0, 1, 2))
             kappa_grad_x = kappa * grad_x
             kappa_grad_y = kappa * grad_y
             kappa_grad_z = kappa * grad_z
-            
-            div_kappa_grad_x = self._fourth_order_gradient(kappa_grad_x, dx, axis=0)
-            div_kappa_grad_y = self._fourth_order_gradient(kappa_grad_y, dx, axis=1)
-            div_kappa_grad_z = self._fourth_order_gradient(kappa_grad_z, dx, axis=2)
-            div_kappa_grad = div_kappa_grad_x + div_kappa_grad_y + div_kappa_grad_z
+            div_kappa_grad += np.gradient(kappa_grad_x, dx, axis=0)
+            div_kappa_grad += np.gradient(kappa_grad_y, dx, axis=1)
+            div_kappa_grad += np.gradient(kappa_grad_z, dx, axis=2)
+        
+        # Phase gradients 𝕋³_φ
+        grad_phi1 = np.gradient(envelope, dphi, axis=3)
+        grad_phi2 = np.gradient(envelope, dphi, axis=4)
+        grad_phi3 = np.gradient(envelope, dphi, axis=5)
+        
+        kappa_grad_phi1 = kappa * grad_phi1
+        kappa_grad_phi2 = kappa * grad_phi2
+        kappa_grad_phi3 = kappa * grad_phi3
+        
+        div_kappa_grad += np.gradient(kappa_grad_phi1, dphi, axis=3)
+        div_kappa_grad += np.gradient(kappa_grad_phi2, dphi, axis=4)
+        div_kappa_grad += np.gradient(kappa_grad_phi3, dphi, axis=5)
+        
+        # Temporal gradient ℝₜ
+        grad_t = np.gradient(envelope, dt, axis=6)
+        kappa_grad_t = kappa * grad_t
+        div_kappa_grad += np.gradient(kappa_grad_t, dt, axis=6)
         
         return div_kappa_grad
     

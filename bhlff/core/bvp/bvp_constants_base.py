@@ -79,6 +79,15 @@ class BVPConstantsBase:
         
         # Carrier frequency ω₀ (rad/s)
         self.CARRIER_FREQUENCY = envelope_config.get("carrier_frequency", 1.85e43)
+        
+        # BVP postulate parameters
+        self.PHASE_VELOCITY_THRESHOLD = envelope_config.get("phase_velocity_threshold", 1e6)
+        self.EPSILON_THRESHOLD = envelope_config.get("epsilon_threshold", 0.1)
+        
+        # Quench detection thresholds
+        self.AMPLITUDE_THRESHOLD = envelope_config.get("amplitude_threshold", 0.8)
+        self.DETUNING_THRESHOLD = envelope_config.get("detuning_threshold", 0.1)
+        self.GRADIENT_THRESHOLD = envelope_config.get("gradient_threshold", 0.5)
     
     def _setup_basic_material_constants(self) -> None:
         """Setup basic material property constants."""
@@ -198,6 +207,46 @@ class BVPConstantsBase:
             "boltzmann_constant": self.BOLTZMANN_CONSTANT,
         }
         return constant_map.get(constant_name, 0.0)
+    
+    def get_physical_parameter(self, parameter_name: str) -> float:
+        """
+        Get physical parameter value.
+        
+        Physical Meaning:
+            Retrieves physical parameters used in BVP postulates and calculations.
+            
+        Args:
+            parameter_name (str): Name of the physical parameter.
+            
+        Returns:
+            float: Physical parameter value.
+        """
+        parameter_map = {
+            "carrier_frequency": self.CARRIER_FREQUENCY,
+            "phase_velocity_threshold": self.PHASE_VELOCITY_THRESHOLD,
+            "epsilon_threshold": self.EPSILON_THRESHOLD,
+        }
+        return parameter_map.get(parameter_name, 0.0)
+    
+    def get_quench_parameter(self, parameter_name: str) -> float:
+        """
+        Get quench detection parameter value.
+        
+        Physical Meaning:
+            Retrieves parameters used for quench detection in BVP postulates.
+            
+        Args:
+            parameter_name (str): Name of the quench parameter.
+            
+        Returns:
+            float: Quench parameter value.
+        """
+        quench_map = {
+            "amplitude_threshold": self.AMPLITUDE_THRESHOLD,
+            "detuning_threshold": self.DETUNING_THRESHOLD,
+            "gradient_threshold": self.GRADIENT_THRESHOLD,
+        }
+        return quench_map.get(parameter_name, 0.0)
     
     def __repr__(self) -> str:
         """String representation of base BVP constants."""

@@ -27,7 +27,7 @@ Example:
 """
 
 from .bvp_envelope_equation_7d import BVPEnvelopeEquation7D
-from .derivative_operators import DerivativeOperators7D
+from .derivative_operators_facade import DerivativeOperators7D
 from .nonlinear_terms import NonlinearTerms7D
 from .solver_core import EnvelopeSolverCore7D
 

@@ -35,5 +35,6 @@ from .temporal_operators import TemporalOperators
 __all__ = [
     'SpatialOperators',
     'PhaseOperators', 
-    'TemporalOperators'
+    'TemporalOperators',
+    'DerivativeOperators7D'
 ]

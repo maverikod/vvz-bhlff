@@ -29,7 +29,9 @@ import numpy as np
 from typing import Tuple
 
 from ...domain.domain_7d import Domain7D
-from .derivative_operators import SpatialOperators, PhaseOperators, TemporalOperators
+from .derivative_operators.spatial_operators import SpatialOperators
+from .derivative_operators.phase_operators import PhaseOperators
+from .derivative_operators.temporal_operators import TemporalOperators
 
 
 class DerivativeOperators7D:

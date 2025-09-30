@@ -26,39 +26,9 @@ Example:
 
 import numpy as np
 from typing import Dict, Any, Tuple, List
-from dataclasses import dataclass
 
 from .domain import Domain
-
-
-@dataclass
-class SpatialConfig:
-    """Configuration for spatial coordinates ℝ³ₓ."""
-    L_x: float = 1.0  # Spatial extent in x
-    L_y: float = 1.0  # Spatial extent in y  
-    L_z: float = 1.0  # Spatial extent in z
-    N_x: int = 64     # Grid points in x
-    N_y: int = 64     # Grid points in y
-    N_z: int = 64     # Grid points in z
-
-
-@dataclass
-class PhaseConfig:
-    """Configuration for phase coordinates 𝕋³_φ."""
-    phi_1_max: float = 2.0 * np.pi  # Phase extent in φ₁
-    phi_2_max: float = 2.0 * np.pi  # Phase extent in φ₂
-    phi_3_max: float = 2.0 * np.pi  # Phase extent in φ₃
-    N_phi_1: int = 32               # Grid points in φ₁
-    N_phi_2: int = 32               # Grid points in φ₂
-    N_phi_3: int = 32               # Grid points in φ₃
-
-
-@dataclass
-class TemporalConfig:
-    """Configuration for temporal coordinate ℝₜ."""
-    T_max: float = 1.0  # Temporal extent
-    N_t: int = 100      # Time steps
-    dt: float = 0.01    # Time step size
+from .config import SpatialConfig, PhaseConfig, TemporalConfig
 
 
 class Domain7D:

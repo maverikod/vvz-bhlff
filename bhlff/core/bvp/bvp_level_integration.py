@@ -29,7 +29,9 @@ from typing import Dict, Any
 
 from .bvp_core import BVPCore
 from .bvp_level_interfaces_abc import LevelAInterface, LevelBInterface, LevelCInterface
-from .bvp_level_interfaces_def import LevelDInterface, LevelEInterface, LevelFInterface
+from .level_d_interface import LevelDInterface
+from .level_e_interface import LevelEInterface
+from .level_f_interface import LevelFInterface
 from .bvp_level_interfaces_g import LevelGInterface
 
 

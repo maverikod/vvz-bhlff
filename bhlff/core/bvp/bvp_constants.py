@@ -28,7 +28,7 @@ import numpy as np
 from typing import Dict, Any, Tuple
 
 from .bvp_constants_base import BVPConstantsBase
-from .bvp_constants_advanced import BVPConstantsAdvanced
+from .constants.bvp_constants_advanced import BVPConstantsAdvanced
 from .bvp_constants_numerical import BVPConstantsNumerical
 
 

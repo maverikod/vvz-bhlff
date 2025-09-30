@@ -26,7 +26,7 @@ Mathematical Foundation:
 """
 
 import numpy as np
-# from typing import Tuple, Union  # Unused imports
+from typing import Tuple, Union
 from dataclasses import dataclass
 
 
@@ -260,7 +260,4 @@ class Domain:
 
     def __repr__(self) -> str:
         """String representation of the 7D domain."""
-        return (
-            f"Domain7D(L={self.L}, N={self.N}, N_phi={self.N_phi}, "
-            f"N_t={self.N_t}, T={self.T}, dimensions={self.dimensions})"
-        )
+        return f"Domain7D(L={self.L}, N={self.N}, N_phi={self.N_phi}, N_t={self.N_t}, T={self.T}, dimensions={self.dimensions})"

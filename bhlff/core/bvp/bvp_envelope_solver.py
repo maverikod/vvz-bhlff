@@ -28,7 +28,7 @@ import numpy as np
 from typing import Dict, Any
 
 from ..domain import Domain
-from .envelope_solver_core import EnvelopeSolverCore
+from .envelope_solver.envelope_solver_core import EnvelopeSolverCore
 from .envelope_solver_line_search import EnvelopeSolverLineSearch
 from .bvp_constants import BVPConstants
 

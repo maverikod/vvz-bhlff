@@ -23,4 +23,4 @@ Example:
     >>> quenches = solver.detect_quenches(bvp_envelope)
 """
 
-from .fft_solver_3d_core import FFTSolver3D
+from .fft_solver_3d.fft_solver_3d_core import FFTSolver3D

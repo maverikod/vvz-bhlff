@@ -27,7 +27,7 @@ from abc import ABC, abstractmethod
 from ..domain.domain_7d import Domain7D
 from .quench_detector import QuenchDetector
 from .bvp_impedance_calculator import BVPImpedanceCalculator
-from .envelope_solver_core import EnvelopeSolverCore
+from .envelope_solver.envelope_solver_core import EnvelopeSolverCore
 
 
 class BVPCore:

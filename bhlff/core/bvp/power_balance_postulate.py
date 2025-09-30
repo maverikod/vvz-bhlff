@@ -17,7 +17,6 @@ Example:
     >>> results = postulate.apply(envelope)
 """
 
-# Import the new modular power balance postulate
 from .postulates.power_balance import PowerBalancePostulate as ModularPowerBalancePostulate
 
 # Create backward compatibility alias

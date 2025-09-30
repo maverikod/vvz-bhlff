@@ -20,7 +20,6 @@ Example:
     >>> core_data = interface.interface_with_core(envelope)
 """
 
-# Import the new modular interface
 from .interface import BVPInterface as ModularBVPInterface
 
 # Create backward compatibility alias

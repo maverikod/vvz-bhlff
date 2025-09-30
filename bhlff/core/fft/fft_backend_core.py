@@ -173,8 +173,20 @@ class FFTBackend:
         # Use ifftn with all 7 dimensions
         real_data = np.fft.ifftn(spectral_data, axes=(0, 1, 2, 3, 4, 5, 6))
 
-        # Return only the real part (imaginary part should be negligible due to numerical errors)
-        return real_data.real
+        # For 7D BVP theory, we need to consider both real and complex fields
+        # The imaginary part may contain important BVP phase information
+        
+        # Check if the result is effectively real (imaginary part is negligible)
+        max_imag = np.max(np.abs(real_data.imag))
+        
+        if max_imag < 1e-12:  # If imaginary part is negligible
+            # This is likely from a real field, return real part
+            return real_data.real
+        else:
+            # Significant imaginary part - this might be BVP phase information
+            # In 7D BVP theory, phase space coordinates can have complex structure
+            # Return the full complex result to preserve BVP information
+            return real_data
 
     def fft_shift(self, spectral_data: np.ndarray) -> np.ndarray:
         """

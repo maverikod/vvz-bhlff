@@ -81,30 +81,28 @@ class FractionalLaplacian:
         Mathematical Foundation:
             Computes |k|^(2β) where |k| is the magnitude of the wave vector.
         """
-        # Get wave vectors
+        # Get 7D wave vectors for BVP theory
         kx = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
         ky = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
         kz = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+        kphi1 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+        kphi2 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+        kphi3 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+        kt = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
 
-        if self.domain.dimensions == 1:
-            k_magnitude = np.abs(kx)
-        elif self.domain.dimensions == 2:
-            KX, KY = np.meshgrid(kx, ky, indexing="ij")
-            k_magnitude = np.sqrt(KX**2 + KY**2)
-        else:  # 3D
-            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
-            k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
+        # Create 7D meshgrids
+        KX, KY, KZ, KPHI1, KPHI2, KPHI3, KT = np.meshgrid(
+            kx, ky, kz, kphi1, kphi2, kphi3, kt, indexing="ij"
+        )
+        
+        # Compute 7D wave vector magnitude
+        k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2 + KPHI1**2 + KPHI2**2 + KPHI3**2 + KT**2)
 
         # Compute spectral coefficients |k|^(2β)
         self._spectral_coeffs = k_magnitude ** (2 * self.beta)
 
-        # Handle k=0 mode (DC component)
-        if self.domain.dimensions == 1:
-            self._spectral_coeffs[0] = 0.0
-        elif self.domain.dimensions == 2:
-            self._spectral_coeffs[0, 0] = 0.0
-        else:  # 3D
-            self._spectral_coeffs[0, 0, 0] = 0.0
+        # Handle k=0 mode (DC component) for 7D
+        self._spectral_coeffs[0, 0, 0, 0, 0, 0, 0] = 0.0
 
     def apply(self, field: np.ndarray) -> np.ndarray:
         """

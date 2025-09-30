@@ -196,3 +196,35 @@ class FFTTwiddleComputer:
             Dict: Twiddle factors cache.
         """
         return self._twiddle_cache
+
+    def get_twiddle_factor(self, dim1: int, dim2: int) -> np.ndarray:
+        """
+        Get twiddle factor for specific dimensions.
+        
+        Args:
+            dim1 (int): First dimension.
+            dim2 (int): Second dimension.
+            
+        Returns:
+            np.ndarray: Twiddle factor.
+        """
+        key = f"twiddle_{dim1}_{dim2}"
+        if key not in self._twiddle_cache:
+            # Compute twiddle factor for these dimensions
+            n = self.domain.N if dim1 < 3 else self.domain.N_phi
+            if dim1 == 6 or dim2 == 6:  # temporal dimension
+                n = self.domain.N_t
+            self._twiddle_cache[key] = self._compute_1d_twiddle_factors(n)
+        return self._twiddle_cache[key]
+    
+    def compute_inverse_twiddle_factors(self) -> Dict[str, np.ndarray]:
+        """
+        Compute inverse twiddle factors.
+        
+        Returns:
+            Dict[str, np.ndarray]: Inverse twiddle factors.
+        """
+        inverse_factors = {}
+        for key, factors in self._twiddle_cache.items():
+            inverse_factors[f"inverse_{key}"] = np.conj(factors)
+        return inverse_factors

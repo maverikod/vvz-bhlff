@@ -187,8 +187,12 @@ class QuenchDetector:
         """
         quenches = []
 
-        # Compute gradient magnitude
-        if envelope.ndim == 1:
+        # Compute gradient magnitude for 7D BVP theory
+        if envelope.ndim == 7:
+            # For 7D, compute gradient over all dimensions
+            gradients = np.gradient(envelope)
+            gradient_magnitude = np.sqrt(sum(grad**2 for grad in gradients))
+        elif envelope.ndim == 1:
             gradient = np.gradient(envelope)
             gradient_magnitude = np.abs(gradient)
         elif envelope.ndim == 2:

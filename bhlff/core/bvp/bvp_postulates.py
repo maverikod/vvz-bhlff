@@ -31,9 +31,7 @@ from .quenches_postulate import QuenchesPostulate
 from .tail_resonatorness_postulate import TailResonatornessPostulate
 from .transition_zone_postulate import TransitionZonePostulate
 from .core_renormalization_postulate import CoreRenormalizationPostulate
-from .postulates.power_balance import (
-    BVPPostulate9_PowerBalance as PowerBalancePostulate,
-)
+from .postulates.power_balance.power_balance_postulate import PowerBalancePostulate
 
 
 class BVPPostulates:

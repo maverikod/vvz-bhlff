@@ -177,19 +177,22 @@ class AbstractSolver(ABC):
         # For the fractional Laplacian (-Δ)^β, we use spectral methods
         field_spectral = np.fft.fftn(field)
 
-        # Get wave vectors
+        # Get 7D wave vectors for BVP theory
         kx = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
         ky = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
         kz = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+        kphi1 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+        kphi2 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+        kphi3 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+        kt = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
 
-        if self.domain.dimensions == 1:
-            k_magnitude = np.abs(kx)
-        elif self.domain.dimensions == 2:
-            KX, KY = np.meshgrid(kx, ky, indexing="ij")
-            k_magnitude = np.sqrt(KX**2 + KY**2)
-        else:  # 3D
-            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
-            k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
+        # Create 7D meshgrids
+        KX, KY, KZ, KPHI1, KPHI2, KPHI3, KT = np.meshgrid(
+            kx, ky, kz, kphi1, kphi2, kphi3, kt, indexing="ij"
+        )
+        
+        # Compute 7D wave vector magnitude
+        k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2 + KPHI1**2 + KPHI2**2 + KPHI3**2 + KT**2)
 
         # Apply fractional Laplacian in spectral space
         # L_β a = μ(-Δ)^β a + λa
@@ -197,7 +200,7 @@ class AbstractSolver(ABC):
         operator_field_spectral = spectral_coeffs * field_spectral
 
         # Transform back to real space
-        operator_field = np.fft.ifftn(operator_field_spectral).real
+        operator_field = np.fft.ifftn(operator_field_spectral, axes=(0, 1, 2, 3, 4, 5, 6)).real
 
         # Compute residual r = L_β a - s
         residual = operator_field - source
@@ -229,19 +232,22 @@ class AbstractSolver(ABC):
         # Transform field to spectral space
         field_spectral = np.fft.fftn(field)
 
-        # Get wave vectors
+        # Get 7D wave vectors for BVP theory
         kx = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
         ky = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
         kz = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+        kphi1 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+        kphi2 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+        kphi3 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+        kt = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
 
-        if self.domain.dimensions == 1:
-            k_magnitude = np.abs(kx)
-        elif self.domain.dimensions == 2:
-            KX, KY = np.meshgrid(kx, ky, indexing="ij")
-            k_magnitude = np.sqrt(KX**2 + KY**2)
-        else:  # 3D
-            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
-            k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
+        # Create 7D meshgrids
+        KX, KY, KZ, KPHI1, KPHI2, KPHI3, KT = np.meshgrid(
+            kx, ky, kz, kphi1, kphi2, kphi3, kt, indexing="ij"
+        )
+        
+        # Compute 7D wave vector magnitude
+        k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2 + KPHI1**2 + KPHI2**2 + KPHI3**2 + KT**2)
 
         # Compute fractional Laplacian in spectral space
         # (-Δ)^β a in spectral space is |k|^(2β) * â(k)
@@ -250,7 +256,7 @@ class AbstractSolver(ABC):
         ) * field_spectral
 
         # Transform back to real space
-        fractional_laplacian_field = np.fft.ifftn(fractional_laplacian_spectral).real
+        fractional_laplacian_field = np.fft.ifftn(fractional_laplacian_spectral, axes=(0, 1, 2, 3, 4, 5, 6)).real
 
         # Compute energy terms
         # μ⟨a,(-Δ)^β a⟩ = μ * ∫ a(x) * (-Δ)^β a(x) dx

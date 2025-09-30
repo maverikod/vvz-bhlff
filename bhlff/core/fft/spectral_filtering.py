@@ -217,3 +217,57 @@ class SpectralFiltering:
         convolution = self.fft_backend.ifft(convolution_spectral)
 
         return convolution.real
+
+    def apply_low_pass_filter(self, field: np.ndarray, cutoff: float) -> np.ndarray:
+        """
+        Apply low-pass filter to field.
+        
+        Args:
+            field (np.ndarray): Input field.
+            cutoff (float): Cutoff frequency.
+            
+        Returns:
+            np.ndarray: Filtered field.
+        """
+        return self.spectral_filter(field, filter_type="low_pass", cutoff=cutoff)
+    
+    def apply_high_pass_filter(self, field: np.ndarray, cutoff: float) -> np.ndarray:
+        """
+        Apply high-pass filter to field.
+        
+        Args:
+            field (np.ndarray): Input field.
+            cutoff (float): Cutoff frequency.
+            
+        Returns:
+            np.ndarray: Filtered field.
+        """
+        return self.spectral_filter(field, filter_type="high_pass", cutoff=cutoff)
+    
+    def apply_band_pass_filter(self, field: np.ndarray, low_cutoff: float, high_cutoff: float) -> np.ndarray:
+        """
+        Apply band-pass filter to field.
+        
+        Args:
+            field (np.ndarray): Input field.
+            low_cutoff (float): Low cutoff frequency.
+            high_cutoff (float): High cutoff frequency.
+            
+        Returns:
+            np.ndarray: Filtered field.
+        """
+        return self.spectral_filter(field, filter_type="band_pass", 
+                                  low_cutoff=low_cutoff, high_cutoff=high_cutoff)
+    
+    def apply_gaussian_filter(self, field: np.ndarray, sigma: float) -> np.ndarray:
+        """
+        Apply Gaussian filter to field.
+        
+        Args:
+            field (np.ndarray): Input field.
+            sigma (float): Standard deviation of Gaussian.
+            
+        Returns:
+            np.ndarray: Filtered field.
+        """
+        return self.spectral_filter(field, filter_type="gaussian", sigma=sigma)

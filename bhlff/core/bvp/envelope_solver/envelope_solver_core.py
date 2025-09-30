@@ -25,7 +25,7 @@ Example:
 import numpy as np
 from typing import Dict, Any
 
-from ..domain import Domain
+from ...domain import Domain
 from ..bvp_constants import BVPConstants
 from .residual_computer import ResidualComputer
 from .jacobian_computer import JacobianComputer

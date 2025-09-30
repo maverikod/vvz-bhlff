@@ -81,19 +81,22 @@ class OperatorRiesz:
             Computes D(k) = μ|k|^(2β) + λ where |k| is the magnitude
             of the wave vector.
         """
-        # Get wave vectors
+        # Get 7D wave vectors for BVP theory
         kx = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
         ky = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
         kz = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+        kphi1 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+        kphi2 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+        kphi3 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+        kt = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
 
-        if self.domain.dimensions == 1:
-            k_magnitude = np.abs(kx)
-        elif self.domain.dimensions == 2:
-            KX, KY = np.meshgrid(kx, ky, indexing="ij")
-            k_magnitude = np.sqrt(KX**2 + KY**2)
-        else:  # 3D
-            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
-            k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
+        # Create 7D meshgrids
+        KX, KY, KZ, KPHI1, KPHI2, KPHI3, KT = np.meshgrid(
+            kx, ky, kz, kphi1, kphi2, kphi3, kt, indexing="ij"
+        )
+        
+        # Compute 7D wave vector magnitude
+        k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2 + KPHI1**2 + KPHI2**2 + KPHI3**2 + KT**2)
 
         # Compute spectral coefficients
         self._spectral_coeffs = self.parameters.get_spectral_coefficients(k_magnitude)

@@ -203,6 +203,56 @@ class SpectralOperations:
         """
         return self._filtering.spectral_convolution(field1, field2)
 
+    def compute_derivative(self, field: np.ndarray, order: int = 1, axis: int = 0) -> np.ndarray:
+        """
+        Compute derivative of field using spectral methods.
+        
+        Args:
+            field (np.ndarray): Input field.
+            order (int): Order of derivative.
+            axis (int): Axis along which to compute derivative.
+            
+        Returns:
+            np.ndarray: Derivative of the field.
+        """
+        return self._derivatives.compute_derivative(field, order, axis)
+    
+    def compute_gradient(self, field: np.ndarray) -> np.ndarray:
+        """
+        Compute gradient of scalar field.
+        
+        Args:
+            field (np.ndarray): Scalar field.
+            
+        Returns:
+            np.ndarray: Gradient vector field.
+        """
+        return self._derivatives.compute_gradient(field)
+    
+    def compute_divergence(self, vector_field: np.ndarray) -> np.ndarray:
+        """
+        Compute divergence of vector field.
+        
+        Args:
+            vector_field (np.ndarray): Vector field.
+            
+        Returns:
+            np.ndarray: Divergence scalar field.
+        """
+        return self._derivatives.compute_divergence(vector_field)
+    
+    def compute_curl(self, vector_field: np.ndarray) -> np.ndarray:
+        """
+        Compute curl of vector field.
+        
+        Args:
+            vector_field (np.ndarray): Vector field.
+            
+        Returns:
+            np.ndarray: Curl vector field.
+        """
+        return self._derivatives.compute_curl(vector_field)
+
     def __repr__(self) -> str:
         """String representation of spectral operations."""
         return (

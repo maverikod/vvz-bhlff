@@ -76,6 +76,12 @@ class FFTBackend:
         self.domain = domain
         self.plan_type = plan_type
         self.precision = precision
+        
+        # Add convenience attributes for domain properties
+        self.N = domain.N
+        self.N_phi = domain.N_phi
+        self.N_t = domain.N_t
+        self.dimensions = domain.dimensions
 
         # Initialize component managers
         self._plan_manager = FFTPlanManager(domain, plan_type, precision)
@@ -130,13 +136,9 @@ class FFTBackend:
                 f"domain shape {self.domain.shape}"
             )
 
-        # Compute forward FFT
-        if self.domain.dimensions == 1:
-            spectral_data = np.fft.fft(real_data)
-        elif self.domain.dimensions == 2:
-            spectral_data = np.fft.fft2(real_data)
-        else:  # 3D
-            spectral_data = np.fft.fftn(real_data)
+        # Compute forward FFT for 7D BVP theory
+        # Use fftn with all 7 dimensions
+        spectral_data = np.fft.fftn(real_data, axes=(0, 1, 2, 3, 4, 5, 6))
 
         return spectral_data
 
@@ -167,15 +169,12 @@ class FFTBackend:
                 f"domain shape {self.domain.shape}"
             )
 
-        # Compute inverse FFT
-        if self.domain.dimensions == 1:
-            real_data = np.fft.ifft(spectral_data)
-        elif self.domain.dimensions == 2:
-            real_data = np.fft.ifft2(spectral_data)
-        else:  # 3D
-            real_data = np.fft.ifftn(spectral_data)
+        # Compute inverse FFT for 7D BVP theory
+        # Use ifftn with all 7 dimensions
+        real_data = np.fft.ifftn(spectral_data, axes=(0, 1, 2, 3, 4, 5, 6))
 
-        return real_data
+        # Return only the real part (imaginary part should be negligible due to numerical errors)
+        return real_data.real
 
     def fft_shift(self, spectral_data: np.ndarray) -> np.ndarray:
         """
@@ -195,12 +194,8 @@ class FFTBackend:
         Returns:
             np.ndarray: Shifted frequency space data â_shifted(k).
         """
-        if self.domain.dimensions == 1:
-            return np.fft.fftshift(spectral_data)
-        elif self.domain.dimensions == 2:
-            return np.fft.fftshift(spectral_data)
-        else:  # 3D
-            return np.fft.fftshift(spectral_data)
+        # For 7D BVP theory, shift all 7 dimensions
+        return np.fft.fftshift(spectral_data, axes=(0, 1, 2, 3, 4, 5, 6))
 
     def ifft_shift(self, spectral_data: np.ndarray) -> np.ndarray:
         """
@@ -220,12 +215,8 @@ class FFTBackend:
         Returns:
             np.ndarray: Original frequency space data â(k).
         """
-        if self.domain.dimensions == 1:
-            return np.fft.ifftshift(spectral_data)
-        elif self.domain.dimensions == 2:
-            return np.fft.ifftshift(spectral_data)
-        else:  # 3D
-            return np.fft.ifftshift(spectral_data)
+        # For 7D BVP theory, inverse shift all 7 dimensions
+        return np.fft.ifftshift(spectral_data, axes=(0, 1, 2, 3, 4, 5, 6))
 
     def get_frequency_arrays(self) -> Tuple[np.ndarray, ...]:
         """
@@ -244,18 +235,47 @@ class FFTBackend:
         """
         dx = self.domain.dx
 
-        if self.domain.dimensions == 1:
-            kx = 2 * np.pi * np.fft.fftfreq(self.domain.N, dx)
-            return (kx,)
-        elif self.domain.dimensions == 2:
-            kx = 2 * np.pi * np.fft.fftfreq(self.domain.N, dx)
-            ky = 2 * np.pi * np.fft.fftfreq(self.domain.N, dx)
-            return (kx, ky)
-        else:  # 3D
-            kx = 2 * np.pi * np.fft.fftfreq(self.domain.N, dx)
-            ky = 2 * np.pi * np.fft.fftfreq(self.domain.N, dx)
-            kz = 2 * np.pi * np.fft.fftfreq(self.domain.N, dx)
-            return (kx, ky, kz)
+        # For 7D BVP theory, we need frequency arrays for all 7 dimensions
+        # Spatial frequencies (3D)
+        kx = 2 * np.pi * np.fft.fftfreq(self.domain.N, dx)
+        ky = 2 * np.pi * np.fft.fftfreq(self.domain.N, dx)
+        kz = 2 * np.pi * np.fft.fftfreq(self.domain.N, dx)
+        
+        # Phase frequencies (3D)
+        kphi1 = 2 * np.pi * np.fft.fftfreq(self.domain.N_phi, self.domain.dphi)
+        kphi2 = 2 * np.pi * np.fft.fftfreq(self.domain.N_phi, self.domain.dphi)
+        kphi3 = 2 * np.pi * np.fft.fftfreq(self.domain.N_phi, self.domain.dphi)
+        
+        # Temporal frequency (1D)
+        kt = 2 * np.pi * np.fft.fftfreq(self.domain.N_t, self.domain.dt)
+        
+        return (kx, ky, kz, kphi1, kphi2, kphi3, kt)
+
+    def get_wave_vector_magnitude(self) -> np.ndarray:
+        """
+        Get wave vector magnitude for 7D BVP theory.
+        
+        Physical Meaning:
+            Computes the magnitude of the 7D wave vector |k| = √(kx² + ky² + kz² + kφ₁² + kφ₂² + kφ₃² + kt²)
+            for spectral operations in 7D space-time.
+            
+        Mathematical Foundation:
+            |k| = √(∑ᵢ kᵢ²) where i runs over all 7 dimensions
+            
+        Returns:
+            np.ndarray: 7D array of wave vector magnitudes with shape (N, N, N, N_phi, N_phi, N_phi, N_t)
+        """
+        kx, ky, kz, kphi1, kphi2, kphi3, kt = self.get_frequency_arrays()
+        
+        # Create 7D meshgrids
+        KX, KY, KZ, KPHI1, KPHI2, KPHI3, KT = np.meshgrid(
+            kx, ky, kz, kphi1, kphi2, kphi3, kt, indexing='ij'
+        )
+        
+        # Compute 7D wave vector magnitude
+        k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2 + KPHI1**2 + KPHI2**2 + KPHI3**2 + KT**2)
+        
+        return k_magnitude
 
     def get_plan_type(self) -> str:
         """
@@ -280,6 +300,46 @@ class FFTBackend:
             str: Numerical precision.
         """
         return self._plan_manager.get_precision()
+
+    def forward_transform(self, real_data: np.ndarray) -> np.ndarray:
+        """
+        Alias for fft() method.
+        
+        Args:
+            real_data (np.ndarray): Real space data.
+            
+        Returns:
+            np.ndarray: Frequency space data.
+        """
+        return self.fft(real_data)
+    
+    def inverse_transform(self, spectral_data: np.ndarray) -> np.ndarray:
+        """
+        Alias for ifft() method.
+        
+        Args:
+            spectral_data (np.ndarray): Frequency space data.
+            
+        Returns:
+            np.ndarray: Real space data.
+        """
+        return self.ifft(spectral_data)
+    
+    def get_wave_vectors(self, dim: int) -> np.ndarray:
+        """
+        Get wave vector for specific dimension.
+        
+        Args:
+            dim (int): Dimension index (0-6 for 7D).
+            
+        Returns:
+            np.ndarray: Wave vector for the specified dimension.
+        """
+        frequency_arrays = self.get_frequency_arrays()
+        if 0 <= dim < len(frequency_arrays):
+            return frequency_arrays[dim]
+        else:
+            raise ValueError(f"Dimension {dim} out of range for 7D BVP theory")
 
     def __repr__(self) -> str:
         """String representation of the FFT backend."""

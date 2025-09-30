@@ -24,13 +24,13 @@ Example:
 """
 
 from .fft_solver_3d_core import FFTSolver3D
-from .spectral_operations import SpectralOperations
+from .spectral_operations import SpectralOperations3D
 from .boundary_handler import BoundaryHandler
 from .bvp_integration import BVPIntegration
 
 __all__ = [
     "FFTSolver3D",
-    "SpectralOperations",
+    "SpectralOperations3D",
     "BoundaryHandler",
     "BVPIntegration"
 ]

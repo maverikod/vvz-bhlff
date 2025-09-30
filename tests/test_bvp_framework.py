@@ -44,10 +44,9 @@ class TestBVPFramework:
             L=1.0,
             N=32,
             dimensions=3,
-            dphi=2*np.pi/16,
             N_phi=16,
-            dt=0.01,
-            N_t=100
+            N_t=100,
+            T=1.0
         )
 
     @pytest.fixture

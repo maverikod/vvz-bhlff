@@ -39,7 +39,7 @@ from .quenches_postulate import BVPPostulate5_Quenches
 from .tail_resonatorness_postulate import BVPPostulate6_TailResonatorness
 from .transition_zone_postulate import BVPPostulate7_TransitionZone
 from .core_renormalization_postulate import BVPPostulate8_CoreRenormalization
-from .power_balance import BVPPostulate9_PowerBalance
+from .power_balance.power_balance_postulate import PowerBalancePostulate as BVPPostulate9_PowerBalance
 from .bvp_postulates_7d import BVPPostulates7D
 
 __all__ = [

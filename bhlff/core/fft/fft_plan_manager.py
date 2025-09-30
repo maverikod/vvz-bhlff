@@ -286,3 +286,42 @@ class FFTPlanManager:
             str: Numerical precision.
         """
         return self.precision
+
+    def create_plan(self, field: np.ndarray) -> str:
+        """
+        Create FFT plan for field.
+        
+        Args:
+            field (np.ndarray): Field to create plan for.
+            
+        Returns:
+            str: Plan identifier.
+        """
+        plan_id = f"plan_{id(field)}"
+        self._fft_plans[plan_id] = {
+            "shape": field.shape,
+            "dtype": field.dtype,
+            "plan_type": self.plan_type
+        }
+        return plan_id
+    
+    def get_plan(self, field: np.ndarray) -> str:
+        """
+        Get existing FFT plan for field.
+        
+        Args:
+            field (np.ndarray): Field to get plan for.
+            
+        Returns:
+            str: Plan identifier.
+        """
+        plan_id = f"plan_{id(field)}"
+        if plan_id not in self._fft_plans:
+            return self.create_plan(field)
+        return plan_id
+    
+    def clear_plans(self) -> None:
+        """
+        Clear all FFT plans.
+        """
+        self._fft_plans.clear()

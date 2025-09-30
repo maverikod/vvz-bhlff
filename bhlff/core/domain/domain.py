@@ -68,7 +68,7 @@ class Domain:
     N_phi: int = 32
     N_t: int = 64
     T: float = 1.0
-    dimensions: int = 3
+    dimensions: int = 7
 
     def __post_init__(self) -> None:
         """
@@ -88,16 +88,16 @@ class Domain:
             raise ValueError("Number of temporal grid points N_t must be positive")
         if self.T <= 0:
             raise ValueError("Temporal domain size T must be positive")
-        if self.dimensions not in [1, 2, 3]:
-            raise ValueError("Dimensions must be 1, 2, or 3")
+        if self.dimensions != 7:
+            raise ValueError("Dimensions must be 7 for 7D BVP theory")
 
         # Compute grid spacings
         self.dx = self.L / self.N
         self.dphi = 2 * np.pi / self.N_phi
         self.dt = self.T / self.N_t
 
-        # Setup shapes
-        self.spatial_shape = tuple([self.N] * self.dimensions)
+        # Setup shapes for 7D BVP theory
+        self.spatial_shape = tuple([self.N] * 3)  # 3 spatial dimensions
         self.phase_shape = tuple([self.N_phi] * 3)  # 3 phase dimensions
         self.shape = self.spatial_shape + self.phase_shape + (self.N_t,)  # 7D shape
 
@@ -113,22 +113,13 @@ class Domain:
         """
         self.coordinates = {}
 
-        # Spatial coordinates ℝ³ₓ
-        if self.dimensions == 1:
-            self.coordinates["x"] = np.linspace(0, self.L, self.N, endpoint=False)
-        elif self.dimensions == 2:
-            x = np.linspace(0, self.L, self.N, endpoint=False)
-            y = np.linspace(0, self.L, self.N, endpoint=False)
-            self.coordinates["x"], self.coordinates["y"] = np.meshgrid(
-                x, y, indexing="ij"
-            )
-        else:  # 3D
-            x = np.linspace(0, self.L, self.N, endpoint=False)
-            y = np.linspace(0, self.L, self.N, endpoint=False)
-            z = np.linspace(0, self.L, self.N, endpoint=False)
-            self.coordinates["x"], self.coordinates["y"], self.coordinates["z"] = (
-                np.meshgrid(x, y, z, indexing="ij")
-            )
+        # Spatial coordinates ℝ³ₓ (always 3D in 7D BVP theory)
+        x = np.linspace(0, self.L, self.N, endpoint=False)
+        y = np.linspace(0, self.L, self.N, endpoint=False)
+        z = np.linspace(0, self.L, self.N, endpoint=False)
+        self.coordinates["x"], self.coordinates["y"], self.coordinates["z"] = (
+            np.meshgrid(x, y, z, indexing="ij")
+        )
 
         # Phase coordinates 𝕋³_φ
         phi1 = np.linspace(0, 2 * np.pi, self.N_phi, endpoint=False)
@@ -257,6 +248,37 @@ class Domain:
                 - 'temporal': temporal grid spacing Δt = T/N_t
         """
         return {"spatial": self.dx, "phase": self.dphi, "temporal": self.dt}
+
+    def get_coordinates(self, dim: int) -> np.ndarray:
+        """
+        Get coordinates for specific dimension.
+        
+        Physical Meaning:
+            Returns coordinate array for the specified dimension in the 7D space-time.
+            
+        Args:
+            dim (int): Dimension index:
+                - 0, 1, 2: spatial coordinates (x, y, z)
+                - 3, 4, 5: phase coordinates (φ₁, φ₂, φ₃)
+                - 6: temporal coordinate (t)
+                
+        Returns:
+            np.ndarray: Coordinate array for the specified dimension.
+            
+        Raises:
+            ValueError: If dimension index is out of range.
+        """
+        if dim < 0 or dim >= 7:
+            raise ValueError(f"Dimension {dim} out of range for 7D BVP theory")
+        
+        if dim < 3:  # Spatial coordinates
+            coord_names = ["x", "y", "z"]
+            return self.coordinates[coord_names[dim]]
+        elif dim < 6:  # Phase coordinates
+            coord_names = ["phi1", "phi2", "phi3"]
+            return self.coordinates[coord_names[dim - 3]]
+        else:  # Temporal coordinate
+            return self.coordinates["t"]
 
     def __repr__(self) -> str:
         """String representation of the 7D domain."""

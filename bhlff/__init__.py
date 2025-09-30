@@ -26,13 +26,13 @@ Example:
     >>> from bhlff.core.domain import Domain
     >>>
     >>> # Create domain and BVP core
-    >>> domain = Domain(L=10.0, N=256, dimensions=3)
+    >>> domain = Domain(L=10.0, N=256, dimensions=7, N_phi=64, N_t=128, T=1.0)
     >>> bvp_core = BVPCore(domain, config)
     >>>
     >>> # Solve BVP envelope equation
     >>> import numpy as np
-    >>> source = np.zeros((256, 256, 256))
-    >>> source[128, 128, 128] = 1.0
+    >>> source = np.zeros((256, 256, 256, 64, 64, 64, 128))
+    >>> source[128, 128, 128, 32, 32, 32, 64] = 1.0
     >>> envelope = bvp_core.solve_envelope(source)
 """
 

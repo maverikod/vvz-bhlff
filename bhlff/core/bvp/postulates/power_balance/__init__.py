@@ -2,38 +2,30 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-Power Balance postulate package.
+Power Balance Postulate package for BVP framework.
 
-This package implements the Power Balance postulate for the BVP framework,
-validating that the BVP flux at the outer boundary equals the sum of core
-energy growth, radiation losses, and reflection.
+This package provides modular components for the Power Balance Postulate,
+including flux computation, energy analysis, and radiation calculations.
 
-Physical Meaning:
-    The Power Balance postulate ensures energy conservation by requiring that
-    the BVP flux at the outer boundary equals the sum of growth of static
-    core energy, EM/weak radiation/losses, and reflection. This is controlled
-    by an integral identity.
-
-Mathematical Foundation:
-    Validates power balance by computing energy fluxes and ensuring
-    conservation through the integral identity. The balance should be
-    satisfied within a specified tolerance.
+Theoretical Background:
+    Power balance is maintained at the external boundary through proper
+    accounting of energy flows. The integral identity ensures conservation
+    of energy in the BVP system.
 
 Example:
-    >>> from bhlff.core.bvp.postulates.power_balance import BVPPostulate9_PowerBalance
-    >>> postulate = BVPPostulate9_PowerBalance(domain_7d, config)
-    >>> results = postulate.apply(envelope_7d)
-    >>> print(f"Power balance satisfied: {results['postulate_satisfied']}")
+    >>> from bhlff.core.bvp.postulates.power_balance import PowerBalancePostulate
+    >>> postulate = PowerBalancePostulate(domain, constants)
+    >>> results = postulate.apply(envelope)
 """
 
-from .power_balance_postulate import BVPPostulate9_PowerBalance
+from .power_balance_postulate import PowerBalancePostulate
 from .flux_computer import FluxComputer
-from .energy_computer import EnergyComputer
-from .boundary_analyzer import BoundaryAnalyzer
+from .energy_analyzer import EnergyAnalyzer
+from .radiation_calculator import RadiationCalculator
 
 __all__ = [
-    "BVPPostulate9_PowerBalance",
+    "PowerBalancePostulate",
     "FluxComputer",
-    "EnergyComputer",
-    "BoundaryAnalyzer",
+    "EnergyAnalyzer", 
+    "RadiationCalculator"
 ]

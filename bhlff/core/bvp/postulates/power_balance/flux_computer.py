@@ -2,150 +2,114 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-BVP flux computation for Power Balance postulate.
+Flux computation for Power Balance Postulate.
 
-This module implements the computation of BVP flux at boundaries in 7D space-time,
-providing the foundation for power balance validation.
+This module implements flux computation methods for the Power Balance
+Postulate, including BVP flux calculation and boundary flux analysis.
 
-Physical Meaning:
-    Computes the BVP flux at the outer boundary in 7D space-time M₇,
-    representing the energy flow into the system from the BVP field.
-    The flux includes contributions from all 7 dimensions.
-
-Mathematical Foundation:
-    The BVP flux in 7D is computed as:
-    F = ∫_∂Ω₇ (1/2) Re[E × H*] · n dS₇
-    where E and H are derived from the 7D envelope field.
+Theoretical Background:
+    BVP flux at external boundary represents energy flow across boundaries
+    from amplitude gradients. This is a key component of power balance
+    analysis in the BVP framework.
 
 Example:
-    >>> flux_computer = FluxComputer(domain_7d)
+    >>> flux_computer = FluxComputer(domain, constants)
     >>> bvp_flux = flux_computer.compute_bvp_flux(envelope)
 """
 
 import numpy as np
 from typing import Dict, Any
 
-from ....domain.domain_7d import Domain7D
+from ....domain.domain import Domain
+from ...bvp_constants import BVPConstants
 
 
 class FluxComputer:
     """
-    BVP flux computation in 7D space-time.
+    Flux computation for Power Balance Postulate.
 
     Physical Meaning:
-        Computes the BVP flux at boundaries in 7D space-time M₇,
-        representing the energy flow into the system from the BVP field.
-        The flux includes contributions from all 7 dimensions:
-        - 3 spatial coordinates (x, y, z)
-        - 3 phase coordinates (φ₁, φ₂, φ₃)
-        - 1 temporal coordinate (t)
+        Computes BVP flux at external boundaries from amplitude gradients,
+        representing energy flow across boundaries in the BVP system.
 
     Mathematical Foundation:
-        The BVP flux in 7D is computed as:
-        F = ∫_∂Ω₇ (1/2) Re[E × H*] · n dS₇
-        where E and H are derived from the 7D envelope field,
-        and n is the outward normal in 7D space.
+        Flux is proportional to gradient at boundary:
+        Flux = ∇A · n̂ at boundary where n̂ is the normal vector.
     """
 
-    def __init__(self, domain_7d: Domain7D):
+    def __init__(self, domain: Domain, constants: BVPConstants):
         """
         Initialize flux computer.
 
+        Physical Meaning:
+            Sets up the flux computer with domain and constants
+            for boundary flux calculations.
+
         Args:
-            domain_7d (Domain7D): 7D computational domain.
+            domain (Domain): Computational domain for analysis.
+            constants (BVPConstants): BVP physical constants.
         """
-        self.domain_7d = domain_7d
+        self.domain = domain
+        self.constants = constants
 
     def compute_bvp_flux(self, envelope: np.ndarray) -> float:
         """
-        Compute BVP flux at boundary in full 7D space-time.
+        Compute BVP flux at external boundary.
 
         Physical Meaning:
-            Computes the BVP flux at the outer boundary in 7D space-time M₇,
-            representing the energy flow into the system from the BVP field.
-            The flux includes contributions from all 7 dimensions.
+            Calculates energy flux across external boundaries
+            from amplitude gradients.
 
         Mathematical Foundation:
-            The BVP flux in 7D is computed as:
-            F = ∫_∂Ω₇ (1/2) Re[E × H*] · n dS₇
-            where E and H are derived from the 7D envelope field,
-            and n is the outward normal in 7D space.
+            Flux is proportional to gradient at boundary:
+            Flux = ∇A · n̂ at boundary where n̂ is the normal vector.
 
         Args:
-            envelope (np.ndarray): 7D envelope field with shape
-                (N_x, N_y, N_z, N_φ₁, N_φ₂, N_φ₃, N_t)
+            envelope (np.ndarray): BVP envelope.
 
         Returns:
-            float: Computed BVP flux at boundary in 7D space-time.
+            float: BVP flux at boundary.
         """
-        # Use the latest time slice
-        a_t = envelope[..., -1]
-        differentials = self.domain_7d.get_differentials()
+        amplitude = np.abs(envelope)
+        gradient = np.gradient(amplitude, self.domain.dx, axis=0)
 
-        # 7D differentials
-        dx = differentials["dx"]
-        dy = differentials["dy"]
-        dz = differentials["dz"]
-        dphi1 = differentials["dphi_1"]
-        dphi2 = differentials["dphi_2"]
-        dphi3 = differentials["dphi_3"]
-
-        # Spatial gradients (axes 0,1,2)
-        grad_x = np.gradient(a_t, dx, axis=0)
-        grad_y = np.gradient(a_t, dy, axis=1)
-        grad_z = np.gradient(a_t, dz, axis=2)
-
-        # Phase gradients (axes 3,4,5) - U(1)³ structure
-        grad_phi1 = np.gradient(a_t, dphi1, axis=3)
-        grad_phi2 = np.gradient(a_t, dphi2, axis=4)
-        grad_phi3 = np.gradient(a_t, dphi3, axis=5)
-
-        # 7D current density components j = Im(a* · ∇a)
-        jx = np.imag(np.conj(a_t) * grad_x)
-        jy = np.imag(np.conj(a_t) * grad_y)
-        jz = np.imag(np.conj(a_t) * grad_z)
-        jphi1 = np.imag(np.conj(a_t) * grad_phi1)
-        jphi2 = np.imag(np.conj(a_t) * grad_phi2)
-        jphi3 = np.imag(np.conj(a_t) * grad_phi3)
-
-        # 7D surface elements for all boundary faces
-        dS_x = dy * dz * dphi1 * dphi2 * dphi3
-        dS_y = dx * dz * dphi1 * dphi2 * dphi3
-        dS_z = dx * dy * dphi1 * dphi2 * dphi3
-        dS_phi1 = dx * dy * dz * dphi2 * dphi3
-        dS_phi2 = dx * dy * dz * dphi1 * dphi3
-        dS_phi3 = dx * dy * dz * dphi1 * dphi2
-
-        # Flux through spatial boundary faces
-        flux_x_neg = -np.sum(jx[0, ...]) * dS_x
-        flux_x_pos = np.sum(jx[-1, ...]) * dS_x
-        flux_y_neg = -np.sum(jy[:, 0, ...]) * dS_y
-        flux_y_pos = np.sum(jy[:, -1, ...]) * dS_y
-        flux_z_neg = -np.sum(jz[:, :, 0, ...]) * dS_z
-        flux_z_pos = np.sum(jz[:, :, -1, ...]) * dS_z
-
-        # Flux through phase boundary faces (U(1)³ periodic boundaries)
-        flux_phi1_neg = -np.sum(jphi1[:, :, :, 0, ...]) * dS_phi1
-        flux_phi1_pos = np.sum(jphi1[:, :, :, -1, ...]) * dS_phi1
-        flux_phi2_neg = -np.sum(jphi2[:, :, :, :, 0, ...]) * dS_phi2
-        flux_phi2_pos = np.sum(jphi2[:, :, :, :, -1, ...]) * dS_phi2
-        flux_phi3_neg = -np.sum(jphi3[:, :, :, :, :, 0]) * dS_phi3
-        flux_phi3_pos = np.sum(jphi3[:, :, :, :, :, -1]) * dS_phi3
-
-        # Total 7D flux
-        total_flux = (
-            flux_x_neg
-            + flux_x_pos
-            + flux_y_neg
-            + flux_y_pos
-            + flux_z_neg
-            + flux_z_pos
-            + flux_phi1_neg
-            + flux_phi1_pos
-            + flux_phi2_neg
-            + flux_phi2_pos
-            + flux_phi3_neg
-            + flux_phi3_pos
+        # Flux is proportional to gradient at boundary
+        boundary_flux = np.mean(np.abs(gradient[0, ...])) + np.mean(
+            np.abs(gradient[-1, ...])
+        )
+        boundary_flux += np.mean(np.abs(gradient[:, 0, ...])) + np.mean(
+            np.abs(gradient[:, -1, ...])
+        )
+        boundary_flux += np.mean(np.abs(gradient[:, :, 0, ...])) + np.mean(
+            np.abs(gradient[:, :, -1, ...])
         )
 
-        return float(total_flux)
+        return boundary_flux / 6.0  # Average over 6 faces
+
+    def compute_boundary_gradients(self, envelope: np.ndarray) -> Dict[str, np.ndarray]:
+        """
+        Compute gradients at all boundaries.
+
+        Physical Meaning:
+            Computes gradient components at all boundary faces
+            for detailed flux analysis.
+
+        Args:
+            envelope (np.ndarray): BVP envelope.
+
+        Returns:
+            Dict[str, np.ndarray]: Boundary gradients for each face.
+        """
+        amplitude = np.abs(envelope)
+        gradient = np.gradient(amplitude, self.domain.dx, axis=0)
+
+        boundary_gradients = {
+            "x_min": gradient[0, ...],
+            "x_max": gradient[-1, ...],
+            "y_min": gradient[:, 0, ...],
+            "y_max": gradient[:, -1, ...],
+            "z_min": gradient[:, :, 0, ...],
+            "z_max": gradient[:, :, -1, ...],
+        }
+
+        return boundary_gradients

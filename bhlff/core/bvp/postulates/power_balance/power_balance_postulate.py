@@ -2,128 +2,171 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-BVP Postulate 9: Power Balance implementation.
+Power Balance Postulate implementation for BVP framework.
 
-This module implements the Power Balance postulate for the BVP framework,
-validating that the BVP flux at the outer boundary equals the sum of core
-energy growth, radiation losses, and reflection.
+This module implements Postulate 9 of the BVP framework, which states that
+BVP flux at external boundary equals the sum of growth of static core energy,
+EM/weak radiation/losses, and reflection, controlled by integral identity.
 
-Physical Meaning:
-    The Power Balance postulate ensures energy conservation by requiring that
-    the BVP flux at the outer boundary equals the sum of growth of static
-    core energy, EM/weak radiation/losses, and reflection. This is controlled
-    by an integral identity.
-
-Mathematical Foundation:
-    Validates power balance by computing energy fluxes and ensuring
-    conservation through the integral identity. The balance should be
-    satisfied within a specified tolerance.
+Theoretical Background:
+    Power balance is maintained at the external boundary through proper
+    accounting of energy flows. The integral identity ensures conservation
+    of energy in the BVP system.
 
 Example:
-    >>> postulate = BVPPostulate9_PowerBalance(domain_7d, config)
-    >>> results = postulate.apply(envelope_7d)
-    >>> print(f"Power balance satisfied: {results['postulate_satisfied']}")
+    >>> postulate = PowerBalancePostulate(domain, constants)
+    >>> results = postulate.apply(envelope)
 """
 
 import numpy as np
 from typing import Dict, Any
 
-from ....domain.domain_7d import Domain7D
+from ....domain.domain import Domain
+from ...bvp_constants import BVPConstants
 from ...bvp_postulate_base import BVPPostulate
 from .flux_computer import FluxComputer
-from .energy_computer import EnergyComputer
-from .boundary_analyzer import BoundaryAnalyzer
+from .energy_analyzer import EnergyAnalyzer
+from .radiation_calculator import RadiationCalculator
 
 
-class BVPPostulate9_PowerBalance(BVPPostulate):
+class PowerBalancePostulate(BVPPostulate):
     """
     Postulate 9: Power Balance.
 
     Physical Meaning:
-        BVP flux at outer boundary = (growth of static core energy) +
+        BVP flux at external boundary = (growth of static core energy) +
         (EM/weak radiation/losses) + (reflection). This is controlled
         by integral identity.
-
-    Mathematical Foundation:
-        Validates power balance by computing energy fluxes and ensuring
-        conservation through integral identity.
     """
 
-    def __init__(self, domain_7d: Domain7D, config: Dict[str, Any]):
+    def __init__(self, domain: Domain, constants: BVPConstants):
         """
-        Initialize Power Balance postulate.
+        Initialize power balance postulate.
 
         Physical Meaning:
-            Sets up the postulate with the computational domain and
-            configuration parameters, including the balance tolerance
-            for energy conservation validation.
+            Sets up the postulate for analyzing power balance
+            at external boundaries.
 
         Args:
-            domain_7d (Domain7D): 7D computational domain.
-            config (Dict[str, Any]): Configuration parameters including:
-                - balance_tolerance (float): Balance tolerance for validation (default: 0.05)
+            domain (Domain): Computational domain for analysis.
+            constants (BVPConstants): BVP physical constants.
         """
-        self.domain_7d = domain_7d
-        self.config = config
-        self.balance_tolerance = config.get("balance_tolerance", 0.05)
+        self.domain = domain
+        self.constants = constants
+        self.power_balance_tolerance = constants.get_quench_parameter(
+            "power_balance_tolerance", 0.05
+        )
+        self.flux_threshold = constants.get_quench_parameter("flux_threshold", 0.1)
 
-        # Initialize component computers
-        self.flux_computer = FluxComputer(domain_7d)
-        self.energy_computer = EnergyComputer(domain_7d, config)
-        self.boundary_analyzer = BoundaryAnalyzer(domain_7d)
+        # Initialize component analyzers
+        self.flux_computer = FluxComputer(domain, constants)
+        self.energy_analyzer = EnergyAnalyzer(domain, constants)
+        self.radiation_calculator = RadiationCalculator(domain, constants)
 
     def apply(self, envelope: np.ndarray, **kwargs) -> Dict[str, Any]:
         """
-        Apply Power Balance postulate.
+        Apply power balance postulate.
 
         Physical Meaning:
-            Validates power balance by computing energy fluxes and ensuring
-            conservation through the integral identity. This ensures that
-            the BVP field exhibits proper energy conservation with balanced
-            flux, core energy growth, radiation losses, and reflection.
+            Verifies that power balance is maintained at the external
+            boundary with proper accounting of energy flows.
 
         Mathematical Foundation:
-            Computes the BVP flux at the boundary and compares it with the
-            sum of core energy growth, radiation losses, and reflection.
-            The balance should be satisfied within the specified tolerance.
+            Checks integral identity: BVP flux = core energy growth +
+            radiation/losses + reflection.
 
         Args:
-            envelope (np.ndarray): 7D envelope field to validate.
-                Shape: (N_x, N_y, N_z, N_φx, N_φy, N_φz, N_t)
+            envelope (np.ndarray): BVP envelope to analyze.
 
         Returns:
-            Dict[str, Any]: Validation results including:
-                - postulate_satisfied (bool): Whether postulate is satisfied
-                - bvp_flux (float): BVP flux at boundary
-                - core_energy_growth (float): Growth of static core energy
-                - radiation_losses (float): EM/weak radiation and losses
-                - reflection (float): Reflection component
-                - balance_error (float): Relative balance error
-                - balance_tolerance (float): Applied balance tolerance
+            Dict[str, Any]: Results including power balance components,
+                flux analysis, and balance validation.
         """
-        # Compute BVP flux at boundary
+        # Compute BVP flux at external boundary
         bvp_flux = self.flux_computer.compute_bvp_flux(envelope)
 
         # Compute core energy growth
-        core_energy_growth = self.energy_computer.compute_core_energy_growth(envelope)
+        core_energy_growth = self.energy_analyzer.compute_core_energy_growth(envelope)
 
         # Compute radiation and losses
-        radiation_losses = self.boundary_analyzer.compute_radiation_losses(envelope)
+        radiation_losses = self.radiation_calculator.compute_radiation_losses(envelope)
 
         # Compute reflection
-        reflection = self.boundary_analyzer.compute_reflection(envelope)
+        reflection = self.radiation_calculator.compute_reflection(envelope)
 
-        # Check power balance
-        total_output = core_energy_growth + radiation_losses + reflection
-        balance_error = abs(bvp_flux - total_output) / abs(bvp_flux + 1e-12)
-        power_balance_satisfied = balance_error < self.balance_tolerance
+        # Analyze power balance
+        power_balance = self._analyze_power_balance(
+            bvp_flux, core_energy_growth, radiation_losses, reflection
+        )
+
+        # Validate power balance
+        is_balanced = self._validate_power_balance(power_balance)
 
         return {
-            "postulate_satisfied": power_balance_satisfied,
-            "bvp_flux": float(bvp_flux),
-            "core_energy_growth": float(core_energy_growth),
-            "radiation_losses": float(radiation_losses),
-            "reflection": float(reflection),
-            "balance_error": float(balance_error),
-            "balance_tolerance": self.balance_tolerance,
+            "bvp_flux": bvp_flux,
+            "core_energy_growth": core_energy_growth,
+            "radiation_losses": radiation_losses,
+            "reflection": reflection,
+            "power_balance": power_balance,
+            "is_balanced": is_balanced,
+            "postulate_satisfied": is_balanced,
         }
+
+    def _analyze_power_balance(
+        self,
+        bvp_flux: float,
+        core_energy_growth: float,
+        radiation_losses: float,
+        reflection: float,
+    ) -> Dict[str, Any]:
+        """
+        Analyze power balance components.
+
+        Physical Meaning:
+            Computes power balance ratio and error to verify
+            energy conservation.
+
+        Mathematical Foundation:
+            Balance ratio = BVP_flux / (core_growth + radiation + reflection)
+
+        Args:
+            bvp_flux (float): BVP flux at boundary.
+            core_energy_growth (float): Core energy growth rate.
+            radiation_losses (float): Radiation losses.
+            reflection (float): Reflected energy.
+
+        Returns:
+            Dict[str, Any]: Power balance analysis.
+        """
+        total_output = core_energy_growth + radiation_losses + reflection
+        balance_ratio = bvp_flux / (total_output + 1e-12)
+        balance_error = abs(balance_ratio - 1.0)
+
+        return {
+            "total_input": bvp_flux,
+            "total_output": total_output,
+            "balance_ratio": balance_ratio,
+            "balance_error": balance_error,
+            "components": {
+                "core_energy_growth": core_energy_growth,
+                "radiation_losses": radiation_losses,
+                "reflection": reflection,
+            },
+        }
+
+    def _validate_power_balance(self, power_balance: Dict[str, Any]) -> bool:
+        """
+        Validate that power balance is maintained.
+
+        Physical Meaning:
+            Checks if power balance error is within acceptable
+            tolerance for energy conservation.
+
+        Args:
+            power_balance (Dict[str, Any]): Power balance analysis.
+
+        Returns:
+            bool: True if power balance is maintained.
+        """
+        balance_error = power_balance["balance_error"]
+        return balance_error < self.power_balance_tolerance

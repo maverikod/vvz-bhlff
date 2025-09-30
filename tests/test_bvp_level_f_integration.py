@@ -26,7 +26,7 @@ from typing import Dict, Any
 
 from bhlff.core.domain import Domain
 from bhlff.core.bvp import BVPCore, BVPInterface
-from bhlff.solvers.spectral import FFTSolver3D
+from bhlff.core.bvp.bvp_envelope_solver import BVPEnvelopeSolver
 from bhlff.solvers.integrators import TimeIntegrator
 
 

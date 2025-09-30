@@ -17,8 +17,11 @@ Mathematical Foundation:
     Riesz operator and related equations in frequency space.
 """
 
-from .fft_solver_3d import FFTSolver3D
+# 7D spectral solvers are available through:
+# - bhlff.core.bvp.bvp_envelope_solver.BVPEnvelopeSolver
+# - bhlff.core.bvp.envelope_equation.solver_core.EnvelopeSolverCore7D
+# - bhlff.core.fft.fft_backend_core.FFTBackend
 
 __all__ = [
-    "FFTSolver3D",
+    # 7D spectral solvers available in core modules
 ]

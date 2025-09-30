@@ -26,7 +26,7 @@ from typing import Dict, Any
 
 from bhlff.core.domain import Domain
 from bhlff.core.bvp import BVPCore, BVPInterface
-from bhlff.solvers.spectral import FFTSolver3D
+from bhlff.core.bvp.bvp_envelope_solver import BVPEnvelopeSolver
 from bhlff.solvers.integrators import TimeIntegrator
 
 
@@ -88,18 +88,17 @@ class TestBVPLevelAIntegration:
         """Test A1: BVP-Enhanced Solvers."""
         bvp_core = BVPCore(domain, bvp_config)
         
-        # Test 7D FFT solver with BVP integration
-        fft_solver = FFTSolver3D(domain, bvp_config, bvp_core)
-        assert fft_solver.get_bvp_core() == bvp_core
+        # Test 7D BVP envelope solver
+        envelope_solver = BVPEnvelopeSolver(domain, bvp_config)
         
         # Test BVP envelope equation solution
         source = np.zeros(domain.shape)
-        source[32, 32, 32] = 1.0
-        envelope = fft_solver.solve_bvp_envelope(source)
+        source[32, 32, 32, 16, 16, 16, 50] = 1.0  # 7D source
+        envelope = envelope_solver.solve_envelope(source)
         assert envelope.shape == domain.shape
         
         # Test BVP quench event handling
-        quenches = fft_solver.detect_quenches(envelope)
+        quenches = bvp_core.detect_quenches(envelope)
         assert isinstance(quenches, dict)
 
     def test_level_a_bvp_scaling(self, domain, bvp_config):

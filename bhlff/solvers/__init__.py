@@ -20,11 +20,13 @@ Mathematical Foundation:
 
 from .base.abstract_solver import AbstractSolver
 from .integrators import TimeIntegrator, BVPModulationIntegrator
-from .spectral import FFTSolver3D
 
 __all__ = [
     "AbstractSolver",
     "TimeIntegrator",
     "BVPModulationIntegrator",
-    "FFTSolver3D",
+    # 7D spectral solvers available in core modules:
+    # - bhlff.core.bvp.bvp_envelope_solver.BVPEnvelopeSolver
+    # - bhlff.core.bvp.envelope_equation.solver_core.EnvelopeSolverCore7D
+    # - bhlff.core.fft.fft_backend_core.FFTBackend
 ]

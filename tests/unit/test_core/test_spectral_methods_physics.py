@@ -35,7 +35,7 @@ from bhlff.core.domain import Domain
 from bhlff.core.fft.spectral_operations import SpectralOperations
 from bhlff.core.fft.spectral_derivatives import SpectralDerivatives
 from bhlff.core.operators.fractional_laplacian import FractionalLaplacian
-from bhlff.solvers.spectral.fft_solver_3d.spectral_operations import SpectralOperations3D as FFTSpectralOps
+from bhlff.core.fft.spectral_operations import SpectralOperations as FFTSpectralOps
 
 
 class TestSpectralMethodsPhysics:

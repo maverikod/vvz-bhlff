@@ -280,16 +280,16 @@ Interfaces BVP envelope with core.
 
 ## Integration with Solvers
 
-### FFTSolver3D with BVP Integration
+### BVPEnvelopeSolver for 7D BVP Integration
 
 ```python
-from bhlff.solvers.spectral import FFTSolver3D
+from bhlff.core.bvp.bvp_envelope_solver import BVPEnvelopeSolver
 
-# Create FFT solver with BVP integration
-solver = FFTSolver3D(domain, config, bvp_core)
+# Create 7D BVP envelope solver
+solver = BVPEnvelopeSolver(domain, config)
 
 # Solve BVP envelope equation
-envelope = solver.solve_bvp_envelope(source)
+envelope = solver.solve_envelope(source)
 
 # Detect quenches
 quenches = solver.detect_quenches(envelope)
@@ -393,14 +393,11 @@ With passivity condition: `ℜΓ_mem ≥ 0`
 import numpy as np
 from bhlff.core.domain import Domain
 from bhlff.core.bvp import BVPCore
-from bhlff.solvers.spectral import FFTSolver3D
+from bhlff.core.bvp.bvp_envelope_solver import BVPEnvelopeSolver
 
-# 1. Create domain
+# 1. Create 7D domain
 domain = Domain(
-    dimensions=3,
-    size=(1.0, 1.0, 1.0),
-    resolution=(64, 64, 64),
-    boundary_conditions="periodic"
+    L=1.0, N=64, dimensions=7, N_phi=32, N_t=100, T=1.0
 )
 
 # 2. Configure BVP
@@ -423,15 +420,15 @@ bvp_config = {
 # 3. Create BVP core
 bvp_core = BVPCore(domain, bvp_config)
 
-# 4. Create solver with BVP integration
-solver = FFTSolver3D(domain, bvp_config, bvp_core)
+# 4. Create 7D BVP envelope solver
+solver = BVPEnvelopeSolver(domain, bvp_config)
 
-# 5. Define source
+# 5. Define 7D source
 source = np.zeros(domain.shape)
-source[32, 32, 32] = 1.0
+source[32, 32, 32, 16, 16, 16, 50] = 1.0
 
 # 6. Solve BVP envelope equation
-envelope = solver.solve_bvp_envelope(source)
+envelope = solver.solve_envelope(source)
 
 # 7. Detect quench events
 quenches = solver.detect_quenches(envelope)

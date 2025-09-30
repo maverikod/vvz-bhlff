@@ -31,8 +31,4 @@ from .phase_vector import PhaseVector
 from .phase_components import PhaseComponents
 from .electroweak_coupling import ElectroweakCoupling
 
-__all__ = [
-    "PhaseVector",
-    "PhaseComponents", 
-    "ElectroweakCoupling"
-]
+__all__ = ["PhaseVector", "PhaseComponents", "ElectroweakCoupling"]

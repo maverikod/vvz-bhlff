@@ -57,7 +57,9 @@ class FFTSolver3DBoundary:
         """
         self.domain = domain
 
-    def apply_dirichlet_boundary(self, field: np.ndarray, boundary_values: Dict[str, float] = None) -> np.ndarray:
+    def apply_dirichlet_boundary(
+        self, field: np.ndarray, boundary_values: Dict[str, float] = None
+    ) -> np.ndarray:
         """
         Apply Dirichlet boundary conditions.
 
@@ -80,41 +82,46 @@ class FFTSolver3DBoundary:
         """
         if boundary_values is None:
             boundary_values = {
-                'x_min': 0.0, 'x_max': 0.0,
-                'y_min': 0.0, 'y_max': 0.0,
-                'z_min': 0.0, 'z_max': 0.0
+                "x_min": 0.0,
+                "x_max": 0.0,
+                "y_min": 0.0,
+                "y_max": 0.0,
+                "z_min": 0.0,
+                "z_max": 0.0,
             }
 
         field_with_bc = field.copy()
-        
+
         # Apply boundary conditions on each face
         # x = 0 face
-        if 'x_min' in boundary_values:
-            field_with_bc[0, :, :] = boundary_values['x_min']
-        
+        if "x_min" in boundary_values:
+            field_with_bc[0, :, :] = boundary_values["x_min"]
+
         # x = L face
-        if 'x_max' in boundary_values:
-            field_with_bc[-1, :, :] = boundary_values['x_max']
-        
+        if "x_max" in boundary_values:
+            field_with_bc[-1, :, :] = boundary_values["x_max"]
+
         # y = 0 face
-        if 'y_min' in boundary_values:
-            field_with_bc[:, 0, :] = boundary_values['y_min']
-        
+        if "y_min" in boundary_values:
+            field_with_bc[:, 0, :] = boundary_values["y_min"]
+
         # y = L face
-        if 'y_max' in boundary_values:
-            field_with_bc[:, -1, :] = boundary_values['y_max']
-        
+        if "y_max" in boundary_values:
+            field_with_bc[:, -1, :] = boundary_values["y_max"]
+
         # z = 0 face
-        if 'z_min' in boundary_values:
-            field_with_bc[:, :, 0] = boundary_values['z_min']
-        
+        if "z_min" in boundary_values:
+            field_with_bc[:, :, 0] = boundary_values["z_min"]
+
         # z = L face
-        if 'z_max' in boundary_values:
-            field_with_bc[:, :, -1] = boundary_values['z_max']
-        
+        if "z_max" in boundary_values:
+            field_with_bc[:, :, -1] = boundary_values["z_max"]
+
         return field_with_bc
 
-    def apply_neumann_boundary(self, field: np.ndarray, boundary_derivatives: Dict[str, float] = None) -> np.ndarray:
+    def apply_neumann_boundary(
+        self, field: np.ndarray, boundary_derivatives: Dict[str, float] = None
+    ) -> np.ndarray:
         """
         Apply Neumann boundary conditions.
 
@@ -137,39 +144,54 @@ class FFTSolver3DBoundary:
         """
         if boundary_derivatives is None:
             boundary_derivatives = {
-                'x_min': 0.0, 'x_max': 0.0,
-                'y_min': 0.0, 'y_max': 0.0,
-                'z_min': 0.0, 'z_max': 0.0
+                "x_min": 0.0,
+                "x_max": 0.0,
+                "y_min": 0.0,
+                "y_max": 0.0,
+                "z_min": 0.0,
+                "z_max": 0.0,
             }
 
         field_with_bc = field.copy()
         dx = self.domain.dx
-        
+
         # Apply boundary conditions on each face
         # x = 0 face (∂u/∂x = h)
-        if 'x_min' in boundary_derivatives:
-            field_with_bc[0, :, :] = field_with_bc[1, :, :] - dx * boundary_derivatives['x_min']
-        
+        if "x_min" in boundary_derivatives:
+            field_with_bc[0, :, :] = (
+                field_with_bc[1, :, :] - dx * boundary_derivatives["x_min"]
+            )
+
         # x = L face (∂u/∂x = h)
-        if 'x_max' in boundary_derivatives:
-            field_with_bc[-1, :, :] = field_with_bc[-2, :, :] + dx * boundary_derivatives['x_max']
-        
+        if "x_max" in boundary_derivatives:
+            field_with_bc[-1, :, :] = (
+                field_with_bc[-2, :, :] + dx * boundary_derivatives["x_max"]
+            )
+
         # y = 0 face (∂u/∂y = h)
-        if 'y_min' in boundary_derivatives:
-            field_with_bc[:, 0, :] = field_with_bc[:, 1, :] - dx * boundary_derivatives['y_min']
-        
+        if "y_min" in boundary_derivatives:
+            field_with_bc[:, 0, :] = (
+                field_with_bc[:, 1, :] - dx * boundary_derivatives["y_min"]
+            )
+
         # y = L face (∂u/∂y = h)
-        if 'y_max' in boundary_derivatives:
-            field_with_bc[:, -1, :] = field_with_bc[:, -2, :] + dx * boundary_derivatives['y_max']
-        
+        if "y_max" in boundary_derivatives:
+            field_with_bc[:, -1, :] = (
+                field_with_bc[:, -2, :] + dx * boundary_derivatives["y_max"]
+            )
+
         # z = 0 face (∂u/∂z = h)
-        if 'z_min' in boundary_derivatives:
-            field_with_bc[:, :, 0] = field_with_bc[:, :, 1] - dx * boundary_derivatives['z_min']
-        
+        if "z_min" in boundary_derivatives:
+            field_with_bc[:, :, 0] = (
+                field_with_bc[:, :, 1] - dx * boundary_derivatives["z_min"]
+            )
+
         # z = L face (∂u/∂z = h)
-        if 'z_max' in boundary_derivatives:
-            field_with_bc[:, :, -1] = field_with_bc[:, :, -2] + dx * boundary_derivatives['z_max']
-        
+        if "z_max" in boundary_derivatives:
+            field_with_bc[:, :, -1] = (
+                field_with_bc[:, :, -2] + dx * boundary_derivatives["z_max"]
+            )
+
         return field_with_bc
 
     def apply_periodic_boundary(self, field: np.ndarray) -> np.ndarray:
@@ -191,23 +213,23 @@ class FFTSolver3DBoundary:
             np.ndarray: Field with periodic boundary conditions applied.
         """
         field_with_bc = field.copy()
-        
+
         # Periodic boundary conditions are naturally satisfied in spectral methods
         # when using FFT, but we can enforce them explicitly if needed
-        
+
         # Ensure continuity at boundaries
         # x-direction
         field_with_bc[0, :, :] = field_with_bc[-1, :, :]
         field_with_bc[-1, :, :] = field_with_bc[0, :, :]
-        
+
         # y-direction
         field_with_bc[:, 0, :] = field_with_bc[:, -1, :]
         field_with_bc[:, -1, :] = field_with_bc[:, 0, :]
-        
+
         # z-direction
         field_with_bc[:, :, 0] = field_with_bc[:, :, -1]
         field_with_bc[:, :, -1] = field_with_bc[:, :, 0]
-        
+
         return field_with_bc
 
     def get_boundary_info(self) -> Dict[str, Any]:
@@ -229,6 +251,6 @@ class FFTSolver3DBoundary:
             "supported_conditions": {
                 "dirichlet": "Fixed values at boundaries",
                 "neumann": "Fixed normal derivatives at boundaries",
-                "periodic": "Periodic continuity across boundaries"
-            }
+                "periodic": "Periodic continuity across boundaries",
+            },
         }

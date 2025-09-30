@@ -54,7 +54,9 @@ class FFTSolver3D:
         bvp_handler (FFTSolver3DBVP): BVP integration handler.
     """
 
-    def __init__(self, domain: Domain, config: Dict[str, Any], bvp_core: Optional[BVPCore] = None) -> None:
+    def __init__(
+        self, domain: Domain, config: Dict[str, Any], bvp_core: Optional[BVPCore] = None
+    ) -> None:
         """
         Initialize 3D FFT solver with BVP framework integration.
 
@@ -79,11 +81,11 @@ class FFTSolver3D:
         self.fft_backend = FFTBackend(domain, config.get("fft_config", {}))
         self.spectral_ops = SpectralOperations(domain, self.fft_backend)
         self._spectral_coeffs: np.ndarray
-        
+
         # Initialize component handlers
         self.boundary_handler = FFTSolver3DBoundary(domain)
         self.bvp_handler = FFTSolver3DBVP(domain, bvp_core, config)
-        
+
         self._setup_spectral_coefficients()
 
     def _setup_spectral_coefficients(self) -> None:
@@ -102,14 +104,14 @@ class FFTSolver3D:
         kx = np.fft.fftfreq(self.domain.N, self.domain.dx)
         ky = np.fft.fftfreq(self.domain.N, self.domain.dx)
         kz = np.fft.fftfreq(self.domain.N, self.domain.dx)
-        
-        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing='ij')
+
+        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
         k_squared = KX**2 + KY**2 + KZ**2
-        
+
         # Spectral coefficients for 3D solver
         # This represents the spectral operator for the 3D equation
         self._spectral_coeffs = k_squared + 1.0  # Add constant term for stability
-        
+
         # Handle k=0 mode
         self._spectral_coeffs[0, 0, 0] = 1.0
 
@@ -142,20 +144,20 @@ class FFTSolver3D:
 
         # Transform to spectral space
         source_spectral = np.fft.fftn(source)
-        
+
         # Apply spectral operator
         solution_spectral = source_spectral / self._spectral_coeffs
-        
+
         # Transform back to real space
         solution = np.fft.ifftn(solution_spectral)
-        
+
         return solution.real
 
     def solve_with_boundary_conditions(
-        self, 
-        source: np.ndarray, 
+        self,
+        source: np.ndarray,
         boundary_type: str = "dirichlet",
-        boundary_values: Dict[str, Any] = None
+        boundary_values: Dict[str, Any] = None,
     ) -> np.ndarray:
         """
         Solve with boundary conditions.
@@ -180,18 +182,24 @@ class FFTSolver3D:
         """
         # Solve without boundary conditions first
         solution = self.solve(source)
-        
+
         # Apply boundary conditions
         if boundary_type == "dirichlet":
-            solution = self.boundary_handler.apply_dirichlet_boundary(solution, boundary_values)
+            solution = self.boundary_handler.apply_dirichlet_boundary(
+                solution, boundary_values
+            )
         elif boundary_type == "neumann":
-            solution = self.boundary_handler.apply_neumann_boundary(solution, boundary_values)
+            solution = self.boundary_handler.apply_neumann_boundary(
+                solution, boundary_values
+            )
         elif boundary_type == "periodic":
             solution = self.boundary_handler.apply_periodic_boundary(solution)
-        
+
         return solution
 
-    def compute_spectral_derivative(self, field: np.ndarray, order: int = 1, axis: int = 0) -> np.ndarray:
+    def compute_spectral_derivative(
+        self, field: np.ndarray, order: int = 1, axis: int = 0
+    ) -> np.ndarray:
         """
         Compute spectral derivative.
 

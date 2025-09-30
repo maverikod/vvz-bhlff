@@ -34,8 +34,8 @@ from .topological_charge_analyzer import TopologicalChargeAnalyzer
 from .zone_separation_analyzer import ZoneSeparationAnalyzer
 
 __all__ = [
-    'PowerLawAnalyzer',
-    'NodesAnalyzer',
-    'TopologicalChargeAnalyzer',
-    'ZoneSeparationAnalyzer'
+    "PowerLawAnalyzer",
+    "NodesAnalyzer",
+    "TopologicalChargeAnalyzer",
+    "ZoneSeparationAnalyzer",
 ]

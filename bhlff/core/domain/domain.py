@@ -26,7 +26,7 @@ Mathematical Foundation:
 """
 
 import numpy as np
-from typing import Tuple, Union
+# from typing import Tuple, Union  # Unused imports
 from dataclasses import dataclass
 
 
@@ -44,7 +44,7 @@ class Domain:
         Implements periodic boundary conditions in the 7D region:
         M₇ = [0,L)³ × [0,2π)³ × [0,T) with uniform grid spacing:
         - Spatial: Δx = L/N for spatial coordinates
-        - Phase: Δφ = 2π/N_φ for phase coordinates  
+        - Phase: Δφ = 2π/N_φ for phase coordinates
         - Temporal: Δt = T/N_t for temporal coordinate
 
     Attributes:
@@ -95,12 +95,12 @@ class Domain:
         self.dx = self.L / self.N
         self.dphi = 2 * np.pi / self.N_phi
         self.dt = self.T / self.N_t
-        
+
         # Setup shapes
         self.spatial_shape = tuple([self.N] * self.dimensions)
         self.phase_shape = tuple([self.N_phi] * 3)  # 3 phase dimensions
         self.shape = self.spatial_shape + self.phase_shape + (self.N_t,)  # 7D shape
-        
+
         self._setup_coordinates()
 
     def _setup_coordinates(self) -> None:
@@ -112,28 +112,34 @@ class Domain:
             M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ, used for source placement and field visualization.
         """
         self.coordinates = {}
-        
+
         # Spatial coordinates ℝ³ₓ
         if self.dimensions == 1:
-            self.coordinates['x'] = np.linspace(0, self.L, self.N, endpoint=False)
+            self.coordinates["x"] = np.linspace(0, self.L, self.N, endpoint=False)
         elif self.dimensions == 2:
             x = np.linspace(0, self.L, self.N, endpoint=False)
             y = np.linspace(0, self.L, self.N, endpoint=False)
-            self.coordinates['x'], self.coordinates['y'] = np.meshgrid(x, y, indexing="ij")
+            self.coordinates["x"], self.coordinates["y"] = np.meshgrid(
+                x, y, indexing="ij"
+            )
         else:  # 3D
             x = np.linspace(0, self.L, self.N, endpoint=False)
             y = np.linspace(0, self.L, self.N, endpoint=False)
             z = np.linspace(0, self.L, self.N, endpoint=False)
-            self.coordinates['x'], self.coordinates['y'], self.coordinates['z'] = np.meshgrid(x, y, z, indexing="ij")
-        
+            self.coordinates["x"], self.coordinates["y"], self.coordinates["z"] = (
+                np.meshgrid(x, y, z, indexing="ij")
+            )
+
         # Phase coordinates 𝕋³_φ
-        phi1 = np.linspace(0, 2*np.pi, self.N_phi, endpoint=False)
-        phi2 = np.linspace(0, 2*np.pi, self.N_phi, endpoint=False)
-        phi3 = np.linspace(0, 2*np.pi, self.N_phi, endpoint=False)
-        self.coordinates['phi1'], self.coordinates['phi2'], self.coordinates['phi3'] = np.meshgrid(phi1, phi2, phi3, indexing="ij")
-        
+        phi1 = np.linspace(0, 2 * np.pi, self.N_phi, endpoint=False)
+        phi2 = np.linspace(0, 2 * np.pi, self.N_phi, endpoint=False)
+        phi3 = np.linspace(0, 2 * np.pi, self.N_phi, endpoint=False)
+        self.coordinates["phi1"], self.coordinates["phi2"], self.coordinates["phi3"] = (
+            np.meshgrid(phi1, phi2, phi3, indexing="ij")
+        )
+
         # Temporal coordinate ℝₜ
-        self.coordinates['t'] = np.linspace(0, self.T, self.N_t, endpoint=False)
+        self.coordinates["t"] = np.linspace(0, self.T, self.N_t, endpoint=False)
 
     def get_wave_numbers(self) -> dict:
         """
@@ -152,33 +158,33 @@ class Domain:
         Returns:
             dict: Wave number arrays for each dimension type:
                 - 'spatial': spatial wave numbers
-                - 'phase': phase wave numbers  
+                - 'phase': phase wave numbers
                 - 'temporal': temporal wave numbers
         """
         wave_numbers = {}
-        
+
         # Spatial wave numbers ℝ³ₓ
         if self.dimensions == 1:
-            wave_numbers['spatial'] = np.fft.fftfreq(self.N, self.dx) * 2 * np.pi
+            wave_numbers["spatial"] = np.fft.fftfreq(self.N, self.dx) * 2 * np.pi
         elif self.dimensions == 2:
             kx = np.fft.fftfreq(self.N, self.dx) * 2 * np.pi
             ky = np.fft.fftfreq(self.N, self.dx) * 2 * np.pi
-            wave_numbers['spatial'] = np.meshgrid(kx, ky, indexing="ij")
+            wave_numbers["spatial"] = np.meshgrid(kx, ky, indexing="ij")
         else:  # 3D
             kx = np.fft.fftfreq(self.N, self.dx) * 2 * np.pi
             ky = np.fft.fftfreq(self.N, self.dx) * 2 * np.pi
             kz = np.fft.fftfreq(self.N, self.dx) * 2 * np.pi
-            wave_numbers['spatial'] = np.meshgrid(kx, ky, kz, indexing="ij")
-        
+            wave_numbers["spatial"] = np.meshgrid(kx, ky, kz, indexing="ij")
+
         # Phase wave numbers 𝕋³_φ
         kphi1 = np.fft.fftfreq(self.N_phi, self.dphi)
         kphi2 = np.fft.fftfreq(self.N_phi, self.dphi)
         kphi3 = np.fft.fftfreq(self.N_phi, self.dphi)
-        wave_numbers['phase'] = np.meshgrid(kphi1, kphi2, kphi3, indexing="ij")
-        
+        wave_numbers["phase"] = np.meshgrid(kphi1, kphi2, kphi3, indexing="ij")
+
         # Temporal wave numbers ℝₜ
-        wave_numbers['temporal'] = np.fft.fftfreq(self.N_t, self.dt) * 2 * np.pi
-        
+        wave_numbers["temporal"] = np.fft.fftfreq(self.N_t, self.dt) * 2 * np.pi
+
         return wave_numbers
 
     def get_center_index(self) -> dict:
@@ -197,21 +203,21 @@ class Domain:
                 - 'temporal': temporal center index
         """
         center_indices = {}
-        
+
         # Spatial center indices
         spatial_center = self.N // 2
         if self.dimensions == 1:
-            center_indices['spatial'] = spatial_center
+            center_indices["spatial"] = spatial_center
         else:
-            center_indices['spatial'] = tuple([spatial_center] * self.dimensions)
-        
+            center_indices["spatial"] = tuple([spatial_center] * self.dimensions)
+
         # Phase center indices
         phase_center = self.N_phi // 2
-        center_indices['phase'] = tuple([phase_center] * 3)  # 3 phase dimensions
-        
+        center_indices["phase"] = tuple([phase_center] * 3)  # 3 phase dimensions
+
         # Temporal center index
-        center_indices['temporal'] = self.N_t // 2
-        
+        center_indices["temporal"] = self.N_t // 2
+
         return center_indices
 
     def get_volume(self) -> dict:
@@ -230,10 +236,10 @@ class Domain:
                 - 'total': total 7D volume
         """
         volumes = {}
-        volumes['spatial'] = self.L**self.dimensions
-        volumes['phase'] = (2 * np.pi)**3  # 3 phase dimensions
-        volumes['temporal'] = self.T
-        volumes['total'] = volumes['spatial'] * volumes['phase'] * volumes['temporal']
+        volumes["spatial"] = self.L**self.dimensions
+        volumes["phase"] = (2 * np.pi) ** 3  # 3 phase dimensions
+        volumes["temporal"] = self.T
+        volumes["total"] = volumes["spatial"] * volumes["phase"] * volumes["temporal"]
         return volumes
 
     def get_grid_spacing(self) -> dict:
@@ -250,12 +256,11 @@ class Domain:
                 - 'phase': phase grid spacing Δφ = 2π/N_φ
                 - 'temporal': temporal grid spacing Δt = T/N_t
         """
-        return {
-            'spatial': self.dx,
-            'phase': self.dphi,
-            'temporal': self.dt
-        }
+        return {"spatial": self.dx, "phase": self.dphi, "temporal": self.dt}
 
     def __repr__(self) -> str:
         """String representation of the 7D domain."""
-        return f"Domain7D(L={self.L}, N={self.N}, N_phi={self.N_phi}, N_t={self.N_t}, T={self.T}, dimensions={self.dimensions})"
+        return (
+            f"Domain7D(L={self.L}, N={self.N}, N_phi={self.N_phi}, "
+            f"N_t={self.N_t}, T={self.T}, dimensions={self.dimensions})"
+        )

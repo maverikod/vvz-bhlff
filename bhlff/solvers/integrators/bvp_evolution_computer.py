@@ -84,13 +84,13 @@ class BVPEvolutionComputer:
         """
         # Compute core BVP terms
         bvp_terms = self._compute_bvp_terms(field)
-        
+
         # Compute modulation terms
         modulation_terms = self._compute_modulation_terms(field)
-        
+
         # Combine terms
         evolution = bvp_terms + modulation_terms
-        
+
         return evolution
 
     def _compute_bvp_terms(self, field: np.ndarray) -> np.ndarray:
@@ -115,20 +115,22 @@ class BVPEvolutionComputer:
         """
         # Initialize evolution terms
         evolution = np.zeros_like(field, dtype=complex)
-        
+
         # Linear evolution terms (spectral)
-        if hasattr(self, '_spectral_evolution_matrix'):
+        if hasattr(self, "_spectral_evolution_matrix"):
             field_spectral = np.fft.fftn(field)
             evolution_spectral = self._spectral_evolution_matrix * field_spectral
             evolution += np.fft.ifftn(evolution_spectral)
-        
+
         # Nonlinear self-interaction terms
         nonlinear_terms = self._compute_bvp_nonlinear_terms_spectral(field)
         evolution += nonlinear_terms
-        
+
         return evolution
 
-    def _compute_bvp_nonlinear_terms_spectral(self, field_spectral: np.ndarray) -> np.ndarray:
+    def _compute_bvp_nonlinear_terms_spectral(
+        self, field_spectral: np.ndarray
+    ) -> np.ndarray:
         """
         Compute BVP nonlinear terms in spectral space.
 
@@ -150,34 +152,34 @@ class BVPEvolutionComputer:
         """
         # Convert to real space for nonlinear computation
         field_real = np.fft.ifftn(field_spectral)
-        
+
         # Cubic self-interaction: |a|²a
-        amplitude_squared = np.abs(field_real)**2
+        amplitude_squared = np.abs(field_real) ** 2
         cubic_term = amplitude_squared * field_real
-        
+
         # Higher-order nonlinearities (quintic term)
         amplitude_fourth = amplitude_squared**2
         quintic_term = 0.1 * amplitude_fourth * field_real
-        
+
         # Combine nonlinear terms
         nonlinear_real = cubic_term + quintic_term
-        
+
         # Convert back to spectral space
         nonlinear_spectral = np.fft.fftn(nonlinear_real)
-        
+
         # Apply spectral filtering for stability
         k_max = self.domain.N // 2
         kx = np.fft.fftfreq(self.domain.N, self.domain.dx)
         ky = np.fft.fftfreq(self.domain.N, self.domain.dx)
         kz = np.fft.fftfreq(self.domain.N, self.domain.dx)
-        
-        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing='ij')
+
+        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
         k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
-        
+
         # Apply spectral filter
-        spectral_filter = np.exp(-(k_magnitude / k_max)**4)
+        spectral_filter = np.exp(-((k_magnitude / k_max) ** 4))
         nonlinear_spectral *= spectral_filter
-        
+
         # Convert back to real space
         return np.fft.ifftn(nonlinear_spectral)
 
@@ -203,18 +205,18 @@ class BVPEvolutionComputer:
         """
         # Carrier frequency modulation
         carrier_modulation = 1j * self.carrier_frequency * field
-        
+
         # Amplitude modulation
         amplitude = np.abs(field)
         amplitude_modulation = self.modulation_strength * amplitude * field
-        
+
         # Phase modulation
         phase = np.angle(field)
         phase_modulation = 0.1 * self.modulation_strength * np.sin(phase) * field
-        
+
         # Combine modulation terms
         modulation = carrier_modulation + amplitude_modulation + phase_modulation
-        
+
         return modulation
 
     def setup_spectral_evolution_matrix(self) -> None:
@@ -233,10 +235,10 @@ class BVPEvolutionComputer:
         kx = np.fft.fftfreq(self.domain.N, self.domain.dx)
         ky = np.fft.fftfreq(self.domain.N, self.domain.dx)
         kz = np.fft.fftfreq(self.domain.N, self.domain.dx)
-        
-        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing='ij')
+
+        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
         k_squared = KX**2 + KY**2 + KZ**2
-        
+
         # BVP evolution matrix in spectral space
         # This represents the linear part of the BVP evolution
         self._spectral_evolution_matrix = -0.5 * k_squared + 1j * self.carrier_frequency

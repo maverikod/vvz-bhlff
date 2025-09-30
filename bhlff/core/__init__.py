@@ -36,7 +36,7 @@ from .sources import Source, BVPSource
 
 __all__ = [
     "Domain",
-    "Field", 
+    "Field",
     "Parameters",
     "BVPCore",
     "BVPEnvelopeSolver",

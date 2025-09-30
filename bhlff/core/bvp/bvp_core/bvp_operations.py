@@ -40,26 +40,28 @@ from ..bvp_parameter_access import BVPParameterAccess
 class BVPCoreOperations:
     """
     BVP core operations for envelope solving and analysis.
-    
+
     Physical Meaning:
         Implements the core operations of the BVP framework including
         envelope solving, quench detection, impedance computation,
         and phase operations for the 7D space-time theory.
-        
+
     Mathematical Foundation:
         Provides operations for solving and analyzing the BVP envelope
         equation and its physical consequences in 7D space-time.
     """
-    
-    def __init__(self, domain: Domain, config: Dict[str, Any], domain_7d: Domain7D = None):
+
+    def __init__(
+        self, domain: Domain, config: Dict[str, Any], domain_7d: Domain7D = None
+    ):
         """
         Initialize BVP core operations.
-        
+
         Physical Meaning:
             Sets up the core operations with the computational domains
             and configuration parameters, initializing all necessary
             components for BVP operations.
-            
+
         Args:
             domain (Domain): Standard computational domain.
             config (Dict[str, Any]): Configuration parameters.
@@ -68,7 +70,7 @@ class BVPCoreOperations:
         self.domain = domain
         self.config = config
         self.domain_7d = domain_7d
-        
+
         # Initialize components
         self._setup_phase_vector()
         self._setup_envelope_solver()
@@ -76,31 +78,31 @@ class BVPCoreOperations:
         self._setup_impedance_calculator()
         self._setup_phase_operations()
         self._setup_parameter_access()
-    
+
     def _setup_phase_vector(self) -> None:
         """Setup phase vector for U(1)³ phase structure."""
         self._phase_vector = PhaseVector(self.domain, self.config)
-    
+
     def _setup_envelope_solver(self) -> None:
         """Setup envelope solver for BVP equation."""
         self._envelope_solver = BVPEnvelopeSolver(self.domain, self.config)
-    
+
     def _setup_quench_detector(self) -> None:
         """Setup quench detector for threshold events."""
         self._quench_detector = QuenchDetector(self.domain, self.config)
-    
+
     def _setup_impedance_calculator(self) -> None:
         """Setup impedance calculator for boundary analysis."""
         self._impedance_calculator = BVPImpedanceCalculator(self.domain, self.config)
-    
+
     def _setup_phase_operations(self) -> None:
         """Setup phase operations for U(1)³ structure."""
         self._phase_operations = BVPPhaseOperations(self.domain, self.config)
-    
+
     def _setup_parameter_access(self) -> None:
         """Setup parameter access for configuration management."""
         self._parameter_access = BVPParameterAccess(self.domain, self.config)
-    
+
     def solve_envelope(self, source: np.ndarray) -> np.ndarray:
         """
         Solve BVP envelope equation for U(1)³ phase structure.
@@ -127,16 +129,18 @@ class BVPCoreOperations:
             ValueError: If source has incompatible shape with 7D domain.
         """
         if source.shape != self.domain.shape:
-            raise ValueError(f"Source shape {source.shape} incompatible with 7D domain shape {self.domain.shape}")
-        
+            raise ValueError(
+                f"Source shape {source.shape} incompatible with 7D domain shape {self.domain.shape}"
+            )
+
         # Solve envelope equation for U(1)³ phase structure
         envelope = self._envelope_solver.solve_envelope(source)
-        
+
         # Update phase vector with solved envelope
         self._phase_vector.update_phase_components(envelope)
-        
+
         return envelope
-    
+
     def detect_quenches(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
         Detect quench events when local thresholds are reached.
@@ -161,7 +165,7 @@ class BVPCoreOperations:
                 - energy_dumped: Energy dumped at each quench
         """
         return self._quench_detector.detect_quenches(envelope)
-    
+
     def compute_impedance(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
         Compute impedance/admittance from BVP envelope.
@@ -188,7 +192,7 @@ class BVPCoreOperations:
                 - resonance_peaks: Resonance peaks {ω_n,Q_n}
         """
         return self._impedance_calculator.compute_impedance(envelope)
-    
+
     def get_phase_vector(self) -> PhaseVector:
         """
         Get phase vector for U(1)³ phase structure.
@@ -202,7 +206,7 @@ class BVPCoreOperations:
             PhaseVector: Phase vector with U(1)³ structure.
         """
         return self._phase_vector
-    
+
     def get_phase_operations(self) -> BVPPhaseOperations:
         """
         Get phase operations for U(1)³ structure.
@@ -215,7 +219,7 @@ class BVPCoreOperations:
             BVPPhaseOperations: Phase operations object.
         """
         return self._phase_operations
-    
+
     def get_parameter_access(self) -> BVPParameterAccess:
         """
         Get parameter access for configuration management.

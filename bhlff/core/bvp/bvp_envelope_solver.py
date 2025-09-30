@@ -59,7 +59,9 @@ class BVPEnvelopeSolver:
         k0_squared (float): Wave number squared k₀².
     """
 
-    def __init__(self, domain: Domain, config: Dict[str, Any], constants: BVPConstants = None) -> None:
+    def __init__(
+        self, domain: Domain, config: Dict[str, Any], constants: BVPConstants = None
+    ) -> None:
         """
         Initialize envelope equation solver.
 
@@ -95,9 +97,11 @@ class BVPEnvelopeSolver:
         self.kappa_0 = self.constants.get_envelope_parameter("kappa_0")
         self.kappa_2 = self.constants.get_envelope_parameter("kappa_2")
         self.chi_prime = self.constants.get_envelope_parameter("chi_prime")
-        self.chi_double_prime_0 = self.constants.get_envelope_parameter("chi_double_prime_0")
+        self.chi_double_prime_0 = self.constants.get_envelope_parameter(
+            "chi_double_prime_0"
+        )
         self.k0_squared = self.constants.get_envelope_parameter("k0_squared")
-    
+
     def _setup_solver_components(self) -> None:
         """Setup solver components."""
         self._core = EnvelopeSolverCore(self.domain, self.config, self.constants)
@@ -146,33 +150,39 @@ class BVPEnvelopeSolver:
             # Compute residual and Jacobian using core components
             residual = self._core.compute_residual(envelope, source)
             jacobian = self._core.compute_jacobian(envelope)
-            
+
             # Check convergence
             residual_norm = np.max(np.abs(residual))
             if residual_norm < tolerance:
                 break
-            
+
             # Solve Newton system: J * δa = -r
             try:
                 # Use advanced linear solver with regularization
                 delta_envelope = self._core.solve_newton_system(jacobian, residual)
-                
+
                 # Apply damping for stability
                 step_size = damping_factor
-                
+
                 # Line search for optimal step size
                 step_size = self._line_search.perform_line_search(
-                    envelope, delta_envelope, residual, source, step_size,
-                    self._core.compute_residual
+                    envelope,
+                    delta_envelope,
+                    residual,
+                    source,
+                    step_size,
+                    self._core.compute_residual,
                 )
-                
+
                 # Update solution
                 envelope = envelope + step_size * delta_envelope
-                
+
             except np.linalg.LinAlgError:
                 # Fallback to gradient descent if Newton fails
                 gradient = self._core.compute_gradient(envelope, source)
-                gradient_step = self.constants.get_numerical_parameter("gradient_descent_step")
+                gradient_step = self.constants.get_numerical_parameter(
+                    "gradient_descent_step"
+                )
                 envelope = envelope - gradient_step * gradient
 
         return envelope.real
@@ -221,7 +231,6 @@ class BVPEnvelopeSolver:
         envelope_new = (source - div_kappa_grad) / (self.k0_squared * chi_safe)
 
         return envelope_new
-
 
     def get_parameters(self) -> Dict[str, float]:
         """

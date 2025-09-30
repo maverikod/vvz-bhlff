@@ -52,7 +52,9 @@ class TimeIntegrator(ABC):
         quench_detector (Optional[QuenchDetector]): Quench detection system.
     """
 
-    def __init__(self, domain: Domain, config: Dict[str, Any], bvp_core: Optional[BVPCore] = None) -> None:
+    def __init__(
+        self, domain: Domain, config: Dict[str, Any], bvp_core: Optional[BVPCore] = None
+    ) -> None:
         """
         Initialize time integrator with BVP framework integration.
 
@@ -70,7 +72,7 @@ class TimeIntegrator(ABC):
         self.config = config
         self.bvp_core = bvp_core
         self.quench_detector: Optional[QuenchDetector] = None
-        
+
         if self.bvp_core is not None:
             quench_config = config.get("quench_detection", {})
             self.quench_detector = QuenchDetector(quench_config)
@@ -162,11 +164,7 @@ class TimeIntegrator(ABC):
         if self.quench_detector is not None:
             return self.quench_detector.detect_quenches(envelope)
         else:
-            return {
-                "quench_locations": [],
-                "quench_types": [],
-                "energy_dumped": []
-            }
+            return {"quench_locations": [], "quench_types": [], "energy_dumped": []}
 
     def get_bvp_core(self) -> Optional[BVPCore]:
         """

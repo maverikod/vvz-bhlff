@@ -103,11 +103,11 @@ class FFTPlanManager:
     def _setup_optimized_fft_plans(self) -> None:
         """
         Setup optimized FFT plans using advanced algorithms.
-        
+
         Physical Meaning:
             Creates optimized FFT plans using advanced algorithms including
             cache optimization, memory alignment, and SIMD instructions.
-            
+
         Mathematical Foundation:
             Implements optimized FFT algorithms with:
             - Cache-friendly memory access patterns
@@ -132,11 +132,11 @@ class FFTPlanManager:
     def _create_1d_fft_plan(self) -> Dict[str, Any]:
         """
         Create optimized 1D FFT plan.
-        
+
         Physical Meaning:
             Creates an optimized plan for 1D FFT operations with
             cache-friendly memory access and SIMD optimization.
-            
+
         Returns:
             Dict[str, Any]: 1D FFT plan configuration.
         """
@@ -152,10 +152,10 @@ class FFTPlanManager:
     def _create_1d_ifft_plan(self) -> Dict[str, Any]:
         """
         Create optimized 1D IFFT plan.
-        
+
         Physical Meaning:
             Creates an optimized plan for 1D inverse FFT operations.
-            
+
         Returns:
             Dict[str, Any]: 1D IFFT plan configuration.
         """
@@ -171,11 +171,11 @@ class FFTPlanManager:
     def _create_2d_fft_plan(self) -> Dict[str, Any]:
         """
         Create optimized 2D FFT plan.
-        
+
         Physical Meaning:
             Creates an optimized plan for 2D FFT operations using
             row-column decomposition with cache optimization.
-            
+
         Returns:
             Dict[str, Any]: 2D FFT plan configuration.
         """
@@ -192,10 +192,10 @@ class FFTPlanManager:
     def _create_2d_ifft_plan(self) -> Dict[str, Any]:
         """
         Create optimized 2D IFFT plan.
-        
+
         Physical Meaning:
             Creates an optimized plan for 2D inverse FFT operations.
-            
+
         Returns:
             Dict[str, Any]: 2D IFFT plan configuration.
         """
@@ -212,11 +212,11 @@ class FFTPlanManager:
     def _create_3d_fft_plan(self) -> Dict[str, Any]:
         """
         Create optimized 3D FFT plan.
-        
+
         Physical Meaning:
             Creates an optimized plan for 3D FFT operations using
             multi-dimensional decomposition with advanced optimization.
-            
+
         Returns:
             Dict[str, Any]: 3D FFT plan configuration.
         """
@@ -233,10 +233,10 @@ class FFTPlanManager:
     def _create_3d_ifft_plan(self) -> Dict[str, Any]:
         """
         Create optimized 3D IFFT plan.
-        
+
         Physical Meaning:
             Creates an optimized plan for 3D inverse FFT operations.
-            
+
         Returns:
             Dict[str, Any]: 3D IFFT plan configuration.
         """

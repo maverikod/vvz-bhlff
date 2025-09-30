@@ -83,54 +83,56 @@ class BVPSourceEnvelope:
         """
         # Get envelope parameters
         envelope_type = self.config.get("envelope_type", "constant")
-        
+
         # Create coordinate arrays
         x = np.linspace(0, 1, self.domain.N)
         y = np.linspace(0, 1, self.domain.N)
         z = np.linspace(0, 1, self.domain.N)
-        
-        X, Y, Z = np.meshgrid(x, y, z, indexing='ij')
-        
+
+        X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
+
         # Generate envelope based on type
         if envelope_type == "constant":
             envelope = self.envelope_amplitude * np.ones_like(X)
-            
+
         elif envelope_type == "gaussian":
             # Gaussian envelope
             center = self.config.get("envelope_center", [0.5, 0.5, 0.5])
             width = self.config.get("envelope_width", 0.2)
-            
+
             dx = X - center[0]
             dy = Y - center[1]
             dz = Z - center[2]
             r_squared = dx**2 + dy**2 + dz**2
-            
+
             envelope = self.envelope_amplitude * np.exp(-r_squared / (2 * width**2))
-            
+
         elif envelope_type == "sine":
             # Sine wave envelope
             kx = self.config.get("envelope_kx", 2 * np.pi)
             ky = self.config.get("envelope_ky", 2 * np.pi)
             kz = self.config.get("envelope_kz", 2 * np.pi)
-            
-            envelope = self.envelope_amplitude * (np.sin(kx * X) * np.sin(ky * Y) * np.sin(kz * Z))
-            
+
+            envelope = self.envelope_amplitude * (
+                np.sin(kx * X) * np.sin(ky * Y) * np.sin(kz * Z)
+            )
+
         elif envelope_type == "exponential":
             # Exponential envelope
             decay_rate = self.config.get("envelope_decay_rate", 1.0)
             center = self.config.get("envelope_center", [0.5, 0.5, 0.5])
-            
+
             dx = X - center[0]
             dy = Y - center[1]
             dz = Z - center[2]
             r = np.sqrt(dx**2 + dy**2 + dz**2)
-            
+
             envelope = self.envelope_amplitude * np.exp(-decay_rate * r)
-            
+
         else:
             # Default to constant envelope
             envelope = self.envelope_amplitude * np.ones_like(X)
-        
+
         return envelope
 
     def generate_carrier(self, time: float = 0.0) -> np.ndarray:
@@ -153,16 +155,20 @@ class BVPSourceEnvelope:
         """
         # Generate carrier phase
         carrier_phase = self.carrier_frequency * time
-        
+
         # Create carrier as complex exponential
         carrier = np.exp(1j * carrier_phase)
-        
+
         # Broadcast to domain shape
-        carrier_field = carrier * np.ones((self.domain.N, self.domain.N, self.domain.N), dtype=complex)
-        
+        carrier_field = carrier * np.ones(
+            (self.domain.N, self.domain.N, self.domain.N), dtype=complex
+        )
+
         return carrier_field
 
-    def generate_modulated_source(self, base_source: np.ndarray, time: float = 0.0) -> np.ndarray:
+    def generate_modulated_source(
+        self, base_source: np.ndarray, time: float = 0.0
+    ) -> np.ndarray:
         """
         Generate BVP-modulated source.
 
@@ -185,10 +191,10 @@ class BVPSourceEnvelope:
         # Generate envelope and carrier
         envelope = self.generate_envelope()
         carrier = self.generate_carrier(time)
-        
+
         # Combine components
         modulated_source = base_source * envelope * carrier
-        
+
         return modulated_source
 
     def get_envelope_info(self) -> Dict[str, Any]:
@@ -206,7 +212,7 @@ class BVPSourceEnvelope:
             "envelope_amplitude": self.envelope_amplitude,
             "envelope_type": self.config.get("envelope_type", "constant"),
             "carrier_frequency": self.carrier_frequency,
-            "supported_envelope_types": ["constant", "gaussian", "sine", "exponential"]
+            "supported_envelope_types": ["constant", "gaussian", "sine", "exponential"],
         }
 
     def get_carrier_info(self) -> Dict[str, Any]:
@@ -224,5 +230,7 @@ class BVPSourceEnvelope:
             "carrier_frequency": self.carrier_frequency,
             "carrier_formula": "exp(iω₀t)",
             "frequency_units": "rad/s",
-            "wavelength": 2 * np.pi / self.carrier_frequency if self.carrier_frequency > 0 else 0
+            "wavelength": (
+                2 * np.pi / self.carrier_frequency if self.carrier_frequency > 0 else 0
+            ),
         }

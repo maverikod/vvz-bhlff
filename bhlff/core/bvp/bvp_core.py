@@ -26,14 +26,7 @@ Example:
 
 # Import from the new modular structure
 from .bvp_core import BVPCore
-from .bvp_core import (
-    BVPCoreOperations,
-    BVPCore7DInterface
-)
+from .bvp_core import BVPCoreOperations, BVPCore7DInterface
 
 # Re-export for backward compatibility
-__all__ = [
-    'BVPCore',
-    'BVPCoreOperations',
-    'BVPCore7DInterface'
-]
+__all__ = ["BVPCore", "BVPCoreOperations", "BVPCore7DInterface"]

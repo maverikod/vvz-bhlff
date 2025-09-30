@@ -74,7 +74,7 @@ class BVPSource(Source):
         """
         super().__init__(domain, config)
         self._setup_bvp_parameters()
-        
+
         # Initialize component generators
         self.source_generators = BVPSourceGenerators(domain, config)
         self.envelope_generator = BVPSourceEnvelope(domain, config)
@@ -110,11 +110,13 @@ class BVPSource(Source):
         """
         # Generate base source
         base_source = self.source_generators.generate_base_source(self.base_source_type)
-        
+
         # Generate BVP-modulated source
         time = self.config.get("time", 0.0)
-        modulated_source = self.envelope_generator.generate_modulated_source(base_source, time)
-        
+        modulated_source = self.envelope_generator.generate_modulated_source(
+            base_source, time
+        )
+
         return modulated_source
 
     def generate_base_source(self) -> np.ndarray:
@@ -239,7 +241,7 @@ class BVPSource(Source):
             "envelope_amplitude": self.envelope_amplitude,
             "envelope_info": self.envelope_generator.get_envelope_info(),
             "carrier_info": self.envelope_generator.get_carrier_info(),
-            "supported_source_types": self.get_supported_source_types()
+            "supported_source_types": self.get_supported_source_types(),
         }
 
     def __repr__(self) -> str:

@@ -35,19 +35,19 @@ from .postulates import (
     BVPPostulate6_TailResonatorness,
     BVPPostulate7_TransitionZone,
     BVPPostulate8_CoreRenormalization,
-    BVPPostulate9_PowerBalance
+    BVPPostulate9_PowerBalance,
 )
 
 # Re-export for backward compatibility
 __all__ = [
-    'BVPPostulates7D',
-    'BVPPostulate1_CarrierPrimacy',
-    'BVPPostulate2_ScaleSeparation',
-    'BVPPostulate3_BVPRigidity',
-    'BVPPostulate4_U1PhaseStructure',
-    'BVPPostulate5_Quenches',
-    'BVPPostulate6_TailResonatorness',
-    'BVPPostulate7_TransitionZone',
-    'BVPPostulate8_CoreRenormalization',
-    'BVPPostulate9_PowerBalance'
+    "BVPPostulates7D",
+    "BVPPostulate1_CarrierPrimacy",
+    "BVPPostulate2_ScaleSeparation",
+    "BVPPostulate3_BVPRigidity",
+    "BVPPostulate4_U1PhaseStructure",
+    "BVPPostulate5_Quenches",
+    "BVPPostulate6_TailResonatorness",
+    "BVPPostulate7_TransitionZone",
+    "BVPPostulate8_CoreRenormalization",
+    "BVPPostulate9_PowerBalance",
 ]

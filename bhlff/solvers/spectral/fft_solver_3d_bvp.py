@@ -50,7 +50,12 @@ class FFTSolver3DBVP:
         quench_detector (Optional[QuenchDetector]): Quench detection system.
     """
 
-    def __init__(self, domain: Domain, bvp_core: Optional[BVPCore] = None, config: Dict[str, Any] = None) -> None:
+    def __init__(
+        self,
+        domain: Domain,
+        bvp_core: Optional[BVPCore] = None,
+        config: Dict[str, Any] = None,
+    ) -> None:
         """
         Initialize 3D FFT solver BVP integration handler.
 
@@ -66,7 +71,7 @@ class FFTSolver3DBVP:
         self.domain = domain
         self.bvp_core = bvp_core
         self.config = config or {}
-        
+
         # Setup quench detection if BVP core is available
         self.quench_detector: Optional[QuenchDetector] = None
         if self.bvp_core is not None:
@@ -97,34 +102,34 @@ class FFTSolver3DBVP:
         """
         if self.bvp_core is None:
             raise RuntimeError("BVP core not available for envelope solving")
-        
+
         # Get BVP parameters
         k0 = self.bvp_core.constants.get_physical_parameter("carrier_frequency")
-        
+
         # Solve BVP envelope equation using iterative method
         # Initial guess
         envelope = np.zeros_like(source, dtype=complex)
-        
+
         # Iterative solution for nonlinear BVP equation
         max_iterations = self.config.get("max_iterations", 100)
         tolerance = self.config.get("tolerance", 1e-6)
-        
+
         for iteration in range(max_iterations):
             # Compute BVP coefficients
             amplitude = np.abs(envelope)
             kappa = self._compute_bvp_kappa(amplitude)
             chi = self._compute_bvp_chi(amplitude)
-            
+
             # Solve linearized equation
             envelope_new = self._solve_linearized_bvp(source, kappa, chi, k0)
-            
+
             # Check convergence
             error = np.max(np.abs(envelope_new - envelope))
             if error < tolerance:
                 break
-            
+
             envelope = envelope_new
-        
+
         return envelope
 
     def _compute_bvp_kappa(self, amplitude: np.ndarray) -> np.ndarray:
@@ -149,9 +154,9 @@ class FFTSolver3DBVP:
         kappa0 = self.config.get("kappa0", 1.0)
         kappa1 = self.config.get("kappa1", 0.1)
         kappa2 = self.config.get("kappa2", 0.01)
-        
+
         kappa = kappa0 + kappa1 * amplitude**2 + kappa2 * amplitude**4
-        
+
         return kappa
 
     def _compute_bvp_chi(self, amplitude: np.ndarray) -> np.ndarray:
@@ -176,12 +181,14 @@ class FFTSolver3DBVP:
         chi0 = self.config.get("chi0", 1.0)
         chi1 = self.config.get("chi1", 0.1)
         chi2 = self.config.get("chi2", 0.01)
-        
+
         chi = chi0 + chi1 * amplitude**2 + chi2 * amplitude**4
-        
+
         return chi
 
-    def _solve_linearized_bvp(self, source: np.ndarray, kappa: np.ndarray, chi: np.ndarray, k0: float) -> np.ndarray:
+    def _solve_linearized_bvp(
+        self, source: np.ndarray, kappa: np.ndarray, chi: np.ndarray, k0: float
+    ) -> np.ndarray:
         """
         Solve linearized BVP equation.
 
@@ -204,24 +211,24 @@ class FFTSolver3DBVP:
         """
         # Transform source to spectral space
         source_spectral = np.fft.fftn(source)
-        
+
         # Compute full spectral operator for BVP equation
         kx = np.fft.fftfreq(self.domain.N, self.domain.dx)
         ky = np.fft.fftfreq(self.domain.N, self.domain.dx)
         kz = np.fft.fftfreq(self.domain.N, self.domain.dx)
-        
-        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing='ij')
+
+        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
         k_squared = KX**2 + KY**2 + KZ**2
-        
+
         # Spectral operator
         spectral_operator = k_squared + k0**2
-        
+
         # Solve in spectral space
         solution_spectral = source_spectral / spectral_operator
-        
+
         # Convert back to real space
         solution = np.fft.ifftn(solution_spectral)
-        
+
         return solution
 
     def detect_quenches(self, envelope: np.ndarray) -> Dict[str, Any]:
@@ -247,12 +254,12 @@ class FFTSolver3DBVP:
                 "quenches_detected": False,
                 "quench_count": 0,
                 "quench_locations": [],
-                "quench_properties": {}
+                "quench_properties": {},
             }
-        
+
         # Use BVP quench detector
         quench_results = self.quench_detector.detect_quenches(envelope)
-        
+
         return quench_results
 
     def compute_bvp_impedance(self, envelope: np.ndarray) -> Dict[str, Any]:
@@ -276,27 +283,27 @@ class FFTSolver3DBVP:
         # Compute field response characteristics
         amplitude = np.abs(envelope)
         phase = np.angle(envelope)
-        
+
         # Compute impedance-like quantities
         field_strength = np.max(amplitude)
         field_energy = np.sum(amplitude**2)
-        
+
         # Compute response characteristics
         response_amplitude = field_strength
         response_phase = np.mean(phase)
-        
+
         # Compute full impedance from BVP envelope
         # Impedance is the ratio of field response to excitation
         impedance_magnitude = response_amplitude / (field_energy + 1e-12)
         impedance_phase = response_phase
-        
+
         return {
             "impedance_magnitude": float(impedance_magnitude),
             "impedance_phase": float(impedance_phase),
             "field_strength": float(field_strength),
             "field_energy": float(field_energy),
             "response_amplitude": float(response_amplitude),
-            "response_phase": float(response_phase)
+            "response_phase": float(response_phase),
         }
 
     def get_bvp_core(self) -> Optional[BVPCore]:
@@ -322,7 +329,7 @@ class FFTSolver3DBVP:
             bvp_core (BVPCore): BVP core to set.
         """
         self.bvp_core = bvp_core
-        
+
         # Reinitialize quench detector
         if self.bvp_core is not None:
             quench_config = self.config.get("quench_detection", {})

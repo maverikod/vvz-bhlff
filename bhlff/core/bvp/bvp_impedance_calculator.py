@@ -57,7 +57,9 @@ class BVPImpedanceCalculator:
         _resonance_detector (ResonanceDetector): Resonance peak detection.
     """
 
-    def __init__(self, domain: Domain, config: Dict[str, Any], constants: BVPConstants = None) -> None:
+    def __init__(
+        self, domain: Domain, config: Dict[str, Any], constants: BVPConstants = None
+    ) -> None:
         """
         Initialize impedance calculator.
 
@@ -82,16 +84,18 @@ class BVPImpedanceCalculator:
     def _setup_components(self) -> None:
         """
         Setup impedance calculation components.
-        
+
         Physical Meaning:
             Initializes the core impedance calculation and resonance
             detection components.
         """
         self._impedance_core = ImpedanceCore(self.domain, self.config, self.constants)
         self._resonance_detector = ResonanceDetector(self.constants)
-        
+
         # Set quality factor threshold from constants
-        quality_threshold = self.constants.get_impedance_parameter("quality_factor_threshold")
+        quality_threshold = self.constants.get_impedance_parameter(
+            "quality_factor_threshold"
+        )
         self._resonance_detector.set_quality_factor_threshold(quality_threshold)
 
     def compute_impedance(self, envelope: np.ndarray) -> Dict[str, Any]:
@@ -122,10 +126,14 @@ class BVPImpedanceCalculator:
         # Create frequency array
         frequency_range = self._impedance_core.frequency_range
         frequency_points = self._impedance_core.frequency_points
-        frequencies = np.linspace(frequency_range[0], frequency_range[1], frequency_points)
+        frequencies = np.linspace(
+            frequency_range[0], frequency_range[1], frequency_points
+        )
 
         # Compute admittance Y(ω) from envelope using core operations
-        admittance = self._impedance_core.compute_admittance_from_envelope(envelope, frequencies)
+        admittance = self._impedance_core.compute_admittance_from_envelope(
+            envelope, frequencies
+        )
 
         # Compute reflection and transmission coefficients
         reflection = self._impedance_core.compute_reflection_coefficient(admittance)
@@ -152,17 +160,19 @@ class BVPImpedanceCalculator:
             Dict[str, Any]: Impedance calculation parameters.
         """
         core_params = self._impedance_core.get_parameters()
-        core_params["quality_factor_threshold"] = self._resonance_detector.get_quality_factor_threshold()
+        core_params["quality_factor_threshold"] = (
+            self._resonance_detector.get_quality_factor_threshold()
+        )
         return core_params
 
     def set_quality_factor_threshold(self, threshold: float) -> None:
         """
         Set quality factor threshold.
-        
+
         Physical Meaning:
             Updates the threshold for quality factor filtering
             in resonance detection.
-            
+
         Args:
             threshold (float): New quality factor threshold.
         """
@@ -171,11 +181,11 @@ class BVPImpedanceCalculator:
     def get_impedance_core(self) -> ImpedanceCore:
         """
         Get impedance core component.
-        
+
         Physical Meaning:
             Returns the core impedance calculation component
             for advanced operations.
-            
+
         Returns:
             ImpedanceCore: Core impedance calculation component.
         """
@@ -184,11 +194,11 @@ class BVPImpedanceCalculator:
     def get_resonance_detector(self) -> ResonanceDetector:
         """
         Get resonance detector component.
-        
+
         Physical Meaning:
             Returns the resonance detection component
             for advanced peak analysis.
-            
+
         Returns:
             ResonanceDetector: Resonance detection component.
         """

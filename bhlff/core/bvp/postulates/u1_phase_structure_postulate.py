@@ -35,26 +35,26 @@ from ..bvp_postulate_base import BVPPostulate
 class BVPPostulate4_U1PhaseStructure(BVPPostulate):
     """
     Postulate 4: U(1)³ Phase Structure.
-    
+
     Physical Meaning:
         BVP is vector of phases Θ_a (a=1..3), weakly hierarchically coupled
         to SU(2)/core through invariant mixed terms; electroweak currents
         arise as functionals of envelope.
-        
+
     Mathematical Foundation:
         Validates that the BVP field exhibits U(1)³ phase structure
         with proper phase coherence and electroweak current generation.
     """
-    
+
     def __init__(self, domain_7d: Domain7D, config: Dict[str, Any]):
         """
         Initialize U(1)³ Phase Structure postulate.
-        
+
         Physical Meaning:
             Sets up the postulate with the computational domain and
             configuration parameters, including the minimum required
             phase coherence.
-            
+
         Args:
             domain_7d (Domain7D): 7D computational domain.
             config (Dict[str, Any]): Configuration parameters including:
@@ -62,27 +62,27 @@ class BVPPostulate4_U1PhaseStructure(BVPPostulate):
         """
         self.domain_7d = domain_7d
         self.config = config
-        self.min_phase_coherence = config.get('min_phase_coherence', 0.7)
-    
+        self.min_phase_coherence = config.get("min_phase_coherence", 0.7)
+
     def apply(self, envelope: np.ndarray, **kwargs) -> Dict[str, Any]:
         """
         Apply U(1)³ Phase Structure postulate.
-        
+
         Physical Meaning:
             Validates U(1)³ phase structure by checking phase coherence
             and electroweak current generation. This ensures that the
             BVP field exhibits the proper three-phase structure with
             weak hierarchical coupling and electroweak current generation.
-            
+
         Mathematical Foundation:
             Extracts three phase components from the envelope field,
             computes their coherence through cross-correlations, and
             calculates the generated electroweak currents.
-            
+
         Args:
             envelope (np.ndarray): 7D envelope field to validate.
                 Shape: (N_x, N_y, N_z, N_φx, N_φy, N_φz, N_t)
-                
+
         Returns:
             Dict[str, Any]: Validation results including:
                 - postulate_satisfied (bool): Whether postulate is satisfied
@@ -101,41 +101,44 @@ class BVPPostulate4_U1PhaseStructure(BVPPostulate):
             amplitude = np.abs(envelope)
             phase = np.angle(envelope)
             phase_1 = amplitude * np.exp(1j * phase)
-            phase_2 = amplitude * np.exp(1j * (phase + 2*np.pi/3))
-            phase_3 = amplitude * np.exp(1j * (phase + 4*np.pi/3))
-        
+            phase_2 = amplitude * np.exp(1j * (phase + 2 * np.pi / 3))
+            phase_3 = amplitude * np.exp(1j * (phase + 4 * np.pi / 3))
+
         # Compute phase coherence
         phase_coherence = self._compute_phase_coherence(phase_1, phase_2, phase_3)
-        
+
         # Compute electroweak currents
-        electroweak_currents = self._compute_electroweak_currents(phase_1, phase_2, phase_3)
-        
+        electroweak_currents = self._compute_electroweak_currents(
+            phase_1, phase_2, phase_3
+        )
+
         # Check if U(1)³ structure is valid
         u1_structure_valid = phase_coherence > self.min_phase_coherence
-        
+
         return {
-            'postulate_satisfied': u1_structure_valid,
-            'phase_coherence': float(phase_coherence),
-            'electroweak_currents': electroweak_currents,
-            'u1_structure_valid': u1_structure_valid,
-            'min_required_coherence': self.min_phase_coherence
+            "postulate_satisfied": u1_structure_valid,
+            "phase_coherence": float(phase_coherence),
+            "electroweak_currents": electroweak_currents,
+            "u1_structure_valid": u1_structure_valid,
+            "min_required_coherence": self.min_phase_coherence,
         }
-    
-    def _compute_phase_coherence(self, phase_1: np.ndarray, phase_2: np.ndarray, 
-                               phase_3: np.ndarray) -> float:
+
+    def _compute_phase_coherence(
+        self, phase_1: np.ndarray, phase_2: np.ndarray, phase_3: np.ndarray
+    ) -> float:
         """
         Compute phase coherence measure.
-        
+
         Physical Meaning:
             Computes the coherence between the three phase components
             by analyzing their cross-correlations. High coherence indicates
             proper U(1)³ phase structure.
-            
+
         Args:
             phase_1 (np.ndarray): First phase component.
             phase_2 (np.ndarray): Second phase component.
             phase_3 (np.ndarray): Third phase component.
-            
+
         Returns:
             float: Phase coherence measure (0-1).
         """
@@ -143,34 +146,35 @@ class BVPPostulate4_U1PhaseStructure(BVPPostulate):
         corr_12 = np.abs(np.corrcoef(phase_1.flatten(), phase_2.flatten())[0, 1])
         corr_13 = np.abs(np.corrcoef(phase_1.flatten(), phase_3.flatten())[0, 1])
         corr_23 = np.abs(np.corrcoef(phase_2.flatten(), phase_3.flatten())[0, 1])
-        
+
         # Average coherence
         coherence = (corr_12 + corr_13 + corr_23) / 3.0
         return coherence
-    
-    def _compute_electroweak_currents(self, phase_1: np.ndarray, phase_2: np.ndarray, 
-                                    phase_3: np.ndarray) -> Dict[str, float]:
+
+    def _compute_electroweak_currents(
+        self, phase_1: np.ndarray, phase_2: np.ndarray, phase_3: np.ndarray
+    ) -> Dict[str, float]:
         """
         Compute electroweak currents.
-        
+
         Physical Meaning:
             Computes the electroweak currents generated by the three
             phase components. These currents arise as functionals of
             the envelope and represent the electroweak interactions
             in the U(1)³ phase structure.
-            
+
         Mathematical Foundation:
             The electroweak currents are computed as:
             - EM current: J_EM = g₁(φ₁∂φ₁* + φ₂∂φ₂*)
             - Weak current: J_W = g₂(φ₃∂φ₃*)
             - Mixed current: J_M = g₃(φ₁∂φ₂* + φ₂∂φ₁*)
             where g₁, g₂, g₃ are coupling constants.
-            
+
         Args:
             phase_1 (np.ndarray): First phase component.
             phase_2 (np.ndarray): Second phase component.
             phase_3 (np.ndarray): Third phase component.
-            
+
         Returns:
             Dict[str, float]: Dictionary containing:
                 - em_current: Electromagnetic current
@@ -181,31 +185,29 @@ class BVPPostulate4_U1PhaseStructure(BVPPostulate):
         grad_phase_1 = np.gradient(phase_1)
         grad_phase_2 = np.gradient(phase_2)
         grad_phase_3 = np.gradient(phase_3)
-        
+
         # Coupling constants
         g_em = 1.0  # Electromagnetic coupling
         g_weak = 0.1  # Weak coupling
         g_mixed = 0.01  # Mixed coupling
-        
+
         # Compute electromagnetic current
         em_current = g_em * np.sum(
-            np.real(phase_1 * np.conj(grad_phase_1)) + 
-            np.real(phase_2 * np.conj(grad_phase_2))
+            np.real(phase_1 * np.conj(grad_phase_1))
+            + np.real(phase_2 * np.conj(grad_phase_2))
         )
-        
+
         # Compute weak current
-        weak_current = g_weak * np.sum(
-            np.real(phase_3 * np.conj(grad_phase_3))
-        )
-        
+        weak_current = g_weak * np.sum(np.real(phase_3 * np.conj(grad_phase_3)))
+
         # Compute mixed electroweak current
         mixed_current = g_mixed * np.sum(
-            np.real(phase_1 * np.conj(grad_phase_2)) + 
-            np.real(phase_2 * np.conj(grad_phase_1))
+            np.real(phase_1 * np.conj(grad_phase_2))
+            + np.real(phase_2 * np.conj(grad_phase_1))
         )
-        
+
         return {
-            'em_current': float(em_current),
-            'weak_current': float(weak_current),
-            'mixed_current': float(mixed_current)
+            "em_current": float(em_current),
+            "weak_current": float(weak_current),
+            "mixed_current": float(mixed_current),
         }

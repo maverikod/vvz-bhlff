@@ -35,27 +35,27 @@ from .bvp_constants_numerical import BVPConstantsNumerical
 class BVPConstants(BVPConstantsNumerical, BVPConstantsAdvanced, BVPConstantsBase):
     """
     Unified interface for all BVP constants.
-    
+
     Physical Meaning:
         Provides a single interface to access all physical constants, numerical
         parameters, and configuration defaults for the BVP system by combining
         base constants, advanced material properties, and numerical parameters.
-        
+
     Mathematical Foundation:
         Combines constants from multiple modules:
         - Base envelope equation parameters
         - Advanced material properties with frequency dependence
         - Numerical solver parameters and thresholds
     """
-    
+
     def __init__(self, config: Dict[str, Any] = None) -> None:
         """
         Initialize unified BVP constants.
-        
+
         Physical Meaning:
             Sets up all BVP constants by initializing base, advanced, and
             numerical constant modules with the provided configuration.
-            
+
         Args:
             config (Dict[str, Any], optional): Configuration to override defaults.
         """
@@ -63,18 +63,18 @@ class BVPConstants(BVPConstantsNumerical, BVPConstantsAdvanced, BVPConstantsBase
         BVPConstantsBase.__init__(self, config)
         BVPConstantsAdvanced.__init__(self, config)
         BVPConstantsNumerical.__init__(self, config)
-    
+
     def get_material_property(self, property_name: str) -> float:
         """
         Get material property constant (unified interface).
-        
+
         Physical Meaning:
             Provides unified access to both basic and advanced material
             properties through a single interface.
-            
+
         Args:
             property_name (str): Name of the material property.
-            
+
         Returns:
             float: Property value.
         """
@@ -82,10 +82,10 @@ class BVPConstants(BVPConstantsNumerical, BVPConstantsAdvanced, BVPConstantsBase
         basic_property = self.get_basic_material_property(property_name)
         if basic_property != 0.0:
             return basic_property
-        
+
         # Try advanced material properties
         return self.get_advanced_material_property(property_name)
-    
+
     def __repr__(self) -> str:
         """String representation of unified BVP constants."""
         return (

@@ -26,14 +26,7 @@ Example:
 
 # Import from the new modular structure
 from .envelope_equation import BVPEnvelopeEquation7D
-from .envelope_equation import (
-    DerivativeOperators7D,
-    NonlinearTerms7D
-)
+from .envelope_equation import DerivativeOperators7D, NonlinearTerms7D
 
 # Re-export for backward compatibility
-__all__ = [
-    'BVPEnvelopeEquation7D',
-    'DerivativeOperators7D',
-    'NonlinearTerms7D'
-]
+__all__ = ["BVPEnvelopeEquation7D", "DerivativeOperators7D", "NonlinearTerms7D"]

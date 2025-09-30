@@ -32,29 +32,29 @@ from ...domain import Domain
 class PhaseComponents:
     """
     Management of three U(1) phase components Θ_a (a=1..3).
-    
+
     Physical Meaning:
         Handles the three independent U(1) phase components that
         form the U(1)³ structure of the BVP field.
-        
+
     Mathematical Foundation:
         Manages Θ₁, Θ₂, Θ₃ as independent U(1) phase degrees
         of freedom with weak hierarchical coupling.
-        
+
     Attributes:
         domain (Domain): Computational domain.
         config (Dict[str, Any]): Phase components configuration.
         theta_components (List[np.ndarray]): Three phase components Θ_a.
     """
-    
+
     def __init__(self, domain: Domain, config: Dict[str, Any]) -> None:
         """
         Initialize phase components manager.
-        
+
         Physical Meaning:
             Sets up the three U(1) phase components Θ_a (a=1..3)
             with proper spatial distribution and frequencies.
-            
+
         Args:
             domain (Domain): Computational domain.
             config (Dict[str, Any]): Phase components configuration including:
@@ -65,26 +65,26 @@ class PhaseComponents:
         self.config = config
         self.theta_components = []
         self._setup_phase_components()
-    
+
     def _setup_phase_components(self) -> None:
         """
         Setup the three U(1) phase components Θ_a (a=1..3).
-        
+
         Physical Meaning:
             Initializes the three independent U(1) phase components
             that form the U(1)³ structure of the BVP field.
         """
         # Get phase configuration
         phase_config = self.config.get("phase_components", {})
-        
+
         for a in range(3):  # Three U(1) components
             # Initialize phase component Θ_a
             theta_a = np.zeros(self.domain.shape, dtype=complex)
-            
+
             # Set amplitude and frequency for this component
             amplitude = phase_config.get(f"amplitude_{a+1}", 1.0)
             frequency = phase_config.get(f"frequency_{a+1}", 1.0)
-            
+
             # Create spatial phase distribution
             if self.domain.dimensions == 1:
                 x = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
@@ -100,46 +100,46 @@ class PhaseComponents:
                 z = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
                 X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
                 theta_a = amplitude * np.exp(1j * frequency * (X + Y + Z))
-            
+
             self.theta_components.append(theta_a)
-    
+
     def get_components(self) -> List[np.ndarray]:
         """
         Get the three U(1) phase components Θ_a (a=1..3).
-        
+
         Physical Meaning:
             Returns the three independent U(1) phase components
             that form the U(1)³ structure.
-            
+
         Returns:
             List[np.ndarray]: List of three phase components Θ_a.
         """
         return self.theta_components.copy()
-    
+
     def get_total_phase(self, coupling_matrix: np.ndarray = None) -> np.ndarray:
         """
         Get the total phase from U(1)³ structure.
-        
+
         Physical Meaning:
             Computes the total phase by combining the three
             U(1) components with proper coupling.
-            
+
         Mathematical Foundation:
             Θ_total = Σ_a Θ_a + Σ_{a,b} g_{ab} Θ_a Θ_b
             where g_{ab} are the coupling coefficients.
-            
+
         Args:
             coupling_matrix (np.ndarray, optional): Coupling matrix for components.
-            
+
         Returns:
             np.ndarray: Total phase field.
         """
         # Start with sum of individual components
         total_phase = np.zeros_like(self.theta_components[0])
-        
+
         for theta_a in self.theta_components:
             total_phase += theta_a
-        
+
         # Add coupling terms if provided
         if coupling_matrix is not None:
             for i, theta_i in enumerate(self.theta_components):
@@ -147,21 +147,21 @@ class PhaseComponents:
                     if i != j:
                         coupling_strength = coupling_matrix[i, j]
                         total_phase += coupling_strength * theta_i * theta_j
-        
+
         return total_phase
-    
+
     def update_components(self, envelope: np.ndarray) -> None:
         """
         Update phase components from solved envelope.
-        
+
         Physical Meaning:
             Updates the three U(1) phase components Θ_a (a=1..3)
             from the solved BVP envelope field.
-            
+
         Mathematical Foundation:
             Extracts phase components from the envelope solution
             and updates the U(1)³ phase structure.
-            
+
         Args:
             envelope (np.ndarray): Solved BVP envelope in 7D space-time.
         """
@@ -177,34 +177,34 @@ class PhaseComponents:
                 # Each component gets a phase-shifted version
                 phase_shift = 2 * np.pi * a / 3
                 self.theta_components[a] = envelope * np.exp(1j * phase_shift)
-    
+
     def compute_phase_coherence(self) -> np.ndarray:
         """
         Compute phase coherence measure.
-        
+
         Physical Meaning:
             Computes a measure of phase coherence across the
             U(1)³ structure, indicating the degree of
             synchronization between the three phase components.
-            
+
         Mathematical Foundation:
             Coherence = |Σ_a exp(iΘ_a)| / 3
             where the magnitude indicates coherence strength.
-            
+
         Returns:
             np.ndarray: Phase coherence measure.
         """
         # Sum of complex exponentials
         coherence_sum = np.zeros_like(self.theta_components[0])
-        
+
         for theta_a in self.theta_components:
             coherence_sum += np.exp(1j * np.angle(theta_a))
-        
+
         # Normalize by number of components
         coherence = np.abs(coherence_sum) / 3.0
-        
+
         return coherence
-    
+
     def __repr__(self) -> str:
         """String representation of phase components."""
         return f"PhaseComponents(domain={self.domain}, num_components={len(self.theta_components)})"

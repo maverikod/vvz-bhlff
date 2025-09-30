@@ -32,8 +32,8 @@ from .energy_computer import EnergyComputer
 from .boundary_analyzer import BoundaryAnalyzer
 
 __all__ = [
-    'BVPPostulate9_PowerBalance',
-    'FluxComputer', 
-    'EnergyComputer',
-    'BoundaryAnalyzer'
+    "BVPPostulate9_PowerBalance",
+    "FluxComputer",
+    "EnergyComputer",
+    "BoundaryAnalyzer",
 ]

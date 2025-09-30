@@ -46,7 +46,9 @@ class QuenchDetector:
         gradient_threshold (float): Gradient threshold for quench detection.
     """
 
-    def __init__(self, config: Dict[str, Any], constants: Optional[BVPConstants] = None) -> None:
+    def __init__(
+        self, config: Dict[str, Any], constants: Optional[BVPConstants] = None
+    ) -> None:
         """
         Initialize quench detector with configuration.
 
@@ -73,9 +75,15 @@ class QuenchDetector:
             Initializes the threshold values used for detecting
             different types of quench events.
         """
-        self.amplitude_threshold = self.constants.get_quench_threshold("amplitude_threshold")
-        self.detuning_threshold = self.constants.get_quench_threshold("detuning_threshold")
-        self.gradient_threshold = self.constants.get_quench_threshold("gradient_threshold")
+        self.amplitude_threshold = self.constants.get_quench_threshold(
+            "amplitude_threshold"
+        )
+        self.detuning_threshold = self.constants.get_quench_threshold(
+            "detuning_threshold"
+        )
+        self.gradient_threshold = self.constants.get_quench_threshold(
+            "gradient_threshold"
+        )
 
     def detect_quenches(self, envelope: np.ndarray) -> Dict[str, Any]:
         """

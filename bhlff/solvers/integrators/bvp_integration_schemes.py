@@ -88,10 +88,10 @@ class BVPIntegrationSchemes:
         k2 = dt * evolution_func(field + 0.5 * k1)
         k3 = dt * evolution_func(field + 0.5 * k2)
         k4 = dt * evolution_func(field + k3)
-        
+
         # RK4 update
-        field_new = field + (k1 + 2*k2 + 2*k3 + k4) / 6.0
-        
+        field_new = field + (k1 + 2 * k2 + 2 * k3 + k4) / 6.0
+
         return field_new
 
     def euler_step(self, field: np.ndarray, dt: float, evolution_func) -> np.ndarray:
@@ -116,10 +116,12 @@ class BVPIntegrationSchemes:
         """
         # Forward Euler update
         field_new = field + dt * evolution_func(field)
-        
+
         return field_new
 
-    def crank_nicolson_step(self, field: np.ndarray, dt: float, evolution_func) -> np.ndarray:
+    def crank_nicolson_step(
+        self, field: np.ndarray, dt: float, evolution_func
+    ) -> np.ndarray:
         """
         Crank-Nicolson step.
 
@@ -141,16 +143,18 @@ class BVPIntegrationSchemes:
         """
         # Predictor step (Euler)
         field_predictor = field + dt * evolution_func(field)
-        
+
         # Corrector step (Crank-Nicolson)
         evolution_current = evolution_func(field)
         evolution_predictor = evolution_func(field_predictor)
-        
+
         field_new = field + 0.5 * dt * (evolution_current + evolution_predictor)
-        
+
         return field_new
 
-    def adaptive_step(self, field: np.ndarray, dt: float, evolution_func, tolerance: float = 1e-6) -> tuple:
+    def adaptive_step(
+        self, field: np.ndarray, dt: float, evolution_func, tolerance: float = 1e-6
+    ) -> tuple:
         """
         Adaptive time step with error estimation.
 
@@ -173,24 +177,24 @@ class BVPIntegrationSchemes:
         """
         # Take full step
         field_full = self.rk4_step(field, dt, evolution_func)
-        
+
         # Take two half steps
-        field_half1 = self.rk4_step(field, dt/2, evolution_func)
-        field_half2 = self.rk4_step(field_half1, dt/2, evolution_func)
-        
+        field_half1 = self.rk4_step(field, dt / 2, evolution_func)
+        field_half2 = self.rk4_step(field_half1, dt / 2, evolution_func)
+
         # Estimate error
         error_estimate = np.max(np.abs(field_full - field_half2))
-        
+
         # Adjust step size based on error
         if error_estimate > tolerance:
             # Reduce step size
-            dt_new = dt * (tolerance / error_estimate)**0.2
+            dt_new = dt * (tolerance / error_estimate) ** 0.2
             dt_new = max(dt_new, dt * 0.1)  # Minimum reduction factor
         else:
             # Increase step size
-            dt_new = dt * (tolerance / error_estimate)**0.2
+            dt_new = dt * (tolerance / error_estimate) ** 0.2
             dt_new = min(dt_new, dt * 2.0)  # Maximum increase factor
-        
+
         # Use higher accuracy result (two half steps)
         return field_half2, dt_new, error_estimate
 
@@ -213,26 +217,26 @@ class BVPIntegrationSchemes:
                 "order": 4,
                 "stability": "explicit",
                 "accuracy": "high",
-                "computational_cost": "high"
+                "computational_cost": "high",
             },
             "euler": {
                 "order": 1,
                 "stability": "explicit",
                 "accuracy": "low",
-                "computational_cost": "low"
+                "computational_cost": "low",
             },
             "crank_nicolson": {
                 "order": 2,
                 "stability": "implicit",
                 "accuracy": "medium",
-                "computational_cost": "medium"
+                "computational_cost": "medium",
             },
             "adaptive": {
                 "order": "variable",
                 "stability": "adaptive",
                 "accuracy": "high",
-                "computational_cost": "variable"
-            }
+                "computational_cost": "variable",
+            },
         }
-        
+
         return scheme_info.get(scheme_name, {})

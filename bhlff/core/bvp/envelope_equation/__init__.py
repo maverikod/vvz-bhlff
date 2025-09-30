@@ -32,8 +32,8 @@ from .nonlinear_terms import NonlinearTerms7D
 from .solver_core import EnvelopeSolverCore7D
 
 __all__ = [
-    'BVPEnvelopeEquation7D',
-    'DerivativeOperators7D',
-    'NonlinearTerms7D',
-    'EnvelopeSolverCore7D'
+    "BVPEnvelopeEquation7D",
+    "DerivativeOperators7D",
+    "NonlinearTerms7D",
+    "EnvelopeSolverCore7D",
 ]

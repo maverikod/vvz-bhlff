@@ -80,23 +80,23 @@ class BVPSourceGenerators:
         amplitude = self.config.get("gaussian_amplitude", 1.0)
         center = self.config.get("gaussian_center", [0.5, 0.5, 0.5])
         width = self.config.get("gaussian_width", 0.1)
-        
+
         # Create coordinate arrays
         x = np.linspace(0, 1, self.domain.N)
         y = np.linspace(0, 1, self.domain.N)
         z = np.linspace(0, 1, self.domain.N)
-        
-        X, Y, Z = np.meshgrid(x, y, z, indexing='ij')
-        
+
+        X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
+
         # Compute distances from center
         dx = X - center[0]
         dy = Y - center[1]
         dz = Z - center[2]
         r_squared = dx**2 + dy**2 + dz**2
-        
+
         # Generate Gaussian source
         source = amplitude * np.exp(-r_squared / (2 * width**2))
-        
+
         return source
 
     def generate_point_source(self) -> np.ndarray:
@@ -117,21 +117,21 @@ class BVPSourceGenerators:
         # Get point source parameters
         amplitude = self.config.get("point_amplitude", 1.0)
         location = self.config.get("point_location", [0.5, 0.5, 0.5])
-        
+
         # Create coordinate arrays
         x = np.linspace(0, 1, self.domain.N)
         y = np.linspace(0, 1, self.domain.N)
         z = np.linspace(0, 1, self.domain.N)
-        
+
         # Find closest grid points to source location
         i = int(location[0] * (self.domain.N - 1))
         j = int(location[1] * (self.domain.N - 1))
         k = int(location[2] * (self.domain.N - 1))
-        
+
         # Create point source
         source = np.zeros((self.domain.N, self.domain.N, self.domain.N))
         source[i, j, k] = amplitude
-        
+
         return source
 
     def generate_distributed_source(self) -> np.ndarray:
@@ -152,41 +152,41 @@ class BVPSourceGenerators:
         # Get distributed source parameters
         amplitude = self.config.get("distributed_amplitude", 1.0)
         distribution_type = self.config.get("distribution_type", "sine")
-        
+
         # Create coordinate arrays
         x = np.linspace(0, 1, self.domain.N)
         y = np.linspace(0, 1, self.domain.N)
         z = np.linspace(0, 1, self.domain.N)
-        
-        X, Y, Z = np.meshgrid(x, y, z, indexing='ij')
-        
+
+        X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
+
         # Generate distributed source based on type
         if distribution_type == "sine":
             # Sine wave distribution
             kx = self.config.get("sine_kx", 2 * np.pi)
             ky = self.config.get("sine_ky", 2 * np.pi)
             kz = self.config.get("sine_kz", 2 * np.pi)
-            
+
             source = amplitude * (np.sin(kx * X) * np.sin(ky * Y) * np.sin(kz * Z))
-            
+
         elif distribution_type == "cosine":
             # Cosine wave distribution
             kx = self.config.get("cosine_kx", 2 * np.pi)
             ky = self.config.get("cosine_ky", 2 * np.pi)
             kz = self.config.get("cosine_kz", 2 * np.pi)
-            
+
             source = amplitude * (np.cos(kx * X) * np.cos(ky * Y) * np.cos(kz * Z))
-            
+
         elif distribution_type == "polynomial":
             # Polynomial distribution
             order = self.config.get("polynomial_order", 2)
-            
+
             source = amplitude * (X**order + Y**order + Z**order)
-            
+
         else:
             # Default to constant distribution
             source = amplitude * np.ones_like(X)
-        
+
         return source
 
     def generate_base_source(self, source_type: str) -> np.ndarray:
@@ -244,18 +244,22 @@ class BVPSourceGenerators:
             "gaussian": {
                 "description": "Gaussian source distribution",
                 "formula": "s(x) = A * exp(-|x-x₀|²/σ²)",
-                "parameters": ["gaussian_amplitude", "gaussian_center", "gaussian_width"]
+                "parameters": [
+                    "gaussian_amplitude",
+                    "gaussian_center",
+                    "gaussian_width",
+                ],
             },
             "point": {
                 "description": "Point source at specified location",
                 "formula": "s(x) = A * δ(x-x₀)",
-                "parameters": ["point_amplitude", "point_location"]
+                "parameters": ["point_amplitude", "point_location"],
             },
             "distributed": {
                 "description": "Distributed source with spatial distribution",
                 "formula": "s(x) = A * f(x)",
-                "parameters": ["distributed_amplitude", "distribution_type"]
-            }
+                "parameters": ["distributed_amplitude", "distribution_type"],
+            },
         }
-        
+
         return source_info.get(source_type, {})

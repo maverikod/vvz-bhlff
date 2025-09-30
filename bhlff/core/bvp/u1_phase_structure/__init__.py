@@ -23,8 +23,4 @@ from .u1_phase_structure_postulate import U1PhaseStructurePostulate
 from .phase_analysis import PhaseAnalysis
 from .coherence_analysis import CoherenceAnalysis
 
-__all__ = [
-    "U1PhaseStructurePostulate",
-    "PhaseAnalysis",
-    "CoherenceAnalysis"
-]
+__all__ = ["U1PhaseStructurePostulate", "PhaseAnalysis", "CoherenceAnalysis"]

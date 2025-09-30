@@ -50,8 +50,10 @@ class BVPCore:
         where κ(|a|) = κ₀ + κ₂|a|² is nonlinear stiffness and
         χ(|a|) = χ' + iχ''(|a|) is effective susceptibility with quenches.
     """
-    
-    def __init__(self, domain: Domain, config: Dict[str, Any], domain_7d: Domain7D = None) -> None:
+
+    def __init__(
+        self, domain: Domain, config: Dict[str, Any], domain_7d: Domain7D = None
+    ) -> None:
         """
         Initialize BVP core framework.
 
@@ -74,18 +76,18 @@ class BVPCore:
         self.domain = domain
         self.config = config
         self.domain_7d = domain_7d
-        
+
         # Initialize BVP constants
         self._bvp_constants = BVPConstants(config)
-        
+
         # Initialize core operations
         self._operations = BVPCoreOperations(domain, config, domain_7d)
-        
+
         # Initialize 7D interface if 7D domain is available
         self._7d_interface = None
         if domain_7d is not None:
             self._7d_interface = BVPCore7DInterface(domain_7d, config)
-    
+
     def solve_envelope(self, source: np.ndarray) -> np.ndarray:
         """
         Solve BVP envelope equation for U(1)³ phase structure.
@@ -112,7 +114,7 @@ class BVPCore:
             ValueError: If source has incompatible shape with 7D domain.
         """
         return self._operations.solve_envelope(source)
-    
+
     def detect_quenches(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
         Detect quench events when local thresholds are reached.
@@ -137,7 +139,7 @@ class BVPCore:
                 - energy_dumped: Energy dumped at each quench
         """
         return self._operations.detect_quenches(envelope)
-    
+
     def compute_impedance(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
         Compute impedance/admittance from BVP envelope.
@@ -164,7 +166,7 @@ class BVPCore:
                 - resonance_peaks: Resonance peaks {ω_n,Q_n}
         """
         return self._operations.compute_impedance(envelope)
-    
+
     def get_carrier_frequency(self) -> float:
         """
         Get BVP carrier frequency.
@@ -178,84 +180,84 @@ class BVPCore:
             float: BVP carrier frequency ω₀.
         """
         return self._bvp_constants.get_carrier_frequency()
-    
+
     def solve_envelope_7d(self, source_7d: np.ndarray) -> np.ndarray:
         """
         Solve 7D BVP envelope equation.
-        
+
         Physical Meaning:
             Solves the full 7D envelope equation in space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
             using the 7D envelope equation solver.
-            
+
         Args:
             source_7d (np.ndarray): 7D source term s(x,φ,t).
-            
+
         Returns:
             np.ndarray: 7D envelope solution a(x,φ,t).
-            
+
         Raises:
             RuntimeError: If 7D domain is not available.
         """
         if self._7d_interface is None:
             raise RuntimeError("7D domain not available for 7D envelope equation")
-        
+
         return self._7d_interface.solve_envelope_7d(source_7d)
-    
+
     def validate_postulates_7d(self, envelope_7d: np.ndarray) -> Dict[str, Any]:
         """
         Validate all 9 BVP postulates for 7D field.
-        
+
         Physical Meaning:
             Validates all 9 BVP postulates to ensure the 7D field
             satisfies the fundamental properties of the BVP framework.
-            
+
         Args:
             envelope_7d (np.ndarray): 7D BVP envelope field.
-            
+
         Returns:
             Dict[str, Any]: Validation results from all postulates.
-            
+
         Raises:
             RuntimeError: If 7D postulates are not available.
         """
         if self._7d_interface is None:
             raise RuntimeError("7D postulates not available")
-        
+
         return self._7d_interface.validate_postulates_7d(envelope_7d)
-    
+
     def get_7d_domain(self) -> Optional[Domain7D]:
         """
         Get the 7D domain.
-        
+
         Returns:
             Optional[Domain7D]: The 7D space-time domain if available.
         """
         if self._7d_interface is None:
             return None
         return self._7d_interface.get_7d_domain()
-    
+
     def get_parameters(self) -> Dict[str, Any]:
         """
         Get BVP core parameters.
-        
+
         Physical Meaning:
             Returns the current values of all BVP parameters for
             monitoring and analysis purposes.
-            
+
         Returns:
             Dict[str, Any]: Dictionary containing all parameters.
         """
         params = self._bvp_constants.get_all_constants()
-        
+
         if self._7d_interface is not None:
-            params['7d_interface'] = self._7d_interface.get_7d_parameters()
-        
+            params["7d_interface"] = self._7d_interface.get_7d_parameters()
+
         return params
-    
+
     def __repr__(self) -> str:
         """
         String representation of BVP core.
-        
+
         Returns:
             str: String representation showing domain and carrier frequency.
         """

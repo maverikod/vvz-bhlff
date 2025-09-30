@@ -43,14 +43,14 @@ from .power_balance import BVPPostulate9_PowerBalance
 from .bvp_postulates_7d import BVPPostulates7D
 
 __all__ = [
-    'BVPPostulate1_CarrierPrimacy',
-    'BVPPostulate2_ScaleSeparation', 
-    'BVPPostulate3_BVPRigidity',
-    'BVPPostulate4_U1PhaseStructure',
-    'BVPPostulate5_Quenches',
-    'BVPPostulate6_TailResonatorness',
-    'BVPPostulate7_TransitionZone',
-    'BVPPostulate8_CoreRenormalization',
-    'BVPPostulate9_PowerBalance',
-    'BVPPostulates7D'
+    "BVPPostulate1_CarrierPrimacy",
+    "BVPPostulate2_ScaleSeparation",
+    "BVPPostulate3_BVPRigidity",
+    "BVPPostulate4_U1PhaseStructure",
+    "BVPPostulate5_Quenches",
+    "BVPPostulate6_TailResonatorness",
+    "BVPPostulate7_TransitionZone",
+    "BVPPostulate8_CoreRenormalization",
+    "BVPPostulate9_PowerBalance",
+    "BVPPostulates7D",
 ]

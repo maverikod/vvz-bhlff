@@ -88,7 +88,7 @@ class BVPModulationIntegrator(TimeIntegrator):
         # Initialize component computers
         self._evolution_computer = BVPEvolutionComputer(self.domain, self.config)
         self._integration_schemes = BVPIntegrationSchemes(self.domain, self.config)
-        
+
         # Setup BVP evolution matrix
         self._evolution_computer.setup_spectral_evolution_matrix()
 
@@ -117,22 +117,28 @@ class BVPModulationIntegrator(TimeIntegrator):
         """
         # Get evolution function
         evolution_func = self._evolution_computer.compute_bvp_evolution
-        
+
         # Apply integration scheme
         if self.integration_scheme == "rk4":
             field_new = self._integration_schemes.rk4_step(field, dt, evolution_func)
         elif self.integration_scheme == "euler":
             field_new = self._integration_schemes.euler_step(field, dt, evolution_func)
         elif self.integration_scheme == "crank_nicolson":
-            field_new = self._integration_schemes.crank_nicolson_step(field, dt, evolution_func)
+            field_new = self._integration_schemes.crank_nicolson_step(
+                field, dt, evolution_func
+            )
         elif self.integration_scheme == "adaptive":
-            field_new, dt_new, error = self._integration_schemes.adaptive_step(field, dt, evolution_func)
+            field_new, dt_new, error = self._integration_schemes.adaptive_step(
+                field, dt, evolution_func
+            )
             # Store adaptive step information
             self._last_dt = dt_new
             self._last_error = error
         else:
-            raise ValueError(f"Unsupported integration scheme: {self.integration_scheme}")
-        
+            raise ValueError(
+                f"Unsupported integration scheme: {self.integration_scheme}"
+            )
+
         return field_new
 
     def get_integrator_type(self) -> str:

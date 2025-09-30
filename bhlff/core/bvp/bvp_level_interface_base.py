@@ -33,25 +33,25 @@ from abc import ABC, abstractmethod
 class BVPLevelInterface(ABC):
     """
     Abstract base class for BVP level interfaces.
-    
+
     Physical Meaning:
         Defines the interface for integrating BVP with specific levels
         of the 7D phase field theory.
     """
-    
+
     @abstractmethod
     def process_bvp_data(self, envelope: np.ndarray, **kwargs) -> Dict[str, Any]:
         """
         Process BVP envelope data for this level.
-        
+
         Physical Meaning:
             Transforms BVP envelope data according to level-specific
             requirements while maintaining BVP framework compliance.
-            
+
         Args:
             envelope (np.ndarray): BVP envelope in 7D space-time.
             **kwargs: Level-specific parameters.
-            
+
         Returns:
             Dict[str, Any]: Processed data for this level.
         """

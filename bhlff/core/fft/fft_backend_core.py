@@ -76,23 +76,23 @@ class FFTBackend:
         self.domain = domain
         self.plan_type = plan_type
         self.precision = precision
-        
+
         # Initialize component managers
         self._plan_manager = FFTPlanManager(domain, plan_type, precision)
         self._twiddle_computer = FFTTwiddleComputer(domain, precision)
         self._butterfly_computer = FFTButterflyComputer(domain)
-        
+
         # Setup FFT plans and pre-compute factors
         self._plan_manager.setup_fft_plans()
         self._twiddle_computer.precompute_twiddle_factors()
-        
+
         # Setup memory pools for efficient allocation
         self._setup_memory_pools()
 
     def _setup_memory_pools(self) -> None:
         """
         Setup memory pools for efficient allocation.
-        
+
         Physical Meaning:
             Creates memory pools for efficient allocation and deallocation
             of temporary arrays during FFT operations.

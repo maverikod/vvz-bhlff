@@ -54,7 +54,9 @@ class BVPInterface:
         _interface_advanced (BVPInterfaceAdvanced): Advanced interface operations.
     """
 
-    def __init__(self, bvp_core: "BVPCore", constants: Optional[BVPConstants] = None) -> None:
+    def __init__(
+        self, bvp_core: "BVPCore", constants: Optional[BVPConstants] = None
+    ) -> None:
         """
         Initialize BVP interface.
 
@@ -68,7 +70,7 @@ class BVPInterface:
         """
         self.bvp_core = bvp_core
         self.constants = constants or bvp_core.constants
-        
+
         # Initialize interface components
         self._interface_core = BVPInterfaceCore(bvp_core.domain, self.constants)
         self._interface_advanced = BVPInterfaceAdvanced(self.constants)
@@ -153,7 +155,9 @@ class BVPInterface:
         amplitude_fourth = amplitude**4
 
         # Compute nonlinear admittance using advanced interface
-        nonlinear_admittance = self._interface_advanced.compute_nonlinear_admittance(amplitude)
+        nonlinear_admittance = self._interface_advanced.compute_nonlinear_admittance(
+            amplitude
+        )
 
         # Compute current sources using advanced interface
         em_current_sources = self._interface_advanced.compute_em_current_sources(
@@ -200,16 +204,24 @@ class BVPInterface:
         # Compute field quantities using core interface
         amplitude = self._interface_core.compute_field_amplitude(envelope)
         field_gradient = self._interface_core.compute_field_gradient(envelope)
-        gradient_magnitude_squared = self._interface_core.compute_gradient_magnitude_squared(field_gradient)
+        gradient_magnitude_squared = (
+            self._interface_core.compute_gradient_magnitude_squared(field_gradient)
+        )
 
         # Compute renormalized coefficients using advanced interface
-        renormalized_coefficients = self._interface_advanced.compute_renormalized_coefficients(
-            amplitude, gradient_magnitude_squared
+        renormalized_coefficients = (
+            self._interface_advanced.compute_renormalized_coefficients(
+                amplitude, gradient_magnitude_squared
+            )
         )
 
         # Compute boundary conditions using advanced interface
-        boundary_pressure = self._interface_advanced.compute_boundary_pressure(amplitude)
-        boundary_stiffness = self._interface_advanced.compute_boundary_stiffness(amplitude)
+        boundary_pressure = self._interface_advanced.compute_boundary_pressure(
+            amplitude
+        )
+        boundary_stiffness = self._interface_advanced.compute_boundary_stiffness(
+            amplitude
+        )
 
         core_data = {
             "renormalized_coefficients": renormalized_coefficients,

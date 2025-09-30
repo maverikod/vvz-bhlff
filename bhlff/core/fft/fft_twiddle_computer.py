@@ -63,11 +63,11 @@ class FFTTwiddleComputer:
     def precompute_twiddle_factors(self) -> None:
         """
         Pre-compute twiddle factors for all FFT plans.
-        
+
         Physical Meaning:
             Pre-computes complex exponential factors used in FFT
             operations to avoid repeated computation during runtime.
-            
+
         Mathematical Foundation:
             Twiddle factors are W_N^k = exp(-2πik/N) where N is the
             FFT size and k is the frequency index.
@@ -76,22 +76,24 @@ class FFTTwiddleComputer:
         for dim in range(1, self.domain.dimensions + 1):
             self._twiddle_cache[f"{dim}d"] = self.compute_twiddle_factors(dim)
 
-    def compute_twiddle_factors(self, dimensions: int, conjugate: bool = False) -> np.ndarray:
+    def compute_twiddle_factors(
+        self, dimensions: int, conjugate: bool = False
+    ) -> np.ndarray:
         """
         Compute twiddle factors for given dimensions.
-        
+
         Physical Meaning:
             Computes the complex exponential factors used in FFT
             operations for the specified number of dimensions.
-            
+
         Mathematical Foundation:
             W_N^k = exp(-2πik/N) for forward FFT
             W_N^k = exp(2πik/N) for inverse FFT (conjugate=True)
-            
+
         Args:
             dimensions (int): Number of dimensions.
             conjugate (bool): Whether to compute conjugate twiddle factors.
-            
+
         Returns:
             np.ndarray: Twiddle factors.
         """
@@ -105,74 +107,78 @@ class FFTTwiddleComputer:
     def _compute_1d_twiddle_factors(self, conjugate: bool = False) -> np.ndarray:
         """
         Compute 1D twiddle factors.
-        
+
         Physical Meaning:
             Computes complex exponential factors for 1D FFT operations.
-            
+
         Args:
             conjugate (bool): Whether to compute conjugate factors.
-            
+
         Returns:
             np.ndarray: 1D twiddle factors.
         """
         N = self.domain.N
         k = np.arange(N)
-        
+
         if conjugate:
             # For inverse FFT
             twiddle = np.exp(2j * np.pi * k / N)
         else:
             # For forward FFT
             twiddle = np.exp(-2j * np.pi * k / N)
-        
+
         return twiddle.astype(self.precision)
 
-    def _compute_2d_twiddle_factors(self, conjugate: bool = False) -> Dict[str, np.ndarray]:
+    def _compute_2d_twiddle_factors(
+        self, conjugate: bool = False
+    ) -> Dict[str, np.ndarray]:
         """
         Compute 2D twiddle factors.
-        
+
         Physical Meaning:
             Computes complex exponential factors for 2D FFT operations
             using row-column decomposition.
-            
+
         Args:
             conjugate (bool): Whether to compute conjugate factors.
-            
+
         Returns:
             Dict[str, np.ndarray]: 2D twiddle factors for rows and columns.
         """
         N = self.domain.N
-        
+
         # Row twiddle factors
         row_twiddle = self._compute_1d_twiddle_factors(conjugate)
-        
+
         # Column twiddle factors
         col_twiddle = self._compute_1d_twiddle_factors(conjugate)
-        
+
         return {
             "row": row_twiddle,
             "column": col_twiddle,
         }
 
-    def _compute_3d_twiddle_factors(self, conjugate: bool = False) -> Dict[str, np.ndarray]:
+    def _compute_3d_twiddle_factors(
+        self, conjugate: bool = False
+    ) -> Dict[str, np.ndarray]:
         """
         Compute 3D twiddle factors.
-        
+
         Physical Meaning:
             Computes complex exponential factors for 3D FFT operations
             using multi-dimensional decomposition.
-            
+
         Args:
             conjugate (bool): Whether to compute conjugate factors.
-            
+
         Returns:
             Dict[str, np.ndarray]: 3D twiddle factors for all dimensions.
         """
         N = self.domain.N
-        
+
         # Compute twiddle factors for each dimension
         twiddle_1d = self._compute_1d_twiddle_factors(conjugate)
-        
+
         return {
             "x": twiddle_1d,
             "y": twiddle_1d,

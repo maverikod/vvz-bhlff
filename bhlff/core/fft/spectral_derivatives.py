@@ -34,27 +34,27 @@ from .fft_backend import FFTBackend
 class SpectralDerivatives:
     """
     Spectral derivative operations for phase field calculations.
-    
+
     Physical Meaning:
         Implements mathematical derivative operations in frequency space,
         providing efficient and accurate computation of derivatives
         for phase field calculations.
-        
+
     Mathematical Foundation:
         Spectral derivatives work in frequency space where:
         - Derivatives become multiplication by powers of ik
         - Gradient becomes multiplication by ik vector
         - Laplacian becomes multiplication by -|k|²
     """
-    
+
     def __init__(self, domain: Domain, fft_backend: FFTBackend):
         """
         Initialize spectral derivatives.
-        
+
         Physical Meaning:
             Sets up spectral derivative operations with the computational domain
             and FFT backend for efficient frequency space computations.
-            
+
         Args:
             domain (Domain): Computational domain for spectral operations.
             fft_backend (FFTBackend): FFT backend for transformations.
@@ -62,29 +62,29 @@ class SpectralDerivatives:
         self.domain = domain
         self.fft_backend = fft_backend
         self._frequency_arrays = self.fft_backend.get_frequency_arrays()
-    
+
     def spectral_derivative(
         self, field: np.ndarray, order: int = 1, axis: int = 0
     ) -> np.ndarray:
         """
         Compute spectral derivative.
-        
+
         Physical Meaning:
             Computes the derivative of the field using spectral methods,
             which is more accurate than finite difference methods.
-            
+
         Mathematical Foundation:
             Spectral derivative: ∂^n/∂x^n a(x) = IFFT((ik)^n * FFT(a(x)))
             where k is the frequency and n is the derivative order.
-            
+
         Args:
             field (np.ndarray): Input field a(x).
             order (int): Derivative order (default: 1).
             axis (int): Axis along which to compute derivative (default: 0).
-            
+
         Returns:
             np.ndarray: Spectral derivative of the field.
-            
+
         Raises:
             ValueError: If field shape is incompatible with domain.
         """
@@ -93,18 +93,18 @@ class SpectralDerivatives:
                 f"Field shape {field.shape} incompatible with "
                 f"domain shape {self.domain.shape}"
             )
-        
+
         # Transform to spectral space
         field_spectral = self.fft_backend.fft(field)
-        
+
         # Get frequency array for the specified axis
         if axis >= self.domain.dimensions:
             raise ValueError(
                 f"Axis {axis} out of range for {self.domain.dimensions}D domain"
             )
-        
+
         k = self._frequency_arrays[axis]
-        
+
         # Create frequency multiplier for derivative
         if self.domain.dimensions == 1:
             k_multiplier = (1j * k) ** order
@@ -120,33 +120,33 @@ class SpectralDerivatives:
                 k_multiplier = (1j * k[np.newaxis, :, np.newaxis]) ** order
             else:  # axis == 2
                 k_multiplier = (1j * k[np.newaxis, np.newaxis, :]) ** order
-        
+
         # Apply spectral derivative
         derivative_spectral = k_multiplier * field_spectral
-        
+
         # Transform back to real space
         derivative = self.fft_backend.ifft(derivative_spectral)
-        
+
         return derivative.real
-    
+
     def spectral_gradient(self, field: np.ndarray) -> Tuple[np.ndarray, ...]:
         """
         Compute spectral gradient.
-        
+
         Physical Meaning:
             Computes the gradient of the field using spectral methods,
             providing all partial derivatives in all dimensions.
-            
+
         Mathematical Foundation:
             Spectral gradient: ∇a(x) = IFFT(ik * FFT(a(x)))
             where k is the wave vector.
-            
+
         Args:
             field (np.ndarray): Input field a(x).
-            
+
         Returns:
             Tuple[np.ndarray, ...]: Gradient components in each dimension.
-            
+
         Raises:
             ValueError: If field shape is incompatible with domain.
         """
@@ -155,33 +155,33 @@ class SpectralDerivatives:
                 f"Field shape {field.shape} incompatible with "
                 f"domain shape {self.domain.shape}"
             )
-        
+
         gradient_components = []
-        
+
         for axis in range(self.domain.dimensions):
             gradient_component = self.spectral_derivative(field, order=1, axis=axis)
             gradient_components.append(gradient_component)
-        
+
         return tuple(gradient_components)
-    
+
     def spectral_laplacian(self, field: np.ndarray) -> np.ndarray:
         """
         Compute spectral Laplacian.
-        
+
         Physical Meaning:
             Computes the Laplacian of the field using spectral methods,
             providing the sum of second partial derivatives.
-            
+
         Mathematical Foundation:
             Spectral Laplacian: Δa(x) = IFFT(-|k|² * FFT(a(x)))
             where |k|² is the squared magnitude of the wave vector.
-            
+
         Args:
             field (np.ndarray): Input field a(x).
-            
+
         Returns:
             np.ndarray: Spectral Laplacian of the field.
-            
+
         Raises:
             ValueError: If field shape is incompatible with domain.
         """
@@ -190,10 +190,10 @@ class SpectralDerivatives:
                 f"Field shape {field.shape} incompatible with "
                 f"domain shape {self.domain.shape}"
             )
-        
+
         # Transform to spectral space
         field_spectral = self.fft_backend.fft(field)
-        
+
         # Compute |k|²
         if self.domain.dimensions == 1:
             k = self._frequency_arrays[0]
@@ -206,11 +206,11 @@ class SpectralDerivatives:
             kx, ky, kz = self._frequency_arrays
             KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
             k_squared = KX**2 + KY**2 + KZ**2
-        
+
         # Apply spectral Laplacian
         laplacian_spectral = -k_squared * field_spectral
-        
+
         # Transform back to real space
         laplacian = self.fft_backend.ifft(laplacian_spectral)
-        
+
         return laplacian.real

@@ -66,7 +66,7 @@ class BVPConstantsAdvanced(BVPConstantsBase):
         """
         super().__init__(config)
         self._setup_advanced_material_constants()
-        
+
         # Initialize components
         self.frequency_properties = FrequencyDependentProperties(self)
         self.nonlinear_coeffs = NonlinearCoefficients(self)
@@ -187,7 +187,9 @@ class BVPConstantsAdvanced(BVPConstantsBase):
         Returns:
             Dict[str, float]: Nonlinear admittance coefficients.
         """
-        return self.nonlinear_coeffs.compute_admittance_coefficients(frequency, amplitude)
+        return self.nonlinear_coeffs.compute_admittance_coefficients(
+            frequency, amplitude
+        )
 
     def compute_renormalized_coefficients(
         self, amplitude: float, gradient_magnitude_squared: float

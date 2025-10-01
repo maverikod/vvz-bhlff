@@ -94,9 +94,11 @@ class FractionalLaplacian:
         KX, KY, KZ, KPHI1, KPHI2, KPHI3, KT = np.meshgrid(
             kx, ky, kz, kphi1, kphi2, kphi3, kt, indexing="ij"
         )
-        
+
         # Compute 7D wave vector magnitude
-        k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2 + KPHI1**2 + KPHI2**2 + KPHI3**2 + KT**2)
+        k_magnitude = np.sqrt(
+            KX**2 + KY**2 + KZ**2 + KPHI1**2 + KPHI2**2 + KPHI3**2 + KT**2
+        )
 
         # Compute spectral coefficients |k|^(2β)
         self._spectral_coeffs = k_magnitude ** (2 * self.beta)

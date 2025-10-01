@@ -92,7 +92,9 @@ class GradientComputer:
             envelope_pert = envelope_pert.reshape(envelope.shape)
 
             # Compute perturbed residual
-            pert_residual = self.residual_computer.compute_residual(envelope_pert, source)
+            pert_residual = self.residual_computer.compute_residual(
+                envelope_pert, source
+            )
 
             # Compute gradient component
             gradient.flat[i] = np.sum((pert_residual - residual).conj() * residual) / h

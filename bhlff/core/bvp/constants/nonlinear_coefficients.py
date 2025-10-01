@@ -98,7 +98,9 @@ class NonlinearCoefficients:
         y2 = y2_base * y2_frequency_dependence * y2_quantum_correction
 
         # Third-order nonlinear coefficient (higher-order effects)
-        y3_base = self.constants.get_advanced_material_property("admittance_coeff_3") * 0.1
+        y3_base = (
+            self.constants.get_advanced_material_property("admittance_coeff_3") * 0.1
+        )
         y3_frequency_dependence = 1.0 + 0.01 * (frequency / 1e12) ** 0.25
         y3_many_body_correction = 1.0 + 0.0001 * amplitude**4
         y3 = y3_base * y3_frequency_dependence * y3_many_body_correction

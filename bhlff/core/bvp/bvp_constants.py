@@ -89,10 +89,10 @@ class BVPConstants(BVPConstantsNumerical, BVPConstantsAdvanced, BVPConstantsBase
     def get_all_constants(self) -> Dict[str, Any]:
         """
         Get all BVP constants as a dictionary.
-        
+
         Physical Meaning:
             Returns all BVP constants for monitoring and analysis purposes.
-            
+
         Returns:
             Dict[str, Any]: Dictionary containing all constants.
         """
@@ -104,12 +104,10 @@ class BVPConstants(BVPConstantsNumerical, BVPConstantsAdvanced, BVPConstantsBase
             "chi_double_prime_0": self.CHI_DOUBLE_PRIME_0,
             "k0_squared": self.K0_SQUARED,
             "carrier_frequency": self.CARRIER_FREQUENCY,
-            
             # Quench detection thresholds
             "amplitude_threshold": self.AMPLITUDE_THRESHOLD,
             "detuning_threshold": self.DETUNING_THRESHOLD,
             "gradient_threshold": self.GRADIENT_THRESHOLD,
-            
             # Physical constants
             "speed_of_light": self.SPEED_OF_LIGHT,
             "vacuum_permeability": self.VACUUM_PERMEABILITY,

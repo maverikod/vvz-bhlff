@@ -14,14 +14,14 @@ Physical Meaning:
     - ℝ³ₓ: 3 spatial coordinates (x, y, z) - conventional geometry
     - 𝕋³_φ: 3 phase coordinates (φ₁, φ₂, φ₃) - internal field states
     - ℝₜ: 1 temporal coordinate (t) - evolution dynamics
-    
+
     Phase field simulations are performed in this 7D space-time.
 
 Mathematical Foundation:
     The domain implements periodic boundary conditions in the 7D region
     M₇ = [0,L)³ × [0,2π)³ × [0,T) with uniform grid spacing:
     - Spatial: Δx = L/N for spatial coordinates
-    - Phase: Δφ = 2π/N_φ for phase coordinates  
+    - Phase: Δφ = 2π/N_φ for phase coordinates
     - Temporal: Δt = T/N_t for temporal coordinate
 """
 
@@ -252,25 +252,25 @@ class Domain:
     def get_coordinates(self, dim: int) -> np.ndarray:
         """
         Get coordinates for specific dimension.
-        
+
         Physical Meaning:
             Returns coordinate array for the specified dimension in the 7D space-time.
-            
+
         Args:
             dim (int): Dimension index:
                 - 0, 1, 2: spatial coordinates (x, y, z)
                 - 3, 4, 5: phase coordinates (φ₁, φ₂, φ₃)
                 - 6: temporal coordinate (t)
-                
+
         Returns:
             np.ndarray: Coordinate array for the specified dimension.
-            
+
         Raises:
             ValueError: If dimension index is out of range.
         """
         if dim < 0 or dim >= 7:
             raise ValueError(f"Dimension {dim} out of range for 7D BVP theory")
-        
+
         if dim < 3:  # Spatial coordinates
             coord_names = ["x", "y", "z"]
             return self.coordinates[coord_names[dim]]

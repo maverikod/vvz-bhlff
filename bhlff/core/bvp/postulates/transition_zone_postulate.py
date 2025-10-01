@@ -176,23 +176,23 @@ class BVPPostulate7_TransitionZone(BVPPostulate):
         """
         amplitude = np.abs(envelope)
         phase = np.angle(envelope)
-        
+
         # Compute spatial gradients for vector potential
         grad_amplitude = np.gradient(amplitude)
         grad_phase = np.gradient(phase)
-        
+
         # Compute vector potential A from envelope
         # A = amplitude * exp(i*phase) in complex form
         vector_potential = amplitude * np.exp(1j * phase)
-        
+
         # Compute EM current: J_EM = ∇×A + ∂A/∂t
         # For static case: J_EM = ∇×A
         curl_A = np.gradient(vector_potential)
-        em_current = np.sum(np.abs(curl_A)**2)
-        
+        em_current = np.sum(np.abs(curl_A) ** 2)
+
         # Compute weak current: J_W = ψ†γμψ
         # Spinor field ψ derived from phase structure
         spinor_field = np.sqrt(amplitude) * np.exp(1j * phase / 2)
-        weak_current = np.sum(np.abs(spinor_field)**2 * np.cos(phase))
+        weak_current = np.sum(np.abs(spinor_field) ** 2 * np.cos(phase))
 
         return {"em_current": float(em_current), "weak_current": float(weak_current)}

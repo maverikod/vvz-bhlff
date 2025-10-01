@@ -91,6 +91,7 @@ class BVPCoreOperations:
     def _setup_quench_detector(self) -> None:
         """Setup quench detector for threshold events."""
         from ..bvp_constants import BVPConstants
+
         constants = BVPConstants(self.config)
         self._quench_detector = QuenchDetector(self.domain, constants)
 
@@ -105,12 +106,13 @@ class BVPCoreOperations:
     def _setup_parameter_access(self) -> None:
         """Setup parameter access for configuration management."""
         from ..bvp_constants import BVPConstants
+
         constants = BVPConstants(self.config)
         self._parameter_access = BVPParameterAccess(
-            constants, 
-            self._envelope_solver, 
-            self._quench_detector, 
-            self._impedance_calculator
+            constants,
+            self._envelope_solver,
+            self._quench_detector,
+            self._impedance_calculator,
         )
 
     def solve_envelope(self, source: np.ndarray) -> np.ndarray:

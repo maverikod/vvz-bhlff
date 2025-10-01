@@ -26,4 +26,4 @@ Example:
 
 from .u1_phase_field import U1PhaseField
 
-__all__ = ['U1PhaseField']
+__all__ = ["U1PhaseField"]

@@ -19,7 +19,7 @@ Physical Meaning:
 Example:
     # OLD (deprecated):
     # from bhlff.core.bvp.bvp_postulates_7d import BVPPostulates7D
-    
+
     # NEW (recommended):
     from bhlff.core.bvp.postulates import BVPPostulates7D
 """

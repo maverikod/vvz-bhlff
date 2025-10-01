@@ -239,12 +239,12 @@ class BVPConstantsBase:
     def get_carrier_frequency(self) -> float:
         """
         Get BVP carrier frequency.
-        
+
         Physical Meaning:
             Returns the high-frequency carrier frequency ω₀ of the BVP field,
             which is the fundamental frequency that all envelope modulations
             and beatings are based upon.
-            
+
         Returns:
             float: BVP carrier frequency ω₀.
         """

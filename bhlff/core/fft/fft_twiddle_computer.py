@@ -200,11 +200,11 @@ class FFTTwiddleComputer:
     def get_twiddle_factor(self, dim1: int, dim2: int) -> np.ndarray:
         """
         Get twiddle factor for specific dimensions.
-        
+
         Args:
             dim1 (int): First dimension.
             dim2 (int): Second dimension.
-            
+
         Returns:
             np.ndarray: Twiddle factor.
         """
@@ -216,11 +216,11 @@ class FFTTwiddleComputer:
                 n = self.domain.N_t
             self._twiddle_cache[key] = self._compute_1d_twiddle_factors(n)
         return self._twiddle_cache[key]
-    
+
     def compute_inverse_twiddle_factors(self) -> Dict[str, np.ndarray]:
         """
         Compute inverse twiddle factors.
-        
+
         Returns:
             Dict[str, np.ndarray]: Inverse twiddle factors.
         """

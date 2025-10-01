@@ -33,8 +33,8 @@ from .gradient_computer import GradientComputer
 
 __all__ = [
     "EnvelopeSolverCore",
-    "ResidualComputer", 
+    "ResidualComputer",
     "JacobianComputer",
     "NewtonSolver",
-    "GradientComputer"
+    "GradientComputer",
 ]

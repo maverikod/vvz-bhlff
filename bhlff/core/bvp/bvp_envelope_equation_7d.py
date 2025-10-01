@@ -19,7 +19,7 @@ Physical Meaning:
 Example:
     # OLD (deprecated):
     # from bhlff.core.bvp.bvp_envelope_equation_7d import BVPEnvelopeEquation7D
-    
+
     # NEW (recommended):
     from bhlff.core.bvp.envelope_equation import BVPEnvelopeEquation7D
 """

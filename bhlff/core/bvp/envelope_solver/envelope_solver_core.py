@@ -71,7 +71,7 @@ class EnvelopeSolverCore:
         """
         self.domain = domain
         self.constants = constants or BVPConstants(config)
-        
+
         # Initialize components
         self.residual_computer = ResidualComputer(domain, self.constants)
         self.jacobian_computer = JacobianComputer(domain, self.constants)
@@ -150,6 +150,5 @@ class EnvelopeSolverCore:
     def __repr__(self) -> str:
         """String representation of envelope solver core."""
         return (
-            f"EnvelopeSolverCore(domain={self.domain}, "
-            f"constants={self.constants})"
+            f"EnvelopeSolverCore(domain={self.domain}, " f"constants={self.constants})"
         )

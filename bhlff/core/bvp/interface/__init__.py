@@ -24,9 +24,4 @@ from .tail_interface import TailInterface
 from .transition_interface import TransitionInterface
 from .core_interface import CoreInterface
 
-__all__ = [
-    "BVPInterface",
-    "TailInterface", 
-    "TransitionInterface",
-    "CoreInterface"
-]
+__all__ = ["BVPInterface", "TailInterface", "TransitionInterface", "CoreInterface"]

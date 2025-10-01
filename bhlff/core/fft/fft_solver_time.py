@@ -27,26 +27,32 @@ from typing import Dict, Any, Optional, List
 import logging
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from ..domain import Domain
     from ..domain.parameters import Parameters
-    from ..time import BVPExponentialIntegrator, CrankNicolsonIntegrator, MemoryKernel, QuenchDetector
+    from ..time import (
+        BVPExponentialIntegrator,
+        CrankNicolsonIntegrator,
+        MemoryKernel,
+        QuenchDetector,
+    )
 
 
 class FFTSolverTimeMethods:
     """
     Time-dependent methods for 7D FFT Solver.
-    
+
     Physical Meaning:
         Implements time-dependent solving methods for the dynamic phase field equation:
         ∂a/∂t + ν(-Δ)^β a + λa = s(x,φ,t)
         using high-precision temporal integrators with support for memory kernels
         and quench detection.
-        
+
     Mathematical Foundation:
         Uses either exponential integrator (exact for harmonic sources) or
         Crank-Nicolson integrator (second-order accurate, unconditionally stable).
-        
+
     Attributes:
         domain (Domain): Computational domain for the simulation.
         parameters (Parameters): Solver parameters.
@@ -55,16 +61,16 @@ class FFTSolverTimeMethods:
         _memory_kernel (MemoryKernel): Memory kernel for non-local effects.
         _quench_detector (QuenchDetector): Quench detection system.
     """
-    
-    def __init__(self, domain: 'Domain', parameters: 'Parameters'):
+
+    def __init__(self, domain: "Domain", parameters: "Parameters"):
         """
         Initialize time-dependent methods.
-        
+
         Physical Meaning:
             Sets up the time-dependent methods with the computational domain
             and solver parameters, initializing temporal integrators and
             supporting components.
-            
+
         Args:
             domain (Domain): Computational domain with grid information.
             parameters (Parameters): Solver parameters.
@@ -72,72 +78,87 @@ class FFTSolverTimeMethods:
         self.domain = domain
         self.parameters = parameters
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize time integrators
         self._exponential_integrator = None
         self._crank_nicolson_integrator = None
         self._memory_kernel = None
         self._quench_detector = None
-        
+
         self.logger.info(f"FFTSolverTimeMethods initialized for domain {domain.shape}")
-    
-    def solve_time_dependent(self, initial_field: np.ndarray, source_field: np.ndarray, 
-                           time_steps: np.ndarray, method: str = 'exponential') -> np.ndarray:
+
+    def solve_time_dependent(
+        self,
+        initial_field: np.ndarray,
+        source_field: np.ndarray,
+        time_steps: np.ndarray,
+        method: str = "exponential",
+    ) -> np.ndarray:
         """
         Solve time-dependent problem using temporal integrators.
-        
+
         Physical Meaning:
             Solves the dynamic phase field equation:
             ∂a/∂t + ν(-Δ)^β a + λa = s(x,φ,t)
             using high-precision temporal integrators with support for
             memory kernels and quench detection.
-            
+
         Mathematical Foundation:
             Uses either exponential integrator (exact for harmonic sources)
             or Crank-Nicolson integrator (second-order accurate, unconditionally stable).
-            
+
         Args:
             initial_field (np.ndarray): Initial field configuration a(x,φ,0).
             source_field (np.ndarray): Source term s(x,φ,t) over time.
             time_steps (np.ndarray): Time points for integration.
             method (str): Integration method ('exponential' or 'crank_nicolson').
-            
+
         Returns:
             np.ndarray: Field evolution a(x,φ,t) over time.
         """
         # Validate inputs
         if initial_field.shape != self.domain.shape:
-            raise ValueError(f"Initial field shape {initial_field.shape} incompatible with domain {self.domain.shape}")
-        
+            raise ValueError(
+                f"Initial field shape {initial_field.shape} incompatible with domain {self.domain.shape}"
+            )
+
         if source_field.shape != (len(time_steps),) + self.domain.shape:
-            raise ValueError(f"Source field shape {source_field.shape} incompatible with time steps and domain")
-        
+            raise ValueError(
+                f"Source field shape {source_field.shape} incompatible with time steps and domain"
+            )
+
         # Get or create integrator
-        if method == 'exponential':
+        if method == "exponential":
             if self._exponential_integrator is None:
                 from ..time import BVPExponentialIntegrator
-                self._exponential_integrator = BVPExponentialIntegrator(self.domain, self.parameters)
+
+                self._exponential_integrator = BVPExponentialIntegrator(
+                    self.domain, self.parameters
+                )
                 self._setup_integrator_components(self._exponential_integrator)
             integrator = self._exponential_integrator
-        elif method == 'crank_nicolson':
+        elif method == "crank_nicolson":
             if self._crank_nicolson_integrator is None:
                 from ..time import CrankNicolsonIntegrator
-                self._crank_nicolson_integrator = CrankNicolsonIntegrator(self.domain, self.parameters)
+
+                self._crank_nicolson_integrator = CrankNicolsonIntegrator(
+                    self.domain, self.parameters
+                )
                 self._setup_integrator_components(self._crank_nicolson_integrator)
             integrator = self._crank_nicolson_integrator
         else:
             raise ValueError(f"Unknown integration method: {method}")
-        
+
         # Integrate
         result = integrator.integrate(initial_field, source_field, time_steps)
-        
+
         self.logger.info(f"Time-dependent integration completed using {method} method")
         return result
-    
+
     def _setup_integrator_components(self, integrator) -> None:
         """
         Setup memory kernel and quench detector for integrator.
-        
+
         Physical Meaning:
             Configures the integrator with memory kernel for non-local
             temporal effects and quench detector for monitoring energy
@@ -146,96 +167,108 @@ class FFTSolverTimeMethods:
         # Setup memory kernel
         if self._memory_kernel is None:
             from ..time import MemoryKernel
+
             self._memory_kernel = MemoryKernel(self.domain, num_memory_vars=3)
         integrator.set_memory_kernel(self._memory_kernel)
-        
+
         # Setup quench detector
         if self._quench_detector is None:
             from ..time import QuenchDetector
+
             self._quench_detector = QuenchDetector(self.domain)
         integrator.set_quench_detector(self._quench_detector)
-    
-    def set_memory_kernel(self, num_memory_vars: int = 3, 
-                         relaxation_times: Optional[List[float]] = None,
-                         coupling_strengths: Optional[List[float]] = None) -> None:
+
+    def set_memory_kernel(
+        self,
+        num_memory_vars: int = 3,
+        relaxation_times: Optional[List[float]] = None,
+        coupling_strengths: Optional[List[float]] = None,
+    ) -> None:
         """
         Configure memory kernel for non-local temporal effects.
-        
+
         Physical Meaning:
             Sets up the memory kernel with specified number of memory
             variables, relaxation times, and coupling strengths for
             non-local temporal effects in phase field evolution.
-            
+
         Args:
             num_memory_vars (int): Number of memory variables.
             relaxation_times (Optional[List[float]]): Relaxation times τⱼ.
             coupling_strengths (Optional[List[float]]): Coupling strengths γⱼ.
         """
         from ..time import MemoryKernel
+
         self._memory_kernel = MemoryKernel(self.domain, num_memory_vars)
-        
+
         if relaxation_times is not None:
             self._memory_kernel.set_relaxation_times(relaxation_times)
-        
+
         if coupling_strengths is not None:
             self._memory_kernel.set_coupling_strengths(coupling_strengths)
-        
+
         # Update existing integrators
         if self._exponential_integrator is not None:
             self._exponential_integrator.set_memory_kernel(self._memory_kernel)
         if self._crank_nicolson_integrator is not None:
             self._crank_nicolson_integrator.set_memory_kernel(self._memory_kernel)
-        
+
         self.logger.info(f"Memory kernel configured with {num_memory_vars} variables")
-    
-    def set_quench_detector(self, energy_threshold: float = 1e-3,
-                           rate_threshold: float = 1e-2,
-                           magnitude_threshold: float = 10.0) -> None:
+
+    def set_quench_detector(
+        self,
+        energy_threshold: float = 1e-3,
+        rate_threshold: float = 1e-2,
+        magnitude_threshold: float = 10.0,
+    ) -> None:
         """
         Configure quench detection system.
-        
+
         Physical Meaning:
             Sets up the quench detection system with specified thresholds
             for monitoring energy dumping events during integration.
-            
+
         Args:
             energy_threshold (float): Energy change threshold for quench detection.
             rate_threshold (float): Rate of change threshold.
             magnitude_threshold (float): Field magnitude threshold.
         """
         from ..time import QuenchDetector
+
         self._quench_detector = QuenchDetector(
-            self.domain, 
+            self.domain,
             energy_threshold=energy_threshold,
             rate_threshold=rate_threshold,
-            magnitude_threshold=magnitude_threshold
+            magnitude_threshold=magnitude_threshold,
         )
-        
+
         # Update existing integrators
         if self._exponential_integrator is not None:
             self._exponential_integrator.set_quench_detector(self._quench_detector)
         if self._crank_nicolson_integrator is not None:
             self._crank_nicolson_integrator.set_quench_detector(self._quench_detector)
-        
-        self.logger.info(f"Quench detector configured with thresholds: "
-                        f"energy={energy_threshold}, rate={rate_threshold}, "
-                        f"magnitude={magnitude_threshold}")
-    
+
+        self.logger.info(
+            f"Quench detector configured with thresholds: "
+            f"energy={energy_threshold}, rate={rate_threshold}, "
+            f"magnitude={magnitude_threshold}"
+        )
+
     def get_quench_history(self) -> List[Dict]:
         """
         Get quench detection history.
-        
+
         Returns:
             List[Dict]: History of detected quench events.
         """
         if self._quench_detector is None:
             return []
         return self._quench_detector.get_quench_history()
-    
+
     def get_memory_contribution(self) -> np.ndarray:
         """
         Get current memory kernel contribution.
-        
+
         Returns:
             np.ndarray: Current memory contribution to field.
         """

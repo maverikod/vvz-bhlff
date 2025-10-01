@@ -32,7 +32,7 @@ from .quench_detector import QuenchDetector
 
 __all__ = [
     "BaseTimeIntegrator",
-    "BVPExponentialIntegrator", 
+    "BVPExponentialIntegrator",
     "CrankNicolsonIntegrator",
     "AdaptiveIntegrator",
     "MemoryKernel",

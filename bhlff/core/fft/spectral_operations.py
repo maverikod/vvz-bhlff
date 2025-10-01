@@ -30,6 +30,7 @@ from typing import Any, Tuple, Dict, Optional
 import logging
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from ..domain import Domain
     from .fft_backend import FFTBackend
@@ -60,7 +61,7 @@ class SpectralOperations:
         _filtering (SpectralFiltering): Spectral filtering calculator.
     """
 
-    def __init__(self, domain: 'Domain', precision: str = 'float64'):
+    def __init__(self, domain: "Domain", precision: str = "float64"):
         """
         Initialize spectral operations.
 
@@ -82,11 +83,13 @@ class SpectralOperations:
 
         # Initialize specialized calculators
         self._derivatives = None  # Lazy initialization
-        self._filtering = None    # Lazy initialization
+        self._filtering = None  # Lazy initialization
 
         self.logger.info(f"SpectralOperations initialized for domain {domain.shape}")
 
-    def forward_fft(self, field: np.ndarray, normalization: str = 'ortho') -> np.ndarray:
+    def forward_fft(
+        self, field: np.ndarray, normalization: str = "ortho"
+    ) -> np.ndarray:
         """
         Compute forward FFT of field.
 
@@ -111,16 +114,18 @@ class SpectralOperations:
                 normalization type is unsupported.
         """
         if field.shape != self.domain.shape:
-            raise ValueError(f"Field shape {field.shape} incompatible with domain {self.domain.shape}")
+            raise ValueError(
+                f"Field shape {field.shape} incompatible with domain {self.domain.shape}"
+            )
 
-        if normalization == 'ortho':
+        if normalization == "ortho":
             # Use orthogonal normalization
-            field_spectral = np.fft.fftn(field, norm='ortho')
-        elif normalization == 'physics':
+            field_spectral = np.fft.fftn(field, norm="ortho")
+        elif normalization == "physics":
             # Use physics normalization
             field_spectral = np.fft.fftn(field)
             # Apply physics normalization factor
-            if hasattr(self.domain, 'N_spatial'):
+            if hasattr(self.domain, "N_spatial"):
                 # New Domain7DBVP structure
                 dx = self.domain.L_spatial / self.domain.N_spatial
                 dphi = 2 * np.pi / self.domain.N_phase
@@ -130,14 +135,16 @@ class SpectralOperations:
                 dx = self.domain.L / self.domain.N
                 dphi = 2 * np.pi / self.domain.N_phi
                 dt = self.domain.T / self.domain.N_t
-            normalization_factor = (dx ** 3) * (dphi ** 3) * dt
+            normalization_factor = (dx**3) * (dphi**3) * dt
             field_spectral *= normalization_factor
         else:
             raise ValueError(f"Unsupported normalization: {normalization}")
 
         return field_spectral.astype(np.complex128)
 
-    def inverse_fft(self, spectral_field: np.ndarray, normalization: str = 'ortho') -> np.ndarray:
+    def inverse_fft(
+        self, spectral_field: np.ndarray, normalization: str = "ortho"
+    ) -> np.ndarray:
         """
         Compute inverse FFT of spectral field.
 
@@ -162,14 +169,16 @@ class SpectralOperations:
                 normalization type is unsupported.
         """
         if spectral_field.shape != self.domain.shape:
-            raise ValueError(f"Spectral field shape {spectral_field.shape} incompatible with domain {self.domain.shape}")
+            raise ValueError(
+                f"Spectral field shape {spectral_field.shape} incompatible with domain {self.domain.shape}"
+            )
 
-        if normalization == 'ortho':
+        if normalization == "ortho":
             # Use orthogonal normalization
-            field = np.fft.ifftn(spectral_field, norm='ortho')
-        elif normalization == 'physics':
+            field = np.fft.ifftn(spectral_field, norm="ortho")
+        elif normalization == "physics":
             # Use physics normalization
-            if hasattr(self.domain, 'N_spatial'):
+            if hasattr(self.domain, "N_spatial"):
                 # New Domain7DBVP structure
                 dx = self.domain.L_spatial / self.domain.N_spatial
                 dphi = 2 * np.pi / self.domain.N_phase
@@ -179,14 +188,14 @@ class SpectralOperations:
                 dx = self.domain.L / self.domain.N
                 dphi = 2 * np.pi / self.domain.N_phi
                 dt = self.domain.T / self.domain.N_t
-            normalization_factor = (dx ** 3) * (dphi ** 3) * dt
+            normalization_factor = (dx**3) * (dphi**3) * dt
             field = np.fft.ifftn(spectral_field / normalization_factor)
         else:
             raise ValueError(f"Unsupported normalization: {normalization}")
 
         return field.astype(np.complex128)
 
-    def get_derivatives(self) -> 'SpectralDerivatives':
+    def get_derivatives(self) -> "SpectralDerivatives":
         """
         Get spectral derivatives calculator.
 
@@ -199,10 +208,11 @@ class SpectralOperations:
         """
         if self._derivatives is None:
             from .spectral_derivatives import SpectralDerivatives
+
             self._derivatives = SpectralDerivatives(self.domain, self.precision)
         return self._derivatives
 
-    def get_filtering(self) -> 'SpectralFiltering':
+    def get_filtering(self) -> "SpectralFiltering":
         """
         Get spectral filtering calculator.
 
@@ -215,11 +225,13 @@ class SpectralOperations:
         """
         if self._filtering is None:
             from .spectral_filtering import SpectralFiltering
+
             self._filtering = SpectralFiltering(self.domain, self.precision)
         return self._filtering
 
-    def compute_spectral_derivative(self, field: np.ndarray, order: int, 
-                                  direction: int) -> np.ndarray:
+    def compute_spectral_derivative(
+        self, field: np.ndarray, order: int, direction: int
+    ) -> np.ndarray:
         """
         Compute spectral derivative of specified order and direction.
 
@@ -240,10 +252,13 @@ class SpectralOperations:
         Returns:
             np.ndarray: Derivative field.
         """
-        return self.get_derivatives().compute_spectral_derivative(field, order, direction)
+        return self.get_derivatives().compute_spectral_derivative(
+            field, order, direction
+        )
 
-    def apply_spectral_filter(self, field: np.ndarray, filter_type: str,
-                            **kwargs) -> np.ndarray:
+    def apply_spectral_filter(
+        self, field: np.ndarray, filter_type: str, **kwargs
+    ) -> np.ndarray:
         """
         Apply spectral filter of specified type.
 
@@ -278,23 +293,25 @@ class SpectralOperations:
             Tuple[np.ndarray, ...]: Wave vectors for each dimension.
         """
         wave_vectors = []
-        
-        if hasattr(self.domain, 'N_spatial'):
+
+        if hasattr(self.domain, "N_spatial"):
             # New Domain7DBVP structure
             # Spatial dimensions (x, y, z)
             for i in range(3):
-                k = np.fft.fftfreq(self.domain.N_spatial, self.domain.L_spatial / self.domain.N_spatial)
+                k = np.fft.fftfreq(
+                    self.domain.N_spatial, self.domain.L_spatial / self.domain.N_spatial
+                )
                 k = k * 2 * np.pi / self.domain.L_spatial
                 k = np.broadcast_to(k.reshape(-1, 1, 1, 1, 1, 1, 1), self.domain.shape)
                 wave_vectors.append(k)
-            
+
             # Phase dimensions (φ₁, φ₂, φ₃)
             for i in range(3):
                 k = np.fft.fftfreq(self.domain.N_phase, 2 * np.pi / self.domain.N_phase)
                 k = k * 2 * np.pi / (2 * np.pi)
                 k = np.broadcast_to(k.reshape(1, 1, 1, -1, 1, 1, 1), self.domain.shape)
                 wave_vectors.append(k)
-            
+
             # Time dimension (t)
             k = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
             k = k * 2 * np.pi / self.domain.T
@@ -308,18 +325,18 @@ class SpectralOperations:
                 k = k * 2 * np.pi / self.domain.L
                 k = np.broadcast_to(k.reshape(-1, 1, 1, 1, 1, 1, 1), self.domain.shape)
                 wave_vectors.append(k)
-            
+
             # Phase dimensions (φ₁, φ₂, φ₃)
             for i in range(3):
                 k = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
                 k = k * 2 * np.pi / (2 * np.pi)
                 k = np.broadcast_to(k.reshape(1, 1, 1, -1, 1, 1, 1), self.domain.shape)
                 wave_vectors.append(k)
-            
+
             # Time dimension (t)
             k = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
             k = k * 2 * np.pi / self.domain.T
             k = np.broadcast_to(k.reshape(1, 1, 1, 1, 1, 1, -1), self.domain.shape)
             wave_vectors.append(k)
-        
+
         return tuple(wave_vectors)

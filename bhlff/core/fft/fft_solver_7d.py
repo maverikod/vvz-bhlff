@@ -28,6 +28,7 @@ from typing import Dict, Any, Optional, Tuple, List
 import logging
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from ...solvers.base.abstract_solver import AbstractSolver
     from ..domain import Domain
@@ -69,7 +70,7 @@ class FFTSolver7D:
         _validation (FFTSolverValidation): Validation methods.
     """
 
-    def __init__(self, domain: 'Domain', parameters: 'Parameters'):
+    def __init__(self, domain: "Domain", parameters: "Parameters"):
         """
         Initialize 7D FFT solver.
 
@@ -92,25 +93,33 @@ class FFTSolver7D:
 
         # Validate domain dimensions
         if domain.dimensions != 7:
-            raise ValueError(f"Dimensions must be 7 for 7D BVP theory, got {domain.dimensions}")
+            raise ValueError(
+                f"Dimensions must be 7 for 7D BVP theory, got {domain.dimensions}"
+            )
 
         # Initialize core components
-        self._fractional_laplacian = FractionalLaplacian(domain, parameters.beta, parameters.lambda_param)
+        self._fractional_laplacian = FractionalLaplacian(
+            domain, parameters.beta, parameters.lambda_param
+        )
         self._spectral_ops = SpectralOperations(domain, parameters.precision)
-        self._memory_manager = MemoryManager7D(domain.shape, 8.0)  # Default memory limit
+        self._memory_manager = MemoryManager7D(
+            domain.shape, 8.0
+        )  # Default memory limit
         self._fft_plan = FFTPlan7D(domain.shape, parameters.precision)
         self._spectral_cache = SpectralCoefficientCache()
-        
+
         # Pre-compute spectral coefficients
         self._setup_spectral_coefficients()
-        
+
         # Initialize specialized methods
         self._time_methods = FFTSolverTimeMethods(domain, parameters)
-        self._validation = FFTSolverValidation(domain, parameters, self._fractional_laplacian)
-        
+        self._validation = FFTSolverValidation(
+            domain, parameters, self._fractional_laplacian
+        )
+
         # Setup logging
         self.logger = logging.getLogger(__name__)
-        
+
         # Mark as initialized
         self._initialized = True
 
@@ -147,89 +156,108 @@ class FFTSolver7D:
             raise RuntimeError("Solver not initialized")
 
         if source_field.shape != self.domain.shape:
-            raise ValueError(f"Source shape {source_field.shape} incompatible with domain shape {self.domain.shape}")
+            raise ValueError(
+                f"Source shape {source_field.shape} incompatible with domain shape {self.domain.shape}"
+            )
 
         # Validate source for λ=0 case
         self._validate_source_for_lambda_zero(source_field)
 
         # Transform source to spectral space
-        source_spectral = self._spectral_ops.forward_fft(source_field, 'physics')
+        source_spectral = self._spectral_ops.forward_fft(source_field, "physics")
 
         # Apply spectral operator
         spectral_coeffs = self._get_spectral_coefficients()
         solution_spectral = source_spectral / spectral_coeffs
 
         # Transform back to real space
-        solution = self._spectral_ops.inverse_fft(solution_spectral, 'physics')
+        solution = self._spectral_ops.inverse_fft(solution_spectral, "physics")
 
         self.logger.info("Stationary problem solved successfully")
         return solution.real
 
-    def solve_time_dependent(self, initial_field: np.ndarray, source_field: np.ndarray, 
-                           time_steps: np.ndarray, method: str = 'exponential') -> np.ndarray:
+    def solve_time_dependent(
+        self,
+        initial_field: np.ndarray,
+        source_field: np.ndarray,
+        time_steps: np.ndarray,
+        method: str = "exponential",
+    ) -> np.ndarray:
         """
         Solve time-dependent problem using temporal integrators.
-        
+
         Physical Meaning:
             Solves the dynamic phase field equation:
             ∂a/∂t + ν(-Δ)^β a + λa = s(x,φ,t)
             using high-precision temporal integrators with support for
             memory kernels and quench detection.
-            
+
         Mathematical Foundation:
             Uses either exponential integrator (exact for harmonic sources)
             or Crank-Nicolson integrator (second-order accurate, unconditionally stable).
-            
+
         Args:
             initial_field (np.ndarray): Initial field configuration a(x,φ,0).
             source_field (np.ndarray): Source term s(x,φ,t) over time.
             time_steps (np.ndarray): Time points for integration.
             method (str): Integration method ('exponential' or 'crank_nicolson').
-            
+
         Returns:
             np.ndarray: Field evolution a(x,φ,t) over time.
         """
-        return self._time_methods.solve_time_dependent(initial_field, source_field, time_steps, method)
+        return self._time_methods.solve_time_dependent(
+            initial_field, source_field, time_steps, method
+        )
 
-    def set_memory_kernel(self, num_memory_vars: int = 3, 
-                         relaxation_times: Optional[List[float]] = None,
-                         coupling_strengths: Optional[List[float]] = None) -> None:
+    def set_memory_kernel(
+        self,
+        num_memory_vars: int = 3,
+        relaxation_times: Optional[List[float]] = None,
+        coupling_strengths: Optional[List[float]] = None,
+    ) -> None:
         """
         Configure memory kernel for non-local temporal effects.
-        
+
         Physical Meaning:
             Sets up the memory kernel with specified number of memory
             variables, relaxation times, and coupling strengths for
             non-local temporal effects in phase field evolution.
-            
+
         Args:
             num_memory_vars (int): Number of memory variables.
             relaxation_times (Optional[List[float]]): Relaxation times τⱼ.
             coupling_strengths (Optional[List[float]]): Coupling strengths γⱼ.
         """
-        self._time_methods.set_memory_kernel(num_memory_vars, relaxation_times, coupling_strengths)
+        self._time_methods.set_memory_kernel(
+            num_memory_vars, relaxation_times, coupling_strengths
+        )
 
-    def set_quench_detector(self, energy_threshold: float = 1e-3,
-                           rate_threshold: float = 1e-2,
-                           magnitude_threshold: float = 10.0) -> None:
+    def set_quench_detector(
+        self,
+        energy_threshold: float = 1e-3,
+        rate_threshold: float = 1e-2,
+        magnitude_threshold: float = 10.0,
+    ) -> None:
         """
         Configure quench detection system.
-        
+
         Physical Meaning:
             Sets up the quench detection system with specified thresholds
             for monitoring energy dumping events during integration.
-            
+
         Args:
             energy_threshold (float): Energy change threshold for quench detection.
             rate_threshold (float): Rate of change threshold.
             magnitude_threshold (float): Field magnitude threshold.
         """
-        self._time_methods.set_quench_detector(energy_threshold, rate_threshold, magnitude_threshold)
+        self._time_methods.set_quench_detector(
+            energy_threshold, rate_threshold, magnitude_threshold
+        )
 
     def get_quench_history(self) -> List[Dict]:
         """
         Get quench detection history.
-        
+
         Returns:
             List[Dict]: History of detected quench events.
         """
@@ -238,31 +266,32 @@ class FFTSolver7D:
     def get_memory_contribution(self) -> np.ndarray:
         """
         Get current memory kernel contribution.
-        
+
         Returns:
             np.ndarray: Current memory contribution to field.
         """
         return self._time_methods.get_memory_contribution()
 
-    def validate_solution(self, solution: np.ndarray, source: np.ndarray,
-                         tolerance: float = 1e-12) -> Dict[str, Any]:
+    def validate_solution(
+        self, solution: np.ndarray, source: np.ndarray, tolerance: float = 1e-12
+    ) -> Dict[str, Any]:
         """
         Validate solution to fractional Laplacian equation.
-        
+
         Physical Meaning:
             Validates the solution by computing the residual of the equation
             L_β a = s and checking that it satisfies the equation within
             the specified tolerance.
-            
+
         Mathematical Foundation:
             Computes residual: r = L_β a - s = μ(-Δ)^β a + λa - s
             and checks that ||r|| < tolerance.
-            
+
         Args:
             solution (np.ndarray): Solution field a(x,φ,t).
             source (np.ndarray): Source field s(x,φ,t).
             tolerance (float): Tolerance for residual validation.
-            
+
         Returns:
             Dict[str, Any]: Validation results including residual norm and status.
         """
@@ -282,7 +311,7 @@ class FFTSolver7D:
             mu=self.parameters.mu,
             beta=self.parameters.beta,
             lambda_param=self.parameters.lambda_param,
-            domain_shape=self.domain.shape
+            domain_shape=self.domain.shape,
         )
 
     def _get_spectral_coefficients(self) -> np.ndarray:
@@ -323,8 +352,10 @@ class FFTSolver7D:
 
     def __repr__(self) -> str:
         """String representation of solver."""
-        return (f"FFTSolver7D("
-                f"domain={self.domain.shape}, "
-                f"mu={self.parameters.mu}, "
-                f"beta={self.parameters.beta}, "
-                f"lambda={self.parameters.lambda_param})")
+        return (
+            f"FFTSolver7D("
+            f"domain={self.domain.shape}, "
+            f"mu={self.parameters.mu}, "
+            f"beta={self.parameters.beta}, "
+            f"lambda={self.parameters.lambda_param})"
+        )

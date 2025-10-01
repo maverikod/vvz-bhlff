@@ -26,6 +26,6 @@ from .radiation_calculator import RadiationCalculator
 __all__ = [
     "PowerBalancePostulate",
     "FluxComputer",
-    "EnergyAnalyzer", 
-    "RadiationCalculator"
+    "EnergyAnalyzer",
+    "RadiationCalculator",
 ]

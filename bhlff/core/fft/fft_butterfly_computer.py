@@ -126,10 +126,10 @@ class FFTButterflyComputer:
     def compute_butterfly(self, data: np.ndarray) -> np.ndarray:
         """
         Compute butterfly operation on data.
-        
+
         Args:
             data (np.ndarray): Input data.
-            
+
         Returns:
             np.ndarray: Result of butterfly operation.
         """
@@ -140,14 +140,14 @@ class FFTButterflyComputer:
             return self._butterfly_2d(data)
         else:
             return self._butterfly_nd(data)
-    
+
     def compute_inverse_butterfly(self, data: np.ndarray) -> np.ndarray:
         """
         Compute inverse butterfly operation on data.
-        
+
         Args:
             data (np.ndarray): Input data.
-            
+
         Returns:
             np.ndarray: Result of inverse butterfly operation.
         """
@@ -158,7 +158,7 @@ class FFTButterflyComputer:
             return self._inverse_butterfly_2d(data)
         else:
             return self._inverse_butterfly_nd(data)
-    
+
     def _butterfly_1d(self, data: np.ndarray) -> np.ndarray:
         """1D butterfly operation."""
         n = len(data)
@@ -167,9 +167,10 @@ class FFTButterflyComputer:
         even = self._butterfly_1d(data[::2])
         odd = self._butterfly_1d(data[1::2])
         factor = np.exp(-2j * np.pi * np.arange(n) / n)
-        return np.concatenate([even + factor[:n//2] * odd,
-                              even + factor[n//2:] * odd])
-    
+        return np.concatenate(
+            [even + factor[: n // 2] * odd, even + factor[n // 2 :] * odd]
+        )
+
     def _butterfly_2d(self, data: np.ndarray) -> np.ndarray:
         """2D butterfly operation."""
         result = np.zeros_like(data, dtype=complex)
@@ -178,14 +179,14 @@ class FFTButterflyComputer:
         for j in range(data.shape[1]):
             result[:, j] = self._butterfly_1d(result[:, j])
         return result
-    
+
     def _butterfly_nd(self, data: np.ndarray) -> np.ndarray:
         """N-D butterfly operation."""
         result = data.astype(complex)
         for axis in range(data.ndim):
             result = np.apply_along_axis(self._butterfly_1d, axis, result)
         return result
-    
+
     def _inverse_butterfly_1d(self, data: np.ndarray) -> np.ndarray:
         """1D inverse butterfly operation."""
         n = len(data)
@@ -194,9 +195,13 @@ class FFTButterflyComputer:
         even = self._inverse_butterfly_1d(data[::2])
         odd = self._inverse_butterfly_1d(data[1::2])
         factor = np.exp(2j * np.pi * np.arange(n) / n)
-        return np.concatenate([even + factor[:n//2] * odd,
-                              even + factor[n//2:] * odd]) / 2
-    
+        return (
+            np.concatenate(
+                [even + factor[: n // 2] * odd, even + factor[n // 2 :] * odd]
+            )
+            / 2
+        )
+
     def _inverse_butterfly_2d(self, data: np.ndarray) -> np.ndarray:
         """2D inverse butterfly operation."""
         result = np.zeros_like(data, dtype=complex)
@@ -205,7 +210,7 @@ class FFTButterflyComputer:
         for j in range(data.shape[1]):
             result[:, j] = self._inverse_butterfly_1d(result[:, j])
         return result
-    
+
     def _inverse_butterfly_nd(self, data: np.ndarray) -> np.ndarray:
         """N-D inverse butterfly operation."""
         result = data.astype(complex)

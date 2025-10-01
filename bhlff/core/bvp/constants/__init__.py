@@ -32,6 +32,6 @@ from .renormalized_coefficients import RenormalizedCoefficients
 __all__ = [
     "BVPConstantsAdvanced",
     "FrequencyDependentProperties",
-    "NonlinearCoefficients", 
-    "RenormalizedCoefficients"
+    "NonlinearCoefficients",
+    "RenormalizedCoefficients",
 ]

@@ -76,7 +76,7 @@ class FFTBackend:
         self.domain = domain
         self.plan_type = plan_type
         self.precision = precision
-        
+
         # Add convenience attributes for domain properties
         self.N = domain.N
         self.N_phi = domain.N_phi
@@ -175,10 +175,10 @@ class FFTBackend:
 
         # For 7D BVP theory, we need to consider both real and complex fields
         # The imaginary part may contain important BVP phase information
-        
+
         # Check if the result is effectively real (imaginary part is negligible)
         max_imag = np.max(np.abs(real_data.imag))
-        
+
         if max_imag < 1e-12:  # If imaginary part is negligible
             # This is likely from a real field, return real part
             return real_data.real
@@ -252,41 +252,43 @@ class FFTBackend:
         kx = 2 * np.pi * np.fft.fftfreq(self.domain.N, dx)
         ky = 2 * np.pi * np.fft.fftfreq(self.domain.N, dx)
         kz = 2 * np.pi * np.fft.fftfreq(self.domain.N, dx)
-        
+
         # Phase frequencies (3D)
         kphi1 = 2 * np.pi * np.fft.fftfreq(self.domain.N_phi, self.domain.dphi)
         kphi2 = 2 * np.pi * np.fft.fftfreq(self.domain.N_phi, self.domain.dphi)
         kphi3 = 2 * np.pi * np.fft.fftfreq(self.domain.N_phi, self.domain.dphi)
-        
+
         # Temporal frequency (1D)
         kt = 2 * np.pi * np.fft.fftfreq(self.domain.N_t, self.domain.dt)
-        
+
         return (kx, ky, kz, kphi1, kphi2, kphi3, kt)
 
     def get_wave_vector_magnitude(self) -> np.ndarray:
         """
         Get wave vector magnitude for 7D BVP theory.
-        
+
         Physical Meaning:
             Computes the magnitude of the 7D wave vector |k| = √(kx² + ky² + kz² + kφ₁² + kφ₂² + kφ₃² + kt²)
             for spectral operations in 7D space-time.
-            
+
         Mathematical Foundation:
             |k| = √(∑ᵢ kᵢ²) where i runs over all 7 dimensions
-            
+
         Returns:
             np.ndarray: 7D array of wave vector magnitudes with shape (N, N, N, N_phi, N_phi, N_phi, N_t)
         """
         kx, ky, kz, kphi1, kphi2, kphi3, kt = self.get_frequency_arrays()
-        
+
         # Create 7D meshgrids
         KX, KY, KZ, KPHI1, KPHI2, KPHI3, KT = np.meshgrid(
-            kx, ky, kz, kphi1, kphi2, kphi3, kt, indexing='ij'
+            kx, ky, kz, kphi1, kphi2, kphi3, kt, indexing="ij"
         )
-        
+
         # Compute 7D wave vector magnitude
-        k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2 + KPHI1**2 + KPHI2**2 + KPHI3**2 + KT**2)
-        
+        k_magnitude = np.sqrt(
+            KX**2 + KY**2 + KZ**2 + KPHI1**2 + KPHI2**2 + KPHI3**2 + KT**2
+        )
+
         return k_magnitude
 
     def get_plan_type(self) -> str:
@@ -316,34 +318,34 @@ class FFTBackend:
     def forward_transform(self, real_data: np.ndarray) -> np.ndarray:
         """
         Alias for fft() method.
-        
+
         Args:
             real_data (np.ndarray): Real space data.
-            
+
         Returns:
             np.ndarray: Frequency space data.
         """
         return self.fft(real_data)
-    
+
     def inverse_transform(self, spectral_data: np.ndarray) -> np.ndarray:
         """
         Alias for ifft() method.
-        
+
         Args:
             spectral_data (np.ndarray): Frequency space data.
-            
+
         Returns:
             np.ndarray: Real space data.
         """
         return self.ifft(spectral_data)
-    
+
     def get_wave_vectors(self, dim: int) -> np.ndarray:
         """
         Get wave vector for specific dimension.
-        
+
         Args:
             dim (int): Dimension index (0-6 for 7D).
-            
+
         Returns:
             np.ndarray: Wave vector for the specified dimension.
         """

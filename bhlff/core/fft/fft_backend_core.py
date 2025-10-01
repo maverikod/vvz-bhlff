@@ -29,6 +29,7 @@ from ..domain import Domain
 from .fft_plan_manager import FFTPlanManager
 from .fft_twiddle_computer import FFTTwiddleComputer
 from .fft_butterfly_computer import FFTButterflyComputer
+from .unified_spectral_operations import UnifiedSpectralOperations
 
 
 class FFTBackend:
@@ -94,6 +95,9 @@ class FFTBackend:
 
         # Setup memory pools for efficient allocation
         self._setup_memory_pools()
+        
+        # Initialize unified spectral operations for delegation
+        self._unified_ops = UnifiedSpectralOperations(domain, precision)
 
     def _setup_memory_pools(self) -> None:
         """
@@ -111,11 +115,11 @@ class FFTBackend:
 
     def fft(self, real_data: np.ndarray) -> np.ndarray:
         """
-        Compute forward FFT.
+        Compute forward FFT using unified spectral operations.
 
         Physical Meaning:
             Transforms real space data to frequency space using Fast
-            Fourier Transform.
+            Fourier Transform with proper normalization.
 
         Mathematical Foundation:
             Computes FFT: â(k) = FFT(a(x)) where a(x) is real space data
@@ -130,25 +134,16 @@ class FFTBackend:
         Raises:
             ValueError: If data shape is incompatible with domain.
         """
-        if real_data.shape != self.domain.shape:
-            raise ValueError(
-                f"Data shape {real_data.shape} incompatible with "
-                f"domain shape {self.domain.shape}"
-            )
-
-        # Compute forward FFT for 7D BVP theory
-        # Use fftn with all 7 dimensions
-        spectral_data = np.fft.fftn(real_data, axes=(0, 1, 2, 3, 4, 5, 6))
-
-        return spectral_data
+        # Delegate to unified spectral operations for better normalization support
+        return self._unified_ops.forward_fft(real_data, 'ortho')
 
     def ifft(self, spectral_data: np.ndarray) -> np.ndarray:
         """
-        Compute inverse FFT.
+        Compute inverse FFT using unified spectral operations.
 
         Physical Meaning:
             Transforms frequency space data back to real space using
-            inverse Fast Fourier Transform.
+            inverse Fast Fourier Transform with proper normalization.
 
         Mathematical Foundation:
             Computes IFFT: a(x) = IFFT(â(k)) where â(k) is frequency space
@@ -163,30 +158,8 @@ class FFTBackend:
         Raises:
             ValueError: If data shape is incompatible with domain.
         """
-        if spectral_data.shape != self.domain.shape:
-            raise ValueError(
-                f"Data shape {spectral_data.shape} incompatible with "
-                f"domain shape {self.domain.shape}"
-            )
-
-        # Compute inverse FFT for 7D BVP theory
-        # Use ifftn with all 7 dimensions
-        real_data = np.fft.ifftn(spectral_data, axes=(0, 1, 2, 3, 4, 5, 6))
-
-        # For 7D BVP theory, we need to consider both real and complex fields
-        # The imaginary part may contain important BVP phase information
-
-        # Check if the result is effectively real (imaginary part is negligible)
-        max_imag = np.max(np.abs(real_data.imag))
-
-        if max_imag < 1e-12:  # If imaginary part is negligible
-            # This is likely from a real field, return real part
-            return real_data.real
-        else:
-            # Significant imaginary part - this might be BVP phase information
-            # In 7D BVP theory, phase space coordinates can have complex structure
-            # Return the full complex result to preserve BVP information
-            return real_data
+        # Delegate to unified spectral operations for better normalization support
+        return self._unified_ops.inverse_fft(spectral_data, 'ortho')
 
     def fft_shift(self, spectral_data: np.ndarray) -> np.ndarray:
         """

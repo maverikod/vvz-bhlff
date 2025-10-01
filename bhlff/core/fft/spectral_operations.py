@@ -2,73 +2,104 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-Spectral operations implementation.
+Spectral operations implementation for 7D BHLFF Framework.
 
 This module provides spectral operations for the 7D phase field theory,
-including spectral derivatives and spectral filtering.
+including spectral derivatives, filtering, and FFT operations with
+optimized performance for 7D computations.
 
 Physical Meaning:
     Spectral operations implement mathematical operations in frequency space,
     providing efficient computation of derivatives and filtering operations
-    for phase field calculations.
+    for 7D phase field calculations with U(1)³ phase structure.
 
 Mathematical Foundation:
     Implements spectral operations including spectral derivatives and
-    spectral filtering for efficient computation in frequency space.
+    spectral filtering for efficient computation in 7D frequency space:
+    - 7D FFT: â(k_x, k_φ, k_t) = F[a(x, φ, t)]
+    - Spectral derivatives: ∂^n/∂x^n a → (ik)^n * â(k)
+    - Spectral filtering: a_filtered = F^{-1}[H(k) * â(k)]
 
 Example:
-    >>> ops = SpectralOperations(domain, fft_backend)
+    >>> ops = SpectralOperations(domain, precision="float64")
     >>> spectral_derivative = ops.spectral_derivative(field, order=2)
     >>> filtered_field = ops.spectral_filter(field, filter_type="low_pass")
 """
 
 import numpy as np
-from typing import Any, Tuple
+from typing import Any, Tuple, Dict, Optional
+import logging
 
-from ..domain import Domain
-from .fft_backend import FFTBackend
-from .spectral_derivatives import SpectralDerivatives
-from .spectral_filtering import SpectralFiltering
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..domain import Domain
+    from .fft_backend import FFTBackend
+    from .spectral_derivatives import SpectralDerivatives
+    from .spectral_filtering import SpectralFiltering
 
 
 class SpectralOperations:
     """
-    Spectral operations for phase field calculations.
+    Spectral operations for 7D phase field calculations.
 
     Physical Meaning:
-        Implements mathematical operations in frequency space, providing
+        Implements mathematical operations in 7D frequency space, providing
         efficient computation of derivatives, filtering, and other spectral
-        operations for phase field calculations.
+        operations for 7D phase field calculations with U(1)³ phase structure.
 
     Mathematical Foundation:
-        Spectral operations work in frequency space where:
+        Spectral operations work in 7D frequency space where:
+        - 7D FFT: â(k_x, k_φ, k_t) = F[a(x, φ, t)]
         - Derivatives become multiplication by powers of ik
         - Filtering becomes multiplication by filter functions
         - Convolutions become multiplication of spectra
+        - 7D wave vector: |k|² = |k_x|² + |k_φ|² + k_t²
 
     Attributes:
         domain (Domain): Computational domain.
-        fft_backend (FFTBackend): FFT backend for transformations.
+        precision (str): Numerical precision ('float64' or 'float32').
+        fft_backend (Optional[FFTBackend]): FFT backend for transformations.
         _frequency_arrays (Tuple[np.ndarray, ...]): Frequency arrays.
+        _wave_vectors (Tuple[np.ndarray, ...]): 7D wave vectors.
     """
 
-    def __init__(self, domain: Domain, fft_backend: FFTBackend) -> None:
+    def __init__(self, domain: Domain, precision: str = "float64", 
+                 fft_backend: Optional[FFTBackend] = None) -> None:
         """
-        Initialize spectral operations.
+        Initialize spectral operations for 7D computations.
 
         Physical Meaning:
             Sets up spectral operations with the computational domain
-            and FFT backend for efficient frequency space computations.
+            and precision for efficient 7D frequency space computations.
 
         Args:
             domain (Domain): Computational domain for spectral operations.
-            fft_backend (FFTBackend): FFT backend for transformations.
+            precision (str): Numerical precision ('float64' or 'float32').
+            fft_backend (Optional[FFTBackend]): FFT backend for transformations.
         """
         self.domain = domain
+        self.precision = precision
         self.fft_backend = fft_backend
-        self._frequency_arrays = self.fft_backend.get_frequency_arrays()
-        self._derivatives = SpectralDerivatives(domain, fft_backend)
-        self._filtering = SpectralFiltering(domain, fft_backend)
+        
+        # Setup logging
+        self.logger = logging.getLogger(__name__)
+        
+        # Initialize components
+        if fft_backend is not None:
+            self._frequency_arrays = fft_backend.get_frequency_arrays()
+            # TODO: Initialize derivatives and filtering when available
+            self._derivatives = None
+            self._filtering = None
+        else:
+            # Initialize without FFT backend for basic operations
+            self._frequency_arrays = self._compute_frequency_arrays()
+            self._derivatives = None
+            self._filtering = None
+        
+        # Compute 7D wave vectors
+        self._wave_vectors = self._compute_wave_vectors()
+        
+        self.logger.info(f"SpectralOperations initialized: domain={domain.shape}, precision={precision}")
 
     def spectral_derivative(
         self, field: np.ndarray, order: int = 1, axis: int = 0
@@ -95,6 +126,8 @@ class SpectralOperations:
         Raises:
             ValueError: If field shape is incompatible with domain.
         """
+        if self._derivatives is None:
+            raise NotImplementedError("Spectral derivatives not yet implemented")
         return self._derivatives.spectral_derivative(field, order, axis)
 
     def spectral_gradient(self, field: np.ndarray) -> Tuple[np.ndarray, ...]:
@@ -118,6 +151,8 @@ class SpectralOperations:
         Raises:
             ValueError: If field shape is incompatible with domain.
         """
+        if self._derivatives is None:
+            raise NotImplementedError("Spectral derivatives not yet implemented")
         return self._derivatives.spectral_gradient(field)
 
     def spectral_laplacian(self, field: np.ndarray) -> np.ndarray:
@@ -141,6 +176,8 @@ class SpectralOperations:
         Raises:
             ValueError: If field shape is incompatible with domain.
         """
+        if self._derivatives is None:
+            raise NotImplementedError("Spectral derivatives not yet implemented")
         return self._derivatives.spectral_laplacian(field)
 
     def spectral_filter(
@@ -175,6 +212,8 @@ class SpectralOperations:
             ValueError: If field shape is incompatible with domain or
                 filter_type is unsupported.
         """
+        if self._filtering is None:
+            raise NotImplementedError("Spectral filtering not yet implemented")
         return self._filtering.spectral_filter(field, filter_type, cutoff, **kwargs)
 
     def spectral_convolution(
@@ -201,6 +240,8 @@ class SpectralOperations:
         Raises:
             ValueError: If field shapes are incompatible with domain.
         """
+        if self._filtering is None:
+            raise NotImplementedError("Spectral filtering not yet implemented")
         return self._filtering.spectral_convolution(field1, field2)
 
     def compute_derivative(self, field: np.ndarray, order: int = 1, axis: int = 0) -> np.ndarray:
@@ -215,6 +256,8 @@ class SpectralOperations:
         Returns:
             np.ndarray: Derivative of the field.
         """
+        if self._derivatives is None:
+            raise NotImplementedError("Spectral derivatives not yet implemented")
         return self._derivatives.compute_derivative(field, order, axis)
     
     def compute_gradient(self, field: np.ndarray) -> np.ndarray:
@@ -227,6 +270,8 @@ class SpectralOperations:
         Returns:
             np.ndarray: Gradient vector field.
         """
+        if self._derivatives is None:
+            raise NotImplementedError("Spectral derivatives not yet implemented")
         return self._derivatives.compute_gradient(field)
     
     def compute_divergence(self, vector_field: np.ndarray) -> np.ndarray:
@@ -239,6 +284,8 @@ class SpectralOperations:
         Returns:
             np.ndarray: Divergence scalar field.
         """
+        if self._derivatives is None:
+            raise NotImplementedError("Spectral derivatives not yet implemented")
         return self._derivatives.compute_divergence(vector_field)
     
     def compute_curl(self, vector_field: np.ndarray) -> np.ndarray:
@@ -251,11 +298,145 @@ class SpectralOperations:
         Returns:
             np.ndarray: Curl vector field.
         """
+        if self._derivatives is None:
+            raise NotImplementedError("Spectral derivatives not yet implemented")
         return self._derivatives.compute_curl(vector_field)
 
+    def forward_fft(self, field: np.ndarray) -> np.ndarray:
+        """
+        Forward FFT with proper normalization for 7D.
+        
+        Physical Meaning:
+            Performs forward FFT transformation with ortho normalization
+            for 7D phase field computations.
+            
+        Args:
+            field (np.ndarray): Input field in real space.
+            
+        Returns:
+            np.ndarray: Forward FFT result in spectral space.
+        """
+        return np.fft.fftn(field, norm='ortho')
+    
+    def inverse_fft(self, spectral_field: np.ndarray) -> np.ndarray:
+        """
+        Inverse FFT with proper normalization for 7D.
+        
+        Physical Meaning:
+            Performs inverse FFT transformation with ortho normalization
+            for 7D phase field computations.
+            
+        Args:
+            spectral_field (np.ndarray): Input field in spectral space.
+            
+        Returns:
+            np.ndarray: Inverse FFT result in real space.
+        """
+        return np.fft.ifftn(spectral_field, norm='ortho')
+    
+    def compute_wave_vectors(self) -> Tuple[np.ndarray, ...]:
+        """
+        Compute wave vectors for 7D domain.
+        
+        Physical Meaning:
+            Computes the discrete wave vectors k = 2π/L * m for each
+            dimension in the 7D domain.
+            
+        Returns:
+            Tuple[np.ndarray, ...]: Wave vectors for each dimension.
+        """
+        return self._wave_vectors
+    
+    def compute_wave_vector_magnitude(self) -> np.ndarray:
+        """
+        Compute magnitude of 7D wave vectors |k|.
+        
+        Physical Meaning:
+            Computes the magnitude of the 7D wave vector:
+            |k|² = |k_x|² + |k_φ|² + k_t²
+            
+        Returns:
+            np.ndarray: Wave vector magnitudes |k|.
+        """
+        # Create meshgrid of wave vectors
+        K_mesh = np.meshgrid(*self._wave_vectors, indexing='ij')
+        
+        # Compute magnitude squared
+        k_magnitude_squared = sum(K**2 for K in K_mesh)
+        
+        # Take square root
+        k_magnitude = np.sqrt(k_magnitude_squared)
+        
+        return k_magnitude
+    
+    def energy_conservation_check(self, real_field: np.ndarray, 
+                                spectral_field: np.ndarray) -> float:
+        """
+        Check energy conservation in FFT transformation.
+        
+        Physical Meaning:
+            Verifies that energy is conserved during FFT transformation
+            according to Parseval's theorem.
+            
+        Mathematical Foundation:
+            Σ |a(x)|² = (1/N^7) Σ |â(k)|²
+            
+        Args:
+            real_field (np.ndarray): Field in real space.
+            spectral_field (np.ndarray): Field in spectral space.
+            
+        Returns:
+            float: Relative error in energy conservation.
+        """
+        real_energy = np.sum(np.abs(real_field)**2)
+        spectral_energy = np.sum(np.abs(spectral_field)**2) / np.prod(real_field.shape)
+        
+        return abs(real_energy - spectral_energy) / real_energy
+    
+    def _compute_frequency_arrays(self) -> Tuple[np.ndarray, ...]:
+        """
+        Compute frequency arrays for the domain.
+        
+        Physical Meaning:
+            Computes the frequency arrays for each dimension
+            in the 7D domain.
+            
+        Returns:
+            Tuple[np.ndarray, ...]: Frequency arrays for each dimension.
+        """
+        frequency_arrays = []
+        
+        for n in self.domain.shape:
+            # Compute frequency array
+            freq = np.fft.fftfreq(n, d=1.0/n)
+            frequency_arrays.append(freq)
+        
+        return tuple(frequency_arrays)
+    
+    def _compute_wave_vectors(self) -> Tuple[np.ndarray, ...]:
+        """
+        Compute wave vectors for 7D domain.
+        
+        Physical Meaning:
+            Computes the discrete wave vectors k = 2π/L * m for each
+            dimension in the 7D domain.
+            
+        Returns:
+            Tuple[np.ndarray, ...]: Wave vectors for each dimension.
+        """
+        wave_vectors = []
+        
+        for n in self.domain.shape:
+            # Compute wave numbers
+            k = np.fft.fftfreq(n, d=1.0/n)
+            k *= 2 * np.pi  # Convert to angular frequency
+            wave_vectors.append(k)
+        
+        return tuple(wave_vectors)
+    
     def __repr__(self) -> str:
         """String representation of spectral operations."""
         return (
             f"SpectralOperations(domain={self.domain}, "
-            f"fft_backend={self.fft_backend})"
+            f"precision={self.precision}, fft_backend={self.fft_backend})"
         )

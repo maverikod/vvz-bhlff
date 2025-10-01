@@ -1,0 +1,50 @@
+{
+  "domain": {
+    "L": 8.0,
+    "N": 128,
+    "dimensions": 3,
+    "periodic": true
+  },
+  "physics": {
+    "mu": 1.0,
+    "beta": 1.0,
+    "lambda": 0.1,
+    "nu": 1.0
+  },
+  "solver": {
+    "precision": "float64",
+    "fft_plan": "MEASURE",
+    "tolerance": 1e-12,
+    "max_iterations": 1000
+  },
+  "validation": {
+    "residual_threshold": 1e-12,
+    "orthogonality_threshold": 1e-12,
+    "energy_balance_threshold": 0.03,
+    "anisotropy_threshold": 1e-12,
+    "convergence_rate_min": 2.0
+  },
+  "tests": {
+    "plane_wave": {
+      "k_modes": [[4, 0, 0], [0, 4, 0], [3, 3, 2]],
+      "amplitudes": [1.0, 1.0, 1.0],
+      "phases": [0.0, 0.0, 0.0]
+    },
+    "multifrequency": {
+      "num_modes": 10,
+      "max_frequency": 32,
+      "amplitude_range": [0.1, 1.0]
+    },
+    "zero_mode": {
+      "lambda_values": [0.0, 0.1],
+      "source_types": ["zero_mean", "constant"]
+    }
+  },
+  "output": {
+    "save_fields": true,
+    "save_spectra": true,
+    "save_analysis": true,
+    "format": "hdf5"
+  },
+  "seed": 42
+}

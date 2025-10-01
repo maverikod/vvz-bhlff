@@ -198,32 +198,209 @@ def solve_envelope(self, source: np.ndarray) -> np.ndarray:
 2. **Стандартизировать FFT интерфейсы**
 3. **Устранить дублирование** нормализации
 
-## 6. План рефакторинга
+## 10. ПОДРОБНЫЙ ПЛАН РЕФАКТОРИНГА С КОНКРЕТНЫМИ ДЕЙСТВИЯМИ
 
-### Этап 1: Критические заглушки (1 день)
-- **🚨 КРИТИЧНО:** Устранить заглушки в `EnvelopeSolverCore7D.compute_residual()`
-- **🚨 КРИТИЧНО:** Устранить заглушки в `EnvelopeSolverCore7D.compute_jacobian()`
-- Заменить на полную физическую реализацию
+### Этап 1: 🚨 КРИТИЧЕСКИЕ ЗАГЛУШКИ (1 день)
 
-### Этап 2: Решатели (2-3 дня)
-- Объединить `compute_residual()` в `AbstractSolverCore`
-- Объединить `compute_jacobian()` в `AbstractSolverCore`
-- Рефакторинг `EnvelopeSolverCore` - убрать делегирование
-- Рефакторинг `BVPSolverCore` - использовать базовую реализацию
-- Рефакторинг `EnvelopeSolverCore7D` - использовать базовую реализацию
+#### 1.1 Устранить заглушки в `EnvelopeSolverCore7D`
 
-### Этап 3: Фасады (1-2 дня)
-- Убрать `BVPCoreFacadeBase` из иерархии
-- Упростить: `AbstractBVPFacade` → `BVPCoreFacade`
-- Устранение дублирования методов
+**Файл:** `bhlff/core/bvp/envelope_equation/solver_core.py`
 
-### Этап 4: Анализ (1-2 дня)
-- Объединить `LevelBPowerLawAnalyzer` с `UnifiedPowerLawAnalyzer`
-- Стандартизация валидации
+**Действие 1.1.1:** Заменить `compute_residual()` заглушку
+```python
+# ЗАМЕНИТЬ:
+def compute_residual(self, envelope: np.ndarray, source: np.ndarray) -> np.ndarray:
+    # Placeholder implementation - should be implemented with actual physics
+    return source - envelope
 
-### Этап 5: FFT (1 день)
-- Объединить `FFTBackend` и `FFTPlan7D` с `UnifiedSpectralOperations`
-- Стандартизация интерфейсов
+# НА: Скопировать реализацию из BVPSolverCore.compute_residual()
+```
+
+**Действие 1.1.2:** Заменить `compute_jacobian()` заглушку
+```python
+# ЗАМЕНИТЬ:
+def compute_jacobian(self, envelope: np.ndarray) -> np.ndarray:
+    # Placeholder implementation - should be implemented with actual physics
+    return np.eye(envelope.size).reshape(envelope.shape + envelope.shape)
+
+# НА: Скопировать реализацию из BVPSolverCore.compute_jacobian()
+```
+
+**Действие 1.1.3:** Добавить необходимые атрибуты
+- Добавить `self.parameters` (из `BVPSolverCore`)
+- Добавить `self._derivatives` (из `BVPSolverCore`)
+
+### Этап 2: ОБЪЕДИНЕНИЕ РЕШАТЕЛЕЙ (2-3 дня)
+
+#### 2.1 Создать базовую реализацию в `AbstractSolverCore`
+
+**Файл:** `bhlff/core/bvp/abstract_solver_core.py`
+
+**Действие 2.1.1:** Добавить базовую реализацию `compute_residual()`
+```python
+def compute_residual(self, envelope: np.ndarray, source: np.ndarray) -> np.ndarray:
+    """Базовая реализация - может быть переопределена в подклассах."""
+    # Реализация из BVPSolverCore.compute_residual()
+```
+
+**Действие 2.1.2:** Добавить базовую реализацию `compute_jacobian()`
+```python
+def compute_jacobian(self, envelope: np.ndarray) -> np.ndarray:
+    """Базовая реализация - может быть переопределена в подклассах."""
+    # Реализация из BVPSolverCore.compute_jacobian()
+```
+
+#### 2.2 Рефакторинг `EnvelopeSolverCore`
+
+**Файл:** `bhlff/core/bvp/envelope_solver/envelope_solver_core.py`
+
+**Действие 2.2.1:** Убрать делегирование в `compute_residual()`
+```python
+# УДАЛИТЬ:
+def compute_residual(self, envelope: np.ndarray, source: np.ndarray) -> np.ndarray:
+    return self.residual_computer.compute_residual(envelope, source)
+
+# ОСТАВИТЬ: Наследование от AbstractSolverCore
+```
+
+**Действие 2.2.2:** Убрать делегирование в `compute_jacobian()`
+```python
+# УДАЛИТЬ:
+def compute_jacobian(self, envelope: np.ndarray) -> np.ndarray:
+    return self.jacobian_computer.compute_jacobian(envelope)
+
+# ОСТАВИТЬ: Наследование от AbstractSolverCore
+```
+
+**Действие 2.2.3:** Удалить неиспользуемые компоненты
+- Удалить `self.residual_computer`
+- Удалить `self.jacobian_computer`
+- Удалить `self.newton_solver` (если не используется)
+
+#### 2.3 Рефакторинг `BVPSolverCore`
+
+**Файл:** `bhlff/core/fft/bvp_solver_core.py`
+
+**Действие 2.3.1:** Убрать дублирование методов
+```python
+# УДАЛИТЬ: compute_residual() и compute_jacobian()
+# ОСТАВИТЬ: Наследование от AbstractSolverCore
+```
+
+#### 2.4 Рефакторинг `EnvelopeSolverCore7D`
+
+**Файл:** `bhlff/core/bvp/envelope_equation/solver_core.py`
+
+**Действие 2.4.1:** Убрать дублирование методов
+```python
+# УДАЛИТЬ: compute_residual() и compute_jacobian() (после замены заглушек)
+# ОСТАВИТЬ: Наследование от AbstractSolverCore
+```
+
+#### 2.5 Удалить неиспользуемые классы
+
+**Действие 2.5.1:** Удалить `ResidualComputer`
+- **Файл:** `bhlff/core/bvp/residual_computer.py`
+- **Причина:** Функциональность перенесена в `AbstractSolverCore`
+
+**Действие 2.5.2:** Удалить `JacobianComputer`
+- **Файл:** `bhlff/core/bvp/envelope_solver/jacobian_computer.py`
+- **Причина:** Функциональность перенесена в `AbstractSolverCore`
+
+### Этап 3: УПРОЩЕНИЕ ФАСАДОВ (1-2 дня)
+
+#### 3.1 Удалить `BVPCoreFacadeBase`
+
+**Файл:** `bhlff/core/bvp/bvp_core/bvp_core_facade_base.py`
+
+**Действие 3.1.1:** Удалить файл
+- **Причина:** Избыточная иерархия наследования
+
+**Действие 3.1.2:** Обновить импорты в `BVPCoreFacade`
+```python
+# ИЗМЕНИТЬ:
+from .bvp_core_facade_base import BVPCoreFacadeBase
+
+# НА:
+from ..abstract_bvp_facade import AbstractBVPFacade
+
+# ИЗМЕНИТЬ:
+class BVPCoreFacade(BVPCoreFacadeBase):
+
+# НА:
+class BVPCoreFacade(AbstractBVPFacade):
+```
+
+### Этап 4: ОБЪЕДИНЕНИЕ АНАЛИЗАТОРОВ (1-2 дня)
+
+#### 4.1 Объединить `LevelBPowerLawAnalyzer` с `UnifiedPowerLawAnalyzer`
+
+**Файл:** `bhlff/models/level_b/power_law_analysis.py`
+
+**Действие 4.1.1:** Заменить реализацию на делегирование
+```python
+# ЗАМЕНИТЬ: Всю реализацию LevelBPowerLawAnalyzer
+
+# НА:
+class LevelBPowerLawAnalyzer:
+    def __init__(self):
+        self._unified_analyzer = UnifiedPowerLawAnalyzer()
+    
+    def analyze_power_law_tails(self, envelope: np.ndarray) -> Dict[str, Any]:
+        return self._unified_analyzer.analyze_power_law_tails(envelope)
+    
+    def compute_radial_profile(self, envelope: np.ndarray, n_bins: int = 50) -> Dict[str, Any]:
+        return self._unified_analyzer.compute_radial_profile(envelope, n_bins)
+```
+
+### Этап 5: ОБЪЕДИНЕНИЕ FFT ОПЕРАЦИЙ (1 день)
+
+#### 5.1 Объединить `FFTBackend` с `UnifiedSpectralOperations`
+
+**Файл:** `bhlff/core/fft/fft_backend_core.py`
+
+**Действие 5.1.1:** Заменить простые методы на делегирование
+```python
+# ЗАМЕНИТЬ:
+def fft(self, real_data: np.ndarray) -> np.ndarray:
+    # Простая реализация
+
+# НА:
+def fft(self, real_data: np.ndarray) -> np.ndarray:
+    return self._unified_ops.forward_fft(real_data, 'ortho')
+
+# ДОБАВИТЬ:
+def __init__(self, domain: Domain, plan_type: str = "MEASURE", precision: str = "float64"):
+    # ... существующий код ...
+    self._unified_ops = UnifiedSpectralOperations(domain, precision)
+```
+
+#### 5.2 Объединить `FFTPlan7D` с `UnifiedSpectralOperations`
+
+**Файл:** `bhlff/core/fft/fft_plan_7d.py`
+
+**Действие 5.2.1:** Заменить методы на делегирование
+```python
+# ЗАМЕНИТЬ: execute_fft() на делегирование в UnifiedSpectralOperations
+```
+
+### Этап 6: ОЧИСТКА И ТЕСТИРОВАНИЕ (1 день)
+
+#### 6.1 Удалить неиспользуемые файлы
+- `bhlff/core/bvp/residual_computer.py`
+- `bhlff/core/bvp/envelope_solver/jacobian_computer.py`
+- `bhlff/core/bvp/bvp_core/bvp_core_facade_base.py`
+
+#### 6.2 Обновить импорты во всех файлах
+- Найти все импорты удаленных классов
+- Заменить на импорты из новых мест
+
+#### 6.3 Запустить тесты
+- Убедиться, что все тесты проходят
+- Исправить сломанные тесты
+
+#### 6.4 Проверить покрытие кода
+- Убедиться, что покрытие не упало ниже 90%
 
 ## 7. Ожидаемые результаты
 
@@ -248,40 +425,221 @@ def solve_envelope(self, source: np.ndarray) -> np.ndarray:
 - Комплексное тестирование
 - Откат изменений при проблемах
 
-## 9. Новые находки
+## 9. Детальный анализ дублей с конкретными рекомендациями
 
-### 9.1 Заглушки в продакшн коде
+### 9.1 🚨 КРИТИЧЕСКИЕ ЗАГЛУШКИ В ПРОДАКШН КОДЕ
 
-**🚨 КРИТИЧЕСКАЯ ПРОБЛЕМА:** Обнаружены заглушки в продакшн коде:
+**Файл:** `bhlff/core/bvp/envelope_equation/solver_core.py`
 
-1. **`EnvelopeSolverCore7D.compute_residual()`** - возвращает `source - envelope`
-2. **`EnvelopeSolverCore7D.compute_jacobian()`** - возвращает единичную матрицу
+**Проблема:** Класс `EnvelopeSolverCore7D` содержит заглушки в критических методах:
 
-**Нарушение стандартов проекта:** Заглушки запрещены в продакшн коде согласно правилам проекта.
+```python
+def compute_residual(self, envelope: np.ndarray, source: np.ndarray) -> np.ndarray:
+    # Placeholder implementation - should be implemented with actual physics
+    return source - envelope
 
-### 9.2 Избыточная иерархия наследования
+def compute_jacobian(self, envelope: np.ndarray) -> np.ndarray:
+    # Placeholder implementation - should be implemented with actual physics
+    return np.eye(envelope.size).reshape(envelope.shape + envelope.shape)
+```
 
-**Проблема:** Избыточная иерархия фасадов:
+**🚨 НАРУШЕНИЕ СТАНДАРТОВ:** Заглушки запрещены в продакшн коде согласно правилам проекта.
+
+**РЕШЕНИЕ:** Заменить на полную реализацию из `BVPSolverCore.compute_residual()` и `BVPSolverCore.compute_jacobian()`.
+
+### 9.2 ДУБЛИРОВАНИЕ РЕШАТЕЛЕЙ - ДЕТАЛЬНЫЙ АНАЛИЗ
+
+#### 9.2.1 Анализ `compute_residual()` методов
+
+**1. `AbstractSolverCore.compute_residual()`** - абстрактный метод
+- **Статус:** ✅ Корректно - абстрактный базовый класс
+- **Действие:** Оставить как есть
+
+**2. `BVPSolverCore.compute_residual()`** - полная реализация
+- **Файл:** `bhlff/core/fft/bvp_solver_core.py:81-122`
+- **Статус:** ✅ Лучшая реализация - содержит полную физику
+- **Особенности:** 
+  - Численная стабильность (`amplitude_clipped`)
+  - Полная реализация уравнения: `∇·(κ(|a|)∇a) + k₀²χ(|a|)a - s`
+  - Обработка нелинейных коэффициентов
+- **Действие:** **ИСПОЛЬЗОВАТЬ КАК ОСНОВУ** для объединения
+
+**3. `EnvelopeSolverCore.compute_residual()`** - делегирование
+- **Файл:** `bhlff/core/bvp/envelope_solver/envelope_solver_core.py:82-97`
+- **Статус:** ⚠️ Делегирует в `ResidualComputer`
+- **Действие:** **УДАЛИТЬ** - заменить на прямую реализацию
+
+**4. `EnvelopeSolverCore7D.compute_residual()`** - заглушка
+- **Файл:** `bhlff/core/bvp/envelope_equation/solver_core.py:68-84`
+- **Статус:** 🚨 **КРИТИЧЕСКАЯ ЗАГЛУШКА**
+- **Действие:** **ЗАМЕНИТЬ** на реализацию из `BVPSolverCore`
+
+**5. `ResidualComputer.compute_residual()`** - базовая реализация
+- **Файл:** `bhlff/core/bvp/residual_computer.py:131-161`
+- **Статус:** ⚠️ Частичная реализация
+- **Действие:** **ОБЪЕДИНИТЬ** с `BVPSolverCore`
+
+#### 9.2.2 Анализ `compute_jacobian()` методов
+
+**1. `AbstractSolverCore.compute_jacobian()`** - абстрактный метод
+- **Статус:** ✅ Корректно - абстрактный базовый класс
+- **Действие:** Оставить как есть
+
+**2. `BVPSolverCore.compute_jacobian()`** - полная реализация
+- **Файл:** `bhlff/core/fft/bvp_solver_core.py:162-202`
+- **Статус:** ✅ Лучшая реализация - содержит полную физику
+- **Особенности:**
+  - Полная разреженная матрица Якоби
+  - Обработка нелинейных производных
+  - Численная стабильность
+- **Действие:** **ИСПОЛЬЗОВАТЬ КАК ОСНОВУ** для объединения
+
+**3. `EnvelopeSolverCore.compute_jacobian()`** - делегирование
+- **Файл:** `bhlff/core/bvp/envelope_solver/envelope_solver_core.py:99-113`
+- **Статус:** ⚠️ Делегирует в `JacobianComputer`
+- **Действие:** **УДАЛИТЬ** - заменить на прямую реализацию
+
+**4. `EnvelopeSolverCore7D.compute_jacobian()`** - заглушка
+- **Файл:** `bhlff/core/bvp/envelope_equation/solver_core.py:86-101`
+- **Статус:** 🚨 **КРИТИЧЕСКАЯ ЗАГЛУШКА**
+- **Действие:** **ЗАМЕНИТЬ** на реализацию из `BVPSolverCore`
+
+**5. `JacobianComputer.compute_jacobian()`** - конечные разности
+- **Файл:** `bhlff/core/bvp/envelope_solver/jacobian_computer.py:65-111`
+- **Статус:** ⚠️ Медленная реализация через конечные разности
+- **Действие:** **ОБЪЕДИНИТЬ** с `BVPSolverCore` (аналитическая реализация лучше)
+
+### 9.3 ДУБЛИРОВАНИЕ FFT ОПЕРАЦИЙ - ДЕТАЛЬНЫЙ АНАЛИЗ
+
+#### 9.3.1 Анализ FFT методов
+
+**1. `UnifiedSpectralOperations.forward_fft()`** - объединенная реализация
+- **Файл:** `bhlff/core/fft/unified_spectral_operations.py:83-126`
+- **Статус:** ✅ Лучшая реализация - поддерживает нормализацию
+- **Особенности:**
+  - Поддержка 'physics' и 'ortho' нормализации
+  - Правильная обработка 7D объема
+- **Действие:** **ИСПОЛЬЗОВАТЬ КАК ОСНОВУ**
+
+**2. `FFTBackend.fft()`** - базовая реализация
+- **Файл:** `bhlff/core/fft/fft_backend_core.py:112-143`
+- **Статус:** ⚠️ Простая реализация без нормализации
+- **Действие:** **ОБЪЕДИНИТЬ** с `UnifiedSpectralOperations`
+
+**3. `SpectralOperations.forward_fft()`** - наследование
+- **Файл:** `bhlff/core/fft/spectral_operations.py:42`
+- **Статус:** ✅ Наследует от `UnifiedSpectralOperations`
+- **Действие:** **ОСТАВИТЬ** - корректное наследование
+
+### 9.4 ДУБЛИРОВАНИЕ ФАСАДОВ - ДЕТАЛЬНЫЙ АНАЛИЗ
+
+#### 9.4.1 Избыточная иерархия наследования
+
+**Текущая иерархия:**
 ```
 AbstractBVPFacade → BVPCoreFacadeBase → BVPCoreFacade
 ```
+
+**Проблема:** `BVPCoreFacadeBase` не добавляет функциональности, только усложняет архитектуру.
 
 **Рекомендация:** Упростить до:
 ```
 AbstractBVPFacade → BVPCoreFacade
 ```
 
-### 9.3 Частично решенные дубли
+**Действие:** **УДАЛИТЬ** `BVPCoreFacadeBase`, перенести функциональность в `BVPCoreFacade`.
 
-**✅ Прогресс:** Некоторые дубли уже частично решены:
-- `PowerLawAnalyzer` делегирует в `UnifiedPowerLawAnalyzer`
-- `SpectralOperations` наследует от `UnifiedSpectralOperations`
+### 9.5 ДУБЛИРОВАНИЕ АНАЛИЗАТОРОВ - ДЕТАЛЬНЫЙ АНАЛИЗ
+
+#### 9.5.1 Анализ степенных законов
+
+**1. `UnifiedPowerLawAnalyzer`** - объединенный анализатор
+- **Файл:** `bhlff/core/bvp/unified_power_law_analyzer.py`
+- **Статус:** ✅ Лучшая реализация - полная функциональность
+- **Действие:** **ИСПОЛЬЗОВАТЬ КАК ОСНОВУ**
+
+**2. `PowerLawAnalyzer`** - делегирование
+- **Файл:** `bhlff/core/bvp/level_b_analysis/power_law_analyzer.py`
+- **Статус:** ✅ Корректно делегирует в `UnifiedPowerLawAnalyzer`
+- **Действие:** **ОСТАВИТЬ** - корректное делегирование
+
+**3. `LevelBPowerLawAnalyzer`** - дублирование
+- **Файл:** `bhlff/models/level_b/power_law_analysis.py`
+- **Статус:** ⚠️ Дублирует функциональность
+- **Действие:** **ОБЪЕДИНИТЬ** с `UnifiedPowerLawAnalyzer`
+
+## 11. ИТОГОВАЯ СВОДКА ДЕЙСТВИЙ
+
+### 11.1 🚨 КРИТИЧЕСКИЕ ДЕЙСТВИЯ (НЕМЕДЛЕННО)
+
+#### Файлы для изменения:
+1. **`bhlff/core/bvp/envelope_equation/solver_core.py`**
+   - Заменить заглушки в `compute_residual()` и `compute_jacobian()`
+   - Добавить необходимые атрибуты
+
+### 11.2 ФАЙЛЫ ДЛЯ УДАЛЕНИЯ
+
+#### Полное удаление:
+1. **`bhlff/core/bvp/residual_computer.py`** - функциональность в `AbstractSolverCore`
+2. **`bhlff/core/bvp/envelope_solver/jacobian_computer.py`** - функциональность в `AbstractSolverCore`
+3. **`bhlff/core/bvp/bvp_core/bvp_core_facade_base.py`** - избыточная иерархия
+
+### 11.3 ФАЙЛЫ ДЛЯ ИЗМЕНЕНИЯ
+
+#### Основные изменения:
+1. **`bhlff/core/bvp/abstract_solver_core.py`**
+   - Добавить базовые реализации `compute_residual()` и `compute_jacobian()`
+
+2. **`bhlff/core/bvp/envelope_solver/envelope_solver_core.py`**
+   - Убрать делегирование в `compute_residual()` и `compute_jacobian()`
+   - Удалить неиспользуемые компоненты
+
+3. **`bhlff/core/fft/bvp_solver_core.py`**
+   - Убрать дублирование методов (наследование от `AbstractSolverCore`)
+
+4. **`bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py`**
+   - Изменить наследование с `BVPCoreFacadeBase` на `AbstractBVPFacade`
+
+5. **`bhlff/models/level_b/power_law_analysis.py`**
+   - Заменить реализацию на делегирование в `UnifiedPowerLawAnalyzer`
+
+6. **`bhlff/core/fft/fft_backend_core.py`**
+   - Добавить делегирование в `UnifiedSpectralOperations`
+
+7. **`bhlff/core/fft/fft_plan_7d.py`**
+   - Добавить делегирование в `UnifiedSpectralOperations`
+
+### 11.4 ФАЙЛЫ ДЛЯ ОСТАВЛЕНИЯ БЕЗ ИЗМЕНЕНИЙ
+
+#### Корректные реализации:
+1. **`bhlff/core/bvp/level_b_analysis/power_law_analyzer.py`** - корректное делегирование
+2. **`bhlff/core/fft/spectral_operations.py`** - корректное наследование
+3. **`bhlff/core/fft/unified_spectral_operations.py`** - лучшая реализация
+4. **`bhlff/core/bvp/unified_power_law_analyzer.py`** - лучшая реализация
+
+### 11.5 ОЖИДАЕМЫЕ РЕЗУЛЬТАТЫ
+
+#### Количественные показатели:
+- **Удаление файлов:** 3 файла
+- **Изменение файлов:** 7 файлов
+- **Сокращение кода:** ~35-40% в затронутых модулях
+- **Улучшение покрытия:** +5-10% за счет устранения дублей
+
+#### Качественные улучшения:
+- ✅ Устранение заглушек в продакшн коде
+- ✅ Упрощение архитектуры решателей
+- ✅ Устранение избыточной иерархии наследования
+- ✅ Стандартизация интерфейсов
+- ✅ Улучшение поддерживаемости кода
 
 ## Заключение
 
-Обнаружены значительные логические дубли в ключевых компонентах проекта BHLFF. **КРИТИЧНО**: Обнаружены заглушки в продакшн коде, что нарушает стандарты проекта. Рекомендуется немедленное устранение критических дублей и заглушек для улучшения архитектуры и поддерживаемости кода.
+Проведен детальный анализ логических дублей в проекте BHLFF с учетом документации и технического задания. **КРИТИЧНО**: Обнаружены заглушки в продакшн коде, что нарушает стандарты проекта. 
+
+Создан подробный план рефакторинга с конкретными действиями для каждого файла. Рекомендуется немедленное устранение критических заглушек и поэтапное выполнение плана рефакторинга для улучшения архитектуры и поддерживаемости кода.
 
 **Общий объем дублированного кода:** ~40% от анализируемых модулей  
 **Критичность:** Высокая  
 **Приоритет рефакторинга:** Критический  
-**🚨 КРИТИЧНО:** Заглушки в продакшн коде требуют немедленного устранения
+**🚨 КРИТИЧНО:** Заглушки в продакшн коде требуют немедленного устранения  
+**📋 План:** 6 этапов, 6-8 дней работы

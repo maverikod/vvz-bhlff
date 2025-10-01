@@ -14,7 +14,7 @@
 - `domain_7d.py` - 325 строк
 - `level_e_interface.py` - 321 строка
 - `tail_resonatorness_postulate.py` - 316 строк
-- `quench_detector_new.py` - 312 строк
+- `quench_detector.py` - 312 строк
 
 ### ✅ 2. Разделение больших файлов на модули
 

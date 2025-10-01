@@ -228,22 +228,22 @@ class TestBVPConstantsCoverage:
             conductivity = freq_props.compute_frequency_dependent_conductivity(frequencies)
             assert isinstance(conductivity, np.ndarray)
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("BVP constants method not yet implemented")
         
         try:
             capacitance = freq_props.compute_frequency_dependent_capacitance(frequencies)
             assert isinstance(capacitance, np.ndarray)
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("BVP constants method not yet implemented")
         
         try:
             inductance = freq_props.compute_frequency_dependent_inductance(frequencies)
             assert isinstance(inductance, np.ndarray)
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("BVP constants method not yet implemented")
 
     def test_nonlinear_coefficients_methods(self):
         """Test nonlinear coefficients methods."""
@@ -265,8 +265,8 @@ class TestBVPConstantsCoverage:
             coeffs = nonlinear_coeffs.compute_nonlinear_admittance_coefficients()
             assert isinstance(coeffs, dict)
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("BVP constants method not yet implemented")
 
     def test_renormalized_coefficients_methods(self):
         """Test renormalized coefficients methods."""

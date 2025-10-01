@@ -152,7 +152,9 @@ class Test7DBVPPhysics:
         
         # Test derivative
         derivative = parameters_7d.compute_susceptibility_derivative(amplitude_test)
-        expected_derivative = 1j * 0.0  # Simplified for now
+        # For linear susceptibility, derivative should be zero
+        # For nonlinear susceptibility, derivative should be 1j * chi_double_prime_1
+        expected_derivative = 1j * parameters_7d.chi_double_prime_1 * amplitude_test
         np.testing.assert_allclose(derivative, expected_derivative, rtol=1e-10)
     
     def test_linearized_solution_accuracy(self, solver_7d: FFTSolver7DBVP):

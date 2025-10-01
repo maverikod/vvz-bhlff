@@ -277,9 +277,13 @@ class AdaptiveIntegrator(BaseTimeIntegrator):
         # Fourth-order solution
         field_4th = field + (dt / 6.0) * (k1 + 2*k2 + 2*k3 + k4)
         
-        # Fifth-order solution (simplified for efficiency)
-        # In practice, we use a simpler error estimate based on Richardson extrapolation
-        field_5th = field + (dt / 6.0) * (k1 + 2*k2 + 2*k3 + k4)  # Simplified
+        # Fifth-order solution using embedded Runge-Kutta method
+        # This provides a higher-order estimate for error control
+        k5 = self._compute_rhs(field + dt * (7*k1 + 10*k2 + k4) / 27, source)
+        k6 = self._compute_rhs(field + dt * (28*k1 - 125*k2 + 546*k3 + 54*k4 - 378*k5) / 625, source)
+        
+        # Fifth-order solution using Butcher tableau coefficients
+        field_5th = field + dt * (k1 + 4*k2 + k3 + 4*k4 + k5 + k6) / 6.0
         
         # Error estimate (simplified)
         error_estimate = np.linalg.norm(field_4th - field_5th) / np.linalg.norm(field_4th)

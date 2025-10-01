@@ -171,8 +171,9 @@ class TestFFTSolver7DValidation:
             # Expected behavior - lambda=0 with non-zero mean should fail
             assert "lambda" in str(e).lower() or "mean" in str(e).lower()
         except Exception as e:
-            # Other exceptions are also acceptable
-            pass
+            # Other exceptions are also acceptable - log for debugging
+            print(f"Unexpected exception in test: {e}")
+            # Test passes as any exception is acceptable for this validation
     
     def test_A04_time_dependent_harmonic(self, solver, domain_7d):
         """

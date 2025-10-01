@@ -87,8 +87,8 @@ class TestFrequencyDependentPropertiesPhysics:
                 f"Frequency-dependent conductivity magnitude too large: {max_conductivity}"
                 
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("Frequency-dependent conductivity method not yet implemented")
 
     def test_frequency_dependent_capacitance_physics(self, frequency_properties):
         """
@@ -120,8 +120,8 @@ class TestFrequencyDependentPropertiesPhysics:
                 f"Frequency-dependent capacitance magnitude too large: {max_capacitance}"
                 
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("Frequency-dependent conductivity method not yet implemented")
 
     def test_frequency_dependent_inductance_physics(self, frequency_properties):
         """
@@ -153,8 +153,8 @@ class TestFrequencyDependentPropertiesPhysics:
                 f"Frequency-dependent inductance magnitude too large: {max_inductance}"
                 
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("Frequency-dependent conductivity method not yet implemented")
 
     def test_frequency_dependent_energy_conservation_physics(self, frequency_properties):
         """
@@ -179,8 +179,8 @@ class TestFrequencyDependentPropertiesPhysics:
                 "Energy conservation requires finite conductivity"
                 
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("Frequency-dependent conductivity method not yet implemented")
 
     def test_frequency_dependent_causality_constraints_physics(self, frequency_properties):
         """
@@ -206,8 +206,8 @@ class TestFrequencyDependentPropertiesPhysics:
                 "Causality requires finite conductivity"
                 
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("Frequency-dependent conductivity method not yet implemented")
 
     def test_frequency_dependent_thermodynamic_constraints_physics(self, frequency_properties):
         """
@@ -233,8 +233,8 @@ class TestFrequencyDependentPropertiesPhysics:
                 "Thermodynamics requires finite conductivity"
                 
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("Frequency-dependent conductivity method not yet implemented")
 
     def test_frequency_dependent_7d_structure_physics(self, frequency_properties):
         """
@@ -259,8 +259,8 @@ class TestFrequencyDependentPropertiesPhysics:
                 "7D structure requires finite conductivity"
                 
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("Frequency-dependent conductivity method not yet implemented")
 
     def test_frequency_dependent_numerical_stability_physics(self, frequency_properties):
         """
@@ -285,8 +285,8 @@ class TestFrequencyDependentPropertiesPhysics:
                 "Numerical stability requires finite conductivity"
                 
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("Frequency-dependent conductivity method not yet implemented")
 
     def test_frequency_dependent_precision_physics(self, frequency_properties):
         """
@@ -311,8 +311,8 @@ class TestFrequencyDependentPropertiesPhysics:
                 "Precision requires finite conductivity"
                 
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("Frequency-dependent conductivity method not yet implemented")
 
     def test_frequency_dependent_validation_physics(self, frequency_properties):
         """
@@ -337,8 +337,8 @@ class TestFrequencyDependentPropertiesPhysics:
                 "Validation requires finite conductivity"
                 
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("Frequency-dependent conductivity method not yet implemented")
 
     def test_frequency_dependent_consistency_physics(self, frequency_properties):
         """
@@ -363,8 +363,8 @@ class TestFrequencyDependentPropertiesPhysics:
                 "Consistency requires finite conductivity"
                 
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("Frequency-dependent conductivity method not yet implemented")
 
     def test_frequency_dependent_physical_meaning_physics(self, frequency_properties):
         """
@@ -389,5 +389,5 @@ class TestFrequencyDependentPropertiesPhysics:
                 "Physical meaning requires finite conductivity"
                 
         except AttributeError:
-            # Method not implemented yet
-            pass
+            # Method not implemented yet - skip test with proper reason
+            pytest.skip("Frequency-dependent conductivity method not yet implemented")

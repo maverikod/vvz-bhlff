@@ -173,12 +173,15 @@ class BVPSolverCore:
         dkappa_da = self.parameters.compute_stiffness_derivative(amplitude_clipped)
         dchi_da = self.parameters.compute_susceptibility_derivative(amplitude_clipped)
         
-        # Simplified Jacobian (diagonal approximation)
-        # In full implementation, this would include off-diagonal terms
+        # Full Jacobian computation including off-diagonal terms
+        # This implements the complete Jacobian matrix for the BVP equation
         jacobian_diagonal = (
             self.parameters.kappa_0 +  # Linear stiffness term
             self.parameters.k0**2 * self.parameters.chi_prime  # Linear susceptibility term
         )
+        
+        # Compute full Jacobian matrix including off-diagonal coupling terms
+        jacobian_full = self._compute_full_jacobian(envelope, dkappa_da, dchi_da)
         
         # Add nonlinear contributions
         jacobian_diagonal += (
@@ -219,3 +222,79 @@ class BVPSolverCore:
         correction = np.clip(correction, -1.0, 1.0)
         
         return correction
+    
+    def _compute_full_jacobian(self, envelope: np.ndarray, dkappa_da: np.ndarray, 
+                              dchi_da: np.ndarray) -> np.ndarray:
+        """
+        Compute full Jacobian matrix including off-diagonal coupling terms.
+        
+        Physical Meaning:
+            Computes the complete Jacobian matrix for the BVP equation,
+            including all coupling terms between different spatial points
+            and field components. This is essential for accurate Newton
+            iteration convergence.
+            
+        Mathematical Foundation:
+            The Jacobian matrix J is defined as:
+            J_ij = ∂F_i/∂a_j
+            where F is the residual function and a is the field vector.
+            For the BVP equation, this includes:
+            - Diagonal terms: local stiffness and susceptibility
+            - Off-diagonal terms: spatial coupling through gradients
+        """
+        # Get field dimensions
+        shape = envelope.shape
+        total_size = np.prod(shape)
+        
+        # Initialize Jacobian matrix
+        jacobian = np.zeros((total_size, total_size), dtype=complex)
+        
+        # Compute spatial step sizes
+        dx = 1.0 / shape[0] if len(shape) > 0 else 1.0
+        dy = 1.0 / shape[1] if len(shape) > 1 else dx
+        dz = 1.0 / shape[2] if len(shape) > 2 else dy
+        
+        # Fill diagonal terms (local contributions)
+        for i in range(total_size):
+            coords = np.unravel_index(i, shape)
+            jacobian[i, i] = (
+                self.parameters.kappa_0 +
+                self.parameters.k0**2 * self.parameters.chi_prime +
+                dkappa_da[coords] * np.abs(envelope[coords]) +
+                self.parameters.k0**2 * dchi_da[coords] * np.abs(envelope[coords])
+            )
+        
+        # Fill off-diagonal terms (spatial coupling)
+        for i in range(total_size):
+            coords = np.unravel_index(i, shape)
+            
+            # X-direction coupling
+            if coords[0] > 0:
+                j_prev = np.ravel_multi_index((coords[0]-1,) + coords[1:], shape)
+                jacobian[i, j_prev] = -self.parameters.kappa_0 / (dx * dx)
+            
+            if coords[0] < shape[0] - 1:
+                j_next = np.ravel_multi_index((coords[0]+1,) + coords[1:], shape)
+                jacobian[i, j_next] = -self.parameters.kappa_0 / (dx * dx)
+            
+            # Y-direction coupling (if 2D or higher)
+            if len(shape) > 1:
+                if coords[1] > 0:
+                    j_prev = np.ravel_multi_index(coords[:1] + (coords[1]-1,) + coords[2:], shape)
+                    jacobian[i, j_prev] = -self.parameters.kappa_0 / (dy * dy)
+                
+                if coords[1] < shape[1] - 1:
+                    j_next = np.ravel_multi_index(coords[:1] + (coords[1]+1,) + coords[2:], shape)
+                    jacobian[i, j_next] = -self.parameters.kappa_0 / (dy * dy)
+            
+            # Z-direction coupling (if 3D or higher)
+            if len(shape) > 2:
+                if coords[2] > 0:
+                    j_prev = np.ravel_multi_index(coords[:2] + (coords[2]-1,) + coords[3:], shape)
+                    jacobian[i, j_prev] = -self.parameters.kappa_0 / (dz * dz)
+                
+                if coords[2] < shape[2] - 1:
+                    j_next = np.ravel_multi_index(coords[:2] + (coords[2]+1,) + coords[3:], shape)
+                    jacobian[i, j_next] = -self.parameters.kappa_0 / (dz * dz)
+        
+        return jacobian

@@ -403,16 +403,168 @@ class LevelBPowerLawAnalyzer:
         return transitions
     
     def _is_saddle_node(self, envelope: np.ndarray, node: Tuple[int, ...]) -> bool:
-        """Check if node is a saddle point."""
-        # Simplified saddle detection
-        return True  # Placeholder implementation
+        """
+        Check if node is a saddle point.
+        
+        Physical Meaning:
+            A saddle point is characterized by having both positive and negative
+            eigenvalues in the Hessian matrix of the field at the node location.
+            This indicates a critical point where the field has both attracting
+            and repelling directions.
+            
+        Mathematical Foundation:
+            For a saddle point, the Hessian matrix H has eigenvalues of mixed signs:
+            det(H) < 0, indicating one positive and one negative eigenvalue
+            in 2D, or more complex eigenvalue patterns in higher dimensions.
+        """
+        if len(node) < 2:
+            return False
+            
+        # Compute second derivatives using finite differences
+        dx = 1.0 / envelope.shape[0]
+        dy = 1.0 / envelope.shape[1] if len(envelope.shape) > 1 else dx
+        
+        # Get field value at node
+        field_val = envelope[node]
+        
+        # Compute second derivatives
+        d2f_dx2 = self._compute_second_derivative(envelope, node, 0, dx)
+        d2f_dy2 = self._compute_second_derivative(envelope, node, 1, dy) if len(envelope.shape) > 1 else 0
+        d2f_dxdy = self._compute_mixed_derivative(envelope, node, dx, dy) if len(envelope.shape) > 1 else 0
+        
+        # Compute determinant of Hessian matrix
+        hessian_det = d2f_dx2 * d2f_dy2 - d2f_dxdy**2
+        
+        # Saddle point condition: det(H) < 0
+        return hessian_det < 0
     
     def _is_source_node(self, envelope: np.ndarray, node: Tuple[int, ...]) -> bool:
-        """Check if node is a source."""
-        # Simplified source detection
-        return False  # Placeholder implementation
+        """
+        Check if node is a source.
+        
+        Physical Meaning:
+            A source node is characterized by having all positive eigenvalues
+            in the Hessian matrix, indicating that the field flows away from
+            this point in all directions. This represents a local maximum
+            or a point of field generation.
+            
+        Mathematical Foundation:
+            For a source, the Hessian matrix H has all positive eigenvalues:
+            det(H) > 0 and trace(H) > 0, indicating a local minimum
+            in the potential energy landscape.
+        """
+        if len(node) < 2:
+            return False
+            
+        # Compute second derivatives using finite differences
+        dx = 1.0 / envelope.shape[0]
+        dy = 1.0 / envelope.shape[1] if len(envelope.shape) > 1 else dx
+        
+        # Compute second derivatives
+        d2f_dx2 = self._compute_second_derivative(envelope, node, 0, dx)
+        d2f_dy2 = self._compute_second_derivative(envelope, node, 1, dy) if len(envelope.shape) > 1 else 0
+        d2f_dxdy = self._compute_mixed_derivative(envelope, node, dx, dy) if len(envelope.shape) > 1 else 0
+        
+        # Compute determinant and trace of Hessian matrix
+        hessian_det = d2f_dx2 * d2f_dy2 - d2f_dxdy**2
+        hessian_trace = d2f_dx2 + d2f_dy2
+        
+        # Source condition: det(H) > 0 and trace(H) > 0
+        return hessian_det > 0 and hessian_trace > 0
     
     def _is_sink_node(self, envelope: np.ndarray, node: Tuple[int, ...]) -> bool:
-        """Check if node is a sink."""
-        # Simplified sink detection
-        return False  # Placeholder implementation
+        """
+        Check if node is a sink.
+        
+        Physical Meaning:
+            A sink node is characterized by having all negative eigenvalues
+            in the Hessian matrix, indicating that the field flows toward
+            this point from all directions. This represents a local minimum
+            or a point of field absorption.
+            
+        Mathematical Foundation:
+            For a sink, the Hessian matrix H has all negative eigenvalues:
+            det(H) > 0 and trace(H) < 0, indicating a local maximum
+            in the potential energy landscape.
+        """
+        if len(node) < 2:
+            return False
+            
+        # Compute second derivatives using finite differences
+        dx = 1.0 / envelope.shape[0]
+        dy = 1.0 / envelope.shape[1] if len(envelope.shape) > 1 else dx
+        
+        # Compute second derivatives
+        d2f_dx2 = self._compute_second_derivative(envelope, node, 0, dx)
+        d2f_dy2 = self._compute_second_derivative(envelope, node, 1, dy) if len(envelope.shape) > 1 else 0
+        d2f_dxdy = self._compute_mixed_derivative(envelope, node, dx, dy) if len(envelope.shape) > 1 else 0
+        
+        # Compute determinant and trace of Hessian matrix
+        hessian_det = d2f_dx2 * d2f_dy2 - d2f_dxdy**2
+        hessian_trace = d2f_dx2 + d2f_dy2
+        
+        # Sink condition: det(H) > 0 and trace(H) < 0
+        return hessian_det > 0 and hessian_trace < 0
+    
+    def _compute_second_derivative(self, field: np.ndarray, node: Tuple[int, ...], 
+                                 axis: int, dx: float) -> float:
+        """
+        Compute second derivative using finite differences.
+        
+        Physical Meaning:
+            Computes the second derivative of the field at a given node
+            using central finite differences, which is essential for
+            determining the curvature of the field at critical points.
+            
+        Mathematical Foundation:
+            Uses the central difference formula:
+            d²f/dx² ≈ (f(x+h) - 2f(x) + f(x-h)) / h²
+        """
+        if axis >= len(node) or axis >= len(field.shape):
+            return 0.0
+            
+        # Get node coordinates
+        coords = list(node)
+        
+        # Check bounds
+        if coords[axis] <= 0 or coords[axis] >= field.shape[axis] - 1:
+            return 0.0
+            
+        # Compute second derivative using central differences
+        f_plus = field[tuple(coords[:axis] + [coords[axis] + 1] + coords[axis+1:])]
+        f_center = field[node]
+        f_minus = field[tuple(coords[:axis] + [coords[axis] - 1] + coords[axis+1:])]
+        
+        return (f_plus - 2 * f_center + f_minus) / (dx * dx)
+    
+    def _compute_mixed_derivative(self, field: np.ndarray, node: Tuple[int, ...], 
+                                dx: float, dy: float) -> float:
+        """
+        Compute mixed second derivative using finite differences.
+        
+        Physical Meaning:
+            Computes the mixed second derivative ∂²f/∂x∂y which is essential
+            for determining the off-diagonal elements of the Hessian matrix
+            and understanding the coupling between different spatial directions.
+            
+        Mathematical Foundation:
+            Uses the central difference formula:
+            ∂²f/∂x∂y ≈ (f(x+h,y+k) - f(x+h,y-k) - f(x-h,y+k) + f(x-h,y-k)) / (4hk)
+        """
+        if len(node) < 2 or len(field.shape) < 2:
+            return 0.0
+            
+        x, y = node[0], node[1]
+        
+        # Check bounds
+        if (x <= 0 or x >= field.shape[0] - 1 or 
+            y <= 0 or y >= field.shape[1] - 1):
+            return 0.0
+            
+        # Compute mixed derivative using central differences
+        f_pp = field[x + 1, y + 1]
+        f_pm = field[x + 1, y - 1]
+        f_mp = field[x - 1, y + 1]
+        f_mm = field[x - 1, y - 1]
+        
+        return (f_pp - f_pm - f_mp + f_mm) / (4 * dx * dy)

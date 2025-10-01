@@ -30,7 +30,7 @@ import numpy as np
 from typing import Any, Tuple, Dict, Optional
 import logging
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from ..domain import Domain
     from .fft_backend import FFTBackend
@@ -63,8 +63,8 @@ class SpectralOperations:
         _wave_vectors (Tuple[np.ndarray, ...]): 7D wave vectors.
     """
 
-    def __init__(self, domain: Domain, precision: str = "float64", 
-                 fft_backend: Optional[FFTBackend] = None) -> None:
+    def __init__(self, domain: 'Domain', precision: str = "float64", 
+                 fft_backend: Optional['FFTBackend'] = None) -> None:
         """
         Initialize spectral operations for 7D computations.
 
@@ -302,37 +302,65 @@ class SpectralOperations:
             raise NotImplementedError("Spectral derivatives not yet implemented")
         return self._derivatives.compute_curl(vector_field)
 
-    def forward_fft(self, field: np.ndarray) -> np.ndarray:
+    def forward_fft(self, field: np.ndarray, normalization: str = 'ortho') -> np.ndarray:
         """
         Forward FFT with proper normalization for 7D.
         
         Physical Meaning:
-            Performs forward FFT transformation with ortho normalization
+            Performs forward FFT transformation with specified normalization
             for 7D phase field computations.
             
         Args:
             field (np.ndarray): Input field in real space.
+            normalization (str): Normalization type ('ortho' or 'physics').
             
         Returns:
             np.ndarray: Forward FFT result in spectral space.
         """
-        return np.fft.fftn(field, norm='ortho')
+        if normalization == 'ortho':
+            # Orthogonal normalization for testing
+            return np.fft.fftn(field, norm='ortho')
+        elif normalization == 'physics':
+            # 7D physics normalization: Δ^7 = (dx^3) * (dphi^3) * dt
+            dx = self.domain.L / self.domain.N
+            dphi = (2 * np.pi) / self.domain.N_phi
+            dt = self.domain.T / self.domain.N_t
+            normalization_factor = (dx ** 3) * (dphi ** 3) * dt
+            
+            field_spectral = np.fft.fftn(field) * normalization_factor
+            return field_spectral
+        else:
+            raise ValueError(f"Unknown normalization: {normalization}")
     
-    def inverse_fft(self, spectral_field: np.ndarray) -> np.ndarray:
+    def inverse_fft(self, spectral_field: np.ndarray, normalization: str = 'ortho') -> np.ndarray:
         """
         Inverse FFT with proper normalization for 7D.
         
         Physical Meaning:
-            Performs inverse FFT transformation with ortho normalization
+            Performs inverse FFT transformation with specified normalization
             for 7D phase field computations.
             
         Args:
             spectral_field (np.ndarray): Input field in spectral space.
+            normalization (str): Normalization type ('ortho' or 'physics').
             
         Returns:
             np.ndarray: Inverse FFT result in real space.
         """
-        return np.fft.ifftn(spectral_field, norm='ortho')
+        if normalization == 'ortho':
+            # Orthogonal normalization for testing
+            return np.fft.ifftn(spectral_field, norm='ortho')
+        elif normalization == 'physics':
+            # 7D physics normalization: 1/(Δ^7) where Δ^7 = (dx^3) * (dphi^3) * dt
+            dx = self.domain.L / self.domain.N
+            dphi = (2 * np.pi) / self.domain.N_phi
+            dt = self.domain.T / self.domain.N_t
+            normalization_factor = (dx ** 3) * (dphi ** 3) * dt
+            
+            result = np.fft.ifftn(spectral_field) / normalization_factor
+            return result
+        else:
+            raise ValueError(f"Unknown normalization: {normalization}")
     
     def compute_wave_vectors(self) -> Tuple[np.ndarray, ...]:
         """
@@ -426,10 +454,15 @@ class SpectralOperations:
         """
         wave_vectors = []
         
-        for n in self.domain.shape:
-            # Compute wave numbers
-            k = np.fft.fftfreq(n, d=1.0/n)
-            k *= 2 * np.pi  # Convert to angular frequency
+        # For 7D domain: spatial dimensions use L, phase dimensions use 2π, time uses T
+        dimensions = ['x', 'y', 'z', 'phi1', 'phi2', 'phi3', 't']
+        scales = [self.domain.L, self.domain.L, self.domain.L, 
+                 2*np.pi, 2*np.pi, 2*np.pi, self.domain.T]
+        
+        for i, (n, scale) in enumerate(zip(self.domain.shape, scales)):
+            # Correct formula: k = (2π/scale) * m
+            k = np.fft.fftfreq(n, d=scale/n)
+            k *= 2 * np.pi  # k = (2π/scale) * m
             wave_vectors.append(k)
         
         return tuple(wave_vectors)

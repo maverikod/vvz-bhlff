@@ -38,9 +38,9 @@ class TestFFTSolver7DValidation:
     """
     
     @pytest.fixture
-    def domain_3d(self):
-        """Create 3D domain for testing."""
-        return Domain(L=1.0, N=64, dimensions=3)
+    def domain_7d(self):
+        """Create 7D domain for testing."""
+        return Domain(L=1.0, N=8, N_phi=4, N_t=8, dimensions=7)
     
     @pytest.fixture
     def parameters_basic(self):
@@ -48,18 +48,18 @@ class TestFFTSolver7DValidation:
         return {
             'mu': 1.0,
             'beta': 1.0,
-            'lambda': 0.1,
+            'lambda_param': 0.1,
             'precision': 'float64',
             'fft_plan': 'MEASURE',
             'tolerance': 1e-12
         }
     
     @pytest.fixture
-    def solver(self, domain_3d, parameters_basic):
+    def solver(self, domain_7d, parameters_basic):
         """Create FFT solver for testing."""
-        return FFTSolver7D(domain_3d, parameters_basic)
+        return FFTSolver7D(domain_7d, parameters_basic)
     
-    def test_A01_plane_wave_stationary(self, solver, domain_3d):
+    def test_A01_plane_wave_stationary(self, solver, domain_7d):
         """
         Test A0.1: Plane wave stationary solution.
         
@@ -80,7 +80,7 @@ class TestFFTSolver7DValidation:
         
         for k_mode in k_modes:
             # Create plane wave source
-            source = self._create_plane_wave_source(domain_3d, k_mode, amplitude=1.0)
+            source = self._create_plane_wave_source(domain_7d, k_mode, amplitude=1.0)
             
             # Solve
             solution = solver.solve_stationary(source)
@@ -93,7 +93,7 @@ class TestFFTSolver7DValidation:
             # Validate solution
             self._validate_plane_wave_solution(solution, expected_solution, k_mode)
     
-    def test_A02_multifrequency_source(self, solver, domain_3d):
+    def test_A02_multifrequency_source(self, solver, domain_7d):
         """
         Test A0.2: Multifrequency source superposition.
         
@@ -109,9 +109,9 @@ class TestFFTSolver7DValidation:
         k_modes = [(2, 0, 0), (0, 2, 0), (1, 1, 1), (3, 0, 0)]
         amplitudes = [1.0, 0.5, 0.8, 0.3]
         
-        source = np.zeros(domain_3d.shape, dtype=complex)
+        source = np.zeros(domain_7d.shape, dtype=complex)
         for k_mode, amplitude in zip(k_modes, amplitudes):
-            plane_wave = self._create_plane_wave_source(domain_3d, k_mode, amplitude)
+            plane_wave = self._create_plane_wave_source(domain_7d, k_mode, amplitude)
             source += plane_wave
         
         # Solve
@@ -120,7 +120,7 @@ class TestFFTSolver7DValidation:
         # Validate superposition
         self._validate_multifrequency_solution(solution, k_modes, amplitudes, solver)
     
-    def test_A03_zero_mode_compatibility(self, domain_3d):
+    def test_A03_zero_mode_compatibility(self, domain_7d):
         """
         Test A0.3: Zero mode compatibility for λ=0.
         
@@ -139,22 +139,22 @@ class TestFFTSolver7DValidation:
             'lambda': 0.0,
             'precision': 'float64'
         }
-        solver_zero = FFTSolver7D(domain_3d, parameters_zero_lambda)
+        solver_zero = FFTSolver7D(domain_7d, parameters_zero_lambda)
         
         # Create zero mean source
-        source_zero_mean = self._create_plane_wave_source(domain_3d, (2, 0, 0), 1.0)
+        source_zero_mean = self._create_plane_wave_source(domain_7d, (2, 0, 0), 1.0)
         solution = solver_zero.solve_stationary(source_zero_mean)
         
         # Should work without error
         assert solution is not None
         
         # Test case 2: λ=0 with non-zero mean source (should fail)
-        source_constant = np.ones(domain_3d.shape, dtype=complex)
+        source_constant = np.ones(domain_7d.shape, dtype=complex)
         
         with pytest.raises(ValueError, match="lambda=0 requires mean\\(source\\)=0"):
             solver_zero.solve_stationary(source_constant)
     
-    def test_A04_time_dependent_harmonic(self, solver, domain_3d):
+    def test_A04_time_dependent_harmonic(self, solver, domain_7d):
         """
         Test A0.4: Time-dependent harmonic source.
         
@@ -173,7 +173,7 @@ class TestFFTSolver7DValidation:
         dt = 0.01
         
         # Create harmonic source
-        source = self._create_plane_wave_source(domain_3d, k_mode, 1.0)
+        source = self._create_plane_wave_source(domain_7d, k_mode, 1.0)
         
         # Time integration parameters
         time_params = {
@@ -189,7 +189,7 @@ class TestFFTSolver7DValidation:
         # Validate steady-state solution
         self._validate_harmonic_steady_state(time_evolution, k_mode, omega, solver)
     
-    def test_A05_energy_balance_residual(self, solver, domain_3d):
+    def test_A05_energy_balance_residual(self, solver, domain_7d):
         """
         Test A0.5: Energy balance and residual validation.
         
@@ -203,7 +203,7 @@ class TestFFTSolver7DValidation:
             - Re(Σ â*(k) r̂(k)) ≈ 0 (orthogonality)
         """
         # Create test source
-        source = self._create_plane_wave_source(domain_3d, (4, 0, 0), 1.0)
+        source = self._create_plane_wave_source(domain_7d, (4, 0, 0), 1.0)
         
         # Solve
         solution = solver.solve_stationary(source)
@@ -220,7 +220,7 @@ class TestFFTSolver7DValidation:
         # Check energy balance
         assert metrics['energy_balance'] <= 0.03, f"Energy balance violation: {metrics['energy_balance']}"
     
-    def test_A11_scale_length_invariance(self, domain_3d):
+    def test_A11_scale_length_invariance(self, domain_7d):
         """
         Test A1.1: Scale length invariance.
         
@@ -236,7 +236,7 @@ class TestFFTSolver7DValidation:
         parameters = {
             'mu': 1.0,
             'beta': 1.0,
-            'lambda': 0.1,
+            'lambda_param': 0.1,
             'precision': 'float64'
         }
         
@@ -259,7 +259,7 @@ class TestFFTSolver7DValidation:
         # Compare dimensionless solutions
         self._validate_scale_invariance(solution1, solution2, domain1, domain2)
     
-    def test_A12_units_invariance(self, domain_3d):
+    def test_A12_units_invariance(self, domain_7d):
         """
         Test A1.2: Units invariance.
         
@@ -275,7 +275,7 @@ class TestFFTSolver7DValidation:
         parameters1 = {
             'mu': 1.0,
             'beta': 1.0,
-            'lambda': 0.1,
+            'lambda_param': 0.1,
             'precision': 'float64'
         }
         
@@ -286,11 +286,11 @@ class TestFFTSolver7DValidation:
             'precision': 'float64'
         }
         
-        solver1 = FFTSolver7D(domain_3d, parameters1)
-        solver2 = FFTSolver7D(domain_3d, parameters2)
+        solver1 = FFTSolver7D(domain_7d, parameters1)
+        solver2 = FFTSolver7D(domain_7d, parameters2)
         
         # Create source
-        source = self._create_plane_wave_source(domain_3d, (4, 0, 0), 1.0)
+        source = self._create_plane_wave_source(domain_7d, (4, 0, 0), 1.0)
         
         # Solve
         solution1 = solver1.solve_stationary(source)

@@ -48,7 +48,7 @@ class FractionalLaplacian:
         _wave_vectors (Tuple[np.ndarray, ...]): Wave vectors for each dimension.
     """
     
-    def __init__(self, domain: 'Domain', beta: float):
+    def __init__(self, domain: 'Domain', beta: float, lambda_param: float = 0.0):
         """
         Initialize fractional Laplacian with order β.
         
@@ -65,8 +65,8 @@ class FractionalLaplacian:
                 - β → 2: long-range interactions
         """
         self.domain = domain
-        
         self.beta = beta
+        self.lambda_param = lambda_param
         self._validate_beta()
         
         # Pre-compute spectral coefficients
@@ -152,11 +152,8 @@ class FractionalLaplacian:
         # Initialize result
         result = np.zeros_like(k_magnitude)
         
-        # Handle k=0 case
-        if self.beta > 0:
-            result[k_zero_mask] = 0.0
-        else:
-            result[k_zero_mask] = 1.0
+        # Handle k=0 case: D(0) = λ (as per TЗ)
+        result[k_zero_mask] = self.lambda_param
         
         # Handle k≠0 case
         if np.any(k_nonzero_mask):

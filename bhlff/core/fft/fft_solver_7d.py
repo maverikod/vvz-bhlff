@@ -24,8 +24,9 @@ import logging
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from ..base.abstract_solver import AbstractSolver
+    from ...solvers.base.abstract_solver import AbstractSolver
     from ..domain import Domain
+    from ..domain.parameters import Parameters
 
 from .fractional_laplacian import FractionalLaplacian
 from .spectral_operations import SpectralOperations
@@ -59,7 +60,7 @@ class FFTSolver7D:
         _spectral_coeffs (np.ndarray): Pre-computed spectral coefficients.
     """
     
-    def __init__(self, domain: 'Domain', parameters: Dict[str, Any]):
+    def __init__(self, domain: 'Domain', parameters: 'Parameters'):
         """
         Initialize FFT solver with domain and physics parameters.
         
@@ -78,6 +79,11 @@ class FFTSolver7D:
                 - fft_plan (str): FFT plan type ('MEASURE')
                 - tolerance (float): Convergence tolerance (1e-12)
         """
+        # Convert Dict to Parameters if needed
+        if isinstance(parameters, dict):
+            from ..domain.parameters import Parameters
+            parameters = Parameters(**parameters)
+        
         self.domain = domain
         self.parameters = parameters
         
@@ -85,10 +91,10 @@ class FFTSolver7D:
         self._validate_parameters()
         
         # Initialize components
-        self._fractional_laplacian = FractionalLaplacian(domain, parameters['beta'])
-        self._spectral_ops = SpectralOperations(domain, parameters.get('precision', 'float64'))
-        self._memory_manager = MemoryManager7D(domain.shape, parameters.get('max_memory_gb', 8.0))
-        self._fft_plan = FFTPlan7D(domain.shape, parameters.get('precision', 'float64'))
+        self._fractional_laplacian = FractionalLaplacian(domain, parameters.beta, parameters.lambda_param)
+        self._spectral_ops = SpectralOperations(domain, parameters.precision)
+        self._memory_manager = MemoryManager7D(domain.shape, 8.0)  # Default memory limit
+        self._fft_plan = FFTPlan7D(domain.shape, parameters.precision)
         self._spectral_cache = SpectralCoefficientCache()
         
         # Pre-compute spectral coefficients
@@ -250,9 +256,9 @@ class FFTSolver7D:
             Ensures all physical parameters are within valid ranges
             for the fractional Laplacian equation.
         """
-        mu = self.parameters.get('mu', 1.0)
-        beta = self.parameters.get('beta', 1.0)
-        lambda_param = self.parameters.get('lambda', 0.0)
+        mu = self.parameters.mu
+        beta = self.parameters.beta
+        lambda_param = self.parameters.lambda_param
         
         if mu <= 0:
             raise ValueError(f"Diffusion coefficient μ must be positive, got {mu}")
@@ -272,9 +278,9 @@ class FFTSolver7D:
             Laplacian operator, which is essential for efficient
             solution of the equation in spectral space.
         """
-        mu = self.parameters['mu']
-        beta = self.parameters['beta']
-        lambda_param = self.parameters['lambda']
+        mu = self.parameters.mu
+        beta = self.parameters.beta
+        lambda_param = self.parameters.lambda_param
         
         # Get coefficients from cache or compute new ones
         self._spectral_coeffs = self._spectral_cache.get_coefficients(
@@ -289,7 +295,7 @@ class FFTSolver7D:
             Ensures that when λ=0, the source field has zero mean
             to avoid singularity in the spectral solution.
         """
-        lambda_param = self.parameters.get('lambda', 0.0)
+        lambda_param = self.parameters.lambda_param
         
         if lambda_param == 0:
             source_spectral = self._spectral_ops.forward_fft(source_field)

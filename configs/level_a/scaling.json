@@ -1,14 +1,16 @@
 {
   "domain": {
     "L": 1.0,
-    "N": 256,
-    "dimensions": 3,
-    "periodic": true
+    "N": 16,
+    "N_phi": 8,
+    "N_t": 16,
+    "T": 1.0,
+    "dimensions": 7,
   },
   "physics": {
     "mu": 1.0,
     "beta": 1.0,
-    "lambda": 0.0,
+    "lambda_param": 0.0,
     "nu": 1.0
   },
   "solver": {

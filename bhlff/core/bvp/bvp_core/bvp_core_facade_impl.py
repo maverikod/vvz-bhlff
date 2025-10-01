@@ -32,13 +32,13 @@ import logging
 
 from ...domain import Domain
 from ...domain.domain_7d import Domain7D
-from .bvp_core_facade_base import BVPCoreFacadeBase
+from ..abstract_bvp_facade import AbstractBVPFacade
 from ..bvp_constants import BVPConstants
 from .bvp_operations import BVPCoreOperations
 from .bvp_7d_interface import BVPCore7DInterface
 
 
-class BVPCoreFacade(BVPCoreFacadeBase):
+class BVPCoreFacade(AbstractBVPFacade):
     """
     BVP Core Facade - Main implementation for BVP framework.
 

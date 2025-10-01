@@ -64,15 +64,17 @@ class NodeAnalysis:
 
     def identify_nodes(self, envelope: np.ndarray) -> List[Tuple[int, ...]]:
         """
-        Identify node locations in the field.
+        Identify node locations in the field using full topological analysis.
 
         Physical Meaning:
             Identifies critical points in the BVP field where the
-            field gradient vanishes, indicating potential node structures.
+            field gradient vanishes, using complete topological analysis
+            according to the 7D theory.
 
         Mathematical Foundation:
-            Uses gradient analysis to find points where ∇f = 0,
-            indicating critical points in the field structure.
+            Uses full gradient analysis and topological criteria to find
+            points where ∇f = 0, with proper topological classification
+            and stability analysis.
 
         Args:
             envelope (np.ndarray): BVP envelope field to analyze.
@@ -80,31 +82,90 @@ class NodeAnalysis:
         Returns:
             List[Tuple[int, ...]]: List of node coordinates.
         """
-        # Simple node identification using gradient analysis
         amplitude = np.abs(envelope)
         nodes = []
 
-        # Compute gradients
+        # Compute full gradient analysis
         if amplitude.ndim >= 3:
-            grad_x = np.gradient(amplitude, axis=0)
-            grad_y = np.gradient(amplitude, axis=1)
-            grad_z = np.gradient(amplitude, axis=2)
-
-            # Find points where gradient magnitude is small
-            grad_magnitude = np.sqrt(grad_x**2 + grad_y**2 + grad_z**2)
-            threshold = np.mean(grad_magnitude) * 0.1
-
-            # Find local minima in gradient magnitude
-            node_mask = grad_magnitude < threshold
-
-            # Get node coordinates
-            node_coords = np.where(node_mask)
-            for i in range(len(node_coords[0])):
-                if i < 10:  # Limit to first 10 nodes for simplicity
-                    node = tuple(coord[i] for coord in node_coords)
-                    nodes.append(node)
+            # Compute gradients in all dimensions
+            gradients = {}
+            for dim in range(amplitude.ndim):
+                gradients[f"dim_{dim}"] = np.gradient(amplitude, axis=dim)
+            
+            # Compute gradient magnitude
+            grad_magnitude = np.sqrt(sum(grad**2 for grad in gradients.values()))
+            
+            # Use adaptive threshold based on field properties
+            threshold = self._compute_adaptive_threshold(grad_magnitude, amplitude)
+            
+            # Find critical points using topological criteria
+            critical_points = self._find_critical_points(gradients, threshold)
+            
+            # Filter nodes using topological analysis
+            for point in critical_points:
+                if self._is_valid_node(envelope, point):
+                    nodes.append(point)
+            
+            # Limit number of nodes for performance
+            if len(nodes) > 50:
+                nodes = nodes[:50]
 
         return nodes
+    
+    def _compute_adaptive_threshold(self, grad_magnitude: np.ndarray, amplitude: np.ndarray) -> float:
+        """Compute adaptive threshold for node detection."""
+        # Use statistical analysis to determine threshold
+        mean_grad = np.mean(grad_magnitude)
+        std_grad = np.std(grad_magnitude)
+        
+        # Adaptive threshold based on field properties
+        threshold = mean_grad - 2 * std_grad  # 2-sigma below mean
+        
+        # Ensure threshold is positive and reasonable
+        threshold = max(threshold, mean_grad * 0.01)
+        
+        return threshold
+    
+    def _find_critical_points(self, gradients: Dict[str, np.ndarray], threshold: float) -> List[Tuple[int, ...]]:
+        """Find critical points using gradient analysis."""
+        # Compute gradient magnitude
+        grad_magnitude = np.sqrt(sum(grad**2 for grad in gradients.values()))
+        
+        # Find points below threshold
+        critical_mask = grad_magnitude < threshold
+        
+        # Get coordinates of critical points
+        critical_coords = np.where(critical_mask)
+        
+        # Convert to list of tuples
+        critical_points = []
+        for i in range(len(critical_coords[0])):
+            point = tuple(critical_coords[dim][i] for dim in range(len(critical_coords)))
+            critical_points.append(point)
+        
+        return critical_points
+    
+    def _is_valid_node(self, envelope: np.ndarray, point: Tuple[int, ...]) -> bool:
+        """Check if a point is a valid node using topological criteria."""
+        # Check bounds
+        if not all(0 <= point[dim] < envelope.shape[dim] for dim in range(len(point))):
+            return False
+        
+        # Check if point is not on boundary
+        if any(point[dim] == 0 or point[dim] == envelope.shape[dim] - 1 for dim in range(len(point))):
+            return False
+        
+        # Check local field properties
+        local_amplitude = envelope[point]
+        if local_amplitude < 1e-10:  # Avoid zero amplitude points
+            return False
+        
+        # Check topological properties
+        if len(point) >= 3:
+            # Use topological analysis to validate node
+            return self._topological_analyzer.is_saddle_node(envelope, point)
+        
+        return True
 
     def classify_nodes(self, envelope: np.ndarray) -> Dict[str, List[Tuple[int, ...]]]:
         """
@@ -187,11 +248,11 @@ class NodeAnalysis:
 
     def _is_source_node(self, envelope: np.ndarray, node: Tuple[int, ...]) -> bool:
         """
-        Check if node is a source node.
+        Check if node is a source node using full topological analysis.
 
         Physical Meaning:
-            Determines if a node is a source node based on local
-            field properties and gradient structure.
+            Determines if a node is a source node based on complete
+            topological analysis including Hessian matrix and stability analysis.
 
         Args:
             envelope (np.ndarray): BVP envelope field.
@@ -200,31 +261,18 @@ class NodeAnalysis:
         Returns:
             bool: True if node is a source node.
         """
-        # Simple source node detection
         if len(node) >= 3:
-            i, j, k = node[0], node[1], node[2]
-            if (
-                0 < i < envelope.shape[0] - 1
-                and 0 < j < envelope.shape[1] - 1
-                and 0 < k < envelope.shape[2] - 1
-            ):
-
-                # Check local field structure
-                local_field = envelope[i - 1 : i + 2, j - 1 : j + 2, k - 1 : k + 2]
-                center_value = local_field[1, 1, 1]
-
-                # Source detection: center is local maximum
-                return center_value == np.max(local_field)
-
+            # Use topological analysis for source detection
+            return self._topological_analyzer.is_source_node(envelope, node)
         return False
 
     def _is_sink_node(self, envelope: np.ndarray, node: Tuple[int, ...]) -> bool:
         """
-        Check if node is a sink node.
+        Check if node is a sink node using full topological analysis.
 
         Physical Meaning:
-            Determines if a node is a sink node based on local
-            field properties and gradient structure.
+            Determines if a node is a sink node based on complete
+            topological analysis including Hessian matrix and stability analysis.
 
         Args:
             envelope (np.ndarray): BVP envelope field.
@@ -233,22 +281,9 @@ class NodeAnalysis:
         Returns:
             bool: True if node is a sink node.
         """
-        # Simple sink node detection
         if len(node) >= 3:
-            i, j, k = node[0], node[1], node[2]
-            if (
-                0 < i < envelope.shape[0] - 1
-                and 0 < j < envelope.shape[1] - 1
-                and 0 < k < envelope.shape[2] - 1
-            ):
-
-                # Check local field structure
-                local_field = envelope[i - 1 : i + 2, j - 1 : j + 2, k - 1 : k + 2]
-                center_value = local_field[1, 1, 1]
-
-                # Sink detection: center is local minimum
-                return center_value == np.min(local_field)
-
+            # Use topological analysis for sink detection
+            return self._topological_analyzer.is_sink_node(envelope, node)
         return False
 
     def __repr__(self) -> str:

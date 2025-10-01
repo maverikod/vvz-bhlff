@@ -175,15 +175,42 @@ class TopologicalAnalysis:
     def _compute_mixed_derivative(self, neighborhood: np.ndarray, i: int, j: int) -> float:
         """Compute mixed derivative ∂²φ/∂xᵢ∂xⱼ from neighborhood."""
         if neighborhood.ndim == 7:
-            # 7D case
+            # 7D case - full implementation
             if i == j:
-                # Second derivative ∂²φ/∂xᵢ²
-                return (neighborhood[2, 1, 1, 1, 1, 1, 1] - 2 * neighborhood[1, 1, 1, 1, 1, 1, 1] + 
-                        neighborhood[0, 1, 1, 1, 1, 1, 1])
+                # Second derivative ∂²φ/∂xᵢ² using central difference
+                indices = [1, 1, 1, 1, 1, 1, 1]  # Center point
+                indices[i] = 2  # Forward point
+                forward = neighborhood[tuple(indices)]
+                
+                indices[i] = 0  # Backward point
+                backward = neighborhood[tuple(indices)]
+                
+                indices[i] = 1  # Center point
+                center = neighborhood[tuple(indices)]
+                
+                return forward - 2 * center + backward
             else:
-                # Mixed derivative ∂²φ/∂xᵢ∂xⱼ
-                return (neighborhood[2, 2, 1, 1, 1, 1, 1] - neighborhood[2, 0, 1, 1, 1, 1, 1] - 
-                        neighborhood[0, 2, 1, 1, 1, 1, 1] + neighborhood[0, 0, 1, 1, 1, 1, 1]) / 4
+                # Mixed derivative ∂²φ/∂xᵢ∂xⱼ using central difference
+                indices = [1, 1, 1, 1, 1, 1, 1]  # Center point
+                
+                # Four corner points for mixed derivative
+                indices[i] = 2
+                indices[j] = 2
+                corner_pp = neighborhood[tuple(indices)]
+                
+                indices[i] = 2
+                indices[j] = 0
+                corner_pm = neighborhood[tuple(indices)]
+                
+                indices[i] = 0
+                indices[j] = 2
+                corner_mp = neighborhood[tuple(indices)]
+                
+                indices[i] = 0
+                indices[j] = 0
+                corner_mm = neighborhood[tuple(indices)]
+                
+                return (corner_pp - corner_pm - corner_mp + corner_mm) / 4.0
         else:
             # 3D case
             return self._compute_mixed_derivative_3d(neighborhood, i, j)
@@ -275,3 +302,63 @@ class TopologicalAnalysis:
             "condition_number": float(condition_number),
             "eigenvalues": eigenvalues.tolist()
         }
+    
+    def is_source_node(self, envelope: np.ndarray, node: Tuple[int, ...]) -> bool:
+        """
+        Check if node is a source node using full topological analysis.
+        
+        Physical Meaning:
+            Determines if a node is a source node based on complete
+            topological analysis including Hessian matrix and stability analysis.
+        """
+        if len(node) >= 3:
+            # Compute Hessian matrix
+            if len(node) >= 7:
+                hessian = self._compute_7d_hessian(envelope, node)
+            else:
+                hessian = self._compute_3d_hessian(envelope, node)
+            
+            # Apply Morse theory
+            morse_analysis = self._apply_morse_theory(hessian)
+            
+            # Check stability
+            stability = self._analyze_stability(hessian)
+            
+            # Source node: all eigenvalues positive (local minimum)
+            return (
+                morse_analysis["type"] == "minimum" and
+                stability["type"] == "stable" and
+                morse_analysis["positive_eigenvalues"] == hessian.shape[0]
+            )
+        
+        return False
+    
+    def is_sink_node(self, envelope: np.ndarray, node: Tuple[int, ...]) -> bool:
+        """
+        Check if node is a sink node using full topological analysis.
+        
+        Physical Meaning:
+            Determines if a node is a sink node based on complete
+            topological analysis including Hessian matrix and stability analysis.
+        """
+        if len(node) >= 3:
+            # Compute Hessian matrix
+            if len(node) >= 7:
+                hessian = self._compute_7d_hessian(envelope, node)
+            else:
+                hessian = self._compute_3d_hessian(envelope, node)
+            
+            # Apply Morse theory
+            morse_analysis = self._apply_morse_theory(hessian)
+            
+            # Check stability
+            stability = self._analyze_stability(hessian)
+            
+            # Sink node: all eigenvalues negative (local maximum)
+            return (
+                morse_analysis["type"] == "maximum" and
+                stability["type"] == "unstable" and
+                morse_analysis["negative_eigenvalues"] == hessian.shape[0]
+            )
+        
+        return False

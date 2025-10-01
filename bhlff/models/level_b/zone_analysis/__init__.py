@@ -11,10 +11,12 @@ of the 7D phase field theory, focusing on zone identification and classification
 from .zone_analysis import ZoneAnalysis
 from .boundary_detection import BoundaryDetection
 from .zone_properties import ZoneProperties
+from .transition_analysis import TransitionAnalysis
 
 __all__ = [
     'ZoneAnalysis',
     'BoundaryDetection',
-    'ZoneProperties'
+    'ZoneProperties',
+    'TransitionAnalysis'
 ]
 

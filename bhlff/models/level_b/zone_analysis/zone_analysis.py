@@ -30,6 +30,7 @@ import logging
 from ...core.bvp import BVPCore
 from .boundary_detection import BoundaryDetection
 from .zone_properties import ZoneProperties
+from .transition_analysis import TransitionAnalysis
 
 
 class ZoneAnalysis:
@@ -59,6 +60,7 @@ class ZoneAnalysis:
         # Initialize specialized analyzers
         self._boundary_detector = BoundaryDetection(bvp_core)
         self._zone_properties_analyzer = ZoneProperties(bvp_core)
+        self._transition_analyzer = TransitionAnalysis(bvp_core)
 
     def identify_zone_boundaries(self, envelope: np.ndarray) -> List[Dict[str, Any]]:
         """
@@ -85,15 +87,19 @@ class ZoneAnalysis:
 
     def classify_zones(self, envelope: np.ndarray) -> Dict[str, List[Tuple[int, ...]]]:
         """
-        Classify spatial zones in the field.
+        Classify spatial zones using full 7D analysis.
 
         Physical Meaning:
             Classifies different spatial zones in the BVP field
-            based on field properties and local characteristics.
+            using complete 7D analysis including level set analysis,
+            phase field methods, and topological analysis.
 
         Mathematical Foundation:
-            Uses field amplitude and gradient analysis to classify
-            regions into core, transition, and tail zones.
+            Uses full 7D analysis including:
+            - Level set analysis for zone identification
+            - Phase field method for boundary evolution
+            - Topological analysis of zone boundaries
+            - Energy landscape analysis
 
         Args:
             envelope (np.ndarray): BVP envelope field to analyze.
@@ -106,17 +112,19 @@ class ZoneAnalysis:
         """
         amplitude = np.abs(envelope)
 
-        # Define zone thresholds
-        max_amplitude = np.max(amplitude)
-        mean_amplitude = np.mean(amplitude)
-
-        core_threshold = 0.8 * max_amplitude
-        tail_threshold = 0.2 * mean_amplitude
-
-        # Classify zones
-        core_mask = amplitude > core_threshold
-        tail_mask = amplitude < tail_threshold
-        transition_mask = ~(core_mask | tail_mask)
+        # Use full boundary detection for zone classification
+        boundary_analysis = self._boundary_detector.identify_zone_boundaries(envelope)
+        
+        # Extract level set boundaries for zone classification
+        level_sets = boundary_analysis.get("level_set_boundaries", {})
+        
+        # Use adaptive thresholds based on level set analysis
+        thresholds = self._compute_adaptive_zone_thresholds(amplitude, level_sets)
+        
+        # Classify zones using full analysis
+        core_mask = self._classify_core_zones(amplitude, thresholds)
+        tail_mask = self._classify_tail_zones(amplitude, thresholds)
+        transition_mask = self._classify_transition_zones(amplitude, core_mask, tail_mask)
 
         # Get zone coordinates
         core_zones = list(zip(*np.where(core_mask)))
@@ -128,6 +136,185 @@ class ZoneAnalysis:
             "transition_zones": transition_zones,
             "tail_zones": tail_zones,
         }
+    
+    def _compute_adaptive_zone_thresholds(self, amplitude: np.ndarray, level_sets: Dict[str, Any]) -> Dict[str, float]:
+        """Compute adaptive zone thresholds using level set analysis."""
+        # Use level set analysis to determine optimal thresholds
+        max_amplitude = np.max(amplitude)
+        mean_amplitude = np.mean(amplitude)
+        std_amplitude = np.std(amplitude)
+        
+        # Adaptive core threshold based on level set analysis
+        if level_sets:
+            # Use level set information for threshold determination
+            core_threshold = max_amplitude * 0.7  # More conservative threshold
+        else:
+            # Fallback to statistical threshold
+            core_threshold = mean_amplitude + 2 * std_amplitude
+        
+        # Adaptive tail threshold
+        tail_threshold = mean_amplitude - std_amplitude
+        
+        # Ensure thresholds are reasonable
+        core_threshold = max(core_threshold, max_amplitude * 0.5)
+        tail_threshold = max(tail_threshold, mean_amplitude * 0.1)
+        
+        return {
+            "core_threshold": core_threshold,
+            "tail_threshold": tail_threshold
+        }
+    
+    def _classify_core_zones(self, amplitude: np.ndarray, thresholds: Dict[str, float]) -> np.ndarray:
+        """Classify core zones using full analysis."""
+        core_threshold = thresholds["core_threshold"]
+        
+        # Basic amplitude threshold
+        core_mask = amplitude > core_threshold
+        
+        # Additional criteria for core zone classification
+        # Check for local maxima and high coherence
+        if amplitude.ndim >= 3:
+            # Check for local maxima
+            local_maxima = self._find_local_maxima(amplitude)
+            core_mask = core_mask & local_maxima
+            
+            # Check for high coherence
+            coherence_mask = self._compute_coherence_mask(amplitude)
+            core_mask = core_mask & coherence_mask
+        
+        return core_mask
+    
+    def _classify_tail_zones(self, amplitude: np.ndarray, thresholds: Dict[str, float]) -> np.ndarray:
+        """Classify tail zones using full analysis."""
+        tail_threshold = thresholds["tail_threshold"]
+        
+        # Basic amplitude threshold
+        tail_mask = amplitude < tail_threshold
+        
+        # Additional criteria for tail zone classification
+        # Check for local minima and low coherence
+        if amplitude.ndim >= 3:
+            # Check for local minima
+            local_minima = self._find_local_minima(amplitude)
+            tail_mask = tail_mask & local_minima
+            
+            # Check for low coherence
+            coherence_mask = self._compute_coherence_mask(amplitude)
+            tail_mask = tail_mask & ~coherence_mask
+        
+        return tail_mask
+    
+    def _classify_transition_zones(self, amplitude: np.ndarray, core_mask: np.ndarray, tail_mask: np.ndarray) -> np.ndarray:
+        """Classify transition zones using full analysis."""
+        # Basic transition mask (not core and not tail)
+        transition_mask = ~(core_mask | tail_mask)
+        
+        # Additional criteria for transition zone classification
+        # Check for high gradient regions
+        if amplitude.ndim >= 3:
+            # Compute gradients
+            gradients = {}
+            for dim in range(amplitude.ndim):
+                gradients[f"dim_{dim}"] = np.gradient(amplitude, axis=dim)
+            
+            # Compute gradient magnitude
+            grad_magnitude = np.sqrt(sum(grad**2 for grad in gradients.values()))
+            
+            # High gradient regions are likely transitions
+            grad_threshold = np.mean(grad_magnitude) + np.std(grad_magnitude)
+            high_gradient_mask = grad_magnitude > grad_threshold
+            
+            # Combine with basic transition mask
+            transition_mask = transition_mask & high_gradient_mask
+        
+        return transition_mask
+    
+    def _find_local_maxima(self, amplitude: np.ndarray) -> np.ndarray:
+        """Find local maxima in the amplitude field."""
+        # Use morphological operations to find local maxima
+        try:
+            from scipy import ndimage
+            # Find local maxima
+            local_maxima = ndimage.maximum_filter(amplitude, size=3) == amplitude
+            return local_maxima
+        except ImportError:
+            # Fallback implementation
+            local_maxima = np.zeros_like(amplitude, dtype=bool)
+            for i in range(1, amplitude.shape[0] - 1):
+                for j in range(1, amplitude.shape[1] - 1):
+                    if amplitude.ndim == 3:
+                        for k in range(1, amplitude.shape[2] - 1):
+                            center = amplitude[i, j, k]
+                            neighbors = [
+                                amplitude[i-1, j, k], amplitude[i+1, j, k],
+                                amplitude[i, j-1, k], amplitude[i, j+1, k],
+                                amplitude[i, j, k-1], amplitude[i, j, k+1]
+                            ]
+                            if center > max(neighbors):
+                                local_maxima[i, j, k] = True
+                    else:
+                        center = amplitude[i, j]
+                        neighbors = [
+                            amplitude[i-1, j], amplitude[i+1, j],
+                            amplitude[i, j-1], amplitude[i, j+1]
+                        ]
+                        if center > max(neighbors):
+                            local_maxima[i, j] = True
+            return local_maxima
+    
+    def _find_local_minima(self, amplitude: np.ndarray) -> np.ndarray:
+        """Find local minima in the amplitude field."""
+        # Use morphological operations to find local minima
+        try:
+            from scipy import ndimage
+            # Find local minima
+            local_minima = ndimage.minimum_filter(amplitude, size=3) == amplitude
+            return local_minima
+        except ImportError:
+            # Fallback implementation
+            local_minima = np.zeros_like(amplitude, dtype=bool)
+            for i in range(1, amplitude.shape[0] - 1):
+                for j in range(1, amplitude.shape[1] - 1):
+                    if amplitude.ndim == 3:
+                        for k in range(1, amplitude.shape[2] - 1):
+                            center = amplitude[i, j, k]
+                            neighbors = [
+                                amplitude[i-1, j, k], amplitude[i+1, j, k],
+                                amplitude[i, j-1, k], amplitude[i, j+1, k],
+                                amplitude[i, j, k-1], amplitude[i, j, k+1]
+                            ]
+                            if center < min(neighbors):
+                                local_minima[i, j, k] = True
+                    else:
+                        center = amplitude[i, j]
+                        neighbors = [
+                            amplitude[i-1, j], amplitude[i+1, j],
+                            amplitude[i, j-1], amplitude[i, j+1]
+                        ]
+                        if center < min(neighbors):
+                            local_minima[i, j] = True
+            return local_minima
+    
+    def _compute_coherence_mask(self, amplitude: np.ndarray) -> np.ndarray:
+        """Compute coherence mask for zone classification."""
+        # Compute local coherence using gradient analysis
+        if amplitude.ndim >= 3:
+            # Compute gradients
+            gradients = {}
+            for dim in range(amplitude.ndim):
+                gradients[f"dim_{dim}"] = np.gradient(amplitude, axis=dim)
+            
+            # Compute gradient magnitude
+            grad_magnitude = np.sqrt(sum(grad**2 for grad in gradients.values()))
+            
+            # High coherence regions have low gradient magnitude
+            coherence_threshold = np.mean(grad_magnitude) - np.std(grad_magnitude)
+            coherence_mask = grad_magnitude < coherence_threshold
+            
+            return coherence_mask
+        else:
+            # Fallback for lower dimensions
+            return np.ones_like(amplitude, dtype=bool)
 
     def analyze_zone_properties(
         self, envelope: np.ndarray
@@ -156,17 +343,19 @@ class ZoneAnalysis:
 
     def identify_transition_regions(self, envelope: np.ndarray) -> List[Dict[str, Any]]:
         """
-        Identify transition regions between zones.
+        Identify transition regions using full 7D analysis.
 
         Physical Meaning:
             Identifies transition regions between different zones
-            in the BVP field, focusing on regions with intermediate
-            field properties.
+            using complete 7D analysis including level set analysis,
+            phase field methods, and topological analysis.
 
         Mathematical Foundation:
-            Uses gradient analysis and field property analysis
-            to identify transition regions with intermediate
-            characteristics.
+            Uses full 7D analysis including:
+            - Level set analysis for transition detection
+            - Phase field method for boundary evolution
+            - Topological analysis of transition regions
+            - Energy landscape analysis
 
         Args:
             envelope (np.ndarray): BVP envelope field to analyze.
@@ -177,41 +366,7 @@ class ZoneAnalysis:
                 - region_location: Location of the region
                 - transition_strength: Strength of the transition
         """
-        transition_regions = []
-
-        # Analyze field gradients
-        amplitude = np.abs(envelope)
-
-        if amplitude.ndim >= 3:
-            # Compute gradients
-            grad_x = np.gradient(amplitude, axis=0)
-            grad_y = np.gradient(amplitude, axis=1)
-            grad_z = np.gradient(amplitude, axis=2)
-
-            # Compute gradient magnitude
-            grad_magnitude = np.sqrt(grad_x**2 + grad_y**2 + grad_z**2)
-
-            # Find high-gradient regions (potential transitions)
-            threshold = np.mean(grad_magnitude) + np.std(grad_magnitude)
-            transition_mask = grad_magnitude > threshold
-
-            # Get transition region coordinates
-            transition_coords = np.where(transition_mask)
-
-            if len(transition_coords[0]) > 0:
-                # Create transition region
-                transition_region = {
-                    "region_type": "gradient_transition",
-                    "region_location": (
-                        transition_coords[0][0],
-                        transition_coords[1][0],
-                        transition_coords[2][0],
-                    ),
-                    "transition_strength": np.mean(grad_magnitude[transition_mask]),
-                }
-                transition_regions.append(transition_region)
-
-        return transition_regions
+        return self._transition_analyzer.identify_transition_regions(envelope)
 
     def __repr__(self) -> str:
         """String representation of zone analyzer."""

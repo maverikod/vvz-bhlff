@@ -43,7 +43,7 @@ class TestBVPFramework:
         return Domain(
             L=1.0,
             N=32,
-            dimensions=3,
+            dimensions=7,
             N_phi=16,
             N_t=100,
             T=1.0
@@ -87,7 +87,7 @@ class TestBVPFramework:
     
     def test_domain_7d_structure(self, domain_7d):
         """Test 7D domain structure."""
-        assert domain_7d.dimensions == 3
+        assert domain_7d.dimensions == 7
         assert hasattr(domain_7d, 'dphi')
         assert hasattr(domain_7d, 'N_phi')
         assert hasattr(domain_7d, 'dt')

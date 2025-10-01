@@ -26,15 +26,12 @@ Example:
 """
 
 from .envelope_solver_core import EnvelopeSolverCore
-from ..residual_computer import ResidualComputer
-from .jacobian_computer import JacobianComputer
+# ResidualComputer and JacobianComputer removed - functionality moved to AbstractSolverCore
 from .newton_solver import NewtonSolver
 from .gradient_computer import GradientComputer
 
 __all__ = [
     "EnvelopeSolverCore",
-    "ResidualComputer",
-    "JacobianComputer",
     "NewtonSolver",
     "GradientComputer",
 ]

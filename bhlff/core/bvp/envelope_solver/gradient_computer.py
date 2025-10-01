@@ -24,7 +24,7 @@ from typing import Dict, Any
 
 from ...domain import Domain
 from ..bvp_constants import BVPConstants
-from ..residual_computer import ResidualComputer
+# ResidualComputer removed - functionality moved to AbstractSolverCore
 
 
 class GradientComputer:

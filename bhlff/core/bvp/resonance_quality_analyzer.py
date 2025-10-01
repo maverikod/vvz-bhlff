@@ -183,15 +183,16 @@ class ResonanceQualityAnalyzer:
         self, frequencies: np.ndarray, magnitude: np.ndarray, peak_idx: int
     ) -> dict:
         """
-        Fit Lorentzian function to resonance peak.
+        Fit Lorentzian function to resonance peak using full optimization.
 
         Physical Meaning:
-            Fits a Lorentzian function to the resonance peak
-            for more accurate quality factor estimation.
+            Fits a Lorentzian function to the resonance peak using
+            full scipy.optimize.curve_fit optimization for accurate
+            quality factor estimation.
 
         Mathematical Foundation:
-            Lorentzian: L(f) = A / (1 + ((f - f₀) / (Δf/2))²)
-            where A is amplitude, f₀ is center frequency, Δf is FWHM.
+            Lorentzian: L(f) = A * γ² / ((f - f₀)² + γ²) + offset
+            where A is amplitude, f₀ is center frequency, γ = FWHM/2.
 
         Args:
             frequencies (np.ndarray): Frequency array.
@@ -199,10 +200,10 @@ class ResonanceQualityAnalyzer:
             peak_idx (int): Peak index.
 
         Returns:
-            dict: Lorentzian fit parameters.
+            dict: Lorentzian fit parameters with full optimization results.
         """
         if peak_idx <= 0 or peak_idx >= len(frequencies) - 1:
-            return {"amplitude": 0, "center": 0, "fwhm": 0, "q_factor": 0}
+            return {"amplitude": 0, "center": 0, "fwhm": 0, "q_factor": 0, "fitting_quality": 0.0}
 
         # Extract peak region
         window = self.constants.get_impedance_parameter("peak_window_size")
@@ -212,24 +213,75 @@ class ResonanceQualityAnalyzer:
         peak_freqs = frequencies[start_idx:end_idx]
         peak_mags = magnitude[start_idx:end_idx]
 
-        # Initial guess for parameters
-        amplitude = magnitude[peak_idx]
-        center = frequencies[peak_idx]
-        fwhm = (frequencies[end_idx - 1] - frequencies[start_idx]) / 4
-
-        # Simple fit (could use scipy.optimize.curve_fit for better accuracy)
+        # Full Lorentzian fitting using scipy.optimize.curve_fit
         try:
-            # Calculate Q factor from FWHM
-            q_factor = center / fwhm if fwhm > 0 else 0
-
+            from scipy.optimize import curve_fit
+            
+            # Define Lorentzian function
+            def lorentzian(f, f0, gamma, A, offset):
+                """
+                Lorentzian function: A * gamma^2 / ((f - f0)^2 + gamma^2) + offset
+                where gamma = FWHM / 2
+                """
+                return A * gamma**2 / ((f - f0)**2 + gamma**2) + offset
+            
+            # Initial parameter estimates
+            f0_guess = frequencies[peak_idx]
+            gamma_guess = (frequencies[end_idx-1] - frequencies[start_idx]) / 4
+            A_guess = magnitude[peak_idx]
+            offset_guess = np.mean(magnitude[start_idx:end_idx])
+            
+            initial_guess = [f0_guess, gamma_guess, A_guess, offset_guess]
+            
+            # Parameter bounds
+            bounds = (
+                [frequencies[start_idx], 0, 0, 0],  # Lower bounds
+                [frequencies[end_idx-1], np.inf, np.inf, np.inf]  # Upper bounds
+            )
+            
+            # Perform curve fitting with full optimization
+            popt, pcov = curve_fit(
+                lorentzian, 
+                peak_freqs, 
+                peak_mags, 
+                p0=initial_guess,
+                bounds=bounds,
+                maxfev=2000,  # Increased iterations for better convergence
+                method='trf'  # Trust Region Reflective algorithm
+            )
+            
+            # Extract fitted parameters
+            f0_fitted, gamma_fitted, A_fitted, offset_fitted = popt
+            
+            # Calculate quality factor from fitted parameters
+            fwhm_fitted = 2 * gamma_fitted
+            q_factor = f0_fitted / fwhm_fitted if fwhm_fitted > 0 else 0
+            
+            # Apply quality factor bounds
+            min_q = self.constants.get_impedance_parameter("min_quality_factor")
+            max_q = self.constants.get_impedance_parameter("max_quality_factor")
+            q_factor = max(min_q, min(max_q, q_factor))
+            
+            # Assess fitting quality
+            fitting_quality = self._assess_fitting_quality(popt, pcov, peak_freqs, peak_mags)
+            
             return {
-                "amplitude": amplitude,
-                "center": center,
-                "fwhm": fwhm,
-                "q_factor": q_factor,
+                "amplitude": float(A_fitted),
+                "center": float(f0_fitted),
+                "fwhm": float(fwhm_fitted),
+                "q_factor": float(q_factor),
+                "gamma": float(gamma_fitted),
+                "offset": float(offset_fitted),
+                "fitting_quality": fitting_quality["fitting_quality_score"],
+                "r_squared": fitting_quality["r_squared"],
+                "chi_squared": fitting_quality["chi_squared"],
+                "parameter_errors": fitting_quality["parameter_errors"],
+                "covariance_matrix": pcov.tolist()
             }
-        except:
-            return {"amplitude": 0, "center": 0, "fwhm": 0, "q_factor": 0}
+            
+        except (ImportError, RuntimeError, ValueError) as e:
+            # Fallback to simplified estimation
+            return self._fallback_lorentzian_estimation(frequencies, magnitude, peak_idx)
     
     def _assess_fitting_quality(self, popt: np.ndarray, pcov: np.ndarray, 
                                frequencies: np.ndarray, magnitude: np.ndarray) -> Dict[str, float]:
@@ -336,3 +388,73 @@ class ResonanceQualityAnalyzer:
         # Final fallback: estimate from peak width
         min_q = self.constants.get_impedance_parameter("min_quality_factor")
         return max(min_q, peak_magnitude / np.mean(magnitude))
+    
+    def _fallback_lorentzian_estimation(self, frequencies: np.ndarray, magnitude: np.ndarray, 
+                                      peak_idx: int) -> dict:
+        """
+        Fallback Lorentzian estimation when full optimization fails.
+        
+        Physical Meaning:
+            Provides a simplified Lorentzian parameter estimation when
+            the full scipy.optimize.curve_fit optimization is not available or fails.
+        """
+        # Extract peak region
+        window = self.constants.get_impedance_parameter("peak_window_size")
+        start_idx = max(0, peak_idx - window)
+        end_idx = min(len(frequencies), peak_idx + window + 1)
+
+        peak_freqs = frequencies[start_idx:end_idx]
+        peak_mags = magnitude[start_idx:end_idx]
+
+        # Simple parameter estimation
+        amplitude = magnitude[peak_idx]
+        center = frequencies[peak_idx]
+        
+        # Estimate FWHM using half-maximum method
+        half_max = amplitude / 2
+        left_idx = peak_idx
+        right_idx = peak_idx
+        
+        # Find left half-maximum
+        for i in range(peak_idx, start_idx, -1):
+            if magnitude[i] <= half_max:
+                left_idx = i
+                break
+        
+        # Find right half-maximum
+        for i in range(peak_idx, end_idx):
+            if magnitude[i] <= half_max:
+                right_idx = i
+                break
+        
+        # Calculate FWHM
+        if right_idx > left_idx:
+            fwhm = frequencies[right_idx] - frequencies[left_idx]
+        else:
+            fwhm = (frequencies[end_idx-1] - frequencies[start_idx]) / 4
+        
+        # Calculate gamma and Q factor
+        gamma = fwhm / 2
+        q_factor = center / fwhm if fwhm > 0 else 0
+        
+        # Apply bounds
+        min_q = self.constants.get_impedance_parameter("min_quality_factor")
+        max_q = self.constants.get_impedance_parameter("max_quality_factor")
+        q_factor = max(min_q, min(max_q, q_factor))
+        
+        # Estimate offset
+        offset = np.mean(magnitude[start_idx:end_idx])
+        
+        return {
+            "amplitude": float(amplitude),
+            "center": float(center),
+            "fwhm": float(fwhm),
+            "q_factor": float(q_factor),
+            "gamma": float(gamma),
+            "offset": float(offset),
+            "fitting_quality": 0.5,  # Lower quality for fallback
+            "r_squared": 0.0,  # No fitting performed
+            "chi_squared": 0.0,
+            "parameter_errors": [0.0, 0.0, 0.0, 0.0],
+            "covariance_matrix": [[0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]]
+        }

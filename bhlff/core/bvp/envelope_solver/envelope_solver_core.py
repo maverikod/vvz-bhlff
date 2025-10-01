@@ -27,7 +27,7 @@ from typing import Dict, Any
 
 from ...domain import Domain
 from ..bvp_constants import BVPConstants
-from .residual_computer import ResidualComputer
+from ..residual_computer import ResidualComputer
 from .jacobian_computer import JacobianComputer
 from .newton_solver import NewtonSolver
 from .gradient_computer import GradientComputer

@@ -359,33 +359,75 @@ class TestFFTSolver7DValidation:
     
     def test_A11_scale_length_invariance(self, domain_7d):
         """
-        Test A1.1: Scale length invariance.
+        Test A1.1: Scale length invariance with full implementation.
         
         Physical Meaning:
             Tests that dimensionless solutions are invariant
-            under changes in domain size L.
-            
-        Mathematical Foundation:
-            For the same dimensionless source, the dimensionless
-            solution should be identical regardless of L.
+            under changes in domain size L using complete
+            scale invariance analysis.
         """
-        # Skip this test to avoid hanging - it requires complex domain comparisons
-        pytest.skip("Scale invariance test skipped to avoid hanging")
+        # Create test domains with different scales
+        scales = [0.5, 1.0, 2.0]
+        results = {}
+        
+        for scale in scales:
+            # Create scaled domain
+            scaled_domain = self._create_scaled_domain(domain_7d, scale)
+            
+            # Create scaled source
+            scaled_source = self._create_scaled_source(scaled_domain, scale)
+            
+            # Solve on scaled domain
+            scaled_solution = self._solve_on_scaled_domain(scaled_domain, scaled_source)
+            
+            # Store results
+            results[scale] = {
+                "domain": scaled_domain,
+                "source": scaled_source,
+                "solution": scaled_solution
+            }
+        
+        # Check scale invariance
+        scale_invariance = self._check_scale_invariance(results)
+        
+        assert scale_invariance["is_invariant"], f"Scale invariance failed: {scale_invariance['error']}"
+        assert scale_invariance["relative_error"] < 1e-10, f"Relative error too large: {scale_invariance['relative_error']}"
     
     def test_A12_units_invariance(self, domain_7d):
         """
-        Test A1.2: Units invariance.
+        Test A1.2: Units invariance with full implementation.
         
         Physical Meaning:
             Tests that dimensionless solutions are invariant
-            under changes in base units (L₀, T₀, A₀).
-            
-        Mathematical Foundation:
-            For the same dimensionless parameters, the dimensionless
-            solution should be identical regardless of base units.
+            under changes in base units (L₀, T₀, A₀) using complete
+            units invariance analysis.
         """
-        # Skip this test to avoid hanging - it requires complex parameter comparisons
-        pytest.skip("Units invariance test skipped to avoid hanging")
+        # Create test domains with different base units
+        unit_scales = [0.1, 1.0, 10.0]
+        results = {}
+        
+        for unit_scale in unit_scales:
+            # Create domain with scaled units
+            scaled_domain = self._create_units_scaled_domain(domain_7d, unit_scale)
+            
+            # Create source with scaled units
+            scaled_source = self._create_units_scaled_source(scaled_domain, unit_scale)
+            
+            # Solve on scaled domain
+            scaled_solution = self._solve_on_scaled_domain(scaled_domain, scaled_source)
+            
+            # Store results
+            results[unit_scale] = {
+                "domain": scaled_domain,
+                "source": scaled_source,
+                "solution": scaled_solution
+            }
+        
+        # Check units invariance
+        units_invariance = self._check_units_invariance(results)
+        
+        assert units_invariance["is_invariant"], f"Units invariance failed: {units_invariance['error']}"
+        assert units_invariance["relative_error"] < 1e-10, f"Relative error too large: {units_invariance['relative_error']}"
     
     def _create_plane_wave_source(self, domain: Domain, k_mode: Tuple[int, ...],
                                  amplitude: float) -> np.ndarray:
@@ -461,6 +503,142 @@ class TestFFTSolver7DValidation:
         
         # For steady state, relative change should be small
         assert relative_change < 0.1, f"Solution did not reach steady state: relative_change={relative_change:.2e}"
+    
+    def _create_scaled_domain(self, domain_7d, scale: float):
+        """Create scaled domain for scale invariance testing."""
+        from bhlff.core.domain.domain_7d_bvp import Domain7DBVP
+        from bhlff.core.domain.parameters_7d_bvp import Parameters7DBVP
+        
+        # Create scaled parameters
+        scaled_params = Parameters7DBVP(
+            L=domain_7d.L * scale,
+            N=domain_7d.N,
+            beta=domain_7d.parameters.beta,
+            lambda_param=domain_7d.parameters.lambda_param,
+            mu=domain_7d.parameters.mu,
+            nu=domain_7d.parameters.nu
+        )
+        
+        # Create scaled domain
+        scaled_domain = Domain7DBVP(scaled_params)
+        return scaled_domain
+    
+    def _create_scaled_source(self, scaled_domain, scale: float):
+        """Create scaled source for scale invariance testing."""
+        # Create source with same dimensionless structure
+        source = np.zeros(scaled_domain.shape, dtype=complex)
+        center = tuple(s // 2 for s in scaled_domain.shape)
+        source[center] = 1.0 / scale  # Scale amplitude inversely with domain size
+        return source
+    
+    def _solve_on_scaled_domain(self, scaled_domain, scaled_source):
+        """Solve BVP equation on scaled domain."""
+        from bhlff.core.fft.fft_solver_7d_bvp import FFTSolver7DBVP
+        
+        # Create solver for scaled domain
+        solver = FFTSolver7DBVP(scaled_domain)
+        
+        # Solve the equation
+        solution = solver.solve(scaled_source)
+        return solution
+    
+    def _check_scale_invariance(self, results):
+        """Check scale invariance of solutions."""
+        scales = list(results.keys())
+        if len(scales) < 2:
+            return {"is_invariant": True, "relative_error": 0.0, "error": "Not enough scales"}
+        
+        # Compare solutions at different scales
+        reference_scale = scales[0]
+        reference_solution = results[reference_scale]["solution"]
+        
+        max_relative_error = 0.0
+        errors = []
+        
+        for scale in scales[1:]:
+            solution = results[scale]["solution"]
+            
+            # Resample solutions to same grid for comparison
+            resampled_solution = self._resample_solution(solution, reference_solution.shape)
+            
+            # Compute relative error
+            relative_error = np.linalg.norm(resampled_solution - reference_solution) / np.linalg.norm(reference_solution)
+            max_relative_error = max(max_relative_error, relative_error)
+            errors.append(f"Scale {scale}: {relative_error:.2e}")
+        
+        return {
+            "is_invariant": max_relative_error < 1e-10,
+            "relative_error": max_relative_error,
+            "error": "; ".join(errors)
+        }
+    
+    def _create_units_scaled_domain(self, domain_7d, unit_scale: float):
+        """Create domain with scaled base units."""
+        from bhlff.core.domain.domain_7d_bvp import Domain7DBVP
+        from bhlff.core.domain.parameters_7d_bvp import Parameters7DBVP
+        
+        # Create parameters with scaled base units
+        scaled_params = Parameters7DBVP(
+            L=domain_7d.L,
+            N=domain_7d.N,
+            beta=domain_7d.parameters.beta,
+            lambda_param=domain_7d.parameters.lambda_param * unit_scale,
+            mu=domain_7d.parameters.mu * unit_scale,
+            nu=domain_7d.parameters.nu * unit_scale
+        )
+        
+        # Create scaled domain
+        scaled_domain = Domain7DBVP(scaled_params)
+        return scaled_domain
+    
+    def _create_units_scaled_source(self, scaled_domain, unit_scale: float):
+        """Create source with scaled base units."""
+        # Create source with same dimensionless structure
+        source = np.zeros(scaled_domain.shape, dtype=complex)
+        center = tuple(s // 2 for s in scaled_domain.shape)
+        source[center] = 1.0 / unit_scale  # Scale amplitude inversely with unit scale
+        return source
+    
+    def _check_units_invariance(self, results):
+        """Check units invariance of solutions."""
+        unit_scales = list(results.keys())
+        if len(unit_scales) < 2:
+            return {"is_invariant": True, "relative_error": 0.0, "error": "Not enough unit scales"}
+        
+        # Compare solutions at different unit scales
+        reference_scale = unit_scales[0]
+        reference_solution = results[reference_scale]["solution"]
+        
+        max_relative_error = 0.0
+        errors = []
+        
+        for unit_scale in unit_scales[1:]:
+            solution = results[unit_scale]["solution"]
+            
+            # Resample solutions to same grid for comparison
+            resampled_solution = self._resample_solution(solution, reference_solution.shape)
+            
+            # Compute relative error
+            relative_error = np.linalg.norm(resampled_solution - reference_solution) / np.linalg.norm(reference_solution)
+            max_relative_error = max(max_relative_error, relative_error)
+            errors.append(f"Unit scale {unit_scale}: {relative_error:.2e}")
+        
+        return {
+            "is_invariant": max_relative_error < 1e-10,
+            "relative_error": max_relative_error,
+            "error": "; ".join(errors)
+        }
+    
+    def _resample_solution(self, solution, target_shape):
+        """Resample solution to target shape for comparison."""
+        from scipy.ndimage import zoom
+        
+        # Compute zoom factors for each dimension
+        zoom_factors = [target_shape[i] / solution.shape[i] for i in range(len(target_shape))]
+        
+        # Resample the solution
+        resampled = zoom(solution, zoom_factors, order=1)
+        return resampled
     
     def _validate_scale_invariance(self, solution1: np.ndarray, solution2: np.ndarray,
                                  domain1: Domain, domain2: Domain):

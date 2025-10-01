@@ -144,7 +144,6 @@ class BVPEnvelopeSolver:
         max_iterations = int(self.constants.get_numerical_parameter("max_iterations"))
         tolerance = self.constants.get_numerical_parameter("tolerance")
         damping_factor = self.constants.get_numerical_parameter("damping_factor")
-        min_step_size = self.constants.get_numerical_parameter("min_step_size")
 
         for iteration in range(max_iterations):
             # Compute residual and Jacobian using core components
@@ -184,6 +183,67 @@ class BVPEnvelopeSolver:
                     "gradient_descent_step"
                 )
                 envelope = envelope - gradient_step * gradient
+
+        return envelope.real
+
+    def solve_envelope_linearized(self, source: np.ndarray) -> np.ndarray:
+        """
+        Solve linearized 7D BVP envelope equation.
+
+        Physical Meaning:
+            Solves the linearized version of the envelope equation
+            ∇·(κ₀∇a) + k₀²χ'a = s(x,φ,t) for initial guess generation.
+
+        Mathematical Foundation:
+            Solves the linearized equation using spectral methods
+            for efficient computation of initial guess.
+
+        Args:
+            source (np.ndarray): Source term s(x,φ,t) in 7D space-time.
+
+        Returns:
+            np.ndarray: Linearized envelope solution a(x,φ,t).
+        """
+        if source.shape != self.domain.shape:
+            raise ValueError(
+                f"Source shape {source.shape} incompatible with "
+                f"7D domain shape {self.domain.shape}"
+            )
+
+        # Use linearized version with constant coefficients
+        # ∇·(κ₀∇a) + k₀²χ'a = s
+        # In spectral space: -κ₀|k|²â + k₀²χ'â = ŝ
+        # Therefore: â = ŝ / (k₀²χ' - κ₀|k|²)
+
+        # Transform to spectral space
+        source_spectral = np.fft.fftn(source)
+
+        # Compute wave vectors for 7D
+        k_vectors = []
+        for i, n in enumerate(self.domain.shape):
+            k = np.fft.fftfreq(n, self.domain.L / n)
+            k_vectors.append(k)
+
+        # Create 7D wave vector grid
+        K_grids = np.meshgrid(*k_vectors, indexing="ij")
+        k_magnitude_squared = sum(K**2 for K in K_grids)
+
+        # Compute spectral coefficients
+        spectral_coeffs = (
+            self.k0_squared * self.chi_prime - self.kappa_0 * k_magnitude_squared
+        )
+
+        # Avoid division by zero
+        regularization = self.constants.get_numerical_parameter("regularization", 1e-12)
+        spectral_coeffs = np.where(
+            np.abs(spectral_coeffs) < regularization, regularization, spectral_coeffs
+        )
+
+        # Solve in spectral space
+        envelope_spectral = source_spectral / spectral_coeffs
+
+        # Transform back to real space
+        envelope = np.fft.ifftn(envelope_spectral)
 
         return envelope.real
 
@@ -248,6 +308,54 @@ class BVPEnvelopeSolver:
             "chi_prime": self.chi_prime,
             "chi_double_prime_0": self.chi_double_prime_0,
             "k0_squared": self.k0_squared,
+        }
+
+    def validate_solution(
+        self, solution: np.ndarray, source: np.ndarray, tolerance: float = 1e-8
+    ) -> Dict[str, Any]:
+        """
+        Validate envelope equation solution.
+
+        Physical Meaning:
+            Validates that the solution satisfies the envelope equation
+            within the specified tolerance by computing the residual.
+
+        Mathematical Foundation:
+            Computes residual R = ∇·(κ(|a|)∇a) + k₀²χ(|a|)a - s
+            and checks that ||R|| / ||s|| < tolerance.
+
+        Args:
+            solution (np.ndarray): Envelope solution a(x,φ,t).
+            source (np.ndarray): Source term s(x,φ,t).
+            tolerance (float): Relative tolerance for validation.
+
+        Returns:
+            Dict[str, Any]: Validation results including:
+                - is_valid: Whether solution is valid
+                - residual_norm: L2 norm of residual
+                - relative_error: Relative error
+                - max_error: Maximum error
+        """
+        if solution.shape != source.shape:
+            raise ValueError("Solution and source shapes must match")
+
+        # Compute residual: ∇·(κ∇a) + k₀²χa - s
+        residual = self._core.compute_residual(solution, source)
+
+        # Compute error metrics
+        residual_norm = np.linalg.norm(residual)
+        source_norm = np.linalg.norm(source)
+        relative_error = residual_norm / (source_norm + 1e-15)
+        max_error = np.max(np.abs(residual))
+
+        is_valid = relative_error < tolerance
+
+        return {
+            "is_valid": bool(is_valid),
+            "residual_norm": float(residual_norm),
+            "relative_error": float(relative_error),
+            "max_error": float(max_error),
+            "tolerance": float(tolerance),
         }
 
     def __repr__(self) -> str:

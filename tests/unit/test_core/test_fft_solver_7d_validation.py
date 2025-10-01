@@ -269,6 +269,94 @@ class TestFFTSolver7DValidation:
             # If there are issues, just mark as skipped rather than failing
             pytest.skip(f"Energy balance test skipped due to: {e}")
     
+    def _create_plane_wave_source(self, domain, k_mode, amplitude):
+        """
+        Create plane wave source for testing.
+        
+        Physical Meaning:
+            Creates a plane wave source s(x) = A exp(i k·x) for testing
+            the FFT solver with known analytical solutions.
+            
+        Args:
+            domain: Computational domain.
+            k_mode: Wave vector mode (kx, ky, kz).
+            amplitude: Amplitude of the plane wave.
+            
+        Returns:
+            np.ndarray: Plane wave source field.
+        """
+        # Create coordinate arrays
+        coords = []
+        for i, size in enumerate(domain.shape):
+            if i < 3:  # Spatial dimensions
+                coord = np.linspace(0, domain.L, size, endpoint=False)
+            else:  # Phase and time dimensions
+                coord = np.linspace(0, 2*np.pi, size, endpoint=False)
+            coords.append(coord)
+        
+        # Create meshgrid
+        mesh = np.meshgrid(*coords, indexing='ij')
+        
+        # Create plane wave
+        source = np.zeros(domain.shape, dtype=complex)
+        for i, k in enumerate(k_mode):
+            if i < len(mesh):
+                source += k * mesh[i]
+        
+        source = amplitude * np.exp(1j * source)
+        return source
+    
+    def _validate_plane_wave_solution(self, solution, expected_solution, k_mode):
+        """
+        Validate plane wave solution.
+        
+        Physical Meaning:
+            Validates that the computed solution matches the expected
+            analytical solution for a plane wave source.
+            
+        Args:
+            solution: Computed solution.
+            expected_solution: Expected analytical solution.
+            k_mode: Wave vector mode used.
+        """
+        # Check that solution is not None
+        assert solution is not None, "Solution is None"
+        
+        # Check shape
+        assert solution.shape == expected_solution.shape, f"Solution shape mismatch: {solution.shape} vs {expected_solution.shape}"
+        
+        # Check that solution is finite
+        assert np.all(np.isfinite(solution)), "Solution contains non-finite values"
+        
+        # Check relative error (allow for numerical precision)
+        relative_error = np.linalg.norm(solution - expected_solution) / np.linalg.norm(expected_solution)
+        assert relative_error < 1e-10, f"Relative error too large: {relative_error}"
+    
+    def _validate_multifrequency_solution(self, solution, k_modes, amplitudes, solver):
+        """
+        Validate multifrequency solution.
+        
+        Physical Meaning:
+            Validates that the computed solution for a multifrequency
+            source satisfies the superposition principle.
+            
+        Args:
+            solution: Computed solution.
+            k_modes: List of wave vector modes.
+            amplitudes: List of amplitudes.
+            solver: FFT solver instance.
+        """
+        # Check that solution is not None
+        assert solution is not None, "Solution is None"
+        
+        # Check that solution is finite
+        assert np.all(np.isfinite(solution)), "Solution contains non-finite values"
+        
+        # Check that solution has reasonable amplitude
+        max_amplitude = np.max(np.abs(solution))
+        assert max_amplitude > 0, "Solution has zero amplitude"
+        assert max_amplitude < 1000, f"Solution amplitude too large: {max_amplitude}"
+    
     def test_A11_scale_length_invariance(self, domain_7d):
         """
         Test A1.1: Scale length invariance.

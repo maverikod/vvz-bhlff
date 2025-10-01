@@ -2,11 +2,10 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-Level B power law analysis module for BVP framework.
+Level B power law analysis facade for BVP framework.
 
-This module implements power law analysis operations for Level B
-of the 7D phase field theory, analyzing fundamental properties
-of the BVP field.
+This module provides the main facade interface for Level B power law analysis,
+coordinating all analysis operations while maintaining modular architecture.
 
 Physical Meaning:
     Level B power law analysis examines the fundamental properties
@@ -14,11 +13,9 @@ Physical Meaning:
     topological charge, and zone separation.
 
 Mathematical Foundation:
-    Implements analysis of:
-    - Power law tails in field distributions
-    - Node identification and analysis
-    - Topological charge computation
-    - Zone separation analysis
+    Implements comprehensive analysis of BVP field properties
+    including statistical analysis, topological analysis,
+    and spatial pattern recognition.
 
 Example:
     >>> analyzer = LevelBPowerLawAnalyzer(bvp_core)
@@ -31,6 +28,9 @@ import logging
 
 from ...core.bvp import BVPCore
 from ...core.domain import Domain
+from .power_law_core import PowerLawCore
+from .node_analysis import NodeAnalysis
+from .zone_analysis import ZoneAnalysis
 
 
 class LevelBPowerLawAnalyzer:
@@ -58,6 +58,11 @@ class LevelBPowerLawAnalyzer:
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
         
+        # Initialize modular components
+        self._power_law_core = PowerLawCore(bvp_core)
+        self._node_analysis = NodeAnalysis(bvp_core)
+        self._zone_analysis = ZoneAnalysis(bvp_core)
+        
     def analyze_power_laws(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
         Analyze power law properties of BVP field.
@@ -77,10 +82,10 @@ class LevelBPowerLawAnalyzer:
         self.logger.info("Starting power law analysis")
         
         results = {
-            "power_law_exponents": self._compute_power_law_exponents(envelope),
-            "scaling_regions": self._identify_scaling_regions(envelope),
-            "correlation_functions": self._compute_correlation_functions(envelope),
-            "critical_behavior": self._analyze_critical_behavior(envelope)
+            "power_law_exponents": self._power_law_core.compute_power_law_exponents(envelope),
+            "scaling_regions": self._power_law_core.identify_scaling_regions(envelope),
+            "correlation_functions": self._power_law_core.compute_correlation_functions(envelope),
+            "critical_behavior": self._power_law_core.analyze_critical_behavior(envelope)
         }
         
         self.logger.info("Power law analysis completed")
@@ -91,24 +96,23 @@ class LevelBPowerLawAnalyzer:
         Analyze node structures in BVP field.
         
         Physical Meaning:
-            Identifies and analyzes node structures in the BVP field,
-            including their spatial distribution and topological
-            characteristics.
+            Identifies and classifies node structures in the BVP field,
+            including saddle nodes, source nodes, and sink nodes.
             
         Returns:
             Dict[str, Any]: Node analysis results including:
-                - node_locations: Spatial coordinates of nodes
+                - node_locations: Coordinates of identified nodes
                 - node_types: Classification of node types
                 - node_density: Spatial density of nodes
-                - topological_charge: Net topological charge
+                - topological_charge: Total topological charge
         """
         self.logger.info("Starting node analysis")
         
         results = {
-            "node_locations": self._identify_nodes(envelope),
-            "node_types": self._classify_nodes(envelope),
-            "node_density": self._compute_node_density(envelope),
-            "topological_charge": self._compute_topological_charge(envelope)
+            "node_locations": self._node_analysis.identify_nodes(envelope),
+            "node_types": self._node_analysis.classify_nodes(envelope),
+            "node_density": self._node_analysis.compute_node_density(envelope),
+            "topological_charge": self._node_analysis.compute_topological_charge(envelope)
         }
         
         self.logger.info("Node analysis completed")
@@ -120,451 +124,50 @@ class LevelBPowerLawAnalyzer:
         
         Physical Meaning:
             Identifies and analyzes different zones in the BVP field
-            based on amplitude, gradient, and phase characteristics.
+            including core, transition, and tail regions.
             
         Returns:
             Dict[str, Any]: Zone analysis results including:
-                - zone_boundaries: Boundaries between zones
-                - zone_types: Classification of zone types
+                - zone_boundaries: Boundaries between different zones
+                - zone_classification: Classification of spatial zones
                 - zone_properties: Properties of each zone
                 - transition_regions: Transition regions between zones
         """
         self.logger.info("Starting zone analysis")
         
         results = {
-            "zone_boundaries": self._identify_zone_boundaries(envelope),
-            "zone_types": self._classify_zones(envelope),
-            "zone_properties": self._analyze_zone_properties(envelope),
-            "transition_regions": self._identify_transition_regions(envelope)
+            "zone_boundaries": self._zone_analysis.identify_zone_boundaries(envelope),
+            "zone_classification": self._zone_analysis.classify_zones(envelope),
+            "zone_properties": self._zone_analysis.analyze_zone_properties(envelope),
+            "transition_regions": self._zone_analysis.identify_transition_regions(envelope)
         }
         
         self.logger.info("Zone analysis completed")
         return results
     
-    def _compute_power_law_exponents(self, envelope: np.ndarray) -> Dict[str, float]:
-        """Compute power law exponents from field distribution."""
-        # Analyze amplitude distribution
-        amplitudes = np.abs(envelope)
-        amplitudes = amplitudes[amplitudes > 0]  # Remove zeros
+    def analyze_all(self, envelope: np.ndarray) -> Dict[str, Any]:
+        """
+        Perform comprehensive analysis of all Level B properties.
         
-        if len(amplitudes) == 0:
-            return {"amplitude_exponent": 0.0}
-        
-        # Simple power law fit (log-log regression)
-        sorted_amplitudes = np.sort(amplitudes)[::-1]  # Descending order
-        ranks = np.arange(1, len(sorted_amplitudes) + 1)
-        
-        # Fit power law: P(x) ~ x^(-α)
-        log_ranks = np.log(ranks)
-        log_amplitudes = np.log(sorted_amplitudes)
-        
-        # Linear regression in log space
-        if len(log_ranks) > 1:
-            slope = np.polyfit(log_ranks, log_amplitudes, 1)[0]
-            exponent = -slope
-        else:
-            exponent = 0.0
-        
-        return {"amplitude_exponent": exponent}
-    
-    def _identify_scaling_regions(self, envelope: np.ndarray) -> List[Dict[str, Any]]:
-        """Identify regions with power law scaling behavior."""
-        # Simple implementation: identify regions with consistent scaling
-        regions = []
-        
-        # Analyze different spatial regions
-        domain = self.bvp_core.domain
-        if hasattr(domain, 'shape'):
-            shape = domain.shape
-            if len(shape) >= 3:
-                # Analyze center region
-                center = tuple(s // 2 for s in shape)
-                region = {
-                    "center": center,
-                    "radius": min(shape) // 4,
-                    "scaling_type": "central",
-                    "exponent": self._compute_power_law_exponents(envelope)["amplitude_exponent"]
-                }
-                regions.append(region)
-        
-        return regions
-    
-    def _compute_correlation_functions(self, envelope: np.ndarray) -> Dict[str, np.ndarray]:
-        """Compute spatial correlation functions."""
-        # Simple correlation analysis
-        correlations = {}
-        
-        # Amplitude correlation
-        amplitude = np.abs(envelope)
-        if amplitude.size > 0:
-            # Compute autocorrelation
-            correlation = np.correlate(amplitude.flatten(), amplitude.flatten(), mode='full')
-            correlation = correlation[correlation.size // 2:]
-            correlations["amplitude_correlation"] = correlation
-        
-        return correlations
-    
-    def _analyze_critical_behavior(self, envelope: np.ndarray) -> Dict[str, Any]:
-        """Analyze critical behavior near phase transitions."""
-        # Simple critical analysis
-        amplitude = np.abs(envelope)
-        
-        # Find regions with high variability (potential critical regions)
-        if amplitude.size > 1:
-            gradient = np.gradient(amplitude)
-            variability = np.std(gradient)
+        Physical Meaning:
+            Performs complete analysis of all fundamental properties
+            of the BVP field including power laws, nodes, and zones.
             
-            critical_analysis = {
-                "variability": float(variability),
-                "critical_regions": variability > np.mean(variability) * 2,
-                "transition_strength": float(np.max(amplitude) - np.min(amplitude))
-            }
-        else:
-            critical_analysis = {
-                "variability": 0.0,
-                "critical_regions": False,
-                "transition_strength": 0.0
-            }
+        Returns:
+            Dict[str, Any]: Complete analysis results from all components.
+        """
+        self.logger.info("Starting comprehensive Level B analysis")
         
-        return critical_analysis
-    
-    def _identify_nodes(self, envelope: np.ndarray) -> List[Tuple[int, ...]]:
-        """Identify node locations in the field."""
-        # Simple node identification: find zero crossings
-        nodes = []
-        
-        # Find points where field changes sign
-        if envelope.size > 1:
-            # Look for sign changes in each dimension
-            for i in range(len(envelope.shape)):
-                # Find sign changes along dimension i
-                diff = np.diff(np.sign(envelope), axis=i)
-                node_indices = np.where(diff != 0)
-                
-                for idx in zip(*node_indices):
-                    node_coords = list(idx)
-                    node_coords.insert(i, node_coords[i])  # Insert coordinate for dimension i
-                    nodes.append(tuple(node_coords))
-        
-        return nodes
-    
-    def _classify_nodes(self, envelope: np.ndarray) -> Dict[str, List[Tuple[int, ...]]]:
-        """Classify nodes by type."""
-        nodes = self._identify_nodes(envelope)
-        
-        # Simple classification based on local field behavior
-        node_types = {
-            "saddle": [],
-            "source": [],
-            "sink": [],
-            "center": []
+        results = {
+            "power_laws": self.analyze_power_laws(envelope),
+            "nodes": self.analyze_nodes(envelope),
+            "zones": self.analyze_zones(envelope),
+            "analysis_status": "completed"
         }
         
-        for node in nodes:
-            # Analyze local field behavior around node
-            if self._is_saddle_node(envelope, node):
-                node_types["saddle"].append(node)
-            elif self._is_source_node(envelope, node):
-                node_types["source"].append(node)
-            elif self._is_sink_node(envelope, node):
-                node_types["sink"].append(node)
-            else:
-                node_types["center"].append(node)
-        
-        return node_types
+        self.logger.info("Comprehensive Level B analysis completed")
+        return results
     
-    def _compute_node_density(self, envelope: np.ndarray) -> float:
-        """Compute spatial density of nodes."""
-        nodes = self._identify_nodes(envelope)
-        total_volume = envelope.size
-        return len(nodes) / total_volume if total_volume > 0 else 0.0
-    
-    def _compute_topological_charge(self, envelope: np.ndarray) -> float:
-        """Compute net topological charge."""
-        # Simple topological charge computation
-        # This is a simplified version - real implementation would be more complex
-        
-        # For complex fields, topological charge is related to winding number
-        if np.iscomplexobj(envelope):
-            # Compute phase winding
-            phase = np.angle(envelope)
-            phase_gradient = np.gradient(phase)
-            
-            # Integrate phase gradient to get winding number
-            total_charge = np.sum(phase_gradient) / (2 * np.pi)
-        else:
-            # For real fields, use gradient analysis
-            gradient = np.gradient(envelope)
-            total_charge = np.sum(gradient) / (2 * np.pi)
-        
-        return float(total_charge)
-    
-    def _identify_zone_boundaries(self, envelope: np.ndarray) -> List[Dict[str, Any]]:
-        """Identify boundaries between different zones."""
-        # Simple zone boundary identification
-        boundaries = []
-        
-        # Find regions with high gradient (potential boundaries)
-        gradient = np.gradient(envelope)
-        gradient_magnitude = np.sqrt(sum(g**2 for g in gradient))
-        
-        # Threshold for boundary detection
-        threshold = np.mean(gradient_magnitude) + 2 * np.std(gradient_magnitude)
-        boundary_indices = np.where(gradient_magnitude > threshold)
-        
-        for idx in zip(*boundary_indices):
-            boundary = {
-                "location": idx,
-                "strength": float(gradient_magnitude[idx]),
-                "type": "gradient_boundary"
-            }
-            boundaries.append(boundary)
-        
-        return boundaries
-    
-    def _classify_zones(self, envelope: np.ndarray) -> Dict[str, List[Tuple[int, ...]]]:
-        """Classify different zones in the field."""
-        # Simple zone classification based on amplitude
-        amplitude = np.abs(envelope)
-        
-        # Define amplitude thresholds
-        low_threshold = np.percentile(amplitude, 25)
-        high_threshold = np.percentile(amplitude, 75)
-        
-        zones = {
-            "low_amplitude": [],
-            "medium_amplitude": [],
-            "high_amplitude": []
-        }
-        
-        # Classify each point
-        for idx in np.ndindex(envelope.shape):
-            amp = amplitude[idx]
-            if amp < low_threshold:
-                zones["low_amplitude"].append(idx)
-            elif amp < high_threshold:
-                zones["medium_amplitude"].append(idx)
-            else:
-                zones["high_amplitude"].append(idx)
-        
-        return zones
-    
-    def _analyze_zone_properties(self, envelope: np.ndarray) -> Dict[str, Dict[str, float]]:
-        """Analyze properties of each zone."""
-        zones = self._classify_zones(envelope)
-        properties = {}
-        
-        for zone_type, zone_points in zones.items():
-            if zone_points:
-                # Extract field values in this zone
-                zone_values = [envelope[point] for point in zone_points]
-                zone_amplitudes = [np.abs(val) for val in zone_values]
-                
-                properties[zone_type] = {
-                    "mean_amplitude": float(np.mean(zone_amplitudes)),
-                    "std_amplitude": float(np.std(zone_amplitudes)),
-                    "max_amplitude": float(np.max(zone_amplitudes)),
-                    "min_amplitude": float(np.min(zone_amplitudes)),
-                    "point_count": len(zone_points)
-                }
-            else:
-                properties[zone_type] = {
-                    "mean_amplitude": 0.0,
-                    "std_amplitude": 0.0,
-                    "max_amplitude": 0.0,
-                    "min_amplitude": 0.0,
-                    "point_count": 0
-                }
-        
-        return properties
-    
-    def _identify_transition_regions(self, envelope: np.ndarray) -> List[Dict[str, Any]]:
-        """Identify transition regions between zones."""
-        # Simple transition region identification
-        transitions = []
-        
-        # Find regions with intermediate amplitude (between zones)
-        amplitude = np.abs(envelope)
-        low_threshold = np.percentile(amplitude, 25)
-        high_threshold = np.percentile(amplitude, 75)
-        
-        transition_indices = np.where(
-            (amplitude > low_threshold) & (amplitude < high_threshold)
-        )
-        
-        for idx in zip(*transition_indices):
-            transition = {
-                "location": idx,
-                "amplitude": float(amplitude[idx]),
-                "type": "amplitude_transition"
-            }
-            transitions.append(transition)
-        
-        return transitions
-    
-    def _is_saddle_node(self, envelope: np.ndarray, node: Tuple[int, ...]) -> bool:
-        """
-        Check if node is a saddle point.
-        
-        Physical Meaning:
-            A saddle point is characterized by having both positive and negative
-            eigenvalues in the Hessian matrix of the field at the node location.
-            This indicates a critical point where the field has both attracting
-            and repelling directions.
-            
-        Mathematical Foundation:
-            For a saddle point, the Hessian matrix H has eigenvalues of mixed signs:
-            det(H) < 0, indicating one positive and one negative eigenvalue
-            in 2D, or more complex eigenvalue patterns in higher dimensions.
-        """
-        if len(node) < 2:
-            return False
-            
-        # Compute second derivatives using finite differences
-        dx = 1.0 / envelope.shape[0]
-        dy = 1.0 / envelope.shape[1] if len(envelope.shape) > 1 else dx
-        
-        # Get field value at node
-        field_val = envelope[node]
-        
-        # Compute second derivatives
-        d2f_dx2 = self._compute_second_derivative(envelope, node, 0, dx)
-        d2f_dy2 = self._compute_second_derivative(envelope, node, 1, dy) if len(envelope.shape) > 1 else 0
-        d2f_dxdy = self._compute_mixed_derivative(envelope, node, dx, dy) if len(envelope.shape) > 1 else 0
-        
-        # Compute determinant of Hessian matrix
-        hessian_det = d2f_dx2 * d2f_dy2 - d2f_dxdy**2
-        
-        # Saddle point condition: det(H) < 0
-        return hessian_det < 0
-    
-    def _is_source_node(self, envelope: np.ndarray, node: Tuple[int, ...]) -> bool:
-        """
-        Check if node is a source.
-        
-        Physical Meaning:
-            A source node is characterized by having all positive eigenvalues
-            in the Hessian matrix, indicating that the field flows away from
-            this point in all directions. This represents a local maximum
-            or a point of field generation.
-            
-        Mathematical Foundation:
-            For a source, the Hessian matrix H has all positive eigenvalues:
-            det(H) > 0 and trace(H) > 0, indicating a local minimum
-            in the potential energy landscape.
-        """
-        if len(node) < 2:
-            return False
-            
-        # Compute second derivatives using finite differences
-        dx = 1.0 / envelope.shape[0]
-        dy = 1.0 / envelope.shape[1] if len(envelope.shape) > 1 else dx
-        
-        # Compute second derivatives
-        d2f_dx2 = self._compute_second_derivative(envelope, node, 0, dx)
-        d2f_dy2 = self._compute_second_derivative(envelope, node, 1, dy) if len(envelope.shape) > 1 else 0
-        d2f_dxdy = self._compute_mixed_derivative(envelope, node, dx, dy) if len(envelope.shape) > 1 else 0
-        
-        # Compute determinant and trace of Hessian matrix
-        hessian_det = d2f_dx2 * d2f_dy2 - d2f_dxdy**2
-        hessian_trace = d2f_dx2 + d2f_dy2
-        
-        # Source condition: det(H) > 0 and trace(H) > 0
-        return hessian_det > 0 and hessian_trace > 0
-    
-    def _is_sink_node(self, envelope: np.ndarray, node: Tuple[int, ...]) -> bool:
-        """
-        Check if node is a sink.
-        
-        Physical Meaning:
-            A sink node is characterized by having all negative eigenvalues
-            in the Hessian matrix, indicating that the field flows toward
-            this point from all directions. This represents a local minimum
-            or a point of field absorption.
-            
-        Mathematical Foundation:
-            For a sink, the Hessian matrix H has all negative eigenvalues:
-            det(H) > 0 and trace(H) < 0, indicating a local maximum
-            in the potential energy landscape.
-        """
-        if len(node) < 2:
-            return False
-            
-        # Compute second derivatives using finite differences
-        dx = 1.0 / envelope.shape[0]
-        dy = 1.0 / envelope.shape[1] if len(envelope.shape) > 1 else dx
-        
-        # Compute second derivatives
-        d2f_dx2 = self._compute_second_derivative(envelope, node, 0, dx)
-        d2f_dy2 = self._compute_second_derivative(envelope, node, 1, dy) if len(envelope.shape) > 1 else 0
-        d2f_dxdy = self._compute_mixed_derivative(envelope, node, dx, dy) if len(envelope.shape) > 1 else 0
-        
-        # Compute determinant and trace of Hessian matrix
-        hessian_det = d2f_dx2 * d2f_dy2 - d2f_dxdy**2
-        hessian_trace = d2f_dx2 + d2f_dy2
-        
-        # Sink condition: det(H) > 0 and trace(H) < 0
-        return hessian_det > 0 and hessian_trace < 0
-    
-    def _compute_second_derivative(self, field: np.ndarray, node: Tuple[int, ...], 
-                                 axis: int, dx: float) -> float:
-        """
-        Compute second derivative using finite differences.
-        
-        Physical Meaning:
-            Computes the second derivative of the field at a given node
-            using central finite differences, which is essential for
-            determining the curvature of the field at critical points.
-            
-        Mathematical Foundation:
-            Uses the central difference formula:
-            d²f/dx² ≈ (f(x+h) - 2f(x) + f(x-h)) / h²
-        """
-        if axis >= len(node) or axis >= len(field.shape):
-            return 0.0
-            
-        # Get node coordinates
-        coords = list(node)
-        
-        # Check bounds
-        if coords[axis] <= 0 or coords[axis] >= field.shape[axis] - 1:
-            return 0.0
-            
-        # Compute second derivative using central differences
-        f_plus = field[tuple(coords[:axis] + [coords[axis] + 1] + coords[axis+1:])]
-        f_center = field[node]
-        f_minus = field[tuple(coords[:axis] + [coords[axis] - 1] + coords[axis+1:])]
-        
-        return (f_plus - 2 * f_center + f_minus) / (dx * dx)
-    
-    def _compute_mixed_derivative(self, field: np.ndarray, node: Tuple[int, ...], 
-                                dx: float, dy: float) -> float:
-        """
-        Compute mixed second derivative using finite differences.
-        
-        Physical Meaning:
-            Computes the mixed second derivative ∂²f/∂x∂y which is essential
-            for determining the off-diagonal elements of the Hessian matrix
-            and understanding the coupling between different spatial directions.
-            
-        Mathematical Foundation:
-            Uses the central difference formula:
-            ∂²f/∂x∂y ≈ (f(x+h,y+k) - f(x+h,y-k) - f(x-h,y+k) + f(x-h,y-k)) / (4hk)
-        """
-        if len(node) < 2 or len(field.shape) < 2:
-            return 0.0
-            
-        x, y = node[0], node[1]
-        
-        # Check bounds
-        if (x <= 0 or x >= field.shape[0] - 1 or 
-            y <= 0 or y >= field.shape[1] - 1):
-            return 0.0
-            
-        # Compute mixed derivative using central differences
-        f_pp = field[x + 1, y + 1]
-        f_pm = field[x + 1, y - 1]
-        f_mp = field[x - 1, y + 1]
-        f_mm = field[x - 1, y - 1]
-        
-        return (f_pp - f_pm - f_mp + f_mm) / (4 * dx * dy)
+    def __repr__(self) -> str:
+        """String representation of analyzer."""
+        return f"LevelBPowerLawAnalyzer(bvp_core={self.bvp_core})"

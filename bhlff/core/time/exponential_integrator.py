@@ -85,10 +85,13 @@ class BVPExponentialIntegrator(BaseTimeIntegrator):
             ν|k|^(2β) + λ for efficient exponential integration.
         """
         # Get wave vectors
-        wave_vectors = self._spectral_ops.compute_wave_vectors()
+        wave_vectors = self._spectral_ops._compute_wave_vectors()
         
         # Compute wave vector magnitudes
-        k_magnitude = self._spectral_ops.compute_wave_vector_magnitude()
+        k_magnitude_squared = np.zeros(self.domain.shape)
+        for k_vec in wave_vectors:
+            k_magnitude_squared += k_vec**2
+        k_magnitude = np.sqrt(k_magnitude_squared)
         
         # Compute spectral coefficients: ν|k|^(2β) + λ
         self._spectral_coeffs = (self.parameters.nu * (k_magnitude ** (2 * self.parameters.beta)) + 

@@ -2,327 +2,354 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-Spectral derivatives implementation.
+Spectral derivatives implementation for 7D BHLFF Framework.
 
 This module provides spectral derivative operations for the 7D phase field theory,
-including spectral derivatives, gradient, and Laplacian computations.
+including gradient, divergence, curl, and higher-order derivatives with
+optimized performance for 7D computations.
 
 Physical Meaning:
-    Spectral derivatives implement mathematical derivative operations in frequency space,
-    providing efficient and accurate computation of derivatives for phase field calculations.
+    Spectral derivatives implement mathematical differentiation operations
+    in frequency space, providing efficient computation of derivatives
+    for 7D phase field calculations with U(1)³ phase structure.
 
 Mathematical Foundation:
-    Implements spectral derivatives where:
-    - Derivatives become multiplication by powers of ik
-    - Gradient becomes multiplication by ik vector
-    - Laplacian becomes multiplication by -|k|²
+    Implements spectral derivatives using the property that differentiation
+    in real space corresponds to multiplication by ik in frequency space:
+    - Gradient: ∇a → ik * â(k)
+    - Divergence: ∇·a → ik · â(k)
+    - Curl: ∇×a → ik × â(k)
+    - Laplacian: Δa → -|k|² * â(k)
 
 Example:
-    >>> deriv_ops = SpectralDerivatives(domain, fft_backend)
-    >>> derivative = deriv_ops.spectral_derivative(field, order=2)
-    >>> gradient = deriv_ops.spectral_gradient(field)
-    >>> laplacian = deriv_ops.spectral_laplacian(field)
+    >>> deriv = SpectralDerivatives(domain, precision="float64")
+    >>> gradient = deriv.compute_gradient(field)
+    >>> laplacian = deriv.compute_laplacian(field)
 """
 
 import numpy as np
-from typing import Tuple
+from typing import Any, Tuple, Dict, Optional
+import logging
 
-from ..domain import Domain
-from .fft_backend import FFTBackend
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..domain import Domain
 
 
 class SpectralDerivatives:
     """
-    Spectral derivative operations for phase field calculations.
-
+    Spectral derivatives for 7D phase field calculations.
+    
     Physical Meaning:
-        Implements mathematical derivative operations in frequency space,
-        providing efficient and accurate computation of derivatives
-        for phase field calculations.
-
+        Implements mathematical differentiation operations in 7D frequency space,
+        providing efficient computation of derivatives for 7D phase field
+        calculations with U(1)³ phase structure.
+        
     Mathematical Foundation:
-        Spectral derivatives work in frequency space where:
-        - Derivatives become multiplication by powers of ik
-        - Gradient becomes multiplication by ik vector
-        - Laplacian becomes multiplication by -|k|²
+        Uses the property that differentiation in real space corresponds to
+        multiplication by ik in frequency space, where k is the wave vector.
+        
+    Attributes:
+        domain (Domain): Computational domain for the simulation.
+        precision (str): Numerical precision for computations.
+        _wave_vectors (Tuple[np.ndarray, ...]): Pre-computed wave vectors.
+        _k_magnitude (np.ndarray): Pre-computed wave vector magnitudes.
     """
-
-    def __init__(self, domain: Domain, fft_backend: FFTBackend):
+    
+    def __init__(self, domain: 'Domain', precision: str = 'float64'):
         """
         Initialize spectral derivatives.
-
+        
         Physical Meaning:
-            Sets up spectral derivative operations with the computational domain
-            and FFT backend for efficient frequency space computations.
-
+            Sets up the spectral derivatives calculator with the computational
+            domain and numerical precision, pre-computing wave vectors for
+            efficient derivative calculations.
+            
         Args:
-            domain (Domain): Computational domain for spectral operations.
-            fft_backend (FFTBackend): FFT backend for transformations.
+            domain (Domain): Computational domain with grid information.
+            precision (str): Numerical precision ('float64' or 'float32').
         """
         self.domain = domain
-        self.fft_backend = fft_backend
-        self._frequency_arrays = self.fft_backend.get_frequency_arrays()
-
-    def spectral_derivative(
-        self, field: np.ndarray, order: int = 1, axis: int = 0
-    ) -> np.ndarray:
+        self.precision = precision
+        self.logger = logging.getLogger(__name__)
+        
+        # Pre-compute wave vectors
+        self._wave_vectors = self._compute_wave_vectors()
+        self._k_magnitude = self._compute_k_magnitude()
+        
+        self.logger.info(f"SpectralDerivatives initialized for domain {domain.shape}")
+    
+    def compute_gradient(self, field: np.ndarray) -> Tuple[np.ndarray, ...]:
         """
-        Compute spectral derivative.
-
+        Compute gradient of field in spectral space.
+        
         Physical Meaning:
-            Computes the derivative of the field using spectral methods,
-            which is more accurate than finite difference methods.
-
+            Computes the gradient ∇a of the phase field in 7D space-time,
+            representing the spatial and temporal rates of change of the
+            phase field configuration.
+            
         Mathematical Foundation:
-            Spectral derivative: ∂^n/∂x^n a(x) = IFFT((ik)^n * FFT(a(x)))
-            where k is the frequency and n is the derivative order.
-
+            In spectral space: ∇a → ik * â(k)
+            where k is the wave vector and â(k) is the spectral representation.
+            
         Args:
-            field (np.ndarray): Input field a(x).
-            order (int): Derivative order (default: 1).
-            axis (int): Axis along which to compute derivative (default: 0).
-
+            field (np.ndarray): Field to differentiate.
+            
         Returns:
-            np.ndarray: Spectral derivative of the field.
-
-        Raises:
-            ValueError: If field shape is incompatible with domain.
+            Tuple[np.ndarray, ...]: Gradient components (∂a/∂x, ∂a/∂y, ∂a/∂z, ∂a/∂φ₁, ∂a/∂φ₂, ∂a/∂φ₃, ∂a/∂t).
         """
         if field.shape != self.domain.shape:
-            raise ValueError(
-                f"Field shape {field.shape} incompatible with "
-                f"domain shape {self.domain.shape}"
-            )
-
+            raise ValueError(f"Field shape {field.shape} incompatible with domain {self.domain.shape}")
+        
         # Transform to spectral space
-        field_spectral = self.fft_backend.fft(field)
-
-        # Get frequency array for the specified axis
-        if axis >= self.domain.dimensions:
-            raise ValueError(
-                f"Axis {axis} out of range for {self.domain.dimensions}D domain"
-            )
-
-        k = self._frequency_arrays[axis]
-
-        # Create frequency multiplier for derivative
-        if self.domain.dimensions == 1:
-            k_multiplier = (1j * k) ** order
-        elif self.domain.dimensions == 2:
-            if axis == 0:
-                k_multiplier = (1j * k[:, np.newaxis]) ** order
-            else:  # axis == 1
-                k_multiplier = (1j * k[np.newaxis, :]) ** order
-        else:  # 3D
-            if axis == 0:
-                k_multiplier = (1j * k[:, np.newaxis, np.newaxis]) ** order
-            elif axis == 1:
-                k_multiplier = (1j * k[np.newaxis, :, np.newaxis]) ** order
-            else:  # axis == 2
-                k_multiplier = (1j * k[np.newaxis, np.newaxis, :]) ** order
-
-        # Apply spectral derivative
-        derivative_spectral = k_multiplier * field_spectral
-
-        # Transform back to real space
-        derivative = self.fft_backend.ifft(derivative_spectral)
-
-        return derivative.real
-
-    def spectral_gradient(self, field: np.ndarray) -> Tuple[np.ndarray, ...]:
-        """
-        Compute spectral gradient.
-
-        Physical Meaning:
-            Computes the gradient of the field using spectral methods,
-            providing all partial derivatives in all dimensions.
-
-        Mathematical Foundation:
-            Spectral gradient: ∇a(x) = IFFT(ik * FFT(a(x)))
-            where k is the wave vector.
-
-        Args:
-            field (np.ndarray): Input field a(x).
-
-        Returns:
-            Tuple[np.ndarray, ...]: Gradient components in each dimension.
-
-        Raises:
-            ValueError: If field shape is incompatible with domain.
-        """
-        if field.shape != self.domain.shape:
-            raise ValueError(
-                f"Field shape {field.shape} incompatible with "
-                f"domain shape {self.domain.shape}"
-            )
-
+        field_spectral = np.fft.fftn(field)
+        
+        # Compute gradient components
         gradient_components = []
-
-        for axis in range(self.domain.dimensions):
-            gradient_component = self.spectral_derivative(field, order=1, axis=axis)
-            gradient_components.append(gradient_component)
-
+        for i, k_vec in enumerate(self._wave_vectors):
+            gradient_spectral = 1j * k_vec * field_spectral
+            gradient_component = np.fft.ifftn(gradient_spectral)
+            gradient_components.append(gradient_component.real.astype(self.precision))
+        
         return tuple(gradient_components)
-
-    def spectral_laplacian(self, field: np.ndarray) -> np.ndarray:
+    
+    def compute_divergence(self, field_components: Tuple[np.ndarray, ...]) -> np.ndarray:
         """
-        Compute spectral Laplacian.
-
+        Compute divergence of vector field in spectral space.
+        
         Physical Meaning:
-            Computes the Laplacian of the field using spectral methods,
-            providing the sum of second partial derivatives.
-
+            Computes the divergence ∇·a of a vector field in 7D space-time,
+            representing the net flux of the field through an infinitesimal
+            volume element.
+            
         Mathematical Foundation:
-            Spectral Laplacian: Δa(x) = IFFT(-|k|² * FFT(a(x)))
-            where |k|² is the squared magnitude of the wave vector.
-
+            In spectral space: ∇·a → ik · â(k)
+            where k is the wave vector and â(k) is the spectral representation.
+            
         Args:
-            field (np.ndarray): Input field a(x).
-
+            field_components (Tuple[np.ndarray, ...]): Vector field components.
+            
         Returns:
-            np.ndarray: Spectral Laplacian of the field.
-
-        Raises:
-            ValueError: If field shape is incompatible with domain.
+            np.ndarray: Divergence field.
+        """
+        if len(field_components) != 7:
+            raise ValueError(f"Expected 7 components, got {len(field_components)}")
+        
+        # Transform to spectral space
+        field_spectral_components = [np.fft.fftn(comp) for comp in field_components]
+        
+        # Compute divergence in spectral space
+        divergence_spectral = np.zeros_like(field_spectral_components[0])
+        for i, (k_vec, field_spectral) in enumerate(zip(self._wave_vectors, field_spectral_components)):
+            divergence_spectral += 1j * k_vec * field_spectral
+        
+        # Transform back to real space
+        divergence = np.fft.ifftn(divergence_spectral)
+        return divergence.real.astype(self.precision)
+    
+    def compute_curl(self, field_components: Tuple[np.ndarray, ...]) -> Tuple[np.ndarray, ...]:
+        """
+        Compute curl of vector field in spectral space.
+        
+        Physical Meaning:
+            Computes the curl ∇×a of a vector field in 7D space-time,
+            representing the rotation of the field around each point.
+            
+        Mathematical Foundation:
+            In spectral space: ∇×a → ik × â(k)
+            where k is the wave vector and â(k) is the spectral representation.
+            
+        Args:
+            field_components (Tuple[np.ndarray, ...]): Vector field components.
+            
+        Returns:
+            Tuple[np.ndarray, ...]: Curl components.
+        """
+        if len(field_components) != 7:
+            raise ValueError(f"Expected 7 components, got {len(field_components)}")
+        
+        # Transform to spectral space
+        field_spectral_components = [np.fft.fftn(comp) for comp in field_components]
+        
+        # Compute curl in spectral space using cross product
+        curl_components = []
+        for i in range(7):
+            curl_spectral = np.zeros_like(field_spectral_components[0])
+            for j in range(7):
+                for k in range(7):
+                    if i != j and j != k and k != i:
+                        # Levi-Civita symbol for 7D cross product
+                        levi_civita = self._levi_civita_7d(i, j, k)
+                        if levi_civita != 0:
+                            curl_spectral += (levi_civita * 1j * self._wave_vectors[j] * 
+                                            field_spectral_components[k])
+            
+            curl_component = np.fft.ifftn(curl_spectral)
+            curl_components.append(curl_component.real.astype(self.precision))
+        
+        return tuple(curl_components)
+    
+    def compute_laplacian(self, field: np.ndarray) -> np.ndarray:
+        """
+        Compute Laplacian of field in spectral space.
+        
+        Physical Meaning:
+            Computes the Laplacian Δa of the phase field in 7D space-time,
+            representing the sum of second partial derivatives in all dimensions.
+            
+        Mathematical Foundation:
+            In spectral space: Δa → -|k|² * â(k)
+            where |k|² is the squared magnitude of the wave vector.
+            
+        Args:
+            field (np.ndarray): Field to differentiate.
+            
+        Returns:
+            np.ndarray: Laplacian field.
         """
         if field.shape != self.domain.shape:
-            raise ValueError(
-                f"Field shape {field.shape} incompatible with "
-                f"domain shape {self.domain.shape}"
-            )
-
+            raise ValueError(f"Field shape {field.shape} incompatible with domain {self.domain.shape}")
+        
         # Transform to spectral space
-        field_spectral = self.fft_backend.fft(field)
-
-        # Compute |k|²
-        if self.domain.dimensions == 1:
-            k = self._frequency_arrays[0]
-            k_squared = k**2
-        elif self.domain.dimensions == 2:
-            kx, ky = self._frequency_arrays
-            KX, KY = np.meshgrid(kx, ky, indexing="ij")
-            k_squared = KX**2 + KY**2
-        else:  # 3D
-            kx, ky, kz = self._frequency_arrays
-            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
-            k_squared = KX**2 + KY**2 + KZ**2
-
-        # Apply spectral Laplacian
-        laplacian_spectral = -k_squared * field_spectral
-
+        field_spectral = np.fft.fftn(field)
+        
+        # Compute Laplacian in spectral space
+        laplacian_spectral = -self._k_magnitude**2 * field_spectral
+        
         # Transform back to real space
-        laplacian = self.fft_backend.ifft(laplacian_spectral)
-
-        return laplacian.real
-
-    def compute_first_derivative(self, field: np.ndarray, axis: int = 0) -> np.ndarray:
-        """
-        Compute first derivative of field.
-        
-        Args:
-            field (np.ndarray): Input field.
-            axis (int): Axis along which to compute derivative.
-            
-        Returns:
-            np.ndarray: First derivative of the field.
-        """
-        return self.spectral_derivative(field, order=1, axis=axis)
+        laplacian = np.fft.ifftn(laplacian_spectral)
+        return laplacian.real.astype(self.precision)
     
-    def compute_second_derivative(self, field: np.ndarray, axis: int = 0) -> np.ndarray:
+    def compute_spectral_derivative(self, field: np.ndarray, order: int, 
+                                  direction: int) -> np.ndarray:
         """
-        Compute second derivative of field.
+        Compute spectral derivative of specified order and direction.
         
-        Args:
-            field (np.ndarray): Input field.
-            axis (int): Axis along which to compute derivative.
+        Physical Meaning:
+            Computes the n-th order derivative of the phase field in the
+            specified direction, representing the rate of change of the
+            field configuration.
             
-        Returns:
-            np.ndarray: Second derivative of the field.
-        """
-        return self.spectral_derivative(field, order=2, axis=axis)
-    
-    def compute_nth_derivative(self, field: np.ndarray, order: int, axis: int = 0) -> np.ndarray:
-        """
-        Compute nth derivative of field.
-        
+        Mathematical Foundation:
+            In spectral space: ∂^n/∂x^n a → (ik)^n * â(k)
+            where k is the wave vector component in the specified direction.
+            
         Args:
-            field (np.ndarray): Input field.
+            field (np.ndarray): Field to differentiate.
             order (int): Order of derivative.
-            axis (int): Axis along which to compute derivative.
+            direction (int): Direction index (0-6 for 7D).
             
         Returns:
-            np.ndarray: Nth derivative of the field.
+            np.ndarray: Derivative field.
         """
-        return self.spectral_derivative(field, order=order, axis=axis)
+        if field.shape != self.domain.shape:
+            raise ValueError(f"Field shape {field.shape} incompatible with domain {self.domain.shape}")
+        
+        if not 0 <= direction < 7:
+            raise ValueError(f"Direction must be 0-6, got {direction}")
+        
+        if order < 0:
+            raise ValueError(f"Order must be non-negative, got {order}")
+        
+        # Transform to spectral space
+        field_spectral = np.fft.fftn(field)
+        
+        # Compute derivative in spectral space
+        k_vec = self._wave_vectors[direction]
+        derivative_spectral = (1j * k_vec)**order * field_spectral
+        
+        # Transform back to real space
+        derivative = np.fft.ifftn(derivative_spectral)
+        return derivative.real.astype(self.precision)
     
-    def compute_mixed_derivative(self, field: np.ndarray, orders: list) -> np.ndarray:
+    def _compute_wave_vectors(self) -> Tuple[np.ndarray, ...]:
         """
-        Compute mixed derivative of field.
+        Compute wave vectors for all 7 dimensions.
         
-        Args:
-            field (np.ndarray): Input field.
-            orders (list): List of derivative orders for each axis.
+        Physical Meaning:
+            Computes the wave vectors k for all 7 dimensions of the
+            computational domain, representing the frequency components
+            in spectral space.
+            
+        Mathematical Foundation:
+            k = (2π/scale) * m, where m is the mode index and scale is
+            the domain size in each dimension.
             
         Returns:
-            np.ndarray: Mixed derivative of the field.
+            Tuple[np.ndarray, ...]: Wave vectors for each dimension.
         """
-        result = field.copy()
-        for axis, order in enumerate(orders):
-            if order > 0:
-                result = self.spectral_derivative(result, order=order, axis=axis)
-        return result
+        wave_vectors = []
+        
+        # Spatial dimensions (x, y, z)
+        for i in range(3):
+            k = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+            k = k * 2 * np.pi / self.domain.L
+            k = np.broadcast_to(k.reshape(-1, 1, 1, 1, 1, 1, 1), self.domain.shape)
+            wave_vectors.append(k)
+        
+        # Phase dimensions (φ₁, φ₂, φ₃)
+        for i in range(3):
+            k = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+            k = k * 2 * np.pi / (2 * np.pi)
+            k = np.broadcast_to(k.reshape(1, 1, 1, -1, 1, 1, 1), self.domain.shape)
+            wave_vectors.append(k)
+        
+        # Time dimension (t)
+        k = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
+        k = k * 2 * np.pi / self.domain.T
+        k = np.broadcast_to(k.reshape(1, 1, 1, 1, 1, 1, -1), self.domain.shape)
+        wave_vectors.append(k)
+        
+        return tuple(wave_vectors)
     
-    def compute_gradient(self, field: np.ndarray) -> np.ndarray:
+    def _compute_k_magnitude(self) -> np.ndarray:
         """
-        Compute gradient of scalar field.
+        Compute magnitude of wave vectors.
         
-        Args:
-            field (np.ndarray): Scalar field.
+        Physical Meaning:
+            Computes the magnitude |k| of the wave vectors, representing
+            the spatial frequency of the field components.
+            
+        Mathematical Foundation:
+            |k|² = k_x² + k_y² + k_z² + k_φ₁² + k_φ₂² + k_φ₃² + k_t²
             
         Returns:
-            np.ndarray: Gradient vector field.
+            np.ndarray: Wave vector magnitudes.
         """
-        gradients = []
-        for axis in range(field.ndim):
-            gradients.append(self.spectral_derivative(field, order=1, axis=axis))
-        return np.stack(gradients, axis=-1)
+        k_magnitude_squared = np.zeros(self.domain.shape)
+        for k_vec in self._wave_vectors:
+            k_magnitude_squared += k_vec**2
+        
+        return np.sqrt(k_magnitude_squared)
     
-    def compute_divergence(self, vector_field: np.ndarray) -> np.ndarray:
+    def _levi_civita_7d(self, i: int, j: int, k: int) -> int:
         """
-        Compute divergence of vector field.
+        Compute Levi-Civita symbol for 7D cross product.
         
+        Physical Meaning:
+            Computes the Levi-Civita symbol εᵢⱼₖ for 7D cross product,
+            representing the sign of the permutation of indices.
+            
+        Mathematical Foundation:
+            εᵢⱼₖ = +1 if (i,j,k) is even permutation
+            εᵢⱼₖ = -1 if (i,j,k) is odd permutation
+            εᵢⱼₖ = 0 if any indices are equal
+            
         Args:
-            vector_field (np.ndarray): Vector field.
+            i, j, k (int): Indices for Levi-Civita symbol.
             
         Returns:
-            np.ndarray: Divergence scalar field.
+            int: Levi-Civita symbol value.
         """
-        divergence = np.zeros_like(vector_field[..., 0])
-        for axis in range(vector_field.shape[-1]):
-            divergence += self.spectral_derivative(vector_field[..., axis], order=1, axis=axis)
-        return divergence
-    
-    def compute_curl(self, vector_field: np.ndarray) -> np.ndarray:
-        """
-        Compute curl of vector field.
+        if i == j or j == k or k == i:
+            return 0
         
-        Args:
-            vector_field (np.ndarray): Vector field.
-            
-        Returns:
-            np.ndarray: Curl vector field.
-        """
-        if vector_field.shape[-1] != 3:
-            raise ValueError("Curl requires 3D vector field")
+        # Check if permutation is even or odd
+        indices = [i, j, k]
+        inversions = 0
+        for m in range(3):
+            for n in range(m + 1, 3):
+                if indices[m] > indices[n]:
+                    inversions += 1
         
-        curl = np.zeros_like(vector_field)
-        # curl_x = ∂F_z/∂y - ∂F_y/∂z
-        curl[..., 0] = (self.spectral_derivative(vector_field[..., 2], order=1, axis=1) - 
-                       self.spectral_derivative(vector_field[..., 1], order=1, axis=2))
-        # curl_y = ∂F_x/∂z - ∂F_z/∂x
-        curl[..., 1] = (self.spectral_derivative(vector_field[..., 0], order=1, axis=2) - 
-                       self.spectral_derivative(vector_field[..., 2], order=1, axis=0))
-        # curl_z = ∂F_y/∂x - ∂F_x/∂y
-        curl[..., 2] = (self.spectral_derivative(vector_field[..., 1], order=1, axis=0) - 
-                       self.spectral_derivative(vector_field[..., 0], order=1, axis=1))
-        return curl
+        return 1 if inversions % 2 == 0 else -1

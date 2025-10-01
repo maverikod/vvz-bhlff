@@ -26,7 +26,11 @@ Example:
 """
 
 from .bvp_core import BVPCore
+from .bvp_core_facade import BVPCoreFacade
 from .bvp_operations import BVPCoreOperations
 from .bvp_7d_interface import BVPCore7DInterface
 
-__all__ = ["BVPCore", "BVPCoreOperations", "BVPCore7DInterface"]
+# Main facade class for unified interface
+BVPCore = BVPCoreFacade
+
+__all__ = ["BVPCore", "BVPCoreFacade", "BVPCoreOperations", "BVPCore7DInterface"]

@@ -2,31 +2,33 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-Legacy BVP core module - DEPRECATED.
+BVP Core module - Unified interface.
 
-This module is deprecated. Use the new modular structure:
-- bhlff.core.bvp.bvp_core.BVPCore
-- Individual modules in bhlff.core.bvp.bvp_core.*
-
-The BVP core has been refactored into separate modules following
-the 1 class = 1 file principle and size limits.
+This module provides the unified BVP Core interface using the facade pattern.
+The implementation has been consolidated into a single, well-organized
+interface that follows the 1 class = 1 file principle.
 
 Physical Meaning:
-    This legacy module contained the complete BVP core implementation
-    in a single file, which violated project standards. The implementation
-    has been moved to individual modules for better maintainability.
+    The BVP core serves as the central backbone of the entire system, where
+    all observed particles and fields are manifestations of envelope
+    modulations and beatings of the high-frequency carrier field.
+
+Mathematical Foundation:
+    BVP implements the envelope equation:
+    ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t)
+    where κ(|a|) = κ₀ + κ₂|a|² is nonlinear stiffness and
+    χ(|a|) = χ' + iχ''(|a|) is effective susceptibility with quenches.
 
 Example:
-    # OLD (deprecated):
-    # from bhlff.core.bvp.bvp_core import BVPCore
-    
-    # NEW (recommended):
-    from bhlff.core.bvp.bvp_core import BVPCore
+    >>> from bhlff.core.bvp.bvp_core import BVPCore
+    >>> bvp_core = BVPCore(domain, config, domain_7d)
+    >>> envelope = bvp_core.solve_envelope(source)
+    >>> quenches = bvp_core.detect_quenches(envelope)
 """
 
-# Import from the new modular structure
+# Import from the consolidated facade structure
 from .bvp_core import BVPCore
 from .bvp_core import BVPCoreOperations, BVPCore7DInterface
 
-# Re-export for backward compatibility
+# Re-export for unified interface
 __all__ = ["BVPCore", "BVPCoreOperations", "BVPCore7DInterface"]

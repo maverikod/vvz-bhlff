@@ -120,9 +120,16 @@ class SpectralOperations:
             # Use physics normalization
             field_spectral = np.fft.fftn(field)
             # Apply physics normalization factor
-            dx = self.domain.L / self.domain.N
-            dphi = 2 * np.pi / self.domain.N_phi
-            dt = self.domain.T / self.domain.N_t
+            if hasattr(self.domain, 'N_spatial'):
+                # New Domain7DBVP structure
+                dx = self.domain.L_spatial / self.domain.N_spatial
+                dphi = 2 * np.pi / self.domain.N_phase
+                dt = self.domain.T / self.domain.N_t
+            else:
+                # Old Domain structure
+                dx = self.domain.L / self.domain.N
+                dphi = 2 * np.pi / self.domain.N_phi
+                dt = self.domain.T / self.domain.N_t
             normalization_factor = (dx ** 3) * (dphi ** 3) * dt
             field_spectral *= normalization_factor
         else:
@@ -162,9 +169,16 @@ class SpectralOperations:
             field = np.fft.ifftn(spectral_field, norm='ortho')
         elif normalization == 'physics':
             # Use physics normalization
-            dx = self.domain.L / self.domain.N
-            dphi = 2 * np.pi / self.domain.N_phi
-            dt = self.domain.T / self.domain.N_t
+            if hasattr(self.domain, 'N_spatial'):
+                # New Domain7DBVP structure
+                dx = self.domain.L_spatial / self.domain.N_spatial
+                dphi = 2 * np.pi / self.domain.N_phase
+                dt = self.domain.T / self.domain.N_t
+            else:
+                # Old Domain structure
+                dx = self.domain.L / self.domain.N
+                dphi = 2 * np.pi / self.domain.N_phi
+                dt = self.domain.T / self.domain.N_t
             normalization_factor = (dx ** 3) * (dphi ** 3) * dt
             field = np.fft.ifftn(spectral_field / normalization_factor)
         else:
@@ -265,24 +279,47 @@ class SpectralOperations:
         """
         wave_vectors = []
         
-        # Spatial dimensions (x, y, z)
-        for i in range(3):
-            k = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
-            k = k * 2 * np.pi / self.domain.L
-            k = np.broadcast_to(k.reshape(-1, 1, 1, 1, 1, 1, 1), self.domain.shape)
+        if hasattr(self.domain, 'N_spatial'):
+            # New Domain7DBVP structure
+            # Spatial dimensions (x, y, z)
+            for i in range(3):
+                k = np.fft.fftfreq(self.domain.N_spatial, self.domain.L_spatial / self.domain.N_spatial)
+                k = k * 2 * np.pi / self.domain.L_spatial
+                k = np.broadcast_to(k.reshape(-1, 1, 1, 1, 1, 1, 1), self.domain.shape)
+                wave_vectors.append(k)
+            
+            # Phase dimensions (φ₁, φ₂, φ₃)
+            for i in range(3):
+                k = np.fft.fftfreq(self.domain.N_phase, 2 * np.pi / self.domain.N_phase)
+                k = k * 2 * np.pi / (2 * np.pi)
+                k = np.broadcast_to(k.reshape(1, 1, 1, -1, 1, 1, 1), self.domain.shape)
+                wave_vectors.append(k)
+            
+            # Time dimension (t)
+            k = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
+            k = k * 2 * np.pi / self.domain.T
+            k = np.broadcast_to(k.reshape(1, 1, 1, 1, 1, 1, -1), self.domain.shape)
             wave_vectors.append(k)
-        
-        # Phase dimensions (φ₁, φ₂, φ₃)
-        for i in range(3):
-            k = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
-            k = k * 2 * np.pi / (2 * np.pi)
-            k = np.broadcast_to(k.reshape(1, 1, 1, -1, 1, 1, 1), self.domain.shape)
+        else:
+            # Old Domain structure
+            # Spatial dimensions (x, y, z)
+            for i in range(3):
+                k = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+                k = k * 2 * np.pi / self.domain.L
+                k = np.broadcast_to(k.reshape(-1, 1, 1, 1, 1, 1, 1), self.domain.shape)
+                wave_vectors.append(k)
+            
+            # Phase dimensions (φ₁, φ₂, φ₃)
+            for i in range(3):
+                k = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+                k = k * 2 * np.pi / (2 * np.pi)
+                k = np.broadcast_to(k.reshape(1, 1, 1, -1, 1, 1, 1), self.domain.shape)
+                wave_vectors.append(k)
+            
+            # Time dimension (t)
+            k = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
+            k = k * 2 * np.pi / self.domain.T
+            k = np.broadcast_to(k.reshape(1, 1, 1, 1, 1, 1, -1), self.domain.shape)
             wave_vectors.append(k)
-        
-        # Time dimension (t)
-        k = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
-        k = k * 2 * np.pi / self.domain.T
-        k = np.broadcast_to(k.reshape(1, 1, 1, 1, 1, 1, -1), self.domain.shape)
-        wave_vectors.append(k)
         
         return tuple(wave_vectors)

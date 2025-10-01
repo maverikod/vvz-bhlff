@@ -350,8 +350,17 @@ class TestFFTSolver7DValidation:
         assert time_evolution is not None
         assert time_evolution.shape == solver.domain.shape
         
-        # TODO: Implement detailed steady-state validation
-        # This would require implementing the time integrator first
+        # Implement detailed steady-state validation
+        # Check that the solution reaches a steady state
+        final_state = time_evolution[-1]
+        initial_state = time_evolution[0]
+        
+        # Compute change in solution over time
+        solution_change = np.linalg.norm(final_state - initial_state)
+        relative_change = solution_change / np.linalg.norm(initial_state)
+        
+        # For steady state, relative change should be small
+        assert relative_change < 0.1, f"Solution did not reach steady state: relative_change={relative_change:.2e}"
     
     def _validate_scale_invariance(self, solution1: np.ndarray, solution2: np.ndarray,
                                  domain1: Domain, domain2: Domain):
@@ -361,8 +370,22 @@ class TestFFTSolver7DValidation:
         assert solution1 is not None
         assert solution2 is not None
         
-        # TODO: Implement detailed scale invariance validation
-        # This would require proper dimensionless comparison
+        # Implement detailed scale invariance validation
+        # Check that solutions scale properly with domain size
+        scale_factor = domain2.L / domain1.L
+        
+        # Resample solution1 to match solution2's grid
+        from scipy.ndimage import zoom
+        zoom_factors = [scale_factor] * 7  # 7D scaling
+        solution1_resampled = zoom(solution1, zoom_factors, order=1)
+        
+        # Compare dimensionless solutions
+        solution1_norm = solution1_resampled / np.linalg.norm(solution1_resampled)
+        solution2_norm = solution2 / np.linalg.norm(solution2)
+        
+        # Solutions should be similar after normalization
+        similarity = np.corrcoef(solution1_norm.flatten(), solution2_norm.flatten())[0, 1]
+        assert similarity > 0.8, f"Scale invariance failed: similarity={similarity:.3f}"
     
     def _validate_units_invariance(self, solution1: np.ndarray, solution2: np.ndarray):
         """Validate units invariance."""
@@ -370,5 +393,14 @@ class TestFFTSolver7DValidation:
         assert solution1 is not None
         assert solution2 is not None
         
-        # TODO: Implement detailed units invariance validation
-        # This would require proper dimensionless comparison
+        # Implement detailed units invariance validation
+        # Check that solutions are invariant under unit transformations
+        # For dimensionless solutions, they should be identical
+        solution1_norm = solution1 / np.linalg.norm(solution1)
+        solution2_norm = solution2 / np.linalg.norm(solution2)
+        
+        # Compute relative difference
+        relative_diff = np.linalg.norm(solution1_norm - solution2_norm) / np.linalg.norm(solution1_norm)
+        
+        # Solutions should be nearly identical after normalization
+        assert relative_diff < 0.01, f"Units invariance failed: relative_diff={relative_diff:.2e}"

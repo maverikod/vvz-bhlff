@@ -280,25 +280,49 @@ class SpectralDerivatives:
         """
         wave_vectors = []
         
-        # Spatial dimensions (x, y, z)
-        for i in range(3):
-            k = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
-            k = k * 2 * np.pi / self.domain.L
-            k = np.broadcast_to(k.reshape(-1, 1, 1, 1, 1, 1, 1), self.domain.shape)
+        # Check if domain is Domain7DBVP or old Domain
+        if hasattr(self.domain, 'N_spatial'):
+            # New Domain7DBVP structure
+            # Spatial dimensions (x, y, z)
+            for i in range(3):
+                k = np.fft.fftfreq(self.domain.N_spatial, self.domain.L_spatial / self.domain.N_spatial)
+                k = k * 2 * np.pi / self.domain.L_spatial
+                k = np.broadcast_to(k.reshape(-1, 1, 1, 1, 1, 1, 1), self.domain.shape)
+                wave_vectors.append(k)
+            
+            # Phase dimensions (φ₁, φ₂, φ₃)
+            for i in range(3):
+                k = np.fft.fftfreq(self.domain.N_phase, 2 * np.pi / self.domain.N_phase)
+                k = k * 2 * np.pi / (2 * np.pi)
+                k = np.broadcast_to(k.reshape(1, 1, 1, -1, 1, 1, 1), self.domain.shape)
+                wave_vectors.append(k)
+            
+            # Time dimension (t)
+            k = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
+            k = k * 2 * np.pi / self.domain.T
+            k = np.broadcast_to(k.reshape(1, 1, 1, 1, 1, 1, -1), self.domain.shape)
             wave_vectors.append(k)
-        
-        # Phase dimensions (φ₁, φ₂, φ₃)
-        for i in range(3):
-            k = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
-            k = k * 2 * np.pi / (2 * np.pi)
-            k = np.broadcast_to(k.reshape(1, 1, 1, -1, 1, 1, 1), self.domain.shape)
+        else:
+            # Old Domain structure
+            # Spatial dimensions (x, y, z)
+            for i in range(3):
+                k = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+                k = k * 2 * np.pi / self.domain.L
+                k = np.broadcast_to(k.reshape(-1, 1, 1, 1, 1, 1, 1), self.domain.shape)
+                wave_vectors.append(k)
+            
+            # Phase dimensions (φ₁, φ₂, φ₃)
+            for i in range(3):
+                k = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+                k = k * 2 * np.pi / (2 * np.pi)
+                k = np.broadcast_to(k.reshape(1, 1, 1, -1, 1, 1, 1), self.domain.shape)
+                wave_vectors.append(k)
+            
+            # Time dimension (t)
+            k = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
+            k = k * 2 * np.pi / self.domain.T
+            k = np.broadcast_to(k.reshape(1, 1, 1, 1, 1, 1, -1), self.domain.shape)
             wave_vectors.append(k)
-        
-        # Time dimension (t)
-        k = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
-        k = k * 2 * np.pi / self.domain.T
-        k = np.broadcast_to(k.reshape(1, 1, 1, 1, 1, 1, -1), self.domain.shape)
-        wave_vectors.append(k)
         
         return tuple(wave_vectors)
     
@@ -316,11 +340,20 @@ class SpectralDerivatives:
         Returns:
             np.ndarray: Wave vector magnitudes.
         """
-        k_magnitude_squared = np.zeros(self.domain.shape)
-        for k_vec in self._wave_vectors:
-            k_magnitude_squared += k_vec**2
-        
-        return np.sqrt(k_magnitude_squared)
+        if hasattr(self.domain, 'N_spatial'):
+            # New Domain7DBVP structure
+            k_magnitude_squared = np.zeros(self.domain.shape)
+            for k_vec in self._wave_vectors:
+                k_magnitude_squared += k_vec**2
+            
+            return np.sqrt(k_magnitude_squared)
+        else:
+            # Old Domain structure
+            k_magnitude_squared = np.zeros(self.domain.shape)
+            for k_vec in self._wave_vectors:
+                k_magnitude_squared += k_vec**2
+            
+            return np.sqrt(k_magnitude_squared)
     
     def _levi_civita_7d(self, i: int, j: int, k: int) -> int:
         """

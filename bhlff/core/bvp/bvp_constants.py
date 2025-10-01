@@ -86,6 +86,38 @@ class BVPConstants(BVPConstantsNumerical, BVPConstantsAdvanced, BVPConstantsBase
         # Try advanced material properties
         return self.get_advanced_material_property(property_name)
 
+    def get_all_constants(self) -> Dict[str, Any]:
+        """
+        Get all BVP constants as a dictionary.
+        
+        Physical Meaning:
+            Returns all BVP constants for monitoring and analysis purposes.
+            
+        Returns:
+            Dict[str, Any]: Dictionary containing all constants.
+        """
+        return {
+            # Envelope equation parameters
+            "kappa_0": self.KAPPA_0,
+            "kappa_2": self.KAPPA_2,
+            "chi_prime": self.CHI_PRIME,
+            "chi_double_prime_0": self.CHI_DOUBLE_PRIME_0,
+            "k0_squared": self.K0_SQUARED,
+            "carrier_frequency": self.CARRIER_FREQUENCY,
+            
+            # Quench detection thresholds
+            "amplitude_threshold": self.AMPLITUDE_THRESHOLD,
+            "detuning_threshold": self.DETUNING_THRESHOLD,
+            "gradient_threshold": self.GRADIENT_THRESHOLD,
+            
+            # Physical constants
+            "speed_of_light": self.SPEED_OF_LIGHT,
+            "vacuum_permeability": self.VACUUM_PERMEABILITY,
+            "vacuum_permittivity": self.VACUUM_PERMITTIVITY,
+            "planck_constant": self.PLANCK_CONSTANT,
+            "boltzmann_constant": self.BOLTZMANN_CONSTANT,
+        }
+
     def __repr__(self) -> str:
         """String representation of unified BVP constants."""
         return (

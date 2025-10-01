@@ -241,8 +241,20 @@ class TestBVPCorePipelinePhysics:
         # Compute phase
         phase = np.angle(envelope)
         
-        # Compute phase coherence (simplified)
+        # Compute phase coherence (full algorithm)
+        # Phase coherence measures the uniformity of phase distribution
+        phase_mean = np.mean(phase)
         phase_variance = np.var(phase)
-        coherence = np.exp(-phase_variance)
+        
+        # Compute coherence as inverse of phase spread
+        # For U(1) phase, coherence = |⟨e^(iφ)⟩| where ⟨⟩ is spatial average
+        complex_phase = np.exp(1j * phase)
+        coherence = np.abs(np.mean(complex_phase))
+        
+        # Alternative measure: exponential decay of phase variance
+        coherence_alt = np.exp(-phase_variance)
+        
+        # Use the more physically meaningful measure
+        coherence = coherence
         
         return coherence

@@ -77,6 +77,7 @@ class BVPCoreOperations:
         self._setup_quench_detector()
         self._setup_impedance_calculator()
         self._setup_phase_operations()
+        # Parameter access needs to be initialized after all other components
         self._setup_parameter_access()
 
     def _setup_phase_vector(self) -> None:
@@ -89,7 +90,9 @@ class BVPCoreOperations:
 
     def _setup_quench_detector(self) -> None:
         """Setup quench detector for threshold events."""
-        self._quench_detector = QuenchDetector(self.domain, self.config)
+        from ..bvp_constants import BVPConstants
+        constants = BVPConstants(self.config)
+        self._quench_detector = QuenchDetector(self.domain, constants)
 
     def _setup_impedance_calculator(self) -> None:
         """Setup impedance calculator for boundary analysis."""
@@ -97,11 +100,18 @@ class BVPCoreOperations:
 
     def _setup_phase_operations(self) -> None:
         """Setup phase operations for U(1)³ structure."""
-        self._phase_operations = BVPPhaseOperations(self.domain, self.config)
+        self._phase_operations = BVPPhaseOperations(self._phase_vector)
 
     def _setup_parameter_access(self) -> None:
         """Setup parameter access for configuration management."""
-        self._parameter_access = BVPParameterAccess(self.domain, self.config)
+        from ..bvp_constants import BVPConstants
+        constants = BVPConstants(self.config)
+        self._parameter_access = BVPParameterAccess(
+            constants, 
+            self._envelope_solver, 
+            self._quench_detector, 
+            self._impedance_calculator
+        )
 
     def solve_envelope(self, source: np.ndarray) -> np.ndarray:
         """

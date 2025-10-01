@@ -236,6 +236,20 @@ class BVPConstantsBase:
         }
         return parameter_map.get(parameter_name, 0.0)
 
+    def get_carrier_frequency(self) -> float:
+        """
+        Get BVP carrier frequency.
+        
+        Physical Meaning:
+            Returns the high-frequency carrier frequency ω₀ of the BVP field,
+            which is the fundamental frequency that all envelope modulations
+            and beatings are based upon.
+            
+        Returns:
+            float: BVP carrier frequency ω₀.
+        """
+        return self.CARRIER_FREQUENCY
+
     def get_quench_parameter(self, parameter_name: str) -> float:
         """
         Get quench detection parameter value.

@@ -81,19 +81,20 @@ class FractionalLaplacian:
         
         Physical Meaning:
             Computes the fractional Laplacian of the field, representing
-            non-local interactions with range determined by β.
+            non-local interactions with range determined by β in 7D space-time
+            M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
             
         Mathematical Foundation:
-            Applies the operator in spectral space:
-            1. FFT: f̂(k) = F[f](k)
+            Applies the operator in spectral space with proper 7D physics normalization:
+            1. FFT: f̂(k) = F[f](k) with physics normalization
             2. Multiply: ĝ(k) = |k|^(2β) * f̂(k)
-            3. IFFT: g(x) = F^{-1}[ĝ(k)]
+            3. IFFT: g(x) = F^{-1}[ĝ(k)] with physics normalization
             
         Args:
-            field (np.ndarray): Input field f(x) in real space.
+            field (np.ndarray): Input field f(x,φ,t) in 7D real space.
                 
         Returns:
-            np.ndarray: Result field g(x) = (-Δ)^β f(x) in real space.
+            np.ndarray: Result field g(x,φ,t) = (-Δ)^β f(x,φ,t) in 7D real space.
                 
         Raises:
             ValueError: If field has incompatible shape with domain.
@@ -101,14 +102,14 @@ class FractionalLaplacian:
         if field.shape != self.domain.shape:
             raise ValueError(f"Field shape {field.shape} incompatible with domain shape {self.domain.shape}")
         
-        # Transform to spectral space
-        field_spectral = np.fft.fftn(field, norm='ortho')
+        # Transform to spectral space with physics normalization
+        field_spectral = self._forward_fft_physics(field)
         
         # Apply spectral coefficients
         result_spectral = field_spectral * self._spectral_coeffs
         
-        # Transform back to real space
-        result = np.fft.ifftn(result_spectral, norm='ortho')
+        # Transform back to real space with physics normalization
+        result = self._inverse_fft_physics(result_spectral)
         
         return result.real
     
@@ -207,10 +208,42 @@ class FractionalLaplacian:
         """
         wave_vectors = []
         
-        for i, n in enumerate(self.domain.shape):
-            # Compute wave numbers
-            k = np.fft.fftfreq(n, d=self.domain.L / n)
-            k *= 2 * np.pi  # Convert to angular frequency
+        # Check if domain is Domain7DBVP or old Domain
+        if hasattr(self.domain, 'N_spatial'):
+            # New Domain7DBVP structure
+            # Spatial dimensions (x, y, z)
+            for i in range(3):
+                k = np.fft.fftfreq(self.domain.N_spatial, self.domain.L_spatial / self.domain.N_spatial)
+                k = k * 2 * np.pi / self.domain.L_spatial
+                wave_vectors.append(k)
+            
+            # Phase dimensions (φ₁, φ₂, φ₃)
+            for i in range(3):
+                k = np.fft.fftfreq(self.domain.N_phase, 2 * np.pi / self.domain.N_phase)
+                k = k * 2 * np.pi / (2 * np.pi)
+                wave_vectors.append(k)
+            
+            # Time dimension (t)
+            k = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
+            k = k * 2 * np.pi / self.domain.T
+            wave_vectors.append(k)
+        else:
+            # Old Domain structure
+            # Spatial dimensions (x, y, z)
+            for i in range(3):
+                k = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+                k = k * 2 * np.pi / self.domain.L
+                wave_vectors.append(k)
+            
+            # Phase dimensions (φ₁, φ₂, φ₃)
+            for i in range(3):
+                k = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+                k = k * 2 * np.pi / (2 * np.pi)
+                wave_vectors.append(k)
+            
+            # Time dimension (t)
+            k = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
+            k = k * 2 * np.pi / self.domain.T
             wave_vectors.append(k)
         
         return tuple(wave_vectors)
@@ -226,16 +259,30 @@ class FractionalLaplacian:
         Returns:
             np.ndarray: Wave vector magnitudes |k|.
         """
-        # Create meshgrid of wave vectors
-        K_mesh = np.meshgrid(*self._wave_vectors, indexing='ij')
-        
-        # Compute magnitude squared
-        k_magnitude_squared = sum(K**2 for K in K_mesh)
-        
-        # Take square root
-        k_magnitude = np.sqrt(k_magnitude_squared)
-        
-        return k_magnitude
+        if hasattr(self.domain, 'N_spatial'):
+            # New Domain7DBVP structure
+            # Create meshgrid of wave vectors
+            K_mesh = np.meshgrid(*self._wave_vectors, indexing='ij')
+            
+            # Compute magnitude squared
+            k_magnitude_squared = sum(K**2 for K in K_mesh)
+            
+            # Take square root
+            k_magnitude = np.sqrt(k_magnitude_squared)
+            
+            return k_magnitude
+        else:
+            # Old Domain structure
+            # Create meshgrid of wave vectors
+            K_mesh = np.meshgrid(*self._wave_vectors, indexing='ij')
+            
+            # Compute magnitude squared
+            k_magnitude_squared = sum(K**2 for K in K_mesh)
+            
+            # Take square root
+            k_magnitude = np.sqrt(k_magnitude_squared)
+            
+            return k_magnitude
     
     def get_operator_info(self) -> Dict[str, Any]:
         """
@@ -261,3 +308,76 @@ class FractionalLaplacian:
             'interaction_range': 'local' if self.beta < 0.5 else 'intermediate' if self.beta < 1.5 else 'long_range',
             'operator_type': 'fractional_laplacian'
         }
+    
+    def _forward_fft_physics(self, field: np.ndarray) -> np.ndarray:
+        """
+        Forward FFT with 7D physics normalization.
+        
+        Physical Meaning:
+            Performs forward FFT with proper 7D physics normalization
+            for the BVP theory in M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
+            
+        Mathematical Foundation:
+            â(m) = Σ_x a(x) e^(-i k(m)·x) Δ^7
+            where Δ^7 = (dx^3) * (dphi^3) * dt is the 7D volume element.
+            
+        Args:
+            field (np.ndarray): Field in real space.
+            
+        Returns:
+            np.ndarray: Field in spectral space with physics normalization.
+        """
+        # Compute 7D volume element
+        if hasattr(self.domain, 'N_spatial'):
+            # New Domain7DBVP structure
+            dx = self.domain.L_spatial / self.domain.N_spatial
+            dphi = 2 * np.pi / self.domain.N_phase
+            dt = self.domain.T / self.domain.N_t
+        else:
+            # Old Domain structure
+            dx = self.domain.L / self.domain.N
+            dphi = 2 * np.pi / self.domain.N_phi
+            dt = self.domain.T / self.domain.N_t
+        volume_element = (dx ** 3) * (dphi ** 3) * dt
+        
+        # Forward FFT with physics normalization
+        field_spectral = np.fft.fftn(field)
+        field_spectral *= volume_element
+        
+        return field_spectral
+    
+    def _inverse_fft_physics(self, field_spectral: np.ndarray) -> np.ndarray:
+        """
+        Inverse FFT with 7D physics normalization.
+        
+        Physical Meaning:
+            Performs inverse FFT with proper 7D physics normalization
+            for the BVP theory in M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
+            
+        Mathematical Foundation:
+            a(x) = (1/Δ^7) Σ_m â(m) e^(i k(m)·x)
+            where Δ^7 = (dx^3) * (dphi^3) * dt is the 7D volume element.
+            
+        Args:
+            field_spectral (np.ndarray): Field in spectral space.
+            
+        Returns:
+            np.ndarray: Field in real space with physics normalization.
+        """
+        # Compute 7D volume element
+        if hasattr(self.domain, 'N_spatial'):
+            # New Domain7DBVP structure
+            dx = self.domain.L_spatial / self.domain.N_spatial
+            dphi = 2 * np.pi / self.domain.N_phase
+            dt = self.domain.T / self.domain.N_t
+        else:
+            # Old Domain structure
+            dx = self.domain.L / self.domain.N
+            dphi = 2 * np.pi / self.domain.N_phi
+            dt = self.domain.T / self.domain.N_t
+        volume_element = (dx ** 3) * (dphi ** 3) * dt
+        
+        # Inverse FFT with physics normalization
+        field = np.fft.ifftn(field_spectral / volume_element)
+        
+        return field

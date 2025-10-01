@@ -28,7 +28,7 @@ import logging
 
 from ...core.bvp import BVPCore
 from ...core.domain import Domain
-from .power_law_core import PowerLawCore
+from ...core.bvp.unified_power_law_analyzer import UnifiedPowerLawAnalyzer
 from .node_analysis import NodeAnalysis
 from .zone_analysis import ZoneAnalysis
 
@@ -59,7 +59,7 @@ class LevelBPowerLawAnalyzer:
         self.logger = logging.getLogger(__name__)
 
         # Initialize modular components
-        self._power_law_core = PowerLawCore(bvp_core)
+        self._power_law_core = UnifiedPowerLawAnalyzer(bvp_core)
         self._node_analysis = NodeAnalysis(bvp_core)
         self._zone_analysis = ZoneAnalysis(bvp_core)
 
@@ -81,18 +81,7 @@ class LevelBPowerLawAnalyzer:
         """
         self.logger.info("Starting power law analysis")
 
-        results = {
-            "power_law_exponents": self._power_law_core.compute_power_law_exponents(
-                envelope
-            ),
-            "scaling_regions": self._power_law_core.identify_scaling_regions(envelope),
-            "correlation_functions": self._power_law_core.compute_correlation_functions(
-                envelope
-            ),
-            "critical_behavior": self._power_law_core.analyze_critical_behavior(
-                envelope
-            ),
-        }
+        results = self._power_law_core.analyze_power_laws(envelope)
 
         self.logger.info("Power law analysis completed")
         return results
@@ -177,6 +166,36 @@ class LevelBPowerLawAnalyzer:
 
         self.logger.info("Comprehensive Level B analysis completed")
         return results
+
+    def analyze_power_law_tails(self, envelope: np.ndarray) -> Dict[str, Any]:
+        """
+        Analyze power law tails of BVP field.
+
+        Physical Meaning:
+            Analyzes the power law decay behavior in the tails of the BVP field,
+            identifying scaling exponents and decay characteristics.
+
+        Returns:
+            Dict[str, Any]: Power law tail analysis results.
+        """
+        return self._power_law_core.analyze_power_law_tails(envelope)
+
+    def compute_radial_profile(self, envelope: np.ndarray, n_bins: int = 50) -> Dict[str, Any]:
+        """
+        Compute radial profile of BVP field.
+
+        Physical Meaning:
+            Computes the radial distribution of the BVP field amplitude,
+            providing insight into the spatial structure and decay behavior.
+
+        Args:
+            envelope (np.ndarray): BVP field envelope.
+            n_bins (int): Number of radial bins for analysis.
+
+        Returns:
+            Dict[str, Any]: Radial profile analysis results.
+        """
+        return self._power_law_core.compute_radial_profile(envelope, n_bins)
 
     def __repr__(self) -> str:
         """String representation of analyzer."""

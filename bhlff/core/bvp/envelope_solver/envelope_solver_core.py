@@ -27,13 +27,11 @@ from typing import Dict, Any
 
 from ...domain import Domain
 from ..bvp_constants import BVPConstants
-from ..residual_computer import ResidualComputer
-from .jacobian_computer import JacobianComputer
-from .newton_solver import NewtonSolver
+from ..abstract_solver_core import AbstractSolverCore
 from .gradient_computer import GradientComputer
 
 
-class EnvelopeSolverCore:
+class EnvelopeSolverCore(AbstractSolverCore):
     """
     Core facade for 7D BVP envelope equation solver.
 
@@ -48,9 +46,6 @@ class EnvelopeSolverCore:
     Attributes:
         domain (Domain): 7D computational domain.
         constants (BVPConstants): BVP constants instance.
-        residual_computer (ResidualComputer): Residual computation component.
-        jacobian_computer (JacobianComputer): Jacobian computation component.
-        newton_solver (NewtonSolver): Newton-Raphson solver component.
         gradient_computer (GradientComputer): Gradient computation component.
     """
 
@@ -69,66 +64,17 @@ class EnvelopeSolverCore:
             config (Dict[str, Any]): Configuration parameters.
             constants (BVPConstants, optional): BVP constants instance.
         """
-        self.domain = domain
+        super().__init__(domain, config)
         self.constants = constants or BVPConstants(config)
 
-        # Initialize components
-        self.residual_computer = ResidualComputer(domain, self.constants)
-        self.jacobian_computer = JacobianComputer(domain, self.constants)
-        self.newton_solver = NewtonSolver(domain, self.constants)
+        # Initialize only the components that are still used
         self.gradient_computer = GradientComputer(domain, self.constants)
 
-    def compute_residual(self, envelope: np.ndarray, source: np.ndarray) -> np.ndarray:
-        """
-        Compute residual of the 7D envelope equation.
+    # compute_residual method removed - now inherits from AbstractSolverCore
 
-        Physical Meaning:
-            Computes the residual r = ∇·(κ(|a|)∇a) + k₀²χ(|a|)a - s(x,φ,t)
-            for the Newton-Raphson method in 7D space-time.
+    # compute_jacobian method removed - now inherits from AbstractSolverCore
 
-        Args:
-            envelope (np.ndarray): Current envelope estimate in 7D space-time.
-            source (np.ndarray): Source term s(x,φ,t) in 7D space-time.
-
-        Returns:
-            np.ndarray: Residual r = L(a) - s in 7D space-time.
-        """
-        return self.residual_computer.compute_residual(envelope, source)
-
-    def compute_jacobian(self, envelope: np.ndarray) -> np.ndarray:
-        """
-        Compute Jacobian matrix for Newton-Raphson method.
-
-        Physical Meaning:
-            Computes the Jacobian matrix J = ∂r/∂a of the residual
-            with respect to the envelope field.
-
-        Args:
-            envelope (np.ndarray): Current envelope estimate.
-
-        Returns:
-            np.ndarray: Jacobian matrix J.
-        """
-        return self.jacobian_computer.compute_jacobian(envelope)
-
-    def solve_newton_system(
-        self, jacobian: np.ndarray, residual: np.ndarray
-    ) -> np.ndarray:
-        """
-        Solve Newton system J * δa = -r.
-
-        Physical Meaning:
-            Solves the linear system for the Newton update step
-            using advanced numerical methods.
-
-        Args:
-            jacobian (np.ndarray): Jacobian matrix J.
-            residual (np.ndarray): Residual vector r.
-
-        Returns:
-            np.ndarray: Newton update step δa.
-        """
-        return self.newton_solver.solve_newton_system(jacobian, residual)
+    # solve_linear_system method removed - now inherits from AbstractSolverCore
 
     def compute_gradient(self, envelope: np.ndarray, source: np.ndarray) -> np.ndarray:
         """
@@ -150,5 +96,6 @@ class EnvelopeSolverCore:
     def __repr__(self) -> str:
         """String representation of envelope solver core."""
         return (
-            f"EnvelopeSolverCore(domain={self.domain}, " f"constants={self.constants})"
+            f"EnvelopeSolverCore(domain={self.domain.shape}, "
+            f"constants={self.constants})"
         )

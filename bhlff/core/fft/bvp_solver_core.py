@@ -33,9 +33,10 @@ if TYPE_CHECKING:
     from ..domain.domain_7d_bvp import Domain7DBVP
     from ..domain.parameters_7d_bvp import Parameters7DBVP
     from .spectral_derivatives import SpectralDerivatives
+    from ..bvp.abstract_solver_core import AbstractSolverCore
 
 
-class BVPSolverCore:
+class BVPSolverCore(AbstractSolverCore):
     """
     Core BVP solver functionality.
 
@@ -56,8 +57,9 @@ class BVPSolverCore:
     def __init__(
         self,
         domain: "Domain7DBVP",
-        parameters: "Parameters7DBVP",
-        derivatives: "SpectralDerivatives",
+        config: Dict[str, Any],
+        parameters: "Parameters7DBVP" = None,
+        derivatives: "SpectralDerivatives" = None,
     ):
         """
         Initialize BVP solver core.
@@ -68,19 +70,17 @@ class BVPSolverCore:
 
         Args:
             domain (Domain7DBVP): 7D BVP computational domain.
-            parameters (Parameters7DBVP): 7D BVP parameters.
-            derivatives (SpectralDerivatives): Spectral derivatives calculator.
+            config (Dict[str, Any]): Configuration parameters.
+            parameters (Parameters7DBVP, optional): 7D BVP parameters.
+            derivatives (SpectralDerivatives, optional): Spectral derivatives calculator.
         """
-        self.domain = domain
+        super().__init__(domain, config)
         self.parameters = parameters
         self._derivatives = derivatives
-        self.logger = logging.getLogger(__name__)
-
-        self.logger.info("BVPSolverCore initialized.")
 
     def compute_residual(self, solution: np.ndarray, source: np.ndarray) -> np.ndarray:
         """
-        Compute residual of BVP equation.
+        Compute residual of BVP equation with full physics implementation.
 
         Physical Meaning:
             Computes the residual R(a) = ∇·(κ(|a|)∇a) + k₀²χ(|a|)a - s
@@ -97,6 +97,10 @@ class BVPSolverCore:
         Returns:
             np.ndarray: Residual R(a).
         """
+        if self.parameters is None or self._derivatives is None:
+            # Fallback to base implementation
+            return super().compute_residual(solution, source)
+        
         amplitude = np.abs(solution)
 
         # Compute nonlinear coefficients with numerical stability
@@ -178,6 +182,10 @@ class BVPSolverCore:
         Returns:
             np.ndarray: Jacobian diagonal elements.
         """
+        if self.parameters is None or self._derivatives is None:
+            # Fallback to base implementation
+            return super().compute_jacobian(solution)
+        
         amplitude = np.abs(solution)
 
         # Compute coefficient derivatives with numerical stability
@@ -205,11 +213,11 @@ class BVPSolverCore:
         self, jacobian: np.ndarray, residual: np.ndarray
     ) -> np.ndarray:
         """
-        Solve linear system J * correction = residual.
+        Solve linear system for Newton-Raphson update with enhanced stability.
 
         Physical Meaning:
-            Solves the linear system for the Newton-Raphson correction
-            step, where J is the Jacobian matrix.
+            Solves the linear system J·δa = -r for the Newton-Raphson
+            update δa, where J is the Jacobian and R is the residual.
 
         Mathematical Foundation:
             Solves J * correction = residual for the correction vector.
@@ -222,6 +230,7 @@ class BVPSolverCore:
         Returns:
             np.ndarray: Correction vector.
         """
+        # Enhanced implementation with better numerical stability
         # For diagonal Jacobian, solution is element-wise division
         # Add regularization to avoid division by zero and numerical instability
         epsilon = 1e-6

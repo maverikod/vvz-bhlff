@@ -83,7 +83,7 @@ class ResidualComputerBase(ABC):
             of the envelope equation, including stiffness and susceptibility
             coefficients.
         """
-        pass
+        raise NotImplementedError("Subclasses must implement _setup_parameters method")
     
     @abstractmethod
     def compute_residual(self, envelope: np.ndarray, source: np.ndarray) -> np.ndarray:
@@ -106,7 +106,7 @@ class ResidualComputerBase(ABC):
         Returns:
             np.ndarray: Residual R = L(a) - s in 7D space-time.
         """
-        pass
+        raise NotImplementedError("Subclasses must implement compute_residual method")
     
     @abstractmethod
     def _compute_div_kappa_grad(self, envelope: np.ndarray, kappa: np.ndarray) -> np.ndarray:
@@ -130,7 +130,7 @@ class ResidualComputerBase(ABC):
         Returns:
             np.ndarray: ∇·(κ∇a) term in 7D space-time.
         """
-        pass
+        raise NotImplementedError("Subclasses must implement _compute_div_kappa_grad method")
     
     def compute_residual_norm(self, residual: np.ndarray) -> float:
         """

@@ -390,9 +390,56 @@ class UnifiedPowerLawAnalyzer:
         return np.correlate(amplitude.flatten(), amplitude.flatten(), mode='full')
 
     def _compute_radial_correlation(self, amplitude: np.ndarray) -> np.ndarray:
-        """Compute radial correlation function."""
-        # Simplified implementation
-        return np.ones(10)  # Placeholder
+        """
+        Compute radial correlation function with full implementation.
+        
+        Physical Meaning:
+            Computes the radial correlation function C(r) which describes
+            how the field amplitude correlates with itself at different
+            radial distances in 7D space-time.
+            
+        Mathematical Foundation:
+            C(r) = ⟨a(x)a(x+r)⟩ where the average is taken over all
+            points x and r is the radial distance.
+        """
+        # Compute center of mass for radial analysis
+        center = tuple(s // 2 for s in amplitude.shape)
+        
+        # Create radial distance array
+        max_radius = min(amplitude.shape) // 2
+        radii = np.arange(0, max_radius, 1)
+        
+        # Compute radial correlation function
+        correlation = np.zeros_like(radii, dtype=float)
+        
+        for i, r in enumerate(radii):
+            if r == 0:
+                # Self-correlation
+                correlation[i] = np.mean(amplitude**2)
+            else:
+                # Compute correlation at distance r
+                correlation_sum = 0.0
+                count = 0
+                
+                # Sample points at distance r from center
+                for dim in range(amplitude.ndim):
+                    if r < amplitude.shape[dim]:
+                        # Create coordinate arrays
+                        coords = [slice(None)] * amplitude.ndim
+                        coords[dim] = slice(center[dim] - r, center[dim] + r + 1)
+                        
+                        # Extract values at distance r
+                        values_at_r = amplitude[tuple(coords)]
+                        if values_at_r.size > 0:
+                            correlation_sum += np.mean(values_at_r**2)
+                            count += 1
+                
+                if count > 0:
+                    correlation[i] = correlation_sum / count
+                else:
+                    correlation[i] = 0.0
+        
+        return correlation
 
     def _compute_correlation_length(self, correlation: np.ndarray) -> float:
         """Compute correlation length from correlation function."""

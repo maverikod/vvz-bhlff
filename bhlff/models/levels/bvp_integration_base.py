@@ -29,7 +29,7 @@ from typing import Dict, Any, Optional
 import logging
 from abc import ABC, abstractmethod
 
-from ...core.bvp import BVPCore
+from bhlff.core.bvp import BVPCore
 
 
 class BVPLevelIntegrationBase(ABC):

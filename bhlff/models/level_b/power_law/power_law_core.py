@@ -28,7 +28,7 @@ import numpy as np
 from typing import Dict, Any, List, Tuple
 import logging
 
-from ...core.bvp import BVPCore
+from bhlff.core.bvp import BVPCore
 from .correlation_analysis import CorrelationAnalysis
 from .critical_exponents import CriticalExponents
 from .scaling_regions import ScalingRegions

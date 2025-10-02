@@ -23,7 +23,7 @@ import numpy as np
 from typing import Dict, Any, List
 import logging
 
-from ...core.bvp import BVPCore
+from bhlff.core.bvp import BVPCore
 
 
 class BoundaryDetection:

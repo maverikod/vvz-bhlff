@@ -27,8 +27,8 @@ from abc import ABC, abstractmethod
 import numpy as np
 from typing import Dict, Any, Optional
 
-from ...core.domain import Domain
-from ...core.bvp import BVPCore, QuenchDetector
+from bhlff.core.domain import Domain
+from bhlff.core.bvp import BVPCore, QuenchDetector
 
 
 class TimeIntegrator(ABC):

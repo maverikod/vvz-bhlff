@@ -29,7 +29,7 @@ import numpy as np
 from typing import Dict, Any, Optional
 import logging
 
-from ...core.bvp import BVPCore
+from bhlff.core.bvp import BVPCore
 from .bvp_integration_base import BVPLevelIntegrationBase
 from ..level_a import LevelAValidator
 from ..level_b import LevelBPowerLawAnalyzer

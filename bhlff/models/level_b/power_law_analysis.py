@@ -26,7 +26,7 @@ import numpy as np
 from typing import Dict, Any, List, Tuple
 import logging
 
-from ...core.bvp import BVPCore
+from bhlff.core.bvp import BVPCore
 from ...core.domain import Domain
 from ...core.bvp.unified_power_law_analyzer import UnifiedPowerLawAnalyzer
 from .node_analysis import NodeAnalysis

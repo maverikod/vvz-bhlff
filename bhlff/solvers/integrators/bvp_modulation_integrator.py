@@ -23,3 +23,5 @@ Example:
 """
 
 from .bvp_modulation_integrator_core import BVPModulationIntegrator
+
+__all__ = ["BVPModulationIntegrator"]

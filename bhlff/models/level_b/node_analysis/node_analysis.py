@@ -28,7 +28,7 @@ import numpy as np
 from typing import Dict, Any, List, Tuple
 import logging
 
-from ...core.bvp import BVPCore
+from bhlff.core.bvp import BVPCore
 from .topological_analysis import TopologicalAnalysis
 from .charge_computation import ChargeComputation
 

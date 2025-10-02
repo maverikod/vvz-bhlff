@@ -28,7 +28,7 @@ import numpy as np
 from typing import Dict, Any, List, Tuple
 import logging
 
-from ...core.bvp import BVPCore
+from ..bvp import BVPCore
 
 
 class UnifiedPowerLawAnalyzer:

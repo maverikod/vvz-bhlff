@@ -27,7 +27,7 @@ import numpy as np
 from typing import Dict, Any, List, Tuple
 import logging
 
-from ...core.bvp import BVPCore
+from bhlff.core.bvp import BVPCore
 from .boundary_detection import BoundaryDetection
 from .zone_properties import ZoneProperties
 from .transition_analysis import TransitionAnalysis

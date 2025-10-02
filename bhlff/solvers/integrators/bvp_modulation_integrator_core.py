@@ -25,7 +25,7 @@ Example:
 import numpy as np
 from typing import Dict, Any
 
-from ...core.domain import Domain
+from bhlff.core.domain import Domain
 from .time_integrator import TimeIntegrator
 from .bvp_evolution_computer import BVPEvolutionComputer
 from .bvp_integration_schemes import BVPIntegrationSchemes

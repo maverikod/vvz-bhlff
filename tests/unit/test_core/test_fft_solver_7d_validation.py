@@ -553,7 +553,7 @@ class TestFFTSolver7DValidation:
     
     def _solve_on_scaled_domain(self, scaled_domain, scaled_source):
         """Solve BVP equation on scaled domain."""
-        from bhlff.core.fft.fft_solver_7d_bvp import FFTSolver7DBVP
+        from bhlff.core.fft.fft_solver_7d import FFTSolver7D as FFTSolver7DBVP
         
         # Create solver for scaled domain
         solver = FFTSolver7DBVP(scaled_domain)

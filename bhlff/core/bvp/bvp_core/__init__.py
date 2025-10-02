@@ -25,7 +25,6 @@ Example:
     >>> envelope = bvp_core.solve_envelope(source)
 """
 
-from .bvp_core import BVPCore
 from .bvp_core_facade import BVPCoreFacade
 from .bvp_operations import BVPCoreOperations
 from .bvp_7d_interface import BVPCore7DInterface

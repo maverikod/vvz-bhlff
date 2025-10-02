@@ -30,7 +30,7 @@ import numpy as np
 from typing import Dict, Any
 
 from bhlff.core.domain import Domain
-from bhlff.core.bvp.bvp_interface import BVPInterface
+from bhlff.core.bvp.interface.interface_facade import BVPInterface
 from bhlff.core.bvp.constants.bvp_constants_advanced import BVPConstantsAdvanced
 
 

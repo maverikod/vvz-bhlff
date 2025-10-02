@@ -24,7 +24,7 @@ Mathematical Foundation:
 from .bvp_core import BVPCore
 from .bvp_envelope_solver import BVPEnvelopeSolver
 from .bvp_impedance_calculator import BVPImpedanceCalculator
-from .bvp_interface import BVPInterface
+from .interface.interface_facade import BVPInterface
 from .bvp_constants import BVPConstants
 from .quench_detector import QuenchDetector
 from .phase_vector import PhaseVector

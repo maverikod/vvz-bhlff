@@ -24,7 +24,7 @@ import numpy as np
 from typing import Dict, Any
 
 from ...domain.domain_7d import Domain7D
-from ..bvp_core_new import BVPCore
+from ..bvp_core.bvp_core_facade_impl import BVPCoreFacade as BVPCore
 from .tail_interface import TailInterface
 from .transition_interface import TransitionInterface
 from .core_interface import CoreInterface

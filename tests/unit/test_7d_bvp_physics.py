@@ -30,7 +30,7 @@ from typing import Dict, Any
 
 from bhlff.core.domain.domain_7d_bvp import Domain7DBVP
 from bhlff.core.domain.parameters_7d_bvp import Parameters7DBVP
-from bhlff.core.fft.fft_solver_7d_bvp import FFTSolver7DBVP
+from bhlff.core.fft.fft_solver_7d import FFTSolver7D as FFTSolver7DBVP
 
 
 class Test7DBVPPhysics:

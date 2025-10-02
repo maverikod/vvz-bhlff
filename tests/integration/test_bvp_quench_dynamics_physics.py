@@ -27,7 +27,7 @@ import numpy as np
 from typing import Dict, Any
 
 from bhlff.core.domain import Domain
-from bhlff.core.bvp.bvp_core.bvp_core import BVPCore
+from bhlff.core.bvp.bvp_core import BVPCore
 from bhlff.core.bvp.quench_detector import QuenchDetector
 from bhlff.core.bvp.constants.bvp_constants_advanced import BVPConstantsAdvanced
 

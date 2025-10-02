@@ -175,6 +175,65 @@ class FFTSolver7D:
 
         self.logger.info("Stationary problem solved successfully")
         return solution.real
+    
+    def solve_envelope(self, source: np.ndarray, method: str = 'linearized') -> np.ndarray:
+        """
+        Solve BVP envelope equation.
+
+        Physical Meaning:
+            Solves the BVP envelope equation for the given source term,
+            providing the envelope solution that represents the modulation
+            of the high-frequency carrier field.
+
+        Args:
+            source (np.ndarray): Source term s(x,φ,t) in 7D space-time.
+            method (str): Solution method ('linearized' or 'nonlinear').
+
+        Returns:
+            np.ndarray: Envelope solution a(x,φ,t) in 7D space-time.
+        """
+        if method == 'linearized':
+            return self.solve_stationary(source)
+        else:
+            raise NotImplementedError(f"Method '{method}' not implemented yet")
+    
+    def _compute_residual(self, solution: np.ndarray, source: np.ndarray) -> np.ndarray:
+        """
+        Compute residual of the BVP equation.
+
+        Physical Meaning:
+            Computes the residual R(a) = ∇·(κ(|a|)∇a) + k₀²χ(|a|)a - s
+            for the current solution, representing how well the solution
+            satisfies the BVP equation.
+
+        Args:
+            solution (np.ndarray): Current solution a(x,φ,t).
+            source (np.ndarray): Source term s(x,φ,t).
+
+        Returns:
+            np.ndarray: Residual R(a) in 7D space-time.
+        """
+        # For linearized case, residual is L_β a - s
+        laplacian_solution = self._fractional_laplacian.apply(solution)
+        residual = laplacian_solution - source
+        return residual
+    
+    def _compute_jacobian(self, solution: np.ndarray) -> np.ndarray:
+        """
+        Compute Jacobian matrix for Newton-Raphson iteration.
+
+        Physical Meaning:
+            Computes the Jacobian matrix J = ∂R/∂a for the Newton-Raphson
+            iteration in solving the nonlinear BVP equation.
+
+        Args:
+            solution (np.ndarray): Current solution a(x,φ,t).
+
+        Returns:
+            np.ndarray: Jacobian matrix J in 7D space-time.
+        """
+        # For linearized case, Jacobian is the fractional Laplacian operator
+        return self._fractional_laplacian.apply(solution)
 
     def solve_time_dependent(
         self,

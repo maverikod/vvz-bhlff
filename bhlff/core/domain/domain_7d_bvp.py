@@ -154,6 +154,41 @@ class Domain7DBVP:
             self.N_phase,
             self.N_t,
         )
+    
+    @property
+    def size(self) -> int:
+        """Get total number of grid points."""
+        return np.prod(self.shape)
+    
+    def get_grid_spacing(self) -> Dict[str, float]:
+        """
+        Get grid spacing for all dimensions.
+        
+        Physical Meaning:
+            Returns the grid spacing for spatial, phase, and temporal
+            dimensions, representing the resolution of the computational grid.
+            
+        Returns:
+            Dict[str, float]: Grid spacing for each dimension type.
+        """
+        return {
+            'spatial': self.dx,
+            'phase': self.dphi,
+            'temporal': self.dt
+        }
+    
+    def get_total_volume(self) -> float:
+        """
+        Get total volume of the 7D domain.
+        
+        Physical Meaning:
+            Returns the total volume of the 7D space-time domain,
+            representing the total computational space available.
+            
+        Returns:
+            float: Total volume of the 7D domain.
+        """
+        return self.dV_total
 
     @property
     def spatial_coordinates(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:

@@ -250,6 +250,32 @@ class BVPCoreFacade(AbstractBVPFacade):
             Optional[BVPCore7DInterface]: 7D interface or None if not available.
         """
         return self._7d_interface
+    
+    def get_phase_operations(self):
+        """
+        Get phase operations interface.
+        
+        Physical Meaning:
+            Retrieves the phase operations interface for U(1)³ phase
+            structure analysis and manipulation.
+            
+        Returns:
+            Phase operations interface.
+        """
+        return self._operations.get_phase_operations()
+    
+    def get_parameter_access(self):
+        """
+        Get parameter access interface.
+        
+        Physical Meaning:
+            Retrieves the parameter access interface for BVP constants
+            and configuration management.
+            
+        Returns:
+            Parameter access interface.
+        """
+        return self._operations.get_parameter_access()
 
     def __repr__(self) -> str:
         """String representation of BVP core facade."""

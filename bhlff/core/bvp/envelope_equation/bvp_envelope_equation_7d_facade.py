@@ -78,7 +78,7 @@ class BVPEnvelopeEquation7D:
         self.derivative_operators = DerivativeOperators7D(domain_7d)
         self.nonlinear_terms = NonlinearTerms7D(domain_7d, config)
         self.solver_core = EnvelopeSolverCore7D(domain_7d, config)
-        self.residual_computer = ResidualComputer(domain_7d, config)
+        self.residual_computer = EnvelopeSolverCore7D(domain_7d, config)
 
         # Setup components
         self.derivative_operators.setup_operators()
@@ -134,9 +134,7 @@ class BVPEnvelopeEquation7D:
             )
 
         # Solve using solver core
-        return self.solver_core.solve_envelope(
-            source_7d, initial_guess, residual_func, jacobian_func
-        )
+        return self.solver_core.solve_envelope(source_7d, initial_guess)
 
     def get_parameters(self) -> Dict[str, float]:
         """

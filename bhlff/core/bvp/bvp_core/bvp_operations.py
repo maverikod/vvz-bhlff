@@ -90,10 +90,7 @@ class BVPCoreOperations:
 
     def _setup_quench_detector(self) -> None:
         """Setup quench detector for threshold events."""
-        from ..bvp_constants import BVPConstants
-
-        constants = BVPConstants(self.config)
-        self._quench_detector = QuenchDetector(self.domain, constants)
+        self._quench_detector = QuenchDetector(self.domain, self.config)
 
     def _setup_impedance_calculator(self) -> None:
         """Setup impedance calculator for boundary analysis."""

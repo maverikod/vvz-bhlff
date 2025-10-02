@@ -54,9 +54,9 @@ class PowerBalancePostulate(BVPPostulate):
         self.domain = domain
         self.constants = constants
         self.power_balance_tolerance = constants.get_quench_parameter(
-            "power_balance_tolerance", 0.05
-        )
-        self.flux_threshold = constants.get_quench_parameter("flux_threshold", 0.1)
+            "power_balance_tolerance"
+        ) if hasattr(constants, 'get_quench_parameter') else 0.05
+        self.flux_threshold = constants.get_quench_parameter("flux_threshold") if hasattr(constants, 'get_quench_parameter') else 0.1
 
         # Initialize component analyzers
         self.flux_computer = FluxComputer(domain, constants)

@@ -87,6 +87,10 @@ class BVPPostulates7D:
         self.domain_7d = domain_7d
         self.config = config
 
+        # Create BVPConstants from config
+        from ..bvp_constants import BVPConstants
+        constants = BVPConstants(config)
+
         # Initialize all postulates
         self.postulates = {
             "carrier_primacy": BVPPostulate1_CarrierPrimacy(domain_7d, config),
@@ -99,7 +103,7 @@ class BVPPostulates7D:
             "core_renormalization": BVPPostulate8_CoreRenormalization(
                 domain_7d, config
             ),
-            "power_balance": BVPPostulate9_PowerBalance(domain_7d, config),
+            "power_balance": BVPPostulate9_PowerBalance(domain_7d, constants),
         }
 
     def validate_all_postulates(self, envelope_7d: np.ndarray) -> Dict[str, Any]:

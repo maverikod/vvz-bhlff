@@ -119,6 +119,45 @@ class BVPCoreFacade(AbstractBVPFacade):
         """
         return self._operations.solve_envelope(source)
 
+    def solve_envelope_7d(self, source_7d: np.ndarray) -> np.ndarray:
+        """
+        Solve 7D BVP envelope equation.
+
+        Physical Meaning:
+            Solves the full 7D envelope equation in space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
+            using the 7D envelope equation solver. This provides the complete
+            solution including spatial, phase, and temporal evolution.
+
+        Args:
+            source_7d (np.ndarray): 7D source term s(x,φ,t).
+
+        Returns:
+            np.ndarray: 7D envelope solution a(x,φ,t).
+        """
+        if self._7d_interface is None:
+            raise ValueError("7D interface not available - domain_7d was not provided")
+        
+        return self._7d_interface.solve_envelope_7d(source_7d)
+
+    def validate_postulates_7d(self, envelope_7d: np.ndarray) -> Dict[str, Any]:
+        """
+        Validate all 9 BVP postulates in 7D space-time.
+
+        Physical Meaning:
+            Validates all 9 BVP postulates against the 7D envelope solution,
+            ensuring physical consistency and theoretical correctness.
+
+        Args:
+            envelope_7d (np.ndarray): 7D envelope solution to validate.
+
+        Returns:
+            Dict[str, Any]: Postulate validation results.
+        """
+        if self._7d_interface is None:
+            raise ValueError("7D interface not available - domain_7d was not provided")
+        
+        return self._7d_interface.validate_postulates_7d(envelope_7d)
+
     def detect_quenches(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
         Detect quench events when local thresholds are reached.

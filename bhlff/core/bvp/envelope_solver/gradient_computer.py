@@ -24,7 +24,7 @@ from typing import Dict, Any
 
 from ...domain import Domain
 from ..bvp_constants import BVPConstants
-# ResidualComputer removed - functionality moved to AbstractSolverCore
+from ..abstract_solver_core import AbstractSolverCore
 
 
 class GradientComputer:
@@ -58,7 +58,7 @@ class GradientComputer:
         """
         self.domain = domain
         self.constants = constants
-        self.residual_computer = ResidualComputer(domain, constants)
+        self.residual_computer = AbstractSolverCore(domain, {})
 
     def compute_gradient(self, envelope: np.ndarray, source: np.ndarray) -> np.ndarray:
         """

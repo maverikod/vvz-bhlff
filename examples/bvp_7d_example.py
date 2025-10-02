@@ -53,7 +53,7 @@ def create_3d_domain(config: dict) -> Domain:
     return Domain(
         L=spatial['L_x'],
         N=spatial['N_x'],
-        dimensions=3
+        dimensions=7
     )
 
 
@@ -68,31 +68,8 @@ def create_source_7d(domain_7d: Domain7D) -> np.ndarray:
     # Get 7D shape
     full_shape = domain_7d.get_full_7d_shape()
     
-    # Create source with spatial and phase dependence
-    X, Y, Z = domain_7d.get_spatial_coordinates()
-    PHI_1, PHI_2, PHI_3 = domain_7d.get_phase_coordinates()
-    
-    # Create 7D source array
-    source_7d = np.zeros(full_shape, dtype=complex)
-    
-    # Fill with spatial and phase dependent source
-    for i in range(full_shape[0]):
-        for j in range(full_shape[1]):
-            for k in range(full_shape[2]):
-                for l in range(full_shape[3]):
-                    for m in range(full_shape[4]):
-                        for n in range(full_shape[5]):
-                            # Spatial dependence
-                            spatial_term = np.exp(-((X[i,j,k] - 0.5)**2 + 
-                                                   (Y[i,j,k] - 0.5)**2 + 
-                                                   (Z[i,j,k] - 0.5)**2) / 0.1)
-                            
-                            # Phase dependence
-                            phase_term = np.exp(1j * (PHI_1[i,j,k,l,m,n] + 
-                                                     PHI_2[i,j,k,l,m,n] + 
-                                                     PHI_3[i,j,k,l,m,n]))
-                            
-                            source_7d[i,j,k,l,m,n] = spatial_term * phase_term
+    # Create simple 7D source array
+    source_7d = np.ones(full_shape, dtype=complex) * 0.1
     
     return source_7d
 

@@ -185,6 +185,109 @@
 
 **РЕЗУЛЬТАТ**: Удаление 7 файлов с 33+ дублирующими методами, консолидация в основные валидаторы
 
+#### **3.4. ДЕТАЛЬНЫЙ ПЛАН ПО МЕТОДАМ:**
+
+**ДУБЛЬ 1: Валидация консистентности - КОНКРЕТНЫЕ МЕТОДЫ:**
+- **`beating_validation_consistency.py`**:
+  - `validate_consistency()` - основная проверка консистентности
+  - `_check_frequency_pattern_consistency()` - проверка частот и паттернов
+  - `_check_coupling_frequency_consistency()` - проверка связи и частот
+  - `_compute_overall_consistency()` - общая консистентность
+- **`beating_validation_core.py`**:
+  - `validate_analysis_consistency()` - дублирует `validate_consistency()`
+  - `_validate_beating_frequencies()` - дублирует частотную проверку
+  - `_validate_interference_patterns()` - дублирует паттернную проверку
+  - `_validate_mode_coupling()` - дублирует проверку связи
+- **ДЕЙСТВИЕ**: Удалить `beating_validation_consistency.py`, оставить методы в `beating_validation_core.py`
+
+**ДУБЛЬ 2: Статистическая валидация - КОНКРЕТНЫЕ МЕТОДЫ:**
+- **`beating_validation_metrics.py`**:
+  - `compute_validation_metrics()` - вычисление метрик валидации
+  - `get_validation_summary()` - получение сводки валидации
+- **`beating_validation_statistics.py`**:
+  - `compute_overall_statistical_validation()` - дублирует статистическую валидацию
+- **ДЕЙСТВИЕ**: Удалить `beating_validation_metrics.py`, оставить `beating_validation_statistics.py`
+
+**ДУБЛЬ 3: Энергетический анализ - КОНКРЕТНЫЕ МЕТОДЫ (5 файлов!):**
+- **`energy_analysis.py`** (9 методов):
+  - `check_energy_conservation()` - основная проверка сохранения энергии
+  - `_compute_kinetic_energy_7d()` - кинетическая энергия в 7D
+  - `_compute_potential_energy_7d()` - потенциальная энергия в 7D
+  - `_compute_interaction_energy_7d()` - энергия взаимодействия в 7D
+  - `_compute_energy_conservation_metrics()` - метрики сохранения энергии
+  - `_perform_energy_balance_analysis()` - анализ энергетического баланса
+  - `_perform_energy_distribution_analysis()` - анализ распределения энергии
+  - `_perform_energy_flux_analysis()` - анализ энергетического потока
+  - `_evaluate_energy_conservation_criteria()` - критерии сохранения энергии
+- **`fft_solver_validation.py`**:
+  - `check_energy_conservation()` - ДУБЛИРУЕТ основную проверку
+- **`bvp_solver_validation.py`**:
+  - `check_energy_conservation()` - ДУБЛИРУЕТ основную проверку
+- **`postulates/power_balance/energy_analyzer.py`** (3 метода):
+  - `compute_core_energy_growth()` - рост энергии ядра
+  - `compute_energy_density()` - плотность энергии
+  - `compute_total_energy()` - общая энергия
+- **`postulates/power_balance/energy_computer.py`** (3 метода):
+  - `compute_core_energy_growth()` - ДУБЛИРУЕТ рост энергии ядра
+  - `_energy_density_7d()` - плотность энергии в 7D
+  - `_calculate_bvp_metrics()` - метрики BVP
+- **ДЕЙСТВИЕ**: Удалить `energy_analysis.py`, оставить специализированные методы в `fft_solver_validation.py`
+
+**ДУБЛЬ 4: Анализ сходимости - КОНКРЕТНЫЕ МЕТОДЫ (3 файла):**
+- **`convergence_analysis.py`** (12 методов):
+  - `check_convergence()` - основная проверка сходимости
+  - `_check_condition_number()` - число обусловленности
+  - `_check_residual_convergence()` - сходимость остатков
+  - `_check_iterative_convergence()` - итеративная сходимость
+  - `_evaluate_convergence_criteria()` - критерии сходимости
+  - `_compute_residual_decay_rate()` - скорость затухания остатков
+  - `_check_monotonic_convergence()` - монотонная сходимость
+  - `_compute_convergence_rate()` - скорость сходимости
+  - `_compute_stability_measure()` - мера устойчивости
+  - `_compute_high_frequency_content()` - высокочастотное содержание
+  - `_check_spectral_aliasing()` - спектральный алиасинг
+  - `_compute_error_propagation_matrix()` - матрица распространения ошибок
+  - `_compute_error_bounds()` - границы ошибок
+- **`beating_validation_parameter_optimization.py`**:
+  - `_check_convergence()` - ДУБЛИРУЕТ проверку сходимости
+- **`beating_basic_optimization.py`**:
+  - `_check_convergence()` - ДУБЛИРУЕТ проверку сходимости
+- **ДЕЙСТВИЕ**: Удалить `convergence_analysis.py`, оставить специализированные методы в `beating_validation_parameter_optimization.py`
+
+**ДУБЛЬ 5: Общая валидация BVP - КОНКРЕТНЫЕ МЕТОДЫ (2 файла):**
+- **`validation.py`** (10 методов):
+  - `validate_bvp_framework()` - общая валидация BVP фреймворка
+  - `_validate_envelope_equation()` - валидация уравнения огибающей
+  - `_validate_quench_detection()` - валидация детекции квенчей
+  - `_validate_impedance_calculation()` - валидация расчета импеданса
+  - `_validate_7d_postulates()` - валидация 7D постулатов
+  - `_check_physical_constraints()` - физические ограничения
+  - `_check_quench_accuracy()` - точность детекции квенчей
+  - `_check_threshold_compliance()` - соответствие порогам
+  - `_check_admittance_validity()` - валидность проводимости
+  - `_check_resonance_peaks()` - резонансные пики
+  - `_check_frequency_response()` - частотная характеристика
+- **`beating_validation_core.py`**:
+  - `validate_with_statistics()` - ДУБЛИРУЕТ общую валидацию
+  - `_validate_beating_frequencies()` - валидация частот биений
+  - `_validate_interference_patterns()` - валидация интерференционных паттернов
+  - `_validate_mode_coupling()` - валидация связи мод
+  - `_check_frequency_physical_reasonableness()` - физическая разумность частот
+- **ДЕЙСТВИЕ**: Удалить `validation.py`, распределить методы по специализированным валидаторам
+
+#### **3.5. ИТОГОВЫЙ ПЛАН УДАЛЕНИЯ:**
+
+**УДАЛИТЬ 7 ФАЙЛОВ:**
+1. **`beating_validation_consistency.py`** → 4 метода → консолидировать в `beating_validation_core.py`
+2. **`beating_validation_metrics.py`** → 2 метода → консолидировать в `beating_validation_statistics.py`
+3. **`energy_analysis.py`** → 9 методов → консолидировать в `fft_solver_validation.py`
+4. **`convergence_analysis.py`** → 12 методов → консолидировать в `beating_validation_parameter_optimization.py`
+5. **`validation.py`** → 10 методов → распределить по специализированным валидаторам
+6. **`beating_validation_basic_main.py`** → избыточный координатор
+7. **`beating_validation_statistics.py`** → оставить как единственный статистический валидатор
+
+**КОНСОЛИДИРОВАТЬ 37+ ДУБЛИРУЮЩИХ МЕТОДОВ** в основные валидаторы для устранения избыточности!
+
 ### **ПРИОРИТЕТ 4: Дробление файлов**
 
 #### **4.1. Файлы для разделения (превышают 400 строк):**

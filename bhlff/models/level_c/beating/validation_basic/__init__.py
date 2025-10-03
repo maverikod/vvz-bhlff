@@ -8,14 +8,10 @@ This package provides basic validation functionality for beating
 analysis in the 7D phase field.
 """
 
-from .beating_validation_basic_main import BeatingValidationBasicMain
 from .beating_validation_frequencies import BeatingValidationFrequencies
 from .beating_validation_patterns import BeatingValidationPatterns
-from .beating_validation_metrics import BeatingValidationMetrics
 
 __all__ = [
-    'BeatingValidationBasicMain',
     'BeatingValidationFrequencies',
-    'BeatingValidationPatterns',
-    'BeatingValidationMetrics'
+    'BeatingValidationPatterns'
 ]

@@ -8,12 +8,7 @@ This package implements validation operations for the BVP framework,
 ensuring that all components work correctly according to the 7D theory.
 """
 
-from .validation import LevelAValidator
-from .convergence_analysis import ConvergenceAnalysis
-from .energy_analysis import EnergyAnalysis
+# Level A validation package - specialized validators moved to core modules
+# validation.py, convergence_analysis.py, energy_analysis.py removed due to redundancy
 
-__all__ = [
-    'LevelAValidator',
-    'ConvergenceAnalysis',
-    'EnergyAnalysis'
-]
+__all__ = []

@@ -15,7 +15,6 @@ import logging
 from bhlff.core.bvp import BVPCore
 from .beating_validation_statistics import BeatingValidationStatistics
 from .beating_validation_comparison import BeatingValidationComparison
-from .beating_validation_consistency import BeatingValidationConsistency
 
 
 class BeatingValidationCore:

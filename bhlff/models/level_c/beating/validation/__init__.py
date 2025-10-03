@@ -11,11 +11,9 @@ in the 7D phase field.
 from .beating_validation_core import BeatingValidationCore
 from .beating_validation_statistics import BeatingValidationStatistics
 from .beating_validation_comparison import BeatingValidationComparison
-from .beating_validation_consistency import BeatingValidationConsistency
 
 __all__ = [
     'BeatingValidationCore',
     'BeatingValidationStatistics',
-    'BeatingValidationComparison',
-    'BeatingValidationConsistency'
+    'BeatingValidationComparison'
 ]

@@ -71,7 +71,8 @@ class FFTAdvancedCore:
         max_memory_gb = getattr(parameters, 'max_memory_gb', 8.0)
         self.memory_manager = MemoryManager7D(domain.shape, max_memory_gb)
         self.fft_plan = FFTPlan7D(domain, parameters)
-        self.spectral_cache = SpectralCoefficientCache(domain, parameters)
+        max_cache_size = getattr(parameters, 'max_cache_size', 100)
+        self.spectral_cache = SpectralCoefficientCache(max_cache_size)
         self.time_methods = FFTSolverTimeMethods(domain, parameters)
         self.validation = FFTSolverValidation(domain, parameters)
         

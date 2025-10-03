@@ -195,9 +195,9 @@ class BVPExponentialIntegrator(BaseTimeIntegrator):
             result[i] = current_field.copy()
 
             # Check for quench events
-            if self._check_quench(current_field, time_steps[i]):
+            if self._quench_detector is not None and self._quench_detector.detect_quench(current_field, time_steps[i]):
                 self.logger.warning(f"Quench detected at t={time_steps[i]:.3f}")
-                # Could implement special handling here
+                # DEPRECATED: Classical exponential integrator - use BVPEnvelopeIntegrator instead
 
         self.logger.info(f"Integration completed over {len(time_steps)} time steps")
         return result

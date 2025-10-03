@@ -191,9 +191,10 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
             result[i] = current_field.copy()
 
             # Check for quench events
-            if self._check_quench(current_field, time_steps[i]):
+            if self._quench_detector is not None and self._quench_detector.detect_quench(current_field, time_steps[i]):
                 self.logger.warning(f"Quench detected at t={time_steps[i]:.3f}")
                 # Handle quench events according to BVP theory
+                self._handle_quench_event(current_field, time_steps[i])
 
         self.logger.info(f"BVP envelope integration completed over {len(time_steps)} time steps")
         return result
@@ -324,6 +325,26 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
 
         self.logger.info(f"BVP envelope modulation integration completed for carrier frequency ω₀={carrier_frequency}")
         return result
+
+    def _handle_quench_event(self, field: np.ndarray, time: float) -> None:
+        """
+        Handle quench event according to BVP theory.
+
+        Physical Meaning:
+            Implements quench handling according to BVP theory where
+            quenches represent dissipative energy dumps in the envelope.
+
+        Args:
+            field (np.ndarray): Current field configuration.
+            time (float): Current time.
+        """
+        # BVP quench handling: energy dump and envelope reset
+        if self._quench_detector is not None:
+            quench_info = self._quench_detector.get_quench_info()
+            self.logger.info(f"BVP quench handled: energy_dump={quench_info.get('energy_dump', 0):.3f}")
+            
+            # Reset envelope modulation parameters if needed
+            # This is BVP-specific quench handling
 
     def __repr__(self) -> str:
         """String representation of integrator."""

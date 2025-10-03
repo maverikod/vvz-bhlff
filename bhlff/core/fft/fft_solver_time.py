@@ -92,7 +92,7 @@ class FFTSolverTimeMethods:
         initial_field: np.ndarray,
         source_field: np.ndarray,
         time_steps: np.ndarray,
-        method: str = "exponential",
+        method: str = "envelope",
     ) -> np.ndarray:
         """
         Solve time-dependent problem using temporal integrators.
@@ -104,14 +104,14 @@ class FFTSolverTimeMethods:
             memory kernels and quench detection.
 
         Mathematical Foundation:
-            Uses either exponential integrator (exact for harmonic sources)
+            Uses either BVP envelope integrator (envelope modulation approach)
             or Crank-Nicolson integrator (second-order accurate, unconditionally stable).
 
         Args:
             initial_field (np.ndarray): Initial field configuration a(x,φ,0).
             source_field (np.ndarray): Source term s(x,φ,t) over time.
             time_steps (np.ndarray): Time points for integration.
-            method (str): Integration method ('exponential' or 'crank_nicolson').
+            method (str): Integration method ('envelope' or 'crank_nicolson').
 
         Returns:
             np.ndarray: Field evolution a(x,φ,t) over time.

@@ -135,23 +135,55 @@
 - `_compute_convergence_rate()` - вычисление скорости сходимости
 - **ПРОБЛЕМА**: Дублирует функциональность из основного валидатора
 
-#### **3.2. Конкретные действия по удалению:**
+#### **3.2. ДЕТАЛЬНЫЙ АНАЛИЗ ДУБЛИРУЮЩИХ МЕТОДОВ:**
 
-**УДАЛИТЬ (7 файлов):**
-1. **`beating_validation_metrics.py`** → функциональность перенести в `beating_validation_statistics.py`
+**ДУБЛЬ 1: Валидация консистентности**
+- **`beating_validation_consistency.py`**: `validate_consistency()` + 3 вспомогательных метода
+- **`beating_validation_core.py`**: `validate_analysis_consistency()` + 4 вспомогательных метода
+- **ДУБЛИРУЮТ**: Проверка консистентности результатов анализа
+
+**ДУБЛЬ 2: Статистическая валидация**
+- **`beating_validation_metrics.py`**: `compute_validation_metrics()`
+- **`beating_validation_statistics.py`**: `compute_overall_statistical_validation()`
+- **ДУБЛИРУЮТ**: Вычисление статистических метрик валидации
+
+**ДУБЛЬ 3: Энергетический анализ (5 файлов!)**
+- **`energy_analysis.py`**: `check_energy_conservation()` + 9 методов энергетического анализа
+- **`fft_solver_validation.py`**: `check_energy_conservation()`
+- **`bvp_solver_validation.py`**: `check_energy_conservation()`
+- **`postulates/power_balance/energy_analyzer.py`**: 3 метода энергетического анализа
+- **`postulates/power_balance/energy_computer.py`**: 3 метода энергетического анализа
+- **ДУБЛИРУЮТ**: Проверка сохранения энергии, вычисление энергетических метрик
+
+**ДУБЛЬ 4: Анализ сходимости (3 файла)**
+- **`convergence_analysis.py`**: `check_convergence()` + 12 методов анализа сходимости
+- **`beating_validation_parameter_optimization.py`**: `_check_convergence()`
+- **`beating_basic_optimization.py`**: `_check_convergence()`
+- **ДУБЛИРУЮТ**: Проверка сходимости итераций, вычисление метрик сходимости
+
+**ДУБЛЬ 5: Общая валидация BVP (2 файла)**
+- **`validation.py`**: `validate_bvp_framework()` + 10 вспомогательных методов
+- **`beating_validation_core.py`**: `validate_with_statistics()` + 5 вспомогательных методов
+- **ДУБЛИРУЮТ**: Общая валидация BVP фреймворка
+
+#### **3.3. Конкретные действия по удалению:**
+
+**УДАЛИТЬ (7 файлов) с дублирующими методами:**
+1. **`beating_validation_metrics.py`** → `compute_validation_metrics()` дублирует статистику
 2. **`beating_validation_basic_main.py`** → избыточный координатор
-3. **`beating_validation_consistency.py`** → функциональность перенести в основной валидатор
-4. **`beating_validation_statistics.py`** → оставить как единственный статистический валидатор
-5. **`validation.py`** → слишком общий, функциональность распределить по специализированным валидаторам
-6. **`energy_analysis.py`** → функциональность перенести в основной валидатор
-7. **`convergence_analysis.py`** → функциональность перенести в основной валидатор
+3. **`beating_validation_consistency.py`** → `validate_consistency()` дублирует core
+4. **`validation.py`** → `validate_bvp_framework()` дублирует специализированные валидаторы
+5. **`energy_analysis.py`** → `check_energy_conservation()` дублирует 4 других файла
+6. **`convergence_analysis.py`** → `check_convergence()` дублирует 2 других файла
+7. **`beating_validation_statistics.py`** → оставить как единственный статистический валидатор
 
-**ОСТАВИТЬ:**
-- Основные валидаторы с уникальной функциональностью
-- Специализированные модули без дублирования
-- Файлы с четко определенной ответственностью
+**КОНСОЛИДИРОВАТЬ методы:**
+- **Энергетический анализ**: Оставить в `fft_solver_validation.py` (основной)
+- **Анализ сходимости**: Оставить в `beating_validation_parameter_optimization.py` (специализированный)
+- **Валидация консистентности**: Оставить в `beating_validation_core.py` (основной)
+- **Общая валидация**: Распределить по специализированным валидаторам
 
-**РЕЗУЛЬТАТ**: Удаление 7 избыточных файлов, консолидация функциональности
+**РЕЗУЛЬТАТ**: Удаление 7 файлов с 33+ дублирующими методами, консолидация в основные валидаторы
 
 ### **ПРИОРИТЕТ 4: Дробление файлов**
 

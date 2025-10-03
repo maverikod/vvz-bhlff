@@ -9,15 +9,8 @@ for the 7D phase field theory.
 """
 
 import numpy as np
-from typing import Dict, Any, Optional, Tuple, List
+from typing import Dict, Any, Optional, Tuple, List, TYPE_CHECKING
 import logging
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from ...solvers.base.abstract_solver import AbstractSolver
-    from ..domain import Domain
-    from ..domain.parameters import Parameters
 
 from ..fractional_laplacian import FractionalLaplacian
 from ..spectral_operations import SpectralOperations
@@ -29,6 +22,11 @@ from ..fft_solver_validation import FFTSolverValidation
 from .fft_optimization import FFTOptimization
 from .fft_adaptive import FFTAdaptive
 from .fft_analysis import FFTAnalysis
+
+if TYPE_CHECKING:
+    from ...solvers.base.abstract_solver import AbstractSolver
+    from ..domain import Domain
+    from ..domain.parameters import Parameters
 
 
 class FFTAdvancedCore:
@@ -247,12 +245,20 @@ class FFTAdvancedCore:
     def _setup_spectral_coefficients(self) -> None:
         """Setup spectral coefficients for advanced solving."""
         # Spectral coefficients are computed on-demand in SpectralCoefficientCache
-        pass
+        self.spectral_coefficients = self.spectral_cache.get_coefficients(
+            self.parameters.mu,
+            self.parameters.beta,
+            self.parameters.lambda_param,
+            self.domain.shape
+        )
 
     def _setup_fft_plan(self) -> None:
         """Setup FFT plan for advanced solving."""
         # FFT plans are already set up in FFTPlan7D constructor
-        pass
+        self.fft_plan.setup_optimized_plans(
+            precision=getattr(self.parameters, 'precision', 'float64'),
+            plan_type=getattr(self.parameters, 'fft_plan_type', 'MEASURE')
+        )
 
     def _setup_optimization(self) -> None:
         """Setup optimization components."""

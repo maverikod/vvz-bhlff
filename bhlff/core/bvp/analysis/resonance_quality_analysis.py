@@ -4,15 +4,16 @@ email: vasilyvz@gmail.com
 
 Advanced resonance quality factor analysis for BVP impedance analysis.
 
-This module implements advanced algorithms for resonance quality analysis,
-including statistical analysis, quality factor optimization, and
-resonance characterization.
+This module implements the main resonance quality analysis functionality,
+providing comprehensive analysis of resonance characteristics and quality factors.
 """
 
 import numpy as np
 from typing import List, Dict, Tuple
 
-from .bvp_constants import BVPConstants
+from .resonance_optimization import ResonanceOptimization
+from .resonance_statistics import ResonanceStatistics
+from ..bvp_constants import BVPConstants
 
 
 class ResonanceQualityAnalysis:
@@ -20,52 +21,30 @@ class ResonanceQualityAnalysis:
     Advanced resonance quality factor analysis.
 
     Physical Meaning:
-        Provides advanced analysis of resonance quality factors,
-        including statistical analysis, optimization, and
-        resonance characterization.
+        Provides advanced analysis of resonance quality factors for BVP impedance
+        analysis, including comprehensive characterization of resonance properties
+        and quality factor calculations.
+
+    Mathematical Foundation:
+        Analyzes resonance characteristics using advanced fitting techniques,
+        statistical analysis, and quality factor optimization to provide
+        accurate characterization of BVP resonance properties.
     """
 
     def __init__(self, constants: BVPConstants):
         """
         Initialize advanced quality analyzer.
 
+        Physical Meaning:
+            Sets up the analyzer with BVP constants and initializes
+            optimization and statistics modules for comprehensive analysis.
+
         Args:
             constants (BVPConstants): BVP constants instance.
         """
         self.constants = constants
-
-    def optimize_quality_factors(
-        self, frequencies: np.ndarray, magnitude: np.ndarray, peak_indices: List[int]
-    ) -> List[float]:
-        """
-        Optimize quality factors using advanced fitting techniques.
-
-        Physical Meaning:
-            Optimizes quality factors using advanced fitting techniques
-            to improve accuracy and reliability of resonance analysis.
-
-        Args:
-            frequencies (np.ndarray): Frequency array.
-            magnitude (np.ndarray): Magnitude response array.
-            peak_indices (List[int]): List of peak indices.
-
-        Returns:
-            List[float]: Optimized quality factors.
-        """
-        optimized_quality_factors = []
-        
-        for peak_idx in peak_indices:
-            # Extract peak region
-            peak_region = self._extract_peak_region(frequencies, magnitude, peak_idx)
-            
-            # Perform advanced fitting
-            optimized_params = self._advanced_lorentzian_fitting(peak_region)
-            
-            # Calculate optimized quality factor
-            quality_factor = self._calculate_optimized_quality_factor(optimized_params)
-            optimized_quality_factors.append(quality_factor)
-        
-        return optimized_quality_factors
+        self.optimization = ResonanceOptimization(constants)
+        self.statistics = ResonanceStatistics(constants)
 
     def analyze_resonance_characteristics(
         self, frequencies: np.ndarray, magnitude: np.ndarray, peak_indices: List[int]
@@ -76,7 +55,12 @@ class ResonanceQualityAnalysis:
         Physical Meaning:
             Performs comprehensive analysis of resonance characteristics,
             including quality factors, resonance shapes, and
-            frequency domain properties.
+            frequency domain properties for BVP impedance analysis.
+
+        Mathematical Foundation:
+            Combines optimization techniques, statistical analysis, and
+            resonance characterization to provide complete analysis
+            of resonance properties.
 
         Args:
             frequencies (np.ndarray): Frequency array.
@@ -130,7 +114,13 @@ class ResonanceQualityAnalysis:
 
         Physical Meaning:
             Compares quality factors between two sets of resonances
-            to analyze differences in resonance characteristics.
+            to analyze differences in resonance characteristics and
+            identify systematic variations in BVP impedance properties.
+
+        Mathematical Foundation:
+            Uses statistical methods to compare quality factor distributions,
+            including mean differences, standard deviations, correlations,
+            and significance testing.
 
         Args:
             quality_factors_1 (List[float]): First set of quality factors.
@@ -139,47 +129,18 @@ class ResonanceQualityAnalysis:
         Returns:
             Dict[str, float]: Comparison results.
         """
-        if not quality_factors_1 or not quality_factors_2:
-            return {
-                'mean_difference': 0.0,
-                'std_difference': 0.0,
-                'correlation': 0.0,
-                'significance': 0.0
-            }
-        
-        # Calculate statistics
-        mean_1 = np.mean(quality_factors_1)
-        mean_2 = np.mean(quality_factors_2)
-        std_1 = np.std(quality_factors_1)
-        std_2 = np.std(quality_factors_2)
-        
-        # Calculate differences
-        mean_difference = mean_1 - mean_2
-        std_difference = np.sqrt(std_1**2 + std_2**2)
-        
-        # Calculate correlation
-        if len(quality_factors_1) == len(quality_factors_2):
-            correlation = np.corrcoef(quality_factors_1, quality_factors_2)[0, 1]
-            if np.isnan(correlation):
-                correlation = 0.0
-        else:
-            correlation = 0.0
-        
-        # Calculate significance (simplified)
-        significance = abs(mean_difference) / std_difference if std_difference > 0 else 0.0
-        
-        return {
-            'mean_difference': mean_difference,
-            'std_difference': std_difference,
-            'correlation': correlation,
-            'significance': significance
-        }
+        return self.statistics.compare_quality_factors(quality_factors_1, quality_factors_2)
 
     def _extract_peak_region(
         self, frequencies: np.ndarray, magnitude: np.ndarray, peak_idx: int
     ) -> Dict[str, np.ndarray]:
         """
         Extract region around a resonance peak.
+
+        Physical Meaning:
+            Extracts a localized region around a resonance peak for
+            detailed analysis, ensuring sufficient data for accurate
+            characterization while avoiding interference from nearby peaks.
 
         Args:
             frequencies (np.ndarray): Frequency array.
@@ -206,67 +167,14 @@ class ResonanceQualityAnalysis:
             'peak_idx': peak_idx - start_idx
         }
 
-    def _advanced_lorentzian_fitting(self, peak_region: Dict[str, np.ndarray]) -> Dict[str, float]:
-        """
-        Perform advanced Lorentzian fitting.
-
-        Args:
-            peak_region (Dict[str, np.ndarray]): Peak region data.
-
-        Returns:
-            Dict[str, float]: Advanced fitting parameters.
-        """
-        frequencies = peak_region['frequencies']
-        magnitude = peak_region['magnitude']
-        peak_idx = peak_region['peak_idx']
-        
-        # Initial parameter estimates
-        amplitude = magnitude[peak_idx]
-        center = frequencies[peak_idx]
-        
-        # Estimate FWHM using more sophisticated method
-        half_max = amplitude / 2.0
-        fwhm_indices = np.where(magnitude >= half_max)[0]
-        
-        if len(fwhm_indices) > 1:
-            fwhm = frequencies[fwhm_indices[-1]] - frequencies[fwhm_indices[0]]
-        else:
-            fwhm = (frequencies[-1] - frequencies[0]) / 10.0  # Fallback estimate
-        
-        # Additional parameters for advanced fitting
-        baseline = np.min(magnitude)
-        noise_level = np.std(magnitude)
-        
-        return {
-            'amplitude': amplitude,
-            'center': center,
-            'fwhm': fwhm,
-            'baseline': baseline,
-            'noise_level': noise_level
-        }
-
-    def _calculate_optimized_quality_factor(self, params: Dict[str, float]) -> float:
-        """
-        Calculate optimized quality factor.
-
-        Args:
-            params (Dict[str, float]): Advanced fitting parameters.
-
-        Returns:
-            float: Optimized quality factor.
-        """
-        center = params['center']
-        fwhm = params['fwhm']
-        
-        # Apply optimization corrections
-        optimized_fwhm = fwhm * (1.0 + params['noise_level'] / params['amplitude'])
-        
-        quality_factor = center / optimized_fwhm if optimized_fwhm > 0 else 0.0
-        return quality_factor
-
     def _analyze_resonance_shape(self, peak_region: Dict[str, np.ndarray]) -> Dict[str, float]:
         """
         Analyze resonance shape characteristics.
+
+        Physical Meaning:
+            Analyzes the shape characteristics of a resonance peak,
+            including amplitude, width, and symmetry, which are
+            crucial for understanding BVP impedance properties.
 
         Args:
             peak_region (Dict[str, np.ndarray]): Peak region data.
@@ -291,6 +199,11 @@ class ResonanceQualityAnalysis:
     def _analyze_frequency_properties(self, peak_region: Dict[str, np.ndarray]) -> Dict[str, float]:
         """
         Analyze frequency properties.
+
+        Physical Meaning:
+            Analyzes frequency-domain properties of the resonance,
+            including center frequency, frequency span, and resolution,
+            which are essential for BVP impedance characterization.
 
         Args:
             peak_region (Dict[str, np.ndarray]): Peak region data.
@@ -317,6 +230,11 @@ class ResonanceQualityAnalysis:
         """
         Analyze amplitude properties.
 
+        Physical Meaning:
+            Analyzes amplitude characteristics of the resonance,
+            including maximum, minimum, mean, and standard deviation,
+            which provide insights into BVP impedance magnitude properties.
+
         Args:
             peak_region (Dict[str, np.ndarray]): Peak region data.
 
@@ -341,6 +259,11 @@ class ResonanceQualityAnalysis:
     def _classify_resonance_type(self, peak_region: Dict[str, np.ndarray]) -> str:
         """
         Classify resonance type.
+
+        Physical Meaning:
+            Classifies the resonance type based on its characteristics,
+            which helps in understanding the nature of BVP impedance
+            variations and resonance behavior.
 
         Args:
             peak_region (Dict[str, np.ndarray]): Peak region data.
@@ -368,6 +291,15 @@ class ResonanceQualityAnalysis:
         """
         Calculate quality factor from resonance characteristics.
 
+        Physical Meaning:
+            Calculates the quality factor from resonance characteristics,
+            which is a key parameter for characterizing BVP impedance
+            resonance properties.
+
+        Mathematical Foundation:
+            Q = f_center / Δf, where f_center is the center frequency
+            and Δf is the peak width.
+
         Args:
             resonance_shape (Dict[str, float]): Resonance shape characteristics.
             frequency_properties (Dict[str, float]): Frequency properties.
@@ -384,6 +316,11 @@ class ResonanceQualityAnalysis:
     def _calculate_peak_width(self, magnitude: np.ndarray, peak_idx: int) -> float:
         """
         Calculate peak width.
+
+        Physical Meaning:
+            Calculates the width of the resonance peak, which is
+            essential for quality factor determination and
+            resonance characterization.
 
         Args:
             magnitude (np.ndarray): Magnitude array.
@@ -408,6 +345,15 @@ class ResonanceQualityAnalysis:
     def _calculate_peak_symmetry(self, magnitude: np.ndarray, peak_idx: int) -> float:
         """
         Calculate peak symmetry.
+
+        Physical Meaning:
+            Calculates the symmetry of the resonance peak, which
+            provides insights into the linearity and quality of
+            BVP impedance characteristics.
+
+        Mathematical Foundation:
+            Symmetry metric based on comparison of left and right
+            sides of the peak, with 1.0 representing perfect symmetry.
 
         Args:
             magnitude (np.ndarray): Magnitude array.

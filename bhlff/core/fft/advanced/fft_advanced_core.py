@@ -246,7 +246,8 @@ class FFTAdvancedCore:
 
     def _setup_spectral_coefficients(self) -> None:
         """Setup spectral coefficients for advanced solving."""
-        self.spectral_cache.setup_advanced_coefficients()
+        # Spectral coefficients are computed on-demand in SpectralCoefficientCache
+        pass
 
     def _setup_fft_plan(self) -> None:
         """Setup FFT plan for advanced solving."""

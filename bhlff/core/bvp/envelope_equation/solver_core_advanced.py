@@ -9,7 +9,7 @@ equation, including adaptive methods, preconditioning, and optimization.
 """
 
 import numpy as np
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Tuple
 from scipy.sparse import csc_matrix, lil_matrix
 
 from ...domain.domain_7d import Domain7D

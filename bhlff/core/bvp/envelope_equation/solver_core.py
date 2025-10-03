@@ -12,7 +12,11 @@ aspects of solver core operations.
 from .solver_core_basic import EnvelopeSolverCoreBasic
 from .solver_core_advanced import EnvelopeSolverCoreAdvanced
 
+# Alias for backward compatibility
+EnvelopeSolverCore7D = EnvelopeSolverCoreAdvanced
+
 __all__ = [
     'EnvelopeSolverCoreBasic',
-    'EnvelopeSolverCoreAdvanced'
+    'EnvelopeSolverCoreAdvanced',
+    'EnvelopeSolverCore7D'
 ]

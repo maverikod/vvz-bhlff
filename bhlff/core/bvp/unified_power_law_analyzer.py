@@ -12,7 +12,11 @@ aspects of power law analysis.
 from .power_law_core import PowerLawCore
 from .power_law_analysis import PowerLawAnalysis
 
+# Alias for backward compatibility
+UnifiedPowerLawAnalyzer = PowerLawAnalysis
+
 __all__ = [
     'PowerLawCore',
-    'PowerLawAnalysis'
+    'PowerLawAnalysis',
+    'UnifiedPowerLawAnalyzer'
 ]

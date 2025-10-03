@@ -27,7 +27,7 @@ from typing import Dict, List, Optional
 
 from .bvp_constants import BVPConstants
 from .resonance_peak_detector import ResonancePeakDetector
-from .resonance_quality_analyzer import ResonanceQualityAnalyzer
+from .resonance_quality_analyzer import ResonanceQualityAnalysis
 
 
 class ResonanceDetector:
@@ -60,7 +60,7 @@ class ResonanceDetector:
 
         # Initialize helper components
         self.peak_detector = ResonancePeakDetector(self.constants)
-        self.quality_analyzer = ResonanceQualityAnalyzer(self.constants)
+        self.quality_analyzer = ResonanceQualityAnalysis(self.constants)
 
     def find_resonance_peaks(
         self, frequencies: np.ndarray, admittance: np.ndarray

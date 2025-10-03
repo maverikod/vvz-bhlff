@@ -90,16 +90,68 @@
 
 ### **ПРИОРИТЕТ 3: Удаление лишних файлов**
 
-#### **3.1. Файлы с избыточной функциональностью:**
-- **`beating_validation_metrics.py`** - дублирует функциональность
-- **`beating_validation_basic_main.py`** - избыточный координатор
-- **`beating_validation_consistency.py`** - дублирует валидацию
-- **`beating_validation_statistics.py`** - дублирует статистику
-- **`validation.py`** - общий валидатор без специфики
-- **`energy_analysis.py`** - дублирует энергетический анализ
-- **`convergence_analysis.py`** - дублирует анализ сходимости
+#### **3.1. Детальный анализ дублирующих файлов:**
 
-**Действие**: Удалить дублирующие файлы, оставить только уникальную функциональность
+**ГРУППА 1: Beating Validation (4 файла) - ДУБЛИРУЮТ ФУНКЦИОНАЛЬНОСТЬ**
+
+**`beating_validation_metrics.py`** - ДУБЛИРУЕТ:
+- `compute_validation_metrics()` - общие метрики валидации
+- **ПРОБЛЕМА**: Дублирует функциональность из `beating_validation_statistics.py`
+
+**`beating_validation_basic_main.py`** - ИЗБЫТОЧНЫЙ КООРДИНАТОР:
+- Координирует 3 модуля: `BeatingValidationFrequencies`, `BeatingValidationPatterns`, `BeatingValidationMetrics`
+- **ПРОБЛЕМА**: Избыточный уровень абстракции, функциональность уже есть в других файлах
+
+**`beating_validation_consistency.py`** - ДУБЛИРУЕТ ВАЛИДАЦИЮ:
+- `validate_consistency()` - проверка консистентности
+- `_check_frequency_pattern_consistency()` - проверка частот и паттернов
+- `_check_coupling_frequency_consistency()` - проверка связи и частот
+- **ПРОБЛЕМА**: Дублирует функциональность из основного валидатора
+
+**`beating_validation_statistics.py`** - ДУБЛИРУЕТ СТАТИСТИКУ:
+- `compute_overall_statistical_validation()` - статистическая валидация
+- **ПРОБЛЕМА**: Дублирует функциональность из `beating_validation_metrics.py`
+
+**ГРУППА 2: Level A Validation (3 файла) - ДУБЛИРУЮТ АНАЛИЗ**
+
+**`validation.py`** - ОБЩИЙ ВАЛИДАТОР БЕЗ СПЕЦИФИКИ:
+- `validate_bvp_framework()` - общая валидация BVP
+- `_validate_envelope_equation()` - валидация уравнения огибающей
+- `_validate_quench_detection()` - валидация квенч-детекции
+- `_validate_impedance_calculation()` - валидация расчета импеданса
+- **ПРОБЛЕМА**: Слишком общий, дублирует специализированные валидаторы
+
+**`energy_analysis.py`** - ДУБЛИРУЕТ ЭНЕРГЕТИЧЕСКИЙ АНАЛИЗ:
+- `check_energy_conservation()` - проверка сохранения энергии
+- `_compute_kinetic_energy_7d()` - кинетическая энергия в 7D
+- `_compute_potential_energy_7d()` - потенциальная энергия в 7D
+- `_compute_interaction_energy_7d()` - энергия взаимодействия в 7D
+- **ПРОБЛЕМА**: Дублирует функциональность из основного валидатора
+
+**`convergence_analysis.py`** - ДУБЛИРУЕТ АНАЛИЗ СХОДИМОСТИ:
+- `check_convergence()` - проверка сходимости
+- `_check_residual_convergence()` - проверка сходимости остатков
+- `_check_iterative_convergence()` - проверка итеративной сходимости
+- `_compute_convergence_rate()` - вычисление скорости сходимости
+- **ПРОБЛЕМА**: Дублирует функциональность из основного валидатора
+
+#### **3.2. Конкретные действия по удалению:**
+
+**УДАЛИТЬ (7 файлов):**
+1. **`beating_validation_metrics.py`** → функциональность перенести в `beating_validation_statistics.py`
+2. **`beating_validation_basic_main.py`** → избыточный координатор
+3. **`beating_validation_consistency.py`** → функциональность перенести в основной валидатор
+4. **`beating_validation_statistics.py`** → оставить как единственный статистический валидатор
+5. **`validation.py`** → слишком общий, функциональность распределить по специализированным валидаторам
+6. **`energy_analysis.py`** → функциональность перенести в основной валидатор
+7. **`convergence_analysis.py`** → функциональность перенести в основной валидатор
+
+**ОСТАВИТЬ:**
+- Основные валидаторы с уникальной функциональностью
+- Специализированные модули без дублирования
+- Файлы с четко определенной ответственностью
+
+**РЕЗУЛЬТАТ**: Удаление 7 избыточных файлов, консолидация функциональности
 
 ### **ПРИОРИТЕТ 4: Дробление файлов**
 

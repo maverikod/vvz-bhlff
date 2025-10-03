@@ -74,7 +74,7 @@ class FFTAdvancedCore:
         max_cache_size = getattr(parameters, 'max_cache_size', 100)
         self.spectral_cache = SpectralCoefficientCache(max_cache_size)
         self.time_methods = FFTSolverTimeMethods(domain, parameters)
-        self.validation = FFTSolverValidation(domain, parameters)
+        self.validation = FFTSolverValidation(domain, parameters, self.fractional_laplacian)
         
         # Initialize specialized modules
         self.optimization = FFTOptimization(domain, parameters)

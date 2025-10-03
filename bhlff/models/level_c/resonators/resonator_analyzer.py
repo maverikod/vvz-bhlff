@@ -341,3 +341,4 @@ class ResonatorAnalyzer:
         
         energy_transfer = field_energy * resonance_energy
         return float(energy_transfer)
+

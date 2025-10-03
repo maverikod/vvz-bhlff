@@ -9,8 +9,8 @@ importing from the modular test structure for better maintainability.
 """
 
 # Import all test classes from the modular structure
-from .time_integrators.test_basic_integrators import TestBasicIntegrators
-from .time_integrators.test_advanced_integrators import TestAdvancedIntegrators
+from tests.unit.test_core.time_integrators.test_basic_integrators import TestBasicIntegrators
+from tests.unit.test_core.time_integrators.test_advanced_integrators import TestAdvancedIntegrators
 
 # Re-export all test classes for pytest discovery
 __all__ = [

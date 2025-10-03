@@ -9,8 +9,8 @@ importing from the modular test structure for better maintainability.
 """
 
 # Import all test classes from the modular structure
-from .nonlinear_coefficients.test_basic_coefficients import TestBasicCoefficients
-from .nonlinear_coefficients.test_advanced_coefficients import TestAdvancedCoefficients
+from tests.unit.test_core.nonlinear_coefficients.test_basic_coefficients import TestBasicCoefficients
+from tests.unit.test_core.nonlinear_coefficients.test_advanced_coefficients import TestAdvancedCoefficients
 
 # Re-export all test classes for pytest discovery
 __all__ = [

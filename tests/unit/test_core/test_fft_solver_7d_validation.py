@@ -9,9 +9,9 @@ importing from the modular test structure for better maintainability.
 """
 
 # Import all test classes from the modular structure
-from .fft_solver_7d_validation.test_basic_validation import TestBasicValidation
-from .fft_solver_7d_validation.test_numerical_validation import TestNumericalValidation
-from .fft_solver_7d_validation.test_boundary_cases import TestBoundaryCases
+from tests.unit.test_core.fft_solver_7d_validation.test_basic_validation import TestBasicValidation
+from tests.unit.test_core.fft_solver_7d_validation.test_numerical_validation import TestNumericalValidation
+from tests.unit.test_core.fft_solver_7d_validation.test_boundary_cases import TestBoundaryCases
 
 # Re-export all test classes for pytest discovery
 __all__ = [

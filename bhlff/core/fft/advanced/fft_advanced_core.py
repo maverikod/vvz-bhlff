@@ -64,8 +64,8 @@ class FFTAdvancedCore:
         self.logger = logging.getLogger(__name__)
         
         # Advanced solver components
-        beta = parameters.get('beta', 1.0)
-        lambda_param = parameters.get('lambda', 0.0)
+        beta = getattr(parameters, 'beta', 1.0)
+        lambda_param = getattr(parameters, 'lambda_param', 0.0)
         self.fractional_laplacian = FractionalLaplacian(domain, beta, lambda_param)
         self.spectral_operations = SpectralOperations(domain, parameters)
         self.memory_manager = MemoryManager7D(domain, parameters)

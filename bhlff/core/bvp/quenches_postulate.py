@@ -51,11 +51,11 @@ class QuenchesPostulate(BVPPostulate):
         """
         self.domain = domain
         self.constants = constants
-        self.quench_threshold = constants.get_quench_parameter("quench_threshold", 0.1)
+        self.quench_threshold = constants.get_quench_parameter("quench_threshold")
         self.energy_dump_threshold = constants.get_quench_parameter(
-            "energy_dump_threshold", 0.01
+            "energy_dump_threshold"
         )
-        self.min_quench_size = constants.get_quench_parameter("min_quench_size", 5)
+        self.min_quench_size = constants.get_quench_parameter("min_quench_size")
 
         # Initialize helper components
         self.detector = QuenchesDetector(domain, constants)

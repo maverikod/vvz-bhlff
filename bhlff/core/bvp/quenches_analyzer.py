@@ -47,7 +47,7 @@ class QuenchesAnalyzer:
         self.domain = domain
         self.constants = constants
         self.energy_dump_threshold = constants.get_quench_parameter(
-            "energy_dump_threshold", 0.01
+            "energy_dump_threshold"
         )
 
     def analyze_quench_properties(

@@ -139,10 +139,15 @@ class PhaseAnalysis:
         Returns:
             np.ndarray: Frequency mask.
         """
-        # Create frequency axes
+        # Create frequency axes for all dimensions
         freq_axes = []
-        for i, size in enumerate(shape[:3]):  # Spatial dimensions only
-            freq_axis = np.fft.fftfreq(size, self.domain.dx)
+        for i, size in enumerate(shape):
+            if i < 3:  # Spatial dimensions
+                freq_axis = np.fft.fftfreq(size, self.domain.dx)
+            elif i < 6:  # Phase dimensions
+                freq_axis = np.fft.fftfreq(size, self.domain.dphi)
+            else:  # Temporal dimension
+                freq_axis = np.fft.fftfreq(size, self.domain.dt)
             freq_axes.append(freq_axis)
 
         # Create frequency grid

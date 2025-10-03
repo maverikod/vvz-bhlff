@@ -145,7 +145,7 @@ class TestBVPFramework:
         assert 'admittance' in impedance
         assert 'reflection' in impedance
         assert 'transmission' in impedance
-        assert 'resonance_peaks' in impedance
+        assert 'peaks' in impedance
     
     def test_bvp_postulates(self, bvp_core):
         """Test all 9 BVP postulates."""
@@ -249,7 +249,9 @@ class TestBVPFramework:
         assert np.isfinite(envelope).all()
         
         # Test phase vector update
-        assert bvp_core._phase_vector.theta_components[0] is not None
+        phase_vector = bvp_core.get_phase_vector()
+        assert phase_vector is not None
+        assert phase_vector._phase_components.theta_components[0] is not None
     
     def test_bvp_core_detect_quenches(self, bvp_core):
         """Test BVP core quench detection."""
@@ -270,7 +272,7 @@ class TestBVPFramework:
         assert 'admittance' in impedance
         assert 'reflection' in impedance
         assert 'transmission' in impedance
-        assert 'resonance_peaks' in impedance
+        assert 'peaks' in impedance
     
     def test_bvp_framework_validation(self, bvp_core):
         """Test BVP framework validation."""

@@ -49,10 +49,10 @@ class BVPRigidityPostulate(BVPPostulate):
         self.domain = domain
         self.constants = constants
         self.stiffness_threshold = constants.get_quench_parameter(
-            "stiffness_threshold", 1.0
+            "stiffness_threshold"
         )
         self.correlation_length_threshold = constants.get_quench_parameter(
-            "correlation_length_threshold", 0.1
+            "correlation_length_threshold"
         )
 
     def apply(self, envelope: np.ndarray, **kwargs) -> Dict[str, Any]:
@@ -279,8 +279,8 @@ class BVPRigidityPostulate(BVPPostulate):
             "short_correlation": short_correlation,
             "is_rigid": is_rigid,
             "rigidity_quality": (
-                mean_stiffness / self.stiffness_threshold
-                + self.correlation_length_threshold / min_correlation_length
+                mean_stiffness / max(self.stiffness_threshold, 1e-12)
+                + self.correlation_length_threshold / max(min_correlation_length, 1e-12)
             )
             / 2,
         }

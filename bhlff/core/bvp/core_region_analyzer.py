@@ -46,7 +46,7 @@ class CoreRegionAnalyzer:
         """
         self.domain = domain
         self.constants = constants
-        self.core_radius = constants.get_physical_parameter("core_radius", 1.0)
+        self.core_radius = constants.get_physical_parameter("core_radius")
 
     def identify_core_region(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
@@ -96,9 +96,11 @@ class CoreRegionAnalyzer:
         """
         center = []
         for axis in range(amplitude.ndim):
-            axis_center = np.sum(amplitude * np.arange(amplitude.shape[axis])) / np.sum(
-                amplitude
-            )
+            # Create coordinate array for this axis
+            coord_array = np.arange(amplitude.shape[axis])
+            # Reshape to match amplitude dimensions
+            coord_array = coord_array.reshape([1] * axis + [amplitude.shape[axis]] + [1] * (amplitude.ndim - axis - 1))
+            axis_center = np.sum(amplitude * coord_array) / np.sum(amplitude)
             center.append(axis_center)
         return center
 
@@ -123,7 +125,12 @@ class CoreRegionAnalyzer:
 
         # Find distance from center where amplitude drops below threshold
         distances = self._compute_distances_from_center(amplitude, center)
-        core_radius = np.min(distances[amplitude < threshold])
+        low_amplitude_mask = amplitude < threshold
+        if np.any(low_amplitude_mask):
+            core_radius = np.min(distances[low_amplitude_mask])
+        else:
+            # If no points below threshold, use maximum distance
+            core_radius = np.max(distances)
 
         return core_radius
 

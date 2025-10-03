@@ -53,9 +53,9 @@ class CoreRenormalizationPostulate(BVPPostulate):
         self.domain = domain
         self.constants = constants
         self.renormalization_threshold = constants.get_quench_parameter(
-            "renormalization_threshold", 0.1
+            "renormalization_threshold"
         )
-        self.core_radius = constants.get_physical_parameter("core_radius", 1.0)
+        self.core_radius = constants.get_physical_parameter("core_radius")
 
         # Initialize helper components
         self.region_analyzer = CoreRegionAnalyzer(domain, constants)

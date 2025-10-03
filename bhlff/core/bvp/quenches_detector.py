@@ -112,9 +112,9 @@ class QuenchesDetector:
         """
         # Use morphological operations to filter small regions
         # Remove small connected components
-        filtered_mask = ndimage.binary_opening(
-            quench_mask, structure=ndimage.generate_binary_structure(3, 1)
-        )
+        # Create structure for 7D domain
+        structure = ndimage.generate_binary_structure(len(quench_mask.shape), 1)
+        filtered_mask = ndimage.binary_opening(quench_mask, structure=structure)
 
         # Remove very small regions
         labeled_mask, num_features = ndimage.label(filtered_mask)

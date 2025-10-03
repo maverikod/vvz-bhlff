@@ -50,7 +50,7 @@ class CarrierPrimacyPostulate(BVPPostulate):
         self.constants = constants
         self.carrier_frequency = constants.get_physical_parameter("carrier_frequency")
         self.scale_separation_threshold = constants.get_quench_parameter(
-            "scale_separation_threshold", 10.0
+            "scale_separation_threshold"
         )
 
     def apply(self, envelope: np.ndarray, **kwargs) -> Dict[str, Any]:
@@ -151,6 +151,10 @@ class CarrierPrimacyPostulate(BVPPostulate):
         spectrum_copy = spectrum.copy()
         spectrum_copy[max_idx] = 0  # Remove carrier peak
         envelope_idx = np.argmax(spectrum_copy)
+        
+        # Ensure envelope_idx is within bounds
+        if envelope_idx >= len(freq_axis):
+            envelope_idx = len(freq_axis) - 1
         envelope_freq = freq_axis[envelope_idx]
 
         return {
@@ -218,7 +222,7 @@ class CarrierPrimacyPostulate(BVPPostulate):
             "frequency_ratio": frequency_ratio,
             "sufficient_separation": sufficient_separation,
             "separation_quality": min(
-                frequency_ratio / self.scale_separation_threshold, 1.0
+                frequency_ratio / max(self.scale_separation_threshold, 1e-12), 1.0
             ),
         }
 

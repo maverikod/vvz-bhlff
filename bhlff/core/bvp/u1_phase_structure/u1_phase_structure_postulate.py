@@ -52,10 +52,10 @@ class U1PhaseStructurePostulate(BVPPostulate):
         self.domain = domain
         self.constants = constants
         self.phase_coherence_threshold = constants.get_quench_parameter(
-            "phase_coherence_threshold", 0.8
+            "phase_coherence_threshold"
         )
         self.phase_variance_threshold = constants.get_quench_parameter(
-            "phase_variance_threshold", 0.1
+            "phase_variance_threshold"
         )
 
         # Initialize analyzers

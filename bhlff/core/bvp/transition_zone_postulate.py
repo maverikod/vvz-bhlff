@@ -49,10 +49,10 @@ class TransitionZonePostulate(BVPPostulate):
         self.domain = domain
         self.constants = constants
         self.nonlinear_threshold = constants.get_quench_parameter(
-            "nonlinear_threshold", 0.5
+            "nonlinear_threshold"
         )
         self.current_threshold = constants.get_quench_parameter(
-            "current_threshold", 0.1
+            "current_threshold"
         )
 
     def apply(self, envelope: np.ndarray, **kwargs) -> Dict[str, Any]:
@@ -121,8 +121,8 @@ class TransitionZonePostulate(BVPPostulate):
 
         # Nonlinear admittance depends on amplitude
         # Y_tr(ω,|A|) = Y_0(ω) * (1 + α|A|² + β|A|⁴)
-        alpha = self.constants.get_envelope_parameter("nonlinear_alpha", 0.1)
-        beta = self.constants.get_envelope_parameter("nonlinear_beta", 0.01)
+        alpha = self.constants.get_envelope_parameter("nonlinear_alpha")
+        beta = self.constants.get_envelope_parameter("nonlinear_beta")
 
         nonlinear_factor = 1 + alpha * amplitude**2 + beta * amplitude**4
         base_admittance = self._compute_base_admittance(envelope)

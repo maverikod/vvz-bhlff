@@ -50,7 +50,7 @@ class ScaleSeparationPostulate(BVPPostulate):
         self.constants = constants
         self.carrier_frequency = constants.get_physical_parameter("carrier_frequency")
         self.scale_separation_threshold = constants.get_quench_parameter(
-            "scale_separation_threshold", 10.0
+            "scale_separation_threshold"
         )
 
     def apply(self, envelope: np.ndarray, **kwargs) -> Dict[str, Any]:
@@ -192,7 +192,7 @@ class ScaleSeparationPostulate(BVPPostulate):
             "min_scale_ratio": min_scale_ratio,
             "sufficient_separation": sufficient_separation,
             "separation_quality": min(
-                min_scale_ratio / self.scale_separation_threshold, 1.0
+                min_scale_ratio / max(self.scale_separation_threshold, 1e-12), 1.0
             ),
         }
 

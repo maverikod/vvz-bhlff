@@ -78,15 +78,13 @@ class CoreRenormalizationAnalyzer:
 
         # Renormalized coefficients depend on envelope amplitude and gradient
         # c_i^eff = c_i + α_i|A|² + β_i|∇A|²/ω₀²
-        alpha_2 = self.constants.get_envelope_parameter("renormalization_alpha_2", 0.1)
-        alpha_4 = self.constants.get_envelope_parameter("renormalization_alpha_4", 0.01)
-        alpha_6 = self.constants.get_envelope_parameter(
-            "renormalization_alpha_6", 0.001
-        )
+        alpha_2 = self.constants.get_envelope_parameter("renormalization_alpha_2")
+        alpha_4 = self.constants.get_envelope_parameter("renormalization_alpha_4")
+        alpha_6 = self.constants.get_envelope_parameter("renormalization_alpha_6")
 
-        beta_2 = self.constants.get_envelope_parameter("renormalization_beta_2", 0.1)
-        beta_4 = self.constants.get_envelope_parameter("renormalization_beta_4", 0.01)
-        beta_6 = self.constants.get_envelope_parameter("renormalization_beta_6", 0.001)
+        beta_2 = self.constants.get_envelope_parameter("renormalization_beta_2")
+        beta_4 = self.constants.get_envelope_parameter("renormalization_beta_4")
+        beta_6 = self.constants.get_envelope_parameter("renormalization_beta_6")
 
         omega_0 = self.constants.get_physical_parameter("carrier_frequency")
 

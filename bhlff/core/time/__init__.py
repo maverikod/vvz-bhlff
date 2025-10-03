@@ -24,7 +24,7 @@ Example:
 """
 
 from .base_integrator import BaseTimeIntegrator
-from .exponential_integrator import BVPExponentialIntegrator
+from .bvp_envelope_integrator import BVPEnvelopeIntegrator
 from .crank_nicolson_integrator import CrankNicolsonIntegrator
 from .adaptive_integrator import AdaptiveIntegrator
 from .memory_kernel import MemoryKernel
@@ -32,7 +32,7 @@ from .quench_detector import QuenchDetector
 
 __all__ = [
     "BaseTimeIntegrator",
-    "BVPExponentialIntegrator",
+    "BVPEnvelopeIntegrator",
     "CrankNicolsonIntegrator",
     "AdaptiveIntegrator",
     "MemoryKernel",

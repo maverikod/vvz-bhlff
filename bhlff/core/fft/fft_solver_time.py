@@ -32,7 +32,7 @@ if TYPE_CHECKING:
     from ..domain import Domain
     from ..domain.parameters import Parameters
     from ..time import (
-        BVPExponentialIntegrator,
+        BVPEnvelopeIntegrator,
         CrankNicolsonIntegrator,
         MemoryKernel,
         QuenchDetector,
@@ -56,7 +56,7 @@ class FFTSolverTimeMethods:
     Attributes:
         domain (Domain): Computational domain for the simulation.
         parameters (Parameters): Solver parameters.
-        _exponential_integrator (BVPExponentialIntegrator): Exponential integrator.
+        _envelope_integrator (BVPEnvelopeIntegrator): BVP envelope integrator.
         _crank_nicolson_integrator (CrankNicolsonIntegrator): Crank-Nicolson integrator.
         _memory_kernel (MemoryKernel): Memory kernel for non-local effects.
         _quench_detector (QuenchDetector): Quench detection system.
@@ -80,7 +80,7 @@ class FFTSolverTimeMethods:
         self.logger = logging.getLogger(__name__)
 
         # Initialize time integrators
-        self._exponential_integrator = None
+        self._envelope_integrator = None
         self._crank_nicolson_integrator = None
         self._memory_kernel = None
         self._quench_detector = None
@@ -128,15 +128,15 @@ class FFTSolverTimeMethods:
             )
 
         # Get or create integrator
-        if method == "exponential":
-            if self._exponential_integrator is None:
-                from ..time import BVPExponentialIntegrator
+        if method == "envelope":
+            if self._envelope_integrator is None:
+                from ..time import BVPEnvelopeIntegrator
 
-                self._exponential_integrator = BVPExponentialIntegrator(
+                self._envelope_integrator = BVPEnvelopeIntegrator(
                     self.domain, self.parameters
                 )
-                self._setup_integrator_components(self._exponential_integrator)
-            integrator = self._exponential_integrator
+                self._setup_integrator_components(self._envelope_integrator)
+            integrator = self._envelope_integrator
         elif method == "crank_nicolson":
             if self._crank_nicolson_integrator is None:
                 from ..time import CrankNicolsonIntegrator
@@ -208,8 +208,8 @@ class FFTSolverTimeMethods:
             self._memory_kernel.set_coupling_strengths(coupling_strengths)
 
         # Update existing integrators
-        if self._exponential_integrator is not None:
-            self._exponential_integrator.set_memory_kernel(self._memory_kernel)
+        if self._envelope_integrator is not None:
+            self._envelope_integrator.set_memory_kernel(self._memory_kernel)
         if self._crank_nicolson_integrator is not None:
             self._crank_nicolson_integrator.set_memory_kernel(self._memory_kernel)
 
@@ -243,8 +243,8 @@ class FFTSolverTimeMethods:
         )
 
         # Update existing integrators
-        if self._exponential_integrator is not None:
-            self._exponential_integrator.set_quench_detector(self._quench_detector)
+        if self._envelope_integrator is not None:
+            self._envelope_integrator.set_quench_detector(self._quench_detector)
         if self._crank_nicolson_integrator is not None:
             self._crank_nicolson_integrator.set_quench_detector(self._quench_detector)
 

@@ -251,7 +251,8 @@ class FFTAdvancedCore:
 
     def _setup_fft_plan(self) -> None:
         """Setup FFT plan for advanced solving."""
-        self.fft_plan.setup_advanced_plan()
+        # FFT plans are already set up in FFTPlan7D constructor
+        pass
 
     def _setup_optimization(self) -> None:
         """Setup optimization components."""

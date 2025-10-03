@@ -26,8 +26,9 @@ Mathematical Foundation:
 """
 
 import numpy as np
-from typing import Tuple, Union
+from typing import Tuple, Union, Dict
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
@@ -69,6 +70,7 @@ class Domain:
     N_t: int = 64
     T: float = 1.0
     dimensions: int = 7
+    temporal_config: Optional['TemporalConfig'] = None
 
     def __post_init__(self) -> None:
         """
@@ -96,12 +98,39 @@ class Domain:
         self.dphi = 2 * np.pi / self.N_phi
         self.dt = self.T / self.N_t
 
+        # Initialize temporal_config if not provided
+        if self.temporal_config is None:
+            from .config import TemporalConfig
+            self.temporal_config = TemporalConfig(T_max=self.T, N_t=self.N_t, dt=self.dt)
+
         # Setup shapes for 7D BVP theory
         self.spatial_shape = tuple([self.N] * 3)  # 3 spatial dimensions
         self.phase_shape = tuple([self.N_phi] * 3)  # 3 phase dimensions
         self.shape = self.spatial_shape + self.phase_shape + (self.N_t,)  # 7D shape
 
         self._setup_coordinates()
+    
+    def get_differentials(self) -> Dict[str, float]:
+        """
+        Get differential elements for 7D space-time.
+        
+        Physical Meaning:
+            Returns the differential elements dx, dphi, dt for
+            the 7D space-time structure M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
+            
+        Returns:
+            Dict[str, float]: Differential elements.
+        """
+        return {
+            'dx': self.dx,
+            'dy': self.dx,  # Same as dx for uniform grid
+            'dz': self.dx,  # Same as dx for uniform grid
+            'dphi': self.dphi,
+            'dphi_1': self.dphi,  # Same as dphi for uniform grid
+            'dphi_2': self.dphi,  # Same as dphi for uniform grid
+            'dphi_3': self.dphi,  # Same as dphi for uniform grid
+            'dt': self.dt
+        }
 
     def _setup_coordinates(self) -> None:
         """

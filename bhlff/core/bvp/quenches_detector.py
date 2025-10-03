@@ -47,8 +47,8 @@ class QuenchesDetector:
         """
         self.domain = domain
         self.constants = constants
-        self.quench_threshold = constants.get_quench_parameter("quench_threshold", 0.1)
-        self.min_quench_size = constants.get_quench_parameter("min_quench_size", 5)
+        self.quench_threshold = constants.get_quench_parameter("amplitude_threshold")
+        self.min_quench_size = 5  # Default value
 
     def detect_quenches(self, envelope: np.ndarray) -> Dict[str, Any]:
         """

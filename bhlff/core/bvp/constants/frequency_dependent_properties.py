@@ -91,7 +91,12 @@ class FrequencyDependentProperties:
 
         # Interband transitions and quantum corrections
         # Include effects from higher-order terms and quantum corrections
-        interband_contribution = 0.1 * dc_conductivity * np.exp(-(omega_tau**2) / 2)
+        # Use numerical stability for exp() to prevent underflow
+        exp_arg = -(omega_tau**2) / 2
+        if exp_arg < -700:  # Prevent underflow
+            interband_contribution = 0.0
+        else:
+            interband_contribution = 0.1 * dc_conductivity * np.exp(exp_arg)
 
         # Quantum corrections for high frequencies
         quantum_correction = 1.0 + 0.01 * np.log(1.0 + frequency / 1e12)

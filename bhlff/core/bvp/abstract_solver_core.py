@@ -128,8 +128,13 @@ class AbstractSolverCore:
         """
         # Base implementation - can be overridden by subclasses
         # Simple fallback implementation - return identity matrix
+        # Use sparse matrix to prevent memory issues for large domains
         size = envelope.size
-        return np.eye(size)
+        if size > 10000:  # Use sparse matrix for large domains
+            from scipy.sparse import identity
+            return identity(size, format='csr')
+        else:
+            return np.eye(size)
 
     def solve_linear_system(self, jacobian: np.ndarray, residual: np.ndarray) -> np.ndarray:
         """

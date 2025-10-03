@@ -197,7 +197,7 @@ class TestBVPFramework:
         
         # Test with 7D field
         field = np.ones(bvp_core.domain.shape, dtype=complex)
-        gradients = interface._interface_core.compute_field_gradient(field)
+        gradients = interface.core_interface.compute_field_gradient(field)
         
         assert isinstance(gradients, list)
         assert len(gradients) == 7  # 3 spatial + 3 phase + 1 temporal
@@ -278,7 +278,7 @@ class TestBVPFramework:
         envelope = np.ones(bvp_core.domain.shape, dtype=complex)
         
         # Test postulate validation
-        postulates = BVPPostulates(bvp_core.domain, bvp_core.constants)
+        postulates = BVPPostulates(bvp_core.domain, bvp_core.get_bvp_constants())
         is_valid = postulates.validate_bvp_framework(envelope)
         assert isinstance(is_valid, bool)
         

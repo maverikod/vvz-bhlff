@@ -13,7 +13,7 @@ import pytest
 from typing import Dict, Any, Tuple
 
 from bhlff.core.time import (
-    BVPExponentialIntegrator, 
+    BVPEnvelopeIntegrator, 
     CrankNicolsonIntegrator,
     MemoryKernel,
     QuenchDetector

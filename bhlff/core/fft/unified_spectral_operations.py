@@ -31,6 +31,7 @@ from typing import Any, Tuple, Dict, Optional
 import logging
 
 from typing import TYPE_CHECKING
+from bhlff.utils.cuda_utils import get_global_backend
 
 if TYPE_CHECKING:
     from ..domain import Domain
@@ -74,6 +75,10 @@ class UnifiedSpectralOperations:
         self.precision = precision
         self.logger = logging.getLogger(__name__)
 
+        # Initialize CUDA backend for optimal performance
+        self.backend = get_global_backend()
+        self.logger.info(f"Using {type(self.backend).__name__} backend for spectral operations")
+
         # Initialize FFT plans cache
         self._fft_plans = {}
         self._setup_fft_plans()
@@ -111,18 +116,26 @@ class UnifiedSpectralOperations:
                 f"Field shape {field.shape} incompatible with domain {self.domain.shape}"
             )
 
+        # Use CUDA backend for FFT operations
+        field_gpu = self.backend.array(field)
+        
         if normalization == "ortho":
             # Use orthogonal normalization
-            field_spectral = np.fft.fftn(field, norm="ortho")
+            field_spectral_gpu = self.backend.fft(field_gpu)
+            # Apply orthogonal normalization
+            N_total = np.prod(self.domain.shape)
+            field_spectral_gpu /= np.sqrt(N_total)
         elif normalization == "physics":
             # Use physics normalization
-            field_spectral = np.fft.fftn(field)
+            field_spectral_gpu = self.backend.fft(field_gpu)
             # Apply physics normalization factor
             volume_element = self._compute_volume_element()
-            field_spectral *= volume_element
+            field_spectral_gpu *= volume_element
         else:
             raise ValueError(f"Unsupported normalization type: {normalization}")
 
+        # Convert back to CPU
+        field_spectral = self.backend.to_numpy(field_spectral_gpu)
         return field_spectral
 
     def inverse_fft(
@@ -155,16 +168,26 @@ class UnifiedSpectralOperations:
                 f"Spectral field shape {spectral_field.shape} incompatible with domain {self.domain.shape}"
             )
 
+        # Use CUDA backend for FFT operations
+        spectral_field_gpu = self.backend.array(spectral_field)
+        
         if normalization == "ortho":
             # Use orthogonal normalization
-            field_real = np.fft.ifftn(spectral_field, norm="ortho")
+            field_spectral_gpu = spectral_field_gpu
+            # Apply orthogonal normalization
+            N_total = np.prod(self.domain.shape)
+            field_spectral_gpu *= np.sqrt(N_total)
+            field_real_gpu = self.backend.ifft(field_spectral_gpu)
         elif normalization == "physics":
             # Use physics normalization
             volume_element = self._compute_volume_element()
-            field_real = np.fft.ifftn(spectral_field / volume_element)
+            field_spectral_gpu = spectral_field_gpu / volume_element
+            field_real_gpu = self.backend.ifft(field_spectral_gpu)
         else:
             raise ValueError(f"Unsupported normalization type: {normalization}")
 
+        # Convert back to CPU and return real part
+        field_real = self.backend.to_numpy(field_real_gpu)
         return field_real.real
 
     def compute_spectral_derivatives(

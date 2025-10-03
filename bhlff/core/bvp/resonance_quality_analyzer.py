@@ -10,7 +10,7 @@ aspects of resonance quality analysis.
 """
 
 from .resonance_quality_core import ResonanceQualityCore
-from .resonance_quality_analysis import ResonanceQualityAnalysis
+from .analysis.resonance_quality_analysis import ResonanceQualityAnalysis
 
 __all__ = [
     'ResonanceQualityCore',

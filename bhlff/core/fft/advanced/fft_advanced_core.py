@@ -12,6 +12,7 @@ import numpy as np
 from typing import Dict, Any, Optional, Tuple, List, TYPE_CHECKING
 import logging
 
+from bhlff.utils.cuda_utils import get_global_backend
 from ..fractional_laplacian import FractionalLaplacian
 from ..spectral_operations import SpectralOperations
 from ..memory_manager_7d import MemoryManager7D
@@ -60,6 +61,10 @@ class FFTAdvancedCore:
         self.domain = domain
         self.parameters = parameters
         self.logger = logging.getLogger(__name__)
+        
+        # Initialize CUDA backend for optimal performance
+        self.backend = get_global_backend()
+        self.logger.info(f"Using {type(self.backend).__name__} backend for FFT operations")
         
         # Advanced solver components
         beta = getattr(parameters, 'beta', 1.0)

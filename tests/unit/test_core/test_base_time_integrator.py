@@ -24,7 +24,7 @@ from typing import Dict, Any, Tuple
 
 from bhlff.core.time import (
     BaseTimeIntegrator, 
-    BVPExponentialIntegrator
+    BVPEnvelopeIntegrator
 )
 from bhlff.core.domain import Domain, Parameters
 

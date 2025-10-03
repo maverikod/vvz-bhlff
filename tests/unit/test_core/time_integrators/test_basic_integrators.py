@@ -13,7 +13,7 @@ import pytest
 from typing import Dict, Any, Tuple
 
 from bhlff.core.time import (
-    BVPExponentialIntegrator, 
+    BVPEnvelopeIntegrator, 
     CrankNicolsonIntegrator,
     MemoryKernel,
     QuenchDetector
@@ -48,9 +48,9 @@ class TestBasicIntegrators:
             tolerance=1e-12
         )
     
-    def test_exponential_integrator_creation(self, domain_7d, parameters_basic):
-        """Test exponential integrator creation."""
-        integrator = BVPExponentialIntegrator(domain_7d, parameters_basic)
+    def test_envelope_integrator_creation(self, domain_7d, parameters_basic):
+        """Test envelope integrator creation."""
+        integrator = BVPEnvelopeIntegrator(domain_7d, parameters_basic)
         
         # Check that integrator is created successfully
         assert integrator is not None, "Exponential integrator should be created"

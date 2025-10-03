@@ -30,6 +30,7 @@ from typing import Any, Tuple, Dict, Optional
 import logging
 
 from typing import TYPE_CHECKING
+from bhlff.utils.cuda_utils import get_global_backend
 from .unified_spectral_operations import UnifiedSpectralOperations
 
 if TYPE_CHECKING:

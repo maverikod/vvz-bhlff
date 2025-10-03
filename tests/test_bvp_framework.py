@@ -42,10 +42,10 @@ class TestBVPFramework:
         """Create 7D domain for testing."""
         return Domain(
             L=1.0,
-            N=32,
+            N=8,
             dimensions=7,
-            N_phi=16,
-            N_t=100,
+            N_phi=4,
+            N_t=8,
             T=1.0
         )
 
@@ -92,7 +92,7 @@ class TestBVPFramework:
         assert hasattr(domain_7d, 'N_phi')
         assert hasattr(domain_7d, 'dt')
         assert hasattr(domain_7d, 'N_t')
-        assert domain_7d.shape == (32, 32, 32, 16, 16, 16, 100)
+        assert domain_7d.shape == (8, 8, 8, 4, 4, 4, 8)
     
     def test_bvp_core_initialization(self, bvp_core):
         """Test BVP core initialization."""

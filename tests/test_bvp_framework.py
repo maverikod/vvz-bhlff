@@ -143,8 +143,8 @@ class TestBVPFramework:
         
         assert isinstance(impedance, dict)
         assert 'admittance' in impedance
-        assert 'reflection_coefficient' in impedance
-        assert 'transmission_coefficient' in impedance
+        assert 'reflection' in impedance
+        assert 'transmission' in impedance
         assert 'resonance_peaks' in impedance
     
     def test_bvp_postulates(self, bvp_core):
@@ -268,8 +268,8 @@ class TestBVPFramework:
         
         assert isinstance(impedance, dict)
         assert 'admittance' in impedance
-        assert 'reflection_coefficient' in impedance
-        assert 'transmission_coefficient' in impedance
+        assert 'reflection' in impedance
+        assert 'transmission' in impedance
         assert 'resonance_peaks' in impedance
     
     def test_bvp_framework_validation(self, bvp_core):

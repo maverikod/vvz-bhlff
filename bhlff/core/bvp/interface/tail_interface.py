@@ -91,9 +91,9 @@ class TailInterface:
         # Extract tail-specific data
         tail_data = {
             "admittance": impedance_data["admittance"],
-            "resonance_peaks": impedance_data["resonance_peaks"],
-            "reflection_coefficient": impedance_data["reflection_coefficient"],
-            "transmission_coefficient": impedance_data["transmission_coefficient"],
+            "resonance_peaks": impedance_data.get("peaks", {"frequencies": [], "quality_factors": []}),
+            "reflection_coefficient": impedance_data["reflection"],
+            "transmission_coefficient": impedance_data["transmission"],
             "spectral_data": self._compute_spectral_data(envelope),
         }
 

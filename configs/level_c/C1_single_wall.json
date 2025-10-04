@@ -1,0 +1,42 @@
+{
+  "case": "C1_single_wall",
+  "description": "Single spherical boundary with admittance contrast",
+  "domain": {
+    "L": 100.5309649,
+    "N": 384,
+    "dimensions": 3
+  },
+  "physics": {
+    "nu": 1.0,
+    "beta": 1.0,
+    "lambda": 0.0,
+    "precision": "float64"
+  },
+  "boundary": {
+    "type": "spherical",
+    "center": [50.26548245, 50.26548245, 50.26548245],
+    "radius": 18.84955592,
+    "thickness": 3,
+    "contrast_range": [0.0, 0.1, 0.2, 0.3, 0.4, 0.5]
+  },
+  "frequency_sweep": {
+    "omega_min": 0.05,
+    "omega_max": 5.0,
+    "points_per_decade": 60,
+    "refine_peaks": true,
+    "peak_refinement_tolerance": 0.001
+  },
+  "analysis": {
+    "find_resonance_modes": true,
+    "compute_radial_profiles": true,
+    "analyze_admittance_spectrum": true,
+    "check_passivity": true
+  },
+  "output": {
+    "directory": "output/C1",
+    "save_profiles": true,
+    "save_admittance": true,
+    "save_field_snapshots": true,
+    "format": "hdf5"
+  }
+}

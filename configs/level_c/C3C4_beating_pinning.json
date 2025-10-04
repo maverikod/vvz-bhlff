@@ -1,0 +1,51 @@
+{
+  "case": "C3C4_beating_pinning",
+  "description": "Mode beating and pinning analysis",
+  "domain": {
+    "L": 100.5309649,
+    "N": 384,
+    "dimensions": 3
+  },
+  "physics": {
+    "nu": 1.0,
+    "beta": 1.0,
+    "lambda": 0.0,
+    "precision": "float64"
+  },
+  "layers": [
+    {
+      "R_over_pi": 6.0,
+      "thickness_in_cells": 3,
+      "memory": [{"gamma": 0.0, "tau": 1.0}]
+    }
+  ],
+  "time_integration": {
+    "dt": 0.005,
+    "T": 400.0,
+    "avg_window": 0.8,
+    "scheme": "exponential"
+  },
+  "forcing": {
+    "type": "dual_mode",
+    "omega_0": 1.0,
+    "delta_omega_ratios": [0.02, 0.05],
+    "amplitude": 1.0,
+    "profile": "gaussian"
+  },
+  "memory_sweep": {
+    "gamma_list": [0.0, 0.2, 0.4, 0.6, 0.8],
+    "tau_list": [0.5, 1.0, 2.0]
+  },
+  "analysis": {
+    "compute_drift_velocity": true,
+    "compute_cross_correlation": true,
+    "compute_jaccard_index": true,
+    "find_freezing_threshold": true
+  },
+  "output": {
+    "directory": "output/C3C4",
+    "save_intensity_series": true,
+    "save_k_spectra": true,
+    "save_drift_analysis": true
+  }
+}

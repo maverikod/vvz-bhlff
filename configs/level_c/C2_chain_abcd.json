@@ -1,0 +1,66 @@
+{
+  "case": "C2_chain_abcd",
+  "description": "Chain of 5 nested resonators with ABCD analysis",
+  "domain": {
+    "L": 125.6637061,
+    "N": 384,
+    "dimensions": 3
+  },
+  "physics": {
+    "nu": 1.0,
+    "beta": 1.2,
+    "lambda": 0.0,
+    "precision": "float64"
+  },
+  "resonators": {
+    "shells": [
+      {
+        "R_over_pi": 6.0,
+        "thickness_in_cells": 3,
+        "memory": [{"gamma": 0.3, "tau": 0.7}]
+      },
+      {
+        "R_over_pi": 9.0,
+        "thickness_in_cells": 3,
+        "memory": [{"gamma": 0.2, "tau": 1.0}]
+      },
+      {
+        "R_over_pi": 12.0,
+        "thickness_in_cells": 3,
+        "memory": [{"gamma": 0.3, "tau": 1.5}]
+      },
+      {
+        "R_over_pi": 15.0,
+        "thickness_in_cells": 3,
+        "memory": [{"gamma": 0.25, "tau": 1.0}]
+      },
+      {
+        "R_over_pi": 18.0,
+        "thickness_in_cells": 3,
+        "memory": [{"gamma": 0.35, "tau": 0.8}]
+      }
+    ]
+  },
+  "frequency_sweep": {
+    "omega_min": 0.05,
+    "omega_max": 6.0,
+    "points_per_decade": 60,
+    "refine_peaks": true
+  },
+  "abcd_analysis": {
+    "use_two_runs": true,
+    "epsilon_dipole": 0.08,
+    "tolerance": 0.05
+  },
+  "analysis": {
+    "abcd_comparison": true,
+    "system_mode_analysis": true,
+    "mode_coupling_analysis": true
+  },
+  "output": {
+    "directory": "output/C2",
+    "save_transmission_matrices": true,
+    "save_abcd_validation": true,
+    "save_system_modes": true
+  }
+}

@@ -1,0 +1,134 @@
+{
+    "F4_cubic_nonlinear": {
+        "domain": {
+            "L": 20.0,
+            "N": 512,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "system": "F1_multi_particle",
+        "nonlinear": {
+            "type": "cubic",
+            "strength": 1.0,
+            "order": 3,
+            "coupling": "local"
+        },
+        "analysis": {
+            "nonlinear_modes": true,
+            "solitons": true,
+            "stability": true,
+            "bifurcations": true
+        },
+        "output": {
+            "save_nonlinear_modes": true,
+            "save_solitons": true,
+            "save_stability": true,
+            "save_visualization": true,
+            "format": "hdf5"
+        }
+    },
+    "F4_quartic_nonlinear": {
+        "domain": {
+            "L": 20.0,
+            "N": 512,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "system": "F1_multi_particle",
+        "nonlinear": {
+            "type": "quartic",
+            "strength": 1.0,
+            "order": 4,
+            "coupling": "local"
+        },
+        "analysis": {
+            "nonlinear_modes": true,
+            "solitons": true,
+            "stability": true,
+            "bifurcations": true
+        },
+        "output": {
+            "save_nonlinear_modes": true,
+            "save_solitons": true,
+            "save_stability": true,
+            "save_visualization": true,
+            "format": "hdf5"
+        }
+    },
+    "F4_sine_gordon_nonlinear": {
+        "domain": {
+            "L": 20.0,
+            "N": 512,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "system": "F1_multi_particle",
+        "nonlinear": {
+            "type": "sine_gordon",
+            "strength": 1.0,
+            "period": 6.28318
+        },
+        "analysis": {
+            "nonlinear_modes": true,
+            "solitons": true,
+            "stability": true,
+            "breathers": true
+        },
+        "output": {
+            "save_nonlinear_modes": true,
+            "save_solitons": true,
+            "save_stability": true,
+            "save_visualization": true,
+            "format": "hdf5"
+        }
+    },
+    "F4_nonlinear_strength_sweep": {
+        "domain": {
+            "L": 20.0,
+            "N": 512,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "system": "F1_multi_particle",
+        "nonlinear": {
+            "type": "cubic",
+            "strength_range": [0.1, 0.5, 1.0, 2.0, 5.0],
+            "order": 3,
+            "coupling": "local"
+        },
+        "analysis": {
+            "nonlinear_modes": true,
+            "solitons": true,
+            "stability": true,
+            "bifurcations": true,
+            "strength_dependence": true
+        },
+        "output": {
+            "save_nonlinear_modes": true,
+            "save_solitons": true,
+            "save_stability": true,
+            "save_visualization": true,
+            "format": "hdf5"
+        }
+    }
+}

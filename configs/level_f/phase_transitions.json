@@ -1,0 +1,98 @@
+{
+    "F3_temperature_sweep": {
+        "domain": {
+            "L": 20.0,
+            "N": 512,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "system": "F1_four_particles",
+        "parameter_sweep": {
+            "parameter": "temperature",
+            "values": [0.01, 0.1, 1.0, 10.0, 100.0],
+            "equilibration_time": 50.0,
+            "measurement_time": 100.0
+        },
+        "analysis": {
+            "order_parameters": true,
+            "critical_points": true,
+            "phase_diagram": true,
+            "critical_exponents": true
+        },
+        "output": {
+            "save_phase_diagram": true,
+            "save_order_parameters": true,
+            "save_visualization": true,
+            "format": "hdf5"
+        }
+    },
+    "F3_interaction_sweep": {
+        "domain": {
+            "L": 20.0,
+            "N": 512,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "system": "F1_four_particles",
+        "parameter_sweep": {
+            "parameter": "interaction_strength",
+            "values": [0.1, 0.5, 1.0, 2.0, 5.0],
+            "equilibration_time": 50.0,
+            "measurement_time": 100.0
+        },
+        "analysis": {
+            "order_parameters": true,
+            "critical_points": true,
+            "phase_diagram": true,
+            "critical_exponents": true
+        },
+        "output": {
+            "save_phase_diagram": true,
+            "save_order_parameters": true,
+            "save_visualization": true,
+            "format": "hdf5"
+        }
+    },
+    "F3_range_sweep": {
+        "domain": {
+            "L": 20.0,
+            "N": 512,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "system": "F1_four_particles",
+        "parameter_sweep": {
+            "parameter": "interaction_range",
+            "values": [2.0, 4.0, 6.0, 8.0, 10.0],
+            "equilibration_time": 50.0,
+            "measurement_time": 100.0
+        },
+        "analysis": {
+            "order_parameters": true,
+            "critical_points": true,
+            "phase_diagram": true,
+            "critical_exponents": true
+        },
+        "output": {
+            "save_phase_diagram": true,
+            "save_order_parameters": true,
+            "save_visualization": true,
+            "format": "hdf5"
+        }
+    }
+}

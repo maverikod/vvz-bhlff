@@ -1,0 +1,100 @@
+{
+    "F1_multi_particle": {
+        "domain": {
+            "L": 20.0,
+            "N": 512,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "multi_particle": {
+            "particles": [
+                {
+                    "position": [5.0, 10.0, 10.0],
+                    "charge": 1,
+                    "phase": 0.0,
+                    "mass": 1.0
+                },
+                {
+                    "position": [15.0, 10.0, 10.0],
+                    "charge": -1,
+                    "phase": 3.14159,
+                    "mass": 1.0
+                }
+            ],
+            "interaction_range": 5.0,
+            "interaction_strength": 1.0
+        },
+        "analysis": {
+            "collective_modes": true,
+            "correlations": true,
+            "stability": true,
+            "effective_potential": true
+        },
+        "output": {
+            "save_fields": true,
+            "save_analysis": true,
+            "save_visualization": true,
+            "format": "hdf5"
+        }
+    },
+    "F1_four_particles": {
+        "domain": {
+            "L": 30.0,
+            "N": 768,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "multi_particle": {
+            "particles": [
+                {
+                    "position": [7.5, 7.5, 15.0],
+                    "charge": 1,
+                    "phase": 0.0,
+                    "mass": 1.0
+                },
+                {
+                    "position": [22.5, 7.5, 15.0],
+                    "charge": -1,
+                    "phase": 3.14159,
+                    "mass": 1.0
+                },
+                {
+                    "position": [7.5, 22.5, 15.0],
+                    "charge": 1,
+                    "phase": 1.5708,
+                    "mass": 1.0
+                },
+                {
+                    "position": [22.5, 22.5, 15.0],
+                    "charge": -1,
+                    "phase": 4.7124,
+                    "mass": 1.0
+                }
+            ],
+            "interaction_range": 8.0,
+            "interaction_strength": 1.0
+        },
+        "analysis": {
+            "collective_modes": true,
+            "correlations": true,
+            "stability": true,
+            "phase_transitions": true
+        },
+        "output": {
+            "save_fields": true,
+            "save_analysis": true,
+            "save_visualization": true,
+            "format": "hdf5"
+        }
+    }
+}

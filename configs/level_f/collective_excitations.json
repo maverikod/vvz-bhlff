@@ -1,0 +1,98 @@
+{
+    "F2_harmonic_excitation": {
+        "domain": {
+            "L": 20.0,
+            "N": 512,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "system": "F1_multi_particle",
+        "excitation": {
+            "type": "harmonic",
+            "frequency_range": [0.1, 10.0],
+            "amplitude": 0.1,
+            "duration": 100.0,
+            "position": [10.0, 10.0, 10.0]
+        },
+        "analysis": {
+            "dispersion_relations": true,
+            "mode_analysis": true,
+            "response_spectrum": true,
+            "participation_ratios": true
+        },
+        "output": {
+            "save_response": true,
+            "save_spectrum": true,
+            "save_visualization": true,
+            "format": "hdf5"
+        }
+    },
+    "F2_impulse_excitation": {
+        "domain": {
+            "L": 20.0,
+            "N": 512,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "system": "F1_multi_particle",
+        "excitation": {
+            "type": "impulse",
+            "amplitude": 1.0,
+            "duration": 0.1,
+            "position": [10.0, 10.0, 10.0]
+        },
+        "analysis": {
+            "transient_response": true,
+            "mode_identification": true,
+            "energy_transfer": true
+        },
+        "output": {
+            "save_response": true,
+            "save_spectrum": true,
+            "save_visualization": true,
+            "format": "hdf5"
+        }
+    },
+    "F2_frequency_sweep": {
+        "domain": {
+            "L": 20.0,
+            "N": 512,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "system": "F1_multi_particle",
+        "excitation": {
+            "type": "sweep",
+            "frequency_range": [0.1, 10.0],
+            "amplitude": 0.1,
+            "duration": 200.0
+        },
+        "analysis": {
+            "dispersion_relations": true,
+            "mode_analysis": true,
+            "response_spectrum": true,
+            "resonance_identification": true
+        },
+        "output": {
+            "save_response": true,
+            "save_spectrum": true,
+            "save_visualization": true,
+            "format": "hdf5"
+        }
+    }
+}

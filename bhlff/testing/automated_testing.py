@@ -184,10 +184,10 @@ class PhysicsValidator:
                 physical validation constraints.
         """
         self.tolerance_config = tolerance_config
-        self.energy_tolerance = tolerance_config.get('energy_conservation', 1e-6)
-        self.virial_tolerance = tolerance_config.get('virial_conditions', 1e-6)
-        self.topology_tolerance = tolerance_config.get('topological_charge', 1e-8)
-        self.passivity_tolerance = tolerance_config.get('passivity', 1e-12)
+        self.energy_tolerance = tolerance_config.get('energy_conservation', {}).get('max_relative_error', 1e-6)
+        self.virial_tolerance = tolerance_config.get('virial_conditions', {}).get('max_relative_error', 1e-6)
+        self.topology_tolerance = tolerance_config.get('topological_charge', {}).get('max_relative_error', 1e-8)
+        self.passivity_tolerance = tolerance_config.get('passivity', {}).get('tolerance', 1e-12)
     
     def validate_result(self, test_result: TestResult) -> Dict[str, Any]:
         """
@@ -244,7 +244,10 @@ class PhysicsValidator:
     def _validate_energy_conservation(self, test_result: TestResult) -> Dict[str, Any]:
         """Validate energy conservation in test result."""
         energy_metrics = test_result.physics_validation.get('energy_conservation', {})
-        energy_error = energy_metrics.get('relative_error', float('inf'))
+        if isinstance(energy_metrics, dict):
+            energy_error = energy_metrics.get('relative_error', float('inf'))
+        else:
+            energy_error = float('inf')
         
         is_valid = energy_error <= self.energy_tolerance
         
@@ -260,7 +263,10 @@ class PhysicsValidator:
     def _validate_virial_conditions(self, test_result: TestResult) -> Dict[str, Any]:
         """Validate virial conditions in test result."""
         virial_metrics = test_result.physics_validation.get('virial_conditions', {})
-        virial_error = virial_metrics.get('relative_error', float('inf'))
+        if isinstance(virial_metrics, dict):
+            virial_error = virial_metrics.get('relative_error', float('inf'))
+        else:
+            virial_error = float('inf')
         
         is_valid = virial_error <= self.virial_tolerance
         
@@ -276,7 +282,10 @@ class PhysicsValidator:
     def _validate_topological_charge(self, test_result: TestResult) -> Dict[str, Any]:
         """Validate topological charge conservation in test result."""
         topology_metrics = test_result.physics_validation.get('topological_charge', {})
-        topology_error = topology_metrics.get('relative_error', float('inf'))
+        if isinstance(topology_metrics, dict):
+            topology_error = topology_metrics.get('relative_error', float('inf'))
+        else:
+            topology_error = float('inf')
         
         is_valid = topology_error <= self.topology_tolerance
         
@@ -292,7 +301,10 @@ class PhysicsValidator:
     def _validate_passivity_conditions(self, test_result: TestResult) -> Dict[str, Any]:
         """Validate passivity conditions in test result."""
         passivity_metrics = test_result.physics_validation.get('passivity', {})
-        min_real_part = passivity_metrics.get('min_real_part', float('-inf'))
+        if isinstance(passivity_metrics, dict):
+            min_real_part = passivity_metrics.get('min_real_part', float('-inf'))
+        else:
+            min_real_part = float('-inf')
         
         is_valid = min_real_part >= -self.passivity_tolerance
         
@@ -647,7 +659,7 @@ class AutomatedTestingSystem:
                 level_results.add_test_result(result)
         
         # Physics validation
-        physics_status = self.physics_validator.validate_level(level, level_results)
+        physics_status = self._validate_level_physics(level, level_results)
         level_results.physics_status = physics_status
         
         level_results.execution_time = time.time() - start_time
@@ -740,6 +752,27 @@ class AutomatedTestingSystem:
                 end_time=datetime.now(),
                 error_message=str(e)
             )
+    
+    def _validate_level_physics(self, level: str, level_results: LevelTestResults) -> Dict[str, Any]:
+        """Validate physics for specific level."""
+        physics_status = {
+            'overall_status': 'valid',
+            'compliance_score': 1.0,
+            'violations': []
+        }
+        
+        # Validate each test result
+        for test_result in level_results.test_results:
+            validation = self.physics_validator.validate_result(test_result)
+            if not validation['is_valid']:
+                physics_status['overall_status'] = 'degraded'
+                physics_status['violations'].extend(validation['violations'])
+                physics_status['compliance_score'] = min(
+                    physics_status['compliance_score'], 
+                    validation['compliance_score']
+                )
+        
+        return physics_status
     
     def _handle_critical_failure(self, level: str, level_results: LevelTestResults) -> None:
         """Handle critical physics failure."""

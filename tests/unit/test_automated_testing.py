@@ -181,7 +181,10 @@ class TestAutomatedTestingSystem:
             start_time=datetime.now(),
             end_time=datetime.now(),
             physics_validation={
-                'energy_conservation': {'relative_error': 1e-8}
+                'energy_conservation': {'relative_error': 1e-8},
+                'virial_conditions': {'relative_error': 1e-8},
+                'topological_charge': {'relative_error': 1e-10},
+                'passivity': {'min_real_part': 1e-12}
             }
         )
         
@@ -198,7 +201,10 @@ class TestAutomatedTestingSystem:
             start_time=datetime.now(),
             end_time=datetime.now(),
             physics_validation={
-                'energy_conservation': {'relative_error': 1e-4}  # Too large
+                'energy_conservation': {'relative_error': 1e-4},  # Too large
+                'virial_conditions': {'relative_error': 1e-8},
+                'topological_charge': {'relative_error': 1e-10},
+                'passivity': {'min_real_part': 1e-12}
             }
         )
         
@@ -224,7 +230,10 @@ class TestAutomatedTestingSystem:
             start_time=datetime.now(),
             end_time=datetime.now(),
             physics_validation={
-                'virial_conditions': {'relative_error': 1e-8}
+                'energy_conservation': {'relative_error': 1e-8},
+                'virial_conditions': {'relative_error': 1e-8},
+                'topological_charge': {'relative_error': 1e-10},
+                'passivity': {'min_real_part': 1e-12}
             }
         )
         
@@ -240,7 +249,10 @@ class TestAutomatedTestingSystem:
             start_time=datetime.now(),
             end_time=datetime.now(),
             physics_validation={
-                'virial_conditions': {'relative_error': 1e-4}  # Too large
+                'energy_conservation': {'relative_error': 1e-8},
+                'virial_conditions': {'relative_error': 1e-4},  # Too large
+                'topological_charge': {'relative_error': 1e-10},
+                'passivity': {'min_real_part': 1e-12}
             }
         )
         
@@ -265,7 +277,10 @@ class TestAutomatedTestingSystem:
             start_time=datetime.now(),
             end_time=datetime.now(),
             physics_validation={
-                'topological_charge': {'relative_error': 1e-10}
+                'energy_conservation': {'relative_error': 1e-8},
+                'virial_conditions': {'relative_error': 1e-8},
+                'topological_charge': {'relative_error': 1e-10},
+                'passivity': {'min_real_part': 1e-12}
             }
         )
         
@@ -281,7 +296,10 @@ class TestAutomatedTestingSystem:
             start_time=datetime.now(),
             end_time=datetime.now(),
             physics_validation={
-                'topological_charge': {'relative_error': 1e-6}  # Too large
+                'energy_conservation': {'relative_error': 1e-8},
+                'virial_conditions': {'relative_error': 1e-8},
+                'topological_charge': {'relative_error': 1e-6},  # Too large
+                'passivity': {'min_real_part': 1e-12}
             }
         )
         
@@ -306,6 +324,9 @@ class TestAutomatedTestingSystem:
             start_time=datetime.now(),
             end_time=datetime.now(),
             physics_validation={
+                'energy_conservation': {'relative_error': 1e-8},
+                'virial_conditions': {'relative_error': 1e-8},
+                'topological_charge': {'relative_error': 1e-10},
                 'passivity': {'min_real_part': 1e-12}
             }
         )
@@ -322,6 +343,9 @@ class TestAutomatedTestingSystem:
             start_time=datetime.now(),
             end_time=datetime.now(),
             physics_validation={
+                'energy_conservation': {'relative_error': 1e-8},
+                'virial_conditions': {'relative_error': 1e-8},
+                'topological_charge': {'relative_error': 1e-10},
                 'passivity': {'min_real_part': -1e-6}  # Negative real part
             }
         )

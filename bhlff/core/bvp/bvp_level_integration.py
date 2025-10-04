@@ -53,7 +53,7 @@ class BVPLevelIntegration:
             the BVP core framework.
         """
         self.bvp_core = bvp_core
-        self.constants = bvp_core.constants
+        self.constants = bvp_core._bvp_constants
 
         # Initialize level interfaces
         self.level_a = LevelAInterface(bvp_core)

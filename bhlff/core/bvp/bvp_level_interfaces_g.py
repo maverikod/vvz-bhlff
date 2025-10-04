@@ -38,7 +38,7 @@ class LevelGInterface(BVPLevelInterface):
 
     def __init__(self, bvp_core: BVPCore):
         self.bvp_core = bvp_core
-        self.constants = bvp_core.constants
+        self.constants = bvp_core._bvp_constants
 
     def process_bvp_data(self, envelope: np.ndarray, **kwargs) -> Dict[str, Any]:
         """

@@ -27,6 +27,7 @@ from .base_integrator import BaseTimeIntegrator
 from .bvp_envelope_integrator import BVPEnvelopeIntegrator
 from .crank_nicolson_integrator import CrankNicolsonIntegrator
 from .adaptive_integrator import AdaptiveIntegrator
+from .exponential_integrator import BVPExponentialIntegrator
 from .memory_kernel import MemoryKernel
 from .quench_detector import QuenchDetector
 
@@ -35,6 +36,7 @@ __all__ = [
     "BVPEnvelopeIntegrator",
     "CrankNicolsonIntegrator",
     "AdaptiveIntegrator",
+    "BVPExponentialIntegrator",
     "MemoryKernel",
     "QuenchDetector",
 ]

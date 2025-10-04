@@ -36,7 +36,32 @@ from bhlff.models.level_b.node_analyzer import LevelBNodeAnalyzer
 from bhlff.models.level_b.zone_analyzer import LevelBZoneAnalyzer
 
 
-class LevelBFundamentalPropertiesTests(unittest.TestCase):
+def test_power_law_tail():
+    """Test B1: Power law tail in homogeneous medium."""
+    test_suite = LevelBFundamentalPropertiesTests()
+    result = test_suite.test_power_law_tail()
+    assert result['passed'], f"Power law test failed: {result.get('error', 'Unknown error')}"
+
+def test_no_spherical_nodes():
+    """Test B2: Absence of spherical standing nodes."""
+    test_suite = LevelBFundamentalPropertiesTests()
+    result = test_suite.test_no_spherical_nodes()
+    assert result['passed'], f"No spherical nodes test failed: {result.get('error', 'Unknown error')}"
+
+def test_topological_charge():
+    """Test B3: Topological charge of defect."""
+    test_suite = LevelBFundamentalPropertiesTests()
+    result = test_suite.test_topological_charge()
+    assert result['passed'], f"Topological charge test failed: {result.get('error', 'Unknown error')}"
+
+def test_zone_separation():
+    """Test B4: Zone separation (core/transition/tail)."""
+    test_suite = LevelBFundamentalPropertiesTests()
+    result = test_suite.test_zone_separation()
+    assert result['passed'], f"Zone separation test failed: {result.get('error', 'Unknown error')}"
+
+
+class LevelBFundamentalPropertiesTests:
     """
     Comprehensive test suite for Level B fundamental properties.
     
@@ -183,7 +208,7 @@ class LevelBFundamentalPropertiesTests(unittest.TestCase):
         
         return solution
     
-    def test_B1_power_law_tail(self):
+    def test_power_law_tail(self):
         """
         Test B1: Power law tail in homogeneous medium.
         
@@ -208,13 +233,17 @@ class LevelBFundamentalPropertiesTests(unittest.TestCase):
         )
         
         # Create BVP source
-        source = BVPSource(
-            center=config["source"]["center"],
-            amplitude=config["source"]["amplitude"]
-        )
+        source_config = {
+            "carrier_frequency": 1.85e43,
+            "envelope_amplitude": config["source"]["amplitude"],
+            "base_source_type": "gaussian",
+            "center": config["source"]["center"],
+            "width": 0.1
+        }
+        source = BVPSource(domain=domain, config=source_config)
         
         # Create simple test field (placeholder for BVP solution)
-        source_field = source.create_field(domain)
+        source_field = source.generate()
         # For now, use a simple analytical solution for testing
         solution = self._create_test_solution(domain, config["source"]["center"], parameters)
         
@@ -236,7 +265,7 @@ class LevelBFundamentalPropertiesTests(unittest.TestCase):
             'config': config
         }
     
-    def test_B2_no_spherical_nodes(self) -> Dict[str, Any]:
+    def test_no_spherical_nodes(self) -> Dict[str, Any]:
         """
         Test B2: Absence of spherical standing nodes.
         
@@ -261,13 +290,17 @@ class LevelBFundamentalPropertiesTests(unittest.TestCase):
         )
         
         # Create BVP source
-        source = BVPSource(
-            center=config["source"]["center"],
-            amplitude=config["source"]["amplitude"]
-        )
+        source_config = {
+            "carrier_frequency": 1.85e43,
+            "envelope_amplitude": config["source"]["amplitude"],
+            "base_source_type": "gaussian",
+            "center": config["source"]["center"],
+            "width": 0.1
+        }
+        source = BVPSource(domain=domain, config=source_config)
         
         # Create simple test field (placeholder for BVP solution)
-        source_field = source.create_field(domain)
+        source_field = source.generate()
         # For now, use a simple analytical solution for testing
         solution = self._create_test_solution(domain, config["source"]["center"], parameters)
         
@@ -289,7 +322,7 @@ class LevelBFundamentalPropertiesTests(unittest.TestCase):
             'config': config
         }
     
-    def test_B3_topological_charge(self) -> Dict[str, Any]:
+    def test_topological_charge(self) -> Dict[str, Any]:
         """
         Test B3: Topological charge of defect.
         
@@ -313,13 +346,17 @@ class LevelBFundamentalPropertiesTests(unittest.TestCase):
         )
         
         # Create BVP source
-        source = BVPSource(
-            center=config["source"]["center"],
-            amplitude=config["source"]["amplitude"]
-        )
+        source_config = {
+            "carrier_frequency": 1.85e43,
+            "envelope_amplitude": config["source"]["amplitude"],
+            "base_source_type": "gaussian",
+            "center": config["source"]["center"],
+            "width": 0.1
+        }
+        source = BVPSource(domain=domain, config=source_config)
         
         # Create simple test field (placeholder for BVP solution)
-        source_field = source.create_field(domain)
+        source_field = source.generate()
         # For now, use a simple analytical solution for testing
         solution = self._create_test_solution(domain, config["source"]["center"], parameters)
         
@@ -337,7 +374,7 @@ class LevelBFundamentalPropertiesTests(unittest.TestCase):
             'config': config
         }
     
-    def test_B4_zone_separation(self) -> Dict[str, Any]:
+    def test_zone_separation(self) -> Dict[str, Any]:
         """
         Test B4: Zone separation (core/transition/tail).
         
@@ -361,13 +398,17 @@ class LevelBFundamentalPropertiesTests(unittest.TestCase):
         )
         
         # Create BVP source
-        source = BVPSource(
-            center=config["source"]["center"],
-            amplitude=config["source"]["amplitude"]
-        )
+        source_config = {
+            "carrier_frequency": 1.85e43,
+            "envelope_amplitude": config["source"]["amplitude"],
+            "base_source_type": "gaussian",
+            "center": config["source"]["center"],
+            "width": 0.1
+        }
+        source = BVPSource(domain=domain, config=source_config)
         
         # Create simple test field (placeholder for BVP solution)
-        source_field = source.create_field(domain)
+        source_field = source.generate()
         # For now, use a simple analytical solution for testing
         solution = self._create_test_solution(domain, config["source"]["center"], parameters)
         

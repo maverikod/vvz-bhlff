@@ -144,13 +144,17 @@ class CarrierPrimacyPostulate(BVPPostulate):
             Dict[str, float]: Dominant frequency components.
         """
         # Find maximum amplitude frequency
-        max_idx = np.argmax(spectrum)
+        # Get the maximum along the temporal axis (axis 6)
+        max_indices = np.unravel_index(np.argmax(spectrum), spectrum.shape)
+        max_idx = max_indices[6]  # Get temporal index
         max_freq = freq_axis[max_idx]
 
         # Find envelope frequency (second highest peak)
         spectrum_copy = spectrum.copy()
-        spectrum_copy[max_idx] = 0  # Remove carrier peak
-        envelope_idx = np.argmax(spectrum_copy)
+        # Remove carrier peak in the temporal dimension
+        spectrum_copy[..., max_idx] = 0
+        envelope_indices = np.unravel_index(np.argmax(spectrum_copy), spectrum_copy.shape)
+        envelope_idx = envelope_indices[6]  # Get temporal index
         
         # Ensure envelope_idx is within bounds
         if envelope_idx >= len(freq_axis):

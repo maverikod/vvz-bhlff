@@ -239,7 +239,14 @@ class CoreRenormalizationAnalyzer:
 
         # Compute stiffness from second derivative at boundary
         second_derivative = np.gradient(np.gradient(amplitude))
-        boundary_stiffness = np.mean(np.abs(second_derivative[boundary_mask]))
+        # Convert boundary_mask to boolean array for indexing
+        boundary_boolean = np.zeros_like(amplitude, dtype=bool)
+        if len(boundary_mask) > 0:
+            # Handle multi-dimensional indexing properly
+            for idx in boundary_mask:
+                if len(idx) == len(amplitude.shape):
+                    boundary_boolean[tuple(idx)] = True
+        boundary_stiffness = np.mean(np.abs(second_derivative[boundary_boolean]))
 
         return boundary_stiffness
 

@@ -61,7 +61,7 @@ class LevelBInterface(BVPLevelInterface):
             bvp_core (BVPCore): BVP core instance.
         """
         self.bvp_core = bvp_core
-        self.constants = bvp_core.constants
+        self.constants = bvp_core._bvp_constants
 
         # Initialize analysis modules
         self.power_law_analyzer = PowerLawAnalyzer()

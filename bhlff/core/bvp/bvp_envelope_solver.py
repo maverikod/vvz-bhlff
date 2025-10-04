@@ -31,6 +31,10 @@ from ..domain import Domain
 from .envelope_solver.envelope_solver_core import EnvelopeSolverCore
 from .envelope_solver_line_search import EnvelopeSolverLineSearch
 from .bvp_constants import BVPConstants
+from .envelope_nonlinear_coefficients import EnvelopeNonlinearCoefficients
+from .envelope_linear_solver import EnvelopeLinearSolver
+from .memory_protection import MemoryProtector
+from .memory_decorator import memory_protected_class_method
 
 
 class BVPEnvelopeSolver:
@@ -91,9 +95,11 @@ class BVPEnvelopeSolver:
         Setup envelope equation parameters.
 
         Physical Meaning:
-            Initializes the physical parameters for the envelope equation
-            from the constants instance.
+            Initializes the base physical parameters for the envelope equation
+            from the constants instance. These are used as base values for
+            computing nonlinear coefficients that depend on field amplitude.
         """
+        # Base parameters for nonlinear coefficient computation
         self.kappa_0 = self.constants.get_envelope_parameter("kappa_0")
         self.kappa_2 = self.constants.get_envelope_parameter("kappa_2")
         self.chi_prime = self.constants.get_envelope_parameter("chi_prime")
@@ -101,12 +107,24 @@ class BVPEnvelopeSolver:
             "chi_double_prime_0"
         )
         self.k0_squared = self.constants.get_envelope_parameter("k0_squared")
+        
+        # Initialize nonlinear coefficients computer and linear solver
+        self.nonlinear_coeffs = EnvelopeNonlinearCoefficients(self.constants)
+        self.linear_solver = EnvelopeLinearSolver(self.domain, self.constants)
+        
+        # Initialize memory protection
+        try:
+            memory_threshold = self.constants.get_numerical_parameter("memory_threshold")
+        except KeyError:
+            memory_threshold = 0.8
+        self.memory_protector = MemoryProtector(memory_threshold)
 
     def _setup_solver_components(self) -> None:
         """Setup solver components."""
         self._core = EnvelopeSolverCore(self.domain, self.config, self.constants)
         self._line_search = EnvelopeSolverLineSearch(self.constants)
 
+    @memory_protected_class_method(memory_threshold=0.8, shape_param='source', dtype_param='source')
     def solve_envelope(self, source: np.ndarray) -> np.ndarray:
         """
         Solve 7D BVP envelope equation.
@@ -135,6 +153,15 @@ class BVPEnvelopeSolver:
                 f"Source shape {source.shape} incompatible with "
                 f"7D domain shape {self.domain.shape}"
             )
+        
+        # Check memory usage before starting calculation
+        try:
+            self.memory_protector.check_memory_usage(source.shape, source.dtype)
+        except MemoryError as e:
+            raise MemoryError(
+                f"Memory protection triggered: {e}. "
+                f"Consider reducing domain size or using lower precision."
+            )
 
         # Solve envelope equation using advanced Newton-Raphson method
         # Initial guess: zero field
@@ -146,9 +173,12 @@ class BVPEnvelopeSolver:
         damping_factor = self.constants.get_numerical_parameter("damping_factor")
 
         for iteration in range(max_iterations):
-            # Compute residual and Jacobian using core components
-            residual = self._core.compute_residual(envelope, source)
-            jacobian = self._core.compute_jacobian(envelope)
+            # Compute nonlinear coefficients based on current envelope
+            nonlinear_coeffs = self.nonlinear_coeffs.compute_coefficients(envelope)
+            
+            # Compute residual and Jacobian using nonlinear coefficients
+            residual = self._core.compute_residual_with_coefficients(envelope, source, nonlinear_coeffs)
+            jacobian = self._core.compute_jacobian_with_coefficients(envelope, nonlinear_coeffs)
 
             # Check convergence
             residual_norm = np.max(np.abs(residual))
@@ -186,6 +216,8 @@ class BVPEnvelopeSolver:
 
         return envelope.real
 
+
+    @memory_protected_class_method(memory_threshold=0.8, shape_param='source', dtype_param='source')
     def solve_envelope_linearized(self, source: np.ndarray) -> np.ndarray:
         """
         Solve linearized 7D BVP envelope equation.
@@ -204,103 +236,20 @@ class BVPEnvelopeSolver:
         Returns:
             np.ndarray: Linearized envelope solution a(x,φ,t).
         """
-        if source.shape != self.domain.shape:
-            raise ValueError(
-                f"Source shape {source.shape} incompatible with "
-                f"7D domain shape {self.domain.shape}"
-            )
+        return self.linear_solver.solve_linearized(source)
 
-        # Use linearized version with constant coefficients
-        # ∇·(κ₀∇a) + k₀²χ'a = s
-        # In spectral space: -κ₀|k|²â + k₀²χ'â = ŝ
-        # Therefore: â = ŝ / (k₀²χ' - κ₀|k|²)
-
-        # Transform to spectral space
-        source_spectral = np.fft.fftn(source)
-
-        # Compute wave vectors for 7D
-        k_vectors = []
-        for i, n in enumerate(self.domain.shape):
-            k = np.fft.fftfreq(n, self.domain.L / n)
-            k_vectors.append(k)
-
-        # Create 7D wave vector grid
-        K_grids = np.meshgrid(*k_vectors, indexing="ij")
-        k_magnitude_squared = sum(K**2 for K in K_grids)
-
-        # Compute spectral coefficients
-        spectral_coeffs = (
-            self.k0_squared * self.chi_prime - self.kappa_0 * k_magnitude_squared
-        )
-
-        # Avoid division by zero
-        regularization = self.constants.get_numerical_parameter("regularization", 1e-12)
-        spectral_coeffs = np.where(
-            np.abs(spectral_coeffs) < regularization, regularization, spectral_coeffs
-        )
-
-        # Solve in spectral space
-        envelope_spectral = source_spectral / spectral_coeffs
-
-        # Transform back to real space
-        envelope = np.fft.ifftn(envelope_spectral)
-
-        return envelope.real
-
-    def _solve_linearized_envelope(
-        self,
-        envelope: np.ndarray,
-        kappa: np.ndarray,
-        chi: np.ndarray,
-        source: np.ndarray,
-    ) -> np.ndarray:
-        """
-        Solve linearized envelope equation.
-
-        Physical Meaning:
-            Solves the linearized version of the envelope equation
-            for a given nonlinear stiffness and susceptibility.
-
-        Mathematical Foundation:
-            Solves ∇·(κ∇a) + k₀²χa = s using finite difference method.
-
-        Args:
-            envelope (np.ndarray): Current envelope estimate.
-            kappa (np.ndarray): Nonlinear stiffness κ(|a|).
-            chi (np.ndarray): Effective susceptibility χ(|a|).
-            source (np.ndarray): Source term s(x).
-
-        Returns:
-            np.ndarray: Updated envelope solution.
-        """
-        # Advanced finite difference implementation with spectral accuracy for 7D
-        # Uses high-order finite differences for all 7 dimensions:
-        # 3 spatial (x,y,z) + 3 phase (φ₁,φ₂,φ₃) + 1 temporal (t)
-
-        # Use the core solver's 7D implementation
-        div_kappa_grad = self._core_solver._compute_div_kappa_grad(envelope, kappa)
-
-        # Solve: ∇·(κ∇a) + k₀²χa = s
-        # Rearrange: k₀²χa = s - ∇·(κ∇a)
-        # Therefore: a = (s - ∇·(κ∇a)) / (k₀²χ)
-
-        # Avoid division by zero
-        regularization = self.constants.get_numerical_parameter("regularization")
-        chi_safe = np.where(np.abs(chi) < regularization, regularization, chi)
-
-        envelope_new = (source - div_kappa_grad) / (self.k0_squared * chi_safe)
-
-        return envelope_new
 
     def get_parameters(self) -> Dict[str, float]:
         """
         Get envelope equation parameters.
 
         Physical Meaning:
-            Returns the current parameters for the envelope equation.
+            Returns the current base parameters for the envelope equation.
+            Note: Actual coefficients are computed dynamically as functions
+            of field amplitude.
 
         Returns:
-            Dict[str, float]: Envelope equation parameters.
+            Dict[str, float]: Base envelope equation parameters.
         """
         return {
             "kappa_0": self.kappa_0,
@@ -308,6 +257,59 @@ class BVPEnvelopeSolver:
             "chi_prime": self.chi_prime,
             "chi_double_prime_0": self.chi_double_prime_0,
             "k0_squared": self.k0_squared,
+        }
+
+    def get_nonlinear_coefficients(self, envelope: np.ndarray) -> Dict[str, np.ndarray]:
+        """
+        Get nonlinear coefficients for given envelope.
+        
+        Physical Meaning:
+            Computes and returns the nonlinear coefficients κ(|a|) and χ(|a|)
+            for the given envelope field, showing how they depend on
+            local field amplitude.
+        
+        Mathematical Foundation:
+            Returns κ(|a|) = κ₀ + κ₂|a|² and χ(|a|) = χ' + iχ''(|a|)
+            computed from the current envelope field.
+        
+        Args:
+            envelope (np.ndarray): Envelope field a(x,φ,t).
+        
+        Returns:
+            Dict[str, np.ndarray]: Nonlinear coefficients:
+                - kappa: Nonlinear stiffness κ(|a|)
+                - chi_real: Real part of susceptibility χ'(|a|)
+                - chi_imag: Imaginary part of susceptibility χ''(|a|)
+        """
+        return self.nonlinear_coeffs.compute_coefficients(envelope)
+    
+    def get_memory_info(self) -> Dict[str, Any]:
+        """
+        Get memory information and usage statistics.
+        
+        Physical Meaning:
+            Returns current memory usage statistics for monitoring
+            and debugging purposes.
+        
+        Returns:
+            Dict[str, Any]: Memory information including:
+                - current_usage: Current memory usage
+                - domain_estimate: Estimated memory for current domain
+                - threshold: Memory threshold setting
+                - is_safe: Whether current usage is safe
+        """
+        memory_info = self.memory_protector.get_memory_info()
+        domain_estimate = self.memory_protector.estimate_memory_requirement(
+            self.domain.shape, np.float64
+        )
+        
+        return {
+            'current_usage': memory_info,
+            'domain_estimate': domain_estimate,
+            'threshold': self.memory_protector.memory_threshold,
+            'is_safe': self.memory_protector.check_and_warn(
+                self.domain.shape, np.float64
+            )
         }
 
     def validate_solution(
@@ -339,8 +341,11 @@ class BVPEnvelopeSolver:
         if solution.shape != source.shape:
             raise ValueError("Solution and source shapes must match")
 
-        # Compute residual: ∇·(κ∇a) + k₀²χa - s
-        residual = self._core.compute_residual(solution, source)
+        # Compute nonlinear coefficients for validation
+        nonlinear_coeffs = self.nonlinear_coeffs.compute_coefficients(solution)
+        
+        # Compute residual: ∇·(κ(|a|)∇a) + k₀²χ(|a|)a - s
+        residual = self._core.compute_residual_with_coefficients(solution, source, nonlinear_coeffs)
 
         # Compute error metrics
         residual_norm = np.linalg.norm(residual)

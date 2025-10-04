@@ -238,7 +238,15 @@ class CoreRenormalizationAnalyzer:
             return 0.0
 
         # Compute stiffness from second derivative at boundary
-        second_derivative = np.gradient(np.gradient(amplitude))
+        # np.gradient returns a list of arrays, we need to combine them
+        gradient_result = np.gradient(amplitude)
+        if isinstance(gradient_result, list):
+            # For multi-dimensional arrays, np.gradient returns a list
+            # We need to compute the magnitude of the gradient
+            second_derivative = np.sqrt(sum(g**2 for g in gradient_result))
+        else:
+            # For 1D arrays, np.gradient returns a single array
+            second_derivative = gradient_result
         # Convert boundary_mask to boolean array for indexing
         boundary_boolean = np.zeros_like(amplitude, dtype=bool)
         if len(boundary_mask) > 0:
@@ -246,6 +254,17 @@ class CoreRenormalizationAnalyzer:
             for idx in boundary_mask:
                 if len(idx) == len(amplitude.shape):
                     boundary_boolean[tuple(idx)] = True
+        
+        # Ensure boundary_boolean has the same shape as second_derivative
+        if boundary_boolean.shape != second_derivative.shape:
+            # Resize boundary_boolean to match second_derivative shape
+            boundary_boolean_resized = np.zeros_like(second_derivative, dtype=bool)
+            # Copy values where possible
+            min_shape = tuple(min(boundary_boolean.shape[i], second_derivative.shape[i]) for i in range(min(len(boundary_boolean.shape), len(second_derivative.shape))))
+            if len(min_shape) > 0:
+                boundary_boolean_resized[tuple(slice(0, s) for s in min_shape)] = boundary_boolean[tuple(slice(0, s) for s in min_shape)]
+            boundary_boolean = boundary_boolean_resized
+            
         boundary_stiffness = np.mean(np.abs(second_derivative[boundary_boolean]))
 
         return boundary_stiffness

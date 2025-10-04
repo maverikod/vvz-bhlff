@@ -219,7 +219,13 @@ class LevelEInterface(BVPLevelInterface):
         amplitude = np.abs(envelope)
 
         # Compute interaction energy
-        interaction_energy = np.sum(amplitude**2 * np.gradient(amplitude) ** 2)
+        gradient_result = np.gradient(amplitude)
+        if isinstance(gradient_result, list):
+            # For multi-dimensional arrays, compute magnitude of gradient
+            gradient_magnitude = np.sqrt(sum(g**2 for g in gradient_result))
+        else:
+            gradient_magnitude = gradient_result
+        interaction_energy = np.sum(amplitude**2 * gradient_magnitude ** 2)
 
         return {
             "interaction_energy": float(interaction_energy),

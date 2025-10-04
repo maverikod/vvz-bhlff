@@ -139,11 +139,9 @@ class LevelDInterface(BVPLevelInterface):
             "mode_count": len(dominant_modes[0]),
             "dominant_frequencies": [float(f) for f in dominant_modes[0][:5]],
             "mode_amplitudes": [
-                float(
-                    power_spectrum[
-                        dominant_modes[0][i], dominant_modes[1][i], dominant_modes[2][i]
-                    ]
-                )
+                float(np.mean(power_spectrum[
+                    dominant_modes[0][i], dominant_modes[1][i], dominant_modes[2][i]
+                ]))
                 for i in range(min(5, len(dominant_modes[0])))
             ],
         }

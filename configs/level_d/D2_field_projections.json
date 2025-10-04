@@ -1,0 +1,55 @@
+{
+    "D2": {
+        "domain": {
+            "L": 10.0,
+            "N": 512,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "field_windows": {
+            "em": {
+                "frequency_range": [0.1, 1.0],
+                "amplitude_threshold": 0.1,
+                "filter_type": "bandpass",
+                "characteristics": ["long_range", "phase_gradient", "u1_symmetry"],
+                "frequency_units": "Hz",
+                "energy_scale": "eV",
+                "coupling_strength": 1e-2,
+                "range_characteristic": "infinite",
+                "symmetry_group": "U(1)"
+            },
+            "strong": {
+                "frequency_range": [1.0, 10.0],
+                "q_threshold": 100,
+                "filter_type": "high_q",
+                "characteristics": ["localized", "high_gradient", "core_near"],
+                "frequency_units": "Hz",
+                "energy_scale": "GeV",
+                "coupling_strength": 1.0,
+                "range_characteristic": "fm",
+                "symmetry_group": "SU(3)"
+            },
+            "weak": {
+                "frequency_range": [0.01, 0.1],
+                "q_threshold": 10,
+                "filter_type": "chiral",
+                "characteristics": ["chiral", "parity_breaking", "leakage"],
+                "frequency_units": "Hz",
+                "energy_scale": "MeV",
+                "coupling_strength": 1e-5,
+                "range_characteristic": "pm",
+                "symmetry_group": "SU(2)_L × U(1)_Y"
+            }
+        },
+        "analysis": {
+            "signature_analysis": true,
+            "leakage_threshold": 0.1,
+            "signature_metrics": ["localization", "range", "anisotropy", "chirality"]
+        }
+    }
+}

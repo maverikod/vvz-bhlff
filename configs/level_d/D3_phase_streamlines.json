@@ -1,0 +1,28 @@
+{
+    "D3": {
+        "domain": {
+            "L": 10.0,
+            "N": 512,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "streamline_params": {
+            "center": [5.0, 5.0, 5.0],
+            "radius": 2.0,
+            "num_streamlines": 100,
+            "integration_steps": 1000,
+            "step_size": 0.01
+        },
+        "analysis": {
+            "topology_analysis": true,
+            "stability_check": true,
+            "visualization": true,
+            "metrics": ["winding_number", "topology_class", "stability_index"]
+        }
+    }
+}

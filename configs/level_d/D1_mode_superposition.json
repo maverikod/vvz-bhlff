@@ -1,0 +1,49 @@
+{
+    "D1": {
+        "domain": {
+            "L": 10.0,
+            "N": 512,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "base_bvp_modulations": [
+            {
+                "frequency": 1.0,
+                "amplitude": 1.0,
+                "phase": 0.0,
+                "spatial_mode": "bvp_envelope_modulation"
+            },
+            {
+                "frequency": 2.0,
+                "amplitude": 0.5,
+                "phase": 0.0,
+                "spatial_mode": "bvp_envelope_modulation"
+            }
+        ],
+        "new_bvp_modulations": [
+            {
+                "frequency": 1.5,
+                "amplitude": 0.3,
+                "phase": 0.0,
+                "spatial_mode": "bvp_envelope_modulation"
+            },
+            {
+                "frequency": 2.5,
+                "amplitude": 0.2,
+                "phase": 0.0,
+                "spatial_mode": "bvp_envelope_modulation"
+            }
+        ],
+        "analysis": {
+            "jaccard_threshold": 0.8,
+            "frequency_tolerance": 0.05,
+            "frame_extraction_method": "hot_zones",
+            "stability_metrics": ["jaccard", "frequency_shift", "topology"]
+        }
+    }
+}

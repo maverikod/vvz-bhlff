@@ -71,8 +71,8 @@ class TestStandardCosmologicalMetric:
         
         metric = StandardCosmologicalMetric(cosmology_params)
         
-        # Test metric tensor at origin
-        g = metric.compute_metric_tensor(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+        # Test metric tensor at non-zero position
+        g = metric.compute_metric_tensor(0.0, 1.0, 0.5, 0.5, 0.5, 0.5, 0.5)
         
         assert g.shape == (7, 7)
         assert g[0, 0] == -1.0  # Time component

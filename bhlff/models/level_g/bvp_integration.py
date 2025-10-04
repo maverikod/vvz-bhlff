@@ -115,10 +115,10 @@ class LevelGBVPIntegration:
         self.logger.info("Processing BVP data for Level G analysis")
 
         # Extract parameters
-        cosmological_scale = kwargs.get('cosmological_scale', 1.0)
-        structure_threshold = kwargs.get('structure_threshold', 0.1)
-        astrophysical_threshold = kwargs.get('astrophysical_threshold', 0.05)
-        gravitational_threshold = kwargs.get('gravitational_threshold', 0.05)
+        cosmological_scale = kwargs.get("cosmological_scale", 1.0)
+        structure_threshold = kwargs.get("structure_threshold", 0.1)
+        astrophysical_threshold = kwargs.get("astrophysical_threshold", 0.05)
+        gravitational_threshold = kwargs.get("gravitational_threshold", 0.05)
 
         # Analyze cosmological evolution
         cosmology_data = self._analyze_cosmological_evolution(
@@ -185,9 +185,7 @@ class LevelGBVPIntegration:
                 - cosmological_parameters: Cosmological parameters
                 - evolution_rates: Evolution rates of the field
         """
-        return self.cosmology_analyzer.analyze_cosmological_evolution(
-            envelope, scale
-        )
+        return self.cosmology_analyzer.analyze_cosmological_evolution(envelope, scale)
 
     def _analyze_large_scale_structure(
         self, envelope: np.ndarray, threshold: float
@@ -287,9 +285,7 @@ class LevelGBVPIntegration:
                 - gravitational_lensing: Gravitational lensing analysis
                 - gravitational_energy: Gravitational energy analysis
         """
-        return self.gravity_analyzer.analyze_gravitational_effects(
-            envelope, threshold
-        )
+        return self.gravity_analyzer.analyze_gravitational_effects(envelope, threshold)
 
     def _analyze_bvp_integration(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
@@ -348,10 +344,14 @@ class LevelGBVPIntegration:
             "envelope_energy": float(envelope_energy),
             "envelope_scale": float(envelope_scale),
             "phase_coherence": float(phase_coherence),
-            "cosmological_evolution_rate": float(np.std(amplitude) / np.mean(amplitude)),
+            "cosmological_evolution_rate": float(
+                np.std(amplitude) / np.mean(amplitude)
+            ),
         }
 
-    def _analyze_envelope_cosmological_coupling(self, envelope: np.ndarray) -> Dict[str, Any]:
+    def _analyze_envelope_cosmological_coupling(
+        self, envelope: np.ndarray
+    ) -> Dict[str, Any]:
         """Analyze coupling between envelope and cosmological evolution."""
         # Compute envelope properties
         amplitude = np.abs(envelope)
@@ -370,10 +370,14 @@ class LevelGBVPIntegration:
             "phase_coherence": float(phase_coherence),
             "amplitude_correlation": float(amplitude_correlation),
             "large_scale_strength": float(large_scale_strength),
-            "envelope_cosmological_coupling": float(phase_coherence * large_scale_strength),
+            "envelope_cosmological_coupling": float(
+                phase_coherence * large_scale_strength
+            ),
         }
 
-    def _analyze_gravitational_envelope_effects(self, envelope: np.ndarray) -> Dict[str, Any]:
+    def _analyze_gravitational_envelope_effects(
+        self, envelope: np.ndarray
+    ) -> Dict[str, Any]:
         """Analyze gravitational effects on envelope."""
         # Compute gravitational effects on envelope
         amplitude = np.abs(envelope)
@@ -389,7 +393,9 @@ class LevelGBVPIntegration:
         return {
             "gravitational_field_strength": float(gravitational_field_strength),
             "gravitational_wave_strength": float(gravitational_wave_strength),
-            "gravitational_envelope_coupling": float(gravitational_field_strength * gravitational_wave_strength),
+            "gravitational_envelope_coupling": float(
+                gravitational_field_strength * gravitational_wave_strength
+            ),
         }
 
     def _check_bvp_compliance(self, envelope: np.ndarray) -> Dict[str, Any]:
@@ -410,5 +416,7 @@ class LevelGBVPIntegration:
             "envelope_energy": float(envelope_energy),
             "shape_compliance": shape_compliance,
             "cosmological_compatible": cosmological_compatible,
-            "bvp_framework_compliant": shape_compliance and envelope_norm > 0 and cosmological_compatible,
+            "bvp_framework_compliant": shape_compliance
+            and envelope_norm > 0
+            and cosmological_compatible,
         }

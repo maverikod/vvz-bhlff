@@ -29,13 +29,13 @@ from .analysis import CosmologicalAnalysis
 from .validation import ParticleInversion, ParticleValidation
 
 __all__ = [
-    'CosmologicalModel',
-    'StandardCosmologicalMetric', 
-    'AstrophysicalObjectModel',
-    'GravitationalEffectsModel',
-    'LargeScaleStructureModel',
-    'CosmologicalEvolution',
-    'CosmologicalAnalysis',
-    'ParticleInversion',
-    'ParticleValidation'
+    "CosmologicalModel",
+    "StandardCosmologicalMetric",
+    "AstrophysicalObjectModel",
+    "GravitationalEffectsModel",
+    "LargeScaleStructureModel",
+    "CosmologicalEvolution",
+    "CosmologicalAnalysis",
+    "ParticleInversion",
+    "ParticleValidation",
 ]

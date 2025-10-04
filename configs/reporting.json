@@ -1,0 +1,103 @@
+{
+    "report_types": {
+        "daily": {
+            "enabled": true,
+            "recipients": {
+                "physicists": ["physics-team@example.com"],
+                "developers": ["dev-team@example.com"],
+                "management": ["management@example.com"]
+            },
+            "format": ["pdf", "html", "json"],
+            "physics_highlights": true,
+            "technical_details": true,
+            "executive_summary": true
+        },
+        "weekly": {
+            "enabled": true,
+            "recipients": {
+                "physicists": ["physics-team@example.com"],
+                "developers": ["dev-team@example.com"],
+                "management": ["management@example.com"]
+            },
+            "format": ["pdf", "html"],
+            "trend_analysis": true,
+            "physics_validation_summary": true,
+            "performance_analysis": true,
+            "recommendations": true
+        },
+        "monthly": {
+            "enabled": true,
+            "recipients": {
+                "physicists": ["physics-team@example.com"],
+                "developers": ["dev-team@example.com"],
+                "management": ["management@example.com"],
+                "stakeholders": ["stakeholders@example.com"]
+            },
+            "format": ["pdf", "html", "json"],
+            "comprehensive_validation": true,
+            "theoretical_prediction_comparison": true,
+            "long_term_trends": true,
+            "research_progress_assessment": true,
+            "future_recommendations": true
+        }
+    },
+    "templates": {
+        "daily": {
+            "physicists": "templates/daily_physics_report.html",
+            "developers": "templates/daily_technical_report.html",
+            "management": "templates/daily_executive_report.html"
+        },
+        "weekly": {
+            "physicists": "templates/weekly_physics_report.html",
+            "developers": "templates/weekly_technical_report.html",
+            "management": "templates/weekly_executive_report.html"
+        },
+        "monthly": {
+            "physicists": "templates/monthly_physics_report.html",
+            "developers": "templates/monthly_technical_report.html",
+            "management": "templates/monthly_executive_report.html",
+            "stakeholders": "templates/monthly_stakeholder_report.html"
+        }
+    },
+    "physics_interpretation": {
+        "energy_conservation": {
+            "description": "Energy conservation validation in 7D phase field theory",
+            "mathematical_expression": "|dE/dt| < ε_energy",
+            "physical_meaning": "Fundamental conservation law for phase field dynamics"
+        },
+        "virial_conditions": {
+            "description": "Virial condition validation for energy balance",
+            "mathematical_expression": "|dE/dλ|λ=1| < ε_virial",
+            "physical_meaning": "Ensures proper energy distribution in phase fields"
+        },
+        "topological_charge": {
+            "description": "Topological charge conservation validation",
+            "mathematical_expression": "|dB/dt| < ε_topology",
+            "physical_meaning": "Essential for particle stability and charge quantization"
+        },
+        "passivity": {
+            "description": "Passivity condition validation",
+            "mathematical_expression": "Re Y(ω) ≥ 0 for all ω",
+            "physical_meaning": "Ensures physical realizability of phase field responses"
+        }
+    },
+    "distribution": {
+        "email": {
+            "smtp_server": "smtp.example.com",
+            "smtp_port": 587,
+            "use_tls": true,
+            "username": "reports@example.com",
+            "password": "secure_password"
+        },
+        "web_dashboard": {
+            "enabled": true,
+            "url": "https://dashboard.example.com",
+            "update_frequency": "real_time"
+        },
+        "file_system": {
+            "enabled": true,
+            "base_path": "/reports/7d_theory",
+            "retention_days": 365
+        }
+    }
+}

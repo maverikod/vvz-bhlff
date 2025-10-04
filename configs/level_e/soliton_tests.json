@@ -1,0 +1,41 @@
+{
+    "soliton_tests": {
+        "baryon_soliton": {
+            "domain": {"L": 15.0, "N": 384},
+            "physics": {
+                "mu": 1.0,
+                "beta": 1.0,
+                "lambda": 0.0,
+                "S4": 0.1,
+                "S6": 0.01
+            },
+            "initial_conditions": {
+                "type": "hedgehog",
+                "center": [7.5, 7.5, 7.5],
+                "radius": 2.0
+            },
+            "analysis": {
+                "topological_charge": true,
+                "energy_components": true,
+                "stability_analysis": true,
+                "fr_constraints": true
+            }
+        },
+        "skyrmion_soliton": {
+            "domain": {"L": 20.0, "N": 512},
+            "physics": {
+                "mu": 1.0,
+                "beta": 1.2,
+                "lambda": 0.0,
+                "S4": 0.15,
+                "S6": 0.02
+            },
+            "charges": [1, 2, 3, -1, -2],
+            "analysis": {
+                "charge_verification": true,
+                "energy_scaling": true,
+                "interaction_potential": true
+            }
+        }
+    }
+}

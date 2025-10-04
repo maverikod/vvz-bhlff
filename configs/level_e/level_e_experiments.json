@@ -1,0 +1,122 @@
+{
+    "level_e_experiments": {
+        "domain": {
+            "L": 20.0,
+            "N": 256,
+            "dimensions": 3,
+            "boundary_conditions": "periodic"
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "S4": 0.1,
+            "S6": 0.01,
+            "F2": 1.0
+        },
+        "experiments": {
+            "E1_sensitivity": {
+                "parameter_ranges": {
+                    "beta": [0.6, 1.4],
+                    "eta_1": [0.0, 0.3],
+                    "eta_2": [0.0, 0.3],
+                    "eta_3": [0.0, 0.3],
+                    "gamma_1": [0.0, 0.8],
+                    "gamma_2": [0.0, 0.8],
+                    "gamma_3": [0.0, 0.8],
+                    "tau_1": [0.5, 2.0],
+                    "tau_2": [0.5, 2.0],
+                    "tau_3": [0.5, 2.0]
+                },
+                "lhs_samples": 1000,
+                "sobol_analysis": {
+                    "first_order": true,
+                    "total_order": true,
+                    "interaction_effects": true
+                }
+            },
+            "E2_robustness": {
+                "noise_levels": [0.0, 0.05, 0.1, 0.15, 0.2],
+                "parameter_uncertainty": {
+                    "beta": 0.05,
+                    "mu": 0.1,
+                    "lambda": 0.02
+                },
+                "geometry_perturbations": [
+                    "boundary_jitter",
+                    "domain_deformation",
+                    "grid_distortion"
+                ]
+            },
+            "E3_discretization": {
+                "grid_sizes": [64, 128, 256, 512],
+                "domain_sizes": [10.0, 15.0, 20.0, 25.0, 30.0],
+                "time_steps": [0.001, 0.005, 0.01, 0.02, 0.05]
+            },
+            "E4_failures": {
+                "passivity_violations": {
+                    "gamma_negative": [-0.1, -0.05, -0.02, -0.01]
+                },
+                "singular_modes": {
+                    "lambda_zero": true,
+                    "zero_source_mode": true
+                },
+                "extreme_contrasts": {
+                    "eta_max": [0.5, 0.6, 0.7, 0.8]
+                }
+            },
+            "E5_phase_mapping": {
+                "parameter_grid": {
+                    "eta": [0.0, 0.1, 0.2, 0.3],
+                    "chi_double_prime": [0.0, 0.2, 0.4, 0.6, 0.8],
+                    "beta": [0.6, 0.8, 1.0, 1.2, 1.4]
+                },
+                "classification_metrics": {
+                    "power_law_threshold": 0.95,
+                    "resonator_q_min": 10.0,
+                    "frozen_velocity_max": 1e-3
+                }
+            },
+            "E6_performance": {
+                "scaling_analysis": {
+                    "grid_sizes": [64, 128, 256, 512, 1024],
+                    "domain_sizes": [10.0, 20.0, 40.0, 80.0],
+                    "time_ranges": [1.0, 5.0, 10.0, 20.0]
+                },
+                "benchmark_tests": {
+                    "reference_cases": [
+                        "single_soliton",
+                        "defect_pair",
+                        "multi_defect_system"
+                    ]
+                }
+            }
+        },
+        "soliton_search": {
+            "initial_guesses": 20,
+            "tolerance": 1e-8,
+            "max_iterations": 1000,
+            "stability_analysis": {
+                "perturbation_amplitude": 0.01,
+                "eigenvalue_tolerance": 1e-6
+            }
+        },
+        "defect_dynamics": {
+            "time_integration": {
+                "scheme": "rk4",
+                "adaptive_step": true,
+                "tolerance": 1e-6
+            },
+            "interaction_cutoff": 5.0,
+            "annihilation_threshold": 0.1
+        },
+        "output": {
+            "save_fields": true,
+            "save_spectra": true,
+            "save_analysis": true,
+            "save_visualizations": true,
+            "format": "hdf5",
+            "compression": "gzip"
+        }
+    }
+}

@@ -1,0 +1,63 @@
+{
+    "defect_tests": {
+        "single_defect": {
+            "domain": {"L": 10.0, "N": 256},
+            "physics": {
+                "mu": 1.0,
+                "beta": 1.0,
+                "lambda": 0.0
+            },
+            "defect": {
+                "position": [5.0, 5.0, 5.0],
+                "charge": 1,
+                "type": "vortex"
+            },
+            "analysis": {
+                "radial_profile": true,
+                "topological_charge": true,
+                "asymptotic_behavior": true
+            }
+        },
+        "defect_pair": {
+            "domain": {"L": 15.0, "N": 384},
+            "physics": {
+                "mu": 1.0,
+                "beta": 1.0,
+                "lambda": 0.0
+            },
+            "defects": [
+                {"position": [3.0, 7.5, 7.5], "charge": 1},
+                {"position": [12.0, 7.5, 7.5], "charge": -1}
+            ],
+            "dynamics": {
+                "time_range": [0.0, 20.0],
+                "dt": 0.01,
+                "save_frequency": 100
+            },
+            "analysis": {
+                "trajectory_analysis": true,
+                "interaction_forces": true,
+                "annihilation_detection": true
+            }
+        },
+        "multi_defect_system": {
+            "domain": {"L": 25.0, "N": 512},
+            "physics": {
+                "mu": 1.0,
+                "beta": 1.0,
+                "lambda": 0.0
+            },
+            "defects": [
+                {"position": [5.0, 5.0, 5.0], "charge": 1},
+                {"position": [20.0, 5.0, 5.0], "charge": -1},
+                {"position": [12.5, 12.5, 12.5], "charge": 1},
+                {"position": [12.5, 12.5, 5.0], "charge": -1}
+            ],
+            "analysis": {
+                "collective_dynamics": true,
+                "formation_processes": true,
+                "statistical_analysis": true
+            }
+        }
+    }
+}

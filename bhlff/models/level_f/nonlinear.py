@@ -484,7 +484,7 @@ class NonlinearEffects(AbstractModel):
         elif soliton['type'] == 'antikink':
             profile = -soliton['amplitude'] * np.tanh((x - soliton['position']) / soliton['width'])
         elif soliton['type'] == 'bright':
-            profile = soliton['amplitude'] * np.sech((x - soliton['position']) / soliton['width'])
+            profile = soliton['amplitude'] / np.cosh((x - soliton['position']) / soliton['width'])
         else:
             profile = soliton['amplitude'] * np.exp(-((x - soliton['position']) / soliton['width'])**2)
         
@@ -541,4 +541,33 @@ class NonlinearEffects(AbstractModel):
                 'nonlinear_strength': (2.0, np.inf),
                 'nonlinear_order': (4, np.inf)
             }
+        }
+    
+    def analyze(self, data: Any) -> Dict[str, Any]:
+        """
+        Analyze data for this model.
+        
+        Physical Meaning:
+            Performs comprehensive analysis of nonlinear effects,
+            including nonlinear modes and soliton solutions.
+            
+        Args:
+            data (Any): Input data to analyze (not used for this model)
+            
+        Returns:
+            Dict: Analysis results including modes, solitons, and stability
+        """
+        # Find nonlinear modes
+        modes = self.find_nonlinear_modes()
+        
+        # Find soliton solutions
+        solitons = self.find_soliton_solutions()
+        
+        # Check stability
+        stability = self.check_nonlinear_stability()
+        
+        return {
+            'nonlinear_modes': modes,
+            'solitons': solitons,
+            'stability': stability
         }

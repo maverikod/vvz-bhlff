@@ -18,7 +18,9 @@ Mathematical Foundation:
 """
 
 from .abstract_models import AbstractLevelModels
+from .abstract_model import AbstractModel
 
 __all__ = [
     "AbstractLevelModels",
+    "AbstractModel",
 ]

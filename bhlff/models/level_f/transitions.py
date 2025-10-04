@@ -430,7 +430,7 @@ class PhaseTransitions(AbstractModel):
             for the phase transition.
         """
         # Find index of critical point
-        crit_idx = np.argmin(np.abs(np.array(param_values) - critical_point)
+        crit_idx = np.argmin(np.abs(np.array(param_values) - critical_point))
         
         # Fit power law near critical point
         # This is simplified - in practice would use proper fitting
@@ -495,5 +495,31 @@ class PhaseTransitions(AbstractModel):
             'stable_regions': [],
             'unstable_regions': [],
             'metastable_regions': []
+        }
+    
+    def analyze(self, data: Any) -> Dict[str, Any]:
+        """
+        Analyze data for this model.
+        
+        Physical Meaning:
+            Performs comprehensive analysis of phase transitions,
+            including order parameters and critical points.
+            
+        Args:
+            data (Any): Input data to analyze (not used for this model)
+            
+        Returns:
+            Dict: Analysis results including order parameters and stability
+        """
+        # Compute order parameters
+        order_params = self.compute_order_parameters()
+        
+        # Analyze phase stability
+        stability = self.analyze_phase_stability()
+        
+        return {
+            'order_parameters': order_params,
+            'stability': stability,
+            'critical_points': self.critical_points
         }
 

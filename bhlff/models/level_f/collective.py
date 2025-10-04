@@ -346,7 +346,14 @@ class CollectiveExcitations(AbstractModel):
         for i, particle in enumerate(self.system.particles):
             # Force from external field at particle position
             # This is simplified - in practice would interpolate field
-            force = external_field[0, 0, 0] * excitation_amplitude * particle.charge
+            # Handle different field dimensions
+            if external_field.ndim == 3:
+                force = external_field[0, 0, 0] * excitation_amplitude * particle.charge
+            elif external_field.ndim == 7:
+                force = external_field[0, 0, 0, 0, 0, 0, 0] * excitation_amplitude * particle.charge
+            else:
+                # Use mean value for other dimensions
+                force = np.mean(external_field) * excitation_amplitude * particle.charge
             forces[i] = force
         
         return forces
@@ -514,6 +521,7 @@ class CollectiveExcitations(AbstractModel):
             to the computed frequency data.
         """
         # Fit quadratic relation
+        frequencies = np.array(frequencies)
         omega_squared = (2 * np.pi * frequencies)**2
         p = np.polyfit(k_values, omega_squared, 1)
         
@@ -533,5 +541,40 @@ class CollectiveExcitations(AbstractModel):
             'c': c,
             'r_squared': r_squared,
             'coefficients': p
+        }
+    
+    def analyze(self, data: Any) -> Dict[str, Any]:
+        """
+        Analyze data for this model.
+        
+        Physical Meaning:
+            Performs comprehensive analysis of collective excitations,
+            including response analysis and dispersion relations.
+            
+        Args:
+            data (Any): Input data to analyze (external field)
+            
+        Returns:
+            Dict: Analysis results including response and dispersion
+        """
+        # Create external field if not provided
+        if data is None:
+            external_field = np.random.randn(*self.domain.shape) * 0.1
+        else:
+            external_field = data
+        
+        # Excite system
+        response = self.excite_system(external_field)
+        
+        # Analyze response
+        response_analysis = self.analyze_response(response)
+        
+        # Compute dispersion relations
+        dispersion = self.compute_dispersion_relations()
+        
+        return {
+            'response': response,
+            'response_analysis': response_analysis,
+            'dispersion': dispersion
         }
 

@@ -35,7 +35,7 @@ class TestNonlinearEffects:
     @pytest.fixture
     def domain(self):
         """Create test domain."""
-        return Domain(L=20.0, N=64, dimensions=3)
+        return Domain(L=20.0, N=16, N_phi=8, N_t=16, T=10.0, dimensions=7)
     
     @pytest.fixture
     def particles(self):
@@ -380,7 +380,7 @@ class TestNonlinearEffects:
         assert 'nonlinear_criteria' in stability
         
         # Check that stability is boolean
-        assert isinstance(stability['is_stable'], bool)
+        assert isinstance(stability['is_stable'], (bool, np.bool_))
         assert isinstance(stability['nonlinear_criteria'], bool)
     
     def test_stability_check(self, nonlinear):
@@ -541,6 +541,6 @@ class TestNonlinearEffects:
         assert 'eigenvalues' in stability
         
         # Check that stability is boolean
-        assert isinstance(stability['is_stable'], bool)
-        assert isinstance(stability['stability_margin'], (int, float))
+        assert isinstance(stability['is_stable'], (bool, np.bool_))
+        assert isinstance(stability['stability_margin'], (int, float, np.integer, np.floating))
         assert isinstance(stability['eigenvalues'], np.ndarray)

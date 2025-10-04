@@ -35,7 +35,7 @@ class TestCollectiveExcitations:
     @pytest.fixture
     def domain(self):
         """Create test domain."""
-        return Domain(L=20.0, N=64, dimensions=3)
+        return Domain(L=20.0, N=16, N_phi=8, N_t=16, T=10.0, dimensions=7)
     
     @pytest.fixture
     def particles(self):
@@ -399,7 +399,7 @@ class TestCollectiveExcitations:
             v_g = excitations._compute_group_velocity(k, omega)
             
             # Check that group velocity is returned
-            assert isinstance(v_g, (int, float))
+            assert isinstance(v_g, (int, float, np.integer, np.floating))
             assert np.isfinite(v_g)
     
     def test_dispersion_relation_fitting(self, excitations):

@@ -35,7 +35,7 @@ class TestPhaseTransitions:
     @pytest.fixture
     def domain(self):
         """Create test domain."""
-        return Domain(L=20.0, N=64, dimensions=3)
+        return Domain(L=20.0, N=16, N_phi=8, N_t=16, T=10.0, dimensions=7)
     
     @pytest.fixture
     def particles(self):
@@ -132,11 +132,11 @@ class TestPhaseTransitions:
         """
         # Create mock phase diagram with critical point
         phase_diagram = [
-            {'parameter_value': 0.1, 'order_parameters': {'topological_order': 2.0}},
-            {'parameter_value': 0.5, 'order_parameters': {'topological_order': 1.8}},
-            {'parameter_value': 1.0, 'order_parameters': {'topological_order': 1.5}},
-            {'parameter_value': 1.5, 'order_parameters': {'topological_order': 1.2}},
-            {'parameter_value': 2.0, 'order_parameters': {'topological_order': 0.8}}
+            {'parameter_value': 0.1, 'order_parameters': {'topological_order': 2.0, 'phase_coherence': 0.8, 'spatial_order': 0.6}},
+            {'parameter_value': 0.5, 'order_parameters': {'topological_order': 1.8, 'phase_coherence': 0.7, 'spatial_order': 0.5}},
+            {'parameter_value': 1.0, 'order_parameters': {'topological_order': 1.5, 'phase_coherence': 0.6, 'spatial_order': 0.4}},
+            {'parameter_value': 1.5, 'order_parameters': {'topological_order': 1.2, 'phase_coherence': 0.5, 'spatial_order': 0.3}},
+            {'parameter_value': 2.0, 'order_parameters': {'topological_order': 0.8, 'phase_coherence': 0.4, 'spatial_order': 0.2}}
         ]
         
         critical_points = transitions.identify_critical_points(phase_diagram)
@@ -158,7 +158,7 @@ class TestPhaseTransitions:
         topological_order = transitions._compute_topological_order()
         
         # Check that topological order is returned
-        assert isinstance(topological_order, (int, float))
+        assert isinstance(topological_order, (int, float, np.integer, np.floating))
         assert topological_order >= 0  # Should be non-negative
         assert np.isfinite(topological_order)
         
@@ -458,11 +458,11 @@ class TestPhaseTransitions:
         """
         # Create mock phase diagram
         phase_diagram = [
-            {'parameter_value': 0.1, 'order_parameters': {'topological_order': 2.0}},
-            {'parameter_value': 0.5, 'order_parameters': {'topological_order': 1.8}},
-            {'parameter_value': 1.0, 'order_parameters': {'topological_order': 1.5}},
-            {'parameter_value': 1.5, 'order_parameters': {'topological_order': 1.2}},
-            {'parameter_value': 2.0, 'order_parameters': {'topological_order': 0.8}}
+            {'parameter_value': 0.1, 'order_parameters': {'topological_order': 2.0, 'phase_coherence': 0.8, 'spatial_order': 0.6}},
+            {'parameter_value': 0.5, 'order_parameters': {'topological_order': 1.8, 'phase_coherence': 0.7, 'spatial_order': 0.5}},
+            {'parameter_value': 1.0, 'order_parameters': {'topological_order': 1.5, 'phase_coherence': 0.6, 'spatial_order': 0.4}},
+            {'parameter_value': 1.5, 'order_parameters': {'topological_order': 1.2, 'phase_coherence': 0.5, 'spatial_order': 0.3}},
+            {'parameter_value': 2.0, 'order_parameters': {'topological_order': 0.8, 'phase_coherence': 0.4, 'spatial_order': 0.2}}
         ]
         
         critical_points = transitions.identify_critical_points(phase_diagram)

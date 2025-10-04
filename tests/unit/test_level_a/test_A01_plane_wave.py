@@ -13,8 +13,7 @@ import pytest
 from typing import Dict, Any
 import logging
 
-from bhlff.core.domain import Domain
-from bhlff.core.domain.parameters import Parameters
+from bhlff.core.domain import Domain, Parameters
 from bhlff.core.fft.fft_solver_7d_basic import FFTSolver7DBasic
 from bhlff.core.fft.fractional_laplacian import FractionalLaplacian
 
@@ -37,8 +36,8 @@ class TestA01PlaneWave:
         """Setup test parameters."""
         # Domain parameters
         self.L = 1.0
-        self.N = 256
-        self.domain = Domain(L=self.L, N=self.N, dimensions=3)
+        self.N = 16  # Much smaller for testing
+        self.domain = Domain(L=self.L, N=self.N, N_phi=8, N_t=16, T=1.0)
         
         # Physics parameters
         self.mu = 1.0

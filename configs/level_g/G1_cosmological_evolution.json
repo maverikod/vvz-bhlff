@@ -1,0 +1,40 @@
+{
+    "G1": {
+        "domain": {
+            "L": 1000.0,
+            "N": 2048,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "cosmology": {
+            "initial_conditions": "gaussian_fluctuations",
+            "scale_factor_evolution": "friedmann",
+            "time_range": [0.0, 13.8],
+            "redshift_range": [1000.0, 0.0],
+            "hubble_constant": 70.0,
+            "matter_density": 0.3,
+            "dark_energy_density": 0.7,
+            "phase_velocity": 1e10,
+            "domain_size": 1000.0,
+            "resolution": 256
+        },
+        "analysis": {
+            "structure_formation": true,
+            "power_spectrum": true,
+            "correlation_functions": true,
+            "topological_defects": true
+        },
+        "output": {
+            "save_fields": true,
+            "save_spectra": true,
+            "save_analysis": true,
+            "format": "hdf5",
+            "output_dir": "output/level_g/G1"
+        }
+    }
+}

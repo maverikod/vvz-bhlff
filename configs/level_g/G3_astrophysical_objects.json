@@ -1,0 +1,53 @@
+{
+    "G3": {
+        "domain": {
+            "L": 100.0,
+            "N": 1024,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "astrophysical_objects": {
+            "stars": {
+                "mass_range": [0.1, 100.0],
+                "radius_range": [0.1, 1000.0],
+                "phase_profiles": true,
+                "stellar_evolution": true,
+                "nuclear_burning": true
+            },
+            "galaxies": {
+                "spiral_arms": [2, 4],
+                "bulge_ratio": [0.1, 0.5],
+                "phase_structure": true,
+                "spiral_structure": true,
+                "galactic_dynamics": true
+            },
+            "black_holes": {
+                "mass_range": [1.0, 1e9],
+                "spin_range": [0.0, 0.99],
+                "phase_defects": true,
+                "event_horizon": true,
+                "accretion_disk": true
+            }
+        },
+        "analysis": {
+            "phase_profiles": true,
+            "topological_properties": true,
+            "observational_comparison": true,
+            "stellar_spectra": true,
+            "galactic_rotation": true,
+            "black_hole_shadows": true
+        },
+        "output": {
+            "save_fields": true,
+            "save_spectra": true,
+            "save_analysis": true,
+            "format": "hdf5",
+            "output_dir": "output/level_g/G3"
+        }
+    }
+}

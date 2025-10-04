@@ -1,0 +1,46 @@
+{
+    "G2": {
+        "domain": {
+            "L": 1000.0,
+            "N": 2048,
+            "dimensions": 3
+        },
+        "physics": {
+            "mu": 1.0,
+            "beta": 1.0,
+            "lambda": 0.0,
+            "nu": 1.0
+        },
+        "large_scale_structure": {
+            "initial_fluctuations": "primordial",
+            "evolution_time": 13.8,
+            "structure_analysis": true,
+            "baryon_acoustic_oscillations": true,
+            "galaxy_formation": true,
+            "cluster_formation": true,
+            "supercluster_formation": true
+        },
+        "cosmology": {
+            "hubble_constant": 70.0,
+            "matter_density": 0.3,
+            "dark_energy_density": 0.7,
+            "baryon_density": 0.05,
+            "neutrino_density": 0.01
+        },
+        "analysis": {
+            "galaxy_formation": true,
+            "cluster_formation": true,
+            "supercluster_formation": true,
+            "correlation_functions": true,
+            "power_spectrum": true,
+            "baryon_acoustic_oscillations": true
+        },
+        "output": {
+            "save_fields": true,
+            "save_spectra": true,
+            "save_analysis": true,
+            "format": "hdf5",
+            "output_dir": "output/level_g/G2"
+        }
+    }
+}

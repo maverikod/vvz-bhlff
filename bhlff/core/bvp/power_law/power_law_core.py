@@ -75,6 +75,48 @@ class PowerLawCore:
         self.logger.info(f"Envelope power law analysis completed: {len(results)} regions analyzed")
         return results
 
+    def analyze_power_law_tails(self, envelope: np.ndarray) -> Dict[str, Any]:
+        """
+        Analyze power law tails in BVP envelope field.
+
+        Physical Meaning:
+            Analyzes the power law decay of BVP envelope amplitude in the
+            tail region, which characterizes the field's long-range behavior
+            in homogeneous medium according to the 7D phase field theory.
+
+        Mathematical Foundation:
+            Computes power law decay A(r) ∝ r^(2β-3) in the tail region,
+            where β is the fractional order and r is the radial distance
+            from the field center.
+
+        Args:
+            envelope (np.ndarray): BVP envelope field to analyze.
+
+        Returns:
+            Dict[str, Any]: Dictionary containing:
+                - tail_slope: Power law exponent α
+                - r_squared: R-squared value of the fit
+                - power_law_range: Range of radial distances used
+        """
+        # Get power law analysis results
+        power_law_results = self.analyze_envelope_power_laws(envelope)
+        
+        if not power_law_results:
+            return {
+                "tail_slope": 0.0,
+                "r_squared": 0.0,
+                "power_law_range": [0.0, 0.0]
+            }
+        
+        # Use the first (most significant) result
+        first_result = power_law_results[0]
+        
+        return {
+            "tail_slope": first_result.get("slope", 0.0),
+            "r_squared": first_result.get("r_squared", 0.0),
+            "power_law_range": first_result.get("range", [0.0, 0.0])
+        }
+
     def _identify_tail_regions(self, envelope: np.ndarray) -> List[Dict[str, Any]]:
         """
         Identify tail regions in the envelope field.
@@ -160,7 +202,7 @@ class PowerLawCore:
         current_region = []
         
         for i, value in enumerate(mask):
-            if value:
+            if np.any(value) if hasattr(value, '__len__') else value:
                 current_region.append(i)
             else:
                 if current_region:

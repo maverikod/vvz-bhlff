@@ -2,18 +2,18 @@
 
 **Автор:** Vasiliy Zdanovskiy
 **Email:** vasilyvz@gmail.com
-**Дата:** 2025-10-05 00:18:06
+**Дата:** 2025-10-05 22:07:34
 
 ## Обзор
 
-Проанализировано файлов: 482
+Проанализировано файлов: 466
 
 ### Статистика
 
-- **Всего файлов:** 482
-- **Всего классов:** 461
-- **Всего функций:** 120
-- **Всего методов:** 3759
+- **Всего файлов:** 466
+- **Всего классов:** 459
+- **Всего функций:** 145
+- **Всего методов:** 3708
 
 ## Анализ по файлам
 
@@ -1253,134 +1253,6 @@ Physical Meaning:
 - `domain.Domain`
 - `domain.domain_7d.Domain7D`
 - `quench_detector.QuenchDetector`
-
----
-
-### bhlff/core/bvp/bvp_envelope_equation_7d.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Legacy BVP envelope equation module - DEPRECATED.
-
-This module is deprecated. Use the new modular structure:
-- bhlff.core.bvp.envelope_equation.BVPEnvelopeEquation7D
-- Individual modules in bhlff.core.bvp.envelope_equation.*
-
-The envelope equation has been refactored into separate modules following
-the 1 class = 1 file principle and size limits.
-
-Physical Meaning:
-    This legacy module contained the complete 7D envelope equation implementation
-    in a single file, which violated project standards. The implementation has
-    been moved to individual modules for better maintainability.
-
-Example:
-    # OLD (deprecated):
-    # from bhlff.core.bvp.bvp_envelope_equation_7d import BVPEnvelopeEquation7D
-
-    # NEW (recommended):
-    from bhlff.core.bvp.envelope_equation import BVPEnvelopeEquation7D
-```
-
-**Основные импорты:**
-
-- `envelope_equation.BVPEnvelopeEquation7D`
-- `envelope_equation.DerivativeOperators7D`
-- `envelope_equation.NonlinearTerms7D`
-
----
-
-### bhlff/core/bvp/bvp_envelope_solver.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-7D BVP envelope equation solver module.
-
-This module implements the solver for the 7D BVP envelope equation with
-nonlinear stiffness and susceptibility, providing the core mathematical
-operations for envelope field calculations in 7D space-time.
-
-Physical Meaning:
-    Solves the 7D envelope equation in M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ:
-    ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t)
-    where κ(|a|) = κ₀ + κ₂|a|² is nonlinear stiffness and
-    χ(|a|) = χ' + iχ''(|a|) is effective susceptibility.
-
-Mathematical Foundation:
-    Implements iterative solution of the nonlinear 7D envelope equation
-    using finite difference methods for the divergence and gradient
-    operations in all 7 dimensions (3 spatial + 3 phase + 1 temporal).
-
-Example:
-    >>> solver = BVPEnvelopeSolver(domain, config)
-    >>> envelope = solver.solve_envelope(source)
-```
-
-**Классы:**
-
-- **BVPEnvelopeSolver**
-  - Описание: Solver for 7D BVP envelope equation.
-
-Physical Meaning:
-    Solves the nonlinear 7D envelope equatio...
-
-  **Методы:**
-  - 🔒 `__init__(domain, config, constants)`
-    - Initialize envelope equation solver.
-
-Physical Meaning:
-    Sets up the solver w...
-  - 🔒 `_setup_parameters()`
-    - Setup envelope equation parameters.
-
-Physical Meaning:
-    Initializes the physi...
-  - 🔒 `_setup_solver_components()`
-    - Setup solver components....
-  - `solve_envelope(source)`
-    - Solve 7D BVP envelope equation.
-
-Physical Meaning:
-    Computes the envelope a(x...
-  - `solve_envelope_linearized(source)`
-    - Solve linearized 7D BVP envelope equation.
-
-Physical Meaning:
-    Solves the lin...
-  - 🔒 `_solve_linearized_envelope(envelope, kappa, chi, source)`
-    - Solve linearized envelope equation.
-
-Physical Meaning:
-    Solves the linearized...
-  - `get_parameters()`
-    - Get envelope equation parameters.
-
-Physical Meaning:
-    Returns the current par...
-  - `validate_solution(solution, source, tolerance)`
-    - Validate envelope equation solution.
-
-Physical Meaning:
-    Validates that the s...
-  - 🔒 `__repr__()`
-    - String representation of envelope solver....
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Dict`
-- `typing.Any`
-- `domain.Domain`
-- `envelope_solver.envelope_solver_core.EnvelopeSolverCore`
-- `envelope_solver_line_search.EnvelopeSolverLineSearch`
 
 ---
 
@@ -2743,1401 +2615,6 @@ Physical Meaning:
 
 ---
 
-### bhlff/core/bvp/envelope_equation/__init__.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-BVP envelope equation package for 7D space-time theory.
-
-This package contains the modular implementation of the 7D BVP envelope equation,
-solving the nonlinear envelope equation in 7D space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
-
-Physical Meaning:
-    The envelope equation describes the evolution of the BVP field envelope
-    in 7D space-time, including spatial, phase, and temporal derivatives
-    with nonlinear stiffness and susceptibility terms.
-
-Mathematical Foundation:
-    Solves the 7D envelope equation:
-    ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t)
-    where:
-    - κ(|a|) = κ₀ + κ₂|a|² (nonlinear stiffness)
-    - χ(|a|) = χ' + iχ''(|a|) (effective susceptibility with quenches)
-    - s(x,φ,t) is the source term
-
-Example:
-    >>> from bhlff.core.bvp.envelope_equation import BVPEnvelopeEquation7D
-    >>> equation_7d = BVPEnvelopeEquation7D(domain_7d, config)
-    >>> envelope = equation_7d.solve_envelope(source_7d)
-```
-
-**Основные импорты:**
-
-- `bvp_envelope_equation_7d.BVPEnvelopeEquation7D`
-- `derivative_operators_facade.DerivativeOperators7D`
-- `nonlinear_terms.NonlinearTerms7D`
-- `solver_core.EnvelopeSolverCore7D`
-
----
-
-### bhlff/core/bvp/envelope_equation/advanced/__init__.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Advanced envelope equation solver modules.
-
-This package provides advanced solving functionality for the 7D BVP envelope
-equation, including adaptive methods, preconditioning, and optimization.
-```
-
-**Основные импорты:**
-
-- `solver_advanced_core.SolverAdvancedCore`
-- `solver_adaptive.SolverAdaptive`
-- `solver_optimized.SolverOptimized`
-- `solver_preconditioning.SolverPreconditioning`
-
----
-
-### bhlff/core/bvp/envelope_equation/advanced/solver_adaptive.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Adaptive solver for 7D BVP envelope equation.
-
-This module implements adaptive solving functionality
-for the 7D BVP envelope equation.
-```
-
-**Классы:**
-
-- **SolverAdaptive**
-  - Описание: Adaptive solver for 7D BVP envelope equation.
-
-Physical Meaning:
-    Implements adaptive solving alg...
-
-  **Методы:**
-  - 🔒 `__init__(domain, config)`
-    - Initialize adaptive solver....
-  - `solve_adaptive(source)`
-    - Solve using adaptive methods.
-
-Physical Meaning:
-    Solves the envelope equatio...
-  - `initialize_solution(source)`
-    - Initialize solution for adaptive solving....
-  - `compute_residual(solution, source)`
-    - Compute residual for adaptive solving....
-  - `compute_jacobian(solution)`
-    - Compute Jacobian for adaptive solving....
-  - `solve_linear_system(jacobian, residual)`
-    - Solve linear system for adaptive solving....
-  - `compute_step_size(solution, update, residual)`
-    - Compute adaptive step size....
-  - `smooth_field(field)`
-    - Apply adaptive smoothing to field....
-  - `scale_field(field)`
-    - Apply adaptive scaling to field....
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Dict`
-- `typing.Any`
-- `scipy.sparse.csc_matrix`
-- `scipy.sparse.linalg.spsolve`
-- `domain.domain_7d.Domain7D`
-
----
-
-### bhlff/core/bvp/envelope_equation/advanced/solver_advanced_core.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Core advanced solver for 7D BVP envelope equation.
-
-This module implements the core advanced solving functionality
-for the 7D BVP envelope equation.
-```
-
-**Классы:**
-
-- **SolverAdvancedCore**
-  - Наследование: AbstractSolverCore
-  - Описание: Core advanced solver for 7D BVP envelope equation.
-
-Physical Meaning:
-    Implements core advanced s...
-
-  **Методы:**
-  - 🔒 `__init__(domain, config)`
-    - Initialize advanced 7D envelope solver core.
-
-Args:
-    domain (Domain7D): 7D co...
-  - `solve_envelope_adaptive(source)`
-    - Solve envelope equation using adaptive methods.
-
-Physical Meaning:
-    Solves th...
-  - `solve_envelope_optimized(source)`
-    - Solve envelope equation using optimization techniques.
-
-Physical Meaning:
-    So...
-  - 🔒 `_initialize_solution_adaptive(source)`
-    - Initialize solution for adaptive solving.
-
-Physical Meaning:
-    Initializes the...
-  - 🔒 `_initialize_solution_optimized(source)`
-    - Initialize solution for optimized solving.
-
-Physical Meaning:
-    Initializes th...
-  - 🔒 `_compute_residual_advanced(solution, source)`
-    - Compute residual for advanced solving.
-
-Physical Meaning:
-    Computes the resid...
-  - 🔒 `_compute_residual_optimized(solution, source)`
-    - Compute residual for optimized solving.
-
-Physical Meaning:
-    Computes the resi...
-  - 🔒 `_compute_jacobian_advanced(solution)`
-    - Compute Jacobian for advanced solving.
-
-Physical Meaning:
-    Computes the Jacob...
-  - 🔒 `_compute_jacobian_optimized(solution)`
-    - Compute Jacobian for optimized solving.
-
-Physical Meaning:
-    Computes the Jaco...
-  - 🔒 `_solve_linear_system_advanced(jacobian, residual)`
-    - Solve linear system for advanced solving.
-
-Physical Meaning:
-    Solves the line...
-  - 🔒 `_solve_linear_system_optimized(jacobian, residual)`
-    - Solve linear system for optimized solving.
-
-Physical Meaning:
-    Solves the lin...
-  - 🔒 `_apply_preconditioning(jacobian, residual)`
-    - Apply preconditioning to linear system.
-
-Physical Meaning:
-    Applies precondit...
-  - 🔒 `_compute_preconditioner(jacobian)`
-    - Compute preconditioner matrix.
-
-Physical Meaning:
-    Computes a preconditioner ...
-  - 🔒 `_compute_adaptive_step_size(solution, update, residual)`
-    - Compute adaptive step size.
-
-Physical Meaning:
-    Computes an adaptive step siz...
-  - 🔒 `_compute_optimized_step_size(solution, update, residual)`
-    - Compute optimized step size.
-
-Physical Meaning:
-    Computes an optimized step s...
-  - 🔒 `_adaptive_smooth_field(field)`
-    - Apply adaptive smoothing to field.
-
-Physical Meaning:
-    Applies adaptive smoot...
-  - 🔒 `_adaptive_scale_field(field)`
-    - Apply adaptive scaling to field.
-
-Physical Meaning:
-    Applies adaptive scaling...
-  - 🔒 `_optimized_smooth_field(field)`
-    - Apply optimized smoothing to field.
-
-Physical Meaning:
-    Applies optimized smo...
-  - 🔒 `_optimized_scale_field(field)`
-    - Apply optimized scaling to field.
-
-Physical Meaning:
-    Applies optimized scali...
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Dict`
-- `typing.Any`
-- `typing.Optional`
-- `typing.Tuple`
-- `scipy.sparse.csc_matrix`
-- `domain.domain_7d.Domain7D`
-- `abstract_solver_core.AbstractSolverCore`
-
----
-
-### bhlff/core/bvp/envelope_equation/advanced/solver_optimized.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Optimized solver for 7D BVP envelope equation.
-
-This module implements optimized solving functionality
-for the 7D BVP envelope equation.
-```
-
-**Классы:**
-
-- **SolverOptimized**
-  - Описание: Optimized solver for 7D BVP envelope equation.
-
-Physical Meaning:
-    Implements optimized solving a...
-
-  **Методы:**
-  - 🔒 `__init__(domain, config)`
-    - Initialize optimized solver....
-  - `solve_optimized(source)`
-    - Solve using optimization techniques.
-
-Physical Meaning:
-    Solves the envelope ...
-  - `initialize_solution(source)`
-    - Initialize solution for optimized solving....
-  - `compute_residual(solution, source)`
-    - Compute residual for optimized solving....
-  - `compute_jacobian(solution)`
-    - Compute Jacobian for optimized solving....
-  - `solve_linear_system(jacobian, residual)`
-    - Solve linear system for optimized solving....
-  - `compute_step_size(solution, update, residual)`
-    - Compute optimized step size....
-  - `smooth_field(field)`
-    - Apply optimized smoothing to field....
-  - `scale_field(field)`
-    - Apply optimized scaling to field....
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Dict`
-- `typing.Any`
-- `scipy.sparse.csc_matrix`
-- `scipy.sparse.linalg.spsolve`
-- `domain.domain_7d.Domain7D`
-
----
-
-### bhlff/core/bvp/envelope_equation/advanced/solver_preconditioning.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Preconditioning for 7D BVP envelope equation solver.
-
-This module implements preconditioning functionality
-for the 7D BVP envelope equation solver.
-```
-
-**Классы:**
-
-- **SolverPreconditioning**
-  - Описание: Preconditioning for 7D BVP envelope equation solver.
-
-Physical Meaning:
-    Implements preconditioni...
-
-  **Методы:**
-  - 🔒 `__init__(domain, config)`
-    - Initialize preconditioning....
-  - `apply_preconditioning(jacobian, residual)`
-    - Apply preconditioning to linear system.
-
-Physical Meaning:
-    Applies precondit...
-  - `compute_preconditioner(jacobian)`
-    - Compute preconditioner matrix.
-
-Physical Meaning:
-    Computes a preconditioner ...
-  - 🔒 `_compute_jacobi_preconditioner(jacobian)`
-    - Compute Jacobi preconditioner....
-  - 🔒 `_compute_ilu_preconditioner(jacobian)`
-    - Compute ILU preconditioner (simplified)....
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Dict`
-- `typing.Any`
-- `typing.Tuple`
-- `scipy.sparse.csc_matrix`
-- `scipy.sparse.diags`
-- `domain.domain_7d.Domain7D`
-
----
-
-### bhlff/core/bvp/envelope_equation/bvp_envelope_equation_7d.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Main 7D BVP envelope equation implementation.
-
-This module provides the main BVPEnvelopeEquation7D class that coordinates
-the solution of the 7D envelope equation using the modular components.
-
-Physical Meaning:
-    The main envelope equation class coordinates the solution of the full
-    7D envelope equation in space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ, including
-    spatial, phase, and temporal derivatives with nonlinear terms.
-
-Mathematical Foundation:
-    Solves the 7D envelope equation:
-    ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t)
-    using modular derivative operators and nonlinear terms.
-
-Example:
-    >>> equation_7d = BVPEnvelopeEquation7D(domain_7d, config)
-    >>> envelope = equation_7d.solve_envelope(source_7d)
-```
-
-**Основные импорты:**
-
-- `bvp_envelope_equation_7d_facade.BVPEnvelopeEquation7D`
-
----
-
-### bhlff/core/bvp/envelope_equation/bvp_envelope_equation_7d_facade.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Facade for 7D BVP envelope equation.
-
-This module provides a unified interface for the 7D BVP envelope equation,
-coordinating all components through a single facade class for solving
-the full 7D envelope equation.
-
-Physical Meaning:
-    The envelope equation facade provides a unified interface to solve
-    the full 7D envelope equation in space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ,
-    including spatial, phase, and temporal derivatives with nonlinear terms.
-
-Mathematical Foundation:
-    Solves the 7D envelope equation:
-    ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t)
-    using modular derivative operators, nonlinear terms, and iterative
-    Newton-Raphson solver.
-
-Example:
-    >>> equation_7d = BVPEnvelopeEquation7D(domain_7d, config)
-    >>> envelope = equation_7d.solve_envelope(source_7d)
-```
-
-**Классы:**
-
-- **BVPEnvelopeEquation7D**
-  - Описание: 7D BVP envelope equation solver.
-
-Physical Meaning:
-    Solves the full 7D envelope equation in spac...
-
-  **Методы:**
-  - 🔒 `__init__(domain_7d, config)`
-    - Initialize 7D envelope equation solver.
-
-Physical Meaning:
-    Sets up the envel...
-  - `solve_envelope(source_7d, initial_guess)`
-    - Solve 7D envelope equation.
-
-Physical Meaning:
-    Solves the full 7D envelope e...
-  - `get_parameters()`
-    - Get envelope equation parameters.
-
-Physical Meaning:
-    Returns the current val...
-  - `analyze_solution_quality(envelope, source)`
-    - Analyze quality of the solution.
-
-Physical Meaning:
-    Analyzes the quality of ...
-  - 🔒 `__repr__()`
-    - String representation of envelope equation solver.
-
-Returns:
-    str: String rep...
-
-**Функции:**
-
-- `residual_func(envelope, source)`
-- `jacobian_func(envelope)`
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Dict`
-- `typing.Any`
-- `typing.Optional`
-- `domain.domain_7d.Domain7D`
-- `bvp_constants.BVPConstants`
-- `derivative_operators_facade.DerivativeOperators7D`
-
----
-
-### bhlff/core/bvp/envelope_equation/derivative_operators/__init__.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Derivative operators package for 7D BVP envelope equation.
-
-This package provides modular derivative operators for the 7D BVP envelope
-equation, including spatial, phase, and temporal operators with appropriate
-boundary conditions and numerical schemes.
-
-Physical Meaning:
-    The derivative operators package implements all derivative operations
-    needed for the 7D envelope equation in space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ,
-    including spatial gradients/divergences, phase gradients/divergences,
-    and temporal derivatives.
-
-Mathematical Foundation:
-    Provides finite difference operators for spatial coordinates,
-    periodic operators for phase coordinates, and backward difference
-    operators for temporal evolution.
-
-Example:
-    >>> from .spatial_operators import SpatialOperators
-    >>> from .phase_operators import PhaseOperators
-    >>> from .temporal_operators import TemporalOperators
-    >>> spatial_ops = SpatialOperators(domain_7d)
-    >>> phase_ops = PhaseOperators(domain_7d)
-    >>> temporal_ops = TemporalOperators(domain_7d)
-```
-
-**Основные импорты:**
-
-- `spatial_operators.SpatialOperators`
-- `phase_operators.PhaseOperators`
-- `temporal_operators.TemporalOperators`
-
----
-
-### bhlff/core/bvp/envelope_equation/derivative_operators/phase_operators.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Phase derivative operators for 7D BVP envelope equation.
-
-This module implements phase derivative operators including gradients
-and divergences with periodic boundary conditions for the toroidal
-phase space in the 7D BVP envelope equation.
-
-Physical Meaning:
-    Phase derivative operators implement periodic derivative schemes
-    for computing phase gradients and divergences in the 3D phase
-    coordinates (φ₁, φ₂, φ₃) of the 7D space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
-
-Mathematical Foundation:
-    Implements periodic derivative operators for:
-    - Phase gradients: ∇φa with periodic boundary conditions
-    - Phase divergences: ∇φ·(κ(|a|)∇φa) with periodic form
-
-Example:
-    >>> phase_ops = PhaseOperators(domain_7d)
-    >>> phase_ops.setup_operators()
-    >>> gradient = phase_ops.apply_gradient(field, axis=3)
-```
-
-**Классы:**
-
-- **PhaseOperators**
-  - Описание: Phase derivative operators for 7D BVP envelope equation.
-
-Physical Meaning:
-    Implements phase der...
-
-  **Методы:**
-  - 🔒 `__init__(domain_7d)`
-    - Initialize phase derivative operators.
-
-Physical Meaning:
-    Sets up the phase ...
-  - `setup_operators()`
-    - Setup all phase derivative operators.
-
-Physical Meaning:
-    Initializes all pha...
-  - 🔒 `_setup_phase_derivatives(phase_shape, dphi_1, dphi_2, dphi_3)`
-    - Setup phase derivative operators.
-
-Physical Meaning:
-    Creates periodic deriva...
-  - 🔒 `_create_periodic_gradient_operator(N, dx, axis)`
-    - Create periodic gradient operator for phase coordinates.
-
-Physical Meaning:
-    ...
-  - 🔒 `_create_periodic_divergence_operator(N, dx, axis)`
-    - Create periodic divergence operator for phase coordinates.
-
-Physical Meaning:
-  ...
-  - `apply_gradient(field, axis)`
-    - Apply phase gradient operator.
-
-Physical Meaning:
-    Applies the phase gradient...
-  - `apply_divergence(field, axis)`
-    - Apply phase divergence operator.
-
-Physical Meaning:
-    Applies the phase diverg...
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Tuple`
-- `scipy.sparse.csc_matrix`
-- `domain.domain_7d.Domain7D`
-
----
-
-### bhlff/core/bvp/envelope_equation/derivative_operators/spatial_operators.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Spatial derivative operators for 7D BVP envelope equation.
-
-This module implements spatial derivative operators including gradients
-and divergences with finite difference schemes and appropriate boundary
-conditions for the 7D BVP envelope equation.
-
-Physical Meaning:
-    Spatial derivative operators implement finite difference schemes
-    for computing spatial gradients and divergences in the 3D spatial
-    coordinates (x, y, z) of the 7D space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
-
-Mathematical Foundation:
-    Implements finite difference operators for:
-    - Spatial gradients: ∇ₓa with central differences
-    - Spatial divergences: ∇ₓ·(κ(|a|)∇ₓa) with conservative form
-
-Example:
-    >>> spatial_ops = SpatialOperators(domain_7d)
-    >>> spatial_ops.setup_operators()
-    >>> gradient = spatial_ops.apply_gradient(field, axis=0)
-```
-
-**Классы:**
-
-- **SpatialOperators**
-  - Описание: Spatial derivative operators for 7D BVP envelope equation.
-
-Physical Meaning:
-    Implements spatial...
-
-  **Методы:**
-  - 🔒 `__init__(domain_7d)`
-    - Initialize spatial derivative operators.
-
-Physical Meaning:
-    Sets up the spat...
-  - `setup_operators()`
-    - Setup all spatial derivative operators.
-
-Physical Meaning:
-    Initializes all s...
-  - 🔒 `_setup_spatial_derivatives(spatial_shape, dx, dy, dz)`
-    - Setup spatial derivative operators.
-
-Physical Meaning:
-    Creates finite differ...
-  - 🔒 `_create_gradient_operator(N, dx, axis)`
-    - Create gradient operator for given axis.
-
-Physical Meaning:
-    Creates a finite...
-  - 🔒 `_create_divergence_operator(N, dx, axis)`
-    - Create divergence operator for given axis.
-
-Physical Meaning:
-    Creates a dive...
-  - `apply_gradient(field, axis)`
-    - Apply spatial gradient operator.
-
-Physical Meaning:
-    Applies the spatial grad...
-  - `apply_divergence(field, axis)`
-    - Apply spatial divergence operator.
-
-Physical Meaning:
-    Applies the spatial di...
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Tuple`
-- `scipy.sparse.csc_matrix`
-- `domain.domain_7d.Domain7D`
-
----
-
-### bhlff/core/bvp/envelope_equation/derivative_operators/temporal_operators.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Temporal derivative operators for 7D BVP envelope equation.
-
-This module implements temporal derivative operators for time evolution
-in the 7D BVP envelope equation using backward difference schemes.
-
-Physical Meaning:
-    Temporal derivative operators implement backward difference schemes
-    for computing temporal derivatives in the time coordinate t of the
-    7D space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
-
-Mathematical Foundation:
-    Implements temporal derivative operators for:
-    - Temporal derivatives: ∂ₜa with backward differences
-    - Time evolution schemes for envelope equation
-
-Example:
-    >>> temporal_ops = TemporalOperators(domain_7d)
-    >>> temporal_ops.setup_operators()
-    >>> derivative = temporal_ops.apply_derivative(field)
-```
-
-**Классы:**
-
-- **TemporalOperators**
-  - Описание: Temporal derivative operators for 7D BVP envelope equation.
-
-Physical Meaning:
-    Implements tempor...
-
-  **Методы:**
-  - 🔒 `__init__(domain_7d)`
-    - Initialize temporal derivative operators.
-
-Physical Meaning:
-    Sets up the tem...
-  - `setup_operators()`
-    - Setup temporal derivative operator.
-
-Physical Meaning:
-    Initializes the tempo...
-  - 🔒 `_setup_temporal_derivative()`
-    - Setup temporal derivative operator.
-
-Physical Meaning:
-    Creates the temporal ...
-  - 🔒 `_create_temporal_derivative_operator(N_t, dt)`
-    - Create temporal derivative operator.
-
-Physical Meaning:
-    Creates a temporal d...
-  - `apply_derivative(field)`
-    - Apply temporal derivative operator.
-
-Physical Meaning:
-    Applies the temporal ...
-  - `get_time_step()`
-    - Get time step size.
-
-Physical Meaning:
-    Returns the time step size used in th...
-  - `get_time_points()`
-    - Get number of time points.
-
-Physical Meaning:
-    Returns the number of time poi...
-
-**Основные импорты:**
-
-- `numpy`
-- `scipy.sparse.csc_matrix`
-- `domain.domain_7d.Domain7D`
-
----
-
-### bhlff/core/bvp/envelope_equation/derivative_operators_facade.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Facade for derivative operators in 7D BVP envelope equation.
-
-This module provides a unified interface to all derivative operators
-needed for the 7D BVP envelope equation, coordinating spatial, phase,
-and temporal operators through a single facade class.
-
-Physical Meaning:
-    The derivative operators facade provides a unified interface to
-    all derivative operations needed for the 7D envelope equation
-    in space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ, coordinating spatial,
-    phase, and temporal derivatives.
-
-Mathematical Foundation:
-    Coordinates finite difference operators for spatial coordinates,
-    periodic operators for phase coordinates, and backward difference
-    operators for temporal evolution through a single interface.
-
-Example:
-    >>> operators = DerivativeOperators7D(domain_7d)
-    >>> operators.setup_operators()
-    >>> gradient = operators.apply_spatial_gradient(field, axis=0)
-```
-
-**Классы:**
-
-- **DerivativeOperators7D**
-  - Описание: 7D derivative operators facade for BVP envelope equation.
-
-Physical Meaning:
-    Provides a unified ...
-
-  **Методы:**
-  - 🔒 `__init__(domain_7d)`
-    - Initialize derivative operators facade.
-
-Physical Meaning:
-    Sets up the deriv...
-  - `setup_operators()`
-    - Setup all derivative operators for 7D space-time.
-
-Physical Meaning:
-    Initial...
-  - `apply_spatial_gradient(field, axis)`
-    - Apply spatial gradient operator.
-
-Physical Meaning:
-    Applies the spatial grad...
-  - `apply_spatial_divergence(field, axis)`
-    - Apply spatial divergence operator.
-
-Physical Meaning:
-    Applies the spatial di...
-  - `apply_phase_gradient(field, axis)`
-    - Apply phase gradient operator.
-
-Physical Meaning:
-    Applies the phase gradient...
-  - `apply_phase_divergence(field, axis)`
-    - Apply phase divergence operator.
-
-Physical Meaning:
-    Applies the phase diverg...
-  - `apply_temporal_derivative(field)`
-    - Apply temporal derivative operator.
-
-Physical Meaning:
-    Applies the temporal ...
-  - `spatial()`
-    - Get spatial operators component....
-  - `phase()`
-    - Get phase operators component....
-  - `temporal()`
-    - Get temporal operators component....
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Tuple`
-- `domain.domain_7d.Domain7D`
-- `derivative_operators.spatial_operators.SpatialOperators`
-- `derivative_operators.phase_operators.PhaseOperators`
-
----
-
-### bhlff/core/bvp/envelope_equation/nonlinear_terms.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Nonlinear terms for 7D BVP envelope equation.
-
-This module implements the nonlinear stiffness and susceptibility terms
-for the 7D BVP envelope equation, including amplitude-dependent
-coefficients and quench effects.
-
-Physical Meaning:
-    The nonlinear terms represent the amplitude-dependent response of
-    the medium to the BVP field, including nonlinear stiffness κ(|a|)
-    and effective susceptibility χ(|a|) with quench effects.
-
-Mathematical Foundation:
-    Implements:
-    - Nonlinear stiffness: κ(|a|) = κ₀ + κ₂|a|²
-    - Effective susceptibility: χ(|a|) = χ' + iχ''(|a|)
-    - Quench effects through amplitude-dependent terms
-
-Example:
-    >>> nonlinear = NonlinearTerms7D(config)
-    >>> nonlinear.setup_terms()
-    >>> kappa = nonlinear.compute_stiffness(amplitude)
-    >>> chi = nonlinear.compute_susceptibility(amplitude)
-```
-
-**Классы:**
-
-- **NonlinearTerms7D**
-  - Описание: 7D nonlinear terms for BVP envelope equation.
-
-Physical Meaning:
-    Implements the nonlinear stiffn...
-
-  **Методы:**
-  - 🔒 `__init__(domain_7d, config)`
-    - Initialize nonlinear terms.
-
-Physical Meaning:
-    Sets up the nonlinear terms w...
-  - `setup_terms()`
-    - Setup nonlinear stiffness and susceptibility terms.
-
-Physical Meaning:
-    Initi...
-  - `compute_stiffness(amplitude)`
-    - Compute nonlinear stiffness κ(|a|).
-
-Physical Meaning:
-    Computes the amplitud...
-  - `compute_susceptibility(amplitude)`
-    - Compute effective susceptibility χ(|a|).
-
-Physical Meaning:
-    Computes the amp...
-  - `compute_stiffness_derivative(amplitude)`
-    - Compute derivative of stiffness with respect to amplitude.
-
-Physical Meaning:
-  ...
-  - `compute_susceptibility_derivative(amplitude)`
-    - Compute derivative of susceptibility with respect to amplitude.
-
-Physical Meanin...
-  - `get_parameters()`
-    - Get nonlinear term parameters.
-
-Physical Meaning:
-    Returns the current values...
-  - `update_parameters(new_params)`
-    - Update nonlinear term parameters.
-
-Physical Meaning:
-    Updates the nonlinear p...
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Dict`
-- `typing.Any`
-- `typing.Callable`
-- `domain.domain_7d.Domain7D`
-
----
-
-### bhlff/core/bvp/envelope_equation/solver_core.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Facade for solver core modules.
-
-This module provides a unified interface for all solver core
-functionality, delegating to specialized modules for different
-aspects of solver core operations.
-```
-
-**Основные импорты:**
-
-- `solver_core_basic.EnvelopeSolverCoreBasic`
-- `solver_core_advanced.EnvelopeSolverCoreAdvanced`
-
----
-
-### bhlff/core/bvp/envelope_equation/solver_core_advanced.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Advanced solver core facade for 7D BVP envelope equation.
-
-This module provides a unified interface for advanced solving functionality,
-delegating to specialized modules for different aspects of solving.
-```
-
-**Основные импорты:**
-
-- `advanced.SolverAdvancedCore`
-
----
-
-### bhlff/core/bvp/envelope_equation/solver_core_basic.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Basic solver core for 7D BVP envelope equation.
-
-This module implements the basic solving algorithms for the 7D BVP envelope
-equation, including core Newton-Raphson iterations and linear system solving.
-```
-
-**Классы:**
-
-- **EnvelopeSolverCoreBasic**
-  - Наследование: AbstractSolverCore
-  - Описание: Basic solver core for 7D BVP envelope equation.
-
-Physical Meaning:
-    Implements the basic solving ...
-
-  **Методы:**
-  - 🔒 `__init__(domain, config)`
-    - Initialize 7D envelope solver core.
-
-Physical Meaning:
-    Sets up the solver co...
-  - `solve_envelope(source)`
-    - Solve the 7D envelope equation.
-
-Physical Meaning:
-    Solves the 7D envelope eq...
-  - 🔒 `_initialize_solution(source)`
-    - Initialize solution field.
-
-Physical Meaning:
-    Initializes the solution field...
-  - 🔒 `_compute_residual(solution, source)`
-    - Compute residual of the envelope equation.
-
-Physical Meaning:
-    Computes the r...
-  - 🔒 `_compute_jacobian(solution)`
-    - Compute Jacobian matrix.
-
-Physical Meaning:
-    Computes the Jacobian matrix J =...
-  - 🔒 `_solve_linear_system(jacobian, residual)`
-    - Solve linear system J·δa = -R.
-
-Physical Meaning:
-    Solves the linearized syst...
-  - 🔒 `_smooth_field(field)`
-    - Apply smoothing to field to avoid singularities.
-
-Args:
-    field (np.ndarray): ...
-  - 🔒 `_compute_nonlinear_stiffness(solution)`
-    - Compute nonlinear stiffness κ(|a|).
-
-Physical Meaning:
-    Computes the nonlinea...
-  - 🔒 `_compute_effective_susceptibility(solution)`
-    - Compute effective susceptibility χ(|a|).
-
-Physical Meaning:
-    Computes the eff...
-  - 🔒 `_compute_divergence_term(solution, stiffness)`
-    - Compute divergence term ∇·(κ(|a|)∇a).
-
-Physical Meaning:
-    Computes the diverg...
-  - 🔒 `_compute_susceptibility_term(solution, susceptibility)`
-    - Compute susceptibility term k₀²χ(|a|)a.
-
-Physical Meaning:
-    Computes the susc...
-  - 🔒 `_compute_gradient(field)`
-    - Compute gradient of field.
-
-Args:
-    field (np.ndarray): Field to differentiate...
-  - 🔒 `_compute_divergence(vector_field)`
-    - Compute divergence of vector field.
-
-Args:
-    vector_field (np.ndarray): Vector...
-  - 🔒 `_compute_jacobian_row(solution, idx)`
-    - Compute Jacobian row for a specific point.
-
-Args:
-    solution (np.ndarray): Cur...
-  - `get_convergence_info()`
-    - Get convergence information.
-
-Returns:
-    Dict[str, Any]: Convergence informati...
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Dict`
-- `typing.Any`
-- `typing.Optional`
-- `typing.Tuple`
-- `scipy.sparse.csc_matrix`
-- `scipy.sparse.lil_matrix`
-- `domain.domain_7d.Domain7D`
-- `abstract_solver_core.AbstractSolverCore`
-
----
-
-### bhlff/core/bvp/envelope_solver/__init__.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Envelope solver package for BVP envelope equation.
-
-This package provides modular components for solving the 7D BVP
-envelope equation, including residual computation, Jacobian calculation,
-and Newton-Raphson system solving.
-
-Physical Meaning:
-    Provides modular components for solving the nonlinear 7D envelope
-    equation ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t) using advanced
-    numerical methods in M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
-
-Mathematical Foundation:
-    Implements Newton-Raphson method with line search and regularization
-    for robust solution of nonlinear 7D envelope equations with gradients
-    in all 7 dimensions.
-
-Example:
-    >>> from .envelope_solver_core import EnvelopeSolverCore
-    >>> from .residual_computer import ResidualComputer
-    >>> core = EnvelopeSolverCore(domain, config)
-    >>> residual = core.compute_residual(envelope, source)
-```
-
-**Основные импорты:**
-
-- `envelope_solver_core.EnvelopeSolverCore`
-- `newton_solver.NewtonSolver`
-- `gradient_computer.GradientComputer`
-
----
-
-### bhlff/core/bvp/envelope_solver/envelope_solver_core.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Core envelope solver facade for BVP envelope equation.
-
-This module provides the main facade class for the envelope solver,
-coordinating all components for solving the 7D BVP envelope equation.
-
-Physical Meaning:
-    Provides the main interface for solving the nonlinear 7D envelope
-    equation ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t) using advanced
-    numerical methods in M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
-
-Mathematical Foundation:
-    Coordinates Newton-Raphson method with line search and regularization
-    for robust solution of nonlinear 7D envelope equations.
-
-Example:
-    >>> core = EnvelopeSolverCore(domain, config)
-    >>> residual = core.compute_residual(envelope, source)
-    >>> jacobian = core.compute_jacobian(envelope)
-```
-
-**Классы:**
-
-- **EnvelopeSolverCore**
-  - Наследование: AbstractSolverCore
-  - Описание: Core facade for 7D BVP envelope equation solver.
-
-Physical Meaning:
-    Coordinates all components f...
-
-  **Методы:**
-  - 🔒 `__init__(domain, config, constants)`
-    - Initialize envelope solver core.
-
-Physical Meaning:
-    Sets up the core mathema...
-  - `solve_newton_system(jacobian, residual)`
-    - Solve Newton-Raphson system for envelope equation.
-
-Physical Meaning:
-    Solves...
-  - `compute_gradient(envelope, source)`
-    - Compute gradient for fallback gradient descent.
-
-Physical Meaning:
-    Computes ...
-  - 🔒 `__repr__()`
-    - String representation of envelope solver core....
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Dict`
-- `typing.Any`
-- `domain.Domain`
-- `bvp_constants.BVPConstants`
-- `abstract_solver_core.AbstractSolverCore`
-
----
-
-### bhlff/core/bvp/envelope_solver/gradient_computer.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Gradient computation for 7D BVP envelope equation.
-
-This module implements gradient computation for fallback gradient descent
-when Newton-Raphson method fails in solving the 7D BVP envelope equation.
-
-Physical Meaning:
-    Computes the gradient of the residual norm for use in gradient descent
-    when Newton method fails, providing robust fallback optimization.
-
-Mathematical Foundation:
-    Gradient is ∇||r||² = 2 * Re(r* * ∂r/∂a) computed using finite differences.
-
-Example:
-    >>> computer = GradientComputer(domain, constants)
-    >>> gradient = computer.compute_gradient(envelope, source)
-```
-
-**Классы:**
-
-- **GradientComputer**
-  - Описание: Gradient computation for 7D BVP envelope equation.
-
-Physical Meaning:
-    Computes the gradient of t...
-
-  **Методы:**
-  - 🔒 `__init__(domain, constants)`
-    - Initialize gradient computer.
-
-Physical Meaning:
-    Sets up the gradient comput...
-  - `compute_gradient(envelope, source)`
-    - Compute gradient for fallback gradient descent.
-
-Physical Meaning:
-    Computes ...
-  - 🔒 `__repr__()`
-    - String representation of gradient computer....
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Dict`
-- `typing.Any`
-- `domain.Domain`
-- `bvp_constants.BVPConstants`
-- `abstract_solver_core.AbstractSolverCore`
-
----
-
-### bhlff/core/bvp/envelope_solver/newton_solver.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Newton-Raphson solver for 7D BVP envelope equation.
-
-This module implements the Newton-Raphson system solver for the 7D BVP
-envelope equation with regularization and advanced numerical methods.
-
-Physical Meaning:
-    Solves the linear system J * δa = -r for the Newton update step
-    using advanced numerical methods with regularization.
-
-Mathematical Foundation:
-    Solves J * δa = -r where J is the Jacobian and r is the residual,
-    with regularization for numerical stability.
-
-Example:
-    >>> solver = NewtonSolver(domain, constants)
-    >>> delta = solver.solve_newton_system(jacobian, residual)
-```
-
-**Классы:**
-
-- **NewtonSolver**
-  - Описание: Newton-Raphson solver for 7D BVP envelope equation.
-
-Physical Meaning:
-    Solves the linear system ...
-
-  **Методы:**
-  - 🔒 `__init__(domain, constants)`
-    - Initialize Newton solver.
-
-Physical Meaning:
-    Sets up the Newton-Raphson solv...
-  - `solve_newton_system(jacobian, residual)`
-    - Solve Newton system J * δa = -r.
-
-Physical Meaning:
-    Solves the linear system...
-  - 🔒 `__repr__()`
-    - String representation of Newton solver....
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Dict`
-- `typing.Any`
-- `domain.Domain`
-- `bvp_constants.BVPConstants`
-
----
-
-### bhlff/core/bvp/envelope_solver_line_search.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-Line search algorithms for BVP envelope equation solver.
-
-This module implements advanced line search algorithms for the Newton-Raphson
-method used in solving the BVP envelope equation.
-
-Physical Meaning:
-    Provides line search algorithms to find optimal step sizes along
-    Newton directions for robust convergence of the envelope equation solver.
-
-Mathematical Foundation:
-    Implements backtracking line search with Armijo condition and
-    advanced step size selection algorithms.
-
-Example:
-    >>> line_search = EnvelopeSolverLineSearch()
-    >>> step_size = line_search.perform_line_search(envelope, delta, residual, source)
-```
-
-**Классы:**
-
-- **EnvelopeSolverLineSearch**
-  - Описание: Line search algorithms for envelope equation solver.
-
-Physical Meaning:
-    Implements advanced line...
-
-  **Методы:**
-  - 🔒 `__init__(constants)`
-    - Initialize line search algorithms.
-
-Args:
-    constants (BVPConstants, optional)...
-  - `perform_line_search(envelope, delta_envelope, residual, source, initial_step, residual_func)`
-    - Perform line search for optimal step size.
-
-Physical Meaning:
-    Finds the opti...
-  - `perform_wolfe_line_search(envelope, delta_envelope, residual, source, initial_step, residual_func)`
-    - Perform Wolfe line search for optimal step size.
-
-Physical Meaning:
-    Finds th...
-  - `perform_adaptive_line_search(envelope, delta_envelope, residual, source, initial_step, residual_func)`
-    - Perform adaptive line search with dynamic parameters.
-
-Physical Meaning:
-    Ada...
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Callable`
-- `typing.Optional`
-- `bvp_constants.BVPConstants`
-
----
-
 ### bhlff/core/bvp/impedance_core.py
 
 **Описание модуля:**
@@ -5325,6 +3802,149 @@ Example:
 - `level_c_bvp_integration.LevelCBVPIntegration`
 - `level_d_bvp_integration.LevelDBVPIntegration`
 - `level_e_bvp_integration.LevelEBVPIntegration`
+
+---
+
+### bhlff/core/bvp/memory_decorator.py
+
+**Описание модуля:**
+
+```
+Author: Vasiliy Zdanovskiy
+email: vasilyvz@gmail.com
+
+Memory protection decorator for BVP calculations.
+
+This module provides a universal decorator for memory protection
+that can be applied to any BVP calculation method to prevent
+out-of-memory errors.
+
+Physical Meaning:
+    Provides automatic memory protection for all BVP calculations
+    by monitoring memory usage and preventing calculations that
+    would exceed system memory limits.
+
+Mathematical Foundation:
+    Estimates memory requirements based on input parameters
+    and applies memory protection before executing calculations.
+
+Example:
+    >>> @memory_protected
+    >>> def solve_equation(domain_shape, data_type):
+    >>>     # Calculation code here
+    >>>     pass
+```
+
+**Функции:**
+
+- `memory_protected(memory_threshold, shape_param, dtype_param)`
+  - Decorator for automatic memory protection.
+
+Physical Meaning:
+    Automatically ...
+- `memory_protected_method(memory_threshold, shape_param, dtype_param)`
+  - Decorator for automatic memory protection on class methods.
+
+Physical Meaning:
+ ...
+- `memory_protected_class_method(memory_threshold, shape_param, dtype_param)`
+  - Decorator for automatic memory protection on class methods with self access.
+
+Ph...
+- `memory_protected_function(memory_threshold, shape_param, dtype_param)`
+  - Decorator for automatic memory protection on standalone functions.
+
+Physical Mea...
+- `decorator(func)`
+- `decorator(func)`
+- `decorator(func)`
+- `decorator(func)`
+- `wrapper()`
+- `wrapper(self)`
+- `wrapper(self)`
+- `wrapper()`
+
+**Основные импорты:**
+
+- `functools`
+- `numpy`
+- `typing.Callable`
+- `typing.Any`
+- `typing.Tuple`
+- `typing.Optional`
+- `memory_protection.MemoryProtector`
+
+---
+
+### bhlff/core/bvp/memory_protection.py
+
+**Описание модуля:**
+
+```
+Author: Vasiliy Zdanovskiy
+email: vasilyvz@gmail.com
+
+Memory protection module for BVP calculations.
+
+This module implements memory protection mechanisms to prevent
+out-of-memory errors during large-scale 7D BVP calculations.
+
+Physical Meaning:
+    Monitors memory usage during BVP calculations to ensure
+    computational resources are used efficiently and prevent
+    system crashes due to excessive memory consumption.
+
+Mathematical Foundation:
+    Estimates memory requirements based on domain size and
+    data types, providing early warning when memory usage
+    approaches system limits.
+
+Example:
+    >>> protector = MemoryProtector()
+    >>> protector.check_memory_usage(domain_shape, data_type)
+```
+
+**Классы:**
+
+- **MemoryProtector**
+  - Описание: Memory protection for BVP calculations.
+
+Physical Meaning:
+    Monitors memory usage during BVP calc...
+
+  **Методы:**
+  - 🔒 `__init__(memory_threshold)`
+    - Initialize memory protector.
+
+Physical Meaning:
+    Sets up memory protection wi...
+  - `check_memory_usage(domain_shape, data_type)`
+    - Check if memory usage would exceed threshold.
+
+Physical Meaning:
+    Estimates m...
+  - `get_memory_info()`
+    - Get current memory information.
+
+Physical Meaning:
+    Returns current memory us...
+  - `estimate_memory_requirement(domain_shape, data_type)`
+    - Estimate memory requirement for given domain and data type.
+
+Physical Meaning:
+ ...
+  - `check_and_warn(domain_shape, data_type)`
+    - Check memory usage and issue warning if approaching threshold.
+
+Physical Meaning...
+
+**Основные импорты:**
+
+- `psutil`
+- `numpy`
+- `typing.Tuple`
+- `typing.Optional`
+- `warnings`
 
 ---
 
@@ -6707,6 +5327,25 @@ Physical Meaning:
 
 Physical Meaning:
     Computes the electroweak cu...
+  - 🔒 `_extract_phase_components(envelope)`
+    - Extract genuine U(1)³ phase components from 7D envelope field.
+
+Physical Meaning...
+  - 🔒 `_compute_phase_component_1(envelope)`
+    - Compute first U(1) phase component from 7D envelope.
+
+Physical Meaning:
+    Comp...
+  - 🔒 `_compute_phase_component_2(envelope)`
+    - Compute second U(1) phase component from 7D envelope.
+
+Physical Meaning:
+    Com...
+  - 🔒 `_compute_phase_component_3(envelope)`
+    - Compute third U(1) phase component from 7D envelope.
+
+Physical Meaning:
+    Comp...
 
 **Основные импорты:**
 
@@ -7010,15 +5649,97 @@ Physical Meaning:
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-Advanced power law analysis facade for BVP framework.
+Advanced power law analysis for BVP framework.
 
-This module provides a unified interface for power law analysis,
-delegating to specialized modules for different aspects of analysis.
+This module implements comprehensive power law analysis for the
+7D BVP field, including scaling regions, critical exponents,
+and correlation functions according to the theoretical framework.
+
+Physical Meaning:
+    Analyzes power law behavior in the BVP field, including
+    scaling regions, critical exponents, and correlation
+    functions according to the theoretical framework.
+
+Mathematical Foundation:
+    Implements power law analysis with proper scaling behavior
+    and critical exponent computation for 7D phase field theory.
+
+Example:
+    >>> analyzer = PowerLawAnalysis(domain_7d, config)
+    >>> results = analyzer.analyze_power_law(field)
+    >>> print(f"Critical exponent: {results['critical_exponent']}")
 ```
+
+**Классы:**
+
+- **PowerLawAnalysis**
+  - Описание: Advanced power law analysis for BVP framework.
+
+Physical Meaning:
+    Analyzes power law behavior in...
+
+  **Методы:**
+  - 🔒 `__init__(domain, config, constants)`
+    - Initialize power law analyzer.
+
+Physical Meaning:
+    Sets up the power law anal...
+  - 🔒 `_setup_analysis_parameters()`
+    - Setup analysis parameters.
+
+Physical Meaning:
+    Initializes parameters for pow...
+  - `analyze_power_law(field)`
+    - Analyze power law behavior in the field.
+
+Physical Meaning:
+    Computes power l...
+  - 🔒 `_compute_correlation_function(field)`
+    - Compute correlation function for power law analysis.
+
+Physical Meaning:
+    Comp...
+  - 🔒 `_analyze_scaling_behavior(correlation_func)`
+    - Analyze scaling behavior in correlation function.
+
+Physical Meaning:
+    Identif...
+  - 🔒 `_find_scaling_region(correlation_func)`
+    - Find region of power law behavior.
+
+Physical Meaning:
+    Identifies the range o...
+  - 🔒 `_compute_scaling_properties(correlation_func, scaling_region)`
+    - Compute scaling properties in the scaling region.
+
+Physical Meaning:
+    Compute...
+  - 🔒 `_compute_critical_exponent(correlation_func, scaling_analysis)`
+    - Compute critical exponent from scaling analysis.
+
+Physical Meaning:
+    Computes...
+  - 🔒 `_compute_quality_metrics(correlation_func, scaling_analysis)`
+    - Compute quality metrics for the power law analysis.
+
+Physical Meaning:
+    Compu...
+  - `get_analysis_parameters()`
+    - Get current analysis parameters.
+
+Physical Meaning:
+    Returns the current para...
 
 **Основные импорты:**
 
-- `power_law.PowerLawCore`
+- `numpy`
+- `typing.Dict`
+- `typing.Any`
+- `typing.Tuple`
+- `typing.Optional`
+- `scipy.optimize.curve_fit`
+- `scipy.stats.linregress`
+- `domain.Domain`
 
 ---
 
@@ -7259,6 +5980,92 @@ Physical Meaning:
 
 ---
 
+### bhlff/core/bvp/quench_characteristics.py
+
+**Описание модуля:**
+
+```
+Author: Vasiliy Zdanovskiy
+email: vasilyvz@gmail.com
+
+Quench characteristics computation.
+
+This module implements the computation of quench characteristics
+such as center of mass, strength, and local frequency analysis
+for quench detection in 7D space-time.
+
+Physical Meaning:
+    Computes various characteristics of quench events including
+    center of mass, strength measures, and local frequency
+    analysis to provide comprehensive quench event information.
+
+Mathematical Foundation:
+    - Center of mass: Σ(r_i * w_i) / Σ(w_i)
+    - Quench strength: max(|A|) within component
+    - Local frequency: |dφ/dt| / dt
+    - Gradient magnitude: |∇A| in 7D space-time
+
+Example:
+    >>> characteristics = QuenchCharacteristics(domain_7d)
+    >>> center = characteristics.compute_center_of_mass(component_mask)
+    >>> strength = characteristics.compute_quench_strength(component_mask, amplitude)
+```
+
+**Классы:**
+
+- **QuenchCharacteristics**
+  - Описание: Computer for quench event characteristics.
+
+Physical Meaning:
+    Computes various characteristics o...
+
+  **Методы:**
+  - 🔒 `__init__(domain_7d)`
+    - Initialize quench characteristics computer.
+
+Physical Meaning:
+    Sets up the c...
+  - `compute_center_of_mass(component_mask)`
+    - Compute center of mass for a quench component.
+
+Physical Meaning:
+    Calculates...
+  - `compute_quench_strength(component_mask, amplitude)`
+    - Compute quench strength for a component.
+
+Physical Meaning:
+    Calculates the s...
+  - `compute_local_frequency(envelope)`
+    - Compute local frequency from phase evolution.
+
+Physical Meaning:
+    Calculates ...
+  - `compute_detuning_strength(component_mask, detuning)`
+    - Compute detuning strength for a component.
+
+Physical Meaning:
+    Calculates the...
+  - `compute_7d_gradient_magnitude(envelope)`
+    - Compute 7D gradient magnitude of envelope field.
+
+Physical Meaning:
+    Calculat...
+  - `compute_gradient_strength(component_mask, gradient_magnitude)`
+    - Compute gradient strength for a component.
+
+Physical Meaning:
+    Calculates the...
+
+**Основные импорты:**
+
+- `numpy`
+- `typing.Tuple`
+- `typing.Dict`
+- `typing.Any`
+- `domain.domain_7d.Domain7D`
+
+---
+
 ### bhlff/core/bvp/quench_detector.py
 
 **Описание модуля:**
@@ -7322,60 +6129,6 @@ Physical Mean...
 
 Physical Meaning:
     Ensures that threshold par...
-  - 🔒 `_apply_morphological_operations(mask)`
-    - Apply morphological operations to filter noise in quench mask.
-
-Physical Meaning...
-  - 🔒 `_simple_morphological_filter(mask)`
-    - Simple morphological filtering without scipy dependency.
-
-Physical Meaning:
-    ...
-  - 🔒 `_find_connected_components(mask)`
-    - Find connected components in quench mask.
-
-Physical Meaning:
-    Groups nearby q...
-  - 🔒 `_simple_connected_components(mask)`
-    - Simple connected component analysis without scipy.
-
-Physical Meaning:
-    Basic ...
-  - 🔒 `_flood_fill_7d(mask, visited, component_mask, start_point)`
-    - Flood-fill algorithm for 7D connected components.
-
-Physical Meaning:
-    Recursi...
-  - 🔒 `_compute_center_of_mass(component_mask)`
-    - Compute center of mass for a quench component.
-
-Physical Meaning:
-    Calculates...
-  - 🔒 `_compute_quench_strength(component_mask, amplitude)`
-    - Compute quench strength for a component.
-
-Physical Meaning:
-    Calculates the s...
-  - 🔒 `_compute_local_frequency(envelope)`
-    - Compute local frequency from phase evolution.
-
-Physical Meaning:
-    Calculates ...
-  - 🔒 `_compute_detuning_strength(component_mask, detuning)`
-    - Compute detuning strength for a component.
-
-Physical Meaning:
-    Calculates the...
-  - 🔒 `_compute_7d_gradient_magnitude(envelope)`
-    - Compute 7D gradient magnitude of envelope field.
-
-Physical Meaning:
-    Calculat...
-  - 🔒 `_compute_gradient_strength(component_mask, gradient_magnitude)`
-    - Compute gradient strength for a component.
-
-Physical Meaning:
-    Calculates the...
 
 **Основные импорты:**
 
@@ -7385,9 +6138,181 @@ Physical Meaning:
 - `typing.List`
 - `typing.Tuple`
 - `domain.domain_7d.Domain7D`
+- `quench_thresholds.QuenchThresholdComputer`
+- `quench_morphology.QuenchMorphology`
+
+---
+
+### bhlff/core/bvp/quench_morphology.py
+
+**Описание модуля:**
+
+```
+Author: Vasiliy Zdanovskiy
+email: vasilyvz@gmail.com
+
+Morphological operations for quench detection.
+
+This module implements morphological operations for filtering noise
+and finding connected components in quench detection, providing
+robust quench event identification in 7D space-time.
+
+Physical Meaning:
+    Applies morphological operations to remove noise and fill gaps
+    in quench regions, improving detection quality. Groups nearby
+    quench events into connected components representing coherent
+    quench structures in 7D space-time.
+
+Mathematical Foundation:
+    - Binary opening: Erosion followed by dilation
+    - Binary closing: Dilation followed by erosion
+    - Connected component analysis: Groups spatially/phase/temporally connected events
+
+Example:
+    >>> morphology = QuenchMorphology()
+    >>> filtered_mask = morphology.apply_operations(quench_mask)
+    >>> components = morphology.find_connected_components(filtered_mask)
+```
+
+**Классы:**
+
+- **QuenchMorphology**
+  - Описание: Morphological operations for quench detection.
+
+Physical Meaning:
+    Applies morphological operatio...
+
+  **Методы:**
+  - 🔒 `__init__()`
+    - Initialize morphological operations processor....
+  - `apply_morphological_operations(mask)`
+    - Apply morphological operations to filter noise in quench mask.
+
+Physical Meaning...
+  - `find_connected_components(mask)`
+    - Find connected components in quench mask.
+
+Physical Meaning:
+    Groups nearby q...
+  - 🔒 `_apply_scipy_operations(mask)`
+    - Apply morphological operations using scipy.
+
+Physical Meaning:
+    Uses scipy's ...
+  - 🔒 `_apply_simple_operations(mask)`
+    - Simple morphological filtering without scipy dependency.
+
+Physical Meaning:
+    ...
+  - 🔒 `_find_scipy_components(mask)`
+    - Find connected components using scipy.
+
+Physical Meaning:
+    Uses scipy's optim...
+  - 🔒 `_find_simple_components(mask)`
+    - Simple connected component analysis without scipy.
+
+Physical Meaning:
+    Basic ...
+  - 🔒 `_flood_fill_7d(mask, visited, component_mask, start_point)`
+    - Flood-fill algorithm for 7D connected components.
+
+Physical Meaning:
+    Recursi...
+
+**Основные импорты:**
+
+- `numpy`
+- `typing.Dict`
+- `typing.Any`
+- `typing.Tuple`
+- `typing.List`
 - `scipy.ndimage.binary_opening`
 - `scipy.ndimage.binary_closing`
 - `scipy.ndimage.label`
+
+---
+
+### bhlff/core/bvp/quench_thresholds.py
+
+**Описание модуля:**
+
+```
+Author: Vasiliy Zdanovskiy
+email: vasilyvz@gmail.com
+
+Physical threshold computation for quench detection.
+
+This module implements the computation of quench thresholds from
+physical principles according to the BVP theoretical framework,
+replacing hardcoded threshold values with physics-based calculations.
+
+Physical Meaning:
+    Computes quench thresholds based on the physical properties
+    of the BVP field, ensuring they are consistent with the
+    theoretical framework. Thresholds are derived from field
+    energy density, phase coherence, gradient magnitude, and
+    frequency detuning according to theoretical principles.
+
+Mathematical Foundation:
+    Thresholds are computed from:
+    - Field energy density: E = |A|²/2
+    - Phase coherence: coherence measure of phase field
+    - Gradient magnitude: |∇A| spatial/phase/temporal gradients
+    - Frequency detuning: |ω_local - ω_0| frequency analysis
+
+Example:
+    >>> threshold_computer = QuenchThresholdComputer(domain_7d)
+    >>> thresholds = threshold_computer.compute_all_thresholds()
+    >>> print(f"Amplitude threshold: {thresholds['amplitude']}")
+```
+
+**Классы:**
+
+- **QuenchThresholdComputer**
+  - Описание: Computer for quench thresholds from physical principles.
+
+Physical Meaning:
+    Computes quench thre...
+
+  **Методы:**
+  - 🔒 `__init__(domain_7d)`
+    - Initialize quench threshold computer.
+
+Physical Meaning:
+    Sets up the thresho...
+  - `compute_all_thresholds()`
+    - Compute all quench thresholds from physical principles.
+
+Physical Meaning:
+    C...
+  - `compute_amplitude_threshold()`
+    - Compute amplitude threshold from field energy density.
+
+Physical Meaning:
+    Co...
+  - `compute_detuning_threshold()`
+    - Compute detuning threshold from frequency analysis.
+
+Physical Meaning:
+    Compu...
+  - `compute_gradient_threshold()`
+    - Compute gradient threshold from field gradients.
+
+Physical Meaning:
+    Computes...
+  - `compute_carrier_frequency()`
+    - Compute carrier frequency from domain properties.
+
+Physical Meaning:
+    Compute...
+
+**Основные импорты:**
+
+- `numpy`
+- `typing.Dict`
+- `typing.Any`
+- `domain.domain_7d.Domain7D`
 
 ---
 
@@ -8164,6 +7089,248 @@ Physical Meaning:
 - `domain.domain.Domain`
 - `bvp_constants.BVPConstants`
 - `bvp_postulate_base.BVPPostulate`
+
+---
+
+### bhlff/core/bvp/topological_charge_analyzer.py
+
+**Описание модуля:**
+
+```
+Author: Vasiliy Zdanovskiy
+email: vasilyvz@gmail.com
+
+Topological charge analyzer for BVP framework.
+
+This module implements comprehensive topological charge analysis for the
+7D BVP field, including winding number computation, defect identification,
+and topological characterization according to the theoretical framework.
+
+Physical Meaning:
+    Analyzes topological charge in the BVP field, identifying
+    topological defects and their properties according to the
+    theoretical framework.
+
+Mathematical Foundation:
+    Implements topological charge analysis with proper winding
+    number computation and defect characterization for 7D phase field theory.
+
+Example:
+    >>> analyzer = TopologicalChargeAnalyzer(domain, config)
+    >>> results = analyzer.compute_topological_charge(field)
+    >>> print(f"Total charge: {results['topological_charge']}")
+```
+
+**Классы:**
+
+- **TopologicalChargeAnalyzer**
+  - Описание: Analyzer for topological charge in BVP field.
+
+Physical Meaning:
+    Computes the topological charge...
+
+  **Методы:**
+  - 🔒 `__init__(domain, config, constants)`
+    - Initialize topological charge analyzer.
+
+Physical Meaning:
+    Sets up the topol...
+  - 🔒 `_setup_analysis_parameters()`
+    - Setup analysis parameters.
+
+Physical Meaning:
+    Initializes parameters for top...
+  - `compute_topological_charge(field)`
+    - Compute topological charge using block processing and vectorization.
+
+Physical M...
+  - 🔒 `_compute_defect_charge(phase, defect_location)`
+    - Compute topological charge around a defect with CUDA optimization.
+
+Physical Mea...
+  - 🔒 `_compute_defect_charge_cuda(phase, defect_location)`
+    - Compute topological charge using CUDA acceleration.
+
+Physical Meaning:
+    CUDA-...
+  - 🔒 `_compute_defect_charge_cpu(phase, defect_location)`
+    - Compute topological charge using CPU with vectorized operations.
+
+Physical Meani...
+  - 🔒 `_determine_optimal_block_size(field_shape)`
+    - Determine optimal block size for memory-efficient processing.
+
+Physical Meaning:...
+  - 🔒 `_generate_overlapping_blocks(field_shape, block_size)`
+    - Generate overlapping blocks for processing large fields.
+
+Physical Meaning:
+    ...
+  - 🔒 `_find_defects_vectorized(phase_block)`
+    - Find topological defects using vectorized operations.
+
+Physical Meaning:
+    Ide...
+  - 🔒 `_find_defects_cuda_vectorized(phase_block)`
+    - Find defects using CUDA-accelerated vectorized operations.
+
+Physical Meaning:
+  ...
+  - 🔒 `_find_defects_cpu_vectorized(phase_block)`
+    - Find defects using CPU vectorized operations.
+
+Physical Meaning:
+    CPU-optimiz...
+  - 🔒 `_extract_defects_vectorized(high_grad_mask)`
+    - Extract defect locations using vectorized operations.
+
+Physical Meaning:
+    Ide...
+  - 🔒 `_compute_defect_charge_vectorized(phase, defect_location)`
+    - Compute topological charge using vectorized operations.
+
+Physical Meaning:
+    C...
+  - 🔒 `_compute_charge_cuda_vectorized(neighborhood)`
+    - Compute charge using CUDA vectorized operations.
+
+Physical Meaning:
+    CUDA-acc...
+  - 🔒 `_compute_charge_cpu_vectorized(neighborhood)`
+    - Compute charge using CPU vectorized operations.
+
+Physical Meaning:
+    CPU-optim...
+  - 🔒 `_compute_charge_stability(charges, locations)`
+    - Compute stability of topological charges.
+
+Physical Meaning:
+    Computes a meas...
+  - 🔒 `_analyze_defects(phase, charge_locations, charges)`
+    - Analyze topological defects in detail.
+
+Physical Meaning:
+    Performs detailed ...
+  - `analyze_phase_structure(field)`
+    - Analyze phase structure of the field.
+
+Physical Meaning:
+    Analyzes the phase ...
+  - `get_analysis_parameters()`
+    - Get current analysis parameters.
+
+Physical Meaning:
+    Returns the current para...
+
+**Основные импорты:**
+
+- `numpy`
+- `typing.Dict`
+- `typing.Any`
+- `typing.Tuple`
+- `typing.List`
+- `typing.Optional`
+- `scipy.ndimage.label`
+- `scipy.ndimage.center_of_mass`
+- `domain.Domain`
+- `bvp_constants.BVPConstants`
+
+---
+
+### bhlff/core/bvp/topological_defect_analyzer.py
+
+**Описание модуля:**
+
+```
+Author: Vasiliy Zdanovskiy
+email: vasilyvz@gmail.com
+
+Topological defect analyzer for BVP framework.
+
+This module implements analysis of topological defects in the
+7D BVP field, including defect identification, classification,
+and interaction analysis according to the theoretical framework.
+
+Physical Meaning:
+    Analyzes topological defects in the BVP field, identifying
+    their types, strengths, and interactions according to the
+    theoretical framework.
+
+Mathematical Foundation:
+    Implements topological defect analysis with proper defect
+    identification and characterization for 7D phase field theory.
+
+Example:
+    >>> analyzer = TopologicalDefectAnalyzer(domain, config)
+    >>> defects = analyzer.find_topological_defects(phase_field)
+    >>> print(f"Found {len(defects)} defects")
+```
+
+**Классы:**
+
+- **TopologicalDefectAnalyzer**
+  - Описание: Analyzer for topological defects in BVP field.
+
+Physical Meaning:
+    Identifies and analyzes topolo...
+
+  **Методы:**
+  - 🔒 `__init__(domain, config, constants)`
+    - Initialize topological defect analyzer.
+
+Physical Meaning:
+    Sets up the defec...
+  - 🔒 `_setup_analysis_parameters()`
+    - Setup analysis parameters.
+
+Physical Meaning:
+    Initializes parameters for top...
+  - `find_topological_defects(phase)`
+    - Find topological defects in the phase field with CUDA optimization.
+
+Physical Me...
+  - 🔒 `_find_topological_defects_cuda(phase)`
+    - Find topological defects using CUDA acceleration.
+
+Physical Meaning:
+    CUDA-ac...
+  - 🔒 `_find_topological_defects_cpu(phase)`
+    - Find topological defects using CPU with vectorized operations.
+
+Physical Meaning...
+  - `analyze_defect_types(phase, defect_locations)`
+    - Analyze types of topological defects.
+
+Physical Meaning:
+    Classifies topologi...
+  - `analyze_defect_interactions(defect_locations, defect_charges)`
+    - Analyze interactions between topological defects.
+
+Physical Meaning:
+    Compute...
+  - 🔒 `_extract_neighborhood(field, center, radius)`
+    - Extract neighborhood around a point.
+
+Physical Meaning:
+    Extracts a small nei...
+  - `get_analysis_parameters()`
+    - Get current analysis parameters.
+
+Physical Meaning:
+    Returns the current para...
+
+**Основные импорты:**
+
+- `numpy`
+- `typing.Dict`
+- `typing.Any`
+- `typing.Tuple`
+- `typing.List`
+- `typing.Optional`
+- `scipy.ndimage.label`
+- `scipy.ndimage.center_of_mass`
+- `domain.Domain`
+- `bvp_constants.BVPConstants`
 
 ---
 
@@ -12420,83 +11587,6 @@ Physical Meaning:
 
 ---
 
-### bhlff/core/sources/bvp_source_envelope.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-BVP source envelope and carrier generation implementation.
-
-This module provides envelope and carrier generation functionality for
-BVP-modulated sources in the 7D phase field theory.
-
-Physical Meaning:
-    BVP source envelope and carrier generation creates the envelope modulation
-    and high-frequency carrier components for BVP-modulated sources.
-
-Mathematical Foundation:
-    Implements envelope and carrier generation:
-    - Envelope: A(x) = A₀ * f(x)
-    - Carrier: exp(iω₀t) with frequency ω₀
-
-Example:
-    >>> envelope_generator = BVPSourceEnvelope(domain, config)
-    >>> envelope = envelope_generator.generate_envelope()
-    >>> carrier = envelope_generator.generate_carrier()
-```
-
-**Классы:**
-
-- **BVPSourceEnvelope**
-  - Описание: BVP source envelope and carrier generator.
-
-Physical Meaning:
-    Generates envelope modulation and ...
-
-  **Методы:**
-  - 🔒 `__init__(domain, config)`
-    - Initialize BVP source envelope generator.
-
-Physical Meaning:
-    Sets up the BVP...
-  - `generate_envelope()`
-    - Generate envelope modulation.
-
-Physical Meaning:
-    Creates the envelope modula...
-  - `generate_carrier(time)`
-    - Generate high-frequency carrier.
-
-Physical Meaning:
-    Creates the high-frequen...
-  - `generate_modulated_source(base_source, time)`
-    - Generate BVP-modulated source.
-
-Physical Meaning:
-    Creates the complete BVP-m...
-  - `get_envelope_info()`
-    - Get envelope information.
-
-Physical Meaning:
-    Returns information about the e...
-  - `get_carrier_info()`
-    - Get carrier information.
-
-Physical Meaning:
-    Returns information about the ca...
-
-**Основные импорты:**
-
-- `numpy`
-- `typing.Dict`
-- `typing.Any`
-- `domain.Domain`
-
----
-
 ### bhlff/core/sources/bvp_source_generators.py
 
 **Описание модуля:**
@@ -13063,87 +12153,6 @@ Physical Meaning:
 - `numpy`
 - `logging`
 - `domain.Domain`
-
----
-
-### bhlff/core/time/bvp_envelope_integrator.py
-
-**Описание модуля:**
-
-```
-Author: Vasiliy Zdanovskiy
-email: vasilyvz@gmail.com
-
-BVP Envelope integrator for 7D phase field dynamics.
-
-This module implements the BVP envelope integrator for solving dynamic
-phase field equations in 7D space-time using envelope modulation approach
-instead of classical exponential solutions.
-
-Physical Meaning:
-    BVP envelope integrator implements the envelope modulation approach
-    where all observed "modes" are envelope modulations and beatings of
-    the Base High-Frequency Field, not classical exponential solutions.
-
-Mathematical Foundation:
-    Implements envelope equation:
-    ∇·(κ(|a|)∇a) + k₀²χ(|a|)a = s(x,φ,t)
-    where κ(|a|) = κ₀ + κ₂|a|² is nonlinear stiffness and
-    χ(|a|) = χ' + iχ''(|a|) is effective susceptibility with quenches.
-```
-
-**Классы:**
-
-- **BVPEnvelopeIntegrator**
-  - Наследование: BaseTimeIntegrator
-  - Описание: BVP Envelope integrator for 7D phase field dynamics.
-
-Physical Meaning:
-    Implements envelope modu...
-
-  **Методы:**
-  - 🔒 `__init__(domain, parameters)`
-    - Initialize BVP envelope integrator.
-
-Physical Meaning:
-    Sets up the envelope ...
-  - 🔒 `_setup_envelope_coefficients()`
-    - Setup envelope coefficients for BVP integrator.
-
-Physical Meaning:
-    Pre-compu...
-  - `integrate(initial_field, source_field, time_steps)`
-    - Integrate the envelope equation over time using BVP approach.
-
-Physical Meaning:...
-  - `step(current_field, source_field, dt)`
-    - Perform a single time step using BVP envelope approach.
-
-Physical Meaning:
-    A...
-  - `integrate_envelope_modulation(initial_field, carrier_frequency, modulation_depth, time_steps)`
-    - Integrate with envelope modulation using BVP approach.
-
-Physical Meaning:
-    So...
-  - 🔒 `_handle_quench_event(field, time)`
-    - Handle quench event according to BVP theory.
-
-Physical Meaning:
-    Implements q...
-  - 🔒 `__repr__()`
-    - String representation of integrator....
-
-**Основные импорты:**
-
-- `typing.Dict`
-- `typing.Any`
-- `typing.Optional`
-- `typing.Tuple`
-- `numpy`
-- `logging`
-- `base_integrator.BaseTimeIntegrator`
-- `memory_kernel.MemoryKernel`
 
 ---
 
@@ -15742,18 +14751,16 @@ split into logical modules for better maintainability.
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-Basic advanced beating analysis modules for Level C.
+Comprehensive beating analysis modules for Level C.
 
-This package provides basic advanced beating analysis functionality
-for analyzing mode beating in the 7D phase field.
+This package provides comprehensive beating analysis functionality
+for analyzing mode beating in the 7D phase field according to the
+theoretical framework.
 ```
 
 **Основные импорты:**
 
-- `beating_basic_core.BeatingBasicCore`
-- `beating_basic_optimization.BeatingBasicOptimization`
-- `beating_basic_statistics.BeatingBasicStatistics`
-- `beating_basic_comparison.BeatingBasicComparison`
+- `beating_basic_core.BeatingAnalysisCore`
 
 ---
 
@@ -15827,31 +14834,41 @@ Physical Meaning:
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-Core basic advanced beating analysis for Level C.
+Comprehensive beating analysis for Level C.
 
-This module implements the core basic advanced beating analysis functionality
-for analyzing mode beating in the 7D phase field.
+This module implements comprehensive beating analysis functionality
+for analyzing mode beating in the 7D phase field according to the
+theoretical framework.
+
+Theoretical Background:
+    Mode beating in 7D phase field theory represents the interference
+    between different frequency components of the envelope field,
+    leading to characteristic beating patterns that reveal the
+    underlying mode structure and coupling mechanisms.
+
+Example:
+    >>> analyzer = BeatingAnalysisCore(bvp_core)
+    >>> results = analyzer.analyze_beating_comprehensive(envelope)
 ```
 
 **Классы:**
 
-- **BeatingBasicCore**
-  - Описание: Core basic advanced beating analysis for Level C analysis.
+- **BeatingAnalysisCore**
+  - Описание: Comprehensive beating analysis for Level C.
 
 Physical Meaning:
-    Provides core basi...
+    Provides comprehensive beating an...
 
   **Методы:**
   - 🔒 `__init__(bvp_core)`
-    - Initialize basic advanced beating core analyzer.
-
-Args:
-    bvp_core (BVPCore): ...
-  - `analyze_beating_optimized(envelope)`
-    - Analyze mode beating with optimization techniques.
+    - Initialize comprehensive beating analysis core.
 
 Physical Meaning:
-    Analyz...
+    Sets up t...
+  - `analyze_beating_comprehensive(envelope)`
+    - Comprehensive beating analysis according to theoretical framework.
+
+Physical Mea...
   - `analyze_beating_statistical(envelope)`
     - Analyze mode beating with statistical analysis.
 
@@ -15867,36 +14884,89 @@ Physical Meaning:
 
 Physical Meaning:
     Optimizes parameter...
-  - 🔒 `_analyze_beating_basic(envelope)`
-    - Perform basic beating analysis.
+  - 🔒 `_analyze_interference_theoretical(envelope)`
+    - Analyze interference patterns using theoretical framework.
 
 Physical Meaning:
-    Performs basic analysis o...
-  - 🔒 `_analyze_frequency_domain(envelope)`
-    - Analyze frequency domain characteristics.
+  ...
+  - 🔒 `_analyze_mode_coupling_theoretical(envelope)`
+    - Analyze mode coupling using theoretical framework.
 
 Physical Meaning:
-    Analyzes freque...
-  - 🔒 `_detect_interference_patterns(envelope)`
-    - Detect interference patterns in the envelope field.
+    Analyz...
+  - 🔒 `_analyze_phase_coherence_theoretical(envelope)`
+    - Analyze phase coherence using theoretical framework.
 
 Physical Meaning:
-    Detec...
-  - 🔒 `_calculate_beating_frequencies(frequency_analysis)`
-    - Calculate beating frequencies from frequency analysis.
+    Anal...
+  - `analyze_interference_theoretical(envelope)`
+  - `analyze_mode_coupling_theoretical(envelope)`
+  - `analyze_phase_coherence_theoretical(envelope)`
+  - `calculate_beating_frequencies_theoretical(envelope)`
+  - 🔒 `_calculate_beating_frequencies_theoretical(envelope)`
+    - Calculate beating frequencies using theoretical framework.
 
 Physical Meaning:
-    Ca...
-  - 🔒 `_analyze_mode_coupling(envelope, beating_frequencies)`
-    - Analyze mode coupling effects.
+  ...
+  - 🔒 `_validate_theoretical_consistency(envelope, analysis_results)`
+    - Validate theoretical consistency of analysis results.
 
 Physical Meaning:
-    Analyzes mode coupling eff...
-  - 🔒 `_calculate_beating_strength(envelope, beating_frequencies)`
-    - Calculate overall beating strength.
+    Val...
+  - 🔒 `_detect_spatial_interference_patterns(envelope_complex)`
+    - Detect spatial interference patterns.
 
 Physical Meaning:
-    Calculates the overal...
+    Detects spatial int...
+  - 🔒 `_decompose_mode_components(envelope)`
+    - Decompose envelope into mode components.
+
+Physical Meaning:
+    Decomposes the e...
+  - 🔒 `_calculate_coupling_matrix(mode_components)`
+    - Calculate coupling matrix between mode components.
+
+Physical Meaning:
+    Calcul...
+  - 🔒 `_calculate_phase_coherence(phase_field)`
+    - Calculate phase coherence.
+
+Physical Meaning:
+    Calculates the phase coherence...
+  - 🔒 `_analyze_phase_stability(phase_field)`
+    - Analyze phase stability.
+
+Physical Meaning:
+    Analyzes the stability of phase ...
+  - 🔒 `_calculate_phase_correlation(phase_field)`
+    - Calculate phase correlation.
+
+Physical Meaning:
+    Calculates the correlation b...
+  - 🔒 `_analyze_beating_patterns(envelope, beating_frequencies)`
+    - Analyze beating patterns.
+
+Physical Meaning:
+    Analyzes the characteristic bea...
+
+- **BeatingOptimization**
+
+  **Методы:**
+  - 🔒 `__init__(bvp_core)`
+  - `optimize_analysis(envelope, results)`
+  - `optimize_parameters(envelope, params)`
+
+- **BeatingStatistics**
+
+  **Методы:**
+  - 🔒 `__init__(bvp_core)`
+  - `perform_statistical_analysis(envelope, results)`
+
+- **BeatingComparison**
+
+  **Методы:**
+  - 🔒 `__init__(bvp_core)`
+  - `compare_analyses(results1, results2)`
 
 **Основные импорты:**
 
@@ -15904,9 +14974,12 @@ Physical Meaning:
 - `typing.Dict`
 - `typing.Any`
 - `typing.List`
+- `typing.Tuple`
 - `logging`
-- `bhlff.core.bvp.BVPCore`
-- `beating_basic_optimization.BeatingBasicOptimization`
+- `scipy.fft.fftn`
+- `scipy.fft.ifftn`
+- `scipy.fft.fftfreq`
+- `scipy.signal.find_peaks`
 
 ---
 
@@ -17443,11 +16516,31 @@ Physical Meaning:
   **Методы:**
   - 🔒 `__init__(bvp_core)`
     - Initialize beating frequency validation....
-  - `validate_beating_frequencies(frequencies)`
-    - Validate beating frequencies.
+  - `validate_beating_frequencies_physical(frequencies)`
+    - Physical validation of beating frequencies.
 
 Physical Meaning:
-    Validates beating frequenci...
+    Validates bea...
+  - 🔒 `_is_physically_valid_frequency(frequency)`
+    - Check if frequency is physically valid.
+
+Physical Meaning:
+    Validates that th...
+  - 🔒 `_is_within_theoretical_bounds(frequency)`
+    - Check if frequency is within theoretical bounds.
+
+Physical Meaning:
+    Validate...
+  - 🔒 `_analyze_frequency_harmonics(frequencies)`
+    - Analyze frequency harmonics and relationships.
+
+Physical Meaning:
+    Analyzes h...
+  - `validate_beating_frequencies(frequencies)`
+    - Legacy method for backward compatibility.
+
+Physical Meaning:
+    Basic frequency...
 
 **Основные импорты:**
 
@@ -24416,11 +23509,15 @@ Physical Meaning:
     Анализирует структуру Python кода,...
 
   **Методы:**
-  - 🔒 `__init__(root_dir, output_file)`
+  - 🔒 `__init__(root_dir, output_file, output_dir)`
     - Инициализация анализатора кода.
 
 Args:
     root_dir (str): Корневая директория д...
+  - 🔒 `_ensure_output_dir()`
+    - Создание выходной директории если она не существует....
+  - 🔒 `_get_output_path(filename)`
+    - Получение полного пути к выходному файлу....
   - `analyze_file(file_path)`
     - Анализ одного Python файла.
 
@@ -25012,6 +24109,50 @@ adaptive step size control.
 
 ---
 
+### test_beating_analysis_fix.py
+
+**Описание модуля:**
+
+```
+Test script for beating analysis fix.
+
+This script tests the comprehensive beating analysis implementation
+to ensure it works correctly and provides theoretical compliance.
+```
+
+**Классы:**
+
+- **MockBVPCore**
+
+  **Методы:**
+  - 🔒 `__init__()`
+
+- **MockBVPCore**
+
+  **Методы:**
+  - 🔒 `__init__()`
+
+**Функции:**
+
+- `test_beating_analysis_comprehensive()`
+  - Test comprehensive beating analysis....
+- `test_theoretical_consistency()`
+  - Test theoretical consistency of analysis....
+- `test_no_simplified_methods()`
+  - Test that no simplified methods remain....
+- `main()`
+  - Run all tests....
+
+**Основные импорты:**
+
+- `sys`
+- `os`
+- `numpy`
+- `logging`
+- `bhlff.core.bvp.BVPCore`
+
+---
+
 ### test_bvp_solver_core_physics.py
 
 **Описание модуля:**
@@ -25228,6 +24369,129 @@ and optimization algorithms.
 - `sys`
 - `os`
 - `bhlff.core.bvp.resonance_quality_analyzer.ResonanceQualityAnalyzer`
+
+---
+
+### test_topological_charge_fix.py
+
+**Описание модуля:**
+
+```
+Author: Vasiliy Zdanovskiy
+email: vasilyvz@gmail.com
+
+Test for Topological Charge Analyzer fix.
+
+This module tests the corrected topological charge analyzer implementation
+to ensure it properly computes topological charge and analyzes defects
+in BVP fields.
+
+Physical Meaning:
+    Tests that the topological charge analyzer correctly computes
+    topological charge, identifies defects, and analyzes their properties
+    for BVP field analysis.
+
+Example:
+    >>> python test_topological_charge_fix.py
+```
+
+**Функции:**
+
+- `test_topological_charge_analyzer_initialization()`
+  - Test topological charge analyzer initialization.
+
+Physical Meaning:
+    Tests th...
+- `test_topological_charge_computation()`
+  - Test topological charge computation.
+
+Physical Meaning:
+    Tests that the corre...
+- `test_defect_analyzer_functionality()`
+  - Test topological defect analyzer functionality.
+
+Physical Meaning:
+    Tests tha...
+- `test_phase_structure_analysis()`
+  - Test phase structure analysis.
+
+Physical Meaning:
+    Tests that the phase struc...
+- `test_charge_stability_computation()`
+  - Test charge stability computation.
+
+Physical Meaning:
+    Tests that the charge ...
+- `main()`
+  - Run all topological charge analyzer fix tests.
+
+Physical Meaning:
+    Comprehens...
+
+**Основные импорты:**
+
+- `numpy`
+- `sys`
+- `os`
+- `typing.Dict`
+- `typing.Any`
+- `bhlff.core.domain.Domain`
+
+---
+
+### test_validation_frequencies_fix.py
+
+**Описание модуля:**
+
+```
+Test script for frequency validation fix.
+
+This script tests the physical frequency validation implementation
+to ensure it works correctly and provides theoretical compliance.
+```
+
+**Классы:**
+
+- **MockBVPCore**
+
+  **Методы:**
+  - 🔒 `__init__()`
+
+- **MockBVPCore**
+
+  **Методы:**
+  - 🔒 `__init__()`
+
+- **MockBVPCore**
+
+  **Методы:**
+  - 🔒 `__init__()`
+
+- **MockBVPCore**
+
+  **Методы:**
+  - 🔒 `__init__()`
+
+**Функции:**
+
+- `test_physical_frequency_validation()`
+  - Test physical frequency validation....
+- `test_invalid_frequency_validation()`
+  - Test validation with invalid frequencies....
+- `test_harmonic_analysis()`
+  - Test harmonic analysis functionality....
+- `test_backward_compatibility()`
+  - Test backward compatibility with legacy method....
+- `main()`
+  - Run all tests....
+
+**Основные импорты:**
+
+- `sys`
+- `os`
+- `numpy`
+- `logging`
+- `bhlff.core.bvp.BVPCore`
 
 ---
 

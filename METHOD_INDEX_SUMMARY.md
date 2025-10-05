@@ -180,3 +180,4 @@ python code_mapper.py --generate-index --index-output method_index.md
 # Создать только карту кода
 python code_mapper.py --output code_map.md
 ```
+

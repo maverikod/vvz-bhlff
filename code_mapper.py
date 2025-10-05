@@ -216,8 +216,12 @@ class CodeMapper:
             if exclude_pattern and re.search(exclude_pattern, str(file_path)):
                 continue
             
-            # Исключение __pycache__ и других служебных директорий
-            if '__pycache__' in str(file_path) or '.git' in str(file_path):
+            # Исключение служебных директорий и файлов
+            excluded_dirs = ['__pycache__', '.git', '.venv', 'venv', 'env', 'node_modules', 
+                           '.pytest_cache', '.coverage', 'htmlcov', 'dist', 'build', 
+                           '.tox', '.mypy_cache', '.ruff_cache']
+            
+            if any(excluded_dir in str(file_path) for excluded_dir in excluded_dirs):
                 continue
             
             print(f"Анализ файла: {file_path.relative_to(self.root_dir)}")

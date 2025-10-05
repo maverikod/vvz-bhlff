@@ -190,3 +190,4 @@ python code_mapper.py --generate-index --output-dir analysis_output
 # Создать только индекс в директории reports
 python code_mapper.py --index-only --output-dir reports
 ```
+

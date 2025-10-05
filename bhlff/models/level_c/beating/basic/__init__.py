@@ -2,20 +2,15 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-Basic advanced beating analysis modules for Level C.
+Comprehensive beating analysis modules for Level C.
 
-This package provides basic advanced beating analysis functionality
-for analyzing mode beating in the 7D phase field.
+This package provides comprehensive beating analysis functionality
+for analyzing mode beating in the 7D phase field according to the
+theoretical framework.
 """
 
-from .beating_basic_core import BeatingBasicCore
-from .beating_basic_optimization import BeatingBasicOptimization
-from .beating_basic_statistics import BeatingBasicStatistics
-from .beating_basic_comparison import BeatingBasicComparison
+from .beating_basic_core import BeatingAnalysisCore
 
 __all__ = [
-    'BeatingBasicCore',
-    'BeatingBasicOptimization',
-    'BeatingBasicStatistics',
-    'BeatingBasicComparison'
+    'BeatingAnalysisCore'
 ]

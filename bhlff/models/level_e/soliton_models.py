@@ -24,15 +24,24 @@ Example:
 """
 
 # Import core soliton functionality
-from .soliton_core import SolitonModel, ConvergenceError
+from .soliton_core import SolitonModel
+from .soliton_optimization import ConvergenceError
 
 # Import specific soliton implementations
 from .soliton_implementations import BaryonSoliton, SkyrmionSoliton
+
+# Import specialized modules
+from .soliton_energy import SolitonEnergyCalculator
+from .soliton_stability import SolitonStabilityAnalyzer
+from .soliton_optimization import SolitonOptimizer
 
 # Re-export for backward compatibility
 __all__ = [
     'SolitonModel',
     'BaryonSoliton', 
     'SkyrmionSoliton',
-    'ConvergenceError'
+    'ConvergenceError',
+    'SolitonEnergyCalculator',
+    'SolitonStabilityAnalyzer',
+    'SolitonOptimizer'
 ]

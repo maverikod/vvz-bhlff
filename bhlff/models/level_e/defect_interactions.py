@@ -84,7 +84,13 @@ class DefectInteractions:
         
         # Remove default screening (λ=0 as per ALL.md)
         self.tempered_lambda = self.params.get("tempered_lambda", 0.0)
+        
+        # Forbid mass terms: assert tempered_lambda==0 in base configs
         if self.tempered_lambda > 0:
+            # Allow override only in diagnostic paths
+            diagnostic_mode = self.params.get("diagnostic_mode", False)
+            if not diagnostic_mode:
+                raise ValueError(f"Mass terms forbidden in base regime: tempered_lambda={self.tempered_lambda} > 0. Use diagnostic_mode=True for diagnostics only.")
             self.screening_factor = 1.0 / self.tempered_lambda
         else:
             self.screening_factor = 0.0  # No screening in base regime

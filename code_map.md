@@ -2,10 +2,10 @@
 Generated for: .
 
 ## Statistics
-- Total files: 512
-- Total classes: 485
-- Total functions: 4056
-- Total imports: 2420
+- Total files: 513
+- Total classes: 486
+- Total functions: 4065
+- Total imports: 2426
 
 ## Files Overview
 ### ./code_mapper.py
@@ -127,6 +127,12 @@ Generated for: .
 - Classes: 2
 - Functions: 16
 - Imports: 4
+
+### ./tests/unit/test_acceptance_criteria.py
+- Lines: 232
+- Classes: 1
+- Functions: 8
+- Imports: 6
 
 ### ./tests/unit/test_level_g_cosmology.py
 - Lines: 444
@@ -1431,7 +1437,7 @@ Generated for: .
 - Imports: 2
 
 ### ./bhlff/models/level_e/defect_core.py
-- Lines: 304
+- Lines: 313
 - Classes: 1
 - Functions: 9
 - Imports: 4
@@ -1455,7 +1461,7 @@ Generated for: .
 - Imports: 6
 
 ### ./bhlff/models/level_e/defect_interactions.py
-- Lines: 427
+- Lines: 433
 - Classes: 1
 - Functions: 11
 - Imports: 3
@@ -1539,7 +1545,7 @@ Generated for: .
 - Imports: 2
 
 ### ./bhlff/models/level_g/gravity.py
-- Lines: 215
+- Lines: 223
 - Classes: 1
 - Functions: 8
 - Imports: 6
@@ -1749,9 +1755,9 @@ Generated for: .
 - Imports: 7
 
 ### ./bhlff/core/time/memory_kernel.py
-- Lines: 260
+- Lines: 291
 - Classes: 1
-- Functions: 9
+- Functions: 10
 - Imports: 4
 
 ### ./bhlff/core/time/quench_detector.py

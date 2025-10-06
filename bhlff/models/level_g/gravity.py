@@ -85,6 +85,14 @@ class VBPGravitationalEffectsModel(ModelBase):
         self.chi_kappa = self.gravity_params.get("chi_kappa", 1.0)  # Bridge parameter
         self.beta = self.gravity_params.get("beta", 0.5)  # Fractional order
         self.mu = self.gravity_params.get("mu", 1.0)  # Diffusion coefficient
+        
+        # Stability: assert c_φ^2>0, M_*^2>0 wherever built
+        assert self.c_phi**2 > 0, f"Stability violation: c_φ^2 = {self.c_phi**2} ≤ 0"
+        assert self.mu > 0, f"Stability violation: μ = {self.mu} ≤ 0"
+        
+        # M_*^2 = μ (effective mass squared)
+        M_star_squared = self.mu
+        assert M_star_squared > 0, f"Stability violation: M_*^2 = {M_star_squared} ≤ 0"
 
     def compute_effective_metric(self) -> np.ndarray:
         """

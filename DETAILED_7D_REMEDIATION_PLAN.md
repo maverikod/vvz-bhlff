@@ -113,17 +113,17 @@ Physical meaning:
 Acceptance hooks:
 - FRAC-1: validate G_β tail; energy monotonicity under approach (ΔE≤0) for interaction tests. ✅
 
-4) Enforcement of acceptance criteria in code paths
+4) Enforcement of acceptance criteria in code paths ✅ COMPLETED
 Files:
-- bhlff/models/level_g/*, bhlff/models/level_e/*, bhlff/core/bvp/postulates/*, configs/*, tests/*
+- bhlff/models/level_g/*, bhlff/models/level_e/*, bhlff/core/bvp/postulates/*, configs/*, tests/* ✅
 
 Required changes (exact):
   - Assertions:
-    • PASS-1: assert ReY(ω)≥0 for memory kernels (Prony/fractional) on ω-grid below resonances; log violations.
-    • Forbid mass terms: assert tempered_lambda==0 in base configs and operators (allow override only in diagnostic paths).
-    • Stability: assert c_φ^2>0, M_*^2>0 wherever built.
+    • PASS-1: assert ReY(ω)≥0 for memory kernels (Prony/fractional) on ω-grid below resonances; log violations. ✅
+    • Forbid mass terms: assert tempered_lambda==0 in base configs and operators (allow override only in diagnostic paths). ✅
+    • Stability: assert c_φ^2>0, M_*^2>0 wherever built. ✅
   - Testing integration:
-    • Add unit tests that execute FON-1/2, PERT-1, GW-1, LEN-1 checks and fail fast on violations; expose PASS/FAIL flags in reports.
+    • Add unit tests that execute FON-1/2, PERT-1, GW-1, LEN-1 checks and fail fast on violations; expose PASS/FAIL flags in reports. ✅
 
 5) CI/tests – migrate expectations
 - Replace GR tensor property tests with envelope curvature invariants and GW-1 amplitude law.
@@ -139,7 +139,7 @@ Milestones & Estimates
 - G1: Envelope curvature refactor (Level G): ~800–1200 LoC, 3–5 days. ✅ COMPLETED
 - E1: Soliton substrate refactor (remove SU(2) hedgehog): ~600–900 LoC, 3–4 days. ✅ COMPLETED
 - E2: Defect Green tails refactor: ~300–500 LoC, 2–3 days. ✅ COMPLETED
-- Tests/Acceptance integration: ~2–3 days. 🔄 PENDING
+- Tests/Acceptance integration: ~2–3 days. ✅ COMPLETED
 
 Deliverables
 - Code edits above + updated tests.

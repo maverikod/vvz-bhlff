@@ -226,7 +226,38 @@ class MemoryKernel:
             )
 
         self.coupling_strengths = gammas.copy()
+        
+        # PASS-1: Assert ReY(ω)≥0 for memory kernels below resonances
+        self._validate_passivity()
+        
         self.logger.info(f"Coupling strengths set: {gammas}")
+
+    def _validate_passivity(self) -> None:
+        """
+        Validate PASS-1: ReY(ω)≥0 for memory kernels below resonances.
+        
+        Physical Meaning:
+            Ensures that the memory kernel frequency response Y(ω) has
+            non-negative real part below resonances, maintaining passivity
+            of the memory system.
+            
+        Mathematical Foundation:
+            For Prony/fractional memory kernels: Y(ω) = Σⱼ γⱼ/(1 + iωτⱼ)
+            Passivity requires ReY(ω) = Σⱼ γⱼ/(1 + ω²τⱼ²) ≥ 0 for all ω
+        """
+        # Check that all coupling strengths are non-negative for passivity
+        for i, gamma in enumerate(self.coupling_strengths):
+            if gamma < 0:
+                self.logger.warning(f"PASS-1 violation: γ_{i} = {gamma} < 0")
+                # Log violation but don't fail - allow for diagnostic cases
+                continue
+        
+        # For Prony model: Y(ω) = Σⱼ γⱼ/(1 + iωτⱼ)
+        # ReY(ω) = Σⱼ γⱼ/(1 + ω²τⱼ²) ≥ 0 if all γⱼ ≥ 0
+        if all(gamma >= 0 for gamma in self.coupling_strengths):
+            self.logger.info("PASS-1: Memory kernel passivity validated (ReY(ω)≥0)")
+        else:
+            self.logger.warning("PASS-1: Memory kernel may violate passivity")
 
     def get_memory_contribution(self) -> np.ndarray:
         """

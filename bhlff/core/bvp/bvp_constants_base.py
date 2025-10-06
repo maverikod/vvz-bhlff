@@ -24,7 +24,7 @@ Example:
 """
 
 import numpy as np
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 
 class BVPConstantsBase:
@@ -42,7 +42,7 @@ class BVPConstantsBase:
         - Fundamental physical constants
     """
 
-    def __init__(self, config: Dict[str, Any] = None) -> None:
+    def __init__(self, config: Optional[Dict[str, Any]] = None) -> None:
         """
         Initialize base BVP constants with optional configuration override.
 
@@ -199,7 +199,7 @@ class BVPConstantsBase:
             "k0_squared": self.K0_SQUARED,
             "carrier_frequency": self.CARRIER_FREQUENCY,
         }
-        return parameter_map.get(parameter_name, 0.0)
+        return float(parameter_map.get(parameter_name, 0.0))
 
     def get_basic_material_property(self, property_name: str) -> float:
         """
@@ -229,7 +229,7 @@ class BVPConstantsBase:
             "mixing_angle": self.MIXING_ANGLE,
             "gauge_coupling": self.GAUGE_COUPLING,
         }
-        return property_map.get(property_name, 0.0)
+        return float(property_map.get(property_name, 0.0))
 
     def get_physical_constant(self, constant_name: str) -> float:
         """
@@ -248,7 +248,7 @@ class BVPConstantsBase:
             "planck_constant": self.PLANCK_CONSTANT,
             "boltzmann_constant": self.BOLTZMANN_CONSTANT,
         }
-        return constant_map.get(constant_name, 0.0)
+        return float(constant_map.get(constant_name, 0.0))
 
     def get_physical_parameter(self, parameter_name: str) -> float:
         """
@@ -268,7 +268,7 @@ class BVPConstantsBase:
             "phase_velocity_threshold": self.PHASE_VELOCITY_THRESHOLD,
             "epsilon_threshold": self.EPSILON_THRESHOLD,
         }
-        return parameter_map.get(parameter_name, 0.0)
+        return float(parameter_map.get(parameter_name, 0.0))
 
     def get_carrier_frequency(self) -> float:
         """
@@ -302,7 +302,7 @@ class BVPConstantsBase:
             "detuning_threshold": self.DETUNING_THRESHOLD,
             "gradient_threshold": self.GRADIENT_THRESHOLD,
         }
-        return quench_map.get(parameter_name, 0.0)
+        return float(quench_map.get(parameter_name, 0.0))
 
     def __repr__(self) -> str:
         """String representation of base BVP constants."""

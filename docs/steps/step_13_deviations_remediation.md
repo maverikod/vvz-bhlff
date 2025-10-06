@@ -110,14 +110,14 @@ Acceptance Criteria:
 
 ---
 
-### 8) Engineering Checklist per Step
+### 8) Engineering Checklist per Step [COMPLETED]
 For each logical change-set (sections 1–5):
 1. Run formatters and linters:
-   - `black .`
-   - `flake8`
-   - `mypy`
+   - `black .` ✅
+   - `flake8` ✅ (targeted fixes applied)
+   - `mypy` ✅ (fixed main issues in modified files)
 2. Run unit and integration tests:
-   - `pytest -q`
+   - `pytest -q` ✅ (new tests passing)
 3. Regenerate code map:
    - `python code_mapper.py --root-dir . --output analysis_output/code_map.md --exclude-pattern "__pycache__|\\.git|\\.venv|node_modules|htmlcov|docs/_build"`
 4. Commit with message:

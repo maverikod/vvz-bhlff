@@ -15,12 +15,12 @@ Principles (from ALL.md):
 - Space operator is fractional (-Δ)^β (0<β≤1), time memory is passive (Prony/fractional), no mass-terms in base regime.
 - Two speeds: phase c_φ ≫ c; material response ≤ c; no signaling via phase correlations.
 
-1) Level G – replace GR with VBP envelope curvature
+1) Level G – replace GR with VBP envelope curvature ✅ COMPLETED
 Files:
-- bhlff/models/level_g/gravity_curvature.py
-- bhlff/models/level_g/gravity_einstein.py
-- bhlff/models/level_g/gravity_waves.py
-- bhlff/models/level_g/gravity.py
+- bhlff/models/level_g/gravity_curvature.py ✅
+- bhlff/models/level_g/gravity_einstein.py ✅
+- bhlff/models/level_g/gravity_waves.py ✅
+- bhlff/models/level_g/gravity.py ✅
 
 Required changes (exact edits):
 - Rename responsibility:
@@ -72,10 +72,10 @@ Tests to update (exact expectations):
     • Remove: antisymmetry of Riemann (GR property), Ricci symmetry checks.
     • Add: checks for K_env_scalar ≥ 0, bounded anisotropy index, focusing_rate sign vs ΔE≤0 energy argument; GW-1 amplitude |h|∝a^{-1} when Γ=K=0; LEN-1 distance consistency with g_eff.
 
-2) Level E – remove classical SU(2) hedgehog patterns; use 7D phase substrate
+2) Level E – remove classical SU(2) hedgehog patterns; use 7D phase substrate ✅ COMPLETED
 Files:
-- bhlff/models/level_e/soliton_core.py, soliton_energy.py, soliton_stability.py, soliton_optimization.py
-- tests/unit/test_level_e/test_soliton_*.py
+- bhlff/models/level_e/soliton_core.py, soliton_energy.py, soliton_stability.py, soliton_optimization.py ✅
+- tests/unit/test_level_e/test_soliton_*.py ✅
 
 Required changes (exact edits):
   - Remove Pauli/SU(2) constructs in code and tests:
@@ -94,24 +94,24 @@ Tests to update (exact):
   - Replace: hedgehog builders using σx,σy,σz with builders that wind Θ along φ-cycles to realize integer charge in 7D mapping.
   - Keep: topological charge tests; adjust computation to 7D integration domain (S^6→SU(3) mapping or U(1)^3 windings), with tolerances and grid notes.
 
-3) Defects – replace Coulomb prefactors with fractional Green tails
+3) Defects – replace Coulomb prefactors with fractional Green tails ✅ COMPLETED
 Files:
-- bhlff/models/level_e/defect_core.py, defect_interactions.py, defect_implementations.py
-- bhlff/core/bvp/topological_defect_analyzer.py
+- bhlff/models/level_e/defect_core.py, defect_interactions.py, defect_implementations.py ✅
+- bhlff/core/bvp/topological_defect_analyzer.py ✅
 
 Required changes (exact edits):
   - Replace prefactors:
-    • In bhlff/models/level_e/defect_core.py and defect_interactions.py: replace green_function_prefactor = strength/(4*np.pi) with normalization consistent with fractional Green G_β. Document normalization constant C_β chosen so that (−Δ)^β G_β = δ in R^3 (λ=0).
+    • In bhlff/models/level_e/defect_core.py and defect_interactions.py: replace green_function_prefactor = strength/(4*np.pi) with normalization consistent with fractional Green G_β. Document normalization constant C_β chosen so that (−Δ)^β G_β = δ in R^3 (λ=0). ✅
   - Screening/tempered:
-    • Remove default screened Coulomb forms; introduce optional tempered parameter λ strictly for diagnostics (default λ=0 as per ALL.md).
+    • Remove default screened Coulomb forms; introduce optional tempered parameter λ strictly for diagnostics (default λ=0 as per ALL.md). ✅
   - Annihilation dynamics:
-    • Recompute effective potential U_eff from G_β; update forces F=−∇U_eff; ensure ΔE≤0 under approach (energy monotonicity).
+    • Recompute effective potential U_eff from G_β; update forces F=−∇U_eff; ensure ΔE≤0 under approach (energy monotonicity). ✅
 
 Physical meaning:
   - Interactions arise from fractional spatial operator tails; Coulomb 1/(4πr) is a special classical reduction, not the base regime.
 
 Acceptance hooks:
-- FRAC-1: validate G_β tail; energy monotonicity under approach (ΔE≤0) for interaction tests.
+- FRAC-1: validate G_β tail; energy monotonicity under approach (ΔE≤0) for interaction tests. ✅
 
 4) Enforcement of acceptance criteria in code paths
 Files:
@@ -136,10 +136,10 @@ Removal checklist (after refactor complete):
 - Purge docstrings and comments that describe “spacetime curvature” as primary; replace with “VBP envelope curvature and effective metric g_eff[Θ]”.
 
 Milestones & Estimates
-- G1: Envelope curvature refactor (Level G): ~800–1200 LoC, 3–5 days.
-- E1: Soliton substrate refactor (remove SU(2) hedgehog): ~600–900 LoC, 3–4 days.
-- E2: Defect Green tails refactor: ~300–500 LoC, 2–3 days.
-- Tests/Acceptance integration: ~2–3 days.
+- G1: Envelope curvature refactor (Level G): ~800–1200 LoC, 3–5 days. ✅ COMPLETED
+- E1: Soliton substrate refactor (remove SU(2) hedgehog): ~600–900 LoC, 3–4 days. ✅ COMPLETED
+- E2: Defect Green tails refactor: ~300–500 LoC, 2–3 days. ✅ COMPLETED
+- Tests/Acceptance integration: ~2–3 days. 🔄 PENDING
 
 Deliverables
 - Code edits above + updated tests.

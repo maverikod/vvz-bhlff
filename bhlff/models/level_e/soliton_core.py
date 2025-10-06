@@ -8,8 +8,10 @@ This module contains the core soliton model class with basic functionality
 for finding and analyzing soliton solutions.
 
 Theoretical Background:
-    Implements the core SU(3) field configuration U(x,φ,t) with topological
-    charge B = (1/24π²)∫ε^μνρσTr(L_ν L_ρ L_σ) and basic soliton operations.
+    Implements the core 7D phase field configuration Θ(x,φ,t) ∈ T^3_φ with
+    topological charge B computed via U(1)^3 winding integrals and basic
+    soliton operations. The classical SU(3) field configuration is a
+    4D pedagogical limit, not the core 7D construction.
 
 Example:
     >>> soliton = SolitonModel(domain, physics_params)
@@ -32,12 +34,14 @@ class SolitonModel(ABC):
     Physical Meaning:
         Represents stable localized solutions of the nonlinear phase field
         equations with topological protection. Solitons are the fundamental
-        particle-like structures in the 7D theory.
+        particle-like structures in the 7D theory, realized as phase patterns
+        on the U(1)^3 substrate with controlled winding over φ-coordinates.
 
     Mathematical Foundation:
-        Implements the SU(3) field configuration U(x,φ,t) with topological
-        charge B = (1/24π²)∫ε^μνρσTr(L_ν L_ρ L_σ) and WZW term for
-        baryon number conservation.
+        Implements the 7D phase field configuration Θ(x,φ,t) ∈ T^3_φ with
+        topological charge B computed via U(1)^3 winding integrals and WZW
+        term for baryon number conservation. The classical SU(3) field
+        configuration is a 4D pedagogical limit, not the core 7D construction.
     """
 
     def __init__(self, domain: "Domain", physics_params: Dict[str, Any]):
@@ -122,14 +126,16 @@ class SolitonModel(ABC):
 
     def _setup_topological_charge(self) -> None:
         """
-        Setup topological charge calculation B = (1/24π²)∫ε^μνρσTr(L_ν L_ρ L_σ).
+        Setup topological charge calculation for 7D U(1)^3 phase winding.
         
         Physical Meaning:
             Initializes the calculation of topological charge which represents
-            the baryon number of the soliton.
+            the baryon number of the soliton via U(1)^3 winding over φ-coordinates.
             
         Mathematical Foundation:
-            B = (1/24π²)∫ε^μνρσTr(L_ν L_ρ L_σ) d³x
+            B = (1/8π²)∫_T³_φ dφ₁dφ₂dφ₃ ∇_φ·Θ(x,φ) for 7D phase field Θ(x,φ) ∈ T^3_φ
+            The classical SU(3) form B = (1/24π²)∫ε^μνρσTr(L_ν L_ρ L_σ) is a
+            4D pedagogical limit, not the core 7D construction.
         """
         self.charge_integration_radius = self.params.get("charge_radius", 2.0)
         self.charge_precision = self.params.get("charge_precision", 1e-6)
@@ -210,15 +216,17 @@ class SolitonModel(ABC):
 
     def compute_topological_charge(self, soliton: np.ndarray) -> float:
         """
-        Compute topological charge of soliton.
+        Compute topological charge of soliton via 7D U(1)^3 phase winding.
 
         Physical Meaning:
-            Calculates the baryon number B = (1/24π²)∫ε^μνρσTr(L_ν L_ρ L_σ)
-            which represents the topological charge of the soliton.
+            Calculates the baryon number B via U(1)^3 winding over φ-coordinates
+            which represents the topological charge of the soliton in 7D phase
+            field theory.
 
         Mathematical Foundation:
-            B = (1/24π²)∫ε^μνρσTr(L_ν L_ρ L_σ) d³x
-            where L_μ = U†∂_μU are the left currents.
+            B = (1/8π²)∫_T³_φ dφ₁dφ₂dφ₃ ∇_φ·Θ(x,φ) for 7D phase field Θ(x,φ) ∈ T^3_φ
+            The classical SU(3) form B = (1/24π²)∫ε^μνρσTr(L_ν L_ρ L_σ) is a
+            4D pedagogical limit, not the core 7D construction.
 
         Args:
             soliton: Soliton field configuration
@@ -226,42 +234,51 @@ class SolitonModel(ABC):
         Returns:
             Topological charge (baryon number)
         """
-        if soliton.ndim < 4:
+        if soliton.ndim < 7:
             return 0.0
             
-        # Compute spatial derivatives
-        dx = 0.1
-        gradients = []
+        # For 7D phase field Θ(x,φ,t), compute U(1)^3 winding over φ-coordinates
+        # B = (1/8π²)∫_T³_φ dφ₁dφ₂dφ₃ ∇_φ·Θ(x,φ)
+        
+        # Extract phase coordinates (last 3 dimensions are φ-coordinates)
+        if soliton.shape[-3:] != (8, 8, 8):  # Assuming 8x8x8 φ-grid
+            return 0.0
+            
+        # Compute phase gradients along φ-coordinates
+        dphi = 2 * np.pi / 8  # Phase coordinate spacing
+        phase_gradients = []
         for i in range(3):
-            if soliton.shape[i] > 1:
-                grad = np.gradient(soliton, dx, axis=i)
-                gradients.append(grad)
+            axis = -3 + i  # φ-coordinate axes
+            if soliton.shape[axis] > 1:
+                grad = np.gradient(soliton, dphi, axis=axis)
+                phase_gradients.append(grad)
             else:
-                gradients.append(np.zeros_like(soliton))
+                phase_gradients.append(np.zeros_like(soliton))
         
-        # Compute left currents L_μ = U†∂_μU
-        L_currents = []
-        for grad in gradients:
-            L_mu = np.einsum('...ji,...jk->...ik', np.conj(soliton), grad)
-            L_currents.append(L_mu)
-        
-        # Compute topological charge density
-        # B = (1/24π²)∫ε^ijkTr(L_i L_j L_k) d³x
+        # Compute U(1)^3 winding integral
+        # For each spatial point x, integrate ∇_φ·Θ over T³_φ
         charge_density = 0.0
-        for i in range(3):
-            for j in range(3):
-                for k in range(3):
-                    if i != j and j != k and i != k:
-                        # Levi-Civita symbol
-                        epsilon = 1 if (i, j, k) in [(0, 1, 2), (1, 2, 0), (2, 0, 1)] else -1
-                        if (i, j, k) in [(0, 2, 1), (1, 0, 2), (2, 1, 0)]:
-                            epsilon = -1
-                        
-                        # Tr(L_i L_j L_k)
-                        trace_term = np.real(np.trace(
-                            np.einsum('...ik,...kj,...jl->...il', 
-                                    L_currents[i], L_currents[j], L_currents[k])
-                        ))
-                        charge_density += epsilon * np.sum(trace_term)
+        for i in range(soliton.shape[0]):  # x-coordinates
+            for j in range(soliton.shape[1]):
+                for k in range(soliton.shape[2]):
+                    # Extract phase field at spatial point (i,j,k)
+                    phase_field = soliton[i, j, k, :, :, :]
+                    
+                    # Compute phase gradients at this spatial point
+                    phase_grads = [grad[i, j, k, :, :, :] for grad in phase_gradients]
+                    
+                    # Compute winding integral over T³_φ
+                    # B = (1/8π²)∫_T³_φ dφ₁dφ₂dφ₃ ∇_φ·Θ(x,φ)
+                    winding_integral = 0.0
+                    for phi1 in range(8):
+                        for phi2 in range(8):
+                            for phi3 in range(8):
+                                # Compute divergence ∇_φ·Θ
+                                div_phi = (phase_grads[0][phi1, phi2, phi3] + 
+                                          phase_grads[1][phi1, phi2, phi3] + 
+                                          phase_grads[2][phi1, phi2, phi3])
+                                winding_integral += div_phi
+                    
+                    charge_density += winding_integral
         
-        return float(charge_density / (24 * np.pi**2))
+        return float(charge_density / (8 * np.pi**2))

@@ -22,7 +22,7 @@ Example:
 
 from .cosmology import CosmologicalModel, StandardCosmologicalMetric
 from .astrophysics import AstrophysicalObjectModel
-from .gravity import GravitationalEffectsModel
+from .gravity import VBPGravitationalEffectsModel
 from .structure import LargeScaleStructureModel
 from .evolution import CosmologicalEvolution
 from .analysis import CosmologicalAnalysis
@@ -32,7 +32,7 @@ __all__ = [
     "CosmologicalModel",
     "StandardCosmologicalMetric",
     "AstrophysicalObjectModel",
-    "GravitationalEffectsModel",
+    "VBPGravitationalEffectsModel",
     "LargeScaleStructureModel",
     "CosmologicalEvolution",
     "CosmologicalAnalysis",

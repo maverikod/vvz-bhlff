@@ -26,6 +26,7 @@ Example:
 import numpy as np
 from typing import Dict, Any, List, Optional, Tuple
 from abc import ABC, abstractmethod
+from scipy.special import gamma
 
 
 class DefectModel(ABC):
@@ -111,9 +112,20 @@ class DefectModel(ABC):
         self.interaction_range = self.params.get("interaction_range", 1.0)
         self.cutoff_radius = self.params.get("cutoff_radius", 0.1)
         
-        # Setup Green function parameters for defect interactions
-        self.green_function_prefactor = self.interaction_strength / (4 * np.pi)
-        self.screening_length = self.interaction_range
+        # Setup fractional Green function parameters for defect interactions
+        beta = self.params.get("beta", 1.0)
+        self.beta = beta
+        
+        # Fractional Green function normalization: C_β chosen so that (-Δ)^β G_β = δ in R³
+        if beta < 1.5:
+            self.green_function_prefactor = self.interaction_strength * self._compute_fractional_green_normalization(beta)
+        else:
+            # Fallback for β ≥ 1.5
+            self.green_function_prefactor = self.interaction_strength / (4 * np.pi)
+        
+        # Remove default screening (λ=0 as per ALL.md)
+        self.tempered_lambda = self.params.get("tempered_lambda", 0.0)
+        self.screening_length = self.tempered_lambda if self.tempered_lambda > 0 else 0.0
 
     def create_defect(self, position: np.ndarray, charge: int) -> np.ndarray:
         """
@@ -259,3 +271,34 @@ class DefectModel(ABC):
         phase_values = phase[i_path, j_path]
         
         return phase_values
+
+    def _compute_fractional_green_normalization(self, beta: float) -> float:
+        """
+        Compute normalization constant for fractional Green function.
+        
+        Physical Meaning:
+            Calculates the normalization constant C_β for the fractional
+            Green function G_β such that (-Δ)^β G_β = δ in R³.
+            
+        Mathematical Foundation:
+            For 3D fractional Laplacian: C_β = Γ(3/2-β) / (2^(2β) π^(3/2) Γ(β))
+            This ensures proper normalization of the fractional Green function.
+            The exact formula ensures that ∫ G_β(r) d³r = 1 and (-Δ)^β G_β = δ.
+            
+        Args:
+            beta: Fractional order parameter
+            
+        Returns:
+            Normalization constant C_β
+        """
+        if beta <= 0 or beta >= 1.5:
+            # Fallback to classical case for extreme values
+            return 1.0 / (4 * np.pi)
+        
+        # Exact normalization for 3D fractional Green function
+        # C_β = Γ(3/2-β) / (2^(2β) π^(3/2) Γ(β))
+        # This is the mathematically correct normalization
+        numerator = gamma(3/2 - beta)
+        denominator = (2**(2*beta)) * (np.pi**(3/2)) * gamma(beta)
+        
+        return numerator / denominator

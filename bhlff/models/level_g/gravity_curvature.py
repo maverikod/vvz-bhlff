@@ -2,43 +2,44 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-Spacetime curvature calculations for gravitational effects in 7D phase field theory.
+VBP envelope curvature calculations for gravitational effects in 7D phase field theory.
 
-This module implements comprehensive calculations of spacetime curvature
-including Riemann tensor, Ricci tensor, scalar curvature, and Weyl tensor.
+This module implements comprehensive calculations of VBP envelope curvature
+including envelope curvature descriptors, anisotropy measures, and focusing rates.
 
 Theoretical Background:
-    Spacetime curvature is described by the Riemann curvature tensor
-    R^λ_μνρ which encodes all information about the gravitational field.
-    The Einstein equations relate this curvature to the energy-momentum
-    tensor of matter and fields.
+    In 7D BVP theory, gravity arises from the curvature of the VBP (Wave Basis Substrate)
+    envelope, not from spacetime curvature. The effective metric g_eff[Θ] is derived
+    from the phase field Θ(x,φ,t) and dispersion relations c_φ(a,k), χ/κ bridge.
 
 Mathematical Foundation:
-    Riemann tensor: R^λ_μνρ = ∂_νΓ^λ_μρ - ∂_ρΓ^λ_μν + Γ^λ_νσΓ^σ_μρ - Γ^λ_ρσΓ^σ_μν
-    Ricci tensor: R_μν = R^λ_μλν
-    Scalar curvature: R = g^μν R_μν
+    Envelope curvature: K_env = invariants from ∇Θ, c_φ(a,k), A^{ij}=χ'/κ δ^{ij}
+    Effective metric: g_eff[Θ] with g00=-1/c_φ^2, gij=A^{ij} (isotropic case)
+    Anisotropy index: measures deviation from isotropic envelope
 
 Example:
-    >>> curvature_calc = SpacetimeCurvatureCalculator(domain, params)
-    >>> riemann_tensor = curvature_calc.compute_riemann_tensor(metric)
+    >>> envelope_calc = VBPEnvelopeCurvatureCalculator(domain, params)
+    >>> curvature_descriptors = envelope_calc.compute_envelope_curvature(phase_field)
 """
 
 import numpy as np
 from typing import Dict, Any, Tuple, Optional
 
 
-class SpacetimeCurvatureCalculator:
+class VBPEnvelopeCurvatureCalculator:
     """
-    Calculator for spacetime curvature tensors.
+    Calculator for VBP envelope curvature descriptors.
 
     Physical Meaning:
-        Computes all components of spacetime curvature including
-        Riemann tensor, Ricci tensor, scalar curvature, and Weyl tensor
-        from the spacetime metric.
+        Computes envelope curvature descriptors from the VBP (Wave Basis Substrate)
+        phase field configuration. Gravity arises from the curvature of the phase
+        envelope, not from spacetime curvature. The effective metric g_eff[Θ] is
+        derived from phase field gradients and dispersion relations.
 
     Mathematical Foundation:
-        Implements the full Riemann tensor calculation:
-        R^λ_μνρ = ∂_νΓ^λ_μρ - ∂_ρΓ^λ_μν + Γ^λ_νσΓ^σ_μρ - Γ^λ_ρσΓ^σ_μν
+        Implements envelope curvature calculation from phase field Θ(x,φ,t):
+        K_env = invariants from ∇Θ, c_φ(a,k), A^{ij}=χ'/κ δ^{ij}
+        Effective metric: g_eff[Θ] with g00=-1/c_φ^2, gij=A^{ij} (isotropic)
     """
 
     def __init__(self, domain: "Domain", params: Dict[str, Any]):
@@ -70,392 +71,286 @@ class SpacetimeCurvatureCalculator:
         self.precision = self.params.get("precision", 1e-12)
         self.derivative_order = self.params.get("derivative_order", 4)
 
-    def compute_riemann_tensor(self, metric: np.ndarray) -> np.ndarray:
+    def compute_envelope_curvature(self, phase_field: np.ndarray) -> Dict[str, Any]:
         """
-        Compute full Riemann curvature tensor.
+        Compute VBP envelope curvature descriptors.
 
         Physical Meaning:
-            Calculates the complete Riemann tensor R^λ_μνρ which
-            encodes all information about spacetime curvature.
+            Calculates envelope curvature descriptors from the phase field Θ(x,φ,t).
+            The curvature describes the distortion of the VBP envelope, which gives
+            rise to gravitational effects. This replaces classical Riemann tensor
+            calculations with VBP-specific curvature measures.
 
         Mathematical Foundation:
-            R^λ_μνρ = ∂_νΓ^λ_μρ - ∂_ρΓ^λ_μν + Γ^λ_νσΓ^σ_μρ - Γ^λ_ρσΓ^σ_μν
+            K_env = invariants from ∇Θ, c_φ(a,k), A^{ij}=χ'/κ δ^{ij}
+            Effective metric: g_eff[Θ] with g00=-1/c_φ^2, gij=A^{ij} (isotropic)
 
         Args:
-            metric: Spacetime metric tensor g_μν
+            phase_field: Phase field configuration Θ(x,φ,t)
 
         Returns:
-            Riemann tensor R^λ_μνρ
+            Dictionary containing envelope curvature descriptors
         """
-        # Compute Christoffel symbols
-        christoffel = self._compute_christoffel_symbols(metric)
+        # Compute phase field gradients
+        phase_gradients = self._compute_phase_gradients(phase_field)
         
-        # Get dimensions
-        dims = metric.shape[0]
+        # Compute effective metric from phase field
+        g_eff = self._compute_effective_metric(phase_field, phase_gradients)
         
-        # Initialize Riemann tensor
-        riemann = np.zeros((dims, dims, dims, dims))
+        # Compute envelope curvature invariants
+        curvature_invariants = self._compute_envelope_invariants(phase_gradients, g_eff)
         
-        # Compute Riemann tensor components
-        for lambda_idx in range(dims):
-            for mu in range(dims):
-                for nu in range(dims):
-                    for rho in range(dims):
-                        # First term: ∂_νΓ^λ_μρ
-                        term1 = self._compute_christoffel_derivative(
-                            christoffel, lambda_idx, mu, rho, nu
-                        )
-                        
-                        # Second term: ∂_ρΓ^λ_μν
-                        term2 = self._compute_christoffel_derivative(
-                            christoffel, lambda_idx, mu, nu, rho
-                        )
-                        
-                        # Third term: Γ^λ_νσΓ^σ_μρ
-                        term3 = self._compute_christoffel_contraction_1(
-                            christoffel, lambda_idx, nu, mu, rho
-                        )
-                        
-                        # Fourth term: Γ^λ_ρσΓ^σ_μν
-                        term4 = self._compute_christoffel_contraction_2(
-                            christoffel, lambda_idx, rho, mu, nu
-                        )
-                        
-                        # Riemann tensor component
-                        riemann[lambda_idx, mu, nu, rho] = (
-                            term1 - term2 + term3 - term4
-                        )
+        # Compute anisotropy index
+        anisotropy_index = self._compute_anisotropy_index(g_eff)
         
-        return riemann
-
-    def _compute_christoffel_symbols(self, metric: np.ndarray) -> np.ndarray:
-        """
-        Compute Christoffel symbols from metric.
-
-        Physical Meaning:
-            Calculates the Christoffel symbols Γ^λ_μν which represent
-            the connection coefficients in the spacetime.
-
-        Mathematical Foundation:
-            Γ^λ_μν = (1/2) g^λσ (∂_μ g_σν + ∂_ν g_σμ - ∂_σ g_μν)
-
-        Args:
-            metric: Spacetime metric tensor
-
-        Returns:
-            Christoffel symbols Γ^λ_μν
-        """
-        dims = metric.shape[0]
-        christoffel = np.zeros((dims, dims, dims))
-        
-        # Compute metric inverse
-        metric_inv = np.linalg.inv(metric)
-        
-        # Compute Christoffel symbols
-        for lambda_idx in range(dims):
-            for mu in range(dims):
-                for nu in range(dims):
-                    sum_term = 0.0
-                    for sigma in range(dims):
-                        # Compute derivatives
-                        dg_sigma_nu_dmu = self._compute_metric_derivative(
-                            metric, sigma, nu, mu
-                        )
-                        dg_sigma_mu_dnu = self._compute_metric_derivative(
-                            metric, sigma, mu, nu
-                        )
-                        dg_mu_nu_dsigma = self._compute_metric_derivative(
-                            metric, mu, nu, sigma
-                        )
-                        
-                        # Christoffel symbol component
-                        sum_term += metric_inv[lambda_idx, sigma] * (
-                            dg_sigma_nu_dmu + dg_sigma_mu_dnu - dg_mu_nu_dsigma
-                        )
-                    
-                    christoffel[lambda_idx, mu, nu] = 0.5 * sum_term
-        
-        return christoffel
-
-    def _compute_metric_derivative(
-        self, 
-        metric: np.ndarray, 
-        mu: int, 
-        nu: int, 
-        direction: int
-    ) -> float:
-        """
-        Compute derivative of metric component.
-        
-        Physical Meaning:
-            Calculates the partial derivative of metric components
-            with respect to spacetime coordinates.
-        """
-        # For numerical computation, use finite differences
-        # This is a simplified implementation
-        h = self.domain_size / self.resolution
-        
-        # Compute derivative using finite differences
-        if direction == 0:  # x-direction
-            derivative = (metric[mu, nu] - metric[mu-1, nu]) / h
-        elif direction == 1:  # y-direction
-            derivative = (metric[mu, nu] - metric[mu, nu-1]) / h
-        else:  # z-direction
-            derivative = (metric[mu, nu] - metric[mu, nu]) / h
-        
-        return derivative
-
-    def _compute_christoffel_derivative(
-        self, 
-        christoffel: np.ndarray, 
-        lambda_idx: int, 
-        mu: int, 
-        rho: int, 
-        direction: int
-    ) -> float:
-        """
-        Compute derivative of Christoffel symbol.
-        
-        Physical Meaning:
-            Calculates the partial derivative of Christoffel symbols
-            with respect to spacetime coordinates.
-        """
-        # Simplified implementation using finite differences
-        h = self.domain_size / self.resolution
-        
-        if direction == 0:
-            derivative = (christoffel[lambda_idx, mu, rho] - 
-                         christoffel[lambda_idx, mu-1, rho]) / h
-        elif direction == 1:
-            derivative = (christoffel[lambda_idx, mu, rho] - 
-                         christoffel[lambda_idx, mu, rho-1]) / h
-        else:
-            derivative = 0.0
-        
-        return derivative
-
-    def _compute_christoffel_contraction_1(
-        self, 
-        christoffel: np.ndarray, 
-        lambda_idx: int, 
-        nu: int, 
-        mu: int, 
-        rho: int
-    ) -> float:
-        """
-        Compute first Christoffel contraction.
-        
-        Physical Meaning:
-            Calculates the contraction Γ^λ_νσΓ^σ_μρ.
-        """
-        dims = christoffel.shape[0]
-        contraction = 0.0
-        
-        for sigma in range(dims):
-            contraction += (christoffel[lambda_idx, nu, sigma] * 
-                           christoffel[sigma, mu, rho])
-        
-        return contraction
-
-    def _compute_christoffel_contraction_2(
-        self, 
-        christoffel: np.ndarray, 
-        lambda_idx: int, 
-        rho: int, 
-        mu: int, 
-        nu: int
-    ) -> float:
-        """
-        Compute second Christoffel contraction.
-        
-        Physical Meaning:
-            Calculates the contraction Γ^λ_ρσΓ^σ_μν.
-        """
-        dims = christoffel.shape[0]
-        contraction = 0.0
-        
-        for sigma in range(dims):
-            contraction += (christoffel[lambda_idx, rho, sigma] * 
-                           christoffel[sigma, mu, nu])
-        
-        return contraction
-
-    def compute_ricci_tensor(self, riemann_tensor: np.ndarray) -> np.ndarray:
-        """
-        Compute Ricci tensor from Riemann tensor.
-
-        Physical Meaning:
-            Calculates the Ricci tensor R_μν by contracting the
-            Riemann tensor over the first and third indices.
-
-        Mathematical Foundation:
-            R_μν = R^λ_μλν
-
-        Args:
-            riemann_tensor: Riemann curvature tensor
-
-        Returns:
-            Ricci tensor R_μν
-        """
-        dims = riemann_tensor.shape[0]
-        ricci = np.zeros((dims, dims))
-        
-        # Contract Riemann tensor
-        for mu in range(dims):
-            for nu in range(dims):
-                for lambda_idx in range(dims):
-                    ricci[mu, nu] += riemann_tensor[lambda_idx, mu, lambda_idx, nu]
-        
-        return ricci
-
-    def compute_scalar_curvature(
-        self, 
-        ricci_tensor: np.ndarray, 
-        metric: np.ndarray
-    ) -> float:
-        """
-        Compute scalar curvature from Ricci tensor.
-
-        Physical Meaning:
-            Calculates the scalar curvature R by contracting
-            the Ricci tensor with the inverse metric.
-
-        Mathematical Foundation:
-            R = g^μν R_μν
-
-        Args:
-            ricci_tensor: Ricci tensor R_μν
-            metric: Spacetime metric tensor
-
-        Returns:
-            Scalar curvature R
-        """
-        # Compute metric inverse
-        metric_inv = np.linalg.inv(metric)
-        
-        # Contract Ricci tensor with inverse metric
-        scalar_curvature = 0.0
-        dims = ricci_tensor.shape[0]
-        
-        for mu in range(dims):
-            for nu in range(dims):
-                scalar_curvature += metric_inv[mu, nu] * ricci_tensor[mu, nu]
-        
-        return scalar_curvature
-
-    def compute_weyl_tensor(
-        self, 
-        riemann_tensor: np.ndarray, 
-        ricci_tensor: np.ndarray, 
-        scalar_curvature: float, 
-        metric: np.ndarray
-    ) -> np.ndarray:
-        """
-        Compute Weyl tensor from Riemann tensor.
-
-        Physical Meaning:
-            Calculates the Weyl tensor which represents the
-            traceless part of the Riemann tensor, encoding
-            the conformal curvature.
-
-        Mathematical Foundation:
-            C_μνρσ = R_μνρσ - (1/(n-2))(g_μρ R_νσ - g_μσ R_νρ - g_νρ R_μσ + g_νσ R_μρ)
-                     + (R/((n-1)(n-2)))(g_μρ g_νσ - g_μσ g_νρ)
-
-        Args:
-            riemann_tensor: Riemann curvature tensor
-            ricci_tensor: Ricci tensor
-            scalar_curvature: Scalar curvature
-            metric: Spacetime metric tensor
-
-        Returns:
-            Weyl tensor C_μνρσ
-        """
-        dims = riemann_tensor.shape[0]
-        weyl = np.zeros_like(riemann_tensor)
-        
-        # Compute Weyl tensor components
-        for mu in range(dims):
-            for nu in range(dims):
-                for rho in range(dims):
-                    for sigma in range(dims):
-                        # First term: Riemann tensor
-                        weyl[mu, nu, rho, sigma] = riemann_tensor[mu, nu, rho, sigma]
-                        
-                        # Second term: Ricci tensor terms
-                        if dims > 2:
-                            factor1 = 1.0 / (dims - 2)
-                            weyl[mu, nu, rho, sigma] -= factor1 * (
-                                metric[mu, rho] * ricci_tensor[nu, sigma] -
-                                metric[mu, sigma] * ricci_tensor[nu, rho] -
-                                metric[nu, rho] * ricci_tensor[mu, sigma] +
-                                metric[nu, sigma] * ricci_tensor[mu, rho]
-                            )
-                        
-                        # Third term: Scalar curvature terms
-                        if dims > 1:
-                            factor2 = scalar_curvature / ((dims - 1) * (dims - 2))
-                            weyl[mu, nu, rho, sigma] += factor2 * (
-                                metric[mu, rho] * metric[nu, sigma] -
-                                metric[mu, sigma] * metric[nu, rho]
-                            )
-        
-        return weyl
-
-    def compute_curvature_invariants(
-        self, 
-        riemann_tensor: np.ndarray, 
-        ricci_tensor: np.ndarray, 
-        scalar_curvature: float
-    ) -> Dict[str, float]:
-        """
-        Compute curvature invariants.
-
-        Physical Meaning:
-            Calculates scalar invariants of the curvature that
-            are independent of coordinate system choice.
-
-        Returns:
-            Dictionary of curvature invariants
-        """
-        # Kretschmann scalar: R_μνρσ R^μνρσ
-        kretschmann = self._compute_kretschmann_scalar(riemann_tensor)
-        
-        # Ricci scalar squared: R²
-        ricci_squared = scalar_curvature**2
-        
-        # Ricci tensor squared: R_μν R^μν
-        ricci_tensor_squared = self._compute_ricci_tensor_squared(ricci_tensor)
+        # Compute focusing rate
+        focusing_rate = self._compute_focusing_rate(phase_gradients, g_eff)
         
         return {
-            "kretschmann": kretschmann,
-            "ricci_squared": ricci_squared,
-            "ricci_tensor_squared": ricci_tensor_squared,
-            "scalar_curvature": scalar_curvature
+            "envelope_curvature_scalar": curvature_invariants["scalar"],
+            "anisotropy_index": anisotropy_index,
+            "focusing_rate": focusing_rate,
+            "effective_metric": g_eff,
+            "phase_gradients": phase_gradients,
+            "curvature_invariants": curvature_invariants
         }
 
-    def _compute_kretschmann_scalar(self, riemann_tensor: np.ndarray) -> float:
-        """Compute Kretschmann scalar."""
-        # Contract Riemann tensor with itself
-        kretschmann = 0.0
-        dims = riemann_tensor.shape[0]
-        
-        for mu in range(dims):
-            for nu in range(dims):
-                for rho in range(dims):
-                    for sigma in range(dims):
-                        kretschmann += riemann_tensor[mu, nu, rho, sigma]**2
-        
-        return kretschmann
+    def _compute_phase_gradients(self, phase_field: np.ndarray) -> Dict[str, np.ndarray]:
+        """
+        Compute gradients of the phase field.
 
-    def _compute_ricci_tensor_squared(self, ricci_tensor: np.ndarray) -> float:
-        """Compute Ricci tensor squared."""
-        # Contract Ricci tensor with itself
-        ricci_squared = 0.0
-        dims = ricci_tensor.shape[0]
+        Physical Meaning:
+            Calculates the gradients of the phase field Θ(x,φ,t) with respect to
+            spatial coordinates x and phase coordinates φ. These gradients are
+            fundamental for computing envelope curvature.
+
+        Mathematical Foundation:
+            ∇_x Θ = ∂Θ/∂x^i, ∇_φ Θ = ∂Θ/∂φ^j
+            where x^i are spatial coordinates and φ^j are phase coordinates
+
+        Args:
+            phase_field: Phase field configuration Θ(x,φ,t)
+
+        Returns:
+            Dictionary containing phase field gradients
+        """
+        # Compute spatial gradients (3D)
+        spatial_gradients = np.gradient(phase_field, axis=(0, 1, 2))
         
-        for mu in range(dims):
-            for nu in range(dims):
-                ricci_squared += ricci_tensor[mu, nu]**2
+        # Compute phase gradients (3D phase space)
+        phase_gradients = np.gradient(phase_field, axis=(3, 4, 5))
         
-        return ricci_squared
+        # Compute time gradient
+        time_gradient = np.gradient(phase_field, axis=6)
+        
+        return {
+            "spatial": spatial_gradients,
+            "phase": phase_gradients,
+            "time": time_gradient
+        }
+
+    def _compute_effective_metric(
+        self, 
+        phase_field: np.ndarray, 
+        phase_gradients: Dict[str, np.ndarray]
+    ) -> np.ndarray:
+        """
+        Compute effective metric from phase field.
+
+        Physical Meaning:
+            Calculates the effective metric g_eff[Θ] from the phase field configuration.
+            This metric describes the geometry of the VBP envelope and replaces
+            the classical spacetime metric in 7D BVP theory.
+
+        Mathematical Foundation:
+            g_eff[Θ] with g00=-1/c_φ^2, gij=A^{ij}=χ'/κ δ^{ij} (isotropic case)
+            where c_φ is the phase velocity and χ/κ is the bridge parameter
+
+        Args:
+            phase_field: Phase field configuration
+            phase_gradients: Phase field gradients
+
+        Returns:
+            Effective metric tensor g_eff[Θ]
+        """
+        # Get parameters
+        c_phi = self.params.get("c_phi", 1.0)  # Phase velocity
+        chi_kappa = self.params.get("chi_kappa", 1.0)  # Bridge parameter
+        
+        # Initialize 7D effective metric
+        g_eff = np.zeros((7, 7))
+        
+        # Time component: g00 = -1/c_φ^2
+        g_eff[0, 0] = -1.0 / (c_phi**2)
+        
+        # Spatial components: gij = A^{ij} = χ'/κ δ^{ij} (isotropic)
+        for i in range(1, 4):
+            g_eff[i, i] = chi_kappa
+        
+        # Phase components: gαβ (phase space metric)
+        for alpha in range(4, 7):
+            g_eff[alpha, alpha] = 1.0  # Unit phase space metric
+        
+        # Add phase field dependent corrections
+        phase_amplitude = np.mean(np.abs(phase_field))
+        correction_factor = 1.0 + 0.1 * phase_amplitude  # Small correction
+        
+        for i in range(7):
+            g_eff[i, i] *= correction_factor
+        
+        return g_eff
+
+    def _compute_envelope_invariants(
+        self, 
+        phase_gradients: Dict[str, np.ndarray], 
+        g_eff: np.ndarray
+    ) -> Dict[str, float]:
+        """
+        Compute envelope curvature invariants.
+
+        Physical Meaning:
+            Calculates scalar invariants of the envelope curvature that are
+            independent of coordinate system choice. These replace classical
+            curvature invariants like Ricci scalar in GR.
+
+        Mathematical Foundation:
+            K_env_scalar = invariants from ∇Θ, c_φ(a,k), A^{ij}
+            These are constructed from phase field gradients and effective metric
+
+        Args:
+            phase_gradients: Phase field gradients
+            g_eff: Effective metric
+
+        Returns:
+            Dictionary containing envelope curvature invariants
+        """
+        # Compute scalar curvature from phase gradients
+        spatial_grads = phase_gradients["spatial"]
+        phase_grads = phase_gradients["phase"]
+        
+        # Scalar invariant: sum of squared gradients (ensure real and non-negative)
+        spatial_invariant = np.sum([np.sum(np.abs(grad)**2) for grad in spatial_grads])
+        phase_invariant = np.sum([np.sum(np.abs(grad)**2) for grad in phase_grads])
+        
+        # Combined envelope curvature scalar (ensure real and non-negative)
+        envelope_scalar = np.real(spatial_invariant + phase_invariant)
+        
+        # Anisotropy measure (ensure real and non-negative)
+        anisotropy_measure = np.real(np.std([np.sum(np.abs(grad)**2) for grad in spatial_grads]))
+        
+        # Focusing measure (ensure real and non-negative)
+        focusing_measure = np.real(np.sum([np.sum(np.abs(grad)) for grad in spatial_grads]))
+        
+        return {
+            "scalar": envelope_scalar,
+            "anisotropy": anisotropy_measure,
+            "focusing": focusing_measure,
+            "spatial_invariant": np.real(spatial_invariant),
+            "phase_invariant": np.real(phase_invariant)
+        }
+
+    def _compute_anisotropy_index(self, g_eff: np.ndarray) -> float:
+        """
+        Compute anisotropy index of the effective metric.
+
+        Physical Meaning:
+            Calculates the anisotropy index which measures deviation from
+            isotropic envelope configuration. This is a key descriptor
+            of envelope geometry in 7D BVP theory.
+
+        Mathematical Foundation:
+            Anisotropy index = std(g_ii) / mean(g_ii) for spatial components
+            where g_ii are diagonal components of the effective metric
+
+        Args:
+            g_eff: Effective metric tensor
+
+        Returns:
+            Anisotropy index (dimensionless)
+        """
+        # Extract spatial diagonal components (indices 1,2,3)
+        spatial_diagonals = [g_eff[i, i] for i in range(1, 4)]
+        
+        # Compute anisotropy index
+        mean_diagonal = np.mean(spatial_diagonals)
+        std_diagonal = np.std(spatial_diagonals)
+        
+        if mean_diagonal > 0:
+            anisotropy_index = std_diagonal / mean_diagonal
+        else:
+            anisotropy_index = 0.0
+        
+        return anisotropy_index
+
+    def _compute_focusing_rate(
+        self, 
+        phase_gradients: Dict[str, np.ndarray], 
+        g_eff: np.ndarray
+    ) -> float:
+        """
+        Compute focusing rate of the envelope.
+
+        Physical Meaning:
+            Calculates the focusing rate which describes how the envelope
+            focuses or defocuses wavefronts. This is related to the
+            energy argument ΔE≤0 for envelope stability.
+
+        Mathematical Foundation:
+            Focusing rate = -∇·(∇Θ/|∇Θ|) where Θ is the phase field
+            Positive values indicate focusing, negative values indicate defocusing
+
+        Args:
+            phase_gradients: Phase field gradients
+            g_eff: Effective metric
+
+        Returns:
+            Focusing rate
+        """
+        spatial_grads = phase_gradients["spatial"]
+        
+        # Compute divergence of normalized gradients
+        focusing_rate = 0.0
+        
+        for i, grad in enumerate(spatial_grads):
+            # Compute gradient magnitude
+            grad_magnitude = np.sqrt(np.sum(grad**2))
+            
+            if grad_magnitude > 1e-12:  # Avoid division by zero
+                # Normalize gradient
+                normalized_grad = grad / grad_magnitude
+                
+                # Compute divergence (simplified)
+                divergence = np.sum(np.gradient(normalized_grad, axis=i))
+                focusing_rate -= divergence
+        
+        return focusing_rate
+
+    def compute_envelope_invariants(self, phase_field: np.ndarray) -> Dict[str, float]:
+        """
+        Compute envelope curvature invariants from phase field.
+
+        Physical Meaning:
+            Calculates scalar invariants of the envelope curvature that are
+            independent of coordinate system choice. These replace classical
+            curvature invariants like Ricci scalar in GR.
+
+        Mathematical Foundation:
+            K_env_scalar = invariants from ∇Θ, c_φ(a,k), A^{ij}
+            These are constructed from phase field gradients and effective metric
+
+        Args:
+            phase_field: Phase field configuration Θ(x,φ,t)
+
+        Returns:
+            Dictionary containing envelope curvature invariants
+        """
+        # Compute phase field gradients
+        phase_gradients = self._compute_phase_gradients(phase_field)
+        
+        # Compute effective metric
+        g_eff = self._compute_effective_metric(phase_field, phase_gradients)
+        
+        # Compute invariants
+        invariants = self._compute_envelope_invariants(phase_gradients, g_eff)
+        
+        return invariants

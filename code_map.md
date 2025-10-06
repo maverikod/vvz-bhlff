@@ -2,10 +2,10 @@
 Generated for: .
 
 ## Statistics
-- Total files: 491
-- Total classes: 465
-- Total functions: 3889
-- Total imports: 2328
+- Total files: 512
+- Total classes: 485
+- Total functions: 4056
+- Total imports: 2420
 
 ## Files Overview
 ### ./code_mapper.py
@@ -134,6 +134,12 @@ Generated for: .
 - Functions: 16
 - Imports: 4
 
+### ./tests/unit/__init__.py
+- Lines: 19
+- Classes: 0
+- Functions: 0
+- Imports: 0
+
 ### ./tests/unit/test_level_g_astrophysics.py
 - Lines: 446
 - Classes: 1
@@ -151,6 +157,18 @@ Generated for: .
 - Classes: 4
 - Functions: 30
 - Imports: 10
+
+### ./tests/unit/test_level_g/test_gravity_physics.py
+- Lines: 377
+- Classes: 2
+- Functions: 14
+- Imports: 7
+
+### ./tests/unit/test_level_g/test_vbp_envelope_physics.py
+- Lines: 478
+- Classes: 5
+- Functions: 27
+- Imports: 8
 
 ### ./tests/unit/test_level_b/__init__.py
 - Lines: 21
@@ -188,10 +206,46 @@ Generated for: .
 - Functions: 13
 - Imports: 7
 
+### ./tests/unit/test_level_e/test_soliton_physics.py
+- Lines: 534
+- Classes: 1
+- Functions: 21
+- Imports: 7
+
+### ./tests/unit/test_level_e/test_defect_physics.py
+- Lines: 341
+- Classes: 1
+- Functions: 12
+- Imports: 4
+
 ### ./tests/unit/test_level_e/test_level_e_simple.py
 - Lines: 666
 - Classes: 16
 - Functions: 39
+- Imports: 7
+
+### ./tests/unit/test_level_e/__init__.py
+- Lines: 26
+- Classes: 0
+- Functions: 0
+- Imports: 3
+
+### ./tests/unit/test_level_e/test_soliton_topology_physics.py
+- Lines: 471
+- Classes: 1
+- Functions: 15
+- Imports: 7
+
+### ./tests/unit/test_level_e/test_defect_fractional_physics.py
+- Lines: 265
+- Classes: 1
+- Functions: 11
+- Imports: 6
+
+### ./tests/unit/test_level_e/test_soliton_energy_physics.py
+- Lines: 455
+- Classes: 1
+- Functions: 13
 - Imports: 7
 
 ### ./tests/unit/test_solvers/test_abstract_solver_comprehensive.py
@@ -1323,10 +1377,22 @@ Generated for: .
 - Imports: 4
 
 ### ./bhlff/models/level_e/defect_models.py
-- Lines: 459
-- Classes: 3
-- Functions: 21
-- Imports: 3
+- Lines: 40
+- Classes: 0
+- Functions: 0
+- Imports: 4
+
+### ./bhlff/models/level_e/defect_dynamics.py
+- Lines: 370
+- Classes: 1
+- Functions: 11
+- Imports: 2
+
+### ./bhlff/models/level_e/defect_implementations.py
+- Lines: 406
+- Classes: 2
+- Functions: 15
+- Imports: 5
 
 ### ./bhlff/models/level_e/sensitivity_analysis.py
 - Lines: 435
@@ -1334,11 +1400,41 @@ Generated for: .
 - Functions: 15
 - Imports: 5
 
+### ./bhlff/models/level_e/soliton_implementations.py
+- Lines: 288
+- Classes: 2
+- Functions: 10
+- Imports: 3
+
 ### ./bhlff/models/level_e/phase_mapping.py
 - Lines: 667
 - Classes: 1
 - Functions: 26
 - Imports: 3
+
+### ./bhlff/models/level_e/soliton_optimization.py
+- Lines: 227
+- Classes: 2
+- Functions: 10
+- Imports: 2
+
+### ./bhlff/models/level_e/soliton_energy.py
+- Lines: 238
+- Classes: 1
+- Functions: 9
+- Imports: 2
+
+### ./bhlff/models/level_e/soliton_stability.py
+- Lines: 212
+- Classes: 1
+- Functions: 8
+- Imports: 2
+
+### ./bhlff/models/level_e/defect_core.py
+- Lines: 304
+- Classes: 1
+- Functions: 9
+- Imports: 4
 
 ### ./bhlff/models/level_e/bvp_integration.py
 - Lines: 425
@@ -1358,6 +1454,12 @@ Generated for: .
 - Functions: 29
 - Imports: 6
 
+### ./bhlff/models/level_e/defect_interactions.py
+- Lines: 427
+- Classes: 1
+- Functions: 11
+- Imports: 3
+
 ### ./bhlff/models/level_e/__init__.py
 - Lines: 54
 - Classes: 0
@@ -1365,10 +1467,16 @@ Generated for: .
 - Imports: 9
 
 ### ./bhlff/models/level_e/soliton_models.py
-- Lines: 681
-- Classes: 4
-- Functions: 29
-- Imports: 3
+- Lines: 49
+- Classes: 0
+- Functions: 0
+- Imports: 6
+
+### ./bhlff/models/level_e/soliton_core.py
+- Lines: 284
+- Classes: 1
+- Functions: 10
+- Imports: 6
 
 ### ./bhlff/models/level_e/failure_detection.py
 - Lines: 582
@@ -1387,6 +1495,12 @@ Generated for: .
 - Classes: 1
 - Functions: 23
 - Imports: 3
+
+### ./bhlff/models/level_g/gravity_curvature.py
+- Lines: 356
+- Classes: 1
+- Functions: 9
+- Imports: 2
 
 ### ./bhlff/models/level_g/astrophysics.py
 - Lines: 447
@@ -1418,11 +1532,17 @@ Generated for: .
 - Functions: 11
 - Imports: 8
 
-### ./bhlff/models/level_g/gravity.py
-- Lines: 614
+### ./bhlff/models/level_g/gravity_waves.py
+- Lines: 411
 - Classes: 1
-- Functions: 24
-- Imports: 3
+- Functions: 12
+- Imports: 2
+
+### ./bhlff/models/level_g/gravity.py
+- Lines: 215
+- Classes: 1
+- Functions: 8
+- Imports: 6
 
 ### ./bhlff/models/level_g/__init__.py
 - Lines: 41
@@ -1440,6 +1560,12 @@ Generated for: .
 - Lines: 683
 - Classes: 2
 - Functions: 20
+- Imports: 3
+
+### ./bhlff/models/level_g/gravity_einstein.py
+- Lines: 352
+- Classes: 1
+- Functions: 10
 - Imports: 3
 
 ### ./bhlff/models/level_a/__init__.py
@@ -1821,7 +1947,7 @@ Generated for: .
 - Imports: 5
 
 ### ./bhlff/core/bvp/topological_defect_analyzer.py
-- Lines: 359
+- Lines: 370
 - Classes: 1
 - Functions: 9
 - Imports: 7
@@ -2865,9 +2991,9 @@ Generated for: .
 - Imports: 4
 
 ### ./bhlff/core/fft/bvp_basic/bvp_basic_core.py
-- Lines: 433
+- Lines: 398
 - Classes: 1
-- Functions: 11
+- Functions: 10
 - Imports: 12
 
 ### ./bhlff/core/fft/bvp_basic/bvp_linear_solver.py

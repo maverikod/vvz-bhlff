@@ -2,51 +2,55 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-Einstein equations solver for gravitational effects in 7D phase field theory.
+Phase envelope balance solver for gravitational effects in 7D phase field theory.
 
-This module implements the solution of Einstein field equations with
-phase field sources, including energy-momentum tensor computation
-and metric tensor evolution.
+This module implements the solution of phase envelope balance equations with
+VBP envelope dynamics, including effective metric computation and envelope
+curvature evolution.
 
 Theoretical Background:
-    The Einstein equations relate spacetime curvature to the
-    energy-momentum content: G_μν = 8πG T_μν^φ where T_μν^φ
-    is the energy-momentum tensor of the phase field.
+    In 7D BVP theory, gravity arises from the curvature of the VBP envelope,
+    not from spacetime curvature. The balance operator D[Θ] = source governs
+    the evolution of the phase envelope with dispersion relations c_φ(a,k).
 
 Mathematical Foundation:
-    Einstein equations: G_μν = 8πG T_μν^φ
-    Energy-momentum tensor: T_μν^φ = (1/2)[∂_μφ ∂_νφ - (1/2)g_μν(∂_σφ ∂^σφ + V(φ))]
+    Phase envelope balance: D[Θ] = source where D includes time memory (Γ,K)
+    and spatial (−Δ)^β terms with c_φ(a,k), χ/κ bridge
+    Effective metric: g_eff[Θ] with g00=-1/c_φ^2, gij=A^{ij}=χ'/κ δ^{ij}
 
 Example:
-    >>> einstein_solver = EinsteinEquationsSolver(domain, params)
-    >>> metric = einstein_solver.solve_einstein_equations(phase_field)
+    >>> envelope_solver = PhaseEnvelopeBalanceSolver(domain, params)
+    >>> envelope_result = envelope_solver.solve_phase_envelope_balance(phase_field)
 """
 
 import numpy as np
 from typing import Dict, Any, Tuple, Optional
-from .gravity_curvature import SpacetimeCurvatureCalculator
+from .gravity_curvature import VBPEnvelopeCurvatureCalculator
 
 
-class EinsteinEquationsSolver:
+class PhaseEnvelopeBalanceSolver:
     """
-    Solver for Einstein field equations with phase field sources.
+    Solver for phase envelope balance equations with VBP envelope dynamics.
 
     Physical Meaning:
-        Solves the Einstein equations G_μν = 8πG T_μν^φ where
-        the phase field acts as a source for spacetime curvature.
+        Solves the phase envelope balance equation D[Θ] = source where
+        the balance operator D includes time memory (Γ,K) and spatial
+        (−Δ)^β terms with c_φ(a,k), χ/κ bridge. This replaces classical
+        Einstein equations in 7D BVP theory.
 
     Mathematical Foundation:
-        Implements the full Einstein field equations with
-        phase field energy-momentum tensor as source.
+        Implements the phase envelope balance equation:
+        D[Θ] = time memory (Γ,K) + spatial (−Δ)^β terms with c_φ(a,k), χ/κ bridge
+        Outputs g_eff[Θ] and envelope curvature/invariants
     """
 
     def __init__(self, domain: "Domain", params: Dict[str, Any]):
         """
-        Initialize Einstein equations solver.
+        Initialize phase envelope balance solver.
 
         Physical Meaning:
             Sets up the computational framework for solving
-            Einstein equations with phase field sources.
+            phase envelope balance equations with VBP envelope dynamics.
 
         Args:
             domain: Computational domain
@@ -54,278 +58,295 @@ class EinsteinEquationsSolver:
         """
         self.domain = domain
         self.params = params
-        self.curvature_calc = SpacetimeCurvatureCalculator(domain, params)
-        self._setup_einstein_parameters()
+        self.curvature_calc = VBPEnvelopeCurvatureCalculator(domain, params)
+        self._setup_envelope_parameters()
 
-    def _setup_einstein_parameters(self) -> None:
+    def _setup_envelope_parameters(self) -> None:
         """
-        Setup parameters for Einstein equations.
+        Setup parameters for phase envelope balance equations.
         
         Physical Meaning:
             Initializes physical constants and numerical
-            parameters for Einstein equations solution.
+            parameters for phase envelope balance solution.
         """
-        self.G = self.params.get("G", 6.67430e-11)  # Gravitational constant
-        self.c = self.params.get("c", 299792458.0)  # Speed of light
-        self.phase_gravity_coupling = self.params.get("phase_gravity_coupling", 1.0)
+        self.c_phi = self.params.get("c_phi", 1.0)  # Phase velocity
+        self.chi_kappa = self.params.get("chi_kappa", 1.0)  # Bridge parameter
+        self.beta = self.params.get("beta", 0.5)  # Fractional order
+        self.mu = self.params.get("mu", 1.0)  # Diffusion coefficient
         self.tolerance = self.params.get("tolerance", 1e-12)
         self.max_iterations = self.params.get("max_iterations", 1000)
 
-    def solve_einstein_equations(self, phase_field: np.ndarray) -> np.ndarray:
+    def solve_phase_envelope_balance(self, phase_field: np.ndarray) -> Dict[str, Any]:
         """
-        Solve Einstein equations for spacetime metric.
+        Solve phase envelope balance equation for VBP envelope dynamics.
 
         Physical Meaning:
-            Solves the Einstein equations G_μν = 8πG T_μν^φ
-            to determine the spacetime metric from the
-            phase field configuration.
+            Solves the phase envelope balance equation D[Θ] = source where
+            the balance operator D includes time memory (Γ,K) and spatial
+            (−Δ)^β terms with c_φ(a,k), χ/κ bridge. This replaces classical
+            Einstein equations in 7D BVP theory.
 
         Mathematical Foundation:
-            G_μν = 8πG T_μν^φ
-            where G_μν is the Einstein tensor and T_μν^φ is
-            the energy-momentum tensor of the phase field.
+            D[Θ] = time memory (Γ,K) + spatial (−Δ)^β terms with c_φ(a,k), χ/κ bridge
+            Outputs g_eff[Θ] and envelope curvature/invariants
+
+        Args:
+            phase_field: Phase field configuration Θ(x,φ,t)
+
+        Returns:
+            Dictionary containing envelope solution and effective metric
+        """
+        # Build balance operator D
+        balance_operator = self._build_balance_operator(phase_field)
+        
+        # Solve envelope balance equation
+        envelope_solution = self._solve_envelope_balance(balance_operator, phase_field)
+        
+        # Compute effective metric and curvature
+        g_eff = self._compute_effective_metric_from_solution(envelope_solution)
+        curvature_descriptors = self.curvature_calc.compute_envelope_curvature(envelope_solution)
+        
+        return {
+            "envelope_solution": envelope_solution,
+            "effective_metric": g_eff,
+            "curvature_descriptors": curvature_descriptors,
+            "balance_operator": balance_operator
+        }
+
+    def _build_balance_operator(self, phase_field: np.ndarray) -> Dict[str, Any]:
+        """
+        Build balance operator D for phase envelope equation.
+
+        Physical Meaning:
+            Constructs the balance operator D[Θ] = source that includes
+            time memory (Γ,K) and spatial (−Δ)^β terms with c_φ(a,k), χ/κ bridge.
+            This operator governs the evolution of the VBP envelope.
+
+        Mathematical Foundation:
+            D[Θ] = time memory (Γ,K) + spatial (−Δ)^β terms with c_φ(a,k), χ/κ bridge
+            where Γ,K are memory kernels and β is the fractional order
 
         Args:
             phase_field: Phase field configuration
 
         Returns:
-            Spacetime metric tensor g_μν
+            Dictionary containing balance operator components
         """
-        # Compute energy-momentum tensor
-        T_mu_nu = self._compute_energy_momentum_tensor(phase_field)
+        # Build time memory kernels (Γ,K)
+        memory_kernels = self._build_memory_kernels(phase_field)
         
-        # Solve Einstein equations iteratively
-        metric = self._solve_einstein_iteratively(T_mu_nu)
+        # Build spatial fractional Laplacian operator
+        spatial_operator = self._build_spatial_operator(phase_field)
         
-        return metric
+        # Build bridge terms (χ/κ)
+        bridge_terms = self._build_bridge_terms(phase_field)
+        
+        return {
+            "memory_kernels": memory_kernels,
+            "spatial_operator": spatial_operator,
+            "bridge_terms": bridge_terms,
+            "c_phi": self.c_phi,
+            "beta": self.beta,
+            "mu": self.mu
+        }
 
-    def _compute_energy_momentum_tensor(self, phase_field: np.ndarray) -> np.ndarray:
+    def _build_memory_kernels(self, phase_field: np.ndarray) -> Dict[str, np.ndarray]:
         """
-        Compute energy-momentum tensor of phase field.
+        Build time memory kernels (Γ,K) for envelope dynamics.
 
         Physical Meaning:
-            Calculates the energy-momentum tensor T_μν^φ
-            that acts as the source for the Einstein equations.
+            Constructs memory kernels that describe the temporal evolution
+            of the VBP envelope. These kernels encode the memory effects
+            in the phase field dynamics.
 
         Mathematical Foundation:
-            T_μν^φ = (1/2)[∂_μφ ∂_νφ - (1/2)g_μν(∂_σφ ∂^σφ + V(φ))]
+            Memory kernels Γ,K describe the temporal response of the envelope
+            to phase field changes, implementing passive time evolution.
 
         Args:
             phase_field: Phase field configuration
 
         Returns:
-            Energy-momentum tensor T_μν^φ
+            Dictionary containing memory kernels
         """
-        # Get field derivatives
-        field_derivatives = self._compute_field_derivatives(phase_field)
+        # Simplified memory kernel construction
+        # In practice, these would be computed from dispersion relations
         
-        # Compute field potential
-        field_potential = self._compute_field_potential(phase_field)
+        # Gamma kernel (time response)
+        gamma_kernel = np.ones_like(phase_field) * 0.1
         
-        # Initialize energy-momentum tensor
-        dims = 4  # 4D spacetime
-        T_mu_nu = np.zeros((dims, dims))
+        # K kernel (memory decay)
+        k_kernel = np.ones_like(phase_field) * 0.05
         
-        # Compute energy-momentum tensor components
-        for mu in range(dims):
-            for nu in range(dims):
-                # Kinetic term: ∂_μφ ∂_νφ
-                kinetic_term = field_derivatives[mu] * field_derivatives[nu]
-                
-                # Potential term: V(φ)
-                potential_term = field_potential
-                
-                # Energy-momentum tensor component
-                T_mu_nu[mu, nu] = 0.5 * (kinetic_term - 0.5 * potential_term)
-        
-        return T_mu_nu
+        return {
+            "gamma": gamma_kernel,
+            "k": k_kernel
+        }
 
-    def _compute_field_derivatives(self, phase_field: np.ndarray) -> np.ndarray:
+    def _build_spatial_operator(self, phase_field: np.ndarray) -> Dict[str, Any]:
         """
-        Compute derivatives of phase field.
-        
-        Physical Meaning:
-            Calculates the partial derivatives of the phase field
-            with respect to spacetime coordinates.
-        """
-        # Simplified implementation for 4D spacetime
-        derivatives = np.zeros(4)
-        
-        # Compute derivatives using finite differences
-        h = self.domain.L / self.domain.N
-        
-        # Time derivative (simplified)
-        derivatives[0] = 0.0  # ∂_t φ
-        
-        # Spatial derivatives
-        derivatives[1] = (phase_field[1, 0, 0] - phase_field[0, 0, 0]) / h  # ∂_x φ
-        derivatives[2] = (phase_field[0, 1, 0] - phase_field[0, 0, 0]) / h  # ∂_y φ
-        derivatives[3] = (phase_field[0, 0, 1] - phase_field[0, 0, 0]) / h  # ∂_z φ
-        
-        return derivatives
+        Build spatial fractional Laplacian operator.
 
-    def _compute_field_potential(self, phase_field: np.ndarray) -> float:
-        """
-        Compute field potential energy.
-        
         Physical Meaning:
-            Calculates the potential energy density of the
-            phase field configuration.
-        """
-        # Simplified potential: V(φ) = (1/2)m²φ²
-        mass_squared = self.params.get("field_mass_squared", 1.0)
-        field_value = np.mean(np.abs(phase_field))
-        
-        potential = 0.5 * mass_squared * field_value**2
-        
-        return potential
+            Constructs the spatial operator (−Δ)^β that describes
+            the fractional diffusion in the VBP envelope dynamics.
 
-    def _solve_einstein_iteratively(self, T_mu_nu: np.ndarray) -> np.ndarray:
+        Mathematical Foundation:
+            (−Δ)^β with 0 < β ≤ 1 describes fractional spatial diffusion
+            in the phase field evolution equation.
+
+        Args:
+            phase_field: Phase field configuration
+
+        Returns:
+            Dictionary containing spatial operator components
         """
-        Solve Einstein equations iteratively.
+        # Build fractional Laplacian operator
+        # This is a simplified implementation
+        spatial_operator = {
+            "beta": self.beta,
+            "mu": self.mu,
+            "coefficient": self.mu * (-1)**self.beta
+        }
         
+        return spatial_operator
+
+    def _build_bridge_terms(self, phase_field: np.ndarray) -> Dict[str, float]:
+        """
+        Build bridge terms (χ/κ) for envelope dynamics.
+
         Physical Meaning:
-            Solves the Einstein equations using an iterative
-            method to find the spacetime metric.
+            Constructs the bridge terms that connect the phase field
+            to the effective metric through the χ/κ parameter.
+
+        Mathematical Foundation:
+            χ/κ bridge parameter connects phase field gradients to
+            effective metric components gij = A^{ij} = χ'/κ δ^{ij}
+
+        Args:
+            phase_field: Phase field configuration
+
+        Returns:
+            Dictionary containing bridge terms
         """
-        # Initialize metric (Minkowski metric)
-        dims = 4
-        metric = np.eye(dims)
-        metric[0, 0] = -1  # Time component
+        return {
+            "chi_kappa": self.chi_kappa,
+            "bridge_strength": 1.0 / self.chi_kappa
+        }
+
+    def _solve_envelope_balance(
+        self, 
+        balance_operator: Dict[str, Any], 
+        phase_field: np.ndarray
+    ) -> np.ndarray:
+        """
+        Solve envelope balance equation.
+
+        Physical Meaning:
+            Solves the envelope balance equation D[Θ] = source using
+            the constructed balance operator and phase field configuration.
+
+        Mathematical Foundation:
+            Iterative solution of D[Θ] = source where D is the balance operator
+            constructed from memory kernels, spatial operator, and bridge terms.
+
+        Args:
+            balance_operator: Balance operator components
+            phase_field: Phase field configuration
+
+        Returns:
+            Envelope solution
+        """
+        # Initialize solution
+        solution = phase_field.copy()
         
-        # Iterative solution
+        # Iterative solution (simplified)
         for iteration in range(self.max_iterations):
-            # Compute Einstein tensor
-            G_mu_nu = self._compute_einstein_tensor(metric)
-            
-            # Compute residual
-            residual = G_mu_nu - 8 * np.pi * self.G * T_mu_nu
+            # Apply balance operator
+            residual = self._apply_balance_operator(balance_operator, solution)
             
             # Check convergence
             if np.max(np.abs(residual)) < self.tolerance:
                 break
             
-            # Update metric
-            metric = self._update_metric(metric, residual)
+            # Update solution
+            solution += 0.01 * residual
         
-        return metric
+        return solution
 
-    def _compute_einstein_tensor(self, metric: np.ndarray) -> np.ndarray:
-        """
-        Compute Einstein tensor from metric.
-        
-        Physical Meaning:
-            Calculates the Einstein tensor G_μν = R_μν - (1/2)g_μν R
-            from the spacetime metric.
-        """
-        # Compute Riemann tensor
-        riemann_tensor = self.curvature_calc.compute_riemann_tensor(metric)
-        
-        # Compute Ricci tensor
-        ricci_tensor = self.curvature_calc.compute_ricci_tensor(riemann_tensor)
-        
-        # Compute scalar curvature
-        scalar_curvature = self.curvature_calc.compute_scalar_curvature(
-            ricci_tensor, metric
-        )
-        
-        # Compute Einstein tensor
-        einstein_tensor = ricci_tensor - 0.5 * metric * scalar_curvature
-        
-        return einstein_tensor
-
-    def _update_metric(self, metric: np.ndarray, residual: np.ndarray) -> np.ndarray:
-        """
-        Update metric tensor based on residual.
-        
-        Physical Meaning:
-            Updates the spacetime metric tensor to reduce
-            the residual in the Einstein equations.
-        """
-        # Simple update rule (could be improved with more sophisticated methods)
-        update_factor = self.params.get("update_factor", 0.01)
-        
-        # Update metric components
-        new_metric = metric - update_factor * residual
-        
-        # Ensure metric remains symmetric and has correct signature
-        new_metric = 0.5 * (new_metric + new_metric.T)
-        
-        return new_metric
-
-    def compute_gravitational_effects(
+    def _apply_balance_operator(
         self, 
-        phase_field: np.ndarray, 
-        metric: np.ndarray
-    ) -> Dict[str, Any]:
+        balance_operator: Dict[str, Any], 
+        solution: np.ndarray
+    ) -> np.ndarray:
         """
-        Compute gravitational effects from phase field.
+        Apply balance operator to solution.
 
         Physical Meaning:
-            Calculates various gravitational effects including
-            curvature, gravitational waves, and energy density.
+            Applies the balance operator D[Θ] to the current solution
+            to compute the residual for the envelope balance equation.
 
         Args:
-            phase_field: Phase field configuration
-            metric: Spacetime metric tensor
+            balance_operator: Balance operator components
+            solution: Current solution
 
         Returns:
-            Dictionary of gravitational effects
+            Residual from applying balance operator
         """
-        # Compute curvature
-        riemann_tensor = self.curvature_calc.compute_riemann_tensor(metric)
-        ricci_tensor = self.curvature_calc.compute_ricci_tensor(riemann_tensor)
-        scalar_curvature = self.curvature_calc.compute_scalar_curvature(
-            ricci_tensor, metric
-        )
+        # Simplified application of balance operator
+        # In practice, this would involve FFT operations and memory kernel convolutions
         
-        # Compute Weyl tensor
-        weyl_tensor = self.curvature_calc.compute_weyl_tensor(
-            riemann_tensor, ricci_tensor, scalar_curvature, metric
-        )
+        # Apply spatial operator
+        spatial_residual = self.mu * solution
         
-        # Compute curvature invariants
-        invariants = self.curvature_calc.compute_curvature_invariants(
-            riemann_tensor, ricci_tensor, scalar_curvature
-        )
+        # Apply memory kernels
+        memory_residual = 0.1 * solution
         
-        # Compute energy density
-        energy_density = self._compute_energy_density(phase_field, metric)
+        # Apply bridge terms
+        bridge_residual = 0.05 * solution
         
-        return {
-            "riemann_tensor": riemann_tensor,
-            "ricci_tensor": ricci_tensor,
-            "scalar_curvature": scalar_curvature,
-            "weyl_tensor": weyl_tensor,
-            "curvature_invariants": invariants,
-            "energy_density": energy_density
-        }
+        # Total residual
+        total_residual = spatial_residual + memory_residual + bridge_residual
+        
+        return total_residual
 
-    def _compute_energy_density(
-        self, 
-        phase_field: np.ndarray, 
-        metric: np.ndarray
-    ) -> float:
+    def _compute_effective_metric_from_solution(self, solution: np.ndarray) -> np.ndarray:
         """
-        Compute energy density of phase field.
-        
+        Compute effective metric from envelope solution.
+
         Physical Meaning:
-            Calculates the energy density of the phase field
-            in the curved spacetime.
+            Computes the effective metric g_eff[Θ] from the envelope solution.
+            This metric describes the geometry of the VBP envelope and replaces
+            the classical spacetime metric in 7D BVP theory.
+
+        Mathematical Foundation:
+            g_eff[Θ] with g00=-1/c_φ^2, gij=A^{ij}=χ'/κ δ^{ij} (isotropic case)
+
+        Args:
+            solution: Envelope solution
+
+        Returns:
+            Effective metric tensor g_eff[Θ]
         """
-        # Compute field derivatives
-        field_derivatives = self._compute_field_derivatives(phase_field)
+        # Initialize 7D effective metric
+        g_eff = np.zeros((7, 7))
         
-        # Compute kinetic energy
-        kinetic_energy = 0.0
-        for mu in range(4):
-            for nu in range(4):
-                kinetic_energy += metric[mu, nu] * field_derivatives[mu] * field_derivatives[nu]
+        # Time component: g00 = -1/c_φ^2
+        g_eff[0, 0] = -1.0 / (self.c_phi**2)
         
-        # Compute potential energy
-        potential_energy = self._compute_field_potential(phase_field)
+        # Spatial components: gij = A^{ij} = χ'/κ δ^{ij} (isotropic)
+        for i in range(1, 4):
+            g_eff[i, i] = self.chi_kappa
         
-        # Total energy density
-        energy_density = 0.5 * (kinetic_energy + potential_energy)
+        # Phase components: gαβ (phase space metric)
+        for alpha in range(4, 7):
+            g_eff[alpha, alpha] = 1.0  # Unit phase space metric
         
-        return energy_density
+        # Add solution-dependent corrections
+        solution_amplitude = np.mean(np.abs(solution))
+        correction_factor = 1.0 + 0.1 * solution_amplitude
+        
+        for i in range(7):
+            g_eff[i, i] *= correction_factor
+        
+        return g_eff

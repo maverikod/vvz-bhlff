@@ -66,12 +66,12 @@ class TestSolitonTopologyPhysics:
         }
 
     @pytest.fixture
-    def hedgehog_field_b1(self, domain_3d):
+    def u1_phase_field_b1(self, domain_3d):
         """
-        Create B=1 hedgehog field configuration.
+        Create B=1 U(1)^3 phase field configuration.
         
         Physical Meaning:
-            Creates a hedgehog field configuration with topological
+            Creates a U(1)^3 phase field configuration with topological
             charge B=1, representing a single baryon.
         """
         N = domain_3d.N
@@ -87,38 +87,29 @@ class TestSolitonTopologyPhysics:
         r = np.sqrt(X**2 + Y**2 + Z**2)
         r = np.where(r < 1e-10, 1e-10, r)
         
-        # Create hedgehog field
-        field = np.zeros((N, N, N, 2, 2), dtype=complex)
+        # Create 7D U(1)^3 phase field Θ(x,φ) ∈ T^3_φ
+        # Shape: (N, N, N, 8, 8, 8, 1) for (x, y, z, φ₁, φ₂, φ₃, t)
+        field = np.zeros((N, N, N, 8, 8, 8, 1), dtype=complex)
         
-        # Profile function f(r) = π(1 - r/R) for r < R, 0 otherwise
-        R = L/6  # Soliton radius
-        f = np.where(r < R, np.pi * (1 - r/R), 0)
+        # Create phase coordinates
+        phi1 = np.linspace(0, 2*np.pi, 8)
+        phi2 = np.linspace(0, 2*np.pi, 8)
+        phi3 = np.linspace(0, 2*np.pi, 8)
+        PHI1, PHI2, PHI3 = np.meshgrid(phi1, phi2, phi3, indexing='ij')
         
-        # Unit radial vector n̂(x) = x/|x|
-        nx = X / r
-        ny = Y / r
-        nz = Z / r
-        
-        # Pauli matrices
-        sigma_x = np.array([[0, 1], [1, 0]], dtype=complex)
-        sigma_y = np.array([[0, -1j], [1j, 0]], dtype=complex)
-        sigma_z = np.array([[1, 0], [0, -1]], dtype=complex)
-        
-        # Create field U(x) = cos(f(r)) + iτ·n̂(x) sin(f(r))
+        # Create U(1)^3 phase field with controlled winding
+        # Θ(x,φ) = φ₁ + φ₂ + φ₃ with spatial modulation
         for i in range(N):
             for j in range(N):
                 for k in range(N):
-                    if r[i, j, k] < R:
-                        # τ·n̂ = σ_x n_x + σ_y n_y + σ_z n_z
-                        tau_dot_n = (sigma_x * nx[i, j, k] + 
-                                   sigma_y * ny[i, j, k] + 
-                                   sigma_z * nz[i, j, k])
-                        
-                        # U = cos(f) + iτ·n̂ sin(f)
-                        field[i, j, k] = (np.cos(f[i, j, k]) * np.eye(2) + 
-                                        1j * tau_dot_n * np.sin(f[i, j, k]))
-                    else:
-                        field[i, j, k] = np.eye(2)
+                    # Spatial modulation factor
+                    r_spatial = np.sqrt(X[i, j, k]**2 + Y[i, j, k]**2 + Z[i, j, k]**2)
+                    R = L/6  # Soliton radius
+                    spatial_factor = np.exp(-r_spatial**2 / (2 * R**2)) if r_spatial < R else 0
+                    
+                    # Create phase field with controlled winding
+                    # Θ(x,φ) = spatial_factor * (φ₁ + φ₂ + φ₃)
+                    field[i, j, k, :, :, :, 0] = spatial_factor * (PHI1 + PHI2 + PHI3)
         
         return field
 
@@ -141,25 +132,25 @@ class TestSolitonTopologyPhysics:
         
         return field
 
-    def test_topological_charge_b1_hedgehog(self, domain_3d, physics_params, hedgehog_field_b1):
+    def test_topological_charge_b1_u1_phase(self, domain_3d, physics_params, u1_phase_field_b1):
         """
-        Test topological charge calculation for B=1 hedgehog field.
+        Test topological charge calculation for B=1 U(1)^3 phase field.
         
         Physical Meaning:
-            Verifies that a hedgehog field configuration has
+            Verifies that a U(1)^3 phase field configuration has
             topological charge B≈1, as expected theoretically.
         """
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Compute topological charge
-        charge = soliton.compute_topological_charge(hedgehog_field_b1)
+        charge = soliton.compute_topological_charge(u1_phase_field_b1)
         
         # Check physical properties
         assert np.isfinite(charge), f"Topological charge should be finite, got {charge}"
         
-        # For a hedgehog field, charge should be close to 1
+        # For a U(1)^3 phase field, charge should be close to 1
         # (allowing for numerical errors and boundary effects)
-        assert abs(charge - 1.0) < 0.5, f"Hedgehog field should have charge ≈ 1, got {charge}"
+        assert abs(charge - 1.0) < 0.5, f"U(1)^3 phase field should have charge ≈ 1, got {charge}"
         
         # Charge should be positive
         assert charge > 0, f"Baryon soliton should have positive charge, got {charge}"
@@ -183,7 +174,7 @@ class TestSolitonTopologyPhysics:
         # For a trivial field, charge should be close to 0
         assert abs(charge) < 0.1, f"Trivial field should have charge ≈ 0, got {charge}"
 
-    def test_topological_charge_conservation(self, domain_3d, physics_params, hedgehog_field_b1):
+    def test_topological_charge_conservation(self, domain_3d, physics_params, u1_phase_field_b1):
         """
         Test topological charge conservation.
         
@@ -194,10 +185,10 @@ class TestSolitonTopologyPhysics:
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Compute charge of original field
-        charge_original = soliton.compute_topological_charge(hedgehog_field_b1)
+        charge_original = soliton.compute_topological_charge(u1_phase_field_b1)
         
         # Create slightly deformed field
-        deformed_field = hedgehog_field_b1.copy()
+        deformed_field = u1_phase_field_b1.copy()
         N = domain_3d.N
         
         # Apply small deformation
@@ -231,8 +222,8 @@ class TestSolitonTopologyPhysics:
         soliton_small = BaryonSoliton(domain_small, physics_params)
         soliton_large = BaryonSoliton(domain_large, physics_params)
         
-        # Create hedgehog fields for both domains
-        def create_hedgehog(domain):
+        # Create U(1)^3 phase fields for both domains
+        def create_u1_phase(domain):
             N = domain.N
             L = domain.L
             x = np.linspace(-L/2, L/2, N)
@@ -242,32 +233,33 @@ class TestSolitonTopologyPhysics:
             r = np.sqrt(X**2 + Y**2 + Z**2)
             r = np.where(r < 1e-10, 1e-10, r)
             
-            field = np.zeros((N, N, N, 2, 2), dtype=complex)
+            field = np.zeros((N, N, N, 8, 8, 8, 1), dtype=complex)
             R = L/6
             f = np.where(r < R, np.pi * (1 - r/R), 0)
             nx = X / r
             ny = Y / r
             nz = Z / r
             
-            sigma_x = np.array([[0, 1], [1, 0]], dtype=complex)
-            sigma_y = np.array([[0, -1j], [1j, 0]], dtype=complex)
-            sigma_z = np.array([[1, 0], [0, -1]], dtype=complex)
+            # Create phase coordinates
+            phi1 = np.linspace(0, 2*np.pi, 8)
+            phi2 = np.linspace(0, 2*np.pi, 8)
+            phi3 = np.linspace(0, 2*np.pi, 8)
+            PHI1, PHI2, PHI3 = np.meshgrid(phi1, phi2, phi3, indexing='ij')
             
+            # Create U(1)^3 phase field with controlled winding
             for i in range(N):
                 for j in range(N):
                     for k in range(N):
-                        if r[i, j, k] < R:
-                            tau_dot_n = (sigma_x * nx[i, j, k] + 
-                                       sigma_y * ny[i, j, k] + 
-                                       sigma_z * nz[i, j, k])
-                            field[i, j, k] = (np.cos(f[i, j, k]) * np.eye(2) + 
-                                            1j * tau_dot_n * np.sin(f[i, j, k]))
-                        else:
-                            field[i, j, k] = np.eye(2)
+                        # Spatial modulation factor
+                        r_spatial = np.sqrt(X[i, j, k]**2 + Y[i, j, k]**2 + Z[i, j, k]**2)
+                        spatial_factor = np.exp(-r_spatial**2 / (2 * R**2)) if r_spatial < R else 0
+                        
+                        # Create phase field with controlled winding
+                        field[i, j, k, :, :, :, 0] = spatial_factor * (PHI1 + PHI2 + PHI3)
             return field
         
-        field_small = create_hedgehog(domain_small)
-        field_large = create_hedgehog(domain_large)
+        field_small = create_u1_phase(domain_small)
+        field_large = create_u1_phase(domain_large)
         
         # Compute charges
         charge_small = soliton_small.compute_topological_charge(field_small)
@@ -285,7 +277,7 @@ class TestSolitonTopologyPhysics:
         charge_difference = abs(charge_small - charge_large)
         assert charge_difference < 0.5, f"Charges should be approximately equal: {charge_small} vs {charge_large}"
 
-    def test_topological_charge_under_rotation(self, domain_3d, physics_params, hedgehog_field_b1):
+    def test_topological_charge_under_rotation(self, domain_3d, physics_params, u1_phase_field_b1):
         """
         Test topological charge under field rotations.
         
@@ -296,10 +288,10 @@ class TestSolitonTopologyPhysics:
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Compute charge of original field
-        charge_original = soliton.compute_topological_charge(hedgehog_field_b1)
+        charge_original = soliton.compute_topological_charge(u1_phase_field_b1)
         
         # Create rotated field
-        rotated_field = hedgehog_field_b1.copy()
+        rotated_field = u1_phase_field_b1.copy()
         N = domain_3d.N
         
         # Apply global rotation around z-axis
@@ -315,7 +307,7 @@ class TestSolitonTopologyPhysics:
             for j in range(N):
                 for k in range(N):
                     # This is a simplified rotation - in reality, it would be more complex
-                    rotated_field[i, j, k] = hedgehog_field_b1[i, j, k]
+                    rotated_field[i, j, k] = u1_phase_field_b1[i, j, k]
         
         # Compute charge of rotated field
         charge_rotated = soliton.compute_topological_charge(rotated_field)
@@ -324,7 +316,7 @@ class TestSolitonTopologyPhysics:
         charge_difference = abs(charge_original - charge_rotated)
         assert charge_difference < 0.1, f"Topological charge should be invariant under rotation: {charge_original} vs {charge_rotated}"
 
-    def test_topological_charge_precision(self, domain_3d, physics_params, hedgehog_field_b1):
+    def test_topological_charge_precision(self, domain_3d, physics_params, u1_phase_field_b1):
         """
         Test topological charge calculation precision.
         
@@ -337,7 +329,7 @@ class TestSolitonTopologyPhysics:
         # Compute charge multiple times
         charges = []
         for _ in range(5):
-            charge = soliton.compute_topological_charge(hedgehog_field_b1)
+            charge = soliton.compute_topological_charge(u1_phase_field_b1)
             charges.append(charge)
         
         # Check consistency
@@ -363,8 +355,8 @@ class TestSolitonTopologyPhysics:
         soliton_periodic = BaryonSoliton(domain_periodic, physics_params)
         soliton_dirichlet = BaryonSoliton(domain_dirichlet, physics_params)
         
-        # Create hedgehog fields for both domains
-        def create_hedgehog(domain):
+        # Create U(1)^3 phase fields for both domains
+        def create_u1_phase(domain):
             N = domain.N
             L = domain.L
             x = np.linspace(-L/2, L/2, N)
@@ -374,32 +366,33 @@ class TestSolitonTopologyPhysics:
             r = np.sqrt(X**2 + Y**2 + Z**2)
             r = np.where(r < 1e-10, 1e-10, r)
             
-            field = np.zeros((N, N, N, 2, 2), dtype=complex)
+            field = np.zeros((N, N, N, 8, 8, 8, 1), dtype=complex)
             R = L/6
             f = np.where(r < R, np.pi * (1 - r/R), 0)
             nx = X / r
             ny = Y / r
             nz = Z / r
             
-            sigma_x = np.array([[0, 1], [1, 0]], dtype=complex)
-            sigma_y = np.array([[0, -1j], [1j, 0]], dtype=complex)
-            sigma_z = np.array([[1, 0], [0, -1]], dtype=complex)
+            # Create phase coordinates
+            phi1 = np.linspace(0, 2*np.pi, 8)
+            phi2 = np.linspace(0, 2*np.pi, 8)
+            phi3 = np.linspace(0, 2*np.pi, 8)
+            PHI1, PHI2, PHI3 = np.meshgrid(phi1, phi2, phi3, indexing='ij')
             
+            # Create U(1)^3 phase field with controlled winding
             for i in range(N):
                 for j in range(N):
                     for k in range(N):
-                        if r[i, j, k] < R:
-                            tau_dot_n = (sigma_x * nx[i, j, k] + 
-                                       sigma_y * ny[i, j, k] + 
-                                       sigma_z * nz[i, j, k])
-                            field[i, j, k] = (np.cos(f[i, j, k]) * np.eye(2) + 
-                                            1j * tau_dot_n * np.sin(f[i, j, k]))
-                        else:
-                            field[i, j, k] = np.eye(2)
+                        # Spatial modulation factor
+                        r_spatial = np.sqrt(X[i, j, k]**2 + Y[i, j, k]**2 + Z[i, j, k]**2)
+                        spatial_factor = np.exp(-r_spatial**2 / (2 * R**2)) if r_spatial < R else 0
+                        
+                        # Create phase field with controlled winding
+                        field[i, j, k, :, :, :, 0] = spatial_factor * (PHI1 + PHI2 + PHI3)
             return field
         
-        field_periodic = create_hedgehog(domain_periodic)
-        field_dirichlet = create_hedgehog(domain_dirichlet)
+        field_periodic = create_u1_phase(domain_periodic)
+        field_dirichlet = create_u1_phase(domain_dirichlet)
         
         # Compute charges
         charge_periodic = soliton_periodic.compute_topological_charge(field_periodic)
@@ -413,7 +406,7 @@ class TestSolitonTopologyPhysics:
         assert charge_periodic > 0, "Charge should be positive for periodic boundary"
         assert charge_dirichlet > 0, "Charge should be positive for dirichlet boundary"
 
-    def test_topological_charge_integration_radius(self, domain_3d, physics_params, hedgehog_field_b1):
+    def test_topological_charge_integration_radius(self, domain_3d, physics_params, u1_phase_field_b1):
         """
         Test topological charge integration radius dependence.
         
@@ -432,8 +425,8 @@ class TestSolitonTopologyPhysics:
         soliton_large = BaryonSoliton(domain_3d, params_large_radius)
         
         # Compute charges
-        charge_small = soliton_small.compute_topological_charge(hedgehog_field_b1)
-        charge_large = soliton_large.compute_topological_charge(hedgehog_field_b1)
+        charge_small = soliton_small.compute_topological_charge(u1_phase_field_b1)
+        charge_large = soliton_large.compute_topological_charge(u1_phase_field_b1)
         
         # Both charges should be finite
         assert np.isfinite(charge_small), "Charge should be finite for small radius"
@@ -468,9 +461,9 @@ class TestSolitonTopologyPhysics:
         assert antibaryon.charge == -1, "Antibaryon soliton should have charge -1"
         
         # Check charge-specific configurations
-        assert baryon.boundary_condition == "hedgehog", "Baryon should have hedgehog boundary condition"
-        assert skyrmion.boundary_condition == "multi_hedgehog", "Skyrmion should have multi-hedgehog boundary condition"
-        assert antibaryon.boundary_condition == "anti_hedgehog", "Antibaryon should have anti-hedgehog boundary condition"
+        assert baryon.boundary_condition == "u1_phase_winding", "Baryon should have u1_phase_winding boundary condition"
+        assert skyrmion.boundary_condition == "multi_u1_phase_winding", "Skyrmion should have multi_u1_phase_winding boundary condition"
+        assert antibaryon.boundary_condition == "anti_u1_phase_winding", "Antibaryon should have anti_u1_phase_winding boundary condition"
 
 
 if __name__ == "__main__":

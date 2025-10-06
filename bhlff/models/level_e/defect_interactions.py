@@ -23,6 +23,7 @@ Example:
 
 import numpy as np
 from typing import Dict, Any, List, Optional, Tuple
+from scipy.special import gamma
 
 
 class DefectInteractions:
@@ -69,9 +70,24 @@ class DefectInteractions:
         self.screening_length = self.params.get("screening_length", 0.5)
         self.cutoff_radius = self.params.get("cutoff_radius", 0.1)
         
-        # Green function parameters
-        self.green_prefactor = self.interaction_strength / (4 * np.pi)
-        self.screening_factor = 1.0 / self.screening_length
+        # Fractional Green function parameters
+        beta = self.params.get("beta", 1.0)
+        self.beta = beta
+        # Fractional Green function normalization: use simple scaling from classical case
+        # For β=1: G₁(r) = 1/(4πr), for β<1: G_β(r) = C_β r^(2β-3)
+        if beta < 1.5:
+            # Simple scaling: normalize so that at r=1, G_β(1) ≈ 1/(4π)
+            self.green_prefactor = self.interaction_strength / (4 * np.pi)
+        else:
+            # Fallback for β ≥ 1.5
+            self.green_prefactor = self.interaction_strength / (4 * np.pi)
+        
+        # Remove default screening (λ=0 as per ALL.md)
+        self.tempered_lambda = self.params.get("tempered_lambda", 0.0)
+        if self.tempered_lambda > 0:
+            self.screening_factor = 1.0 / self.tempered_lambda
+        else:
+            self.screening_factor = 0.0  # No screening in base regime
 
     def compute_interaction_forces(
         self, 
@@ -164,15 +180,17 @@ class DefectInteractions:
 
     def _compute_green_function(self, r: float) -> Tuple[float, float]:
         """
-        Compute Green function and its gradient.
+        Compute fractional Green function and its gradient.
 
         Physical Meaning:
-            Calculates the Green function G(r) and its gradient
+            Calculates the fractional Green function G_β(r) and its gradient
             for defect interactions. The Green function represents
-            the potential due to a point source.
+            the potential due to a point source in fractional Laplacian theory.
 
         Mathematical Foundation:
-            G(r) = (1/4πr) exp(-r/λ) where λ is the screening length.
+            G_β(r) = C_β r^(2β-3) for 3D fractional Laplacian (-Δ)^β.
+            For β=1: G_1(r) = 1/(4πr) (classical Coulomb).
+            For β<1: G_β(r) ∝ r^(2β-3) with power-law tail.
 
         Args:
             r: Distance from source
@@ -184,16 +202,27 @@ class DefectInteractions:
             # Regularize at small distances
             r = self.cutoff_radius
 
-        # Screened Coulomb potential
-        screening_factor = np.exp(-r * self.screening_factor)
+        # Fractional Green function: G_β(r) = C_β r^(2β-3)
+        if self.beta < 1.5:
+            # Power-law tail: G_β(r) ∝ r^(2β-3)
+            power = 2 * self.beta - 3
+            green_value = self.green_prefactor * (r ** power)
+            
+            # Gradient: dG_β/dr = C_β (2β-3) r^(2β-4)
+            if power != 0:
+                green_gradient = self.green_prefactor * power * (r ** (power - 1))
+            else:
+                green_gradient = 0.0
+        else:
+            # Fallback to classical Coulomb for β ≥ 1.5
+            green_value = self.green_prefactor / r
+            green_gradient = -self.green_prefactor / (r ** 2)
         
-        # Green function value
-        green_value = self.green_prefactor * screening_factor / r
-        
-        # Green function gradient
-        green_gradient = -self.green_prefactor * screening_factor * (
-            1/r**2 + self.screening_factor/r
-        )
+        # Apply tempered screening if λ > 0 (diagnostic only)
+        if self.tempered_lambda > 0:
+            screening_factor = np.exp(-r * self.screening_factor)
+            green_value *= screening_factor
+            green_gradient = green_gradient * screening_factor - green_value * self.screening_factor
 
         return green_value, green_gradient
 
@@ -270,20 +299,25 @@ class DefectInteractions:
         separation: float
     ) -> float:
         """
-        Compute energy released during annihilation.
+        Compute energy released during annihilation using fractional Green function.
         
         Physical Meaning:
             Calculates the energy released when a defect-antidefect
-            pair annihilates, based on their charges and separation.
+            pair annihilates, based on their charges and separation
+            using the fractional Green function G_β(r).
+            
+        Mathematical Foundation:
+            Energy scales with the fractional Green function value
+            at the separation distance: E ∝ |q₁q₂| G_β(r).
         """
         # Energy scales with charge magnitude
         charge_factor = abs(charge1 * charge2)
         
-        # Energy decreases with separation
-        separation_factor = np.exp(-separation / self.screening_length)
+        # Get Green function value at separation
+        green_value, _ = self._compute_green_function(separation)
         
-        # Total annihilation energy
-        energy = charge_factor * self.interaction_strength * separation_factor
+        # Total annihilation energy from fractional Green function
+        energy = charge_factor * green_value
         
         return energy
 
@@ -360,3 +394,34 @@ class DefectInteractions:
                 total_potential += charges[i] * charges[j] * green_value
 
         return total_potential
+
+    def _compute_fractional_green_normalization(self, beta: float) -> float:
+        """
+        Compute normalization constant for fractional Green function.
+        
+        Physical Meaning:
+            Calculates the normalization constant C_β for the fractional
+            Green function G_β such that (-Δ)^β G_β = δ in R³.
+            
+        Mathematical Foundation:
+            For 3D fractional Laplacian: C_β = Γ(3/2-β) / (2^(2β) π^(3/2) Γ(β))
+            This ensures proper normalization of the fractional Green function.
+            The exact formula ensures that ∫ G_β(r) d³r = 1 and (-Δ)^β G_β = δ.
+            
+        Args:
+            beta: Fractional order parameter
+            
+        Returns:
+            Normalization constant C_β
+        """
+        if beta <= 0 or beta >= 1.5:
+            # Fallback to classical case for extreme values
+            return 1.0 / (4 * np.pi)
+        
+        # Exact normalization for 3D fractional Green function
+        # C_β = Γ(3/2-β) / (2^(2β) π^(3/2) Γ(β))
+        # This is the mathematically correct normalization
+        numerator = gamma(3/2 - beta)
+        denominator = (2**(2*beta)) * (np.pi**(3/2)) * gamma(beta)
+        
+        return numerator / denominator

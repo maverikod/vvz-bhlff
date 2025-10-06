@@ -11,12 +11,14 @@ Theoretical Background:
     Solitons are stable localized field configurations that minimize
     the energy functional while preserving topological charge. In the
     7D theory, they represent baryons and other particle-like structures
-    through SU(3) field configurations with non-trivial winding numbers.
+    through U(1)^3 phase patterns on the VBP substrate with controlled
+    winding over φ-coordinates.
 
 Mathematical Foundation:
-    Implements SU(3) field configuration U(x,φ,t) with topological
-    charge B = (1/24π²)∫ε^μνρσTr(L_ν L_ρ L_σ) and WZW term for
-    baryon number conservation.
+    Implements 7D phase field configuration Θ(x,φ,t) ∈ T^3_φ with
+    topological charge B = (1/8π²)∫_T³_φ dφ₁dφ₂dφ₃ ∇_φ·Θ(x,φ) and WZW
+    term for baryon number conservation. The classical SU(3) field
+    configuration is a 4D pedagogical limit, not the core 7D construction.
 
 Example:
     >>> soliton = BaryonSoliton(domain, physics_params)

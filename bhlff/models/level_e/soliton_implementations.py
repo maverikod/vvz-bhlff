@@ -29,13 +29,17 @@ class BaryonSoliton(SolitonModel):
 
     Physical Meaning:
         Represents proton/neutron as topological soliton with unit
-        baryon number, subject to Finkelstein-Rubinstein constraints
-        that ensure fermionic statistics.
+        baryon number in 7D phase field theory. The soliton is realized
+        as a phase pattern on the U(1)^3 substrate with controlled
+        winding over φ-coordinates, subject to Finkelstein-Rubinstein
+        constraints that ensure fermionic statistics.
 
     Mathematical Foundation:
-        Implements B=1 soliton with FR constraints ensuring that
-        rotation by 2π changes the sign of the wave function,
-        providing fermionic statistics.
+        Implements B=1 soliton with U(1)^3 phase winding Θ(x,φ) ∈ T^3_φ
+        and FR constraints ensuring that rotation by 2π changes the sign
+        of the wave function, providing fermionic statistics. The classical
+        SU(2) hedgehog pattern is a 4D pedagogical limit, not the core
+        7D construction.
     """
 
     def __init__(self, domain: "Domain", physics_params: Dict[str, Any]):
@@ -210,12 +214,16 @@ class SkyrmionSoliton(SolitonModel):
     Skyrmion soliton with arbitrary topological charge.
 
     Physical Meaning:
-        General topological soliton with arbitrary winding number,
-        representing extended baryonic matter or exotic states.
+        General topological soliton with arbitrary winding number in 7D
+        phase field theory, representing extended baryonic matter or
+        exotic states. The soliton is realized as a phase pattern on
+        the U(1)^3 substrate with controlled winding over φ-coordinates.
 
     Mathematical Foundation:
-        Implements soliton with arbitrary topological charge B,
-        allowing for multi-baryon states and exotic configurations.
+        Implements soliton with arbitrary topological charge B using
+        U(1)^3 phase winding Θ(x,φ) ∈ T^3_φ, allowing for multi-baryon
+        states and exotic configurations. The classical SU(2) hedgehog
+        pattern is a 4D pedagogical limit, not the core 7D construction.
     """
 
     def __init__(self, domain: "Domain", physics_params: Dict[str, Any], charge: int):
@@ -256,13 +264,13 @@ class SkyrmionSoliton(SolitonModel):
 
     def _setup_baryon_terms(self) -> None:
         """Setup terms for B=1 soliton."""
-        self.boundary_condition = "hedgehog"
+        self.boundary_condition = "u1_phase_winding"
         self.constraint_type = "single_baryon"
         self.charge_specific_coupling = self.params.get("baryon_coupling", 1.0)
 
     def _setup_multi_baryon_terms(self) -> None:
         """Setup terms for B>1 soliton."""
-        self.boundary_condition = "multi_hedgehog"
+        self.boundary_condition = "multi_u1_phase_winding"
         self.constraint_type = "multi_baryon"
         self.charge_specific_coupling = self.params.get("multi_baryon_coupling", 1.0)
         
@@ -272,7 +280,7 @@ class SkyrmionSoliton(SolitonModel):
 
     def _setup_antibaryon_terms(self) -> None:
         """Setup terms for B<0 soliton."""
-        self.boundary_condition = "anti_hedgehog"
+        self.boundary_condition = "anti_u1_phase_winding"
         self.constraint_type = "antibaryon"
         self.charge_specific_coupling = self.params.get("antibaryon_coupling", 1.0)
         

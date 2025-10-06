@@ -65,12 +65,12 @@ class TestSolitonEnergyPhysics:
         }
 
     @pytest.fixture
-    def simple_hedgehog_field(self, domain_3d):
+    def simple_u1_phase_field(self, domain_3d):
         """
-        Create simple hedgehog field for testing.
+        Create simple U(1)^3 phase field for testing.
         
         Physical Meaning:
-            Creates a simplified hedgehog field configuration that
+            Creates a simplified U(1)^3 phase field configuration that
             is easier to analyze and has known theoretical properties.
         """
         N = domain_3d.N
@@ -88,39 +88,33 @@ class TestSolitonEnergyPhysics:
         # Avoid division by zero
         r = np.where(r < 1e-10, 1e-10, r)
         
-        # Create simple hedgehog field
-        field = np.zeros((N, N, N, 2, 2), dtype=complex)
+        # Create 7D U(1)^3 phase field Θ(x,φ) ∈ T^3_φ
+        # Shape: (N, N, N, 8, 8, 8, 1) for (x, y, z, φ₁, φ₂, φ₃, t)
+        field = np.zeros((N, N, N, 8, 8, 8, 1), dtype=complex)
         
-        # Simple profile function f(r) = π exp(-r/R)
-        R = L/8  # Soliton radius
-        f = np.pi * np.exp(-r/R)
+        # Create phase coordinates
+        phi1 = np.linspace(0, 2*np.pi, 8)
+        phi2 = np.linspace(0, 2*np.pi, 8)
+        phi3 = np.linspace(0, 2*np.pi, 8)
+        PHI1, PHI2, PHI3 = np.meshgrid(phi1, phi2, phi3, indexing='ij')
         
-        # Unit radial vector
-        nx = X / r
-        ny = Y / r
-        nz = Z / r
-        
-        # Pauli matrices
-        sigma_x = np.array([[0, 1], [1, 0]], dtype=complex)
-        sigma_y = np.array([[0, -1j], [1j, 0]], dtype=complex)
-        sigma_z = np.array([[1, 0], [0, -1]], dtype=complex)
-        
-        # Create field U(x) = cos(f(r)) + iτ·n̂(x) sin(f(r))
+        # Create U(1)^3 phase field with controlled winding
+        # Θ(x,φ) = φ₁ + φ₂ + φ₃ with spatial modulation
         for i in range(N):
             for j in range(N):
                 for k in range(N):
-                    # τ·n̂ = σ_x n_x + σ_y n_y + σ_z n_z
-                    tau_dot_n = (sigma_x * nx[i, j, k] + 
-                               sigma_y * ny[i, j, k] + 
-                               sigma_z * nz[i, j, k])
+                    # Spatial modulation factor
+                    r_spatial = np.sqrt(X[i, j, k]**2 + Y[i, j, k]**2 + Z[i, j, k]**2)
+                    R = L/8  # Soliton radius
+                    spatial_factor = np.exp(-r_spatial**2 / (2 * R**2)) if r_spatial < R else 0
                     
-                    # U = cos(f) + iτ·n̂ sin(f)
-                    field[i, j, k] = (np.cos(f[i, j, k]) * np.eye(2) + 
-                                    1j * tau_dot_n * np.sin(f[i, j, k]))
+                    # Create phase field with controlled winding
+                    # Θ(x,φ) = spatial_factor * (φ₁ + φ₂ + φ₃)
+                    field[i, j, k, :, :, :, 0] = spatial_factor * (PHI1 + PHI2 + PHI3)
         
         return field
 
-    def test_kinetic_energy_physical_properties(self, domain_3d, physics_params, simple_hedgehog_field):
+    def test_kinetic_energy_physical_properties(self, domain_3d, physics_params, simple_u1_phase_field):
         """
         Test physical properties of kinetic energy calculation.
         
@@ -133,14 +127,14 @@ class TestSolitonEnergyPhysics:
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Test with static field (should have zero kinetic energy)
-        static_field = simple_hedgehog_field.copy()
+        static_field = simple_u1_phase_field.copy()
         kinetic_energy_static = soliton._energy_calculator.compute_kinetic_energy(static_field)
         
         # Static field should have zero kinetic energy
         assert abs(kinetic_energy_static) < 1e-10, f"Static field should have zero kinetic energy, got {kinetic_energy_static}"
         
         # Test with time-dependent field
-        time_dependent_field = np.zeros_like(simple_hedgehog_field)
+        time_dependent_field = np.zeros_like(simple_u1_phase_field)
         N = domain_3d.N
         
         # Create field with time dependence: U(x,t) = U(x) * exp(iωt)
@@ -149,7 +143,7 @@ class TestSolitonEnergyPhysics:
         for i in range(N):
             for j in range(N):
                 for k in range(N):
-                    time_dependent_field[i, j, k] = simple_hedgehog_field[i, j, k] * np.exp(1j * omega * t)
+                    time_dependent_field[i, j, k] = simple_u1_phase_field[i, j, k] * np.exp(1j * omega * t)
         
         kinetic_energy_dynamic = soliton._energy_calculator.compute_kinetic_energy(time_dependent_field)
         
@@ -157,7 +151,7 @@ class TestSolitonEnergyPhysics:
         assert kinetic_energy_dynamic > 0, f"Time-dependent field should have positive kinetic energy, got {kinetic_energy_dynamic}"
         assert np.isfinite(kinetic_energy_dynamic), "Kinetic energy should be finite"
 
-    def test_skyrme_energy_physical_properties(self, domain_3d, physics_params, simple_hedgehog_field):
+    def test_skyrme_energy_physical_properties(self, domain_3d, physics_params, simple_u1_phase_field):
         """
         Test physical properties of Skyrme energy calculation.
         
@@ -170,14 +164,14 @@ class TestSolitonEnergyPhysics:
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Compute Skyrme energy
-        skyrme_energy = soliton._compute_skyrme_energy(simple_hedgehog_field)
+        skyrme_energy = soliton._compute_skyrme_energy(simple_u1_phase_field)
         
         # Check physical properties
         assert skyrme_energy >= 0, f"Skyrme energy should be non-negative, got {skyrme_energy}"
         assert np.isfinite(skyrme_energy), "Skyrme energy should be finite"
         
-        # Skyrme energy should be significant for hedgehog configuration
-        assert skyrme_energy > 0, "Hedgehog field should have non-zero Skyrme energy"
+        # Skyrme energy should be significant for U(1)^3 phase configuration
+        assert skyrme_energy > 0, "U(1)^3 phase field should have non-zero Skyrme energy"
         
         # Test with different coupling constants
         params_weak = physics_params.copy()
@@ -189,13 +183,13 @@ class TestSolitonEnergyPhysics:
         soliton_weak = BaryonSoliton(domain_3d, params_weak)
         soliton_strong = BaryonSoliton(domain_3d, params_strong)
         
-        skyrme_weak = soliton_weak._compute_skyrme_energy(simple_hedgehog_field)
-        skyrme_strong = soliton_strong._compute_skyrme_energy(simple_hedgehog_field)
+        skyrme_weak = soliton_weak._compute_skyrme_energy(simple_u1_phase_field)
+        skyrme_strong = soliton_strong._compute_skyrme_energy(simple_u1_phase_field)
         
         # Stronger coupling should give higher energy
         assert skyrme_strong > skyrme_weak, "Stronger coupling should give higher Skyrme energy"
 
-    def test_wzw_energy_physical_properties(self, domain_3d, physics_params, simple_hedgehog_field):
+    def test_wzw_energy_physical_properties(self, domain_3d, physics_params, simple_u1_phase_field):
         """
         Test physical properties of WZW energy calculation.
         
@@ -208,7 +202,7 @@ class TestSolitonEnergyPhysics:
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Compute WZW energy
-        wzw_energy = soliton._compute_wzw_energy(simple_hedgehog_field)
+        wzw_energy = soliton._compute_wzw_energy(simple_u1_phase_field)
         
         # Check physical properties
         assert np.isfinite(wzw_energy), f"WZW energy should be finite, got {wzw_energy}"
@@ -223,8 +217,8 @@ class TestSolitonEnergyPhysics:
         soliton_nc2 = BaryonSoliton(domain_3d, params_nc2)
         soliton_nc4 = BaryonSoliton(domain_3d, params_nc4)
         
-        wzw_nc2 = soliton_nc2._compute_wzw_energy(simple_hedgehog_field)
-        wzw_nc4 = soliton_nc4._compute_wzw_energy(simple_hedgehog_field)
+        wzw_nc2 = soliton_nc2._compute_wzw_energy(simple_u1_phase_field)
+        wzw_nc4 = soliton_nc4._compute_wzw_energy(simple_u1_phase_field)
         
         # WZW energy should scale with N_c
         # (This is a simplified test - in reality, the scaling is more complex)
@@ -246,8 +240,8 @@ class TestSolitonEnergyPhysics:
         soliton_small = BaryonSoliton(domain_small, physics_params)
         soliton_large = BaryonSoliton(domain_large, physics_params)
         
-        # Create hedgehog fields for both domains
-        def create_hedgehog(domain):
+        # Create U(1)^3 phase fields for both domains
+        def create_u1_phase(domain):
             N = domain.N
             L = domain.L
             x = np.linspace(-L/2, L/2, N)
@@ -257,29 +251,33 @@ class TestSolitonEnergyPhysics:
             r = np.sqrt(X**2 + Y**2 + Z**2)
             r = np.where(r < 1e-10, 1e-10, r)
             
-            field = np.zeros((N, N, N, 2, 2), dtype=complex)
+            field = np.zeros((N, N, N, 8, 8, 8, 1), dtype=complex)
             R = L/8
             f = np.pi * np.exp(-r/R)
             nx = X / r
             ny = Y / r
             nz = Z / r
             
-            sigma_x = np.array([[0, 1], [1, 0]], dtype=complex)
-            sigma_y = np.array([[0, -1j], [1j, 0]], dtype=complex)
-            sigma_z = np.array([[1, 0], [0, -1]], dtype=complex)
+            # Create phase coordinates
+            phi1 = np.linspace(0, 2*np.pi, 8)
+            phi2 = np.linspace(0, 2*np.pi, 8)
+            phi3 = np.linspace(0, 2*np.pi, 8)
+            PHI1, PHI2, PHI3 = np.meshgrid(phi1, phi2, phi3, indexing='ij')
             
+            # Create U(1)^3 phase field with controlled winding
             for i in range(N):
                 for j in range(N):
                     for k in range(N):
-                        tau_dot_n = (sigma_x * nx[i, j, k] + 
-                                   sigma_y * ny[i, j, k] + 
-                                   sigma_z * nz[i, j, k])
-                        field[i, j, k] = (np.cos(f[i, j, k]) * np.eye(2) + 
-                                        1j * tau_dot_n * np.sin(f[i, j, k]))
+                        # Spatial modulation factor
+                        r_spatial = np.sqrt(X[i, j, k]**2 + Y[i, j, k]**2 + Z[i, j, k]**2)
+                        spatial_factor = np.exp(-r_spatial**2 / (2 * R**2)) if r_spatial < R else 0
+                        
+                        # Create phase field with controlled winding
+                        field[i, j, k, :, :, :, 0] = spatial_factor * (PHI1 + PHI2 + PHI3)
             return field
         
-        field_small = create_hedgehog(domain_small)
-        field_large = create_hedgehog(domain_large)
+        field_small = create_u1_phase(domain_small)
+        field_large = create_u1_phase(domain_large)
         
         # Compute energies
         energy_small = soliton_small.compute_soliton_energy(field_small)
@@ -293,7 +291,7 @@ class TestSolitonEnergyPhysics:
         assert energy_small > 0, "Energy should be positive for small domain"
         assert energy_large > 0, "Energy should be positive for large domain"
 
-    def test_energy_conservation_under_rotation(self, domain_3d, physics_params, simple_hedgehog_field):
+    def test_energy_conservation_under_rotation(self, domain_3d, physics_params, simple_u1_phase_field):
         """
         Test energy conservation under field rotations.
         
@@ -304,10 +302,10 @@ class TestSolitonEnergyPhysics:
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Compute energy of original field
-        energy_original = soliton.compute_soliton_energy(simple_hedgehog_field)
+        energy_original = soliton.compute_soliton_energy(simple_u1_phase_field)
         
         # Create rotated field
-        rotated_field = simple_hedgehog_field.copy()
+        rotated_field = simple_u1_phase_field.copy()
         N = domain_3d.N
         
         # Apply global rotation around z-axis
@@ -323,7 +321,7 @@ class TestSolitonEnergyPhysics:
             for j in range(N):
                 for k in range(N):
                     # This is a simplified rotation - in reality, it would be more complex
-                    rotated_field[i, j, k] = simple_hedgehog_field[i, j, k]
+                    rotated_field[i, j, k] = simple_u1_phase_field[i, j, k]
         
         # Compute energy of rotated field
         energy_rotated = soliton.compute_soliton_energy(rotated_field)
@@ -349,8 +347,8 @@ class TestSolitonEnergyPhysics:
                 for k in range(N):
                     trivial_field[i, j, k] = np.eye(2)
         
-        # Create hedgehog field
-        def create_hedgehog(domain):
+        # Create U(1)^3 phase field
+        def create_u1_phase(domain):
             N = domain.N
             L = domain.L
             x = np.linspace(-L/2, L/2, N)
@@ -360,42 +358,46 @@ class TestSolitonEnergyPhysics:
             r = np.sqrt(X**2 + Y**2 + Z**2)
             r = np.where(r < 1e-10, 1e-10, r)
             
-            field = np.zeros((N, N, N, 2, 2), dtype=complex)
+            field = np.zeros((N, N, N, 8, 8, 8, 1), dtype=complex)
             R = L/8
             f = np.pi * np.exp(-r/R)
             nx = X / r
             ny = Y / r
             nz = Z / r
             
-            sigma_x = np.array([[0, 1], [1, 0]], dtype=complex)
-            sigma_y = np.array([[0, -1j], [1j, 0]], dtype=complex)
-            sigma_z = np.array([[1, 0], [0, -1]], dtype=complex)
+            # Create phase coordinates
+            phi1 = np.linspace(0, 2*np.pi, 8)
+            phi2 = np.linspace(0, 2*np.pi, 8)
+            phi3 = np.linspace(0, 2*np.pi, 8)
+            PHI1, PHI2, PHI3 = np.meshgrid(phi1, phi2, phi3, indexing='ij')
             
+            # Create U(1)^3 phase field with controlled winding
             for i in range(N):
                 for j in range(N):
                     for k in range(N):
-                        tau_dot_n = (sigma_x * nx[i, j, k] + 
-                                   sigma_y * ny[i, j, k] + 
-                                   sigma_z * nz[i, j, k])
-                        field[i, j, k] = (np.cos(f[i, j, k]) * np.eye(2) + 
-                                        1j * tau_dot_n * np.sin(f[i, j, k]))
+                        # Spatial modulation factor
+                        r_spatial = np.sqrt(X[i, j, k]**2 + Y[i, j, k]**2 + Z[i, j, k]**2)
+                        spatial_factor = np.exp(-r_spatial**2 / (2 * R**2)) if r_spatial < R else 0
+                        
+                        # Create phase field with controlled winding
+                        field[i, j, k, :, :, :, 0] = spatial_factor * (PHI1 + PHI2 + PHI3)
             return field
         
-        hedgehog_field = create_hedgehog(domain_3d)
+        u1_phase_field = create_u1_phase(domain_3d)
         
         # Compute energies
         energy_trivial = soliton.compute_soliton_energy(trivial_field)
-        energy_hedgehog = soliton.compute_soliton_energy(hedgehog_field)
+        energy_u1_phase = soliton.compute_soliton_energy(u1_phase_field)
         
         # Both energies should be finite
         assert np.isfinite(energy_trivial), "Trivial field energy should be finite"
-        assert np.isfinite(energy_hedgehog), "Hedgehog field energy should be finite"
+        assert np.isfinite(energy_u1_phase), "U(1)^3 phase field energy should be finite"
         
         # Both energies should be positive
         assert energy_trivial >= 0, "Trivial field energy should be non-negative"
-        assert energy_hedgehog >= 0, "Hedgehog field energy should be non-negative"
+        assert energy_u1_phase >= 0, "U(1)^3 phase field energy should be non-negative"
 
-    def test_energy_gradient_properties(self, domain_3d, physics_params, simple_hedgehog_field):
+    def test_energy_gradient_properties(self, domain_3d, physics_params, simple_u1_phase_field):
         """
         Test energy gradient properties.
         
@@ -406,10 +408,10 @@ class TestSolitonEnergyPhysics:
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Compute energy gradient
-        gradient = soliton._compute_energy_gradient(simple_hedgehog_field)
+        gradient = soliton._compute_energy_gradient(simple_u1_phase_field)
         
         # Check gradient properties
-        assert gradient.shape == simple_hedgehog_field.shape, "Gradient should have same shape as field"
+        assert gradient.shape == simple_u1_phase_field.shape, "Gradient should have same shape as field"
         assert np.isfinite(gradient).all(), "Gradient should be finite everywhere"
         
         # Compute gradient norm
@@ -417,7 +419,7 @@ class TestSolitonEnergyPhysics:
         assert np.isfinite(gradient_norm), "Gradient norm should be finite"
         assert gradient_norm >= 0, "Gradient norm should be non-negative"
 
-    def test_energy_hessian_properties(self, domain_3d, physics_params, simple_hedgehog_field):
+    def test_energy_hessian_properties(self, domain_3d, physics_params, simple_u1_phase_field):
         """
         Test energy Hessian properties.
         
@@ -428,7 +430,7 @@ class TestSolitonEnergyPhysics:
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Compute energy Hessian
-        hessian = soliton._compute_energy_hessian(simple_hedgehog_field)
+        hessian = soliton._compute_energy_hessian(simple_u1_phase_field)
         
         # Check Hessian properties
         assert hessian.shape[0] == hessian.shape[1], "Hessian should be square"

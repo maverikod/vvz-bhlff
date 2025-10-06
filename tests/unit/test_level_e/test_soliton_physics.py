@@ -67,21 +67,26 @@ class TestSolitonPhysics:
         }
 
     @pytest.fixture
-    def hedgehog_field(self, domain_3d):
+    def u1_phase_field(self, domain_3d):
         """
-        Create hedgehog field configuration.
+        Create U(1)^3 phase field configuration.
         
         Physical Meaning:
-            Creates a hedgehog field configuration U(x) = exp(iτ·n̂(x))
-            where n̂(x) = x̂/|x| is the unit radial vector. This is the
-            standard configuration for B=1 solitons.
+            Creates a 7D phase field configuration Θ(x,φ) ∈ T^3_φ with
+            controlled winding over φ-coordinates. This represents a B=1
+            soliton with U(1)^3 phase winding boundary conditions.
             
         Mathematical Foundation:
-            U(x) = cos(f(r)) + iτ·n̂(x) sin(f(r))
-            where f(r) is the profile function and τ are Pauli matrices.
+            Θ(x,φ) = φ₁ + φ₂ + φ₃ with controlled winding over T^3_φ.
+            The U(1)^3 phase configuration has topological charge B=1
+            via winding integrals over φ-coordinates.
         """
         N = domain_3d.N
         L = domain_3d.L
+        
+        # Create 7D phase field Θ(x,φ) ∈ T^3_φ
+        # Shape: (N, N, N, 8, 8, 8, 1) for (x, y, z, φ₁, φ₂, φ₃, t)
+        field = np.zeros((N, N, N, 8, 8, 8, 1), dtype=complex)
         
         # Create coordinate arrays
         x = np.linspace(-L/2, L/2, N)
@@ -89,45 +94,25 @@ class TestSolitonPhysics:
         z = np.linspace(-L/2, L/2, N)
         X, Y, Z = np.meshgrid(x, y, z, indexing='ij')
         
-        # Compute radial coordinates
-        r = np.sqrt(X**2 + Y**2 + Z**2)
+        # Create phase coordinates
+        phi1 = np.linspace(0, 2*np.pi, 8)
+        phi2 = np.linspace(0, 2*np.pi, 8)
+        phi3 = np.linspace(0, 2*np.pi, 8)
+        PHI1, PHI2, PHI3 = np.meshgrid(phi1, phi2, phi3, indexing='ij')
         
-        # Avoid division by zero
-        r = np.where(r < 1e-10, 1e-10, r)
-        
-        # Create hedgehog field U(x) = exp(iτ·n̂(x))
-        # For simplicity, use a 2x2 matrix representation
-        field = np.zeros((N, N, N, 2, 2), dtype=complex)
-        
-        # Profile function f(r) = π(1 - r/R) for r < R, 0 otherwise
-        R = L/4  # Soliton radius
-        f = np.where(r < R, np.pi * (1 - r/R), 0)
-        
-        # Unit radial vector n̂(x) = x/|x|
-        nx = X / r
-        ny = Y / r
-        nz = Z / r
-        
-        # Pauli matrices
-        sigma_x = np.array([[0, 1], [1, 0]], dtype=complex)
-        sigma_y = np.array([[0, -1j], [1j, 0]], dtype=complex)
-        sigma_z = np.array([[1, 0], [0, -1]], dtype=complex)
-        
-        # Create field U(x) = cos(f(r)) + iτ·n̂(x) sin(f(r))
+        # Create U(1)^3 phase field with controlled winding
+        # Θ(x,φ) = φ₁ + φ₂ + φ₃ with spatial modulation
         for i in range(N):
             for j in range(N):
                 for k in range(N):
-                    if r[i, j, k] < R:
-                        # τ·n̂ = σ_x n_x + σ_y n_y + σ_z n_z
-                        tau_dot_n = (sigma_x * nx[i, j, k] + 
-                                   sigma_y * ny[i, j, k] + 
-                                   sigma_z * nz[i, j, k])
-                        
-                        # U = cos(f) + iτ·n̂ sin(f)
-                        field[i, j, k] = (np.cos(f[i, j, k]) * np.eye(2) + 
-                                        1j * tau_dot_n * np.sin(f[i, j, k]))
-                    else:
-                        field[i, j, k] = np.eye(2)
+                    # Spatial modulation factor
+                    r_spatial = np.sqrt(X[i, j, k]**2 + Y[i, j, k]**2 + Z[i, j, k]**2)
+                    R = L/4  # Soliton radius
+                    spatial_factor = np.exp(-r_spatial**2 / (2 * R**2)) if r_spatial < R else 0
+                    
+                    # Create phase field with controlled winding
+                    # Θ(x,φ) = spatial_factor * (φ₁ + φ₂ + φ₃)
+                    field[i, j, k, :, :, :, 0] = spatial_factor * (PHI1 + PHI2 + PHI3)
         
         return field
 
@@ -195,12 +180,12 @@ class TestSolitonPhysics:
         
         Physical Meaning:
             Verifies that B=1 soliton is correctly configured with
-            hedgehog boundary condition and single baryon constraints.
+            U(1)^3 phase boundary condition and single baryon constraints.
         """
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Check baryon-specific configuration
-        assert soliton.boundary_condition == "hedgehog"
+        assert soliton.boundary_condition == "u1_phase_winding"
         assert soliton.constraint_type == "single_baryon"
         assert soliton.charge_specific_coupling == physics_params.get("baryon_coupling", 1.0)
 
@@ -210,7 +195,7 @@ class TestSolitonPhysics:
         
         Physical Meaning:
             Verifies that B>1 soliton is correctly configured with
-            multi-hedgehog boundary condition and multi-baryon constraints.
+            multi-U(1)^3 phase boundary condition and multi-baryon constraints.
         """
         physics_params["multi_baryon_coupling"] = 1.5
         physics_params["baryon_separation"] = 1.0
@@ -219,7 +204,7 @@ class TestSolitonPhysics:
         soliton = SkyrmionSoliton(domain_3d, physics_params, charge=2)
         
         # Check multi-baryon configuration
-        assert soliton.boundary_condition == "multi_hedgehog"
+        assert soliton.boundary_condition == "multi_u1_phase_winding"
         assert soliton.constraint_type == "multi_baryon"
         assert soliton.charge_specific_coupling == physics_params["multi_baryon_coupling"]
         assert soliton.baryon_separation == physics_params["baryon_separation"]
@@ -231,74 +216,74 @@ class TestSolitonPhysics:
         
         Physical Meaning:
             Verifies that B<0 soliton is correctly configured with
-            anti-hedgehog boundary condition and antibaryon constraints.
+            anti-U(1)^3 phase boundary condition and antibaryon constraints.
         """
         physics_params["antibaryon_coupling"] = -1.0
         
         soliton = SkyrmionSoliton(domain_3d, physics_params, charge=-1)
         
         # Check antibaryon configuration
-        assert soliton.boundary_condition == "anti_hedgehog"
+        assert soliton.boundary_condition == "anti_u1_phase_winding"
         assert soliton.constraint_type == "antibaryon"
         assert soliton.charge_specific_coupling == physics_params["antibaryon_coupling"]
         assert soliton.antibaryon_coupling == physics_params["antibaryon_coupling"]
 
-    def test_kinetic_energy_calculation(self, domain_3d, physics_params, hedgehog_field):
+    def test_kinetic_energy_calculation(self, domain_3d, physics_params, u1_phase_field):
         """
-        Test kinetic energy calculation with hedgehog field.
+        Test kinetic energy calculation with U(1)^3 phase field.
         
         Physical Meaning:
             Verifies that kinetic energy is correctly computed for
-            a hedgehog field configuration. The kinetic energy should
+            a U(1)^3 phase field configuration. The kinetic energy should
             be positive and finite.
         """
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Compute kinetic energy
-        kinetic_energy = soliton._compute_kinetic_energy(hedgehog_field)
+        kinetic_energy = soliton._energy_calculator.compute_kinetic_energy(u1_phase_field)
         
         # Check physical properties
         assert kinetic_energy >= 0, "Kinetic energy should be non-negative"
         assert np.isfinite(kinetic_energy), "Kinetic energy should be finite"
         
-        # For a static hedgehog field, kinetic energy should be zero
+        # For a static U(1)^3 phase field, kinetic energy should be zero
         # (no time dependence in the test field)
         assert abs(kinetic_energy) < 1e-10, "Static field should have zero kinetic energy"
 
-    def test_skyrme_energy_calculation(self, domain_3d, physics_params, hedgehog_field):
+    def test_skyrme_energy_calculation(self, domain_3d, physics_params, u1_phase_field):
         """
-        Test Skyrme energy calculation with hedgehog field.
+        Test Skyrme energy calculation with U(1)^3 phase field.
         
         Physical Meaning:
             Verifies that Skyrme energy is correctly computed for
-            a hedgehog field configuration. The Skyrme energy should
+            a U(1)^3 phase field configuration. The Skyrme energy should
             be positive and provide stability against collapse.
         """
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Compute Skyrme energy
-        skyrme_energy = soliton._compute_skyrme_energy(hedgehog_field)
+        skyrme_energy = soliton._compute_skyrme_energy(u1_phase_field)
         
         # Check physical properties
         assert skyrme_energy >= 0, "Skyrme energy should be non-negative"
         assert np.isfinite(skyrme_energy), "Skyrme energy should be finite"
         
-        # Skyrme energy should be significant for hedgehog configuration
-        assert skyrme_energy > 0, "Hedgehog field should have non-zero Skyrme energy"
+        # Skyrme energy should be significant for U(1)^3 phase configuration
+        assert skyrme_energy > 0, "U(1)^3 phase field should have non-zero Skyrme energy"
 
-    def test_wzw_energy_calculation(self, domain_3d, physics_params, hedgehog_field):
+    def test_wzw_energy_calculation(self, domain_3d, physics_params, u1_phase_field):
         """
-        Test WZW energy calculation with hedgehog field.
+        Test WZW energy calculation with U(1)^3 phase field.
         
         Physical Meaning:
             Verifies that WZW energy is correctly computed for
-            a hedgehog field configuration. The WZW energy should
+            a U(1)^3 phase field configuration. The WZW energy should
             be finite and contribute to baryon number conservation.
         """
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Compute WZW energy
-        wzw_energy = soliton._compute_wzw_energy(hedgehog_field)
+        wzw_energy = soliton._compute_wzw_energy(u1_phase_field)
         
         # Check physical properties
         assert np.isfinite(wzw_energy), "WZW energy should be finite"
@@ -306,9 +291,9 @@ class TestSolitonPhysics:
         # WZW energy can be positive or negative depending on configuration
         # but should be finite
 
-    def test_total_energy_calculation(self, domain_3d, physics_params, hedgehog_field):
+    def test_total_energy_calculation(self, domain_3d, physics_params, u1_phase_field):
         """
-        Test total energy calculation with hedgehog field.
+        Test total energy calculation with U(1)^3 phase field.
         
         Physical Meaning:
             Verifies that total energy is correctly computed as the sum
@@ -317,12 +302,12 @@ class TestSolitonPhysics:
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Compute total energy
-        total_energy = soliton.compute_soliton_energy(hedgehog_field)
+        total_energy = soliton.compute_soliton_energy(u1_phase_field)
         
         # Compute individual contributions
-        kinetic_energy = soliton._compute_kinetic_energy(hedgehog_field)
-        skyrme_energy = soliton._compute_skyrme_energy(hedgehog_field)
-        wzw_energy = soliton._compute_wzw_energy(hedgehog_field)
+        kinetic_energy = soliton._compute_kinetic_energy(u1_phase_field)
+        skyrme_energy = soliton._compute_skyrme_energy(u1_phase_field)
+        wzw_energy = soliton._compute_wzw_energy(u1_phase_field)
         
         # Check that total energy equals sum of contributions
         expected_total = kinetic_energy + skyrme_energy + wzw_energy
@@ -331,28 +316,28 @@ class TestSolitonPhysics:
         # Check physical properties
         assert np.isfinite(total_energy), "Total energy should be finite"
 
-    def test_topological_charge_calculation(self, domain_3d, physics_params, hedgehog_field):
+    def test_topological_charge_calculation(self, domain_3d, physics_params, u1_phase_field):
         """
-        Test topological charge calculation with hedgehog field.
+        Test topological charge calculation with U(1)^3 phase field.
         
         Physical Meaning:
             Verifies that topological charge is correctly computed for
-            a hedgehog field configuration. For a hedgehog field,
+            a U(1)^3 phase field configuration. For a U(1)^3 phase field,
             the topological charge should be close to 1.
         """
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Compute topological charge
-        charge = soliton.compute_topological_charge(hedgehog_field)
+        charge = soliton.compute_topological_charge(u1_phase_field)
         
         # Check physical properties
         assert np.isfinite(charge), "Topological charge should be finite"
         
-        # For a hedgehog field, charge should be close to 1
+        # For a U(1)^3 phase field, charge should be close to 1
         # (allowing for numerical errors and boundary effects)
         assert abs(charge - 1.0) < 0.5, f"Hedgehog field should have charge ≈ 1, got {charge}"
 
-    def test_fr_constraints_application(self, domain_3d, physics_params, hedgehog_field):
+    def test_fr_constraints_application(self, domain_3d, physics_params, u1_phase_field):
         """
         Test FR constraints application to field.
         
@@ -363,17 +348,17 @@ class TestSolitonPhysics:
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Apply FR constraints
-        constrained_field = soliton.apply_fr_constraints(hedgehog_field)
+        constrained_field = soliton.apply_fr_constraints(u1_phase_field)
         
         # Check that field is modified
-        assert not np.array_equal(hedgehog_field, constrained_field), "FR constraints should modify the field"
+        assert not np.array_equal(u1_phase_field, constrained_field), "FR constraints should modify the field"
         
         # Check that constrained field has same shape
-        assert constrained_field.shape == hedgehog_field.shape, "Constrained field should have same shape"
+        assert constrained_field.shape == u1_phase_field.shape, "Constrained field should have same shape"
 
-    def test_soliton_solution_finding(self, domain_3d, physics_params, hedgehog_field):
+    def test_soliton_solution_finding(self, domain_3d, physics_params, u1_phase_field):
         """
-        Test soliton solution finding with hedgehog initial guess.
+        Test soliton solution finding with U(1)^3 phase initial guess.
         
         Physical Meaning:
             Verifies that the soliton finding algorithm converges to a
@@ -382,7 +367,7 @@ class TestSolitonPhysics:
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Find soliton solution
-        result = soliton.find_soliton_solution(hedgehog_field)
+        result = soliton.find_soliton_solution(u1_phase_field)
         
         # Check that solution is found
         assert "solution" in result, "Solution should be found"
@@ -403,7 +388,7 @@ class TestSolitonPhysics:
         # Check that solution has reasonable properties
         assert abs(charge - 1.0) < 0.5, f"Baryon soliton should have charge ≈ 1, got {charge}"
 
-    def test_stability_analysis(self, domain_3d, physics_params, hedgehog_field):
+    def test_stability_analysis(self, domain_3d, physics_params, u1_phase_field):
         """
         Test stability analysis of soliton solution.
         
@@ -414,7 +399,7 @@ class TestSolitonPhysics:
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Analyze stability
-        stability = soliton.analyze_soliton_stability(hedgehog_field)
+        stability = soliton.analyze_soliton_stability(u1_phase_field)
         
         # Check stability analysis results
         assert "eigenvalues" in stability, "Eigenvalues should be computed"
@@ -440,7 +425,7 @@ class TestSolitonPhysics:
             if stable:
                 assert freq >= 0, f"Stable mode {i} should have non-negative frequency"
 
-    def test_energy_conservation(self, domain_3d, physics_params, hedgehog_field):
+    def test_energy_conservation(self, domain_3d, physics_params, u1_phase_field):
         """
         Test energy conservation properties.
         
@@ -451,8 +436,8 @@ class TestSolitonPhysics:
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Compute energy multiple times
-        energy1 = soliton.compute_soliton_energy(hedgehog_field)
-        energy2 = soliton.compute_soliton_energy(hedgehog_field)
+        energy1 = soliton.compute_soliton_energy(u1_phase_field)
+        energy2 = soliton.compute_soliton_energy(u1_phase_field)
         
         # Check consistency
         assert abs(energy1 - energy2) < 1e-10, "Energy should be consistent across multiple calculations"
@@ -460,7 +445,7 @@ class TestSolitonPhysics:
         # Check that energy is finite
         assert np.isfinite(energy1), "Energy should be finite"
 
-    def test_charge_conservation(self, domain_3d, physics_params, hedgehog_field):
+    def test_charge_conservation(self, domain_3d, physics_params, u1_phase_field):
         """
         Test topological charge conservation properties.
         
@@ -471,8 +456,8 @@ class TestSolitonPhysics:
         soliton = BaryonSoliton(domain_3d, physics_params)
         
         # Compute charge multiple times
-        charge1 = soliton.compute_topological_charge(hedgehog_field)
-        charge2 = soliton.compute_topological_charge(hedgehog_field)
+        charge1 = soliton.compute_topological_charge(u1_phase_field)
+        charge2 = soliton.compute_topological_charge(u1_phase_field)
         
         # Check consistency
         assert abs(charge1 - charge2) < 1e-10, "Topological charge should be consistent across multiple calculations"

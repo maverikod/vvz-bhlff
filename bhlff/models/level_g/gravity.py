@@ -2,55 +2,60 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-Gravitational effects interface for 7D phase field theory.
+VBP envelope gravitational effects interface for 7D phase field theory.
 
 This module provides the main interface for gravitational effects,
-delegating to specialized modules for curvature calculations,
-Einstein equations, and gravitational waves.
+delegating to specialized modules for envelope curvature calculations,
+phase envelope balance equations, and gravitational waves.
 
 Theoretical Background:
-    The gravitational effects module implements the connection between
-    the 7D phase field and gravity through the Einstein equations,
-    where the phase field acts as a source for spacetime curvature.
+    In 7D BVP theory, gravity arises from the curvature of the VBP envelope,
+    not from spacetime curvature. The gravitational effects module implements
+    the connection between the 7D phase field and gravity through envelope
+    dynamics and effective metric g_eff[Θ].
 
 Mathematical Foundation:
-    Solves Einstein equations with phase field source:
-    G_μν = 8πG T_μν^φ
+    Solves phase envelope balance equation: D[Θ] = source
+    where D includes time memory (Γ,K) and spatial (−Δ)^β terms
+    with c_φ(a,k), χ/κ bridge
 
 Example:
-    >>> gravity = GravitationalEffectsModel(system, gravity_params)
-    >>> metric = gravity.compute_spacetime_metric()
+    >>> gravity = VBPGravitationalEffectsModel(system, gravity_params)
+    >>> envelope_result = gravity.compute_envelope_effects()
 """
 
 # Import all gravitational effects classes and functionality
-from .gravity_curvature import SpacetimeCurvatureCalculator
-from .gravity_einstein import EinsteinEquationsSolver
-from .gravity_waves import GravitationalWavesCalculator
+from .gravity_curvature import VBPEnvelopeCurvatureCalculator
+from .gravity_einstein import PhaseEnvelopeBalanceSolver
+from .gravity_waves import VBPGravitationalWavesCalculator
 from ..base.model_base import ModelBase
 from typing import Dict, Any, Optional
 import numpy as np
 
 
-class GravitationalEffectsModel(ModelBase):
+class VBPGravitationalEffectsModel(ModelBase):
     """
-    Main interface for gravitational effects in 7D phase field theory.
+    Main interface for VBP envelope gravitational effects in 7D phase field theory.
 
     Physical Meaning:
         Provides the main interface for gravitational effects including
-        spacetime curvature, Einstein equations, and gravitational waves.
+        VBP envelope curvature, phase envelope balance equations, and
+        gravitational waves. Gravity arises from envelope curvature,
+        not spacetime curvature.
 
     Mathematical Foundation:
-        Coordinates the solution of Einstein equations with phase field
-        sources and computes all gravitational effects.
+        Coordinates the solution of phase envelope balance equations
+        with VBP envelope dynamics and computes all gravitational effects.
     """
 
     def __init__(self, system: Any, gravity_params: Dict[str, Any]):
         """
-        Initialize gravitational effects model.
+        Initialize VBP envelope gravitational effects model.
 
         Physical Meaning:
             Sets up the gravitational effects model with specialized
-            calculators for curvature, Einstein equations, and waves.
+            calculators for envelope curvature, phase envelope balance,
+            and gravitational waves from VBP dynamics.
 
         Args:
             system: Phase field system
@@ -61,50 +66,51 @@ class GravitationalEffectsModel(ModelBase):
         self.gravity_params = gravity_params
         
         # Initialize specialized calculators
-        self.curvature_calc = SpacetimeCurvatureCalculator(system.domain, gravity_params)
-        self.einstein_solver = EinsteinEquationsSolver(system.domain, gravity_params)
-        self.waves_calc = GravitationalWavesCalculator(system.domain, gravity_params)
+        self.curvature_calc = VBPEnvelopeCurvatureCalculator(system.domain, gravity_params)
+        self.envelope_solver = PhaseEnvelopeBalanceSolver(system.domain, gravity_params)
+        self.waves_calc = VBPGravitationalWavesCalculator(system.domain, gravity_params)
         
         self._setup_gravitational_parameters()
 
     def _setup_gravitational_parameters(self) -> None:
         """
-        Setup gravitational parameters.
+        Setup VBP envelope gravitational parameters.
 
         Physical Meaning:
-            Initializes gravitational parameters including
-            coupling constants and physical scales.
+            Initializes gravitational parameters for VBP envelope dynamics
+            including phase velocity, bridge parameters, and coupling constants.
         """
-        # Gravitational parameters
-        self.G = self.gravity_params.get("G", 6.67430e-11)  # Gravitational constant
-        self.c = self.gravity_params.get("c", 299792458.0)  # Speed of light
-        self.phase_gravity_coupling = self.gravity_params.get(
-            "phase_gravity_coupling", 1.0
-        )
+        # VBP envelope parameters
+        self.c_phi = self.gravity_params.get("c_phi", 1.0)  # Phase velocity
+        self.chi_kappa = self.gravity_params.get("chi_kappa", 1.0)  # Bridge parameter
+        self.beta = self.gravity_params.get("beta", 0.5)  # Fractional order
+        self.mu = self.gravity_params.get("mu", 1.0)  # Diffusion coefficient
 
-    def compute_spacetime_metric(self) -> np.ndarray:
+    def compute_effective_metric(self) -> np.ndarray:
         """
-        Compute spacetime metric from phase field.
+        Compute effective metric from VBP envelope.
 
         Physical Meaning:
-            Computes the spacetime metric tensor g_μν from the
-            phase field configuration using Einstein equations.
+            Computes the effective metric g_eff[Θ] from the
+            VBP envelope dynamics. This metric describes the
+            geometry of the VBP envelope and replaces the
+            classical spacetime metric in 7D BVP theory.
 
         Returns:
-            Spacetime metric tensor
+            Effective metric tensor g_eff[Θ]
         """
         # Get phase field from system
         phase_field = self._get_phase_field_from_system()
         
-        # Solve Einstein equations
-        metric = self.einstein_solver.solve_einstein_equations(phase_field)
+        # Solve phase envelope balance equation
+        envelope_result = self.envelope_solver.solve_phase_envelope_balance(phase_field)
         
-        return metric
+        return envelope_result["effective_metric"]
 
     def _get_phase_field_from_system(self) -> np.ndarray:
         """
         Get phase field from system.
-        
+
         Physical Meaning:
             Extracts the phase field configuration from the
             system for gravitational calculations.
@@ -117,7 +123,7 @@ class GravitationalEffectsModel(ModelBase):
     def _create_default_phase_field(self) -> np.ndarray:
         """
         Create default phase field for testing.
-        
+
         Physical Meaning:
             Creates a simple phase field configuration for
             gravitational calculations when no field is available.
@@ -126,87 +132,84 @@ class GravitationalEffectsModel(ModelBase):
         field = np.ones((N, N, N), dtype=complex)
         return field
 
-    def analyze_spacetime_curvature(self) -> Dict[str, Any]:
+    def analyze_envelope_curvature(self) -> Dict[str, Any]:
         """
-        Analyze spacetime curvature.
+        Analyze VBP envelope curvature.
 
         Physical Meaning:
-            Computes and analyzes all aspects of spacetime
-            curvature including Riemann tensor, Ricci tensor,
-            and scalar curvature.
+            Computes and analyzes all aspects of VBP envelope
+            curvature including envelope curvature descriptors,
+            anisotropy measures, and focusing rates.
 
         Returns:
-            Dictionary containing curvature analysis
+            Dictionary containing envelope curvature analysis
         """
-        # Get spacetime metric
-        metric = self.compute_spacetime_metric()
+        # Get phase field from system
+        phase_field = self._get_phase_field_from_system()
         
-        # Compute all curvature quantities
-        riemann_tensor = self.curvature_calc.compute_riemann_tensor(metric)
-        ricci_tensor = self.curvature_calc.compute_ricci_tensor(riemann_tensor)
-        scalar_curvature = self.curvature_calc.compute_scalar_curvature(ricci_tensor, metric)
-        weyl_tensor = self.curvature_calc.compute_weyl_tensor(
-            riemann_tensor, ricci_tensor, scalar_curvature, metric
-        )
+        # Compute envelope curvature descriptors
+        curvature_descriptors = self.curvature_calc.compute_envelope_curvature(phase_field)
         
-        # Compute curvature invariants
-        invariants = self.curvature_calc.compute_curvature_invariants(
-            riemann_tensor, ricci_tensor, scalar_curvature
-        )
+        # Compute envelope invariants
+        invariants = self.curvature_calc.compute_envelope_invariants(phase_field)
         
         return {
-            "riemann_tensor": riemann_tensor,
-            "ricci_tensor": ricci_tensor,
-            "scalar_curvature": scalar_curvature,
-            "weyl_tensor": weyl_tensor,
+            "envelope_curvature_scalar": curvature_descriptors["envelope_curvature_scalar"],
+            "anisotropy_index": curvature_descriptors["anisotropy_index"],
+            "focusing_rate": curvature_descriptors["focusing_rate"],
+            "effective_metric": curvature_descriptors["effective_metric"],
             "curvature_invariants": invariants
         }
 
     def compute_gravitational_waves(self) -> Dict[str, Any]:
         """
-        Compute gravitational waves.
+        Compute gravitational waves from VBP envelope dynamics.
 
         Physical Meaning:
             Calculates gravitational waves generated by the
-            phase field dynamics.
+            VBP envelope dynamics. Waves propagate at c_T=c_φ
+            and follow GW-1 amplitude law.
 
         Returns:
             Dictionary containing gravitational wave properties
         """
-        # Get spacetime metric
-        metric = self.compute_spacetime_metric()
+        # Get phase field from system
+        phase_field = self._get_phase_field_from_system()
         
-        # Compute gravitational waves
-        waves = self.waves_calc.compute_gravitational_waves(metric)
+        # Solve phase envelope balance equation
+        envelope_result = self.envelope_solver.solve_phase_envelope_balance(phase_field)
+        
+        # Compute gravitational waves from envelope solution
+        waves = self.waves_calc.compute_gravitational_waves(envelope_result["envelope_solution"])
         
         return waves
 
-    def compute_gravitational_effects(self) -> Dict[str, Any]:
+    def compute_envelope_effects(self) -> Dict[str, Any]:
         """
-        Compute all gravitational effects.
+        Compute all VBP envelope gravitational effects.
 
         Physical Meaning:
-            Calculates all gravitational effects including
-            curvature, waves, and energy-momentum.
+            Calculates all gravitational effects from VBP envelope
+            dynamics including envelope curvature, gravitational waves,
+            and effective metric.
 
         Returns:
-            Dictionary containing all gravitational effects
+            Dictionary containing all envelope gravitational effects
         """
         # Get phase field
         phase_field = self._get_phase_field_from_system()
         
-        # Compute spacetime metric
-        metric = self.compute_spacetime_metric()
+        # Solve phase envelope balance equation
+        envelope_result = self.envelope_solver.solve_phase_envelope_balance(phase_field)
         
-        # Compute all gravitational effects
-        curvature_analysis = self.analyze_spacetime_curvature()
+        # Compute all envelope gravitational effects
+        curvature_analysis = self.analyze_envelope_curvature()
         gravitational_waves = self.compute_gravitational_waves()
-        einstein_effects = self.einstein_solver.compute_gravitational_effects(
-            phase_field, metric
-        )
         
         return {
-            "curvature": curvature_analysis,
+            "envelope_curvature": curvature_analysis,
             "gravitational_waves": gravitational_waves,
-            "einstein_effects": einstein_effects
+            "envelope_solution": envelope_result["envelope_solution"],
+            "effective_metric": envelope_result["effective_metric"],
+            "curvature_descriptors": envelope_result["curvature_descriptors"]
         }

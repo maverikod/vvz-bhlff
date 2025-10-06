@@ -42,7 +42,7 @@ class FFTSolver7DBasic:
         diffusion coefficient, and λ ≥ 0 is the damping parameter.
     """
 
-    def __init__(self, domain: 'Domain', parameters: 'Parameters'):
+    def __init__(self, domain: "Domain", parameters: "Parameters"):
         """
         Initialize 7D FFT solver.
 
@@ -62,17 +62,17 @@ class FFTSolver7DBasic:
         self.domain = domain
         self.parameters = parameters
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize components
         self.fractional_laplacian = FractionalLaplacian(domain, parameters)
         self.spectral_operations = SpectralOperations(domain, parameters)
         self.memory_manager = MemoryManager7D(domain, parameters)
         self.fft_plan = FFTPlan7D(domain, parameters)
         self.spectral_cache = SpectralCoefficientCache(domain, parameters)
-        
+
         # Setup spectral coefficients
         self._setup_spectral_coefficients()
-        
+
         # Setup FFT plan
         self._setup_fft_plan()
 
@@ -106,19 +106,21 @@ class FFTSolver7DBasic:
             RuntimeError: If FFT operations fail.
         """
         if source.shape != self.domain.shape:
-            raise ValueError(f"Source shape {source.shape} incompatible with domain shape {self.domain.shape}")
-        
+            raise ValueError(
+                f"Source shape {source.shape} incompatible with domain shape {self.domain.shape}"
+            )
+
         self.logger.info("Solving stationary fractional Laplacian equation")
-        
+
         # Transform to spectral space
         source_spectral = self.spectral_operations.fft_forward(source)
-        
+
         # Apply spectral operator
         solution_spectral = source_spectral / self.spectral_coefficients
-        
+
         # Transform back to real space
         solution = self.spectral_operations.fft_inverse(solution_spectral)
-        
+
         self.logger.info("Stationary solution computed")
         return solution.real
 
@@ -138,14 +140,16 @@ class FFTSolver7DBasic:
             np.ndarray: Envelope solution field.
         """
         self.logger.info("Solving envelope equation")
-        
+
         # Use stationary solver for envelope equation
         solution = self.solve_stationary(source)
-        
+
         self.logger.info("Envelope solution computed")
         return solution
 
-    def validate_solution(self, solution: np.ndarray, source: np.ndarray) -> Dict[str, Any]:
+    def validate_solution(
+        self, solution: np.ndarray, source: np.ndarray
+    ) -> Dict[str, Any]:
         """
         Validate the computed solution.
 
@@ -165,26 +169,30 @@ class FFTSolver7DBasic:
                 - is_valid: Whether solution is valid
         """
         self.logger.info("Validating solution")
-        
+
         # Compute residual
         residual = self._compute_residual(solution, source)
         residual_norm = np.linalg.norm(residual)
         source_norm = np.linalg.norm(source)
-        
+
         # Compute relative residual
-        relative_residual = residual_norm / source_norm if source_norm > 0 else float('inf')
-        
+        relative_residual = (
+            residual_norm / source_norm if source_norm > 0 else float("inf")
+        )
+
         # Determine validity
         is_valid = relative_residual < 1e-6
-        
+
         validation_results = {
-            'residual': residual,
-            'residual_norm': residual_norm,
-            'relative_residual': relative_residual,
-            'is_valid': is_valid
+            "residual": residual,
+            "residual_norm": residual_norm,
+            "relative_residual": relative_residual,
+            "is_valid": is_valid,
         }
-        
-        self.logger.info(f"Solution validation completed: relative_residual = {relative_residual}")
+
+        self.logger.info(
+            f"Solution validation completed: relative_residual = {relative_residual}"
+        )
         return validation_results
 
     def _setup_spectral_coefficients(self) -> None:
@@ -197,15 +205,15 @@ class FFTSolver7DBasic:
             solution of the equation in spectral space.
         """
         self.logger.info("Setting up spectral coefficients")
-        
+
         # Get parameters
-        mu = self.parameters.get('mu', 1.0)
-        beta = self.parameters.get('beta', 1.0)
-        lambda_param = self.parameters.get('lambda', 0.0)
-        
+        mu = self.parameters.get("mu", 1.0)
+        beta = self.parameters.get("beta", 1.0)
+        lambda_param = self.parameters.get("lambda", 0.0)
+
         # Compute wave vectors
         wave_vectors = self.spectral_operations.get_wave_vectors()
-        
+
         # Compute wave vector magnitudes
         k_magnitude_squared = np.zeros(self.domain.shape)
         for i, k_vec in enumerate(wave_vectors):
@@ -215,14 +223,16 @@ class FFTSolver7DBasic:
                 k_magnitude_squared += k_vec**2
             else:  # Temporal dimension
                 k_magnitude_squared += k_vec**2
-        
+
         # Compute spectral coefficients
-        self.spectral_coefficients = mu * (k_magnitude_squared ** beta) + lambda_param
-        
+        self.spectral_coefficients = mu * (k_magnitude_squared**beta) + lambda_param
+
         # Handle k=0 mode
         if lambda_param == 0:
-            self.spectral_coefficients[0, 0, 0, 0, 0, 0, 0] = 1.0  # Avoid division by zero
-        
+            self.spectral_coefficients[0, 0, 0, 0, 0, 0, 0] = (
+                1.0  # Avoid division by zero
+            )
+
         self.logger.info("Spectral coefficients computed")
 
     def _setup_fft_plan(self) -> None:
@@ -235,10 +245,10 @@ class FFTSolver7DBasic:
             Laplacian equation efficiently.
         """
         self.logger.info("Setting up FFT plan")
-        
+
         # Setup FFT plan
         self.fft_plan.setup_plan()
-        
+
         self.logger.info("FFT plan setup completed")
 
     def _compute_residual(self, solution: np.ndarray, source: np.ndarray) -> np.ndarray:
@@ -258,10 +268,10 @@ class FFTSolver7DBasic:
         """
         # Apply fractional Laplacian operator
         laplacian_solution = self.fractional_laplacian.apply(solution)
-        
+
         # Compute residual
         residual = laplacian_solution - source
-        
+
         return residual
 
     def get_solver_info(self) -> Dict[str, Any]:
@@ -272,9 +282,9 @@ class FFTSolver7DBasic:
             Dict[str, Any]: Solver information.
         """
         return {
-            'domain_shape': self.domain.shape,
-            'parameters': self.parameters,
-            'spectral_coefficients_computed': hasattr(self, 'spectral_coefficients'),
-            'fft_plan_setup': self.fft_plan.is_setup(),
-            'solver_type': 'basic'
+            "domain_shape": self.domain.shape,
+            "parameters": self.parameters,
+            "spectral_coefficients_computed": hasattr(self, "spectral_coefficients"),
+            "fft_plan_setup": self.fft_plan.is_setup(),
+            "solver_type": "basic",
         }

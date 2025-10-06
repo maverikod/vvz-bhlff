@@ -105,7 +105,8 @@ class NodesAnalyzer:
             "has_spherical_nodes": has_spherical_nodes,
             "node_count": node_count,
             "node_locations": [
-                tuple(int(coord) for coord in location) for location in zip(*node_locations)
+                tuple(int(coord) for coord in location)
+                for location in zip(*node_locations)
             ],
         }
 

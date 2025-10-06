@@ -75,23 +75,25 @@ class EnvelopeSolverCore(AbstractSolverCore):
     # compute_jacobian method removed - now inherits from AbstractSolverCore
 
     # solve_linear_system method removed - now inherits from AbstractSolverCore
-    
-    def solve_newton_system(self, jacobian: np.ndarray, residual: np.ndarray) -> np.ndarray:
+
+    def solve_newton_system(
+        self, jacobian: np.ndarray, residual: np.ndarray
+    ) -> np.ndarray:
         """
         Solve Newton-Raphson system for envelope equation.
-        
+
         Physical Meaning:
             Solves the linearized Newton-Raphson system J·δa = -R
             for the envelope equation update δa.
-            
+
         Mathematical Foundation:
             Solves J·δa = -R where J is the Jacobian matrix and R is the residual.
             Uses the inherited solve_linear_system method for the actual solving.
-            
+
         Args:
             jacobian (np.ndarray): Jacobian matrix J.
             residual (np.ndarray): Residual vector R.
-            
+
         Returns:
             np.ndarray: Solution update δa.
         """

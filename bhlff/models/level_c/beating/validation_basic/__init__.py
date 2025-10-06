@@ -11,7 +11,4 @@ analysis in the 7D phase field.
 from .beating_validation_frequencies import BeatingValidationFrequencies
 from .beating_validation_patterns import BeatingValidationPatterns
 
-__all__ = [
-    'BeatingValidationFrequencies',
-    'BeatingValidationPatterns'
-]
+__all__ = ["BeatingValidationFrequencies", "BeatingValidationPatterns"]

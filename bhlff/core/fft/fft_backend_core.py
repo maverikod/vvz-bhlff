@@ -95,7 +95,7 @@ class FFTBackend:
 
         # Setup memory pools for efficient allocation
         self._setup_memory_pools()
-        
+
         # Initialize unified spectral operations for delegation
         self._unified_ops = UnifiedSpectralOperations(domain, precision)
 
@@ -135,7 +135,7 @@ class FFTBackend:
             ValueError: If data shape is incompatible with domain.
         """
         # Delegate to unified spectral operations for better normalization support
-        return self._unified_ops.forward_fft(real_data, 'ortho')
+        return self._unified_ops.forward_fft(real_data, "ortho")
 
     def ifft(self, spectral_data: np.ndarray) -> np.ndarray:
         """
@@ -159,7 +159,7 @@ class FFTBackend:
             ValueError: If data shape is incompatible with domain.
         """
         # Delegate to unified spectral operations for better normalization support
-        return self._unified_ops.inverse_fft(spectral_data, 'ortho')
+        return self._unified_ops.inverse_fft(spectral_data, "ortho")
 
     def fft_shift(self, spectral_data: np.ndarray) -> np.ndarray:
         """

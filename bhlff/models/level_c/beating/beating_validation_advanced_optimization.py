@@ -13,7 +13,4 @@ from .optimization import BeatingValidationOptimizationCore
 # Alias for backward compatibility
 BeatingValidationAdvancedOptimization = BeatingValidationOptimizationCore
 
-__all__ = [
-    'BeatingValidationOptimizationCore',
-    'BeatingValidationAdvancedOptimization'
-]
+__all__ = ["BeatingValidationOptimizationCore", "BeatingValidationAdvancedOptimization"]

@@ -13,7 +13,4 @@ from .validation_basic import BeatingValidationBasicMain
 # Alias for backward compatibility
 BeatingValidationBasic = BeatingValidationBasicMain
 
-__all__ = [
-    'BeatingValidationBasicMain',
-    'BeatingValidationBasic'
-]
+__all__ = ["BeatingValidationBasicMain", "BeatingValidationBasic"]

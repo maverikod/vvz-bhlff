@@ -92,7 +92,7 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
 
         # Compute wave vector magnitudes
         k_magnitude_squared = np.zeros(self.domain.shape)
-        
+
         # Create meshgrids for each dimension
         for i, k_vec in enumerate(wave_vectors):
             if i < 3:  # Spatial dimensions
@@ -101,13 +101,19 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
                 for j in range(self.domain.N):
                     for k in range(self.domain.N):
                         for l in range(self.domain.N):
-                            k_7d[j, k, l, :, :, :, :] = k_vec[j] if i == 0 else (k_vec[k] if i == 1 else k_vec[l])
+                            k_7d[j, k, l, :, :, :, :] = (
+                                k_vec[j]
+                                if i == 0
+                                else (k_vec[k] if i == 1 else k_vec[l])
+                            )
                 k_magnitude_squared += k_7d**2
             elif i < 6:  # Phase dimensions
                 # Create 7D array by broadcasting
                 k_7d = np.zeros(self.domain.shape)
                 for j in range(self.domain.N_phi):
-                    k_7d[:, :, :, j, :, :, :] = k_vec[j] if i == 3 else (k_vec[j] if i == 4 else k_vec[j])
+                    k_7d[:, :, :, j, :, :, :] = (
+                        k_vec[j] if i == 3 else (k_vec[j] if i == 4 else k_vec[j])
+                    )
                 k_magnitude_squared += k_7d**2
             else:  # Temporal dimension
                 # Create 7D array by broadcasting
@@ -115,18 +121,18 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
                 for j in range(self.domain.N_t):
                     k_7d[:, :, :, :, :, :, j] = k_vec[j]
                 k_magnitude_squared += k_7d**2
-        
+
         k_magnitude = np.sqrt(k_magnitude_squared)
 
         # Compute envelope coefficients for BVP theory
         # κ₀|k|² + k₀²χ' where κ₀ is linear stiffness and χ' is real susceptibility
-        kappa_0 = getattr(self.parameters, 'kappa_0', 1.0)  # Linear stiffness
-        k0_squared = getattr(self.parameters, 'k0_squared', 1.0)  # Carrier frequency squared
-        chi_prime = getattr(self.parameters, 'chi_prime', 1.0)  # Real susceptibility
+        kappa_0 = getattr(self.parameters, "kappa_0", 1.0)  # Linear stiffness
+        k0_squared = getattr(
+            self.parameters, "k0_squared", 1.0
+        )  # Carrier frequency squared
+        chi_prime = getattr(self.parameters, "chi_prime", 1.0)  # Real susceptibility
 
-        self._envelope_coeffs = (
-            kappa_0 * k_magnitude_squared + k0_squared * chi_prime
-        )
+        self._envelope_coeffs = kappa_0 * k_magnitude_squared + k0_squared * chi_prime
 
         # Handle k=0 mode
         k_zero_mask = k_magnitude == 0
@@ -191,12 +197,17 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
             result[i] = current_field.copy()
 
             # Check for quench events
-            if self._quench_detector is not None and self._quench_detector.detect_quench(current_field, time_steps[i]):
+            if (
+                self._quench_detector is not None
+                and self._quench_detector.detect_quench(current_field, time_steps[i])
+            ):
                 self.logger.warning(f"Quench detected at t={time_steps[i]:.3f}")
                 # Handle quench events according to BVP theory
                 self._handle_quench_event(current_field, time_steps[i])
 
-        self.logger.info(f"BVP envelope integration completed over {len(time_steps)} time steps")
+        self.logger.info(
+            f"BVP envelope integration completed over {len(time_steps)} time steps"
+        )
         return result
 
     def step(
@@ -238,23 +249,31 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
 
         # BVP envelope integration in spectral space
         # Compute nonlinear stiffness κ(|a|) = κ₀ + κ₂|a|²
-        kappa_2 = getattr(self.parameters, 'kappa_2', 0.1)  # Nonlinear stiffness coefficient
-        field_magnitude_squared = np.abs(current_spectral)**2
+        kappa_2 = getattr(
+            self.parameters, "kappa_2", 0.1
+        )  # Nonlinear stiffness coefficient
+        field_magnitude_squared = np.abs(current_spectral) ** 2
         nonlinear_stiffness = 1.0 + kappa_2 * field_magnitude_squared
 
         # Compute effective susceptibility χ(|a|) = χ' + iχ''(|a|)
-        chi_double_prime = getattr(self.parameters, 'chi_double_prime', 0.1)  # Imaginary susceptibility
+        chi_double_prime = getattr(
+            self.parameters, "chi_double_prime", 0.1
+        )  # Imaginary susceptibility
         effective_susceptibility = 1.0 + 1j * chi_double_prime * field_magnitude_squared
 
         # Envelope modulation factor
-        envelope_factor = np.exp(-self._envelope_coeffs * dt * nonlinear_stiffness * effective_susceptibility)
+        envelope_factor = np.exp(
+            -self._envelope_coeffs * dt * nonlinear_stiffness * effective_susceptibility
+        )
 
         # Source contribution with envelope modulation
-        source_factor = (1.0 - envelope_factor) / (self._envelope_coeffs * nonlinear_stiffness * effective_susceptibility)
+        source_factor = (1.0 - envelope_factor) / (
+            self._envelope_coeffs * nonlinear_stiffness * effective_susceptibility
+        )
         source_factor = np.where(
             self._envelope_coeffs * nonlinear_stiffness * effective_susceptibility != 0,
             source_factor,
-            dt  # Handle division by zero
+            dt,  # Handle division by zero
         )
 
         next_spectral = (
@@ -311,19 +330,19 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
         for i, t in enumerate(time_steps):
             # Envelope modulation factor
             envelope_modulation = 1.0 + modulation_depth * np.cos(carrier_frequency * t)
-            
+
             # Carrier modulation
             carrier_modulation = np.exp(1j * carrier_frequency * t)
 
             # BVP envelope solution
-            field_spectral = (
-                initial_spectral * envelope_modulation * carrier_modulation
-            )
+            field_spectral = initial_spectral * envelope_modulation * carrier_modulation
 
             # Transform back to real space
             result[i] = self._spectral_ops.inverse_fft(field_spectral, "ortho")
 
-        self.logger.info(f"BVP envelope modulation integration completed for carrier frequency ω₀={carrier_frequency}")
+        self.logger.info(
+            f"BVP envelope modulation integration completed for carrier frequency ω₀={carrier_frequency}"
+        )
         return result
 
     def _handle_quench_event(self, field: np.ndarray, time: float) -> None:
@@ -341,8 +360,10 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
         # BVP quench handling: energy dump and envelope reset
         if self._quench_detector is not None:
             quench_info = self._quench_detector.get_quench_info()
-            self.logger.info(f"BVP quench handled: energy_dump={quench_info.get('energy_dump', 0):.3f}")
-            
+            self.logger.info(
+                f"BVP quench handled: energy_dump={quench_info.get('energy_dump', 0):.3f}"
+            )
+
             # Reset envelope modulation parameters if needed
             # This is BVP-specific quench handling
 

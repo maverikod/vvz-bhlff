@@ -35,11 +35,11 @@ from .level_f_bvp_integration import LevelFBVPIntegration
 from .level_g_bvp_integration import LevelGBVPIntegration
 
 __all__ = [
-    'LevelABVPIntegration',
-    'LevelBBVPIntegration', 
-    'LevelCBVPIntegration',
-    'LevelDBVPIntegration',
-    'LevelEBVPIntegration',
-    'LevelFBVPIntegration',
-    'LevelGBVPIntegration'
+    "LevelABVPIntegration",
+    "LevelBBVPIntegration",
+    "LevelCBVPIntegration",
+    "LevelDBVPIntegration",
+    "LevelEBVPIntegration",
+    "LevelFBVPIntegration",
+    "LevelGBVPIntegration",
 ]

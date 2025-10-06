@@ -77,13 +77,17 @@ class UnifiedSpectralOperations:
 
         # Initialize CUDA backend for optimal performance
         self.backend = get_global_backend()
-        self.logger.info(f"Using {type(self.backend).__name__} backend for spectral operations")
+        self.logger.info(
+            f"Using {type(self.backend).__name__} backend for spectral operations"
+        )
 
         # Initialize FFT plans cache
         self._fft_plans = {}
         self._setup_fft_plans()
 
-        self.logger.info(f"UnifiedSpectralOperations initialized for domain {domain.shape}")
+        self.logger.info(
+            f"UnifiedSpectralOperations initialized for domain {domain.shape}"
+        )
 
     def forward_fft(
         self, field: np.ndarray, normalization: str = "ortho"
@@ -118,7 +122,7 @@ class UnifiedSpectralOperations:
 
         # Use CUDA backend for FFT operations
         field_gpu = self.backend.array(field)
-        
+
         if normalization == "ortho":
             # Use orthogonal normalization
             field_spectral_gpu = self.backend.fft(field_gpu)
@@ -170,7 +174,7 @@ class UnifiedSpectralOperations:
 
         # Use CUDA backend for FFT operations
         spectral_field_gpu = self.backend.array(spectral_field)
-        
+
         if normalization == "ortho":
             # Use orthogonal normalization
             field_spectral_gpu = spectral_field_gpu
@@ -219,16 +223,18 @@ class UnifiedSpectralOperations:
         k_vectors = self._get_wave_vectors()
 
         derivatives = {}
-        for i, (axis, k_vec) in enumerate(zip(['x', 'y', 'z', 'phi1', 'phi2', 'phi3', 't'], k_vectors)):
+        for i, (axis, k_vec) in enumerate(
+            zip(["x", "y", "z", "phi1", "phi2", "phi3", "t"], k_vectors)
+        ):
             if i < len(field.shape):
                 # Create wave vector grid for this axis
                 k_grid = self._create_wave_vector_grid(k_vec, i, field.shape)
-                
+
                 # Compute derivative in spectral space
                 derivative_spectral = (1j * k_grid) ** order * field_spectral
-                
+
                 # Transform back to real space
-                derivatives[f'd{axis}'] = self.inverse_fft(derivative_spectral, "ortho")
+                derivatives[f"d{axis}"] = self.inverse_fft(derivative_spectral, "ortho")
 
         return derivatives
 
@@ -349,7 +355,9 @@ class UnifiedSpectralOperations:
             k_vectors.append(k)
         return k_vectors
 
-    def _create_wave_vector_grid(self, k_vec: np.ndarray, axis: int, shape: Tuple[int, ...]) -> np.ndarray:
+    def _create_wave_vector_grid(
+        self, k_vec: np.ndarray, axis: int, shape: Tuple[int, ...]
+    ) -> np.ndarray:
         """
         Create wave vector grid for a specific axis.
 
@@ -364,9 +372,12 @@ class UnifiedSpectralOperations:
         # Create meshgrid with wave vector in the specified axis
         indices = [slice(None)] * len(shape)
         indices[axis] = k_vec
-        
+
         # Create grid
-        grids = np.meshgrid(*[np.arange(s) if i != axis else k_vec for i, s in enumerate(shape)], indexing='ij')
+        grids = np.meshgrid(
+            *[np.arange(s) if i != axis else k_vec for i, s in enumerate(shape)],
+            indexing="ij",
+        )
         return grids[axis]
 
     def _create_lowpass_filter(self, cutoff: float) -> np.ndarray:
@@ -383,12 +394,16 @@ class UnifiedSpectralOperations:
         k_magnitude = np.sqrt(sum(k**2 for k in k_vectors))
         return np.where(k_magnitude >= cutoff, 1.0, 0.0)
 
-    def _create_bandpass_filter(self, low_cutoff: float, high_cutoff: float) -> np.ndarray:
+    def _create_bandpass_filter(
+        self, low_cutoff: float, high_cutoff: float
+    ) -> np.ndarray:
         """Create bandpass filter mask."""
         # Simplified implementation
         k_vectors = self._get_wave_vectors()
         k_magnitude = np.sqrt(sum(k**2 for k in k_vectors))
-        return np.where((k_magnitude >= low_cutoff) & (k_magnitude <= high_cutoff), 1.0, 0.0)
+        return np.where(
+            (k_magnitude >= low_cutoff) & (k_magnitude <= high_cutoff), 1.0, 0.0
+        )
 
     def get_spectral_info(self) -> Dict[str, Any]:
         """

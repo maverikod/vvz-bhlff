@@ -40,7 +40,7 @@ class TestBVPLevelFIntegration:
             dimensions=3,
             size=(1.0, 1.0, 1.0),
             resolution=(64, 64, 64),
-            boundary_conditions="periodic"
+            boundary_conditions="periodic",
         )
 
     @pytest.fixture
@@ -53,22 +53,22 @@ class TestBVPLevelFIntegration:
                 "kappa_2": 0.1,
                 "chi_prime": 1.0,
                 "chi_double_prime_0": 0.01,
-                "k0_squared": 1.0
-            }
+                "k0_squared": 1.0,
+            },
         }
 
     def test_level_f_bvp_multi_particle_systems(self, domain, bvp_config):
         """Test F1: BVP Multi-Particle Systems."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Create multiple particle sources
         source = np.zeros(domain.shape)
         source[20, 20, 20] = 1.0
         source[44, 44, 44] = 1.0
-        
+
         # Solve BVP envelope for multi-particle system
         envelope = bvp_core.solve_envelope(source)
-        
+
         # Test collective mode analysis
         assert envelope.shape == domain.shape
         assert np.all(np.isfinite(envelope))
@@ -76,28 +76,28 @@ class TestBVPLevelFIntegration:
     def test_level_f_bvp_collective_modes(self, domain, bvp_config):
         """Test F2: BVP Collective Modes."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Test U(1)³ phase vector for collective modes
         phase_vector = bvp_core.get_phase_vector()
         coherence = bvp_core.compute_phase_coherence()
-        
+
         # Validate collective mode capabilities
         assert coherence.shape == domain.shape
 
     def test_level_f_bvp_nonlinear_effects(self, domain, bvp_config):
         """Test F3: BVP Nonlinear Effects."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Test nonlinear envelope equation
         source = np.zeros(domain.shape)
         source[32, 32, 32] = 1.0
-        
+
         envelope = bvp_core.solve_envelope(source)
-        
+
         # Test nonlinear effects through envelope parameters
         params = bvp_core.get_envelope_parameters()
         assert "kappa_2" in params  # Nonlinear stiffness coefficient
-        
+
         # Test quench detection for nonlinear effects
         quenches = bvp_core.detect_quenches(envelope)
         assert isinstance(quenches, dict)

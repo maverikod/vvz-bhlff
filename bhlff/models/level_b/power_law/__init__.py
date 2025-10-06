@@ -13,9 +13,4 @@ from .correlation_analysis import CorrelationAnalysis
 from .critical_exponents import CriticalExponents
 from .scaling_regions import ScalingRegions
 
-__all__ = [
-    'PowerLawCore',
-    'CorrelationAnalysis', 
-    'CriticalExponents',
-    'ScalingRegions'
-]
+__all__ = ["PowerLawCore", "CorrelationAnalysis", "CriticalExponents", "ScalingRegions"]

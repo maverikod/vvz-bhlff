@@ -13,7 +13,7 @@ from .beating_validation_statistics import BeatingValidationStatistics
 from .beating_validation_comparison import BeatingValidationComparison
 
 __all__ = [
-    'BeatingValidationCore',
-    'BeatingValidationStatistics',
-    'BeatingValidationComparison'
+    "BeatingValidationCore",
+    "BeatingValidationStatistics",
+    "BeatingValidationComparison",
 ]

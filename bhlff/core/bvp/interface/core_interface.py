@@ -107,27 +107,27 @@ class CoreInterface:
         }
 
         return core_data
-    
+
     def compute_field_gradient(self, field: np.ndarray) -> list:
         """
         Compute field gradient in all 7 dimensions.
-        
+
         Physical Meaning:
             Computes the gradient of the field in all 7 dimensions
             (3 spatial + 3 phase + 1 temporal) for 7D space-time analysis.
-            
+
         Mathematical Foundation:
             Computes ∇f = (∂f/∂x, ∂f/∂y, ∂f/∂z, ∂f/∂φ₁, ∂f/∂φ₂, ∂f/∂φ₃, ∂f/∂t)
             using finite differences in all 7 dimensions.
-            
+
         Args:
             field (np.ndarray): 7D field array.
-            
+
         Returns:
             list: List of 7 gradient components, one for each dimension.
         """
         gradients = []
-        
+
         # Compute gradients for each dimension
         for dim in range(7):
             if dim < 3:  # Spatial dimensions
@@ -142,9 +142,9 @@ class CoreInterface:
                 # Use temporal grid spacing
                 dt = self.bvp_core.domain.dt
                 grad = np.gradient(field, dt, axis=dim)
-            
+
             gradients.append(grad)
-        
+
         return gradients
 
     def _compute_renormalized_coefficients(

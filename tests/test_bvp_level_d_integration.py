@@ -40,7 +40,7 @@ class TestBVPLevelDIntegration:
             dimensions=3,
             size=(1.0, 1.0, 1.0),
             resolution=(64, 64, 64),
-            boundary_conditions="periodic"
+            boundary_conditions="periodic",
         )
 
     @pytest.fixture
@@ -53,29 +53,29 @@ class TestBVPLevelDIntegration:
                 "kappa_2": 0.1,
                 "chi_prime": 1.0,
                 "chi_double_prime_0": 0.01,
-                "k0_squared": 1.0
-            }
+                "k0_squared": 1.0,
+            },
         }
 
     def test_level_d_bvp_mode_superposition(self, domain, bvp_config):
         """Test D1: BVP Mode Superposition."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Create multiple sources for mode superposition
         source1 = np.zeros(domain.shape)
         source1[20, 20, 20] = 1.0
-        
+
         source2 = np.zeros(domain.shape)
         source2[44, 44, 44] = 1.0
-        
+
         # Solve individual envelopes
         envelope1 = bvp_core.solve_envelope(source1)
         envelope2 = bvp_core.solve_envelope(source2)
-        
+
         # Test mode superposition
         combined_source = source1 + source2
         combined_envelope = bvp_core.solve_envelope(combined_source)
-        
+
         # Validate superposition properties
         assert combined_envelope.shape == domain.shape
         assert np.all(np.isfinite(combined_envelope))
@@ -83,15 +83,15 @@ class TestBVPLevelDIntegration:
     def test_level_d_bvp_field_projections(self, domain, bvp_config):
         """Test D2: BVP Field Projections."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Test U(1)³ phase vector projections
         phase_vector = bvp_core.get_phase_vector()
         phase_components = bvp_core.get_phase_components()
-        
+
         # Test electroweak current projections
         envelope = np.ones(domain.shape)
         currents = bvp_core.compute_electroweak_currents(envelope)
-        
+
         # Validate field projections
         assert len(phase_components) == 3
         assert "em_current" in currents
@@ -101,11 +101,11 @@ class TestBVPLevelDIntegration:
     def test_level_d_bvp_streamlines(self, domain, bvp_config):
         """Test D3: BVP Streamlines."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Test phase coherence for streamline analysis
         coherence = bvp_core.compute_phase_coherence()
         assert coherence.shape == domain.shape
-        
+
         # Test total phase for flow analysis
         total_phase = bvp_core.get_total_phase()
         assert total_phase.shape == domain.shape

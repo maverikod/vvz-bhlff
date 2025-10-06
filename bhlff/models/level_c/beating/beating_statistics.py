@@ -11,7 +11,4 @@ analysis in the 7D phase field.
 from .beating_correlation import BeatingCorrelationAnalyzer
 from .beating_patterns import BeatingPatternDetector
 
-__all__ = [
-    'BeatingCorrelationAnalyzer',
-    'BeatingPatternDetector'
-]
+__all__ = ["BeatingCorrelationAnalyzer", "BeatingPatternDetector"]

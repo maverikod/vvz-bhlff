@@ -26,6 +26,7 @@ Example:
 """
 
 from .envelope_solver_core import EnvelopeSolverCore
+
 # ResidualComputer and JacobianComputer removed - functionality moved to AbstractSolverCore
 from .newton_solver import NewtonSolver
 from .gradient_computer import GradientComputer

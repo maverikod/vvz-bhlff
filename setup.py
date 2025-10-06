@@ -27,6 +27,7 @@ from pathlib import Path
 
 from setuptools import setup, find_packages
 
+
 # Read the README file
 def read_readme():
     """Read the README file for long description."""
@@ -34,6 +35,7 @@ def read_readme():
     if readme_path.exists():
         return readme_path.read_text(encoding="utf-8")
     return "7D Phase Field Theory Implementation for Elementary Particles"
+
 
 # Read version from __init__.py
 def get_version():
@@ -46,9 +48,11 @@ def get_version():
                     return line.split("=")[1].strip().strip('"').strip("'")
     return "0.1.0"
 
+
 # Check Python version
 if sys.version_info < (3, 9):
     sys.exit("BHLFF requires Python 3.9 or higher")
+
 
 # Get package data
 def get_package_data():
@@ -65,6 +69,7 @@ def get_package_data():
     }
     return package_data
 
+
 # Get entry points
 def get_entry_points():
     """Get console script entry points."""
@@ -76,6 +81,7 @@ def get_entry_points():
             "bhlff-report=bhlff.cli.report:main",
         ]
     }
+
 
 # Main setup configuration
 setup(

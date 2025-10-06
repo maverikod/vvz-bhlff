@@ -89,6 +89,7 @@ class BVPPostulates7D:
 
         # Create BVPConstants from config
         from ..bvp_constants import BVPConstants
+
         constants = BVPConstants(config)
 
         # Initialize all postulates

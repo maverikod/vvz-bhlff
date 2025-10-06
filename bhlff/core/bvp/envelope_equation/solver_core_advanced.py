@@ -13,7 +13,4 @@ from .advanced import SolverAdvancedCore
 # Alias for backward compatibility
 EnvelopeSolverCoreAdvanced = SolverAdvancedCore
 
-__all__ = [
-    'SolverAdvancedCore',
-    'EnvelopeSolverCoreAdvanced'
-]
+__all__ = ["SolverAdvancedCore", "EnvelopeSolverCoreAdvanced"]

@@ -22,14 +22,7 @@ class TestDomain:
     @pytest.fixture
     def domain(self):
         """Create domain for testing."""
-        return Domain(
-            L=1.0,
-            N=16,
-            dimensions=7,
-            N_phi=8,
-            N_t=32,
-            T=1.0
-        )
+        return Domain(L=1.0, N=16, dimensions=7, N_phi=8, N_t=32, T=1.0)
 
     def test_domain_initialization(self, domain):
         """Test domain initialization."""
@@ -86,10 +79,10 @@ class TestDomain:
         """Test domain validation."""
         with pytest.raises(ValueError):
             Domain(L=-1.0, N=16, dimensions=7)
-        
+
         with pytest.raises(ValueError):
             Domain(L=1.0, N=0, dimensions=7)
-        
+
         with pytest.raises(ValueError):
             Domain(L=1.0, N=16, dimensions=0)
 
@@ -107,14 +100,7 @@ class TestDomain7D:
     @pytest.fixture
     def domain_7d(self):
         """Create 7D domain for testing."""
-        return Domain7D(
-            L=1.0,
-            N=8,
-            N_phi=4,
-            N_t=8,
-            T=1.0,
-            dimensions=7
-        )
+        return Domain7D(L=1.0, N=8, N_phi=4, N_t=8, T=1.0, dimensions=7)
 
     def test_domain_7d_initialization(self, domain_7d):
         """Test 7D domain initialization."""
@@ -136,10 +122,10 @@ class TestDomain7D:
         """Test 7D coordinate generation."""
         x = domain_7d.get_coordinates(0)
         assert len(x) == 8
-        
+
         phi = domain_7d.get_phase_coordinates(0)
         assert len(phi) == 4
-        
+
         t = domain_7d.get_time_coordinates()
         assert len(t) == 8
 
@@ -147,7 +133,7 @@ class TestDomain7D:
         """Test 7D meshgrid generation."""
         X, Y, Z = domain_7d.get_meshgrid()
         assert X.shape == (8, 8, 8)
-        
+
         PHI1, PHI2, PHI3 = domain_7d.get_phase_meshgrid()
         assert PHI1.shape == (4, 4, 4)
 
@@ -155,7 +141,7 @@ class TestDomain7D:
         """Test 7D domain validation."""
         with pytest.raises(ValueError):
             Domain7D(L=-1.0, N=8, N_phi=4, N_t=8, T=1.0, dimensions=7)
-        
+
         with pytest.raises(ValueError):
             Domain7D(L=1.0, N=0, N_phi=4, N_t=8, T=1.0, dimensions=7)
 
@@ -171,14 +157,7 @@ class TestField:
     @pytest.fixture
     def domain(self):
         """Create domain for testing."""
-        return Domain(
-            L=1.0,
-            N=8,
-            dimensions=7,
-            N_phi=4,
-            N_t=8,
-            T=1.0
-        )
+        return Domain(L=1.0, N=8, dimensions=7, N_phi=4, N_t=8, T=1.0)
 
     @pytest.fixture
     def field(self, domain):
@@ -209,18 +188,28 @@ class TestField:
         # Set test data
         test_data = np.ones(field.domain.shape)
         field.set_data(test_data)
-        
+
         energy = field.get_energy()
-        expected_energy = np.sum(test_data**2) * field.domain.dx**3 * field.domain.dphi**3 * field.domain.dt
+        expected_energy = (
+            np.sum(test_data**2)
+            * field.domain.dx**3
+            * field.domain.dphi**3
+            * field.domain.dt
+        )
         assert abs(energy - expected_energy) < 1e-10
 
     def test_field_norm(self, field):
         """Test field norm calculation."""
         test_data = np.ones(field.domain.shape)
         field.set_data(test_data)
-        
+
         norm = field.get_norm()
-        expected_norm = np.sqrt(np.sum(test_data**2) * field.domain.dx**3 * field.domain.dphi**3 * field.domain.dt)
+        expected_norm = np.sqrt(
+            np.sum(test_data**2)
+            * field.domain.dx**3
+            * field.domain.dphi**3
+            * field.domain.dt
+        )
         assert abs(norm - expected_norm) < 1e-10
 
     def test_field_gradient(self, field):
@@ -229,14 +218,16 @@ class TestField:
         x = field.domain.get_coordinates(0)
         y = field.domain.get_coordinates(1)
         z = field.domain.get_coordinates(2)
-        
-        X, Y, Z = np.meshgrid(x, y, z, indexing='ij')
+
+        X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
         test_data = X + Y + Z
-        
+
         # Broadcast to full 7D shape
-        test_data_7d = test_data[:, :, :, np.newaxis, np.newaxis, np.newaxis, np.newaxis]
+        test_data_7d = test_data[
+            :, :, :, np.newaxis, np.newaxis, np.newaxis, np.newaxis
+        ]
         field.set_data(test_data_7d)
-        
+
         gradient = field.get_gradient()
         assert gradient.shape == (3, 8, 8, 8, 4, 4, 4, 8)
         assert np.allclose(gradient[0], 1.0, atol=1e-10)
@@ -249,14 +240,16 @@ class TestField:
         x = field.domain.get_coordinates(0)
         y = field.domain.get_coordinates(1)
         z = field.domain.get_coordinates(2)
-        
-        X, Y, Z = np.meshgrid(x, y, z, indexing='ij')
+
+        X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
         test_data = X**2 + Y**2 + Z**2
-        
+
         # Broadcast to full 7D shape
-        test_data_7d = test_data[:, :, :, np.newaxis, np.newaxis, np.newaxis, np.newaxis]
+        test_data_7d = test_data[
+            :, :, :, np.newaxis, np.newaxis, np.newaxis, np.newaxis
+        ]
         field.set_data(test_data_7d)
-        
+
         laplacian = field.get_laplacian()
         assert laplacian.shape == (8, 8, 8, 4, 4, 4, 8)
         # Laplacian of x² + y² + z² = 6
@@ -279,12 +272,7 @@ class TestParameters:
     @pytest.fixture
     def parameters(self):
         """Create parameters for testing."""
-        return Parameters(
-            mu=1.0,
-            beta=1.5,
-            lambda_param=0.1,
-            nu=1.0
-        )
+        return Parameters(mu=1.0, beta=1.5, lambda_param=0.1, nu=1.0)
 
     def test_parameters_initialization(self, parameters):
         """Test parameters initialization."""
@@ -297,10 +285,10 @@ class TestParameters:
         """Test parameters validation."""
         with pytest.raises(ValueError):
             Parameters(mu=-1.0, beta=1.5, lambda_param=0.1, nu=1.0)
-        
+
         with pytest.raises(ValueError):
             Parameters(mu=1.0, beta=0.0, lambda_param=0.1, nu=1.0)
-        
+
         with pytest.raises(ValueError):
             Parameters(mu=1.0, beta=2.0, lambda_param=0.1, nu=1.0)
 
@@ -308,8 +296,11 @@ class TestParameters:
         """Test spectral coefficients calculation."""
         k_magnitude = np.array([0.0, 1.0, 2.0])
         coeffs = parameters.get_spectral_coefficients(k_magnitude)
-        
-        expected = parameters.mu * (k_magnitude ** (2 * parameters.beta)) + parameters.lambda_param
+
+        expected = (
+            parameters.mu * (k_magnitude ** (2 * parameters.beta))
+            + parameters.lambda_param
+        )
         assert np.allclose(coeffs, expected)
 
     def test_parameters_repr(self, parameters):
@@ -317,5 +308,3 @@ class TestParameters:
         repr_str = repr(parameters)
         assert "Parameters" in repr_str
         assert "mu=1.0" in repr_str
-
-

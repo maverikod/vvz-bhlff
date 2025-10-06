@@ -14,7 +14,9 @@ from unittest.mock import Mock, patch
 
 from bhlff.core.bvp.bvp_constants_base import BVPConstantsBase
 from bhlff.core.bvp.constants.bvp_constants_advanced import BVPConstantsAdvanced
-from bhlff.core.bvp.constants.frequency_dependent_properties import FrequencyDependentProperties
+from bhlff.core.bvp.constants.frequency_dependent_properties import (
+    FrequencyDependentProperties,
+)
 from bhlff.core.bvp.constants.nonlinear_coefficients import NonlinearCoefficients
 from bhlff.core.bvp.constants.renormalized_coefficients import RenormalizedCoefficients
 
@@ -35,7 +37,7 @@ class TestBVPConstantsBase:
                 "carrier_frequency": 2.0e43,
                 "amplitude_threshold": 0.9,
                 "detuning_threshold": 0.2,
-                "gradient_threshold": 0.6
+                "gradient_threshold": 0.6,
             },
             "material_properties": {
                 "em_conductivity": 0.02,
@@ -43,13 +45,13 @@ class TestBVPConstantsBase:
                 "mu": 2.0,
                 "beta": 1.2,
                 "lambda_param": 0.2,
-                "nu": 2.0
+                "nu": 2.0,
             },
             "physical_constants": {
                 "speed_of_light": 3.0e8,
                 "planck_constant": 6.6e-34,
-                "boltzmann_constant": 1.4e-23
-            }
+                "boltzmann_constant": 1.4e-23,
+            },
         }
 
     @pytest.fixture
@@ -167,7 +169,7 @@ class TestBVPConstantsAdvanced:
                 "chi_prime": 1.0,
                 "chi_double_prime_0": 0.01,
                 "k0_squared": 1.0,
-                "carrier_frequency": 1.85e43
+                "carrier_frequency": 1.85e43,
             },
             "material_properties": {
                 "admittance_coeff_1": 0.2,
@@ -180,8 +182,8 @@ class TestBVPConstantsAdvanced:
                 "boundary_pressure_0": 2.0,
                 "boundary_pressure_1": 0.2,
                 "boundary_stiffness_0": 2.0,
-                "boundary_stiffness_1": 0.2
-            }
+                "boundary_stiffness_1": 0.2,
+            },
         }
 
     @pytest.fixture
@@ -211,9 +213,17 @@ class TestBVPConstantsAdvanced:
 
     def test_get_advanced_material_property(self, constants_advanced):
         """Test getting advanced material properties."""
-        assert constants_advanced.get_advanced_material_property("admittance_coeff_1") == 0.2
-        assert constants_advanced.get_advanced_material_property("renorm_coeff_0") == 2.0
-        assert constants_advanced.get_advanced_material_property("boundary_pressure_0") == 2.0
+        assert (
+            constants_advanced.get_advanced_material_property("admittance_coeff_1")
+            == 0.2
+        )
+        assert (
+            constants_advanced.get_advanced_material_property("renorm_coeff_0") == 2.0
+        )
+        assert (
+            constants_advanced.get_advanced_material_property("boundary_pressure_0")
+            == 2.0
+        )
 
     def test_get_advanced_material_property_invalid(self, constants_advanced):
         """Test getting invalid advanced material property."""
@@ -222,12 +232,16 @@ class TestBVPConstantsAdvanced:
 
     def test_constants_advanced_components(self, constants_advanced):
         """Test that components are initialized."""
-        assert hasattr(constants_advanced, 'frequency_properties')
-        assert hasattr(constants_advanced, 'nonlinear_coeffs')
-        assert hasattr(constants_advanced, 'renormalized_coeffs')
-        assert isinstance(constants_advanced.frequency_properties, FrequencyDependentProperties)
+        assert hasattr(constants_advanced, "frequency_properties")
+        assert hasattr(constants_advanced, "nonlinear_coeffs")
+        assert hasattr(constants_advanced, "renormalized_coeffs")
+        assert isinstance(
+            constants_advanced.frequency_properties, FrequencyDependentProperties
+        )
         assert isinstance(constants_advanced.nonlinear_coeffs, NonlinearCoefficients)
-        assert isinstance(constants_advanced.renormalized_coeffs, RenormalizedCoefficients)
+        assert isinstance(
+            constants_advanced.renormalized_coeffs, RenormalizedCoefficients
+        )
 
 
 class TestFrequencyDependentProperties:
@@ -246,15 +260,19 @@ class TestFrequencyDependentProperties:
         """Create FrequencyDependentProperties instance."""
         return FrequencyDependentProperties(mock_constants)
 
-    def test_frequency_properties_initialization(self, frequency_properties, mock_constants):
+    def test_frequency_properties_initialization(
+        self, frequency_properties, mock_constants
+    ):
         """Test frequency properties initialization."""
         assert frequency_properties.constants == mock_constants
 
     def test_compute_frequency_dependent_conductivity(self, frequency_properties):
         """Test frequency-dependent conductivity computation."""
         frequency = np.array([1e9, 1e10, 1e11])
-        conductivity = frequency_properties.compute_frequency_dependent_conductivity(frequency)
-        
+        conductivity = frequency_properties.compute_frequency_dependent_conductivity(
+            frequency
+        )
+
         assert isinstance(conductivity, np.ndarray)
         assert conductivity.shape == frequency.shape
         assert np.all(conductivity > 0)
@@ -262,8 +280,10 @@ class TestFrequencyDependentProperties:
     def test_compute_frequency_dependent_capacitance(self, frequency_properties):
         """Test frequency-dependent capacitance computation."""
         frequency = np.array([1e9, 1e10, 1e11])
-        capacitance = frequency_properties.compute_frequency_dependent_capacitance(frequency)
-        
+        capacitance = frequency_properties.compute_frequency_dependent_capacitance(
+            frequency
+        )
+
         assert isinstance(capacitance, np.ndarray)
         assert capacitance.shape == frequency.shape
         assert np.all(capacitance > 0)
@@ -271,33 +291,43 @@ class TestFrequencyDependentProperties:
     def test_compute_frequency_dependent_inductance(self, frequency_properties):
         """Test frequency-dependent inductance computation."""
         frequency = np.array([1e9, 1e10, 1e11])
-        inductance = frequency_properties.compute_frequency_dependent_inductance(frequency)
-        
+        inductance = frequency_properties.compute_frequency_dependent_inductance(
+            frequency
+        )
+
         assert isinstance(inductance, np.ndarray)
         assert inductance.shape == frequency.shape
         assert np.all(inductance > 0)
 
-    def test_compute_frequency_dependent_conductivity_scalar(self, frequency_properties):
+    def test_compute_frequency_dependent_conductivity_scalar(
+        self, frequency_properties
+    ):
         """Test frequency-dependent conductivity with scalar input."""
         frequency = 1e9
-        conductivity = frequency_properties.compute_frequency_dependent_conductivity(frequency)
-        
+        conductivity = frequency_properties.compute_frequency_dependent_conductivity(
+            frequency
+        )
+
         assert isinstance(conductivity, (float, np.ndarray))
         assert conductivity > 0
 
     def test_compute_frequency_dependent_capacitance_scalar(self, frequency_properties):
         """Test frequency-dependent capacitance with scalar input."""
         frequency = 1e9
-        capacitance = frequency_properties.compute_frequency_dependent_capacitance(frequency)
-        
+        capacitance = frequency_properties.compute_frequency_dependent_capacitance(
+            frequency
+        )
+
         assert isinstance(capacitance, (float, np.ndarray))
         assert capacitance > 0
 
     def test_compute_frequency_dependent_inductance_scalar(self, frequency_properties):
         """Test frequency-dependent inductance with scalar input."""
         frequency = 1e9
-        inductance = frequency_properties.compute_frequency_dependent_inductance(frequency)
-        
+        inductance = frequency_properties.compute_frequency_dependent_inductance(
+            frequency
+        )
+
         assert isinstance(inductance, (float, np.ndarray))
         assert inductance > 0
 
@@ -325,15 +355,17 @@ class TestNonlinearCoefficients:
         """Test nonlinear admittance coefficients computation."""
         frequency = np.array([1e9, 1e10, 1e11])
         amplitude = np.array([0.1, 0.5, 1.0])
-        
-        coeffs = nonlinear_coeffs.compute_nonlinear_admittance_coefficients(frequency, amplitude)
-        
+
+        coeffs = nonlinear_coeffs.compute_nonlinear_admittance_coefficients(
+            frequency, amplitude
+        )
+
         assert isinstance(coeffs, dict)
         assert "linear" in coeffs
         assert "quadratic" in coeffs
         assert "cubic" in coeffs
         assert "quartic" in coeffs
-        
+
         for key, value in coeffs.items():
             assert isinstance(value, np.ndarray)
             assert value.shape == frequency.shape
@@ -342,9 +374,11 @@ class TestNonlinearCoefficients:
         """Test nonlinear admittance coefficients with scalar inputs."""
         frequency = 1e9
         amplitude = 0.5
-        
-        coeffs = nonlinear_coeffs.compute_nonlinear_admittance_coefficients(frequency, amplitude)
-        
+
+        coeffs = nonlinear_coeffs.compute_nonlinear_admittance_coefficients(
+            frequency, amplitude
+        )
+
         assert isinstance(coeffs, dict)
         for key, value in coeffs.items():
             assert isinstance(value, (float, np.ndarray))
@@ -365,7 +399,9 @@ class TestRenormalizedCoefficients:
         """Create RenormalizedCoefficients instance."""
         return RenormalizedCoefficients(mock_constants)
 
-    def test_renormalized_coeffs_initialization(self, renormalized_coeffs, mock_constants):
+    def test_renormalized_coeffs_initialization(
+        self, renormalized_coeffs, mock_constants
+    ):
         """Test renormalized coefficients initialization."""
         assert renormalized_coeffs.constants == mock_constants
 
@@ -373,14 +409,16 @@ class TestRenormalizedCoefficients:
         """Test renormalized coefficients computation."""
         amplitude = np.array([0.1, 0.5, 1.0])
         gradient = np.array([0.01, 0.05, 0.1])
-        
-        coeffs = renormalized_coeffs.compute_renormalized_coefficients(amplitude, gradient)
-        
+
+        coeffs = renormalized_coeffs.compute_renormalized_coefficients(
+            amplitude, gradient
+        )
+
         assert isinstance(coeffs, dict)
         assert "renormalized_0" in coeffs
         assert "renormalized_1" in coeffs
         assert "renormalized_2" in coeffs
-        
+
         for key, value in coeffs.items():
             assert isinstance(value, np.ndarray)
             assert value.shape == amplitude.shape
@@ -389,9 +427,11 @@ class TestRenormalizedCoefficients:
         """Test renormalized coefficients with scalar inputs."""
         amplitude = 0.5
         gradient = 0.05
-        
-        coeffs = renormalized_coeffs.compute_renormalized_coefficients(amplitude, gradient)
-        
+
+        coeffs = renormalized_coeffs.compute_renormalized_coefficients(
+            amplitude, gradient
+        )
+
         assert isinstance(coeffs, dict)
         for key, value in coeffs.items():
             assert isinstance(value, (float, np.ndarray))

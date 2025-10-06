@@ -38,8 +38,8 @@ class AbstractSolverCore:
     Base class for BVP solver cores with default implementations.
 
     Physical Meaning:
-        Provides the fundamental interface and default implementations for solving 
-        the 7D BVP envelope equation using various numerical methods, providing a 
+        Provides the fundamental interface and default implementations for solving
+        the 7D BVP envelope equation using various numerical methods, providing a
         unified approach to envelope field calculations.
 
     Mathematical Foundation:
@@ -78,13 +78,15 @@ class AbstractSolverCore:
         self.tolerance = config.get("tolerance", 1e-8)
         self.damping_factor = config.get("damping_factor", 0.1)
 
-        if hasattr(domain, 'shape'):
+        if hasattr(domain, "shape"):
             domain_info = domain.shape
-        elif hasattr(domain, 'get_full_7d_shape'):
+        elif hasattr(domain, "get_full_7d_shape"):
             domain_info = domain.get_full_7d_shape()
         else:
             domain_info = "unknown"
-        self.logger.info(f"{self.__class__.__name__} initialized for domain {domain_info}")
+        self.logger.info(
+            f"{self.__class__.__name__} initialized for domain {domain_info}"
+        )
 
     def compute_residual(self, envelope: np.ndarray, source: np.ndarray) -> np.ndarray:
         """
@@ -132,11 +134,14 @@ class AbstractSolverCore:
         size = envelope.size
         if size > 10000:  # Use sparse matrix for large domains
             from scipy.sparse import identity
-            return identity(size, format='csr')
+
+            return identity(size, format="csr")
         else:
             return np.eye(size)
 
-    def solve_linear_system(self, jacobian: np.ndarray, residual: np.ndarray) -> np.ndarray:
+    def solve_linear_system(
+        self, jacobian: np.ndarray, residual: np.ndarray
+    ) -> np.ndarray:
         """
         Solve linear system for Newton-Raphson update.
 
@@ -189,14 +194,14 @@ class AbstractSolverCore:
         Raises:
             ValueError: If source has incompatible shape with domain.
         """
-        if hasattr(self.domain, 'shape'):
+        if hasattr(self.domain, "shape"):
             domain_shape = self.domain.shape
-        elif hasattr(self.domain, 'get_full_7d_shape'):
+        elif hasattr(self.domain, "get_full_7d_shape"):
             domain_shape = self.domain.get_full_7d_shape()
         else:
             domain_shape = "unknown"
-        
-        if hasattr(self.domain, 'shape') and source.shape != self.domain.shape:
+
+        if hasattr(self.domain, "shape") and source.shape != self.domain.shape:
             raise ValueError(
                 f"Source shape {source.shape} incompatible with domain shape {self.domain.shape}"
             )

@@ -28,9 +28,11 @@ class SolverPreconditioning:
         """Initialize preconditioning."""
         self.domain = domain
         self.config = config
-        self.preconditioning_type = config.get('preconditioning_type', 'jacobi')
+        self.preconditioning_type = config.get("preconditioning_type", "jacobi")
 
-    def apply_preconditioning(self, jacobian: csc_matrix, residual: np.ndarray) -> Tuple[csc_matrix, np.ndarray]:
+    def apply_preconditioning(
+        self, jacobian: csc_matrix, residual: np.ndarray
+    ) -> Tuple[csc_matrix, np.ndarray]:
         """
         Apply preconditioning to linear system.
 
@@ -47,11 +49,11 @@ class SolverPreconditioning:
         """
         # Compute preconditioner
         preconditioner = self.compute_preconditioner(jacobian)
-        
+
         # Apply preconditioning
         preconditioned_jacobian = preconditioner @ jacobian
         preconditioned_residual = preconditioner @ residual.flatten()
-        
+
         return preconditioned_jacobian, preconditioned_residual.reshape(residual.shape)
 
     def compute_preconditioner(self, jacobian: csc_matrix) -> csc_matrix:
@@ -68,9 +70,9 @@ class SolverPreconditioning:
         Returns:
             csc_matrix: Preconditioner matrix.
         """
-        if self.preconditioning_type == 'jacobi':
+        if self.preconditioning_type == "jacobi":
             return self._compute_jacobi_preconditioner(jacobian)
-        elif self.preconditioning_type == 'ilu':
+        elif self.preconditioning_type == "ilu":
             return self._compute_ilu_preconditioner(jacobian)
         else:
             return self._compute_jacobi_preconditioner(jacobian)
@@ -79,10 +81,10 @@ class SolverPreconditioning:
         """Compute Jacobi preconditioner."""
         # Extract diagonal
         diagonal = jacobian.diagonal()
-        
+
         # Avoid division by zero
         diagonal = np.where(np.abs(diagonal) > 1e-12, diagonal, 1.0)
-        
+
         # Create Jacobi preconditioner
         preconditioner = diags(1.0 / diagonal)
         return preconditioner

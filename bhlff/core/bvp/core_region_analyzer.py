@@ -99,7 +99,9 @@ class CoreRegionAnalyzer:
             # Create coordinate array for this axis
             coord_array = np.arange(amplitude.shape[axis])
             # Reshape to match amplitude dimensions
-            coord_array = coord_array.reshape([1] * axis + [amplitude.shape[axis]] + [1] * (amplitude.ndim - axis - 1))
+            coord_array = coord_array.reshape(
+                [1] * axis + [amplitude.shape[axis]] + [1] * (amplitude.ndim - axis - 1)
+            )
             axis_center = np.sum(amplitude * coord_array) / np.sum(amplitude)
             center.append(axis_center)
         return center

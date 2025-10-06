@@ -32,6 +32,7 @@ from ..bvp_constants import BVPConstants
 from .derivative_operators_facade import DerivativeOperators7D
 from .nonlinear_terms import NonlinearTerms7D
 from .solver_core import EnvelopeSolverCore7D
+
 # ResidualComputer removed - functionality moved to AbstractSolverCore
 
 

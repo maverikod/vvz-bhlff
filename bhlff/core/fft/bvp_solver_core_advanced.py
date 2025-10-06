@@ -13,7 +13,4 @@ from .bvp_advanced import BVPAdvancedCore
 # Alias for backward compatibility
 BVPSolverCoreAdvanced = BVPAdvancedCore
 
-__all__ = [
-    'BVPAdvancedCore',
-    'BVPSolverCoreAdvanced'
-]
+__all__ = ["BVPAdvancedCore", "BVPSolverCoreAdvanced"]

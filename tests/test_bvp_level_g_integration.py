@@ -40,7 +40,7 @@ class TestBVPLevelGIntegration:
             dimensions=3,
             size=(10.0, 10.0, 10.0),
             resolution=(64, 64, 64),
-            boundary_conditions="periodic"
+            boundary_conditions="periodic",
         )
 
     @pytest.fixture
@@ -53,20 +53,20 @@ class TestBVPLevelGIntegration:
                 "kappa_2": 0.1,
                 "chi_prime": 1.0,
                 "chi_double_prime_0": 0.01,
-                "k0_squared": 1.0
-            }
+                "k0_squared": 1.0,
+            },
         }
 
     def test_level_g_bvp_cosmological_evolution(self, domain, bvp_config):
         """Test G1: BVP Cosmological Evolution."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Test large-scale BVP envelope evolution
         source = np.zeros(domain.shape)
         source[32, 32, 32] = 1.0
-        
+
         envelope = bvp_core.solve_envelope(source)
-        
+
         # Validate cosmological scale capabilities
         assert envelope.shape == domain.shape
         assert np.all(np.isfinite(envelope))
@@ -74,31 +74,31 @@ class TestBVPLevelGIntegration:
     def test_level_g_bvp_astrophysical_objects(self, domain, bvp_config):
         """Test G2: BVP Astrophysical Objects."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Test BVP envelope for astrophysical object formation
         source = np.zeros(domain.shape)
         source[32, 32, 32] = 1.0
-        
+
         envelope = bvp_core.solve_envelope(source)
-        
+
         # Test impedance calculation for astrophysical analysis
         impedance = bvp_core.compute_impedance(envelope)
-        
+
         # Validate astrophysical object capabilities
         assert isinstance(impedance, dict)
 
     def test_level_g_bvp_gravitational_effects(self, domain, bvp_config):
         """Test G3: BVP Gravitational Effects."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Test U(1)³ phase vector for gravitational effects
         phase_vector = bvp_core.get_phase_vector()
         total_phase = bvp_core.get_total_phase()
-        
+
         # Test electroweak current generation for gravitational coupling
         envelope = np.ones(domain.shape)
         currents = bvp_core.compute_electroweak_currents(envelope)
-        
+
         # Validate gravitational effect capabilities
         assert total_phase.shape == domain.shape
         assert "em_current" in currents

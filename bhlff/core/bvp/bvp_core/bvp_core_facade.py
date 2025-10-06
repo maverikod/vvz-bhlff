@@ -30,4 +30,4 @@ Example:
 from .bvp_core_facade_impl import BVPCoreFacade
 
 # Re-export for backward compatibility
-__all__ = ['BVPCoreFacade']
+__all__ = ["BVPCoreFacade"]

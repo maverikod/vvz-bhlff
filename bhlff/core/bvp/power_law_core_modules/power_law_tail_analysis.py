@@ -46,49 +46,53 @@ class PowerLawTailAnalysis:
             List[Dict[str, Any]]: List of tail analysis results.
         """
         self.logger.info("Starting power law tail analysis")
-        
+
         # Identify tail regions
         tail_regions = self._identify_tail_regions(envelope)
-        
+
         # Analyze each tail region
         tail_analyses = []
         for region in tail_regions:
             analysis = self._analyze_tail_region(envelope, region)
             if analysis:
                 tail_analyses.append(analysis)
-        
-        self.logger.info(f"Tail analysis completed: {len(tail_analyses)} regions analyzed")
+
+        self.logger.info(
+            f"Tail analysis completed: {len(tail_analyses)} regions analyzed"
+        )
         return tail_analyses
 
     def _identify_tail_regions(self, envelope: np.ndarray) -> List[Dict[str, Any]]:
         """Identify tail regions in the envelope field."""
         # Simplified tail region identification
         regions = []
-        
+
         # Find regions below threshold
         mask = envelope < self.tail_threshold * np.max(envelope)
-        
+
         if np.sum(mask) >= self.min_tail_points:
             region = {
-                'type': 'tail',
-                'mask': mask,
-                'size': np.sum(mask),
-                'threshold': self.tail_threshold
+                "type": "tail",
+                "mask": mask,
+                "size": np.sum(mask),
+                "threshold": self.tail_threshold,
             }
             regions.append(region)
-        
+
         return regions
 
-    def _analyze_tail_region(self, envelope: np.ndarray, region: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_tail_region(
+        self, envelope: np.ndarray, region: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Analyze a specific tail region."""
-        if region['size'] < self.min_tail_points:
+        if region["size"] < self.min_tail_points:
             return None
-        
+
         # Simplified tail region analysis
         return {
-            'region': region,
-            'power_law_exponent': -2.0,  # Simplified
-            'decay_rate': 1.0,  # Simplified
-            'fitting_quality': 0.8,  # Simplified
-            'region_type': 'tail'
+            "region": region,
+            "power_law_exponent": -2.0,  # Simplified
+            "decay_rate": 1.0,  # Simplified
+            "fitting_quality": 0.8,  # Simplified
+            "region_type": "tail",
         }

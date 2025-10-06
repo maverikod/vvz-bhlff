@@ -26,21 +26,23 @@ from bhlff.core.bvp import BVPCore
 class ZoneProperties:
     """
     Zone properties analysis for BVP field.
-    
+
     Physical Meaning:
         Analyzes properties of different zones in the BVP field
         including amplitude, gradient, and coherence properties.
     """
-    
+
     def __init__(self, bvp_core: BVPCore):
         """Initialize zone properties analyzer."""
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-    
-    def analyze_zone_properties(self, envelope: np.ndarray) -> Dict[str, Dict[str, float]]:
+
+    def analyze_zone_properties(
+        self, envelope: np.ndarray
+    ) -> Dict[str, Dict[str, float]]:
         """
         Analyze properties of different zones.
-        
+
         Physical Meaning:
             Analyzes properties of different zones in the BVP field
             including amplitude, gradient, and coherence properties.

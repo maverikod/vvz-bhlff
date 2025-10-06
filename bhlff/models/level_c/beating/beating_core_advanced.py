@@ -12,7 +12,4 @@ aspects of advanced beating core operations.
 from .beating_core_advanced_basic import BeatingCoreAdvancedBasic
 from .beating_core_advanced_ml import BeatingCoreAdvancedML
 
-__all__ = [
-    'BeatingCoreAdvancedBasic',
-    'BeatingCoreAdvancedML'
-]
+__all__ = ["BeatingCoreAdvancedBasic", "BeatingCoreAdvancedML"]

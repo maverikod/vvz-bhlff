@@ -2,18 +2,18 @@
 
 **Автор:** Vasiliy Zdanovskiy
 **Email:** vasilyvz@gmail.com
-**Дата:** 2025-10-05 23:13:37
+**Дата:** 2025-10-05 23:16:50
 
 ## Обзор
 
-Проанализировано файлов: 468
+Проанализировано файлов: 471
 
 ### Статистика
 
-- **Всего файлов:** 468
-- **Всего классов:** 481
-- **Всего функций:** 155
-- **Всего методов:** 3754
+- **Всего файлов:** 471
+- **Всего классов:** 485
+- **Всего функций:** 184
+- **Всего методов:** 3782
 
 ## Анализ по файлам
 
@@ -4264,6 +4264,220 @@ Physical Meaning:
 - `domain.Domain`
 - `bvp_constants.BVPConstants`
 - `phase_components.PhaseComponents`
+
+---
+
+### bhlff/core/bvp/physical_validation_decorator.py
+
+**Описание модуля:**
+
+```
+Author: Vasiliy Zdanovskiy
+email: vasilyvz@gmail.com
+
+Physical validation decorator for BVP methods.
+
+This module provides decorators for automatic physical validation
+of BVP methods and results, ensuring theoretical compliance.
+```
+
+**Классы:**
+
+- **PhysicalValidationMixin**
+  - Описание: Mixin class for adding physical validation capabilities to BVP classes.
+
+Physical Meaning:
+    Provi...
+
+  **Методы:**
+  - 🔒 `__init__()`
+    - Initialize with physical validation capabilities....
+  - 🔒 `_setup_physical_validation()`
+    - Setup physical validation for the class....
+  - `validate_result_physical(result)`
+    - Validate result using physical constraints.
+
+Physical Meaning:
+    Validates tha...
+  - `validate_result_theoretical(result)`
+    - Validate result using theoretical bounds.
+
+Physical Meaning:
+    Validates that ...
+  - `validate_result_comprehensive(result)`
+    - Validate result using both physical constraints and theoretical bounds.
+
+Physica...
+
+**Функции:**
+
+- `physical_validation_required(domain_shape, parameters)`
+  - Decorator for automatic physical validation of BVP methods.
+
+Physical Meaning:
+ ...
+- `validate_physical_constraints(domain_shape, parameters)`
+  - Decorator for validating physical constraints only.
+
+Physical Meaning:
+    Valid...
+- `validate_theoretical_bounds(domain_shape, parameters)`
+  - Decorator for validating theoretical bounds only.
+
+Physical Meaning:
+    Validat...
+- `validate_energy_conservation(domain_shape, parameters)`
+  - Decorator for validating energy conservation only.
+
+Physical Meaning:
+    Valida...
+- `validate_causality(domain_shape, parameters)`
+  - Decorator for validating causality constraints only.
+
+Physical Meaning:
+    Vali...
+- `validate_7d_structure(domain_shape, parameters)`
+  - Decorator for validating 7D structure preservation only.
+
+Physical Meaning:
+    ...
+- `decorator(func)`
+- `decorator(func)`
+- `decorator(func)`
+- `decorator(func)`
+- `decorator(func)`
+- `decorator(func)`
+- `wrapper()`
+- `wrapper()`
+- `wrapper()`
+- `wrapper()`
+- `wrapper()`
+- `wrapper()`
+
+**Основные импорты:**
+
+- `functools`
+- `numpy`
+- `typing.Dict`
+- `typing.Any`
+- `typing.Callable`
+- `typing.Optional`
+- `logging`
+- `physical_validator.BVPPhysicalValidator`
+
+---
+
+### bhlff/core/bvp/physical_validator.py
+
+**Описание модуля:**
+
+```
+Author: Vasiliy Zdanovskiy
+email: vasilyvz@gmail.com
+
+Physical validator for BVP methods and results.
+
+This module implements comprehensive physical validation for BVP methods,
+ensuring that all results are consistent with the theoretical framework
+and physical principles of the 7D phase field theory.
+```
+
+**Классы:**
+
+- **PhysicalValidator**
+  - Наследование: ABC
+  - Описание: Abstract base class for physical validation.
+
+Physical Meaning:
+    Provides the foundation for phys...
+
+  **Методы:**
+  - 🔒 `__init__(domain_shape, parameters)`
+    - Initialize physical validator.
+
+Physical Meaning:
+    Sets up the validator with...
+  - 🔒 `_setup_physical_constraints()`
+    - Setup physical constraints for validation....
+  - 🔒 `_setup_theoretical_bounds()`
+    - Setup theoretical bounds for validation....
+  - 🔸 `validate_physical_constraints(result)`
+    - Validate physical constraints.
+
+Physical Meaning:
+    Validates that the result ...
+  - 🔸 `validate_theoretical_bounds(result)`
+    - Validate theoretical bounds.
+
+Physical Meaning:
+    Validates that the result is...
+
+- **BVPPhysicalValidator**
+  - Наследование: PhysicalValidator
+  - Описание: Physical validator for BVP methods and results.
+
+Physical Meaning:
+    Validates that all BVP method...
+
+  **Методы:**
+  - 🔒 `__init__(domain_shape, parameters)`
+    - Initialize BVP physical validator.
+
+Physical Meaning:
+    Sets up the validator ...
+  - 🔒 `_setup_bvp_constraints()`
+    - Setup BVP-specific constraints....
+  - `validate_physical_constraints(result)`
+    - Validate physical constraints for BVP results.
+
+Physical Meaning:
+    Validates ...
+  - `validate_theoretical_bounds(result)`
+    - Validate theoretical bounds for BVP results.
+
+Physical Meaning:
+    Validates th...
+  - 🔒 `_validate_energy_conservation(field, energy, metadata)`
+    - Validate energy conservation....
+  - 🔒 `_validate_causality(field, metadata)`
+    - Validate causality constraints....
+  - 🔒 `_validate_phase_coherence(field, phase, metadata)`
+    - Validate phase coherence....
+  - 🔒 `_validate_7d_structure(field, metadata)`
+    - Validate 7D structure preservation....
+  - 🔒 `_validate_amplitude_bounds(field, metadata)`
+    - Validate amplitude bounds....
+  - 🔒 `_validate_gradient_bounds(field, metadata)`
+    - Validate gradient bounds....
+  - 🔒 `_validate_field_energy_bounds(field, metadata)`
+    - Validate field energy bounds....
+  - 🔒 `_validate_phase_gradient_bounds(field, metadata)`
+    - Validate phase gradient bounds....
+  - 🔒 `_validate_coherence_length_bounds(field, metadata)`
+    - Validate coherence length bounds....
+  - 🔒 `_validate_temporal_causality_bounds(field, metadata)`
+    - Validate temporal causality bounds....
+  - 🔒 `_validate_spatial_resolution_bounds(field, metadata)`
+    - Validate spatial resolution bounds....
+  - 🔒 `_estimate_coherence_length(field_amplitude)`
+    - Estimate coherence length from field amplitude....
+  - `get_validation_summary(physical_result, theoretical_result)`
+    - Get comprehensive validation summary.
+
+Physical Meaning:
+    Provides a comprehe...
+
+**Основные импорты:**
+
+- `numpy`
+- `typing.Dict`
+- `typing.Any`
+- `typing.List`
+- `typing.Optional`
+- `typing.Tuple`
+- `logging`
+- `abc.ABC`
+- `abc.abstractmethod`
 
 ---
 
@@ -24515,6 +24729,56 @@ beating analysis.
 - `sys`
 - `os`
 - `bhlff.models.level_c.boundaries.BoundaryAnalyzer`
+
+---
+
+### test_physical_validation_fix.py
+
+**Описание модуля:**
+
+```
+Test script for physical validation fix.
+
+This script tests the comprehensive physical validation system
+to ensure it works correctly and provides theoretical compliance.
+```
+
+**Классы:**
+
+- **TestBVPClass**
+  - Наследование: PhysicalValidationMixin
+
+  **Методы:**
+  - 🔒 `__init__(domain_shape, parameters)`
+
+**Функции:**
+
+- `test_physical_validator()`
+  - Test BVP physical validator....
+- `test_validation_decorators()`
+  - Test physical validation decorators....
+- `test_specific_validation_decorators()`
+  - Test specific validation decorators....
+- `test_validation_mixin()`
+  - Test PhysicalValidationMixin....
+- `test_invalid_results()`
+  - Test validation with invalid results....
+- `test_no_basic_validation()`
+  - Test that no basic validation methods remain....
+- `main()`
+  - Run all tests....
+- `test_method()`
+- `test_energy_method()`
+- `test_causality_method()`
+- `test_structure_method()`
+
+**Основные импорты:**
+
+- `sys`
+- `os`
+- `numpy`
+- `logging`
+- `bhlff.core.bvp.physical_validator.BVPPhysicalValidator`
 
 ---
 

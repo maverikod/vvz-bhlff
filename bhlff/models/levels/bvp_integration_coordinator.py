@@ -12,7 +12,4 @@ aspects of BVP integration.
 from .bvp_integration_core import BVPIntegrationCore
 from .bvp_integration_coordinator import BVPLevelIntegrator
 
-__all__ = [
-    'BVPIntegrationCore',
-    'BVPLevelIntegrator'
-]
+__all__ = ["BVPIntegrationCore", "BVPLevelIntegrator"]

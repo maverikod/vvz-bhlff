@@ -13,7 +13,4 @@ from .advanced import FFTAdvancedCore
 # Alias for backward compatibility
 FFTSolver7DAdvanced = FFTAdvancedCore
 
-__all__ = [
-    'FFTAdvancedCore',
-    'FFTSolver7DAdvanced'
-]
+__all__ = ["FFTAdvancedCore", "FFTSolver7DAdvanced"]

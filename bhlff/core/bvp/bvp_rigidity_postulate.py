@@ -48,9 +48,7 @@ class BVPRigidityPostulate(BVPPostulate):
         """
         self.domain = domain
         self.constants = constants
-        self.stiffness_threshold = constants.get_quench_parameter(
-            "stiffness_threshold"
-        )
+        self.stiffness_threshold = constants.get_quench_parameter("stiffness_threshold")
         self.correlation_length_threshold = constants.get_quench_parameter(
             "correlation_length_threshold"
         )

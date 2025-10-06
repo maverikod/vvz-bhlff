@@ -13,7 +13,4 @@ from .ml import BeatingMLCore
 # Alias for backward compatibility
 BeatingCoreAdvancedML = BeatingMLCore
 
-__all__ = [
-    'BeatingMLCore',
-    'BeatingCoreAdvancedML'
-]
+__all__ = ["BeatingMLCore", "BeatingCoreAdvancedML"]

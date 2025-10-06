@@ -116,10 +116,10 @@ class LevelEBVPIntegration:
         self.logger.info("Processing BVP data for Level E analysis")
 
         # Extract parameters
-        soliton_threshold = kwargs.get('soliton_threshold', 0.1)
-        defect_threshold = kwargs.get('defect_threshold', 0.05)
-        dynamics_time_window = kwargs.get('dynamics_time_window', 1.0)
-        interaction_radius = kwargs.get('interaction_radius', 2.0)
+        soliton_threshold = kwargs.get("soliton_threshold", 0.1)
+        defect_threshold = kwargs.get("defect_threshold", 0.05)
+        dynamics_time_window = kwargs.get("dynamics_time_window", 1.0)
+        interaction_radius = kwargs.get("interaction_radius", 2.0)
 
         # Analyze solitons
         soliton_data = self._analyze_solitons(envelope, soliton_threshold)
@@ -128,9 +128,7 @@ class LevelEBVPIntegration:
         defect_data = self._analyze_defects(envelope, defect_threshold)
 
         # Analyze defect dynamics
-        dynamics_data = self._analyze_defect_dynamics(
-            envelope, dynamics_time_window
-        )
+        dynamics_data = self._analyze_defect_dynamics(envelope, dynamics_time_window)
 
         # Analyze defect interactions
         interaction_data = self._analyze_defect_interactions(
@@ -358,10 +356,10 @@ class LevelEBVPIntegration:
         quench_results = self.quench_detector.detect_quenches(envelope)
 
         return {
-            "quench_detected": quench_results.get('quench_detected', False),
-            "quench_amplitude": quench_results.get('quench_amplitude', 0.0),
-            "quench_detuning": quench_results.get('quench_detuning', 0.0),
-            "quench_gradient": quench_results.get('quench_gradient', 0.0),
+            "quench_detected": quench_results.get("quench_detected", False),
+            "quench_amplitude": quench_results.get("quench_amplitude", 0.0),
+            "quench_detuning": quench_results.get("quench_detuning", 0.0),
+            "quench_gradient": quench_results.get("quench_gradient", 0.0),
         }
 
     def _analyze_envelope_defect_coupling(self, envelope: np.ndarray) -> Dict[str, Any]:
@@ -380,14 +378,18 @@ class LevelEBVPIntegration:
         return {
             "phase_gradient_magnitude": float(gradient_magnitude),
             "amplitude_variation": float(amplitude_variation),
-            "envelope_defect_correlation": float(np.corrcoef(amplitude.flatten(), phase.flatten())[0, 1]),
+            "envelope_defect_correlation": float(
+                np.corrcoef(amplitude.flatten(), phase.flatten())[0, 1]
+            ),
         }
 
     def _analyze_nonlinear_defect_effects(self, envelope: np.ndarray) -> Dict[str, Any]:
         """Analyze nonlinear effects on defect formation."""
         # Compute nonlinear stiffness
         amplitude = np.abs(envelope)
-        nonlinear_stiffness = self.constants.kappa_0 + self.constants.kappa_2 * amplitude ** 2
+        nonlinear_stiffness = (
+            self.constants.kappa_0 + self.constants.kappa_2 * amplitude**2
+        )
 
         # Analyze nonlinear effects on defect formation
         nonlinear_ratio = np.mean(nonlinear_stiffness) / self.constants.kappa_0
@@ -417,5 +419,7 @@ class LevelEBVPIntegration:
             "envelope_energy": float(envelope_energy),
             "shape_compliance": shape_compliance,
             "quench_compatible": quench_compatible,
-            "bvp_framework_compliant": shape_compliance and envelope_norm > 0 and quench_compatible,
+            "bvp_framework_compliant": shape_compliance
+            and envelope_norm > 0
+            and quench_compatible,
         }

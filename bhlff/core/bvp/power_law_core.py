@@ -13,7 +13,4 @@ from .power_law_core_modules import PowerLawCoreMain
 # Alias for backward compatibility
 PowerLawCore = PowerLawCoreMain
 
-__all__ = [
-    'PowerLawCoreMain',
-    'PowerLawCore'
-]
+__all__ = ["PowerLawCoreMain", "PowerLawCore"]

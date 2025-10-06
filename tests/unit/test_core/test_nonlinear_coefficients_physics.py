@@ -9,21 +9,24 @@ importing from the modular test structure for better maintainability.
 """
 
 # Import all test classes from the modular structure
-from tests.unit.test_core.nonlinear_coefficients.test_basic_coefficients import TestBasicCoefficients
-from tests.unit.test_core.nonlinear_coefficients.test_advanced_coefficients import TestAdvancedCoefficients
+from tests.unit.test_core.nonlinear_coefficients.test_basic_coefficients import (
+    TestBasicCoefficients,
+)
+from tests.unit.test_core.nonlinear_coefficients.test_advanced_coefficients import (
+    TestAdvancedCoefficients,
+)
 
 # Re-export all test classes for pytest discovery
-__all__ = [
-    'TestBasicCoefficients',
-    'TestAdvancedCoefficients'
-]
+__all__ = ["TestBasicCoefficients", "TestAdvancedCoefficients"]
+
 
 # Legacy class name for backward compatibility
 class TestNonlinearCoefficientsPhysics(TestBasicCoefficients):
     """
     Legacy nonlinear coefficients physics tests.
-    
+
     Physical Meaning:
         Maintains backward compatibility while using the modular test structure.
     """
+
     pass

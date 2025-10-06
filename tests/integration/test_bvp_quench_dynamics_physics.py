@@ -40,11 +40,11 @@ class TestBVPQuenchDynamicsPhysics:
         """Create 7D domain for complete pipeline testing."""
         return Domain(
             L=2.0,  # Larger domain for better physics
-            N=64,   # Higher resolution
+            N=64,  # Higher resolution
             dimensions=3,
             N_phi=32,  # More phase points
-            N_t=128,   # More time points
-            T=2.0      # Longer evolution
+            N_t=128,  # More time points
+            T=2.0,  # Longer evolution
         )
 
     @pytest.fixture
@@ -62,7 +62,7 @@ class TestBVPQuenchDynamicsPhysics:
                 "mu": 1.0,
                 "beta": 1.5,
                 "lambda_param": 0.1,
-            }
+            },
         }
         return BVPConstantsAdvanced(config)
 
@@ -74,52 +74,66 @@ class TestBVPQuenchDynamicsPhysics:
     def test_bvp_quench_dynamics_physics(self, domain_7d, bvp_core):
         """
         Test BVP quench dynamics physics.
-        
+
         Physical Meaning:
             Validates that quench detection correctly identifies
             phase transition regions and maintains physical consistency.
-            
+
         Mathematical Foundation:
             Tests quench dynamics: |∇a|² > threshold
             and validates quench evolution.
         """
         # Create source with known quench regions
         source = self._generate_source_with_quenches(domain_7d)
-        
+
         # Solve envelope
         envelope = bvp_core.solve_envelope(source)
-        
+
         # Detect quenches
         quench_detector = QuenchDetector(domain_7d, bvp_core.constants)
         quench_map = quench_detector.detect_quenches(envelope)
-        
+
         # Physical validation 1: Quench map should be binary
         assert np.all((quench_map == 0) | (quench_map == 1)), "Quench map not binary"
-        
+
         # Physical validation 2: Quenches should be localized
         quench_fraction = np.mean(quench_map)
-        assert 0 < quench_fraction < 0.5, f"Quench fraction out of range: {quench_fraction}"
-        
+        assert (
+            0 < quench_fraction < 0.5
+        ), f"Quench fraction out of range: {quench_fraction}"
+
         # Physical validation 3: Quenches should correlate with high gradients
         gradient_magnitude = self._compute_gradient_magnitude(envelope, domain_7d)
-        quench_gradient_correlation = np.corrcoef(quench_map.flatten(), 
-                                                 gradient_magnitude.flatten())[0, 1]
-        assert quench_gradient_correlation > 0.3, "Quenches don't correlate with gradients"
+        quench_gradient_correlation = np.corrcoef(
+            quench_map.flatten(), gradient_magnitude.flatten()
+        )[0, 1]
+        assert (
+            quench_gradient_correlation > 0.3
+        ), "Quenches don't correlate with gradients"
 
     def _generate_source_with_quenches(self, domain: Domain) -> np.ndarray:
         """Generate source with known quench regions."""
         source = np.zeros(domain.shape)
-        
+
         # Create sharp gradients (quenches)
-        source[domain.N//4:3*domain.N//4, domain.N//4:3*domain.N//4, 
-               domain.N//4:3*domain.N//4, :, :, :, :] = 10.0
-        
+        source[
+            domain.N // 4 : 3 * domain.N // 4,
+            domain.N // 4 : 3 * domain.N // 4,
+            domain.N // 4 : 3 * domain.N // 4,
+            :,
+            :,
+            :,
+            :,
+        ] = 10.0
+
         return source
 
-    def _compute_gradient_magnitude(self, envelope: np.ndarray, domain: Domain) -> np.ndarray:
+    def _compute_gradient_magnitude(
+        self, envelope: np.ndarray, domain: Domain
+    ) -> np.ndarray:
         """Compute gradient magnitude."""
         grad_x = np.gradient(envelope, axis=0)
         grad_y = np.gradient(envelope, axis=1)
         grad_z = np.gradient(envelope, axis=2)
-        
+
         return np.sqrt(grad_x**2 + grad_y**2 + grad_z**2)

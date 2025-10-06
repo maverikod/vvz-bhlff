@@ -46,49 +46,55 @@ class PowerLawOptimization:
             Dict[str, Any]: Optimization results.
         """
         self.logger.info("Starting power law optimization")
-        
+
         # Simplified optimization implementation
         results = {
-            'optimization_successful': True,
-            'improvement_factor': 1.2,
-            'optimized_regions': 5,
-            'total_iterations': 50
+            "optimization_successful": True,
+            "improvement_factor": 1.2,
+            "optimized_regions": 5,
+            "total_iterations": 50,
         }
-        
+
         self.logger.info("Power law optimization completed")
         return results
 
-    def _optimize_region_fit(self, envelope: np.ndarray, region: Dict[str, Any]) -> Dict[str, Any]:
+    def _optimize_region_fit(
+        self, envelope: np.ndarray, region: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Optimize power law fit for a specific region."""
         # Simplified implementation
         return {
-            'optimized_exponent': 2.1,
-            'optimized_coefficient': 1.5,
-            'improvement': 0.15
+            "optimized_exponent": 2.1,
+            "optimized_coefficient": 1.5,
+            "improvement": 0.15,
         }
 
-    def _iterative_refinement(self, region_data: Dict[str, np.ndarray], initial_fit: Dict[str, float]) -> Dict[str, Any]:
+    def _iterative_refinement(
+        self, region_data: Dict[str, np.ndarray], initial_fit: Dict[str, float]
+    ) -> Dict[str, Any]:
         """Perform iterative refinement of power law fit."""
         # Simplified implementation
         return {
-            'refined_exponent': initial_fit.get('exponent', 0.0) * 1.05,
-            'refined_coefficient': initial_fit.get('coefficient', 0.0) * 1.02,
-            'convergence_achieved': True
+            "refined_exponent": initial_fit.get("exponent", 0.0) * 1.05,
+            "refined_coefficient": initial_fit.get("coefficient", 0.0) * 1.02,
+            "convergence_achieved": True,
         }
 
     def _adjust_fit_parameters(self, fit_params: Dict[str, float]) -> Dict[str, float]:
         """Adjust fit parameters for optimization."""
         # Simplified implementation
         adjusted_params = fit_params.copy()
-        adjusted_params['exponent'] *= 1.01
-        adjusted_params['coefficient'] *= 1.005
+        adjusted_params["exponent"] *= 1.01
+        adjusted_params["coefficient"] *= 1.005
         return adjusted_params
 
-    def _calculate_optimization_quality(self, optimized_results: List[Dict[str, Any]]) -> Dict[str, float]:
+    def _calculate_optimization_quality(
+        self, optimized_results: List[Dict[str, Any]]
+    ) -> Dict[str, float]:
         """Calculate quality of optimization results."""
         # Simplified implementation
         return {
-            'average_improvement': 0.12,
-            'optimization_success_rate': 0.85,
-            'overall_quality': 0.78
+            "average_improvement": 0.12,
+            "optimization_success_rate": 0.85,
+            "overall_quality": 0.78,
         }

@@ -19,11 +19,11 @@ from test_fft_twiddle_computer import TestFFTTwiddleComputer
 
 # Export all test classes
 __all__ = [
-    'TestFFTBackend',
-    'TestSpectralOperations',
-    'TestSpectralDerivatives',
-    'TestSpectralFiltering',
-    'TestFFTPlanManager',
-    'TestFFTButterflyComputer',
-    'TestFFTTwiddleComputer',
+    "TestFFTBackend",
+    "TestSpectralOperations",
+    "TestSpectralDerivatives",
+    "TestSpectralFiltering",
+    "TestFFTPlanManager",
+    "TestFFTButterflyComputer",
+    "TestFFTTwiddleComputer",
 ]

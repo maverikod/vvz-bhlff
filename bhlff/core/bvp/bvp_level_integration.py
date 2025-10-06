@@ -116,32 +116,29 @@ class BVPLevelIntegration:
             # Test level interfaces that are known to work
             level_b_data = self.get_level_b_data(envelope)
             level_c_data = self.get_level_c_data(envelope)
-            
+
             # Check that working levels return valid data
-            basic_validation = (
-                level_b_data is not None
-                and level_c_data is not None
-            )
-            
+            basic_validation = level_b_data is not None and level_c_data is not None
+
             # Try other levels but don't fail if they have issues
             try:
                 level_d_data = self.get_level_d_data(envelope)
                 level_d_ok = level_d_data is not None
             except Exception:
                 level_d_ok = False
-                
+
             try:
                 level_e_data = self.get_level_e_data(envelope)
                 level_e_ok = level_e_data is not None
             except Exception:
                 level_e_ok = False
-                
+
             try:
                 level_f_data = self.get_level_f_data(envelope)
                 level_f_ok = level_f_data is not None
             except Exception:
                 level_f_ok = False
-                
+
             try:
                 level_g_data = self.get_level_g_data(envelope)
                 level_g_ok = level_g_data is not None
@@ -149,8 +146,10 @@ class BVPLevelIntegration:
                 level_g_ok = False
 
             # Return True if basic levels work and at least some others work
-            working_levels = sum([basic_validation, level_d_ok, level_e_ok, level_f_ok, level_g_ok])
+            working_levels = sum(
+                [basic_validation, level_d_ok, level_e_ok, level_f_ok, level_g_ok]
+            )
             return working_levels >= 3  # At least 3 levels should work
-            
+
         except Exception:
             return False

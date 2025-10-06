@@ -107,24 +107,18 @@ class LevelDBVPIntegration:
         self.logger.info("Processing BVP data for Level D analysis")
 
         # Extract parameters
-        mode_threshold = kwargs.get('mode_threshold', 0.1)
-        projection_axes = kwargs.get('projection_axes', None)
-        streamline_resolution = kwargs.get('streamline_resolution', 1.0)
+        mode_threshold = kwargs.get("mode_threshold", 0.1)
+        projection_axes = kwargs.get("projection_axes", None)
+        streamline_resolution = kwargs.get("streamline_resolution", 1.0)
 
         # Analyze mode superposition
-        superposition_data = self._analyze_mode_superposition(
-            envelope, mode_threshold
-        )
+        superposition_data = self._analyze_mode_superposition(envelope, mode_threshold)
 
         # Analyze field projections
-        projection_data = self._analyze_field_projections(
-            envelope, projection_axes
-        )
+        projection_data = self._analyze_field_projections(envelope, projection_axes)
 
         # Analyze streamlines
-        streamline_data = self._analyze_streamlines(
-            envelope, streamline_resolution
-        )
+        streamline_data = self._analyze_streamlines(envelope, streamline_resolution)
 
         # BVP-specific integration analysis
         bvp_integration_data = self._analyze_bvp_integration(envelope)
@@ -167,9 +161,7 @@ class LevelDBVPIntegration:
                 - mode_phases: Phases of dominant modes
                 - superposition_quality: Quality metric for superposition
         """
-        return self.superposition_analyzer.analyze_superposition(
-            envelope, threshold
-        )
+        return self.superposition_analyzer.analyze_superposition(envelope, threshold)
 
     def _analyze_field_projections(
         self, envelope: np.ndarray, axes: Optional[List[int]] = None
@@ -197,9 +189,7 @@ class LevelDBVPIntegration:
                 - projection_ratio: Ratio of spatial to phase projection
                 - projection_entropy: Entropy of projection distribution
         """
-        return self.projection_analyzer.analyze_projections(
-            envelope, axes
-        )
+        return self.projection_analyzer.analyze_projections(envelope, axes)
 
     def _analyze_streamlines(
         self, envelope: np.ndarray, resolution: float
@@ -228,9 +218,7 @@ class LevelDBVPIntegration:
                 - curl_mean: Mean curl magnitude
                 - streamline_density: Density of streamlines
         """
-        return self.streamline_analyzer.analyze_streamlines(
-            envelope, resolution
-        )
+        return self.streamline_analyzer.analyze_streamlines(envelope, resolution)
 
     def _analyze_bvp_integration(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
@@ -294,7 +282,9 @@ class LevelDBVPIntegration:
             "amplitude_std": float(np.std(amplitude)),
         }
 
-    def _analyze_carrier_frequency_effects(self, envelope: np.ndarray) -> Dict[str, Any]:
+    def _analyze_carrier_frequency_effects(
+        self, envelope: np.ndarray
+    ) -> Dict[str, Any]:
         """Analyze carrier frequency effects on Level D models."""
         # Get carrier frequency from BVP constants
         carrier_frequency = self.constants.carrier_frequency
@@ -317,7 +307,9 @@ class LevelDBVPIntegration:
         """Analyze nonlinear interactions."""
         # Compute nonlinear terms
         amplitude = np.abs(envelope)
-        nonlinear_stiffness = self.constants.kappa_0 + self.constants.kappa_2 * amplitude ** 2
+        nonlinear_stiffness = (
+            self.constants.kappa_0 + self.constants.kappa_2 * amplitude**2
+        )
 
         # Analyze nonlinear effects
         nonlinear_ratio = np.mean(nonlinear_stiffness) / self.constants.kappa_0

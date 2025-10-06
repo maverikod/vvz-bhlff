@@ -28,4 +28,4 @@ Example:
 from .bvp_integration_coordinator import BVPLevelIntegrator
 
 # Re-export for backward compatibility
-__all__ = ['BVPLevelIntegrator']
+__all__ = ["BVPLevelIntegrator"]

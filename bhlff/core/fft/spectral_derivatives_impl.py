@@ -177,16 +177,23 @@ class SpectralDerivatives(SpectralDerivativesBase):
         curl_components = []
         for i in range(len(self.domain.shape)):
             curl_spectral = np.zeros_like(field_spectral[..., 0])
-            
+
             # Compute curl using cross product in spectral space
             for j in range(len(self.domain.shape)):
                 for k in range(len(self.domain.shape)):
                     if i != j and j != k and k != i:
                         # Levi-Civita symbol: ε_ijk
-                        epsilon = 1 if (i, j, k) in [(0, 1, 2), (1, 2, 0), (2, 0, 1)] else -1
+                        epsilon = (
+                            1 if (i, j, k) in [(0, 1, 2), (1, 2, 0), (2, 0, 1)] else -1
+                        )
                         if epsilon != 0 and k < field.shape[-1]:
-                            curl_spectral += epsilon * 1j * self._wave_vectors[j] * field_spectral[..., k]
-            
+                            curl_spectral += (
+                                epsilon
+                                * 1j
+                                * self._wave_vectors[j]
+                                * field_spectral[..., k]
+                            )
+
             curl_component = np.fft.ifftn(curl_spectral)
             curl_components.append(curl_component.real.astype(self.precision))
 
@@ -247,7 +254,7 @@ class SpectralDerivatives(SpectralDerivativesBase):
         field_spectral = np.fft.fftn(field)
 
         # Compute bi-Laplacian
-        bi_laplacian_spectral = (self._k_magnitude_squared ** 2) * field_spectral
+        bi_laplacian_spectral = (self._k_magnitude_squared**2) * field_spectral
 
         # Transform back to real space
         bi_laplacian = np.fft.ifftn(bi_laplacian_spectral)
@@ -265,18 +272,18 @@ class SpectralDerivatives(SpectralDerivativesBase):
             Tuple[np.ndarray, ...]: Wave vectors for each dimension.
         """
         wave_vectors = []
-        
+
         for i, size in enumerate(self.domain.shape):
             # Compute wave numbers for this dimension
-            k = np.fft.fftfreq(size, d=1.0/size) * 2 * np.pi
-            
+            k = np.fft.fftfreq(size, d=1.0 / size) * 2 * np.pi
+
             # Create meshgrid for this dimension
             k_mesh = np.zeros(self.domain.shape)
             for idx in np.ndindex(self.domain.shape):
                 k_mesh[idx] = k[idx[i]]
-            
+
             wave_vectors.append(k_mesh)
-        
+
         return tuple(wave_vectors)
 
     def _compute_k_magnitude_squared(self) -> np.ndarray:
@@ -291,10 +298,10 @@ class SpectralDerivatives(SpectralDerivativesBase):
             np.ndarray: Squared magnitude of wave vectors.
         """
         k_magnitude_squared = np.zeros(self.domain.shape)
-        
+
         for k_vec in self._wave_vectors:
-            k_magnitude_squared += k_vec ** 2
-        
+            k_magnitude_squared += k_vec**2
+
         return k_magnitude_squared
 
     def __repr__(self) -> str:

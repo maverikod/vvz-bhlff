@@ -94,7 +94,7 @@ class BVPExponentialIntegrator(BaseTimeIntegrator):
 
         # Compute wave vector magnitudes
         k_magnitude_squared = np.zeros(self.domain.shape)
-        
+
         # Create meshgrids for each dimension
         for i, k_vec in enumerate(wave_vectors):
             if i < 3:  # Spatial dimensions
@@ -103,13 +103,19 @@ class BVPExponentialIntegrator(BaseTimeIntegrator):
                 for j in range(self.domain.N):
                     for k in range(self.domain.N):
                         for l in range(self.domain.N):
-                            k_7d[j, k, l, :, :, :, :] = k_vec[j] if i == 0 else (k_vec[k] if i == 1 else k_vec[l])
+                            k_7d[j, k, l, :, :, :, :] = (
+                                k_vec[j]
+                                if i == 0
+                                else (k_vec[k] if i == 1 else k_vec[l])
+                            )
                 k_magnitude_squared += k_7d**2
             elif i < 6:  # Phase dimensions
                 # Create 7D array by broadcasting
                 k_7d = np.zeros(self.domain.shape)
                 for j in range(self.domain.N_phi):
-                    k_7d[:, :, :, j, :, :, :] = k_vec[j] if i == 3 else (k_vec[j] if i == 4 else k_vec[j])
+                    k_7d[:, :, :, j, :, :, :] = (
+                        k_vec[j] if i == 3 else (k_vec[j] if i == 4 else k_vec[j])
+                    )
                 k_magnitude_squared += k_7d**2
             else:  # Temporal dimension
                 # Create 7D array by broadcasting
@@ -117,7 +123,7 @@ class BVPExponentialIntegrator(BaseTimeIntegrator):
                 for j in range(self.domain.N_t):
                     k_7d[:, :, :, :, :, :, j] = k_vec[j]
                 k_magnitude_squared += k_7d**2
-        
+
         k_magnitude = np.sqrt(k_magnitude_squared)
 
         # Compute spectral coefficients: ν|k|^(2β) + λ
@@ -195,7 +201,10 @@ class BVPExponentialIntegrator(BaseTimeIntegrator):
             result[i] = current_field.copy()
 
             # Check for quench events
-            if self._quench_detector is not None and self._quench_detector.detect_quench(current_field, time_steps[i]):
+            if (
+                self._quench_detector is not None
+                and self._quench_detector.detect_quench(current_field, time_steps[i])
+            ):
                 self.logger.warning(f"Quench detected at t={time_steps[i]:.3f}")
                 # DEPRECATED: Classical exponential integrator - use BVPEnvelopeIntegrator instead
 

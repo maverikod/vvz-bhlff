@@ -13,16 +13,18 @@ consistency of FFT-based computations.
 from test_fft_physics import TestFFTPhysics
 from test_spectral_derivatives_physics import TestSpectralDerivativesPhysics
 from test_spectral_laplacian_physics import TestSpectralLaplacianPhysics
-from test_spectral_boundary_conditions_physics import TestSpectralBoundaryConditionsPhysics
+from test_spectral_boundary_conditions_physics import (
+    TestSpectralBoundaryConditionsPhysics,
+)
 from test_spectral_convergence_physics import TestSpectralConvergencePhysics
 from test_spectral_energy_spectrum_physics import TestSpectralEnergySpectrumPhysics
 
 # Export all test classes
 __all__ = [
-    'TestFFTPhysics',
-    'TestSpectralDerivativesPhysics',
-    'TestSpectralLaplacianPhysics',
-    'TestSpectralBoundaryConditionsPhysics',
-    'TestSpectralConvergencePhysics',
-    'TestSpectralEnergySpectrumPhysics',
+    "TestFFTPhysics",
+    "TestSpectralDerivativesPhysics",
+    "TestSpectralLaplacianPhysics",
+    "TestSpectralBoundaryConditionsPhysics",
+    "TestSpectralConvergencePhysics",
+    "TestSpectralEnergySpectrumPhysics",
 ]

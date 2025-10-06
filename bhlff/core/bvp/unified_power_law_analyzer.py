@@ -15,8 +15,4 @@ from .power_law_analysis import PowerLawAnalysis
 # Alias for backward compatibility
 UnifiedPowerLawAnalyzer = PowerLawAnalysis
 
-__all__ = [
-    'PowerLawCore',
-    'PowerLawAnalysis',
-    'UnifiedPowerLawAnalyzer'
-]
+__all__ = ["PowerLawCore", "PowerLawAnalysis", "UnifiedPowerLawAnalyzer"]

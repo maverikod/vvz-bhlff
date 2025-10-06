@@ -56,7 +56,7 @@ class ZoneAnalysis:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize specialized analyzers
         self._boundary_detector = BoundaryDetection(bvp_core)
         self._zone_properties_analyzer = ZoneProperties(bvp_core)
@@ -114,17 +114,19 @@ class ZoneAnalysis:
 
         # Use full boundary detection for zone classification
         boundary_analysis = self._boundary_detector.identify_zone_boundaries(envelope)
-        
+
         # Extract level set boundaries for zone classification
         level_sets = boundary_analysis.get("level_set_boundaries", {})
-        
+
         # Use adaptive thresholds based on level set analysis
         thresholds = self._compute_adaptive_zone_thresholds(amplitude, level_sets)
-        
+
         # Classify zones using full analysis
         core_mask = self._classify_core_zones(amplitude, thresholds)
         tail_mask = self._classify_tail_zones(amplitude, thresholds)
-        transition_mask = self._classify_transition_zones(amplitude, core_mask, tail_mask)
+        transition_mask = self._classify_transition_zones(
+            amplitude, core_mask, tail_mask
+        )
 
         # Get zone coordinates
         core_zones = list(zip(*np.where(core_mask)))
@@ -136,14 +138,16 @@ class ZoneAnalysis:
             "transition_zones": transition_zones,
             "tail_zones": tail_zones,
         }
-    
-    def _compute_adaptive_zone_thresholds(self, amplitude: np.ndarray, level_sets: Dict[str, Any]) -> Dict[str, float]:
+
+    def _compute_adaptive_zone_thresholds(
+        self, amplitude: np.ndarray, level_sets: Dict[str, Any]
+    ) -> Dict[str, float]:
         """Compute adaptive zone thresholds using level set analysis."""
         # Use level set analysis to determine optimal thresholds
         max_amplitude = np.max(amplitude)
         mean_amplitude = np.mean(amplitude)
         std_amplitude = np.std(amplitude)
-        
+
         # Adaptive core threshold based on level set analysis
         if level_sets:
             # Use level set information for threshold determination
@@ -151,64 +155,67 @@ class ZoneAnalysis:
         else:
             # Fallback to statistical threshold
             core_threshold = mean_amplitude + 2 * std_amplitude
-        
+
         # Adaptive tail threshold
         tail_threshold = mean_amplitude - std_amplitude
-        
+
         # Ensure thresholds are reasonable
         core_threshold = max(core_threshold, max_amplitude * 0.5)
         tail_threshold = max(tail_threshold, mean_amplitude * 0.1)
-        
-        return {
-            "core_threshold": core_threshold,
-            "tail_threshold": tail_threshold
-        }
-    
-    def _classify_core_zones(self, amplitude: np.ndarray, thresholds: Dict[str, float]) -> np.ndarray:
+
+        return {"core_threshold": core_threshold, "tail_threshold": tail_threshold}
+
+    def _classify_core_zones(
+        self, amplitude: np.ndarray, thresholds: Dict[str, float]
+    ) -> np.ndarray:
         """Classify core zones using full analysis."""
         core_threshold = thresholds["core_threshold"]
-        
+
         # Basic amplitude threshold
         core_mask = amplitude > core_threshold
-        
+
         # Additional criteria for core zone classification
         # Check for local maxima and high coherence
         if amplitude.ndim >= 3:
             # Check for local maxima
             local_maxima = self._find_local_maxima(amplitude)
             core_mask = core_mask & local_maxima
-            
+
             # Check for high coherence
             coherence_mask = self._compute_coherence_mask(amplitude)
             core_mask = core_mask & coherence_mask
-        
+
         return core_mask
-    
-    def _classify_tail_zones(self, amplitude: np.ndarray, thresholds: Dict[str, float]) -> np.ndarray:
+
+    def _classify_tail_zones(
+        self, amplitude: np.ndarray, thresholds: Dict[str, float]
+    ) -> np.ndarray:
         """Classify tail zones using full analysis."""
         tail_threshold = thresholds["tail_threshold"]
-        
+
         # Basic amplitude threshold
         tail_mask = amplitude < tail_threshold
-        
+
         # Additional criteria for tail zone classification
         # Check for local minima and low coherence
         if amplitude.ndim >= 3:
             # Check for local minima
             local_minima = self._find_local_minima(amplitude)
             tail_mask = tail_mask & local_minima
-            
+
             # Check for low coherence
             coherence_mask = self._compute_coherence_mask(amplitude)
             tail_mask = tail_mask & ~coherence_mask
-        
+
         return tail_mask
-    
-    def _classify_transition_zones(self, amplitude: np.ndarray, core_mask: np.ndarray, tail_mask: np.ndarray) -> np.ndarray:
+
+    def _classify_transition_zones(
+        self, amplitude: np.ndarray, core_mask: np.ndarray, tail_mask: np.ndarray
+    ) -> np.ndarray:
         """Classify transition zones using full analysis."""
         # Basic transition mask (not core and not tail)
         transition_mask = ~(core_mask | tail_mask)
-        
+
         # Additional criteria for transition zone classification
         # Check for high gradient regions
         if amplitude.ndim >= 3:
@@ -216,24 +223,25 @@ class ZoneAnalysis:
             gradients = {}
             for dim in range(amplitude.ndim):
                 gradients[f"dim_{dim}"] = np.gradient(amplitude, axis=dim)
-            
+
             # Compute gradient magnitude
             grad_magnitude = np.sqrt(sum(grad**2 for grad in gradients.values()))
-            
+
             # High gradient regions are likely transitions
             grad_threshold = np.mean(grad_magnitude) + np.std(grad_magnitude)
             high_gradient_mask = grad_magnitude > grad_threshold
-            
+
             # Combine with basic transition mask
             transition_mask = transition_mask & high_gradient_mask
-        
+
         return transition_mask
-    
+
     def _find_local_maxima(self, amplitude: np.ndarray) -> np.ndarray:
         """Find local maxima in the amplitude field."""
         # Use morphological operations to find local maxima
         try:
             from scipy import ndimage
+
             # Find local maxima
             local_maxima = ndimage.maximum_filter(amplitude, size=3) == amplitude
             return local_maxima
@@ -246,27 +254,33 @@ class ZoneAnalysis:
                         for k in range(1, amplitude.shape[2] - 1):
                             center = amplitude[i, j, k]
                             neighbors = [
-                                amplitude[i-1, j, k], amplitude[i+1, j, k],
-                                amplitude[i, j-1, k], amplitude[i, j+1, k],
-                                amplitude[i, j, k-1], amplitude[i, j, k+1]
+                                amplitude[i - 1, j, k],
+                                amplitude[i + 1, j, k],
+                                amplitude[i, j - 1, k],
+                                amplitude[i, j + 1, k],
+                                amplitude[i, j, k - 1],
+                                amplitude[i, j, k + 1],
                             ]
                             if center > max(neighbors):
                                 local_maxima[i, j, k] = True
                     else:
                         center = amplitude[i, j]
                         neighbors = [
-                            amplitude[i-1, j], amplitude[i+1, j],
-                            amplitude[i, j-1], amplitude[i, j+1]
+                            amplitude[i - 1, j],
+                            amplitude[i + 1, j],
+                            amplitude[i, j - 1],
+                            amplitude[i, j + 1],
                         ]
                         if center > max(neighbors):
                             local_maxima[i, j] = True
             return local_maxima
-    
+
     def _find_local_minima(self, amplitude: np.ndarray) -> np.ndarray:
         """Find local minima in the amplitude field."""
         # Use morphological operations to find local minima
         try:
             from scipy import ndimage
+
             # Find local minima
             local_minima = ndimage.minimum_filter(amplitude, size=3) == amplitude
             return local_minima
@@ -279,22 +293,27 @@ class ZoneAnalysis:
                         for k in range(1, amplitude.shape[2] - 1):
                             center = amplitude[i, j, k]
                             neighbors = [
-                                amplitude[i-1, j, k], amplitude[i+1, j, k],
-                                amplitude[i, j-1, k], amplitude[i, j+1, k],
-                                amplitude[i, j, k-1], amplitude[i, j, k+1]
+                                amplitude[i - 1, j, k],
+                                amplitude[i + 1, j, k],
+                                amplitude[i, j - 1, k],
+                                amplitude[i, j + 1, k],
+                                amplitude[i, j, k - 1],
+                                amplitude[i, j, k + 1],
                             ]
                             if center < min(neighbors):
                                 local_minima[i, j, k] = True
                     else:
                         center = amplitude[i, j]
                         neighbors = [
-                            amplitude[i-1, j], amplitude[i+1, j],
-                            amplitude[i, j-1], amplitude[i, j+1]
+                            amplitude[i - 1, j],
+                            amplitude[i + 1, j],
+                            amplitude[i, j - 1],
+                            amplitude[i, j + 1],
                         ]
                         if center < min(neighbors):
                             local_minima[i, j] = True
             return local_minima
-    
+
     def _compute_coherence_mask(self, amplitude: np.ndarray) -> np.ndarray:
         """Compute coherence mask for zone classification."""
         # Compute local coherence using gradient analysis
@@ -303,14 +322,14 @@ class ZoneAnalysis:
             gradients = {}
             for dim in range(amplitude.ndim):
                 gradients[f"dim_{dim}"] = np.gradient(amplitude, axis=dim)
-            
+
             # Compute gradient magnitude
             grad_magnitude = np.sqrt(sum(grad**2 for grad in gradients.values()))
-            
+
             # High coherence regions have low gradient magnitude
             coherence_threshold = np.mean(grad_magnitude) - np.std(grad_magnitude)
             coherence_mask = grad_magnitude < coherence_threshold
-            
+
             return coherence_mask
         else:
             # Fallback for lower dimensions
@@ -371,4 +390,3 @@ class ZoneAnalysis:
     def __repr__(self) -> str:
         """String representation of zone analyzer."""
         return f"ZoneAnalysis(bvp_core={self.bvp_core})"
-

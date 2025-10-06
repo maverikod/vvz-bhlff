@@ -33,11 +33,11 @@ from .streamlines import StreamlineAnalyzer
 from .bvp_integration import LevelDBVPIntegration
 
 __all__ = [
-    'LevelDModels',
-    'MultiModeModel', 
-    'SuperpositionAnalyzer',
-    'FieldProjection',
-    'ProjectionAnalyzer',
-    'StreamlineAnalyzer',
-    'LevelDBVPIntegration'
+    "LevelDModels",
+    "MultiModeModel",
+    "SuperpositionAnalyzer",
+    "FieldProjection",
+    "ProjectionAnalyzer",
+    "StreamlineAnalyzer",
+    "LevelDBVPIntegration",
 ]

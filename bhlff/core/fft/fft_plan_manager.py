@@ -300,8 +300,11 @@ class FFTPlanManager:
         plan_id = f"plan_{id(field)}"
         self._fft_plans[plan_id] = {
             "shape": field.shape,
-            "dtype": field.dtype,
+            "dtype": str(field.dtype),
             "plan_type": self.plan_type,
+            "normalization": "ortho",  # default; may be overridden by caller
+            "axes": tuple(range(len(field.shape))),
+            "backend_hint": "CUDA" if hasattr(self, "_cuda") and self._cuda else "CPU",
         }
         return plan_id
 

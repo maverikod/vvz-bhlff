@@ -31,4 +31,4 @@ Example:
 from .spectral_derivatives_impl import SpectralDerivatives
 
 # Re-export for backward compatibility
-__all__ = ['SpectralDerivatives']
+__all__ = ["SpectralDerivatives"]

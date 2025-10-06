@@ -612,6 +612,13 @@ High $\kappa$ + short $\ell$ give **rigid, self-sustaining** structure: shells l
 
 ---
 
+## 2.2. FFT/CUDA Backend Policy
+
+* Backend selection: use a unified backend with automatic CUDA detection; GPU first, CPU fallback.
+* FFT operations MUST be executed via the unified spectral layer that dispatches to GPU (when available) and preserves §2 normalization.
+* Planning/metadata: store normalization, axes and dtype in plan metadata; CuPy path may ignore plan creation but MUST honor the same normalization.
+* Cross-backend parity: CPU and CUDA results must match within numerical tolerance defined in §8.
+
 # 3. Алгоритмы (минимум, что обязан уметь код)
 
 ## 3.1. BVP Envelope Solver
@@ -785,6 +792,10 @@ Use exponential integrator with memory variable updates.
 * Обработка индексов k: отрицательные частоты через смещение $[-N/2, N/2)$.
 * Проверка входных данных: выброс понятных исключений при $\lambda=0,\ \widehat s(0)\ne0$.
 
+* Запрещены упрощённые/legacy методы "basic" в продакшн-коде. Любые такие методы должны быть удалены или помечены как legacy и не использоваться путём.
+* FFT-ядро обязано иметь CUDA-путь через единый бэкенд; при отсутствии CUDA — корректный CPU fallback без изменения нормировок.
+* Материальные константы не могут быть статичными: требуется частотная зависимость (см. §6.1) и единый доступ через BVPConstants.
+
 ---
 
 # 6. Интерфейс конфигурации (JSON/YAML)
@@ -812,6 +823,30 @@ Use exponential integrator with memory variable updates.
 Все параметры должны сериализоваться в отчёт.
 
 ---
+
+## 6.1. Material properties and priority
+
+* Priority of assignment: CLI > Environment > Config file.
+* Material properties MUST be frequency-dependent; forbidden: fixed hardcoded values like `em_conductivity: 0.01`.
+* Recommended keys under `material_properties`:
+  - `base_conductivity` (float)
+  - `cutoff_frequency` (float)
+  - `admittance_model` (string: "drude", "debye", etc.)
+  - `parameters` (object with model-specific coefficients)
+* Example:
+
+```json
+{
+  "material_properties": {
+    "base_conductivity": 0.02,
+    "cutoff_frequency": 1.0e12,
+    "admittance_model": "drude",
+    "parameters": {"gamma": 1.5e10, "omega_p": 3.2e12}
+  }
+}
+```
+
+Consumer code must compute `σ(ω)` and `Y(ω)` via these parameters and never rely on static constants.
 
 # 7. Выходные данные и отчётность
 

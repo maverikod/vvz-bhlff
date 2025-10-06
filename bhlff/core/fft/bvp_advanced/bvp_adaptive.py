@@ -29,7 +29,12 @@ class BVPAdaptive:
         in the 7D envelope equation.
     """
 
-    def __init__(self, domain: 'Domain7DBVP', parameters: 'Parameters7DBVP', derivatives: 'SpectralDerivatives'):
+    def __init__(
+        self,
+        domain: "Domain7DBVP",
+        parameters: "Parameters7DBVP",
+        derivatives: "SpectralDerivatives",
+    ):
         """Initialize BVP adaptive methods."""
         self.domain = domain
         self.parameters = parameters
@@ -52,29 +57,29 @@ class BVPAdaptive:
             np.ndarray: Solution field.
         """
         self.logger.info("Starting adaptive BVP solving")
-        
+
         # Adaptive solving implementation
-        for iteration in range(self.parameters.get('max_iterations', 100)):
+        for iteration in range(self.parameters.get("max_iterations", 100)):
             # Compute residual
             residual = source - self._apply_operator(solution)
-            
+
             # Check convergence
             residual_norm = np.linalg.norm(residual)
-            if residual_norm < self.parameters.get('tolerance', 1e-6):
+            if residual_norm < self.parameters.get("tolerance", 1e-6):
                 break
-            
+
             # Compute Jacobian
             jacobian = self._compute_jacobian(solution)
-            
+
             # Solve linear system
             update = self._solve_linear_system_adaptive(jacobian, residual)
-            
+
             # Compute adaptive step size
             step_size = self._compute_adaptive_step_size(solution, update, residual)
-            
+
             # Update solution
             solution += step_size * update
-        
+
         self.logger.info("Adaptive BVP solving completed")
         return solution
 
@@ -85,12 +90,16 @@ class BVPAdaptive:
         jacobian = np.eye(n)
         return jacobian
 
-    def _solve_linear_system_adaptive(self, jacobian: np.ndarray, residual: np.ndarray) -> np.ndarray:
+    def _solve_linear_system_adaptive(
+        self, jacobian: np.ndarray, residual: np.ndarray
+    ) -> np.ndarray:
         """Solve linear system with adaptive methods."""
         # Simplified linear system solving
         return np.linalg.solve(jacobian, residual.flatten()).reshape(residual.shape)
 
-    def _compute_adaptive_step_size(self, solution: np.ndarray, update: np.ndarray, residual: np.ndarray) -> float:
+    def _compute_adaptive_step_size(
+        self, solution: np.ndarray, update: np.ndarray, residual: np.ndarray
+    ) -> float:
         """Compute adaptive step size."""
         # Simplified adaptive step size computation
         update_norm = np.linalg.norm(update)

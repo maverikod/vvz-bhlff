@@ -57,7 +57,7 @@ class NodeAnalysis:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize specialized analyzers
         self._topological_analyzer = TopologicalAnalysis(bvp_core)
         self._charge_computer = ChargeComputation(bvp_core)
@@ -91,80 +91,89 @@ class NodeAnalysis:
             gradients = {}
             for dim in range(amplitude.ndim):
                 gradients[f"dim_{dim}"] = np.gradient(amplitude, axis=dim)
-            
+
             # Compute gradient magnitude
             grad_magnitude = np.sqrt(sum(grad**2 for grad in gradients.values()))
-            
+
             # Use adaptive threshold based on field properties
             threshold = self._compute_adaptive_threshold(grad_magnitude, amplitude)
-            
+
             # Find critical points using topological criteria
             critical_points = self._find_critical_points(gradients, threshold)
-            
+
             # Filter nodes using topological analysis
             for point in critical_points:
                 if self._is_valid_node(envelope, point):
                     nodes.append(point)
-            
+
             # Limit number of nodes for performance
             if len(nodes) > 50:
                 nodes = nodes[:50]
 
         return nodes
-    
-    def _compute_adaptive_threshold(self, grad_magnitude: np.ndarray, amplitude: np.ndarray) -> float:
+
+    def _compute_adaptive_threshold(
+        self, grad_magnitude: np.ndarray, amplitude: np.ndarray
+    ) -> float:
         """Compute adaptive threshold for node detection."""
         # Use statistical analysis to determine threshold
         mean_grad = np.mean(grad_magnitude)
         std_grad = np.std(grad_magnitude)
-        
+
         # Adaptive threshold based on field properties
         threshold = mean_grad - 2 * std_grad  # 2-sigma below mean
-        
+
         # Ensure threshold is positive and reasonable
         threshold = max(threshold, mean_grad * 0.01)
-        
+
         return threshold
-    
-    def _find_critical_points(self, gradients: Dict[str, np.ndarray], threshold: float) -> List[Tuple[int, ...]]:
+
+    def _find_critical_points(
+        self, gradients: Dict[str, np.ndarray], threshold: float
+    ) -> List[Tuple[int, ...]]:
         """Find critical points using gradient analysis."""
         # Compute gradient magnitude
         grad_magnitude = np.sqrt(sum(grad**2 for grad in gradients.values()))
-        
+
         # Find points below threshold
         critical_mask = grad_magnitude < threshold
-        
+
         # Get coordinates of critical points
         critical_coords = np.where(critical_mask)
-        
+
         # Convert to list of tuples
         critical_points = []
         for i in range(len(critical_coords[0])):
-            point = tuple(critical_coords[dim][i] for dim in range(len(critical_coords)))
+            point = tuple(
+                critical_coords[dim][i] for dim in range(len(critical_coords))
+            )
             critical_points.append(point)
-        
+
         return critical_points
-    
+
     def _is_valid_node(self, envelope: np.ndarray, point: Tuple[int, ...]) -> bool:
         """Check if a point is a valid node using topological criteria."""
         # Check bounds
         if not all(0 <= point[dim] < envelope.shape[dim] for dim in range(len(point))):
             return False
-        
+
         # Check if point is not on boundary
-        if any(point[dim] == 0 or point[dim] == envelope.shape[dim] - 1 for dim in range(len(point))):
+        if any(
+            point[dim] == 0 or point[dim] == envelope.shape[dim] - 1
+            for dim in range(len(point))
+        ):
             return False
-        
+
         # Check local field properties
         local_amplitude = envelope[point]
         if local_amplitude < 1e-10:  # Avoid zero amplitude points
             return False
-        
+
         # Check topological properties
         if len(point) >= 3:
             # Use topological analysis to validate node
             return self._topological_analyzer.is_saddle_node(envelope, point)
-        
+
         return True
 
     def classify_nodes(self, envelope: np.ndarray) -> Dict[str, List[Tuple[int, ...]]]:

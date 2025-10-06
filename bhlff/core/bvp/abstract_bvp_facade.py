@@ -53,7 +53,12 @@ class AbstractBVPFacade(ABC):
         χ(|a|) = χ' + iχ''(|a|) is effective susceptibility with quenches.
     """
 
-    def __init__(self, domain: Domain, config: Dict[str, Any], domain_7d: Optional[Domain7D] = None):
+    def __init__(
+        self,
+        domain: Domain,
+        config: Dict[str, Any],
+        domain_7d: Optional[Domain7D] = None,
+    ):
         """
         Initialize abstract BVP facade.
 
@@ -71,7 +76,9 @@ class AbstractBVPFacade(ABC):
         self.domain_7d = domain_7d
         self.logger = logging.getLogger(self.__class__.__name__)
 
-        self.logger.info(f"{self.__class__.__name__} initialized for domain {domain.shape}")
+        self.logger.info(
+            f"{self.__class__.__name__} initialized for domain {domain.shape}"
+        )
 
     @abstractmethod
     def solve_envelope(self, source: np.ndarray) -> np.ndarray:
@@ -159,20 +166,22 @@ class AbstractBVPFacade(ABC):
         Returns:
             bool: True if configuration is valid, False otherwise.
         """
-        required_keys = ['carrier_frequency', 'envelope_equation']
-        
+        required_keys = ["carrier_frequency", "envelope_equation"]
+
         for key in required_keys:
             if key not in self.config:
                 self.logger.error(f"Missing required configuration key: {key}")
                 return False
 
         # Validate envelope equation parameters
-        env_eq = self.config.get('envelope_equation', {})
-        required_env_keys = ['kappa_0', 'kappa_2', 'chi_prime']
-        
+        env_eq = self.config.get("envelope_equation", {})
+        required_env_keys = ["kappa_0", "kappa_2", "chi_prime"]
+
         for key in required_env_keys:
             if key not in env_eq:
-                self.logger.error(f"Missing required envelope equation parameter: {key}")
+                self.logger.error(
+                    f"Missing required envelope equation parameter: {key}"
+                )
                 return False
 
         return True
@@ -221,10 +230,12 @@ class AbstractBVPFacade(ABC):
         }
 
         if self.is_7d_available():
-            info.update({
-                "7d_domain_shape": self.domain_7d.shape,
-                "7d_domain_type": type(self.domain_7d).__name__,
-            })
+            info.update(
+                {
+                    "7d_domain_shape": self.domain_7d.shape,
+                    "7d_domain_type": type(self.domain_7d).__name__,
+                }
+            )
 
         return info
 
@@ -242,8 +253,8 @@ class AbstractBVPFacade(ABC):
         return {
             "config_keys": list(self.config.keys()),
             "is_valid": self.validate_configuration(),
-            "has_envelope_equation": 'envelope_equation' in self.config,
-            "has_carrier_frequency": 'carrier_frequency' in self.config,
+            "has_envelope_equation": "envelope_equation" in self.config,
+            "has_carrier_frequency": "carrier_frequency" in self.config,
         }
 
     def __repr__(self) -> str:

@@ -12,7 +12,4 @@ aspects of beating validation.
 from .beating_validation_basic import BeatingValidationBasic
 from .beating_validation_advanced import BeatingValidationAdvanced
 
-__all__ = [
-    'BeatingValidationBasic',
-    'BeatingValidationAdvanced'
-]
+__all__ = ["BeatingValidationBasic", "BeatingValidationAdvanced"]

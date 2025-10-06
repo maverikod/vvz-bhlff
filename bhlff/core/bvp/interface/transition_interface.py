@@ -54,7 +54,7 @@ class TransitionInterface:
             bvp_core (BVPCore): BVP core module instance.
         """
         self.bvp_core = bvp_core
-        self.domain_7d = getattr(bvp_core, 'domain_7d', None) or bvp_core.domain
+        self.domain_7d = getattr(bvp_core, "domain_7d", None) or bvp_core.domain
         self.config = bvp_core.config
         self.tail_interface = TailInterface(bvp_core)
 

@@ -14,8 +14,8 @@ from .power_law_region_analysis import PowerLawRegionAnalysis
 from .power_law_fitting import PowerLawFitting
 
 __all__ = [
-    'PowerLawCoreMain',
-    'PowerLawTailAnalysis',
-    'PowerLawRegionAnalysis',
-    'PowerLawFitting'
+    "PowerLawCoreMain",
+    "PowerLawTailAnalysis",
+    "PowerLawRegionAnalysis",
+    "PowerLawFitting",
 ]

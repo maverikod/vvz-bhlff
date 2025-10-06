@@ -64,34 +64,34 @@ class TestDomainCoverage:
         """Test domain coordinates."""
         domain = Domain(L=1.0, N=8, dimensions=7, N_phi=4, N_t=8, T=1.0)
         # Domain has coordinates attribute, not get_coordinates method
-        assert hasattr(domain, 'coordinates')
+        assert hasattr(domain, "coordinates")
         assert isinstance(domain.coordinates, dict)
-        assert 'x' in domain.coordinates
-        assert 'y' in domain.coordinates
-        assert 'z' in domain.coordinates
+        assert "x" in domain.coordinates
+        assert "y" in domain.coordinates
+        assert "z" in domain.coordinates
 
     def test_domain_phase_coordinates(self):
         """Test domain phase coordinates."""
         domain = Domain(L=1.0, N=8, dimensions=7, N_phi=4, N_t=8, T=1.0)
         # Domain has coordinates attribute with phase coordinates
-        assert hasattr(domain, 'coordinates')
-        assert 'phi1' in domain.coordinates
-        assert 'phi2' in domain.coordinates
-        assert 'phi3' in domain.coordinates
+        assert hasattr(domain, "coordinates")
+        assert "phi1" in domain.coordinates
+        assert "phi2" in domain.coordinates
+        assert "phi3" in domain.coordinates
 
     def test_domain_time_coordinates(self):
         """Test domain time coordinates."""
         domain = Domain(L=1.0, N=8, dimensions=7, N_phi=4, N_t=8, T=1.0)
         # Domain has coordinates attribute with time coordinate
-        assert hasattr(domain, 'coordinates')
-        assert 't' in domain.coordinates
-        assert isinstance(domain.coordinates['t'], np.ndarray)
+        assert hasattr(domain, "coordinates")
+        assert "t" in domain.coordinates
+        assert isinstance(domain.coordinates["t"], np.ndarray)
 
     def test_domain_meshgrid(self):
         """Test domain meshgrid."""
         domain = Domain(L=1.0, N=8, dimensions=7, N_phi=4, N_t=8, T=1.0)
         # Domain has coordinates attribute with meshgrid data
-        assert hasattr(domain, 'coordinates')
+        assert hasattr(domain, "coordinates")
         assert isinstance(domain.coordinates, dict)
         assert len(domain.coordinates) >= 7  # x, y, z, phi1, phi2, phi3, t
 
@@ -99,10 +99,10 @@ class TestDomainCoverage:
         """Test domain phase meshgrid."""
         domain = Domain(L=1.0, N=8, dimensions=7, N_phi=4, N_t=8, T=1.0)
         # Domain has coordinates attribute with phase meshgrid data
-        assert hasattr(domain, 'coordinates')
-        assert 'phi1' in domain.coordinates
-        assert 'phi2' in domain.coordinates
-        assert 'phi3' in domain.coordinates
+        assert hasattr(domain, "coordinates")
+        assert "phi1" in domain.coordinates
+        assert "phi2" in domain.coordinates
+        assert "phi3" in domain.coordinates
 
     def test_domain_validation(self):
         """Test domain validation."""

@@ -23,21 +23,14 @@ class TestSourcesCoverage:
     @pytest.fixture
     def domain(self):
         """Create domain for testing."""
-        return Domain(
-            L=1.0,
-            N=8,
-            dimensions=7,
-            N_phi=4,
-            N_t=8,
-            T=1.0
-        )
+        return Domain(L=1.0, N=8, dimensions=7, N_phi=4, N_t=8, T=1.0)
 
     def test_source_creation(self, domain):
         """Test source creation."""
         config = {
             "carrier_frequency": 1.85e43,
             "envelope_amplitude": 1.0,
-            "base_source_type": "gaussian"
+            "base_source_type": "gaussian",
         }
         source = BVPSource(domain, config)
         assert source.domain == domain
@@ -49,7 +42,7 @@ class TestSourcesCoverage:
             "carrier_frequency": 1.85e43,
             "envelope_amplitude": 1.0,
             "base_source_type": "gaussian",
-            "time": 0.0
+            "time": 0.0,
         }
         source = BVPSource(domain, config)
         assert source.domain == domain
@@ -60,15 +53,15 @@ class TestSourcesCoverage:
         config = {
             "carrier_frequency": 1.85e43,
             "envelope_amplitude": 1.0,
-            "base_source_type": "gaussian"
+            "base_source_type": "gaussian",
         }
         source = BVPSource(domain, config)
-        
+
         # Test generate method
         source_field = source.generate()
         assert isinstance(source_field, np.ndarray)
         assert source_field.shape == domain.shape
-        
+
         # Test generate_base_source method
         base_source = source.generate_base_source()
         assert isinstance(base_source, np.ndarray)
@@ -80,15 +73,15 @@ class TestSourcesCoverage:
             "carrier_frequency": 1.85e43,
             "envelope_amplitude": 1.0,
             "base_source_type": "gaussian",
-            "time": 0.0
+            "time": 0.0,
         }
         source = BVPSource(domain, config)
-        
+
         # Test generate method
         source_field = source.generate()
         assert isinstance(source_field, np.ndarray)
         assert source_field.shape == domain.shape
-        
+
         # Test generate_envelope method
         envelope = source.generate_envelope()
         assert isinstance(envelope, np.ndarray)
@@ -98,29 +91,24 @@ class TestSourcesCoverage:
         """Test source validation."""
         config = {"type": "test", "amplitude": 1.0}
         source = BVPSource(domain, config)
-        
+
         # Test with valid config
         assert source.config == config
         assert source.domain == domain
-        
+
         # Test source field generation
         source_field = source.generate()
         assert np.isfinite(source_field).all()
 
     def test_bvp_source_validation(self, domain):
         """Test BVP source validation."""
-        config = {
-            "type": "bvp",
-            "amplitude": 1.0,
-            "frequency": 1.0,
-            "phase": 0.0
-        }
+        config = {"type": "bvp", "amplitude": 1.0, "frequency": 1.0, "phase": 0.0}
         source = BVPSource(domain, config)
-        
+
         # Test with valid config
         assert source.config == config
         assert source.domain == domain
-        
+
         # Test source field generation
         source_field = source.generate()
         assert np.isfinite(source_field).all()
@@ -129,26 +117,21 @@ class TestSourcesCoverage:
         """Test source 7D structure preservation."""
         config = {"type": "test", "amplitude": 1.0}
         source = BVPSource(domain, config)
-        
+
         # Generate source field
         source_field = source.generate()
-        
+
         # Should preserve 7D structure
         assert source_field.shape == domain.shape
 
     def test_bvp_source_7d_structure(self, domain):
         """Test BVP source 7D structure preservation."""
-        config = {
-            "type": "bvp",
-            "amplitude": 1.0,
-            "frequency": 1.0,
-            "phase": 0.0
-        }
+        config = {"type": "bvp", "amplitude": 1.0, "frequency": 1.0, "phase": 0.0}
         source = BVPSource(domain, config)
-        
+
         # Generate source field
         source_field = source.generate()
-        
+
         # Should preserve 7D structure
         assert source_field.shape == domain.shape
 
@@ -156,26 +139,21 @@ class TestSourcesCoverage:
         """Test source numerical stability."""
         config = {"type": "test", "amplitude": 1.0}
         source = BVPSource(domain, config)
-        
+
         # Generate source field
         source_field = source.generate()
-        
+
         # Should be stable
         assert np.isfinite(source_field).all()
 
     def test_bvp_source_numerical_stability(self, domain):
         """Test BVP source numerical stability."""
-        config = {
-            "type": "bvp",
-            "amplitude": 1.0,
-            "frequency": 1.0,
-            "phase": 0.0
-        }
+        config = {"type": "bvp", "amplitude": 1.0, "frequency": 1.0, "phase": 0.0}
         source = BVPSource(domain, config)
-        
+
         # Generate source field
         source_field = source.generate()
-        
+
         # Should be stable
         assert np.isfinite(source_field).all()
 
@@ -183,27 +161,22 @@ class TestSourcesCoverage:
         """Test source precision."""
         config = {"type": "test", "amplitude": 1.0}
         source = BVPSource(domain, config)
-        
+
         # Generate source field
         source_field = source.generate()
-        
+
         # Should be finite and reasonable
         assert np.isfinite(source_field).all()
         assert np.max(np.abs(source_field)) < 100.0  # Reasonable bound
 
     def test_bvp_source_precision(self, domain):
         """Test BVP source precision."""
-        config = {
-            "type": "bvp",
-            "amplitude": 1.0,
-            "frequency": 1.0,
-            "phase": 0.0
-        }
+        config = {"type": "bvp", "amplitude": 1.0, "frequency": 1.0, "phase": 0.0}
         source = BVPSource(domain, config)
-        
+
         # Generate source field
         source_field = source.generate()
-        
+
         # Should be finite and reasonable
         assert np.isfinite(source_field).all()
         assert np.max(np.abs(source_field)) < 100.0  # Reasonable bound
@@ -213,7 +186,7 @@ class TestSourcesCoverage:
         # Test with invalid config
         with pytest.raises(ValueError):
             BVPSource(domain, None)
-        
+
         with pytest.raises(ValueError):
             BVPSource(domain, {})
 
@@ -222,7 +195,7 @@ class TestSourcesCoverage:
         # Test with invalid config
         with pytest.raises(ValueError):
             BVPSource(domain, None)
-        
+
         with pytest.raises(ValueError):
             BVPSource(domain, {})
 
@@ -234,7 +207,7 @@ class TestSourcesCoverage:
         source_field = source.generate()
         assert isinstance(source_field, np.ndarray)
         assert source_field.shape == domain.shape
-        
+
         # Test with negative amplitude
         config = {"type": "test", "amplitude": -1.0}
         source = BVPSource(domain, config)
@@ -245,24 +218,14 @@ class TestSourcesCoverage:
     def test_bvp_source_edge_cases(self, domain):
         """Test BVP source edge cases."""
         # Test with zero amplitude
-        config = {
-            "type": "bvp",
-            "amplitude": 0.0,
-            "frequency": 1.0,
-            "phase": 0.0
-        }
+        config = {"type": "bvp", "amplitude": 0.0, "frequency": 1.0, "phase": 0.0}
         source = BVPSource(domain, config)
         source_field = source.generate()
         assert isinstance(source_field, np.ndarray)
         assert source_field.shape == domain.shape
-        
+
         # Test with negative amplitude
-        config = {
-            "type": "bvp",
-            "amplitude": -1.0,
-            "frequency": 1.0,
-            "phase": 0.0
-        }
+        config = {"type": "bvp", "amplitude": -1.0, "frequency": 1.0, "phase": 0.0}
         source = BVPSource(domain, config)
         source_field = source.generate()
         assert isinstance(source_field, np.ndarray)
@@ -278,12 +241,7 @@ class TestSourcesCoverage:
 
     def test_bvp_source_repr(self, domain):
         """Test BVP source string representation."""
-        config = {
-            "type": "bvp",
-            "amplitude": 1.0,
-            "frequency": 1.0,
-            "phase": 0.0
-        }
+        config = {"type": "bvp", "amplitude": 1.0, "frequency": 1.0, "phase": 0.0}
         source = BVPSource(domain, config)
         repr_str = repr(source)
         assert isinstance(repr_str, str)
@@ -295,13 +253,9 @@ class TestSourcesCoverage:
         minimal_config = {"type": "test"}
         source = BVPSource(domain, minimal_config)
         assert source.config == minimal_config
-        
+
         # Test with extra config
-        extra_config = {
-            "type": "test",
-            "amplitude": 1.0,
-            "extra_param": "extra_value"
-        }
+        extra_config = {"type": "test", "amplitude": 1.0, "extra_param": "extra_value"}
         source = BVPSource(domain, extra_config)
         assert source.config == extra_config
 
@@ -311,14 +265,14 @@ class TestSourcesCoverage:
         minimal_config = {"type": "bvp"}
         source = BVPSource(domain, minimal_config)
         assert source.config == minimal_config
-        
+
         # Test with extra config
         extra_config = {
             "type": "bvp",
             "amplitude": 1.0,
             "frequency": 1.0,
             "phase": 0.0,
-            "extra_param": "extra_value"
+            "extra_param": "extra_value",
         }
         source = BVPSource(domain, extra_config)
         assert source.config == extra_config
@@ -327,31 +281,28 @@ class TestSourcesCoverage:
         """Test source performance."""
         config = {"type": "test", "amplitude": 1.0}
         source = BVPSource(domain, config)
-        
+
         # Measure performance
         import time
+
         start_time = time.time()
         source_field = source.generate()
         end_time = time.time()
-        
+
         execution_time = end_time - start_time
         assert execution_time < 1.0  # Should be fast for small domain
 
     def test_bvp_source_performance(self, domain):
         """Test BVP source performance."""
-        config = {
-            "type": "bvp",
-            "amplitude": 1.0,
-            "frequency": 1.0,
-            "phase": 0.0
-        }
+        config = {"type": "bvp", "amplitude": 1.0, "frequency": 1.0, "phase": 0.0}
         source = BVPSource(domain, config)
-        
+
         # Measure performance
         import time
+
         start_time = time.time()
         source_field = source.generate()
         end_time = time.time()
-        
+
         execution_time = end_time - start_time
         assert execution_time < 1.0  # Should be fast for small domain

@@ -19,11 +19,11 @@ from test_solvers_coverage import TestSolversCoverage
 
 # Export all test classes
 __all__ = [
-    'TestDomainCoverage',
-    'TestBVPConstantsCoverage',
-    'TestBVPPostulateCoverage',
-    'TestFFTCoverage',
-    'TestOperatorsCoverage',
-    'TestSourcesCoverage',
-    'TestSolversCoverage',
+    "TestDomainCoverage",
+    "TestBVPConstantsCoverage",
+    "TestBVPPostulateCoverage",
+    "TestFFTCoverage",
+    "TestOperatorsCoverage",
+    "TestSourcesCoverage",
+    "TestSolversCoverage",
 ]

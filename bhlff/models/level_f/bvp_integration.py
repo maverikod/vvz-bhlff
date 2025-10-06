@@ -116,10 +116,10 @@ class LevelFBVPIntegration:
         self.logger.info("Processing BVP data for Level F analysis")
 
         # Extract parameters
-        particle_threshold = kwargs.get('particle_threshold', 0.1)
-        collective_mode_threshold = kwargs.get('collective_mode_threshold', 0.05)
-        transition_threshold = kwargs.get('transition_threshold', 0.1)
-        nonlinear_threshold = kwargs.get('nonlinear_threshold', 0.05)
+        particle_threshold = kwargs.get("particle_threshold", 0.1)
+        collective_mode_threshold = kwargs.get("collective_mode_threshold", 0.05)
+        transition_threshold = kwargs.get("transition_threshold", 0.1)
+        nonlinear_threshold = kwargs.get("nonlinear_threshold", 0.05)
 
         # Analyze multi-particle systems
         multi_particle_data = self._analyze_multi_particle_systems(
@@ -137,9 +137,7 @@ class LevelFBVPIntegration:
         )
 
         # Analyze nonlinear effects
-        nonlinear_data = self._analyze_nonlinear_effects(
-            envelope, nonlinear_threshold
-        )
+        nonlinear_data = self._analyze_nonlinear_effects(envelope, nonlinear_threshold)
 
         # BVP-specific integration analysis
         bvp_integration_data = self._analyze_bvp_integration(envelope)
@@ -218,9 +216,7 @@ class LevelFBVPIntegration:
                 - mode_amplitudes: Amplitudes of collective modes
                 - mode_coupling: Coupling between modes
         """
-        return self.collective_analyzer.analyze_collective_modes(
-            envelope, threshold
-        )
+        return self.collective_analyzer.analyze_collective_modes(envelope, threshold)
 
     def _analyze_phase_transitions(
         self, envelope: np.ndarray, threshold: float
@@ -251,9 +247,7 @@ class LevelFBVPIntegration:
                 - order_parameters: Order parameters of transitions
                 - transition_types: Types of phase transitions
         """
-        return self.transition_analyzer.analyze_phase_transitions(
-            envelope, threshold
-        )
+        return self.transition_analyzer.analyze_phase_transitions(envelope, threshold)
 
     def _analyze_nonlinear_effects(
         self, envelope: np.ndarray, threshold: float
@@ -285,9 +279,7 @@ class LevelFBVPIntegration:
                 - nonlinear_behavior: Nonlinear collective behavior
                 - nonlinear_energy: Nonlinear energy contributions
         """
-        return self.nonlinear_analyzer.analyze_nonlinear_effects(
-            envelope, threshold
-        )
+        return self.nonlinear_analyzer.analyze_nonlinear_effects(envelope, threshold)
 
     def _analyze_bvp_integration(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
@@ -337,13 +329,15 @@ class LevelFBVPIntegration:
         impedance_results = self.impedance_calculator.calculate_impedance(envelope)
 
         return {
-            "impedance_magnitude": impedance_results.get('impedance_magnitude', 0.0),
-            "impedance_phase": impedance_results.get('impedance_phase', 0.0),
-            "frequency_response": impedance_results.get('frequency_response', {}),
-            "impedance_quality": impedance_results.get('impedance_quality', 0.0),
+            "impedance_magnitude": impedance_results.get("impedance_magnitude", 0.0),
+            "impedance_phase": impedance_results.get("impedance_phase", 0.0),
+            "frequency_response": impedance_results.get("frequency_response", {}),
+            "impedance_quality": impedance_results.get("impedance_quality", 0.0),
         }
 
-    def _analyze_envelope_collective_coupling(self, envelope: np.ndarray) -> Dict[str, Any]:
+    def _analyze_envelope_collective_coupling(
+        self, envelope: np.ndarray
+    ) -> Dict[str, Any]:
         """Analyze coupling between envelope and collective modes."""
         # Compute envelope amplitude and phase
         amplitude = np.abs(envelope)
@@ -362,21 +356,29 @@ class LevelFBVPIntegration:
             "phase_coherence": float(phase_coherence),
             "amplitude_correlation": float(amplitude_correlation),
             "collective_mode_strength": float(collective_mode_strength),
-            "envelope_collective_coupling": float(phase_coherence * collective_mode_strength),
+            "envelope_collective_coupling": float(
+                phase_coherence * collective_mode_strength
+            ),
         }
 
-    def _analyze_nonlinear_collective_effects(self, envelope: np.ndarray) -> Dict[str, Any]:
+    def _analyze_nonlinear_collective_effects(
+        self, envelope: np.ndarray
+    ) -> Dict[str, Any]:
         """Analyze nonlinear effects on collective behavior."""
         # Compute nonlinear stiffness
         amplitude = np.abs(envelope)
-        nonlinear_stiffness = self.constants.kappa_0 + self.constants.kappa_2 * amplitude ** 2
+        nonlinear_stiffness = (
+            self.constants.kappa_0 + self.constants.kappa_2 * amplitude**2
+        )
 
         # Analyze nonlinear effects on collective behavior
         nonlinear_ratio = np.mean(nonlinear_stiffness) / self.constants.kappa_0
         nonlinear_variation = np.std(nonlinear_stiffness) / np.mean(nonlinear_stiffness)
 
         # Analyze nonlinear coupling between modes
-        mode_coupling = np.corrcoef(amplitude.flatten(), nonlinear_stiffness.flatten())[0, 1]
+        mode_coupling = np.corrcoef(amplitude.flatten(), nonlinear_stiffness.flatten())[
+            0, 1
+        ]
 
         return {
             "nonlinear_ratio": float(nonlinear_ratio),
@@ -403,5 +405,7 @@ class LevelFBVPIntegration:
             "envelope_energy": float(envelope_energy),
             "shape_compliance": shape_compliance,
             "impedance_compatible": impedance_compatible,
-            "bvp_framework_compliant": shape_compliance and envelope_norm > 0 and impedance_compatible,
+            "bvp_framework_compliant": shape_compliance
+            and envelope_norm > 0
+            and impedance_compatible,
         }

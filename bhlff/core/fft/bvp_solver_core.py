@@ -12,7 +12,4 @@ aspects of BVP solver core operations.
 from .bvp_solver_core_basic import BVPSolverCoreBasic
 from .bvp_solver_core_advanced import BVPSolverCoreAdvanced
 
-__all__ = [
-    'BVPSolverCoreBasic',
-    'BVPSolverCoreAdvanced'
-]
+__all__ = ["BVPSolverCoreBasic", "BVPSolverCoreAdvanced"]

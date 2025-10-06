@@ -46,12 +46,12 @@ class PowerLawCoreMain:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Analysis parameters
         self.tail_threshold = 0.1  # Threshold for tail region
         self.min_tail_points = 10  # Minimum points for tail analysis
         self.power_law_tolerance = 1e-3  # Tolerance for power law fitting
-        
+
         # Initialize specialized modules
         self.tail_analysis = PowerLawTailAnalysis(bvp_core)
         self.region_analysis = PowerLawRegionAnalysis(bvp_core)
@@ -91,39 +91,49 @@ class PowerLawCoreMain:
             raise ValueError("Envelope data cannot be None or empty")
 
         self.logger.info("Starting power law analysis of BVP envelope field")
-        
+
         # Analyze tail regions
         tail_analyses = self.tail_analysis.analyze_power_law_tails(envelope)
-        
+
         # Analyze regions
         region_analyses = self.region_analysis.analyze_regions(envelope)
-        
+
         # Combine results
         power_law_results = tail_analyses + region_analyses
-        
+
         # Calculate overall characteristics
-        overall_characteristics = self._calculate_overall_characteristics(power_law_results)
-        
+        overall_characteristics = self._calculate_overall_characteristics(
+            power_law_results
+        )
+
         # Extract key metrics
-        power_law_exponents = [result.get('power_law_exponent', 0.0) for result in power_law_results]
-        decay_rates = [result.get('decay_rate', 0.0) for result in power_law_results]
-        fitting_qualities = [result.get('fitting_quality', 0.0) for result in power_law_results]
-        tail_regions = [result.get('region', {}) for result in power_law_results]
-        
+        power_law_exponents = [
+            result.get("power_law_exponent", 0.0) for result in power_law_results
+        ]
+        decay_rates = [result.get("decay_rate", 0.0) for result in power_law_results]
+        fitting_qualities = [
+            result.get("fitting_quality", 0.0) for result in power_law_results
+        ]
+        tail_regions = [result.get("region", {}) for result in power_law_results]
+
         results = {
-            'power_law_exponents': power_law_exponents,
-            'decay_rates': decay_rates,
-            'fitting_qualities': fitting_qualities,
-            'tail_regions': tail_regions,
-            'overall_characteristics': overall_characteristics,
-            'number_of_regions': len(power_law_results),
-            'analysis_successful': len(power_law_results) > 0
+            "power_law_exponents": power_law_exponents,
+            "decay_rates": decay_rates,
+            "fitting_qualities": fitting_qualities,
+            "tail_regions": tail_regions,
+            "overall_characteristics": overall_characteristics,
+            "number_of_regions": len(power_law_results),
+            "analysis_successful": len(power_law_results) > 0,
         }
-        
-        self.logger.info(f"Power law analysis completed: {len(power_law_results)} regions analyzed")
+
+        self.logger.info(
+            f"Power law analysis completed: {len(power_law_results)} regions analyzed"
+        )
         return results
 
-    def _calculate_overall_characteristics(self, power_law_results: List[Dict[str, Any]]) -> Dict[str, float]:
+    def _calculate_overall_characteristics(
+        self, power_law_results: List[Dict[str, Any]]
+    ) -> Dict[str, float]:
         """
         Calculate overall characteristics from power law results.
 
@@ -139,25 +149,27 @@ class PowerLawCoreMain:
         """
         if not power_law_results:
             return {
-                'mean_power_law_exponent': 0.0,
-                'mean_decay_rate': 0.0,
-                'mean_fitting_quality': 0.0,
-                'std_power_law_exponent': 0.0,
-                'std_decay_rate': 0.0,
-                'std_fitting_quality': 0.0
+                "mean_power_law_exponent": 0.0,
+                "mean_decay_rate": 0.0,
+                "mean_fitting_quality": 0.0,
+                "std_power_law_exponent": 0.0,
+                "std_decay_rate": 0.0,
+                "std_fitting_quality": 0.0,
             }
-        
+
         # Extract metrics
-        exponents = [result.get('power_law_exponent', 0.0) for result in power_law_results]
-        decay_rates = [result.get('decay_rate', 0.0) for result in power_law_results]
-        qualities = [result.get('fitting_quality', 0.0) for result in power_law_results]
-        
+        exponents = [
+            result.get("power_law_exponent", 0.0) for result in power_law_results
+        ]
+        decay_rates = [result.get("decay_rate", 0.0) for result in power_law_results]
+        qualities = [result.get("fitting_quality", 0.0) for result in power_law_results]
+
         # Calculate statistics
         return {
-            'mean_power_law_exponent': float(np.mean(exponents)),
-            'mean_decay_rate': float(np.mean(decay_rates)),
-            'mean_fitting_quality': float(np.mean(qualities)),
-            'std_power_law_exponent': float(np.std(exponents)),
-            'std_decay_rate': float(np.std(decay_rates)),
-            'std_fitting_quality': float(np.std(qualities))
+            "mean_power_law_exponent": float(np.mean(exponents)),
+            "mean_decay_rate": float(np.mean(decay_rates)),
+            "mean_fitting_quality": float(np.mean(qualities)),
+            "std_power_law_exponent": float(np.std(exponents)),
+            "std_decay_rate": float(np.std(decay_rates)),
+            "std_fitting_quality": float(np.std(qualities)),
         }

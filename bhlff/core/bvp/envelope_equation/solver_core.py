@@ -16,7 +16,7 @@ from .solver_core_advanced import EnvelopeSolverCoreAdvanced
 EnvelopeSolverCore7D = EnvelopeSolverCoreAdvanced
 
 __all__ = [
-    'EnvelopeSolverCoreBasic',
-    'EnvelopeSolverCoreAdvanced',
-    'EnvelopeSolverCore7D'
+    "EnvelopeSolverCoreBasic",
+    "EnvelopeSolverCoreAdvanced",
+    "EnvelopeSolverCore7D",
 ]

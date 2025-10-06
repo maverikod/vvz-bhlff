@@ -29,4 +29,9 @@ from .node_analyzer import LevelBNodeAnalyzer
 from .zone_analyzer import LevelBZoneAnalyzer
 from .visualization import LevelBVisualizer
 
-__all__ = ["LevelBPowerLawAnalyzer", "LevelBNodeAnalyzer", "LevelBZoneAnalyzer", "LevelBVisualizer"]
+__all__ = [
+    "LevelBPowerLawAnalyzer",
+    "LevelBNodeAnalyzer",
+    "LevelBZoneAnalyzer",
+    "LevelBVisualizer",
+]

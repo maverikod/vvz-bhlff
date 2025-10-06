@@ -15,8 +15,4 @@ from .fft_solver_7d_advanced import FFTSolver7DAdvanced
 # Alias for backward compatibility
 FFTSolver7D = FFTSolver7DAdvanced
 
-__all__ = [
-    'FFTSolver7DBasic',
-    'FFTSolver7DAdvanced',
-    'FFTSolver7D'
-]
+__all__ = ["FFTSolver7DBasic", "FFTSolver7DAdvanced", "FFTSolver7D"]

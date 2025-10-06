@@ -13,7 +13,4 @@ from .validation import BeatingValidationCore
 # Alias for backward compatibility
 BeatingValidationAdvancedBasic = BeatingValidationCore
 
-__all__ = [
-    'BeatingValidationCore',
-    'BeatingValidationAdvancedBasic'
-]
+__all__ = ["BeatingValidationCore", "BeatingValidationAdvancedBasic"]

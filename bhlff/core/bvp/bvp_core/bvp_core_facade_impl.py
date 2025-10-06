@@ -54,7 +54,12 @@ class BVPCoreFacade(AbstractBVPFacade):
         χ(|a|) = χ' + iχ''(|a|) is effective susceptibility with quenches.
     """
 
-    def __init__(self, domain: Domain, config: Dict[str, Any], domain_7d: Optional[Domain7D] = None):
+    def __init__(
+        self,
+        domain: Domain,
+        config: Dict[str, Any],
+        domain_7d: Optional[Domain7D] = None,
+    ):
         """
         Initialize BVP core facade implementation.
 
@@ -136,7 +141,7 @@ class BVPCoreFacade(AbstractBVPFacade):
         """
         if self._7d_interface is None:
             raise ValueError("7D interface not available - domain_7d was not provided")
-        
+
         return self._7d_interface.solve_envelope_7d(source_7d)
 
     def validate_postulates_7d(self, envelope_7d: np.ndarray) -> Dict[str, Any]:
@@ -155,7 +160,7 @@ class BVPCoreFacade(AbstractBVPFacade):
         """
         if self._7d_interface is None:
             raise ValueError("7D interface not available - domain_7d was not provided")
-        
+
         return self._7d_interface.validate_postulates_7d(envelope_7d)
 
     def detect_quenches(self, envelope: np.ndarray) -> Dict[str, Any]:
@@ -221,7 +226,7 @@ class BVPCoreFacade(AbstractBVPFacade):
         Returns:
             Optional[np.ndarray]: U(1)³ phase vector or None if not available.
         """
-        if hasattr(self._operations, 'get_phase_vector'):
+        if hasattr(self._operations, "get_phase_vector"):
             return self._operations.get_phase_vector()
         return None
 
@@ -250,28 +255,28 @@ class BVPCoreFacade(AbstractBVPFacade):
             Optional[BVPCore7DInterface]: 7D interface or None if not available.
         """
         return self._7d_interface
-    
+
     def get_phase_operations(self):
         """
         Get phase operations interface.
-        
+
         Physical Meaning:
             Retrieves the phase operations interface for U(1)³ phase
             structure analysis and manipulation.
-            
+
         Returns:
             Phase operations interface.
         """
         return self._operations.get_phase_operations()
-    
+
     def get_parameter_access(self):
         """
         Get parameter access interface.
-        
+
         Physical Meaning:
             Retrieves the parameter access interface for BVP constants
             and configuration management.
-            
+
         Returns:
             Parameter access interface.
         """

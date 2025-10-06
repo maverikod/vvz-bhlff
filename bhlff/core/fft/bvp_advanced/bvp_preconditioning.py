@@ -29,14 +29,21 @@ class BVPPreconditioning:
         in the 7D envelope equation.
     """
 
-    def __init__(self, domain: 'Domain7DBVP', parameters: 'Parameters7DBVP', derivatives: 'SpectralDerivatives'):
+    def __init__(
+        self,
+        domain: "Domain7DBVP",
+        parameters: "Parameters7DBVP",
+        derivatives: "SpectralDerivatives",
+    ):
         """Initialize BVP preconditioning."""
         self.domain = domain
         self.parameters = parameters
         self.derivatives = derivatives
         self.logger = logging.getLogger(__name__)
 
-    def solve_with_preconditioning(self, solution: np.ndarray, source: np.ndarray) -> np.ndarray:
+    def solve_with_preconditioning(
+        self, solution: np.ndarray, source: np.ndarray
+    ) -> np.ndarray:
         """
         Solve with preconditioning.
 
@@ -52,26 +59,26 @@ class BVPPreconditioning:
             np.ndarray: Solution field.
         """
         self.logger.info("Starting preconditioned BVP solving")
-        
+
         # Preconditioned solving implementation
-        for iteration in range(self.parameters.get('max_iterations', 100)):
+        for iteration in range(self.parameters.get("max_iterations", 100)):
             # Compute residual
             residual = source - self._apply_operator(solution)
-            
+
             # Check convergence
             residual_norm = np.linalg.norm(residual)
-            if residual_norm < self.parameters.get('tolerance', 1e-6):
+            if residual_norm < self.parameters.get("tolerance", 1e-6):
                 break
-            
+
             # Compute preconditioner
             preconditioner = self._compute_preconditioner(solution)
-            
+
             # Apply preconditioning
             preconditioned_residual = preconditioner @ residual.flatten()
-            
+
             # Update solution
             solution += preconditioned_residual.reshape(solution.shape)
-        
+
         self.logger.info("Preconditioned BVP solving completed")
         return solution
 

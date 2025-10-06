@@ -46,7 +46,7 @@ class FFTAdvancedCore:
         - Comprehensive validation and analysis
     """
 
-    def __init__(self, domain: 'Domain', parameters: 'Parameters'):
+    def __init__(self, domain: "Domain", parameters: "Parameters"):
         """
         Initialize advanced 7D FFT solver.
 
@@ -61,29 +61,33 @@ class FFTAdvancedCore:
         self.domain = domain
         self.parameters = parameters
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize CUDA backend for optimal performance
         self.backend = get_global_backend()
-        self.logger.info(f"Using {type(self.backend).__name__} backend for FFT operations")
-        
+        self.logger.info(
+            f"Using {type(self.backend).__name__} backend for FFT operations"
+        )
+
         # Advanced solver components
-        beta = getattr(parameters, 'beta', 1.0)
-        lambda_param = getattr(parameters, 'lambda_param', 0.0)
+        beta = getattr(parameters, "beta", 1.0)
+        lambda_param = getattr(parameters, "lambda_param", 0.0)
         self.fractional_laplacian = FractionalLaplacian(domain, beta, lambda_param)
         self.spectral_operations = SpectralOperations(domain, parameters)
-        max_memory_gb = getattr(parameters, 'max_memory_gb', 8.0)
+        max_memory_gb = getattr(parameters, "max_memory_gb", 8.0)
         self.memory_manager = MemoryManager7D(domain.shape, max_memory_gb)
         self.fft_plan = FFTPlan7D(domain, parameters)
-        max_cache_size = getattr(parameters, 'max_cache_size', 100)
+        max_cache_size = getattr(parameters, "max_cache_size", 100)
         self.spectral_cache = SpectralCoefficientCache(max_cache_size)
         self.time_methods = FFTSolverTimeMethods(domain, parameters)
-        self.validation = FFTSolverValidation(domain, parameters, self.fractional_laplacian)
-        
+        self.validation = FFTSolverValidation(
+            domain, parameters, self.fractional_laplacian
+        )
+
         # Initialize specialized modules
         self.optimization = FFTOptimization(domain, parameters)
         self.adaptive = FFTAdaptive(domain, parameters)
         self.analysis = FFTAnalysis(domain, parameters)
-        
+
         # Setup advanced components
         self._setup_advanced_components()
 
@@ -112,7 +116,9 @@ class FFTAdvancedCore:
             RuntimeError: If optimization fails.
         """
         if source.shape != self.domain.shape:
-            raise ValueError(f"Source shape {source.shape} incompatible with domain shape {self.domain.shape}")
+            raise ValueError(
+                f"Source shape {source.shape} incompatible with domain shape {self.domain.shape}"
+            )
 
         return self.optimization.solve_optimized(source)
 
@@ -141,11 +147,15 @@ class FFTAdvancedCore:
             RuntimeError: If adaptive solving fails.
         """
         if source.shape != self.domain.shape:
-            raise ValueError(f"Source shape {source.shape} incompatible with domain shape {self.domain.shape}")
+            raise ValueError(
+                f"Source shape {source.shape} incompatible with domain shape {self.domain.shape}"
+            )
 
         return self.adaptive.solve_adaptive(source)
 
-    def solve_with_analysis(self, source: np.ndarray) -> Tuple[np.ndarray, Dict[str, Any]]:
+    def solve_with_analysis(
+        self, source: np.ndarray
+    ) -> Tuple[np.ndarray, Dict[str, Any]]:
         """
         Solve with comprehensive analysis.
 
@@ -170,11 +180,15 @@ class FFTAdvancedCore:
             RuntimeError: If solving or analysis fails.
         """
         if source.shape != self.domain.shape:
-            raise ValueError(f"Source shape {source.shape} incompatible with domain shape {self.domain.shape}")
+            raise ValueError(
+                f"Source shape {source.shape} incompatible with domain shape {self.domain.shape}"
+            )
 
         return self.analysis.solve_with_analysis(source)
 
-    def solve_time_evolution(self, initial_condition: np.ndarray, time_steps: int) -> List[np.ndarray]:
+    def solve_time_evolution(
+        self, initial_condition: np.ndarray, time_steps: int
+    ) -> List[np.ndarray]:
         """
         Solve time evolution of the system.
 
@@ -200,11 +214,15 @@ class FFTAdvancedCore:
             RuntimeError: If time evolution fails.
         """
         if initial_condition.shape != self.domain.shape:
-            raise ValueError(f"Initial condition shape {initial_condition.shape} incompatible with domain shape {self.domain.shape}")
+            raise ValueError(
+                f"Initial condition shape {initial_condition.shape} incompatible with domain shape {self.domain.shape}"
+            )
 
         return self.time_methods.solve_time_evolution(initial_condition, time_steps)
 
-    def validate_solution_comprehensive(self, solution: np.ndarray, source: np.ndarray) -> Dict[str, Any]:
+    def validate_solution_comprehensive(
+        self, solution: np.ndarray, source: np.ndarray
+    ) -> Dict[str, Any]:
         """
         Perform comprehensive solution validation.
 
@@ -230,7 +248,9 @@ class FFTAdvancedCore:
             ValueError: If solution or source have incompatible shapes.
         """
         if solution.shape != self.domain.shape or source.shape != self.domain.shape:
-            raise ValueError("Solution and source must have compatible shapes with domain")
+            raise ValueError(
+                "Solution and source must have compatible shapes with domain"
+            )
 
         return self.validation.validate_solution_comprehensive(solution, source)
 
@@ -254,15 +274,15 @@ class FFTAdvancedCore:
             self.parameters.mu,
             self.parameters.beta,
             self.parameters.lambda_param,
-            self.domain.shape
+            self.domain.shape,
         )
 
     def _setup_fft_plan(self) -> None:
         """Setup FFT plan for advanced solving."""
         # FFT plans are already set up in FFTPlan7D constructor
         self.fft_plan.setup_optimized_plans(
-            precision=getattr(self.parameters, 'precision', 'float64'),
-            plan_type=getattr(self.parameters, 'fft_plan_type', 'MEASURE')
+            precision=getattr(self.parameters, "precision", "float64"),
+            plan_type=getattr(self.parameters, "fft_plan_type", "MEASURE"),
         )
 
     def _setup_optimization(self) -> None:

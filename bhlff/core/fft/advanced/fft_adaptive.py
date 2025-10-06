@@ -29,7 +29,7 @@ class FFTAdaptive:
         in the 7D phase field theory.
     """
 
-    def __init__(self, domain: 'Domain', parameters: 'Parameters'):
+    def __init__(self, domain: "Domain", parameters: "Parameters"):
         """Initialize FFT adaptive methods."""
         self.domain = domain
         self.parameters = parameters
@@ -51,10 +51,10 @@ class FFTAdaptive:
         """
         # Adaptive solving implementation
         self.logger.info("Starting adaptive FFT solving")
-        
+
         # Basic adaptive solution
         solution = np.fft.ifftn(np.fft.fftn(source) / self._get_spectral_coefficients())
-        
+
         self.logger.info("Adaptive FFT solving completed")
         return solution.real
 
@@ -69,11 +69,11 @@ class FFTAdaptive:
         kx = np.fft.fftfreq(shape[0])
         ky = np.fft.fftfreq(shape[1])
         kz = np.fft.fftfreq(shape[2])
-        
-        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing='ij')
+
+        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
         k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
-        
+
         # Avoid division by zero
         k_magnitude[0, 0, 0] = 1.0
-        
+
         return k_magnitude

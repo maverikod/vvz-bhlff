@@ -11,8 +11,4 @@ in the 7D phase field.
 from .beating_spectrum import BeatingSpectrumAnalyzer
 from .beating_statistics import BeatingStatisticsAnalyzer
 
-__all__ = [
-    'BeatingSpectrumAnalyzer',
-    'BeatingStatisticsAnalyzer'
-]
-
+__all__ = ["BeatingSpectrumAnalyzer", "BeatingStatisticsAnalyzer"]

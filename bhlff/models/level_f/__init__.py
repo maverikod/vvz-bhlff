@@ -28,9 +28,8 @@ from .transitions import PhaseTransitions
 from .nonlinear import NonlinearEffects
 
 __all__ = [
-    'MultiParticleSystem',
-    'CollectiveExcitations', 
-    'PhaseTransitions',
-    'NonlinearEffects'
+    "MultiParticleSystem",
+    "CollectiveExcitations",
+    "PhaseTransitions",
+    "NonlinearEffects",
 ]
-

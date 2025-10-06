@@ -40,11 +40,11 @@ class TestBVPPhaseVectorPhysics:
         """Create 7D domain for complete pipeline testing."""
         return Domain(
             L=2.0,  # Larger domain for better physics
-            N=64,   # Higher resolution
+            N=64,  # Higher resolution
             dimensions=3,
             N_phi=32,  # More phase points
-            N_t=128,   # More time points
-            T=2.0      # Longer evolution
+            N_t=128,  # More time points
+            T=2.0,  # Longer evolution
         )
 
     @pytest.fixture
@@ -62,7 +62,7 @@ class TestBVPPhaseVectorPhysics:
                 "mu": 1.0,
                 "beta": 1.5,
                 "lambda_param": 0.1,
-            }
+            },
         }
         return BVPConstantsAdvanced(config)
 
@@ -74,50 +74,60 @@ class TestBVPPhaseVectorPhysics:
     def test_bvp_phase_vector_physics(self, domain_7d, bvp_core):
         """
         Test BVP phase vector physics.
-        
+
         Physical Meaning:
             Validates that phase vector correctly implements
             U(1)³ phase structure and maintains physical consistency.
-            
+
         Mathematical Foundation:
             Tests U(1)³ phase structure: a = |a|e^(iφ₁)e^(iφ₂)e^(iφ₃)
             and validates phase coherence.
         """
         # Create test source
         source = self._generate_physical_source(domain_7d)
-        
+
         # Solve envelope
         envelope = bvp_core.solve_envelope(source)
-        
+
         # Create phase vector
         phase_vector = PhaseVector(domain_7d, bvp_core.constants)
-        
+
         # Test phase decomposition
         amplitude, phases = phase_vector.decompose_phase_structure(envelope)
-        
+
         # Physical validation 1: Amplitude should be non-negative
         assert np.all(amplitude >= 0), "Phase vector amplitude contains negative values"
-        
+
         # Physical validation 2: Phases should be in [0, 2π)
         for phase in phases:
-            assert np.all(phase >= 0) and np.all(phase < 2*np.pi), "Phases out of range"
-        
+            assert np.all(phase >= 0) and np.all(
+                phase < 2 * np.pi
+            ), "Phases out of range"
+
         # Physical validation 3: Phase coherence should be maintained
         coherence = phase_vector.compute_phase_coherence(envelope)
         assert 0 <= coherence <= 1, f"Phase coherence out of range: {coherence}"
-        
+
         # Physical validation 4: Topological charge should be quantized
         topological_charge = phase_vector.compute_topological_charge(envelope)
-        assert np.isclose(topological_charge, np.round(topological_charge), atol=1e-6), \
-            f"Topological charge not quantized: {topological_charge}"
+        assert np.isclose(
+            topological_charge, np.round(topological_charge), atol=1e-6
+        ), f"Topological charge not quantized: {topological_charge}"
 
     def _generate_physical_source(self, domain: Domain) -> np.ndarray:
         """Generate a physical source for testing."""
         source = np.zeros(domain.shape)
-        
+
         # Create localized source in center
         center = domain.N // 2
-        source[center-2:center+3, center-2:center+3, center-2:center+3, 
-               :, :, :, :] = 1.0
-        
+        source[
+            center - 2 : center + 3,
+            center - 2 : center + 3,
+            center - 2 : center + 3,
+            :,
+            :,
+            :,
+            :,
+        ] = 1.0
+
         return source

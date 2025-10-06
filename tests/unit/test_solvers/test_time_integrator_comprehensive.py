@@ -18,16 +18,16 @@ from bhlff.solvers.integrators.time_integrator import TimeIntegrator
 
 class ConcreteTimeIntegrator(TimeIntegrator):
     """Concrete implementation of TimeIntegrator for testing."""
-    
+
     def __init__(self, domain: Domain, config: dict, bvp_core=None):
         """Initialize concrete time integrator."""
         super().__init__(domain, config, bvp_core)
-    
+
     def step(self, field: np.ndarray, dt: float) -> np.ndarray:
         """Perform one time step."""
         # Simple step: add dt to field
         return field + dt
-    
+
     def get_integrator_type(self) -> str:
         """Get integrator type."""
         return "concrete_test_integrator"
@@ -39,14 +39,7 @@ class TestTimeIntegrator:
     @pytest.fixture
     def domain(self):
         """Create domain for testing."""
-        return Domain(
-            L=1.0,
-            N=8,
-            dimensions=3,
-            N_phi=4,
-            N_t=8,
-            T=1.0
-        )
+        return Domain(L=1.0, N=8, dimensions=3, N_phi=4, N_t=8, T=1.0)
 
     @pytest.fixture
     def config(self):
@@ -57,8 +50,8 @@ class TestTimeIntegrator:
             "quench_detection": {
                 "amplitude_threshold": 0.8,
                 "detuning_threshold": 0.1,
-                "gradient_threshold": 0.5
-            }
+                "gradient_threshold": 0.5,
+            },
         }
 
     @pytest.fixture
@@ -68,7 +61,7 @@ class TestTimeIntegrator:
         bvp_core.detect_quenches.return_value = {
             "quench_locations": [],
             "quench_types": [],
-            "energy_dumped": []
+            "energy_dumped": [],
         }
         return bvp_core
 
@@ -89,7 +82,9 @@ class TestTimeIntegrator:
         assert integrator.bvp_core is None
         assert integrator.quench_detector is None
 
-    def test_integrator_initialization_with_bvp(self, integrator_with_bvp, domain, config, mock_bvp_core):
+    def test_integrator_initialization_with_bvp(
+        self, integrator_with_bvp, domain, config, mock_bvp_core
+    ):
         """Test integrator initialization with BVP core."""
         assert integrator_with_bvp.domain == domain
         assert integrator_with_bvp.config == config
@@ -101,10 +96,10 @@ class TestTimeIntegrator:
         # Create test field
         field = np.random.random(integrator.domain.shape)
         dt = 0.1
-        
+
         # Perform step
         new_field = integrator.step(field, dt)
-        
+
         assert new_field.shape == field.shape
         assert isinstance(new_field, np.ndarray)
         assert np.allclose(new_field, field + dt)
@@ -128,10 +123,10 @@ class TestTimeIntegrator:
         """Test quench detection with detector."""
         # Create test envelope
         envelope = np.random.random(integrator_with_bvp.domain.shape)
-        
+
         # Detect quenches
         quenches = integrator_with_bvp.detect_quenches(envelope)
-        
+
         assert isinstance(quenches, dict)
         assert "quench_locations" in quenches
         assert "quench_types" in quenches
@@ -141,10 +136,10 @@ class TestTimeIntegrator:
         """Test quench detection without detector."""
         # Create test envelope
         envelope = np.random.random(integrator.domain.shape)
-        
+
         # Detect quenches
         quenches = integrator.detect_quenches(envelope)
-        
+
         assert isinstance(quenches, dict)
         assert quenches["quench_locations"] == []
         assert quenches["quench_types"] == []
@@ -165,10 +160,10 @@ class TestTimeIntegrator:
         # Initially no BVP core
         assert integrator.bvp_core is None
         assert integrator.quench_detector is None
-        
+
         # Set BVP core
         integrator.set_bvp_core(mock_bvp_core)
-        
+
         assert integrator.bvp_core == mock_bvp_core
         assert integrator.quench_detector is not None
 
@@ -177,10 +172,10 @@ class TestTimeIntegrator:
         # Initially has BVP core
         assert integrator_with_bvp.bvp_core is not None
         assert integrator_with_bvp.quench_detector is not None
-        
+
         # Set BVP core to None
         integrator_with_bvp.set_bvp_core(None)
-        
+
         assert integrator_with_bvp.bvp_core is None
         assert integrator_with_bvp.quench_detector is None
 
@@ -195,13 +190,13 @@ class TestTimeIntegrator:
         """Test that abstract methods raise NotImplementedError."""
         domain = Domain(L=1.0, N=8, dimensions=3)
         config = {"integrator_type": "test"}
-        
+
         # Create abstract integrator (should not be possible, but test the methods)
         integrator = TimeIntegrator(domain, config)
-        
+
         with pytest.raises(NotImplementedError):
             integrator.step(np.random.random(domain.shape), 0.1)
-        
+
         with pytest.raises(NotImplementedError):
             integrator.get_integrator_type()
 
@@ -210,12 +205,12 @@ class TestTimeIntegrator:
         # Create test field
         field = np.random.random(integrator.domain.shape)
         dt = 0.1
-        
+
         # Perform multiple steps
         current_field = field.copy()
         for _ in range(5):
             current_field = integrator.step(current_field, dt)
-        
+
         # Should be field + 5 * dt
         expected_field = field + 5 * dt
         assert np.allclose(current_field, expected_field)
@@ -224,31 +219,34 @@ class TestTimeIntegrator:
         """Test quench detection physics."""
         # Create test envelope with high amplitude (should trigger quench)
         envelope = np.full(integrator_with_bvp.domain.shape, 1.0)
-        
+
         # Detect quenches
         quenches = integrator_with_bvp.detect_quenches(envelope)
-        
+
         # Should return valid quench data structure
         assert isinstance(quenches, dict)
-        assert all(key in quenches for key in ["quench_locations", "quench_types", "energy_dumped"])
+        assert all(
+            key in quenches
+            for key in ["quench_locations", "quench_types", "energy_dumped"]
+        )
 
     def test_integrator_config_handling(self, domain):
         """Test config handling."""
         # Test with minimal config
         minimal_config = {"integrator_type": "test"}
         integrator = ConcreteTimeIntegrator(domain, minimal_config)
-        
+
         assert integrator.config == minimal_config
-        
+
         # Test with extended config
         extended_config = {
             "integrator_type": "test",
             "precision": "float64",
             "tolerance": 1e-12,
-            "max_iterations": 1000
+            "max_iterations": 1000,
         }
         integrator = ConcreteTimeIntegrator(domain, extended_config)
-        
+
         assert integrator.config == extended_config
 
     def test_integrator_domain_properties(self, integrator, domain):
@@ -263,7 +261,7 @@ class TestTimeIntegrator:
         # Test with invalid field shape
         invalid_field = np.random.random((4, 4, 4))
         dt = 0.1
-        
+
         # Should not raise error (integrator doesn't validate input)
         result = integrator.step(invalid_field, dt)
         assert isinstance(result, np.ndarray)
@@ -273,7 +271,7 @@ class TestTimeIntegrator:
         # Test with very small dt
         field = np.random.random(integrator.domain.shape)
         small_dt = 1e-15
-        
+
         result = integrator.step(field, small_dt)
         assert isinstance(result, np.ndarray)
         assert result.shape == field.shape
@@ -283,7 +281,7 @@ class TestTimeIntegrator:
         # Test with large dt
         field = np.random.random(integrator.domain.shape)
         large_dt = 1e6
-        
+
         result = integrator.step(field, large_dt)
         assert isinstance(result, np.ndarray)
         assert result.shape == field.shape
@@ -296,12 +294,12 @@ class TestTimeIntegrator:
             "quench_detection": {
                 "amplitude_threshold": 0.9,
                 "detuning_threshold": 0.2,
-                "gradient_threshold": 0.7
-            }
+                "gradient_threshold": 0.7,
+            },
         }
-        
+
         integrator = ConcreteTimeIntegrator(domain, quench_config)
-        
+
         # Should have quench detector
         assert integrator.quench_detector is not None
 
@@ -309,9 +307,9 @@ class TestTimeIntegrator:
         """Test quench detector without config."""
         # Test without quench detection config
         config = {"integrator_type": "test"}
-        
+
         integrator = ConcreteTimeIntegrator(domain, config)
-        
+
         # Should not have quench detector
         assert integrator.quench_detector is None
 
@@ -319,26 +317,26 @@ class TestTimeIntegrator:
         """Test BVP core integration."""
         # Create integrator with BVP core
         integrator = ConcreteTimeIntegrator(domain, config, mock_bvp_core)
-        
+
         # Test that BVP core is properly integrated
         assert integrator.bvp_core == mock_bvp_core
         assert integrator.quench_detector is not None
-        
+
         # Test quench detection
         envelope = np.random.random(domain.shape)
         quenches = integrator.detect_quenches(envelope)
-        
+
         # Should call BVP core quench detection
         mock_bvp_core.detect_quenches.assert_called_once_with(envelope)
 
     def test_integrator_config_copy(self, integrator, config):
         """Test that config is copied."""
         retrieved_config = integrator.get_config()
-        
+
         # Should be a copy, not the same object
         assert retrieved_config is not config
         assert retrieved_config == config
-        
+
         # Modifying retrieved config should not affect original
         retrieved_config["new_key"] = "new_value"
         assert "new_key" not in integrator.config

@@ -30,7 +30,9 @@ class BeatingValidationStatistics:
         self.logger = logging.getLogger(__name__)
         self.statistical_significance = 0.05
 
-    def compute_overall_statistical_validation(self, validation_results: Dict[str, Any]) -> Dict[str, Any]:
+    def compute_overall_statistical_validation(
+        self, validation_results: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Compute overall statistical validation.
 
@@ -47,24 +49,26 @@ class BeatingValidationStatistics:
         # Collect validation scores
         validation_scores = []
         for key, result in validation_results.items():
-            if isinstance(result, dict) and 'confidence' in result:
-                validation_scores.append(result['confidence'])
-        
+            if isinstance(result, dict) and "confidence" in result:
+                validation_scores.append(result["confidence"])
+
         if not validation_scores:
             return {
-                'overall_confidence': 0.0,
-                'validation_passed': False,
-                'statistical_significance': self.statistical_significance
+                "overall_confidence": 0.0,
+                "validation_passed": False,
+                "statistical_significance": self.statistical_significance,
             }
-        
+
         # Calculate overall metrics
         overall_confidence = np.mean(validation_scores)
         validation_passed = overall_confidence > 0.5
-        
+
         return {
-            'overall_confidence': overall_confidence,
-            'validation_passed': validation_passed,
-            'statistical_significance': self.statistical_significance,
-            'number_of_validations': len(validation_scores),
-            'confidence_std': np.std(validation_scores) if len(validation_scores) > 1 else 0.0
+            "overall_confidence": overall_confidence,
+            "validation_passed": validation_passed,
+            "statistical_significance": self.statistical_significance,
+            "number_of_validations": len(validation_scores),
+            "confidence_std": (
+                np.std(validation_scores) if len(validation_scores) > 1 else 0.0
+            ),
         }

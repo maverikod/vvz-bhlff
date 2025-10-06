@@ -72,14 +72,14 @@ class QuenchDetector:
         self.threshold_computer = QuenchThresholdComputer(domain_7d)
         self.morphology = QuenchMorphology()
         self.characteristics = QuenchCharacteristics(domain_7d)
-        
+
         # Compute physical thresholds from theoretical principles
         thresholds = self.threshold_computer.compute_all_thresholds()
         self.amplitude_threshold = thresholds["amplitude_threshold"]
         self.detuning_threshold = thresholds["detuning_threshold"]
         self.gradient_threshold = thresholds["gradient_threshold"]
         self.carrier_frequency = thresholds["carrier_frequency"]
-        
+
         # Override with config values if provided (for testing/debugging)
         if "amplitude_threshold" in config:
             self.amplitude_threshold = config["amplitude_threshold"]
@@ -191,7 +191,9 @@ class QuenchDetector:
 
                 # Compute component characteristics
                 center = self.characteristics.compute_center_of_mass(component_mask)
-                strength = self.characteristics.compute_quench_strength(component_mask, amplitude)
+                strength = self.characteristics.compute_quench_strength(
+                    component_mask, amplitude
+                )
                 size = np.sum(component_mask)
 
                 quenches.append(
@@ -235,7 +237,7 @@ class QuenchDetector:
         # Compute local frequency from phase evolution
         if envelope.shape[-1] > 1:  # Need at least 2 time slices
             local_frequency = self.characteristics.compute_local_frequency(envelope)
-            
+
             # Detuning from carrier frequency
             detuning = np.abs(local_frequency - self.carrier_frequency)
 
@@ -244,10 +246,14 @@ class QuenchDetector:
 
             if np.any(quench_mask):
                 # Apply morphological operations to filter noise
-                quench_mask = self.morphology.apply_morphological_operations(quench_mask)
+                quench_mask = self.morphology.apply_morphological_operations(
+                    quench_mask
+                )
 
                 # Find connected components
-                quench_components = self.morphology.find_connected_components(quench_mask)
+                quench_components = self.morphology.find_connected_components(
+                    quench_mask
+                )
 
                 # Process each component
                 for component_id, component_mask in quench_components.items():
@@ -256,7 +262,9 @@ class QuenchDetector:
 
                     # Compute component characteristics
                     center = self.characteristics.compute_center_of_mass(component_mask)
-                    strength = self.characteristics.compute_detuning_strength(component_mask, detuning)
+                    strength = self.characteristics.compute_detuning_strength(
+                        component_mask, detuning
+                    )
                     size = np.sum(component_mask)
 
                     quenches.append(
@@ -297,7 +305,9 @@ class QuenchDetector:
         quenches = []
 
         # Compute 7D gradient
-        gradient_magnitude = self.characteristics.compute_7d_gradient_magnitude(envelope)
+        gradient_magnitude = self.characteristics.compute_7d_gradient_magnitude(
+            envelope
+        )
 
         # Find locations exceeding gradient threshold
         quench_mask = gradient_magnitude > self.gradient_threshold
@@ -316,7 +326,9 @@ class QuenchDetector:
 
                 # Compute component characteristics
                 center = self.characteristics.compute_center_of_mass(component_mask)
-                strength = self.characteristics.compute_gradient_strength(component_mask, gradient_magnitude)
+                strength = self.characteristics.compute_gradient_strength(
+                    component_mask, gradient_magnitude
+                )
                 size = np.sum(component_mask)
 
                 quenches.append(
@@ -354,6 +366,3 @@ class QuenchDetector:
 
         if self.carrier_frequency <= 0:
             raise ValueError("Carrier frequency must be positive")
-
-
-

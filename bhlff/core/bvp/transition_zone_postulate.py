@@ -48,12 +48,8 @@ class TransitionZonePostulate(BVPPostulate):
         """
         self.domain = domain
         self.constants = constants
-        self.nonlinear_threshold = constants.get_quench_parameter(
-            "nonlinear_threshold"
-        )
-        self.current_threshold = constants.get_quench_parameter(
-            "current_threshold"
-        )
+        self.nonlinear_threshold = constants.get_quench_parameter("nonlinear_threshold")
+        self.current_threshold = constants.get_quench_parameter("current_threshold")
 
     def apply(self, envelope: np.ndarray, **kwargs) -> Dict[str, Any]:
         """

@@ -40,7 +40,7 @@ class TestBVPLevelAIntegration:
             dimensions=3,
             size=(1.0, 1.0, 1.0),
             resolution=(64, 64, 64),
-            boundary_conditions="periodic"
+            boundary_conditions="periodic",
         )
 
     @pytest.fixture
@@ -53,33 +53,33 @@ class TestBVPLevelAIntegration:
                 "kappa_2": 0.1,
                 "chi_prime": 1.0,
                 "chi_double_prime_0": 0.01,
-                "k0_squared": 1.0
+                "k0_squared": 1.0,
             },
             "quench_detection": {
                 "amplitude_threshold": 0.8,
                 "detuning_threshold": 0.1,
-                "gradient_threshold": 0.5
-            }
+                "gradient_threshold": 0.5,
+            },
         }
 
     def test_level_a_bvp_framework_validation(self, domain, bvp_config):
         """Test A0: BVP Framework Validation."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Validate BVP envelope solver
         source = np.zeros(domain.shape)
         source[32, 32, 32] = 1.0
         envelope = bvp_core.solve_envelope(source)
         assert envelope.shape == domain.shape
-        
+
         # Validate quench detection system
         quenches = bvp_core.detect_quenches(envelope)
         assert isinstance(quenches, dict)
-        
+
         # Validate U(1)³ phase vector
         phase_vector = bvp_core.get_phase_vector()
         assert phase_vector is not None
-        
+
         # Validate BVP impedance calculation
         impedance = bvp_core.compute_impedance(envelope)
         assert isinstance(impedance, dict)
@@ -87,16 +87,16 @@ class TestBVPLevelAIntegration:
     def test_level_a_bvp_enhanced_solvers(self, domain, bvp_config):
         """Test A1: BVP-Enhanced Solvers."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Test 7D BVP envelope solver
         envelope_solver = BVPEnvelopeSolver(domain, bvp_config)
-        
+
         # Test BVP envelope equation solution
         source = np.zeros(domain.shape)
         source[32, 32, 32, 16, 16, 16, 50] = 1.0  # 7D source
         envelope = envelope_solver.solve_envelope(source)
         assert envelope.shape == domain.shape
-        
+
         # Test BVP quench event handling
         quenches = bvp_core.detect_quenches(envelope)
         assert isinstance(quenches, dict)
@@ -107,16 +107,16 @@ class TestBVPLevelAIntegration:
         config1 = bvp_config.copy()
         config2 = bvp_config.copy()
         config2["carrier_frequency"] = 2.0 * config1["carrier_frequency"]
-        
+
         bvp_core1 = BVPCore(domain, config1)
         bvp_core2 = BVPCore(domain, config2)
-        
+
         source = np.zeros(domain.shape)
         source[32, 32, 32] = 1.0
-        
+
         envelope1 = bvp_core1.solve_envelope(source)
         envelope2 = bvp_core2.solve_envelope(source)
-        
+
         # Validate scaling consistency
         assert envelope1.shape == envelope2.shape
         assert np.all(np.isfinite(envelope1))

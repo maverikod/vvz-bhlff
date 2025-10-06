@@ -46,14 +46,14 @@ class SolverAdvancedCore(AbstractSolverCore):
         super().__init__(domain, config)
         self.domain = domain
         self.config = config
-        
+
         # Advanced solver parameters
-        self.max_iterations = config.get('max_iterations', 100)
-        self.tolerance = config.get('tolerance', 1e-6)
-        self.adaptive_step_size = config.get('adaptive_step_size', True)
-        self.preconditioning_enabled = config.get('preconditioning_enabled', True)
-        self.optimization_enabled = config.get('optimization_enabled', True)
-        
+        self.max_iterations = config.get("max_iterations", 100)
+        self.tolerance = config.get("tolerance", 1e-6)
+        self.adaptive_step_size = config.get("adaptive_step_size", True)
+        self.preconditioning_enabled = config.get("preconditioning_enabled", True)
+        self.optimization_enabled = config.get("optimization_enabled", True)
+
         # Initialize specialized modules
         self.adaptive = SolverAdaptive(domain, config)
         self.optimized = SolverOptimized(domain, config)
@@ -84,7 +84,9 @@ class SolverAdvancedCore(AbstractSolverCore):
             RuntimeError: If solver fails to converge.
         """
         if source.shape != self.domain.shape:
-            raise ValueError(f"Source shape {source.shape} incompatible with domain shape {self.domain.shape}")
+            raise ValueError(
+                f"Source shape {source.shape} incompatible with domain shape {self.domain.shape}"
+            )
 
         return self.adaptive.solve_adaptive(source)
 
@@ -113,7 +115,9 @@ class SolverAdvancedCore(AbstractSolverCore):
             RuntimeError: If solver fails to converge.
         """
         if source.shape != self.domain.shape:
-            raise ValueError(f"Source shape {source.shape} incompatible with domain shape {self.domain.shape}")
+            raise ValueError(
+                f"Source shape {source.shape} incompatible with domain shape {self.domain.shape}"
+            )
 
         return self.optimized.solve_optimized(source)
 
@@ -149,7 +153,9 @@ class SolverAdvancedCore(AbstractSolverCore):
         """
         return self.optimized.initialize_solution(source)
 
-    def _compute_residual_advanced(self, solution: np.ndarray, source: np.ndarray) -> np.ndarray:
+    def _compute_residual_advanced(
+        self, solution: np.ndarray, source: np.ndarray
+    ) -> np.ndarray:
         """
         Compute residual for advanced solving.
 
@@ -166,7 +172,9 @@ class SolverAdvancedCore(AbstractSolverCore):
         """
         return self.adaptive.compute_residual(solution, source)
 
-    def _compute_residual_optimized(self, solution: np.ndarray, source: np.ndarray) -> np.ndarray:
+    def _compute_residual_optimized(
+        self, solution: np.ndarray, source: np.ndarray
+    ) -> np.ndarray:
         """
         Compute residual for optimized solving.
 
@@ -215,7 +223,9 @@ class SolverAdvancedCore(AbstractSolverCore):
         """
         return self.optimized.compute_jacobian(solution)
 
-    def _solve_linear_system_advanced(self, jacobian: csc_matrix, residual: np.ndarray) -> np.ndarray:
+    def _solve_linear_system_advanced(
+        self, jacobian: csc_matrix, residual: np.ndarray
+    ) -> np.ndarray:
         """
         Solve linear system for advanced solving.
 
@@ -232,7 +242,9 @@ class SolverAdvancedCore(AbstractSolverCore):
         """
         return self.adaptive.solve_linear_system(jacobian, residual)
 
-    def _solve_linear_system_optimized(self, jacobian: csc_matrix, residual: np.ndarray) -> np.ndarray:
+    def _solve_linear_system_optimized(
+        self, jacobian: csc_matrix, residual: np.ndarray
+    ) -> np.ndarray:
         """
         Solve linear system for optimized solving.
 
@@ -249,7 +261,9 @@ class SolverAdvancedCore(AbstractSolverCore):
         """
         return self.optimized.solve_linear_system(jacobian, residual)
 
-    def _apply_preconditioning(self, jacobian: csc_matrix, residual: np.ndarray) -> Tuple[csc_matrix, np.ndarray]:
+    def _apply_preconditioning(
+        self, jacobian: csc_matrix, residual: np.ndarray
+    ) -> Tuple[csc_matrix, np.ndarray]:
         """
         Apply preconditioning to linear system.
 
@@ -282,7 +296,9 @@ class SolverAdvancedCore(AbstractSolverCore):
         """
         return self.preconditioning.compute_preconditioner(jacobian)
 
-    def _compute_adaptive_step_size(self, solution: np.ndarray, update: np.ndarray, residual: np.ndarray) -> float:
+    def _compute_adaptive_step_size(
+        self, solution: np.ndarray, update: np.ndarray, residual: np.ndarray
+    ) -> float:
         """
         Compute adaptive step size.
 
@@ -300,7 +316,9 @@ class SolverAdvancedCore(AbstractSolverCore):
         """
         return self.adaptive.compute_step_size(solution, update, residual)
 
-    def _compute_optimized_step_size(self, solution: np.ndarray, update: np.ndarray, residual: np.ndarray) -> float:
+    def _compute_optimized_step_size(
+        self, solution: np.ndarray, update: np.ndarray, residual: np.ndarray
+    ) -> float:
         """
         Compute optimized step size.
 

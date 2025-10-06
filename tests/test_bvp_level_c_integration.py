@@ -40,7 +40,7 @@ class TestBVPLevelCIntegration:
             dimensions=3,
             size=(1.0, 1.0, 1.0),
             resolution=(64, 64, 64),
-            boundary_conditions="periodic"
+            boundary_conditions="periodic",
         )
 
     @pytest.fixture
@@ -53,26 +53,26 @@ class TestBVPLevelCIntegration:
                 "kappa_2": 0.1,
                 "chi_prime": 1.0,
                 "chi_double_prime_0": 0.01,
-                "k0_squared": 1.0
+                "k0_squared": 1.0,
             },
             "impedance_calculation": {
                 "frequency_range": [1e15, 1e20],
-                "frequency_points": 1000
-            }
+                "frequency_points": 1000,
+            },
         }
 
     def test_level_c_bvp_boundary_effects(self, domain, bvp_config):
         """Test C1: BVP Boundary Effects."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Create envelope with boundary effects
         source = np.zeros(domain.shape)
         source[32, 32, 32] = 1.0
         envelope = bvp_core.solve_envelope(source)
-        
+
         # Test BVP impedance calculation
         impedance = bvp_core.compute_impedance(envelope)
-        
+
         # Validate boundary function calculation
         assert "admittance" in impedance
         assert "reflection" in impedance
@@ -81,19 +81,19 @@ class TestBVPLevelCIntegration:
     def test_level_c_bvp_resonator_chains(self, domain, bvp_config):
         """Test C2: BVP Resonator Chains."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Test BVP interface for resonator chains
         bvp_interface = BVPInterface(bvp_core)
-        
+
         # Create test envelope
         source = np.zeros(domain.shape)
         source[32, 32, 32] = 1.0
         envelope = bvp_core.solve_envelope(source)
-        
+
         # Test interface with tail resonators
         tail_data = bvp_interface.interface_with_tail(envelope)
         assert isinstance(tail_data, dict)
-        
+
         # Test interface with transition zone
         transition_data = bvp_interface.interface_with_transition_zone(envelope)
         assert isinstance(transition_data, dict)
@@ -101,23 +101,23 @@ class TestBVPLevelCIntegration:
     def test_level_c_bvp_quench_memory(self, domain, bvp_config):
         """Test C3: BVP Quench Memory."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Create envelope with quench events
         source = np.zeros(domain.shape)
         source[32, 32, 32] = 1.0
         envelope = bvp_core.solve_envelope(source)
-        
+
         # Test quench detection
         quenches = bvp_core.detect_quenches(envelope)
-        
+
         # Validate quench memory effects
         assert "quench_locations" in quenches
         assert "energy_dumped" in quenches
-        
+
         # Test quench threshold modification
         new_thresholds = {
             "amplitude_threshold": 0.9,
             "detuning_threshold": 0.2,
-            "gradient_threshold": 0.6
+            "gradient_threshold": 0.6,
         }
         bvp_core.set_quench_thresholds(new_thresholds)

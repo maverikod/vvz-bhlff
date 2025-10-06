@@ -29,8 +29,8 @@ class SolverOptimized:
         """Initialize optimized solver."""
         self.domain = domain
         self.config = config
-        self.max_iterations = config.get('max_iterations', 100)
-        self.tolerance = config.get('tolerance', 1e-6)
+        self.max_iterations = config.get("max_iterations", 100)
+        self.tolerance = config.get("tolerance", 1e-6)
 
     def solve_optimized(self, source: np.ndarray) -> np.ndarray:
         """
@@ -48,29 +48,29 @@ class SolverOptimized:
         """
         # Initialize solution
         solution = self.initialize_solution(source)
-        
+
         # Optimized Newton-Raphson iteration
         for iteration in range(self.max_iterations):
             # Compute residual
             residual = self.compute_residual(solution, source)
-            
+
             # Check convergence
             residual_norm = np.linalg.norm(residual)
             if residual_norm < self.tolerance:
                 break
-            
+
             # Compute Jacobian
             jacobian = self.compute_jacobian(solution)
-            
+
             # Solve linear system
             update = self.solve_linear_system(jacobian, residual)
-            
+
             # Compute optimized step size
             step_size = self.compute_step_size(solution, update, residual)
-            
+
             # Update solution
             solution += step_size * update
-        
+
         return solution
 
     def initialize_solution(self, source: np.ndarray) -> np.ndarray:
@@ -90,11 +90,15 @@ class SolverOptimized:
         jacobian = csc_matrix((np.ones(n), (np.arange(n), np.arange(n))), shape=(n, n))
         return jacobian
 
-    def solve_linear_system(self, jacobian: csc_matrix, residual: np.ndarray) -> np.ndarray:
+    def solve_linear_system(
+        self, jacobian: csc_matrix, residual: np.ndarray
+    ) -> np.ndarray:
         """Solve linear system for optimized solving."""
         return spsolve(jacobian, residual.flatten()).reshape(residual.shape)
 
-    def compute_step_size(self, solution: np.ndarray, update: np.ndarray, residual: np.ndarray) -> float:
+    def compute_step_size(
+        self, solution: np.ndarray, update: np.ndarray, residual: np.ndarray
+    ) -> float:
         """Compute optimized step size."""
         # Optimized step size computation
         update_norm = np.linalg.norm(update)

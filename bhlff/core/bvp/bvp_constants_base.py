@@ -55,7 +55,7 @@ class BVPConstantsBase:
         """
         self.config = config or {}
         self._setup_envelope_constants()
-        self._setup_basic_material_constants()
+        self._setup_material_constants()
         self._setup_physical_constants()
 
     def _setup_envelope_constants(self) -> None:
@@ -91,36 +91,70 @@ class BVPConstantsBase:
         self.DETUNING_THRESHOLD = envelope_config.get("detuning_threshold", 0.1)
         self.GRADIENT_THRESHOLD = envelope_config.get("gradient_threshold", 0.5)
 
-    def _setup_basic_material_constants(self) -> None:
-        """Setup basic material property constants."""
+    def _setup_material_constants(self) -> None:
+        """Setup material property constants with frequency-dependent models."""
         material_config = self.config.get("material_properties", {})
 
-        # Electromagnetic conductivity σ_EM (S/m)
+        # Backward-compat baseline values (deprecated as final values)
         self.EM_CONDUCTIVITY = material_config.get("em_conductivity", 0.01)
-
-        # Weak interaction conductivity σ_weak (S/m)
         self.WEAK_CONDUCTIVITY = material_config.get("weak_conductivity", 0.001)
-
-        # Base admittance Y₀ (S)
         self.BASE_ADMITTANCE = material_config.get("base_admittance", 1.0)
 
-        # U(1)³ phase structure constants
+        # Frequency-dependent model parameters (preferred path)
+        self.BASE_CONDUCTIVITY = material_config.get(
+            "base_conductivity", self.EM_CONDUCTIVITY
+        )
+        self.CUTOFF_FREQUENCY = material_config.get("cutoff_frequency", 1.0)
+        self.ADMITTANCE_MODEL = material_config.get("admittance_model", "drude")
+        self.MATERIAL_PARAMETERS = material_config.get("parameters", {})
+
+        # U(1)^3 phase structure constants (unchanged)
         self.PHASE_AMPLITUDE_1 = material_config.get("phase_amplitude_1", 1.0)
         self.PHASE_AMPLITUDE_2 = material_config.get("phase_amplitude_2", 1.0)
         self.PHASE_AMPLITUDE_3 = material_config.get("phase_amplitude_3", 1.0)
-
         self.PHASE_FREQUENCY_1 = material_config.get("phase_frequency_1", 1.0)
         self.PHASE_FREQUENCY_2 = material_config.get("phase_frequency_2", 1.0)
         self.PHASE_FREQUENCY_3 = material_config.get("phase_frequency_3", 1.0)
 
-        # SU(2) coupling strength
+        # SU(2) and electroweak couplings
         self.SU2_COUPLING_STRENGTH = material_config.get("su2_coupling_strength", 0.1)
-
-        # Electroweak coupling constants
         self.EM_COUPLING = material_config.get("em_coupling", 1.0)
         self.WEAK_COUPLING = material_config.get("weak_coupling", 0.1)
-        self.MIXING_ANGLE = material_config.get("mixing_angle", 0.23)  # Weinberg angle
+        self.MIXING_ANGLE = material_config.get("mixing_angle", 0.23)
         self.GAUGE_COUPLING = material_config.get("gauge_coupling", 0.65)
+
+    def get_conductivity(self, frequency: float) -> float:
+        """Compute frequency-dependent conductivity σ(ω)."""
+        if frequency < 0:
+            frequency = abs(frequency)
+        # Simple Drude-like model as default
+        if self.ADMITTANCE_MODEL.lower() == "drude":
+            gamma = float(self.MATERIAL_PARAMETERS.get("gamma", 0.0))
+            omega_p = float(self.MATERIAL_PARAMETERS.get("omega_p", 0.0))
+            omega = float(frequency)
+            denom = gamma**2 + omega**2 if (gamma != 0.0 or omega != 0.0) else 1.0
+            sigma = self.BASE_CONDUCTIVITY + (omega_p**2) * gamma / denom
+            return float(sigma)
+        if self.ADMITTANCE_MODEL.lower() == "debye":
+            tau = float(self.MATERIAL_PARAMETERS.get("tau", 1.0))
+            sigma_inf = float(
+                self.MATERIAL_PARAMETERS.get("sigma_inf", self.BASE_CONDUCTIVITY)
+            )
+            omega = float(frequency)
+            return float(sigma_inf * (1.0 / (1.0 + (omega * tau) ** 2)))
+        # Fallback: quadratic correction using cutoff frequency
+        return float(
+            self.BASE_CONDUCTIVITY
+            * (1.0 + (frequency**2) / max(self.CUTOFF_FREQUENCY, 1e-12) ** 2)
+        )
+
+    def get_admittance(self, frequency: float) -> float:
+        """Compute frequency-dependent base admittance Y(ω)."""
+        # Simple proportional relation to conductivity for baseline
+        sigma = self.get_conductivity(frequency)
+        return float(
+            self.BASE_ADMITTANCE * (sigma / max(self.BASE_CONDUCTIVITY, 1e-30))
+        )
 
     def _setup_physical_constants(self) -> None:
         """Setup fundamental physical constants."""

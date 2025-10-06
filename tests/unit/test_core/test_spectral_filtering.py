@@ -23,14 +23,7 @@ class TestSpectralFiltering:
     @pytest.fixture
     def domain(self):
         """Create domain for testing."""
-        return Domain(
-            L=1.0,
-            N=8,
-            dimensions=7,
-            N_phi=4,
-            N_t=8,
-            T=1.0
-        )
+        return Domain(L=1.0, N=8, dimensions=7, N_phi=4, N_t=8, T=1.0)
 
     @pytest.fixture
     def fft_backend(self, domain):
@@ -50,10 +43,10 @@ class TestSpectralFiltering:
         """Test low-pass filtering."""
         # Create test field
         field = np.random.random(spectral_filtering.fft_backend.domain.shape)
-        
+
         # Apply low-pass filter
         filtered_field = spectral_filtering.low_pass_filter(field, cutoff=0.5)
-        
+
         assert isinstance(filtered_field, np.ndarray)
         assert filtered_field.shape == field.shape
 
@@ -61,10 +54,10 @@ class TestSpectralFiltering:
         """Test high-pass filtering."""
         # Create test field
         field = np.random.random(spectral_filtering.fft_backend.domain.shape)
-        
+
         # Apply high-pass filter
         filtered_field = spectral_filtering.high_pass_filter(field, cutoff=0.5)
-        
+
         assert isinstance(filtered_field, np.ndarray)
         assert filtered_field.shape == field.shape
 
@@ -72,10 +65,12 @@ class TestSpectralFiltering:
         """Test band-pass filtering."""
         # Create test field
         field = np.random.random(spectral_filtering.fft_backend.domain.shape)
-        
+
         # Apply band-pass filter
-        filtered_field = spectral_filtering.band_pass_filter(field, low_cutoff=0.2, high_cutoff=0.8)
-        
+        filtered_field = spectral_filtering.band_pass_filter(
+            field, low_cutoff=0.2, high_cutoff=0.8
+        )
+
         assert isinstance(filtered_field, np.ndarray)
         assert filtered_field.shape == field.shape
 
@@ -83,10 +78,10 @@ class TestSpectralFiltering:
         """Test Gaussian filtering."""
         # Create test field
         field = np.random.random(spectral_filtering.fft_backend.domain.shape)
-        
+
         # Apply Gaussian filter
         filtered_field = spectral_filtering.gaussian_filter(field, sigma=1.0)
-        
+
         assert isinstance(filtered_field, np.ndarray)
         assert filtered_field.shape == field.shape
 
@@ -94,16 +89,16 @@ class TestSpectralFiltering:
         """Test input validation."""
         # Test with wrong shape
         wrong_field = np.random.random((4, 4, 4))
-        
+
         with pytest.raises(ValueError):
             spectral_filtering.low_pass_filter(wrong_field, cutoff=0.5)
-        
+
         # Test with invalid cutoff
         field = np.random.random(spectral_filtering.fft_backend.domain.shape)
-        
+
         with pytest.raises(ValueError):
             spectral_filtering.low_pass_filter(field, cutoff=-0.1)
-        
+
         with pytest.raises(ValueError):
             spectral_filtering.low_pass_filter(field, cutoff=1.1)
 
@@ -111,17 +106,17 @@ class TestSpectralFiltering:
         """Test energy conservation in spectral filtering."""
         # Create test field
         field = np.random.random(spectral_filtering.fft_backend.domain.shape)
-        
+
         # Apply filter
         filtered_field = spectral_filtering.low_pass_filter(field, cutoff=0.5)
-        
+
         # Energy should be finite
         original_energy = np.sum(field**2)
         filtered_energy = np.sum(filtered_field**2)
-        
+
         assert np.isfinite(original_energy)
         assert np.isfinite(filtered_energy)
-        
+
         # Filtered energy should be less than or equal to original
         assert filtered_energy <= original_energy
 
@@ -130,13 +125,15 @@ class TestSpectralFiltering:
         # Create 7D test field
         field = np.zeros(spectral_filtering.fft_backend.domain.shape)
         field[0, 0, 0, 0, 0, 0, 0] = 1.0
-        
+
         # Apply different filters
         low_pass = spectral_filtering.low_pass_filter(field, cutoff=0.5)
         high_pass = spectral_filtering.high_pass_filter(field, cutoff=0.5)
-        band_pass = spectral_filtering.band_pass_filter(field, low_cutoff=0.2, high_cutoff=0.8)
+        band_pass = spectral_filtering.band_pass_filter(
+            field, low_cutoff=0.2, high_cutoff=0.8
+        )
         gaussian = spectral_filtering.gaussian_filter(field, sigma=1.0)
-        
+
         # All should preserve 7D structure
         assert low_pass.shape == spectral_filtering.fft_backend.domain.shape
         assert high_pass.shape == spectral_filtering.fft_backend.domain.shape
@@ -147,24 +144,32 @@ class TestSpectralFiltering:
         """Test numerical stability of spectral filtering."""
         # Test with extreme values
         field = np.array([1e10, -1e10, 1e-10, -1e-10])
-        field = np.broadcast_to(field.reshape(-1, 1, 1, 1, 1, 1, 1), spectral_filtering.fft_backend.domain.shape)
-        
+        field = np.broadcast_to(
+            field.reshape(-1, 1, 1, 1, 1, 1, 1),
+            spectral_filtering.fft_backend.domain.shape,
+        )
+
         # Should not raise errors
         filtered_field = spectral_filtering.low_pass_filter(field, cutoff=0.5)
-        
+
         # Should be stable
         assert np.isfinite(filtered_field).all()
 
     def test_spectral_filtering_precision(self, spectral_filtering):
         """Test precision of spectral filtering."""
         # Test with known function
-        x = np.linspace(0, 2*np.pi, spectral_filtering.fft_backend.domain.shape[0], endpoint=False)
+        x = np.linspace(
+            0, 2 * np.pi, spectral_filtering.fft_backend.domain.shape[0], endpoint=False
+        )
         field = np.sin(x)
-        field = np.broadcast_to(field.reshape(-1, 1, 1, 1, 1, 1, 1), spectral_filtering.fft_backend.domain.shape)
-        
+        field = np.broadcast_to(
+            field.reshape(-1, 1, 1, 1, 1, 1, 1),
+            spectral_filtering.fft_backend.domain.shape,
+        )
+
         # Apply filter
         filtered_field = spectral_filtering.low_pass_filter(field, cutoff=0.5)
-        
+
         # Should be finite and reasonable
         assert np.isfinite(filtered_field).all()
         assert np.max(np.abs(filtered_field)) < 10.0  # Reasonable bound
@@ -173,13 +178,13 @@ class TestSpectralFiltering:
         """Test effects of different cutoff frequencies."""
         # Create test field
         field = np.random.random(spectral_filtering.fft_backend.domain.shape)
-        
+
         # Test different cutoffs
         cutoffs = [0.1, 0.3, 0.5, 0.7, 0.9]
-        
+
         for cutoff in cutoffs:
             filtered_field = spectral_filtering.low_pass_filter(field, cutoff=cutoff)
-            
+
             assert isinstance(filtered_field, np.ndarray)
             assert filtered_field.shape == field.shape
             assert np.isfinite(filtered_field).all()
@@ -187,24 +192,24 @@ class TestSpectralFiltering:
     def test_spectral_filtering_band_pass_validation(self, spectral_filtering):
         """Test band-pass filter validation."""
         field = np.random.random(spectral_filtering.fft_backend.domain.shape)
-        
+
         # Test invalid band parameters
         with pytest.raises(ValueError):
             spectral_filtering.band_pass_filter(field, low_cutoff=0.8, high_cutoff=0.2)
-        
+
         with pytest.raises(ValueError):
             spectral_filtering.band_pass_filter(field, low_cutoff=-0.1, high_cutoff=0.5)
-        
+
         with pytest.raises(ValueError):
             spectral_filtering.band_pass_filter(field, low_cutoff=0.5, high_cutoff=1.1)
 
     def test_spectral_filtering_gaussian_validation(self, spectral_filtering):
         """Test Gaussian filter validation."""
         field = np.random.random(spectral_filtering.fft_backend.domain.shape)
-        
+
         # Test invalid sigma
         with pytest.raises(ValueError):
             spectral_filtering.gaussian_filter(field, sigma=-1.0)
-        
+
         with pytest.raises(ValueError):
             spectral_filtering.gaussian_filter(field, sigma=0.0)

@@ -46,13 +46,15 @@ class PowerLawFitting:
         """
         # Simplified power law fitting
         return {
-            'power_law_exponent': -2.0,  # Simplified
-            'amplitude': 1.0,  # Simplified
-            'fitting_quality': 0.8,  # Simplified
-            'r_squared': 0.9  # Simplified
+            "power_law_exponent": -2.0,  # Simplified
+            "amplitude": 1.0,  # Simplified
+            "fitting_quality": 0.8,  # Simplified
+            "r_squared": 0.9,  # Simplified
         }
 
-    def calculate_fitting_quality(self, region_data: Dict[str, np.ndarray], power_law_fit: Dict[str, float]) -> float:
+    def calculate_fitting_quality(
+        self, region_data: Dict[str, np.ndarray], power_law_fit: Dict[str, float]
+    ) -> float:
         """
         Calculate fitting quality metric.
 
@@ -68,7 +70,7 @@ class PowerLawFitting:
             float: Fitting quality metric (0-1).
         """
         # Simplified quality calculation
-        return power_law_fit.get('r_squared', 0.0)
+        return power_law_fit.get("r_squared", 0.0)
 
     def calculate_decay_rate(self, power_law_fit: Dict[str, float]) -> float:
         """
@@ -85,5 +87,5 @@ class PowerLawFitting:
             float: Decay rate.
         """
         # Simplified decay rate calculation
-        exponent = power_law_fit.get('power_law_exponent', 0.0)
+        exponent = power_law_fit.get("power_law_exponent", 0.0)
         return abs(exponent)  # Simplified

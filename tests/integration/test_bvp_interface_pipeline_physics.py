@@ -42,11 +42,11 @@ class TestBVPInterfacePipelinePhysics:
         """Create 7D domain for complete pipeline testing."""
         return Domain(
             L=2.0,  # Larger domain for better physics
-            N=64,   # Higher resolution
+            N=64,  # Higher resolution
             dimensions=3,
             N_phi=32,  # More phase points
-            N_t=128,   # More time points
-            T=2.0      # Longer evolution
+            N_t=128,  # More time points
+            T=2.0,  # Longer evolution
         )
 
     @pytest.fixture
@@ -64,7 +64,7 @@ class TestBVPInterfacePipelinePhysics:
                 "mu": 1.0,
                 "beta": 1.5,
                 "lambda_param": 0.1,
-            }
+            },
         }
         return BVPConstantsAdvanced(config)
 
@@ -76,11 +76,11 @@ class TestBVPInterfacePipelinePhysics:
     def test_bvp_interface_physics(self, domain_7d, bvp_interface):
         """
         Test BVP interface physics.
-        
+
         Physical Meaning:
             Validates that the BVP interface correctly coordinates
             all BVP components and maintains physical consistency.
-            
+
         Mathematical Foundation:
             Tests interface coordination of:
             - Envelope solver
@@ -90,36 +90,49 @@ class TestBVPInterfacePipelinePhysics:
         """
         # Create test source
         source = self._generate_physical_source(domain_7d)
-        
+
         # Test interface operations
         interface_results = bvp_interface.process_source(source)
-        
+
         # Physical validation 1: Interface should return valid results
-        assert 'envelope' in interface_results, "Interface missing envelope solution"
-        assert 'postulates' in interface_results, "Interface missing postulate results"
-        assert 'quenches' in interface_results, "Interface missing quench results"
-        assert 'impedance' in interface_results, "Interface missing impedance results"
-        
+        assert "envelope" in interface_results, "Interface missing envelope solution"
+        assert "postulates" in interface_results, "Interface missing postulate results"
+        assert "quenches" in interface_results, "Interface missing quench results"
+        assert "impedance" in interface_results, "Interface missing impedance results"
+
         # Physical validation 2: All results should be physically meaningful
-        envelope = interface_results['envelope']
-        assert np.all(np.isfinite(envelope)), "Interface envelope contains non-finite values"
-        
-        postulates = interface_results['postulates']
+        envelope = interface_results["envelope"]
+        assert np.all(
+            np.isfinite(envelope)
+        ), "Interface envelope contains non-finite values"
+
+        postulates = interface_results["postulates"]
         assert isinstance(postulates, dict), "Interface postulates not a dictionary"
-        
-        quenches = interface_results['quenches']
-        assert np.all((quenches == 0) | (quenches == 1)), "Interface quenches not binary"
-        
-        impedance = interface_results['impedance']
-        assert np.all(np.isfinite(impedance)), "Interface impedance contains non-finite values"
+
+        quenches = interface_results["quenches"]
+        assert np.all(
+            (quenches == 0) | (quenches == 1)
+        ), "Interface quenches not binary"
+
+        impedance = interface_results["impedance"]
+        assert np.all(
+            np.isfinite(impedance)
+        ), "Interface impedance contains non-finite values"
 
     def _generate_physical_source(self, domain: Domain) -> np.ndarray:
         """Generate a physical source for testing."""
         source = np.zeros(domain.shape)
-        
+
         # Create localized source in center
         center = domain.N // 2
-        source[center-2:center+3, center-2:center+3, center-2:center+3, 
-               :, :, :, :] = 1.0
-        
+        source[
+            center - 2 : center + 3,
+            center - 2 : center + 3,
+            center - 2 : center + 3,
+            :,
+            :,
+            :,
+            :,
+        ] = 1.0
+
         return source

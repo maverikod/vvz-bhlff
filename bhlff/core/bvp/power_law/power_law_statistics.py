@@ -45,16 +45,16 @@ class PowerLawStatistics:
             Dict[str, Any]: Statistical analysis results.
         """
         self.logger.info("Starting power law statistical analysis")
-        
+
         # Simplified statistical analysis implementation
         results = {
-            'statistical_significance': 0.05,
-            'confidence_interval': [0.02, 0.08],
-            'p_value': 0.03,
-            'effect_size': 0.15,
-            'sample_size': 100
+            "statistical_significance": 0.05,
+            "confidence_interval": [0.02, 0.08],
+            "p_value": 0.03,
+            "effect_size": 0.15,
+            "sample_size": 100,
         }
-        
+
         self.logger.info("Power law statistical analysis completed")
         return results
 
@@ -62,27 +62,29 @@ class PowerLawStatistics:
         """Calculate statistical metrics for power law analysis."""
         # Simplified implementation
         return {
-            'mean_exponent': 2.1,
-            'std_exponent': 0.3,
-            'confidence_interval': [1.8, 2.4],
-            'p_value': 0.03
+            "mean_exponent": 2.1,
+            "std_exponent": 0.3,
+            "confidence_interval": [1.8, 2.4],
+            "p_value": 0.03,
         }
 
     def _perform_hypothesis_testing(self, envelope: np.ndarray) -> Dict[str, Any]:
         """Perform hypothesis testing for power law behavior."""
         # Simplified implementation
         return {
-            'null_hypothesis_rejected': True,
-            'test_statistic': 2.5,
-            'critical_value': 1.96,
-            'p_value': 0.03
+            "null_hypothesis_rejected": True,
+            "test_statistic": 2.5,
+            "critical_value": 1.96,
+            "p_value": 0.03,
         }
 
-    def _calculate_confidence_intervals(self, envelope: np.ndarray) -> Dict[str, List[float]]:
+    def _calculate_confidence_intervals(
+        self, envelope: np.ndarray
+    ) -> Dict[str, List[float]]:
         """Calculate confidence intervals for power law parameters."""
         # Simplified implementation
         return {
-            'exponent_ci': [1.8, 2.4],
-            'coefficient_ci': [0.9, 1.3],
-            'quality_ci': [0.75, 0.85]
+            "exponent_ci": [1.8, 2.4],
+            "coefficient_ci": [0.9, 1.3],
+            "quality_ci": [0.75, 0.85],
         }

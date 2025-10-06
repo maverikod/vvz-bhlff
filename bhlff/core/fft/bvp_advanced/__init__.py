@@ -13,9 +13,4 @@ from .bvp_preconditioning import BVPPreconditioning
 from .bvp_optimization import BVPOptimization
 from .bvp_adaptive import BVPAdaptive
 
-__all__ = [
-    'BVPAdvancedCore',
-    'BVPPreconditioning',
-    'BVPOptimization',
-    'BVPAdaptive'
-]
+__all__ = ["BVPAdvancedCore", "BVPPreconditioning", "BVPOptimization", "BVPAdaptive"]

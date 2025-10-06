@@ -55,11 +55,11 @@ class ResonanceQualityCore:
             List[float]: List of quality factors for each peak.
         """
         quality_factors = []
-        
+
         for peak_idx in peak_indices:
             q_factor = self.calculate_quality_factor(frequencies, magnitude, peak_idx)
             quality_factors.append(q_factor)
-        
+
         return quality_factors
 
     def calculate_quality_factor(
@@ -86,17 +86,17 @@ class ResonanceQualityCore:
         """
         # Extract peak region
         peak_region = self._extract_peak_region(frequencies, magnitude, peak_idx)
-        
+
         # Fit Lorentzian function
         lorentzian_params = self._fit_lorentzian(peak_region)
-        
+
         # Calculate FWHM
         fwhm = self._calculate_fwhm(lorentzian_params)
-        
+
         # Calculate quality factor
-        resonance_frequency = lorentzian_params['center']
+        resonance_frequency = lorentzian_params["center"]
         quality_factor = resonance_frequency / fwhm if fwhm > 0 else 0.0
-        
+
         return quality_factor
 
     def analyze_resonance_quality(
@@ -120,33 +120,35 @@ class ResonanceQualityCore:
                 FWHM values, and resonance characteristics.
         """
         analysis_results = {
-            'quality_factors': [],
-            'fwhm_values': [],
-            'resonance_frequencies': [],
-            'peak_amplitudes': [],
-            'lorentzian_params': []
+            "quality_factors": [],
+            "fwhm_values": [],
+            "resonance_frequencies": [],
+            "peak_amplitudes": [],
+            "lorentzian_params": [],
         }
-        
+
         for peak_idx in peak_indices:
             # Calculate quality factor
             q_factor = self.calculate_quality_factor(frequencies, magnitude, peak_idx)
-            analysis_results['quality_factors'].append(q_factor)
-            
+            analysis_results["quality_factors"].append(q_factor)
+
             # Extract peak region
             peak_region = self._extract_peak_region(frequencies, magnitude, peak_idx)
-            
+
             # Fit Lorentzian function
             lorentzian_params = self._fit_lorentzian(peak_region)
-            analysis_results['lorentzian_params'].append(lorentzian_params)
-            
+            analysis_results["lorentzian_params"].append(lorentzian_params)
+
             # Calculate FWHM
             fwhm = self._calculate_fwhm(lorentzian_params)
-            analysis_results['fwhm_values'].append(fwhm)
-            
+            analysis_results["fwhm_values"].append(fwhm)
+
             # Store resonance characteristics
-            analysis_results['resonance_frequencies'].append(lorentzian_params['center'])
-            analysis_results['peak_amplitudes'].append(lorentzian_params['amplitude'])
-        
+            analysis_results["resonance_frequencies"].append(
+                lorentzian_params["center"]
+            )
+            analysis_results["peak_amplitudes"].append(lorentzian_params["amplitude"])
+
         return analysis_results
 
     def _extract_peak_region(
@@ -165,19 +167,19 @@ class ResonanceQualityCore:
         """
         # Define region width (adjustable parameter)
         region_width = 20  # Number of points around peak
-        
+
         # Calculate region bounds
         start_idx = max(0, peak_idx - region_width // 2)
         end_idx = min(len(frequencies), peak_idx + region_width // 2 + 1)
-        
+
         # Extract region
         region_frequencies = frequencies[start_idx:end_idx]
         region_magnitude = magnitude[start_idx:end_idx]
-        
+
         return {
-            'frequencies': region_frequencies,
-            'magnitude': region_magnitude,
-            'peak_idx': peak_idx - start_idx
+            "frequencies": region_frequencies,
+            "magnitude": region_magnitude,
+            "peak_idx": peak_idx - start_idx,
         }
 
     def _fit_lorentzian(self, peak_region: Dict[str, np.ndarray]) -> Dict[str, float]:
@@ -194,28 +196,24 @@ class ResonanceQualityCore:
         Returns:
             Dict[str, float]: Lorentzian parameters.
         """
-        frequencies = peak_region['frequencies']
-        magnitude = peak_region['magnitude']
-        peak_idx = peak_region['peak_idx']
-        
+        frequencies = peak_region["frequencies"]
+        magnitude = peak_region["magnitude"]
+        peak_idx = peak_region["peak_idx"]
+
         # Initial parameter estimates
         amplitude = magnitude[peak_idx]
         center = frequencies[peak_idx]
-        
+
         # Estimate FWHM from data
         half_max = amplitude / 2.0
         fwhm_indices = np.where(magnitude >= half_max)[0]
-        
+
         if len(fwhm_indices) > 1:
             fwhm = frequencies[fwhm_indices[-1]] - frequencies[fwhm_indices[0]]
         else:
             fwhm = (frequencies[-1] - frequencies[0]) / 10.0  # Fallback estimate
-        
-        return {
-            'amplitude': amplitude,
-            'center': center,
-            'fwhm': fwhm
-        }
+
+        return {"amplitude": amplitude, "center": center, "fwhm": fwhm}
 
     def _calculate_fwhm(self, lorentzian_params: Dict[str, float]) -> float:
         """
@@ -227,7 +225,7 @@ class ResonanceQualityCore:
         Returns:
             float: FWHM value.
         """
-        return lorentzian_params['fwhm']
+        return lorentzian_params["fwhm"]
 
     def validate_quality_factor(self, quality_factor: float) -> bool:
         """
@@ -242,7 +240,9 @@ class ResonanceQualityCore:
         # Quality factor should be positive and finite
         return np.isfinite(quality_factor) and quality_factor > 0.0
 
-    def calculate_quality_factor_statistics(self, quality_factors: List[float]) -> Dict[str, float]:
+    def calculate_quality_factor_statistics(
+        self, quality_factors: List[float]
+    ) -> Dict[str, float]:
         """
         Calculate statistics for quality factors.
 
@@ -253,20 +253,14 @@ class ResonanceQualityCore:
             Dict[str, float]: Quality factor statistics.
         """
         if not quality_factors:
-            return {
-                'mean': 0.0,
-                'std': 0.0,
-                'min': 0.0,
-                'max': 0.0,
-                'count': 0
-            }
-        
+            return {"mean": 0.0, "std": 0.0, "min": 0.0, "max": 0.0, "count": 0}
+
         quality_factors_array = np.array(quality_factors)
-        
+
         return {
-            'mean': np.mean(quality_factors_array),
-            'std': np.std(quality_factors_array),
-            'min': np.min(quality_factors_array),
-            'max': np.max(quality_factors_array),
-            'count': len(quality_factors)
+            "mean": np.mean(quality_factors_array),
+            "std": np.std(quality_factors_array),
+            "min": np.min(quality_factors_array),
+            "max": np.max(quality_factors_array),
+            "count": len(quality_factors),
         }

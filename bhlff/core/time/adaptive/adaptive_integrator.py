@@ -319,43 +319,51 @@ class AdaptiveIntegrator(BaseTimeIntegrator):
 
             # Clamp to allowed range
             self._current_dt = np.clip(optimal_dt, self._min_dt, self._max_dt)
-            
+
             # Log step size adjustment
-            if abs(self._current_dt - current_dt) / current_dt > 0.1:  # Significant change
-                self.logger.debug(f"Time step adjusted: {current_dt:.2e} -> {self._current_dt:.2e}, error: {error_estimate:.2e}")
+            if (
+                abs(self._current_dt - current_dt) / current_dt > 0.1
+            ):  # Significant change
+                self.logger.debug(
+                    f"Time step adjusted: {current_dt:.2e} -> {self._current_dt:.2e}, error: {error_estimate:.2e}"
+                )
         else:
             # If no error, increase step size conservatively
             self._current_dt = min(self._current_dt * 1.1, self._max_dt)
-    
-    def _apply_stability_constraints(self, proposed_dt: float, error_estimate: float) -> float:
+
+    def _apply_stability_constraints(
+        self, proposed_dt: float, error_estimate: float
+    ) -> float:
         """
         Apply stability constraints to proposed time step.
-        
+
         Physical Meaning:
             Applies stability constraints including CFL conditions
             and spectral stability requirements to ensure numerical stability.
         """
         # CFL condition for diffusion equation
         # For fractional Laplacian, CFL condition is: dt <= C * dx^(2*beta) / nu
-        if hasattr(self.parameters, 'beta') and hasattr(self.parameters, 'nu'):
+        if hasattr(self.parameters, "beta") and hasattr(self.parameters, "nu"):
             beta = self.parameters.beta
             nu = self.parameters.nu
-            
+
             # Estimate grid spacing
-            if hasattr(self.domain, 'dx'):
+            if hasattr(self.domain, "dx"):
                 dx = self.domain.dx
             else:
                 dx = self.domain.L / self.domain.N
-            
+
             # CFL condition for fractional diffusion
             cfl_dt = 0.1 * (dx ** (2 * beta)) / nu
             proposed_dt = min(proposed_dt, cfl_dt)
-        
+
         # Spectral stability constraint
         # Ensure time step doesn't cause high-frequency instabilities
-        if error_estimate > self._tolerance * 10:  # Large error indicates potential instability
+        if (
+            error_estimate > self._tolerance * 10
+        ):  # Large error indicates potential instability
             proposed_dt *= 0.5  # Reduce step size more aggressively
-        
+
         return proposed_dt
 
     def get_current_time_step(self) -> float:

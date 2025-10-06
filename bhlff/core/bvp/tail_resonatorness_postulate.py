@@ -49,9 +49,7 @@ class TailResonatornessPostulate(BVPPostulate):
         """
         self.domain = domain
         self.constants = constants
-        self.resonance_threshold = constants.get_quench_parameter(
-            "resonance_threshold"
-        )
+        self.resonance_threshold = constants.get_quench_parameter("resonance_threshold")
         self.quality_factor_threshold = constants.get_quench_parameter(
             "quality_factor_threshold"
         )
@@ -136,10 +134,9 @@ class TailResonatornessPostulate(BVPPostulate):
         peaks = []
         for freq_idx in range(1, spectrum.shape[6] - 1):
             # Check if this frequency is a local maximum
-            is_local_max = (
-                np.all(spectrum[..., freq_idx] > spectrum[..., freq_idx - 1]) and
-                np.all(spectrum[..., freq_idx] > spectrum[..., freq_idx + 1])
-            )
+            is_local_max = np.all(
+                spectrum[..., freq_idx] > spectrum[..., freq_idx - 1]
+            ) and np.all(spectrum[..., freq_idx] > spectrum[..., freq_idx + 1])
             if is_local_max:
                 # Convert to frequency
                 freq = freq_idx * self.domain.dt / (2 * np.pi)

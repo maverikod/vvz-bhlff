@@ -13,7 +13,4 @@ from .basic import BeatingBasicCore
 # Alias for backward compatibility
 BeatingCoreAdvancedBasic = BeatingBasicCore
 
-__all__ = [
-    'BeatingBasicCore',
-    'BeatingCoreAdvancedBasic'
-]
+__all__ = ["BeatingBasicCore", "BeatingCoreAdvancedBasic"]

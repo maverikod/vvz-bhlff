@@ -153,9 +153,11 @@ class CarrierPrimacyPostulate(BVPPostulate):
         spectrum_copy = spectrum.copy()
         # Remove carrier peak in the temporal dimension
         spectrum_copy[..., max_idx] = 0
-        envelope_indices = np.unravel_index(np.argmax(spectrum_copy), spectrum_copy.shape)
+        envelope_indices = np.unravel_index(
+            np.argmax(spectrum_copy), spectrum_copy.shape
+        )
         envelope_idx = envelope_indices[6]  # Get temporal index
-        
+
         # Ensure envelope_idx is within bounds
         if envelope_idx >= len(freq_axis):
             envelope_idx = len(freq_axis) - 1

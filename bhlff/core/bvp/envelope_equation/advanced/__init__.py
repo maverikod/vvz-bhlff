@@ -14,8 +14,8 @@ from .solver_optimized import SolverOptimized
 from .solver_preconditioning import SolverPreconditioning
 
 __all__ = [
-    'SolverAdvancedCore',
-    'SolverAdaptive',
-    'SolverOptimized',
-    'SolverPreconditioning'
+    "SolverAdvancedCore",
+    "SolverAdaptive",
+    "SolverOptimized",
+    "SolverPreconditioning",
 ]

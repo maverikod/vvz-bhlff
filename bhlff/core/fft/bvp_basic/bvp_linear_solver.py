@@ -29,14 +29,21 @@ class BVPLinearSolver:
         in the 7D envelope equation.
     """
 
-    def __init__(self, domain: 'Domain7DBVP', parameters: 'Parameters7DBVP', derivatives: 'SpectralDerivatives'):
+    def __init__(
+        self,
+        domain: "Domain7DBVP",
+        parameters: "Parameters7DBVP",
+        derivatives: "SpectralDerivatives",
+    ):
         """Initialize BVP linear solver."""
         self.domain = domain
         self.parameters = parameters
         self.derivatives = derivatives
         self.logger = logging.getLogger(__name__)
 
-    def solve_linear_system(self, jacobian: np.ndarray, residual: np.ndarray) -> np.ndarray:
+    def solve_linear_system(
+        self, jacobian: np.ndarray, residual: np.ndarray
+    ) -> np.ndarray:
         """
         Solve linear system for Newton-Raphson update.
 
@@ -52,7 +59,7 @@ class BVPLinearSolver:
             np.ndarray: Solution update vector.
         """
         self.logger.info("Solving BVP linear system")
-        
+
         # Solve linear system
         try:
             update = np.linalg.solve(jacobian, -residual.flatten())
@@ -62,6 +69,6 @@ class BVPLinearSolver:
             self.logger.warning("Linear system is singular, using least squares")
             update = np.linalg.lstsq(jacobian, -residual.flatten(), rcond=None)[0]
             update = update.reshape(residual.shape)
-        
+
         self.logger.info("BVP linear system solving completed")
         return update

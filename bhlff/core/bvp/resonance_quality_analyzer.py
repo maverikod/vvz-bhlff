@@ -12,7 +12,4 @@ aspects of resonance quality analysis.
 from .resonance_quality_core import ResonanceQualityCore
 from .analysis.resonance_quality_analysis import ResonanceQualityAnalysis
 
-__all__ = [
-    'ResonanceQualityCore',
-    'ResonanceQualityAnalysis'
-]
+__all__ = ["ResonanceQualityCore", "ResonanceQualityAnalysis"]

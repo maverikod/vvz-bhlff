@@ -225,7 +225,7 @@ class LevelEInterface(BVPLevelInterface):
             gradient_magnitude = np.sqrt(sum(g**2 for g in gradient_result))
         else:
             gradient_magnitude = gradient_result
-        interaction_energy = np.sum(amplitude**2 * gradient_magnitude ** 2)
+        interaction_energy = np.sum(amplitude**2 * gradient_magnitude**2)
 
         return {
             "interaction_energy": float(interaction_energy),

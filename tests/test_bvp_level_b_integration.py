@@ -40,7 +40,7 @@ class TestBVPLevelBIntegration:
             dimensions=3,
             size=(2.0, 2.0, 2.0),
             resolution=(128, 128, 128),
-            boundary_conditions="periodic"
+            boundary_conditions="periodic",
         )
 
     @pytest.fixture
@@ -53,25 +53,25 @@ class TestBVPLevelBIntegration:
                 "kappa_2": 0.1,
                 "chi_prime": 1.0,
                 "chi_double_prime_0": 0.01,
-                "k0_squared": 1.0
-            }
+                "k0_squared": 1.0,
+            },
         }
 
     def test_level_b_bvp_power_law_tails(self, domain, bvp_config):
         """Test B1: BVP Power Law Tails."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Create point source for power law analysis
         source = np.zeros(domain.shape)
         source[64, 64, 64] = 1.0
-        
+
         # Solve BVP envelope
         envelope = bvp_core.solve_envelope(source)
-        
+
         # Analyze power law behavior
         center = np.array([64, 64, 64])
         radial_profile = []
-        
+
         for r in range(1, 30):
             count = 0
             total_amp = 0
@@ -84,7 +84,7 @@ class TestBVPLevelBIntegration:
                             count += 1
             if count > 0:
                 radial_profile.append(total_amp / count)
-        
+
         # Validate power law behavior
         assert len(radial_profile) > 0
         assert radial_profile[0] > radial_profile[-1]  # Decreasing with distance
@@ -92,16 +92,16 @@ class TestBVPLevelBIntegration:
     def test_level_b_bvp_topological_charge(self, domain, bvp_config):
         """Test B2: BVP Topological Charge."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Test U(1)³ phase vector structure
         phase_vector = bvp_core.get_phase_vector()
         phase_components = bvp_core.get_phase_components()
         assert len(phase_components) == 3
-        
+
         # Test topological charge calculation
         total_phase = bvp_core.get_total_phase()
         assert total_phase.shape == domain.shape
-        
+
         # Test electroweak current generation
         envelope = np.ones(domain.shape)
         currents = bvp_core.compute_electroweak_currents(envelope)
@@ -111,15 +111,15 @@ class TestBVPLevelBIntegration:
     def test_level_b_bvp_zone_separation(self, domain, bvp_config):
         """Test B3: BVP Zone Separation."""
         bvp_core = BVPCore(domain, bvp_config)
-        
+
         # Create test envelope
         source = np.zeros(domain.shape)
         source[64, 64, 64] = 1.0
         envelope = bvp_core.solve_envelope(source)
-        
+
         # Test impedance calculation for zone analysis
         impedance = bvp_core.compute_impedance(envelope)
-        
+
         # Validate zone separation capabilities
         assert "peaks" in impedance
         assert "admittance" in impedance

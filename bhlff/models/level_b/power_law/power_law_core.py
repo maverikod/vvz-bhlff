@@ -57,7 +57,7 @@ class PowerLawCore:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize specialized analyzers
         self._correlation_analyzer = CorrelationAnalysis(bvp_core)
         self._critical_exponents_analyzer = CriticalExponents(bvp_core)
@@ -132,9 +132,7 @@ class PowerLawCore:
         """
         return self._scaling_regions_analyzer.identify_scaling_regions(envelope)
 
-    def compute_correlation_functions(
-        self, envelope: np.ndarray
-    ) -> Dict[str, Any]:
+    def compute_correlation_functions(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
         Compute full 7D spatial correlation functions.
 

@@ -50,5 +50,5 @@ __all__ = [
     "BeatingPattern",
     "LevelCIntegration",
     "LevelCResults",
-    "TestConfiguration"
+    "TestConfiguration",
 ]

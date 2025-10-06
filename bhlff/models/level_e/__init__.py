@@ -38,17 +38,17 @@ from .defect_models import DefectModel, VortexDefect, MultiDefectSystem
 from .level_e_experiments import LevelEExperiments
 
 __all__ = [
-    'SensitivityAnalyzer',
-    'RobustnessTester', 
-    'DiscretizationAnalyzer',
-    'FailureDetector',
-    'PhaseMapper',
-    'PerformanceAnalyzer',
-    'SolitonModel',
-    'BaryonSoliton',
-    'SkyrmionSoliton',
-    'DefectModel',
-    'VortexDefect',
-    'MultiDefectSystem',
-    'LevelEExperiments'
+    "SensitivityAnalyzer",
+    "RobustnessTester",
+    "DiscretizationAnalyzer",
+    "FailureDetector",
+    "PhaseMapper",
+    "PerformanceAnalyzer",
+    "SolitonModel",
+    "BaryonSoliton",
+    "SkyrmionSoliton",
+    "DefectModel",
+    "VortexDefect",
+    "MultiDefectSystem",
+    "LevelEExperiments",
 ]

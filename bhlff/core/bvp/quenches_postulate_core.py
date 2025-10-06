@@ -52,7 +52,9 @@ class QuenchesPostulate(BVPPostulate):
         self.domain = domain
         self.constants = constants
         self.quench_threshold = constants.get_quench_parameter("amplitude_threshold")
-        self.energy_dump_threshold = constants.get_quench_parameter("detuning_threshold")
+        self.energy_dump_threshold = constants.get_quench_parameter(
+            "detuning_threshold"
+        )
         self.min_quench_size = 5  # Default value
 
         # Initialize helper components

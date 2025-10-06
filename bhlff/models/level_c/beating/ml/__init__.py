@@ -14,8 +14,8 @@ from .beating_ml_prediction import BeatingMLPrediction
 from .beating_ml_optimization import BeatingMLOptimization
 
 __all__ = [
-    'BeatingMLCore',
-    'BeatingMLPatterns', 
-    'BeatingMLPrediction',
-    'BeatingMLOptimization'
+    "BeatingMLCore",
+    "BeatingMLPatterns",
+    "BeatingMLPrediction",
+    "BeatingMLOptimization",
 ]

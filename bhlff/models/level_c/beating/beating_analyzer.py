@@ -12,7 +12,4 @@ aspects of beating analysis.
 from .beating_core import BeatingCoreAnalyzer
 from .beating_validation import BeatingValidationAnalyzer
 
-__all__ = [
-    'BeatingCoreAnalyzer',
-    'BeatingValidationAnalyzer'
-]
+__all__ = ["BeatingCoreAnalyzer", "BeatingValidationAnalyzer"]

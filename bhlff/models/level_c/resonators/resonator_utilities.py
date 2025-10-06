@@ -12,7 +12,4 @@ aspects of resonator analysis.
 from .resonator_spectrum import ResonatorSpectrumAnalyzer
 from .resonator_analysis import ResonatorAnalysis
 
-__all__ = [
-    'ResonatorSpectrumAnalyzer',
-    'ResonatorAnalysis'
-]
+__all__ = ["ResonatorSpectrumAnalyzer", "ResonatorAnalysis"]

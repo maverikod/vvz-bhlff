@@ -29,14 +29,21 @@ class BVPOptimization:
         in the 7D envelope equation.
     """
 
-    def __init__(self, domain: 'Domain7DBVP', parameters: 'Parameters7DBVP', derivatives: 'SpectralDerivatives'):
+    def __init__(
+        self,
+        domain: "Domain7DBVP",
+        parameters: "Parameters7DBVP",
+        derivatives: "SpectralDerivatives",
+    ):
         """Initialize BVP optimization."""
         self.domain = domain
         self.parameters = parameters
         self.derivatives = derivatives
         self.logger = logging.getLogger(__name__)
 
-    def solve_with_optimization(self, solution: np.ndarray, source: np.ndarray) -> np.ndarray:
+    def solve_with_optimization(
+        self, solution: np.ndarray, source: np.ndarray
+    ) -> np.ndarray:
         """
         Solve with optimization.
 
@@ -52,29 +59,29 @@ class BVPOptimization:
             np.ndarray: Solution field.
         """
         self.logger.info("Starting optimized BVP solving")
-        
+
         # Optimized solving implementation
-        for iteration in range(self.parameters.get('max_iterations', 100)):
+        for iteration in range(self.parameters.get("max_iterations", 100)):
             # Compute residual
             residual = source - self._apply_operator(solution)
-            
+
             # Check convergence
             residual_norm = np.linalg.norm(residual)
-            if residual_norm < self.parameters.get('tolerance', 1e-6):
+            if residual_norm < self.parameters.get("tolerance", 1e-6):
                 break
-            
+
             # Compute Jacobian
             jacobian = self._compute_jacobian(solution)
-            
+
             # Solve linear system
             update = self._solve_linear_system_optimized(jacobian, residual)
-            
+
             # Compute optimal step size
             step_size = self._compute_optimal_step_size(solution, update, residual)
-            
+
             # Update solution
             solution += step_size * update
-        
+
         self.logger.info("Optimized BVP solving completed")
         return solution
 
@@ -85,12 +92,16 @@ class BVPOptimization:
         jacobian = np.eye(n)
         return jacobian
 
-    def _solve_linear_system_optimized(self, jacobian: np.ndarray, residual: np.ndarray) -> np.ndarray:
+    def _solve_linear_system_optimized(
+        self, jacobian: np.ndarray, residual: np.ndarray
+    ) -> np.ndarray:
         """Solve linear system with optimization."""
         # Simplified linear system solving
         return np.linalg.solve(jacobian, residual.flatten()).reshape(residual.shape)
 
-    def _compute_optimal_step_size(self, solution: np.ndarray, update: np.ndarray, residual: np.ndarray) -> float:
+    def _compute_optimal_step_size(
+        self, solution: np.ndarray, update: np.ndarray, residual: np.ndarray
+    ) -> float:
         """Compute optimal step size."""
         # Simplified step size computation
         update_norm = np.linalg.norm(update)

@@ -13,9 +13,4 @@ from .bvp_residual import BVPResidual
 from .bvp_jacobian import BVPJacobian
 from .bvp_linear_solver import BVPLinearSolver
 
-__all__ = [
-    'BVPCoreSolver',
-    'BVPResidual',
-    'BVPJacobian',
-    'BVPLinearSolver'
-]
+__all__ = ["BVPCoreSolver", "BVPResidual", "BVPJacobian", "BVPLinearSolver"]

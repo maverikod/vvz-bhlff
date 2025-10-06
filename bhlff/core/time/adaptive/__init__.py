@@ -12,8 +12,4 @@ from .adaptive_integrator import AdaptiveIntegrator
 from .error_estimation import ErrorEstimation
 from .runge_kutta import RungeKuttaMethods
 
-__all__ = [
-    'AdaptiveIntegrator',
-    'ErrorEstimation',
-    'RungeKuttaMethods'
-]
+__all__ = ["AdaptiveIntegrator", "ErrorEstimation", "RungeKuttaMethods"]

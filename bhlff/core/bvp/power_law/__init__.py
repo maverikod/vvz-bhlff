@@ -14,8 +14,8 @@ from .power_law_optimization import PowerLawOptimization
 from .power_law_statistics import PowerLawStatistics
 
 __all__ = [
-    'PowerLawCore',
-    'PowerLawComparison',
-    'PowerLawOptimization', 
-    'PowerLawStatistics'
+    "PowerLawCore",
+    "PowerLawComparison",
+    "PowerLawOptimization",
+    "PowerLawStatistics",
 ]

@@ -43,7 +43,12 @@ class BVPAdvancedCore(AbstractSolverCore):
         - Adaptive numerical methods
     """
 
-    def __init__(self, domain: 'Domain7DBVP', parameters: 'Parameters7DBVP', derivatives: 'SpectralDerivatives'):
+    def __init__(
+        self,
+        domain: "Domain7DBVP",
+        parameters: "Parameters7DBVP",
+        derivatives: "SpectralDerivatives",
+    ):
         """
         Initialize advanced BVP solver core.
 
@@ -61,20 +66,22 @@ class BVPAdvancedCore(AbstractSolverCore):
         self.parameters = parameters
         self.derivatives = derivatives
         self.logger = logging.getLogger(__name__)
-        
+
         # Advanced solver parameters
-        self.max_iterations = parameters.get('max_iterations', 100)
-        self.tolerance = parameters.get('tolerance', 1e-6)
-        self.preconditioning_enabled = parameters.get('preconditioning_enabled', True)
-        self.optimization_enabled = parameters.get('optimization_enabled', True)
-        self.adaptive_enabled = parameters.get('adaptive_enabled', True)
-        
+        self.max_iterations = parameters.get("max_iterations", 100)
+        self.tolerance = parameters.get("tolerance", 1e-6)
+        self.preconditioning_enabled = parameters.get("preconditioning_enabled", True)
+        self.optimization_enabled = parameters.get("optimization_enabled", True)
+        self.adaptive_enabled = parameters.get("adaptive_enabled", True)
+
         # Initialize specialized modules
         self.preconditioning = BVPPreconditioning(domain, parameters, derivatives)
         self.optimization = BVPOptimization(domain, parameters, derivatives)
         self.adaptive = BVPAdaptive(domain, parameters, derivatives)
 
-    def solve_with_preconditioning(self, solution: np.ndarray, source: np.ndarray) -> np.ndarray:
+    def solve_with_preconditioning(
+        self, solution: np.ndarray, source: np.ndarray
+    ) -> np.ndarray:
         """
         Solve with preconditioning.
 
@@ -100,11 +107,15 @@ class BVPAdvancedCore(AbstractSolverCore):
             RuntimeError: If preconditioned solving fails.
         """
         if solution.shape != self.domain.shape or source.shape != self.domain.shape:
-            raise ValueError("Solution and source must have compatible shapes with domain")
+            raise ValueError(
+                "Solution and source must have compatible shapes with domain"
+            )
 
         return self.preconditioning.solve_with_preconditioning(solution, source)
 
-    def solve_with_optimization(self, solution: np.ndarray, source: np.ndarray) -> np.ndarray:
+    def solve_with_optimization(
+        self, solution: np.ndarray, source: np.ndarray
+    ) -> np.ndarray:
         """
         Solve with optimization.
 
@@ -130,7 +141,9 @@ class BVPAdvancedCore(AbstractSolverCore):
             RuntimeError: If optimized solving fails.
         """
         if solution.shape != self.domain.shape or source.shape != self.domain.shape:
-            raise ValueError("Solution and source must have compatible shapes with domain")
+            raise ValueError(
+                "Solution and source must have compatible shapes with domain"
+            )
 
         return self.optimization.solve_with_optimization(solution, source)
 
@@ -160,11 +173,15 @@ class BVPAdvancedCore(AbstractSolverCore):
             RuntimeError: If adaptive solving fails.
         """
         if solution.shape != self.domain.shape or source.shape != self.domain.shape:
-            raise ValueError("Solution and source must have compatible shapes with domain")
+            raise ValueError(
+                "Solution and source must have compatible shapes with domain"
+            )
 
         return self.adaptive.solve_adaptive(solution, source)
 
-    def _compute_residual_basic(self, solution: np.ndarray, source: np.ndarray) -> np.ndarray:
+    def _compute_residual_basic(
+        self, solution: np.ndarray, source: np.ndarray
+    ) -> np.ndarray:
         """
         Compute basic residual.
 

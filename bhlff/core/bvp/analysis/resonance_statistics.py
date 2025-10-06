@@ -69,36 +69,40 @@ class ResonanceStatistics:
         """
         if not quality_factors_1 or not quality_factors_2:
             return {
-                'mean_difference': 0.0,
-                'std_difference': 0.0,
-                'correlation': 0.0,
-                'significance': 0.0
+                "mean_difference": 0.0,
+                "std_difference": 0.0,
+                "correlation": 0.0,
+                "significance": 0.0,
             }
-        
+
         # Calculate statistics
         mean_1 = np.mean(quality_factors_1)
         mean_2 = np.mean(quality_factors_2)
         std_1 = np.std(quality_factors_1)
         std_2 = np.std(quality_factors_2)
-        
+
         # Calculate differences
         mean_difference = mean_1 - mean_2
         std_difference = np.sqrt(std_1**2 + std_2**2)
-        
+
         # Calculate correlation
         correlation = self._calculate_correlation(quality_factors_1, quality_factors_2)
-        
+
         # Calculate significance (simplified)
-        significance = abs(mean_difference) / std_difference if std_difference > 0 else 0.0
-        
+        significance = (
+            abs(mean_difference) / std_difference if std_difference > 0 else 0.0
+        )
+
         return {
-            'mean_difference': mean_difference,
-            'std_difference': std_difference,
-            'correlation': correlation,
-            'significance': significance
+            "mean_difference": mean_difference,
+            "std_difference": std_difference,
+            "correlation": correlation,
+            "significance": significance,
         }
 
-    def analyze_quality_factor_distribution(self, quality_factors: List[float]) -> Dict[str, float]:
+    def analyze_quality_factor_distribution(
+        self, quality_factors: List[float]
+    ) -> Dict[str, float]:
         """
         Analyze quality factor distribution.
 
@@ -122,33 +126,33 @@ class ResonanceStatistics:
         """
         if not quality_factors:
             return {
-                'mean': 0.0,
-                'std': 0.0,
-                'skewness': 0.0,
-                'kurtosis': 0.0,
-                'min': 0.0,
-                'max': 0.0
+                "mean": 0.0,
+                "std": 0.0,
+                "skewness": 0.0,
+                "kurtosis": 0.0,
+                "min": 0.0,
+                "max": 0.0,
             }
-        
+
         qf_array = np.array(quality_factors)
-        
+
         # Calculate basic statistics
         mean = np.mean(qf_array)
         std = np.std(qf_array)
         min_val = np.min(qf_array)
         max_val = np.max(qf_array)
-        
+
         # Calculate higher moments
         skewness = self._calculate_skewness(qf_array, mean, std)
         kurtosis = self._calculate_kurtosis(qf_array, mean, std)
-        
+
         return {
-            'mean': mean,
-            'std': std,
-            'skewness': skewness,
-            'kurtosis': kurtosis,
-            'min': min_val,
-            'max': max_val
+            "mean": mean,
+            "std": std,
+            "skewness": skewness,
+            "kurtosis": kurtosis,
+            "min": min_val,
+            "max": max_val,
         }
 
     def _calculate_correlation(self, qf1: List[float], qf2: List[float]) -> float:
@@ -172,7 +176,7 @@ class ResonanceStatistics:
         """
         if len(qf1) != len(qf2) or len(qf1) < 2:
             return 0.0
-        
+
         correlation = np.corrcoef(qf1, qf2)[0, 1]
         return correlation if not np.isnan(correlation) else 0.0
 
@@ -197,7 +201,7 @@ class ResonanceStatistics:
         """
         if std == 0:
             return 0.0
-        
+
         normalized = (data - mean) / std
         skewness = np.mean(normalized**3)
         return skewness
@@ -224,7 +228,7 @@ class ResonanceStatistics:
         """
         if std == 0:
             return 0.0
-        
+
         normalized = (data - mean) / std
         kurtosis = np.mean(normalized**4) - 3.0  # Excess kurtosis
         return kurtosis

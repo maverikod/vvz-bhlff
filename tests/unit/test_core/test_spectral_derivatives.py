@@ -23,14 +23,7 @@ class TestSpectralDerivatives:
     @pytest.fixture
     def domain(self):
         """Create domain for testing."""
-        return Domain(
-            L=1.0,
-            N=8,
-            dimensions=7,
-            N_phi=4,
-            N_t=8,
-            T=1.0
-        )
+        return Domain(L=1.0, N=8, dimensions=7, N_phi=4, N_t=8, T=1.0)
 
     @pytest.fixture
     def fft_backend(self, domain):
@@ -50,10 +43,10 @@ class TestSpectralDerivatives:
         """Test first-order derivative computation."""
         # Create test field
         field = np.random.random(spectral_derivs.fft_backend.domain.shape)
-        
+
         # Compute first derivative
         derivative = spectral_derivs.compute_derivative(field, axis=0, order=1)
-        
+
         assert isinstance(derivative, np.ndarray)
         assert derivative.shape == field.shape
 
@@ -61,10 +54,10 @@ class TestSpectralDerivatives:
         """Test second-order derivative computation."""
         # Create test field
         field = np.random.random(spectral_derivs.fft_backend.domain.shape)
-        
+
         # Compute second derivative
         derivative = spectral_derivs.compute_derivative(field, axis=0, order=2)
-        
+
         assert isinstance(derivative, np.ndarray)
         assert derivative.shape == field.shape
 
@@ -72,11 +65,11 @@ class TestSpectralDerivatives:
         """Test nth-order derivative computation."""
         # Create test field
         field = np.random.random(spectral_derivs.fft_backend.domain.shape)
-        
+
         # Test different orders
         for order in [1, 2, 3, 4]:
             derivative = spectral_derivs.compute_derivative(field, axis=0, order=order)
-            
+
             assert isinstance(derivative, np.ndarray)
             assert derivative.shape == field.shape
 
@@ -84,10 +77,12 @@ class TestSpectralDerivatives:
         """Test mixed derivative computation."""
         # Create test field
         field = np.random.random(spectral_derivs.fft_backend.domain.shape)
-        
+
         # Compute mixed derivative
-        derivative = spectral_derivs.compute_mixed_derivative(field, axes=[0, 1], orders=[1, 1])
-        
+        derivative = spectral_derivs.compute_mixed_derivative(
+            field, axes=[0, 1], orders=[1, 1]
+        )
+
         assert isinstance(derivative, np.ndarray)
         assert derivative.shape == field.shape
 
@@ -95,16 +90,16 @@ class TestSpectralDerivatives:
         """Test input validation."""
         # Test with wrong shape
         wrong_field = np.random.random((4, 4, 4))
-        
+
         with pytest.raises(ValueError):
             spectral_derivs.compute_derivative(wrong_field, axis=0, order=1)
-        
+
         # Test with invalid axis
         field = np.random.random(spectral_derivs.fft_backend.domain.shape)
-        
+
         with pytest.raises(ValueError):
             spectral_derivs.compute_derivative(field, axis=10, order=1)
-        
+
         # Test with invalid order
         with pytest.raises(ValueError):
             spectral_derivs.compute_derivative(field, axis=0, order=0)
@@ -113,14 +108,14 @@ class TestSpectralDerivatives:
         """Test energy conservation in spectral derivatives."""
         # Create test field
         field = np.random.random(spectral_derivs.fft_backend.domain.shape)
-        
+
         # Compute derivative
         derivative = spectral_derivs.compute_derivative(field, axis=0, order=1)
-        
+
         # Energy should be finite
         original_energy = np.sum(field**2)
         derivative_energy = np.sum(derivative**2)
-        
+
         assert np.isfinite(original_energy)
         assert np.isfinite(derivative_energy)
 
@@ -129,11 +124,11 @@ class TestSpectralDerivatives:
         # Create 7D test field
         field = np.zeros(spectral_derivs.fft_backend.domain.shape)
         field[0, 0, 0, 0, 0, 0, 0] = 1.0
-        
+
         # Compute derivatives along different axes
         for axis in range(7):
             derivative = spectral_derivs.compute_derivative(field, axis=axis, order=1)
-            
+
             # Should preserve 7D structure
             assert derivative.shape == spectral_derivs.fft_backend.domain.shape
 
@@ -141,24 +136,32 @@ class TestSpectralDerivatives:
         """Test numerical stability of spectral derivatives."""
         # Test with extreme values
         field = np.array([1e10, -1e10, 1e-10, -1e-10])
-        field = np.broadcast_to(field.reshape(-1, 1, 1, 1, 1, 1, 1), spectral_derivs.fft_backend.domain.shape)
-        
+        field = np.broadcast_to(
+            field.reshape(-1, 1, 1, 1, 1, 1, 1),
+            spectral_derivs.fft_backend.domain.shape,
+        )
+
         # Should not raise errors
         derivative = spectral_derivs.compute_derivative(field, axis=0, order=1)
-        
+
         # Should be stable
         assert np.isfinite(derivative).all()
 
     def test_spectral_derivs_precision(self, spectral_derivs):
         """Test precision of spectral derivatives."""
         # Test with known function
-        x = np.linspace(0, 2*np.pi, spectral_derivs.fft_backend.domain.shape[0], endpoint=False)
+        x = np.linspace(
+            0, 2 * np.pi, spectral_derivs.fft_backend.domain.shape[0], endpoint=False
+        )
         field = np.sin(x)
-        field = np.broadcast_to(field.reshape(-1, 1, 1, 1, 1, 1, 1), spectral_derivs.fft_backend.domain.shape)
-        
+        field = np.broadcast_to(
+            field.reshape(-1, 1, 1, 1, 1, 1, 1),
+            spectral_derivs.fft_backend.domain.shape,
+        )
+
         # Compute derivative
         derivative = spectral_derivs.compute_derivative(field, axis=0, order=1)
-        
+
         # Should be finite and reasonable
         assert np.isfinite(derivative).all()
         assert np.max(np.abs(derivative)) < 10.0  # Reasonable bound
@@ -167,11 +170,11 @@ class TestSpectralDerivatives:
         """Test derivative computation along different axes."""
         # Create test field
         field = np.random.random(spectral_derivs.fft_backend.domain.shape)
-        
+
         # Test all axes
         for axis in range(spectral_derivs.fft_backend.dimensions):
             derivative = spectral_derivs.compute_derivative(field, axis=axis, order=1)
-            
+
             assert isinstance(derivative, np.ndarray)
             assert derivative.shape == field.shape
 
@@ -179,11 +182,11 @@ class TestSpectralDerivatives:
         """Test derivative computation with different orders."""
         # Create test field
         field = np.random.random(spectral_derivs.fft_backend.domain.shape)
-        
+
         # Test different orders
         for order in [1, 2, 3, 4]:
             derivative = spectral_derivs.compute_derivative(field, axis=0, order=order)
-            
+
             assert isinstance(derivative, np.ndarray)
             assert derivative.shape == field.shape
             assert np.isfinite(derivative).all()

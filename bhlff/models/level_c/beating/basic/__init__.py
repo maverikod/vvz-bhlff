@@ -11,6 +11,4 @@ theoretical framework.
 
 from .beating_basic_core import BeatingAnalysisCore
 
-__all__ = [
-    'BeatingAnalysisCore'
-]
+__all__ = ["BeatingAnalysisCore"]

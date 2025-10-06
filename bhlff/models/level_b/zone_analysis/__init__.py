@@ -13,10 +13,4 @@ from .boundary_detection import BoundaryDetection
 from .zone_properties import ZoneProperties
 from .transition_analysis import TransitionAnalysis
 
-__all__ = [
-    'ZoneAnalysis',
-    'BoundaryDetection',
-    'ZoneProperties',
-    'TransitionAnalysis'
-]
-
+__all__ = ["ZoneAnalysis", "BoundaryDetection", "ZoneProperties", "TransitionAnalysis"]

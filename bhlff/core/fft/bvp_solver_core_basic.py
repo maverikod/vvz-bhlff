@@ -13,7 +13,4 @@ from .bvp_basic import BVBBasicCore
 # Alias for backward compatibility
 BVPSolverCoreBasic = BVBBasicCore
 
-__all__ = [
-    'BVBBasicCore',
-    'BVPSolverCoreBasic'
-]
+__all__ = ["BVBBasicCore", "BVPSolverCoreBasic"]

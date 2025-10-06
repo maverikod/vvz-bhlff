@@ -12,8 +12,4 @@ from .node_analysis import NodeAnalysis
 from .topological_analysis import TopologicalAnalysis
 from .charge_computation import ChargeComputation
 
-__all__ = [
-    'NodeAnalysis',
-    'TopologicalAnalysis',
-    'ChargeComputation'
-]
+__all__ = ["NodeAnalysis", "TopologicalAnalysis", "ChargeComputation"]

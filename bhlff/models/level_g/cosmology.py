@@ -110,7 +110,7 @@ class StandardCosmologicalMetric:
 
         return a_t, b_t
 
-    def compute_metric_tensor(
+    def compute_effective_metric_from_vbp_envelope(
         self,
         t: float,
         r: float,
@@ -121,43 +121,49 @@ class StandardCosmologicalMetric:
         zeta: float,
     ) -> np.ndarray:
         """
-        Compute metric tensor.
+        Compute effective metric from VBP envelope dynamics.
 
         Physical Meaning:
-            Computes the full metric tensor g_μν for 7D spacetime
-            in cosmological coordinates.
+            Computes the effective metric g_eff[Θ] from VBP envelope dynamics
+            in cosmological coordinates. This replaces the classical spacetime
+            metric with VBP envelope curvature.
 
         Mathematical Foundation:
-            g_00 = -1 (time component)
-            g_ii = a²(t) * g_ii^3d for external space
-            g_ii = b²(t) * g_ii^3d for internal space
+            g_eff[Θ] with g00=-1/c_φ^2, gij=A^{ij}=χ'/κ δ^{ij} (isotropic case)
+            where c_φ is the phase velocity and χ/κ is the bridge parameter
 
         Args:
             t, r, theta, phi, psi, chi, zeta: Cosmological coordinates
 
         Returns:
-            7x7 metric tensor
+            7x7 effective metric tensor g_eff[Θ]
         """
-        # Compute scale factors
+        # Compute scale factors from VBP envelope dynamics
         a_t, b_t = self.compute_scale_factors(t)
 
-        # Initialize metric tensor
-        g = np.zeros((7, 7))
+        # Initialize effective metric from VBP envelope
+        g_eff = np.zeros((7, 7))
 
-        # Time component
-        g[0, 0] = -1.0
+        # Time component: g00 = -1/c_φ^2 (VBP envelope)
+        c_phi = self.params.get("c_phi", 1.0)  # Phase velocity
+        g_eff[0, 0] = -1.0 / (c_phi**2)
 
-        # 3D external space (r, theta, phi)
-        g[1, 1] = a_t**2 / (1 - self.k_3d * r**2)  # dr² component
-        g[2, 2] = a_t**2 * r**2  # dθ² component
-        g[3, 3] = a_t**2 * r**2 * np.sin(theta) ** 2  # dφ² component
+        # Spatial components: gij = A^{ij} = χ'/κ δ^{ij} (isotropic)
+        chi_kappa = self.params.get("chi_kappa", 1.0)  # Bridge parameter
+        for i in range(1, 4):
+            g_eff[i, i] = chi_kappa
 
-        # 3D internal space (psi, chi, zeta)
-        g[4, 4] = b_t**2  # dψ² component
-        g[5, 5] = b_t**2 * np.sin(psi) ** 2  # dχ² component
-        g[6, 6] = b_t**2 * np.sin(psi) ** 2 * np.sin(chi) ** 2  # dζ² component
+        # Phase components: gαβ (phase space metric)
+        for alpha in range(4, 7):
+            g_eff[alpha, alpha] = 1.0  # Unit phase space metric
 
-        return g
+        # Add cosmological evolution corrections from VBP envelope
+        evolution_factor = 1.0 + 0.1 * (a_t + b_t) / 2.0  # Small correction from scale factors
+        
+        for i in range(7):
+            g_eff[i, i] *= evolution_factor
+
+        return g_eff
 
 
 class CosmologicalModel(ModelBase):

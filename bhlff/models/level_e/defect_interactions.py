@@ -73,14 +73,9 @@ class DefectInteractions:
         # Fractional Green function parameters
         beta = self.params.get("beta", 1.0)
         self.beta = beta
-        # Fractional Green function normalization: use simple scaling from classical case
-        # For β=1: G₁(r) = 1/(4πr), for β<1: G_β(r) = C_β r^(2β-3)
-        if beta < 1.5:
-            # Simple scaling: normalize so that at r=1, G_β(1) ≈ 1/(4π)
-            self.green_prefactor = self.interaction_strength / (4 * np.pi)
-        else:
-            # Fallback for β ≥ 1.5
-            self.green_prefactor = self.interaction_strength / (4 * np.pi)
+        # Fractional Green function normalization: C_β chosen so that (-Δ)^β G_β = δ in R³
+        # For 3D fractional Laplacian: C_β = Γ(3/2-β) / (2^(2β) π^(3/2) Γ(β))
+        self.green_prefactor = self.interaction_strength * self._compute_fractional_green_normalization(beta)
         
         # Remove default screening (λ=0 as per ALL.md)
         self.tempered_lambda = self.params.get("tempered_lambda", 0.0)
@@ -209,20 +204,15 @@ class DefectInteractions:
             r = self.cutoff_radius
 
         # Fractional Green function: G_β(r) = C_β r^(2β-3)
-        if self.beta < 1.5:
-            # Power-law tail: G_β(r) ∝ r^(2β-3)
-            power = 2 * self.beta - 3
-            green_value = self.green_prefactor * (r ** power)
-            
-            # Gradient: dG_β/dr = C_β (2β-3) r^(2β-4)
-            if power != 0:
-                green_gradient = self.green_prefactor * power * (r ** (power - 1))
-            else:
-                green_gradient = 0.0
+        # Always use fractional Green function - no fallback to Coulomb
+        power = 2 * self.beta - 3
+        green_value = self.green_prefactor * (r ** power)
+        
+        # Gradient: dG_β/dr = C_β (2β-3) r^(2β-4)
+        if power != 0:
+            green_gradient = self.green_prefactor * power * (r ** (power - 1))
         else:
-            # Fallback to classical Coulomb for β ≥ 1.5
-            green_value = self.green_prefactor / r
-            green_gradient = -self.green_prefactor / (r ** 2)
+            green_gradient = 0.0
         
         # Apply tempered screening if λ > 0 (diagnostic only)
         if self.tempered_lambda > 0:

@@ -296,13 +296,9 @@ class TopologicalDefectAnalyzer:
                 # Compute interaction strength using fractional Green function
                 # For fractional Laplacian: interaction ∝ q₁q₂ G_β(r) where G_β(r) ∝ r^(2β-3)
                 beta = self.config.get("beta", 1.0)
-                if beta < 1.5:
-                    # Fractional Green function: G_β(r) ∝ r^(2β-3)
-                    power = 2 * beta - 3
-                    green_value = (dist + 1e-6) ** power
-                else:
-                    # Fallback to classical Coulomb: G₁(r) ∝ 1/r
-                    green_value = 1.0 / (dist + 1e-6)
+                # Always use fractional Green function: G_β(r) ∝ r^(2β-3)
+                power = 2 * beta - 3
+                green_value = (dist + 1e-6) ** power
                 
                 interaction = defect_charges[i] * defect_charges[j] * green_value
                 interactions.append(interaction)

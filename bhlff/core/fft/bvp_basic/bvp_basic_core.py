@@ -396,38 +396,3 @@ class BVPCoreSolver(AbstractSolverCore):
 
         return True
 
-    def solve_envelope_legacy(self, source: np.ndarray) -> np.ndarray:
-        """
-        Legacy basic envelope equation solution (deprecated).
-
-        Physical Meaning:
-            Basic envelope equation solution for backward compatibility.
-            For comprehensive solution, use solve_envelope_comprehensive.
-
-        Args:
-            source (np.ndarray): Source term.
-
-        Returns:
-            np.ndarray: Basic solution field.
-        """
-        self.logger.info("Using legacy basic envelope equation solution (deprecated)")
-
-        # Simplified solution for backward compatibility
-        if source.shape != self.domain.shape:
-            raise ValueError("Source must have compatible shape with domain")
-
-        # Basic linear solution (simplified)
-        solution = np.zeros_like(source, dtype=complex)
-
-        # Simple iteration (not full Newton-Raphson)
-        for iteration in range(min(10, self.max_iterations)):  # Limited iterations
-            residual = self.compute_residual(solution, source)
-            residual_norm = np.linalg.norm(residual)
-
-            if residual_norm < self.tolerance * 10:  # Relaxed tolerance
-                break
-
-            # Simple update (not full Jacobian)
-            solution += 0.1 * residual  # Simple gradient descent
-
-        return solution

@@ -22,49 +22,93 @@ Files:
 - bhlff/models/level_g/gravity_waves.py
 - bhlff/models/level_g/gravity.py
 
-Required changes:
+Required changes (exact edits):
 - Rename responsibility:
-  - compute_riemann_tensor → compute_envelope_curvature (operate on phase field Θ, c_φ(a,k), χ, κ; produce curvature descriptors of envelope, not 4D Riemann).
-  - compute_ricci/Einstein tensors → compute_envelope_invariants (scalar/anisotropy measures derived from VBP operators and effective metric g_eff[Θ]).
-  - solve_einstein_equations → solve_phase_envelope_balance (balance operator D derived from dispersion: c_φ, G_eff, χ/κ bridge, memory kernels Γ,K; no GR residual iteration).
-- Inputs/Outputs:
-  - Inputs: phase field Θ(x,φ,t), background tables a(z), H(z), c_φ(a,k), G_eff(a), memory kernels (Γ,K).
-  - Outputs: envelope curvature descriptors {K_env, anisotropy, invariants}, GW observables via c_T=c_φ, not metric perturbations h_μν.
-- Remove hardcoded 4D dims and metric assumptions; compute g_eff[Θ] via dispersion (g00=-1/c_φ^2, gij=A^{ij}=χ'/κ δ^{ij} in iso-case) as in ALL.md.
-- Acceptance hooks: assert PASS-1 (Re Y(ω)≥0 below resonances), GW-1 (|h|∝a^{-1} when Γ=K=0), LEN-1 consistency.
+  - compute_riemann_tensor → compute_envelope_curvature
+    • Replace: loops over Christoffel and 4D indices; metric assumed 4×4; antisymmetry checks.
+    • With: envelope curvature computed from effective metric g_eff[Θ] and phase gradients:
+      K_env := invariants built from ∇Θ, c_φ(a,k), and A^{ij}=χ'/κ δ^{ij} (iso) or A^{ij}(x,φ).
+    • Delete after change: _compute_christoffel_symbols, _christoffel_derivative helpers, any Riemann/Ricci-specific tensor contractions.
+    • Physical meaning: curvature describes distortion of the phase envelope (substrate), not spacetime; it quantifies local anisotropy and focusing of the VBP wavefronts.
+
+  - compute_ricci_tensor / compute_scalar_curvature / compute_einstein_tensor → compute_envelope_invariants
+    • Replace: R_μν, R, G_μν constructions.
+    • With: scalar envelope invariants {K_env_scalar, anisotropy_index, focusing_rate} derived from g_eff[Θ] and ∇Θ; provide normalized, dimensionless measures consistent with acceptance tests LEN-1/GW-1.
+    • Delete after change: compute_einstein_tensor entirely; remove GR docstrings that reference spacetime curvature.
+    • Physical meaning: observables arise from phase-envelope geometry; GR is a 4D reduction limit, not the base model.
+
+  - solve_einstein_equations → solve_phase_envelope_balance
+    • Replace: iterative residual minimization of G_μν−8πGT_μν^φ with metric updates.
+    • With: solution of balance operator D[Θ]=source using dispersion data:
+      D := time memory (Γ,K) + spatial (−Δ)^β terms with c_φ(a,k), χ/κ bridge; outputs g_eff[Θ] and envelope curvature/invariants.
+    • Delete after change: dims=4 hardcodes; metric line-search updates; Einstein residuals; any mention of “spacetime metric update”.
+    • Physical meaning: dynamics governed by the VBP envelope equation; GR emerges only in the 4D reduction.
+Inputs/Outputs alignment:
+  - Inputs: Θ(x,φ,t); background tables (a,H,c_φ,G_eff); memory kernels (Γ,K); β for (−Δ)^β.
+  - Outputs: {K_env tensor/descriptors, K_env_scalar, anisotropy, focusing_rate}; GW observables via c_T=c_φ; no h_μν fields.
+Remove/replace assumptions:
+  - Remove: hardcoded dims=4; arrays sized (4,4,4,4); spacetime index comments.
+  - Replace: compute g_eff[Θ] via dispersion (g00=-1/c_φ^2, gij=A^{ij}=χ'/κ δ^{ij} in isotropy; or A^{ij}(x,φ) if anisotropic).
+Acceptance hooks (to add in code):
+  - PASS-1: assert Re Y(ω)≥0 below resonances after building (Γ,K) models.
+  - GW-1: when Γ=K=0 and M_*'=0, verify |h|∝a^{-1} through c_T=c_φ evolution (store check in test suite).
+  - LEN-1: lensing consistency using g_eff distance factors (no GR tensors needed).
 
 Touch points (by symbol):
-- gravity_curvature.py: compute_riemann_tensor, _compute_christoffel_symbols, compute_ricci_tensor, compute_scalar_curvature → replace with envelope analogs using g_eff[Θ].
-- gravity_einstein.py: solve_einstein_equations, compute_einstein_tensor, _iterate_metric_solution → replace with solve_phase_envelope_balance (operator D) and energy balance, not GR residuals.
-- gravity_waves.py: compute_gravitational_waves/strain/polarization → derive from phase envelope dynamics with c_T=c_φ; remove spacetime-metric perturbation assumptions.
-- gravity.py (facade): methods referencing "spacetime metric" → refocus on phase envelope descriptors; update docstrings accordingly.
+  - gravity_curvature.py:
+    • Replace functions: compute_riemann_tensor → compute_envelope_curvature; compute_ricci_tensor → compute_envelope_invariants; remove _compute_christoffel_symbols and all GR differential geometry helpers.
+    • Update docstrings: “Spacetime curvature” → “VBP envelope curvature”.
+  - gravity_einstein.py:
+    • Replace: solve_einstein_equations → solve_phase_envelope_balance; remove compute_einstein_tensor; remove _iterate_metric_solution.
+    • Add: builder for operator D(Γ,K,β,c_φ,χ/κ) and solver; emit g_eff[Θ] and invariants.
+  - gravity_waves.py:
+    • Replace h_μν-based strain with phase-envelope derived observables using c_T=c_φ; update compute_gravitational_waves/strain/polarization accordingly.
+  - gravity.py (facade):
+    • Rename/redirect: any get_metric/compute_spacetime_metric → build_effective_metric_from_envelope.
+    • Remove wording “spacetime metric” from docstrings; emphasize “effective metric g_eff from VBP envelope”.
 
-Tests to update:
-- tests/unit/test_level_g/test_gravity_physics.py: remove GR-specific antisymmetry checks of Riemann and Ricci symmetry expectations; validate envelope invariants (positivity/consistency), GW-1 amplitude law, LEN-1.
+Tests to update (exact expectations):
+  - tests/unit/test_level_g/test_gravity_physics.py:
+    • Remove: antisymmetry of Riemann (GR property), Ricci symmetry checks.
+    • Add: checks for K_env_scalar ≥ 0, bounded anisotropy index, focusing_rate sign vs ΔE≤0 energy argument; GW-1 amplitude |h|∝a^{-1} when Γ=K=0; LEN-1 distance consistency with g_eff.
 
 2) Level E – remove classical SU(2) hedgehog patterns; use 7D phase substrate
 Files:
 - bhlff/models/level_e/soliton_core.py, soliton_energy.py, soliton_stability.py, soliton_optimization.py
 - tests/unit/test_level_e/test_soliton_*.py
 
-Required changes:
-- Replace explicit Pauli matrices (σx,σy,σz) and SU(2) hedgehog examples with 7D-consistent mapping:
-  - Use U(1)^3 phase substrate on T^3_φ and embedded SU(3) sector as per ALL.md; avoid hard-coded SU(2) algebra.
-- WZW/FR remain conceptually, but parameterization must be tied to 7D indices and substrate coordinates, not 4D-only forms.
-- Energy terms (2,4,6) stay, with gradients over 3D_x and appropriate phase derivatives; ensure no mass terms.
+Required changes (exact edits):
+  - Remove Pauli/SU(2) constructs in code and tests:
+    • Files: tests/unit/test_level_e/test_soliton_physics.py, test_soliton_energy_physics.py, test_soliton_topology_physics.py, and any helpers creating hedgehog via σx,σy,σz.
+    • Replace field constructors that use Pauli matrices with 7D phase configurations on T^3_φ: Θ(x) ∈ U(1)^3 with controlled winding over φ-coordinates; if SU(3) embedding needed, use high-level API (no explicit σ-matrices).
+    • Delete comments and docstrings referring to “Pauli/hedgehog Skyrme” as primary; mark them as 4D pedagogical limit only (if kept in docs/examples).
+  - WZW/FR parameters:
+    • Tie coefficients and constraints to 7D indexing and T^3_φ structure (indices over φ-subspace), not 4D-only forms; document mapping in class docstrings.
+  - Energy terms (2,4,6):
+    • Keep E(2), E(4), E(6) but ensure gradients are taken over x-space and phase derivatives along φ-subspace as per 7D definitions; forbid any mass terms.
 
-Tests to update:
-- Replace hedgehog field constructors based on Pauli matrices with generic 7D phase configurations over T^3_φ; keep topological charge tests but compute in the proper 7D setting.
+Physical meaning:
+  - Particles are phase patterns on the VBP substrate; hedgehog with SU(2) Pauli matrices is a 4D teaching motif, not the core 7D construction.
+
+Tests to update (exact):
+  - Replace: hedgehog builders using σx,σy,σz with builders that wind Θ along φ-cycles to realize integer charge in 7D mapping.
+  - Keep: topological charge tests; adjust computation to 7D integration domain (S^6→SU(3) mapping or U(1)^3 windings), with tolerances and grid notes.
 
 3) Defects – replace Coulomb prefactors with fractional Green tails
 Files:
 - bhlff/models/level_e/defect_core.py, defect_interactions.py, defect_implementations.py
 - bhlff/core/bvp/topological_defect_analyzer.py
 
-Required changes:
-- Remove green_prefactor = strength/(4π); use fractional Green G_β(r) ∝ r^{2β-3} (λ=0 base), consistent normalization with μ,β from operator (-Δ)^β.
-- Provide optional tempered λ>0 only for diagnostic comparison (default off), per ALL.md.
-- Update annihilation dynamics to use effective potential built from G_β, not screened Coulomb by default.
+Required changes (exact edits):
+  - Replace prefactors:
+    • In bhlff/models/level_e/defect_core.py and defect_interactions.py: replace green_function_prefactor = strength/(4*np.pi) with normalization consistent with fractional Green G_β. Document normalization constant C_β chosen so that (−Δ)^β G_β = δ in R^3 (λ=0).
+  - Screening/tempered:
+    • Remove default screened Coulomb forms; introduce optional tempered parameter λ strictly for diagnostics (default λ=0 as per ALL.md).
+  - Annihilation dynamics:
+    • Recompute effective potential U_eff from G_β; update forces F=−∇U_eff; ensure ΔE≤0 under approach (energy monotonicity).
+
+Physical meaning:
+  - Interactions arise from fractional spatial operator tails; Coulomb 1/(4πr) is a special classical reduction, not the base regime.
 
 Acceptance hooks:
 - FRAC-1: validate G_β tail; energy monotonicity under approach (ΔE≤0) for interaction tests.
@@ -73,13 +117,23 @@ Acceptance hooks:
 Files:
 - bhlff/models/level_g/*, bhlff/models/level_e/*, bhlff/core/bvp/postulates/*, configs/*, tests/*
 
-Required changes:
-- Add assertions/log guards: ReY(ω)≥0 (below resonances), forbid mass terms, c_φ^2>0, M_*^2>0.
-- Integrate FON-1/2, PERT-1, GW-1, LEN-1 as automated checks in tests and reporting.
+Required changes (exact):
+  - Assertions:
+    • PASS-1: assert ReY(ω)≥0 for memory kernels (Prony/fractional) on ω-grid below resonances; log violations.
+    • Forbid mass terms: assert tempered_lambda==0 in base configs and operators (allow override only in diagnostic paths).
+    • Stability: assert c_φ^2>0, M_*^2>0 wherever built.
+  - Testing integration:
+    • Add unit tests that execute FON-1/2, PERT-1, GW-1, LEN-1 checks and fail fast on violations; expose PASS/FAIL flags in reports.
 
 5) CI/tests – migrate expectations
 - Replace GR tensor property tests with envelope curvature invariants and GW-1 amplitude law.
 - Replace Pauli/hedgehog-specific constructs with 7D phase configurations in unit tests.
+
+Removal checklist (after refactor complete):
+- Delete GR-only helpers: _compute_christoffel_symbols, christoffel derivatives, compute_einstein_tensor, any dims=4 hardcodes.
+- Remove Pauli matrix imports and σ-based hedgehog builders from tests.
+- Remove Coulomb-specific constants 1/(4π) in defect interactions; replace with documented C_β.
+- Purge docstrings and comments that describe “spacetime curvature” as primary; replace with “VBP envelope curvature and effective metric g_eff[Θ]”.
 
 Milestones & Estimates
 - G1: Envelope curvature refactor (Level G): ~800–1200 LoC, 3–5 days.

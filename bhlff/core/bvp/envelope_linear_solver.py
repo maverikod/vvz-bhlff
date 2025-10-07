@@ -27,6 +27,7 @@ from typing import Dict, Any
 from ..domain import Domain
 from .bvp_constants import BVPConstants
 from .memory_decorator import memory_protected_class_method
+from ..fft.unified_spectral_operations import UnifiedSpectralOperations
 
 
 class EnvelopeLinearSolver:
@@ -95,8 +96,9 @@ class EnvelopeLinearSolver:
         # In spectral space: -κ₀|k|²â + k₀²χ'â = ŝ
         # Therefore: â = ŝ / (k₀²χ' - κ₀|k|²)
 
-        # Transform to spectral space
-        source_spectral = np.fft.fftn(source)
+        # Transform to spectral space via unified backend (physics normalization)
+        spectral_ops = UnifiedSpectralOperations(self.domain, precision="float64")
+        source_spectral = spectral_ops.forward_fft(source, normalization="physics")
 
         # Compute wave vectors for 7D
         k_vectors = []
@@ -122,8 +124,8 @@ class EnvelopeLinearSolver:
         # Solve in spectral space
         envelope_spectral = source_spectral / spectral_coeffs
 
-        # Transform back to real space
-        envelope = np.fft.ifftn(envelope_spectral)
+        # Transform back to real space via unified backend (physics normalization)
+        envelope = spectral_ops.inverse_fft(envelope_spectral, normalization="physics")
 
         return envelope.real
 

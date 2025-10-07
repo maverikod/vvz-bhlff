@@ -22,6 +22,7 @@ from typing import Dict, Any
 
 from ...domain.domain_7d import Domain7D
 from ..bvp_core.bvp_core_facade_impl import BVPCoreFacade as BVPCore
+from ...fft.unified_spectral_operations import UnifiedSpectralOperations
 
 
 class TailInterface:
@@ -113,6 +114,9 @@ class TailInterface:
         Returns:
             np.ndarray: Spectral data S(ω).
         """
-        # Compute FFT of envelope in time dimension
-        spectral_data = np.fft.fft(envelope, axis=-1)
+        # Use unified backend to compute spectral data along time with physics normalization
+        spectral_ops = UnifiedSpectralOperations(self.domain_7d, precision="float64")
+        spectral_full = spectral_ops.forward_fft(envelope, normalization="physics")
+        # Extract 1D spectral density along time axis by collapsing spatial/phase dims
+        spectral_data = np.sum(np.abs(spectral_full) ** 2, axis=tuple(range(envelope.ndim - 1)))
         return spectral_data

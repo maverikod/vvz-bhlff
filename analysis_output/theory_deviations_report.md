@@ -239,7 +239,7 @@ Status: COMPLETED
 
 ---
 
-- [ ] 8) Direct np.fft usage in BVP core paths (interfaces/lin-solvers)
+- [x] 8) Direct np.fft usage in BVP core paths (interfaces/lin-solvers)
 - Rule: Route all spectral transforms via unified spectral backend; no direct np.fft in core BVP paths.
 - Essence: `EnvelopeLinearSolver` and `TailInterface` use direct `np.fft` and ad-hoc k-grids instead of the unified backend and proper per-dimension scaling.
 - Evidence (linear solver uses np.fft and single L for all dims):
@@ -261,6 +261,13 @@ return spectral_data
 
 - Impact: Inconsistent normalization and backend policy; breaks GPU-first policy and physics-normalized transforms.
 - Fix: Replace with `UnifiedSpectralOperations` calls; construct frequency axes via shared utilities that encode 7D spacing.
+
+Status: COMPLETED
+- Edits:
+  - `bhlff/core/bvp/envelope_linear_solver.py`: replaced `np.fft.fftn/ifftn` with `UnifiedSpectralOperations.forward_fft/inverse_fft` using physics normalization.
+  - `bhlff/core/bvp/interface/tail_interface.py`: replaced `np.fft.fft` with unified backend full forward FFT and computed S(ω) by collapsing non-time axes.
+- Notes:
+  - Preserves expected shapes for tail spectral data as 1D over time frequency.
 
 ---
 

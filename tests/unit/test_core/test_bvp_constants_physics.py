@@ -12,7 +12,7 @@ import pytest
 import numpy as np
 from typing import Dict, Any, List
 
-from bhlff.core.domain import Domain
+from bhlff.core.domain.domain_7d_bvp import Domain7DBVP
 from bhlff.core.bvp.constants.bvp_constants_advanced import BVPConstantsAdvanced
 
 
@@ -22,7 +22,7 @@ class TestBVPConstantsPhysics:
     @pytest.fixture
     def domain_7d(self):
         """Create 7D domain for constants testing."""
-        return Domain(L=1.0, N=32, dimensions=7, N_phi=16, N_t=64, T=1.0)
+        return Domain7DBVP(L_spatial=1.0, N_spatial=8, N_phase=4, T=1.0, N_t=8)
 
     @pytest.fixture
     def bvp_constants(self):
@@ -36,10 +36,13 @@ class TestBVPConstantsPhysics:
                 "k0_squared": 4.0,
                 "carrier_frequency": 1.85e43,
             },
-            "basic_material": {
+            "material_properties": {
                 "mu": 1.0,
                 "beta": 1.5,
                 "lambda_param": 0.1,
+            },
+            "numerical_parameters": {
+                "memory_threshold": 0.8,
             },
         }
         return BVPConstantsAdvanced(config)

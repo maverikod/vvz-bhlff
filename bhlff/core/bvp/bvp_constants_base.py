@@ -122,6 +122,11 @@ class BVPConstantsBase:
         self.WEAK_COUPLING = material_config.get("weak_coupling", 0.1)
         self.MIXING_ANGLE = material_config.get("mixing_angle", 0.23)
         self.GAUGE_COUPLING = material_config.get("gauge_coupling", 0.65)
+        
+        # Basic material properties for fractional Laplacian
+        self.MU = material_config.get("mu", 1.0)
+        self.BETA = material_config.get("beta", 1.5)
+        self.LAMBDA_PARAM = material_config.get("lambda_param", 0.1)
 
     def get_conductivity(self, frequency: float) -> float:
         """Compute frequency-dependent conductivity σ(ω)."""
@@ -228,6 +233,10 @@ class BVPConstantsBase:
             "weak_coupling": self.WEAK_COUPLING,
             "mixing_angle": self.MIXING_ANGLE,
             "gauge_coupling": self.GAUGE_COUPLING,
+            # Basic material properties for fractional Laplacian
+            "mu": self.MU,
+            "beta": self.BETA,
+            "lambda_param": self.LAMBDA_PARAM,
         }
         return float(property_map.get(property_name, 0.0))
 

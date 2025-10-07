@@ -69,6 +69,14 @@ class QuenchDetector:
             rate_threshold (float): Rate of change threshold.
             magnitude_threshold (float): Field magnitude threshold.
         """
+        # Validate thresholds
+        if energy_threshold <= 0:
+            raise ValueError("Energy threshold must be positive")
+        if rate_threshold <= 0:
+            raise ValueError("Rate threshold must be positive")
+        if magnitude_threshold <= 0:
+            raise ValueError("Magnitude threshold must be positive")
+
         self.domain = domain
         self.energy_threshold = energy_threshold
         self.rate_threshold = rate_threshold
@@ -77,6 +85,7 @@ class QuenchDetector:
         # Quench history
         self.quench_history = []
         self._previous_energy = None
+        self._last_time = None
         self._initialized = True
 
         # Setup logging
@@ -111,6 +120,18 @@ class QuenchDetector:
         if not self._initialized:
             raise RuntimeError("Quench detector not initialized")
 
+        # Validate field shape
+        if field.shape != self.domain.shape:
+            raise ValueError(f"Field shape {field.shape} must match domain shape {self.domain.shape}")
+
+        # Validate field type
+        if not np.iscomplexobj(field):
+            raise ValueError("Field must be complex")
+
+        # Validate time
+        if time < 0:
+            raise ValueError("Time must be non-negative")
+
         quench_detected = False
         quench_reasons = []
 
@@ -125,13 +146,13 @@ class QuenchDetector:
                 quench_reasons.append(f"energy_change={energy_change:.2e}")
 
         # Check rate of change threshold
-        if self._previous_energy is not None:
-            rate_of_change = abs(current_energy - self._previous_energy) / (
-                time - self._last_time
-            )
-            if rate_of_change > self.rate_threshold:
-                quench_detected = True
-                quench_reasons.append(f"rate_change={rate_of_change:.2e}")
+        if self._previous_energy is not None and self._last_time is not None:
+            dt = time - self._last_time
+            if dt > 0:  # Avoid division by zero
+                rate_of_change = abs(current_energy - self._previous_energy) / dt
+                if rate_of_change > self.rate_threshold:
+                    quench_detected = True
+                    quench_reasons.append(f"rate_change={rate_of_change:.2e}")
 
         # Check field magnitude threshold
         max_magnitude = np.max(np.abs(field))
@@ -144,6 +165,7 @@ class QuenchDetector:
             quench_event = {
                 "time": time,
                 "energy": current_energy,
+                "magnitude": max_magnitude,
                 "reasons": quench_reasons,
                 "field_stats": {
                     "max_magnitude": max_magnitude,
@@ -185,8 +207,8 @@ class QuenchDetector:
 
         # Integrate over domain
         # For 7D: Δx = (dx^3) * (dphi^3) * dt
-        dx = self.domain.L / self.domain.N
-        dphi = (2 * np.pi) / self.domain.N_phi
+        dx = self.domain.L_spatial / self.domain.N_spatial
+        dphi = (2 * np.pi) / self.domain.N_phase
         dt = self.domain.T / self.domain.N_t
         volume_element = (dx**3) * (dphi**3) * dt
 
@@ -266,18 +288,25 @@ class QuenchDetector:
         total_quenches = len(self.quench_history)
         energies = [event["energy"] for event in self.quench_history]
         average_energy = np.mean(energies)
+        
+        # Calculate average magnitude
+        magnitudes = [event["field_stats"]["max_magnitude"] for event in self.quench_history]
+        average_magnitude = np.mean(magnitudes)
 
         # Calculate quench rate (quenches per unit time)
         if len(self.quench_history) > 1:
             time_span = self.quench_history[-1]["time"] - self.quench_history[0]["time"]
             quench_rate = total_quenches / time_span if time_span > 0 else 0.0
         else:
+            time_span = 0.0
             quench_rate = 0.0
 
         return {
             "total_quenches": total_quenches,
             "average_energy": average_energy,
+            "average_magnitude": average_magnitude,
             "quench_rate": quench_rate,
+            "time_span": time_span,
             "energy_range": (min(energies), max(energies)),
         }
 

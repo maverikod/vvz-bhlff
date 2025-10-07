@@ -25,7 +25,7 @@ import pytest
 from typing import Dict, Any, Tuple
 
 from bhlff.core.time import QuenchDetector
-from bhlff.core.domain import Domain, Parameters
+from bhlff.core.domain.domain_7d_bvp import Domain7DBVP
 
 
 class TestQuenchDetector:
@@ -40,7 +40,7 @@ class TestQuenchDetector:
     @pytest.fixture
     def domain_7d(self):
         """Create 7D domain for testing."""
-        return Domain(L=1.0, N=8, N_phi=4, N_t=8, dimensions=7)
+        return Domain7DBVP(L_spatial=1.0, N_spatial=8, N_phase=4, T=1.0, N_t=8)
 
     @pytest.fixture
     def quench_detector(self, domain_7d):
@@ -235,7 +235,7 @@ class TestQuenchDetector:
 
         # Test invalid field shape
         invalid_field = np.random.randn(4, 4, 4).astype(np.complex128)
-        with pytest.raises(ValueError, match="Field shape must match domain"):
+        with pytest.raises(ValueError, match="Field shape.*must match domain shape"):
             quench_detector.detect_quench(invalid_field, time=0.0)
 
         # Test invalid field type
@@ -297,4 +297,4 @@ class TestQuenchDetector:
 
         # Check that reasons are valid
         for reason in event["reasons"]:
-            assert reason in ["energy", "rate", "magnitude"]
+            assert any(keyword in reason for keyword in ["energy_change", "rate_change", "magnitude"])

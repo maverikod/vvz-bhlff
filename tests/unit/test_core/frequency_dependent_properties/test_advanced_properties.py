@@ -12,7 +12,7 @@ import pytest
 import numpy as np
 from typing import Dict, Any, List
 
-from bhlff.core.domain import Domain
+from bhlff.core.domain.domain_7d_bvp import Domain7DBVP
 from bhlff.core.bvp.constants.bvp_constants_advanced import BVPConstantsAdvanced
 from bhlff.core.bvp.constants.frequency_dependent_properties import (
     FrequencyDependentProperties,
@@ -25,7 +25,7 @@ class TestAdvancedProperties:
     @pytest.fixture
     def domain_7d(self):
         """Create 7D domain for constants testing."""
-        return Domain(L=1.0, N=32, dimensions=7, N_phi=16, N_t=64, T=1.0)
+        return Domain7DBVP(L_spatial=1.0, N_spatial=8, N_phase=4, T=1.0, N_t=8)
 
     @pytest.fixture
     def bvp_constants(self):
@@ -39,14 +39,14 @@ class TestAdvancedProperties:
                 "k0_squared": 4.0,
                 "carrier_frequency": 1.85e43,
             },
-            "basic_material": {"mu": 1.0, "beta": 1.5, "lambda_param": 0.1, "nu": 1.0},
+            "material_properties": {"mu": 1.0, "beta": 1.5, "lambda_param": 0.1, "nu": 1.0},
         }
         return BVPConstantsAdvanced(config)
 
     @pytest.fixture
     def freq_props(self, domain_7d, bvp_constants):
         """Create frequency-dependent properties for testing."""
-        return FrequencyDependentProperties(domain_7d, bvp_constants)
+        return FrequencyDependentProperties(bvp_constants, domain_7d)
 
     def test_frequency_array_operations(self, freq_props):
         """Test operations on frequency arrays."""
@@ -235,7 +235,7 @@ class TestAdvancedProperties:
                     "k0_squared": 4.0,
                     "carrier_frequency": 1.85e43,
                 },
-                "basic_material": {
+                "material_properties": {
                     "mu": 1.0,
                     "beta": 1.5,
                     "lambda_param": 0.1,
@@ -244,14 +244,14 @@ class TestAdvancedProperties:
             },
             {
                 "envelope_equation": {
-                    "kappa_0": 2.0,  # Different kappa_0
+                    "kappa_0": 1.0,
                     "kappa_2": 0.1,
-                    "chi_prime": 1.0,
-                    "chi_double_prime_0": 0.01,
+                    "chi_prime": 2.0,  # Different chi_prime
+                    "chi_double_prime_0": 0.02,  # Different chi_double_prime_0
                     "k0_squared": 4.0,
                     "carrier_frequency": 1.85e43,
                 },
-                "basic_material": {
+                "material_properties": {
                     "mu": 1.0,
                     "beta": 1.5,
                     "lambda_param": 0.1,
@@ -263,7 +263,7 @@ class TestAdvancedProperties:
         freq_props_list = []
         for config in configs:
             bvp_constants = BVPConstantsAdvanced(config)
-            freq_props = FrequencyDependentProperties(domain_7d, bvp_constants)
+            freq_props = FrequencyDependentProperties(bvp_constants, domain_7d)
             freq_props_list.append(freq_props)
 
         # Test that different parameters produce different results

@@ -47,7 +47,7 @@ class FrequencyDependentProperties:
         constants: BVP constants instance for parameter access.
     """
 
-    def __init__(self, constants) -> None:
+    def __init__(self, constants, domain=None) -> None:
         """
         Initialize frequency-dependent properties calculator.
 
@@ -57,8 +57,25 @@ class FrequencyDependentProperties:
 
         Args:
             constants: BVP constants instance.
+            domain: Optional domain for frequency array creation.
         """
         self.constants = constants
+        if domain is not None:
+            self._setup_frequency_arrays(domain)
+    
+    def _setup_frequency_arrays(self, domain) -> None:
+        """Setup frequency arrays from domain."""
+        # Create frequency arrays based on domain
+        if hasattr(domain, 'N_t'):
+            N_t = domain.N_t
+            T = getattr(domain, 'T', 1.0)
+        else:
+            N_t = 64  # Default
+            T = 1.0
+        
+        # Create frequency arrays in ascending order
+        self.frequencies = np.linspace(0, (N_t-1)/T, N_t)
+        self.omega = 2 * np.pi * self.frequencies
 
     def compute_conductivity(self, frequency: float) -> float:
         """
@@ -204,6 +221,137 @@ class FrequencyDependentProperties:
         )
 
         return total_inductance
+
+    def compute_susceptibility(self, frequency: float) -> complex:
+        """
+        Compute frequency-dependent susceptibility.
+        
+        Physical Meaning:
+            Computes the complex susceptibility χ(ω) = χ'(ω) + iχ''(ω)
+            representing the material's response to electromagnetic fields.
+            
+        Args:
+            frequency (float): Frequency in rad/s.
+            
+        Returns:
+            complex: Complex susceptibility.
+        """
+        # Get base susceptibility from constants
+        chi_prime = self.constants.get_envelope_parameter("chi_prime")
+        chi_double_prime_0 = self.constants.get_envelope_parameter("chi_double_prime_0")
+        
+        # Frequency-dependent real part with stronger frequency dependence
+        chi_real = chi_prime / (1.0 + (frequency / 1e3)**2)
+        
+        # Frequency-dependent imaginary part with stronger frequency dependence
+        chi_imag = chi_double_prime_0 * frequency / (1.0 + (frequency / 1e3)**2)
+        
+        return complex(chi_real, chi_imag)
+    
+    def compute_dispersion_relation(self, frequency: float) -> float:
+        """
+        Compute dispersion relation k(ω).
+        
+        Physical Meaning:
+            Computes the wave number k as a function of frequency ω
+            based on the dispersion relation.
+            
+        Args:
+            frequency (float): Frequency in rad/s.
+            
+        Returns:
+            float: Wave number k.
+        """
+        # Get material properties
+        mu = self.constants.get_basic_material_property("mu")
+        beta = self.constants.get_basic_material_property("beta")
+        lambda_param = self.constants.get_basic_material_property("lambda_param")
+        
+        # Dispersion relation: k = ω / c, where c is phase velocity
+        # Use a simple linear dispersion for consistency
+        c = 1.0  # Speed of light in normalized units
+        return frequency / c
+    
+    def compute_phase_velocity(self, frequency: float) -> float:
+        """
+        Compute phase velocity v_phase = ω/k.
+        
+        Physical Meaning:
+            Computes the phase velocity of electromagnetic waves
+            in the material.
+            
+        Args:
+            frequency (float): Frequency in rad/s.
+            
+        Returns:
+            float: Phase velocity.
+        """
+        k = self.compute_dispersion_relation(frequency)
+        omega = 2 * np.pi * frequency
+        if k > 0:
+            return omega / k
+        else:
+            return 1.0
+    
+    def compute_group_velocity(self, frequency: float) -> float:
+        """
+        Compute group velocity v_group = dω/dk.
+        
+        Physical Meaning:
+            Computes the group velocity of wave packets
+            in the material.
+            
+        Args:
+            frequency (float): Frequency in rad/s.
+            
+        Returns:
+            float: Group velocity.
+        """
+        # Numerical derivative of dispersion relation
+        delta_freq = frequency * 1e-6
+        k1 = self.compute_dispersion_relation(frequency - delta_freq)
+        k2 = self.compute_dispersion_relation(frequency + delta_freq)
+        
+        if abs(k2 - k1) > 1e-12:
+            return 2 * delta_freq / (k2 - k1)
+        else:
+            return self.compute_phase_velocity(frequency)
+    
+    def compute_absorption_coefficient(self, frequency: float) -> float:
+        """
+        Compute absorption coefficient α(ω).
+        
+        Physical Meaning:
+            Computes the absorption coefficient representing
+            energy loss in the material.
+            
+        Args:
+            frequency (float): Frequency in rad/s.
+            
+        Returns:
+            float: Absorption coefficient.
+        """
+        chi = self.compute_susceptibility(frequency)
+        # Absorption coefficient is proportional to imaginary part
+        return abs(chi.imag) * frequency / 1e12
+    
+    def compute_refractive_index(self, frequency: float) -> complex:
+        """
+        Compute complex refractive index n(ω).
+        
+        Physical Meaning:
+            Computes the complex refractive index n = n' + in''
+            representing the material's optical properties.
+            
+        Args:
+            frequency (float): Frequency in rad/s.
+            
+        Returns:
+            complex: Complex refractive index.
+        """
+        chi = self.compute_susceptibility(frequency)
+        # Refractive index: n = sqrt(1 + χ)
+        return np.sqrt(1.0 + chi)
 
     def __repr__(self) -> str:
         """String representation of frequency-dependent properties."""

@@ -101,14 +101,11 @@ class BVPPostulate2_ScaleSeparation(BVPPostulate):
         spatial_freqs = [
             np.fft.fftfreq(n, d)
             for n, d in zip(
-                self.domain_7d.get_spatial_shape(),
+                self.domain_7d.spatial_shape,
                 [
-                    self.domain_7d.spatial_config.L_x
-                    / self.domain_7d.spatial_config.N_x,
-                    self.domain_7d.spatial_config.L_y
-                    / self.domain_7d.spatial_config.N_y,
-                    self.domain_7d.spatial_config.L_z
-                    / self.domain_7d.spatial_config.N_z,
+                    self.domain_7d.L_spatial / self.domain_7d.N_spatial,
+                    self.domain_7d.L_spatial / self.domain_7d.N_spatial,
+                    self.domain_7d.L_spatial / self.domain_7d.N_spatial,
                 ],
             )
         ]

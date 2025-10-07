@@ -116,14 +116,16 @@ class FFTSolver7DBasic:
 
         self.logger.info("Solving stationary fractional Laplacian equation")
 
-        # Transform to spectral space
-        source_spectral = self.spectral_operations.fft_forward(source)
+        # Transform to spectral space using unified backend
+        from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
+        spectral_ops = UnifiedSpectralOperations(self.domain, precision="float64")
+        source_spectral = spectral_ops.forward_fft(source, normalization="physics")
 
         # Apply spectral operator
         solution_spectral = source_spectral / self.spectral_coefficients
 
         # Transform back to real space
-        solution = self.spectral_operations.fft_inverse(solution_spectral)
+        solution = spectral_ops.inverse_fft(solution_spectral, normalization="physics")
 
         self.logger.info("Stationary solution computed")
         return solution.real

@@ -14,7 +14,7 @@ from typing import Dict, Any
 import logging
 
 from bhlff.core.domain import Domain, Parameters
-from bhlff.core.fft.fractional_laplacian import FractionalLaplacian
+from bhlff.core.operators.fractional_laplacian import FractionalLaplacian
 
 
 class TestFinalSummary:

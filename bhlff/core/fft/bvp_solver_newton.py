@@ -167,7 +167,7 @@ class BVPSolverNewton:
         Returns:
             np.ndarray: Linearized solution a(x,φ,t).
         """
-        from .fractional_laplacian import FractionalLaplacian
+        from bhlff.core.operators.fractional_laplacian import FractionalLaplacian
 
         # Create fractional Laplacian operator
         fractional_laplacian = FractionalLaplacian(

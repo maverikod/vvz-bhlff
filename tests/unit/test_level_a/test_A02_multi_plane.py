@@ -16,7 +16,7 @@ import logging
 from bhlff.core.domain import Domain
 from bhlff.core.domain.parameters import Parameters
 from bhlff.core.fft.fft_solver_7d_basic import FFTSolver7DBasic
-from bhlff.core.fft.fractional_laplacian import FractionalLaplacian
+from bhlff.core.operators.fractional_laplacian import FractionalLaplacian
 
 
 class TestA02MultiPlane:

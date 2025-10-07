@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from ..domain import Domain
     from ..domain.parameters import Parameters
 
-from .fractional_laplacian import FractionalLaplacian
+from bhlff.core.operators.fractional_laplacian import FractionalLaplacian as FractionalLaplacian
 from .spectral_operations import SpectralOperations
 from .memory_manager_7d import MemoryManager7D
 from .fft_plan_7d import FFTPlan7D

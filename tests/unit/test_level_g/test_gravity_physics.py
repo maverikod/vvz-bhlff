@@ -112,22 +112,15 @@ class TestEnvelopeEffectiveMetricGravity:
         g = metric.compute_effective_metric_from_vbp_envelope({"chi_over_kappa": 1.5})
         assert g[0, 0] == pytest.approx(-1.0 / (2.0**2))
 
-        # Check curvature analysis
-        curvature = effects["curvature"]
-        assert "riemann_tensor" in curvature, "Should contain Riemann tensor"
-        assert "ricci_tensor" in curvature, "Should contain Ricci tensor"
-        assert "scalar_curvature" in curvature, "Should contain scalar curvature"
-        assert "weyl_tensor" in curvature, "Should contain Weyl tensor"
-        assert (
-            "curvature_invariants" in curvature
-        ), "Should contain curvature invariants"
+        # Check metric properties
+        assert g.shape == (7, 7), "Should be 7x7 metric tensor"
+        assert g[0, 0] < 0, "Time component should be negative"
+        assert g[1, 1] > 0, "Spatial components should be positive"
+        assert g[4, 4] == 1.0, "Phase components should be unity"
 
-        # Check gravitational waves
-        waves = effects["gravitational_waves"]
-        assert "strain_tensor" in waves, "Should contain strain tensor"
-        assert "amplitude" in waves, "Should contain amplitude"
-        assert "frequency_spectrum" in waves, "Should contain frequency spectrum"
-        assert "polarization" in waves, "Should contain polarization"
+        # Check off-diagonal elements are zero
+        off_diagonal = g - np.diag(np.diag(g))
+        assert np.allclose(off_diagonal, 0.0), "Should be diagonal metric"
 
     def test_metric_scaling_changes_with_params(self):
         m1 = EnvelopeEffectiveMetric({"c_phi": 1.0})

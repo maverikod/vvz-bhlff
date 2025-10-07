@@ -61,7 +61,7 @@ class VBPGravitationalWavesCalculator:
     def _setup_wave_parameters(self) -> None:
         """
         Setup parameters for VBP gravitational wave calculations.
-        
+
         Physical Meaning:
             Initializes parameters for gravitational wave
             calculations from VBP envelope dynamics including
@@ -73,7 +73,9 @@ class VBPGravitationalWavesCalculator:
         self.c_T = self.c_phi  # Wave speed c_T = c_φ
         self.source_distance = self.params.get("source_distance", 1e6)  # meters
 
-    def compute_gravitational_waves(self, envelope_solution: np.ndarray) -> Dict[str, Any]:
+    def compute_gravitational_waves(
+        self, envelope_solution: np.ndarray
+    ) -> Dict[str, Any]:
         """
         Compute gravitational waves from VBP envelope dynamics.
 
@@ -96,19 +98,19 @@ class VBPGravitationalWavesCalculator:
         """
         # Compute strain tensor from envelope dynamics
         strain_tensor = self._compute_strain_tensor_from_envelope(envelope_solution)
-        
+
         # Compute wave amplitude with GW-1 law
         amplitude = self._compute_wave_amplitude_with_gw1_law(strain_tensor)
-        
+
         # Compute frequency spectrum
         frequency_spectrum = self._compute_frequency_spectrum(strain_tensor)
-        
+
         # Compute polarization modes
         polarization = self._compute_polarization_modes(strain_tensor)
-        
+
         # Compute wave energy
         wave_energy = self._compute_wave_energy(strain_tensor)
-        
+
         return {
             "strain_tensor": strain_tensor,
             "amplitude": amplitude,
@@ -116,10 +118,12 @@ class VBPGravitationalWavesCalculator:
             "polarization": polarization,
             "wave_energy": wave_energy,
             "c_T": self.c_T,
-            "c_phi": self.c_phi
+            "c_phi": self.c_phi,
         }
 
-    def _compute_strain_tensor_from_envelope(self, envelope_solution: np.ndarray) -> np.ndarray:
+    def _compute_strain_tensor_from_envelope(
+        self, envelope_solution: np.ndarray
+    ) -> np.ndarray:
         """
         Compute gravitational wave strain tensor from VBP envelope dynamics.
 
@@ -140,19 +144,21 @@ class VBPGravitationalWavesCalculator:
         """
         # Compute strain tensor from envelope dynamics
         strain = np.zeros((7, 7))  # 7D strain tensor
-        
+
         # Compute envelope oscillations
         envelope_oscillations = self._compute_envelope_oscillations(envelope_solution)
-        
+
         # Compute strain components from envelope dynamics
         for mu in range(7):
             for nu in range(7):
                 # Strain from envelope oscillations
                 strain[mu, nu] = 0.5 * envelope_oscillations[mu, nu]
-        
+
         return strain
 
-    def _compute_envelope_oscillations(self, envelope_solution: np.ndarray) -> np.ndarray:
+    def _compute_envelope_oscillations(
+        self, envelope_solution: np.ndarray
+    ) -> np.ndarray:
         """
         Compute envelope oscillations from VBP solution.
 
@@ -173,15 +179,17 @@ class VBPGravitationalWavesCalculator:
         """
         # Compute envelope oscillations (simplified)
         oscillations = np.zeros((7, 7))
-        
+
         # Compute oscillations from envelope solution
         envelope_amplitude = np.mean(np.abs(envelope_solution))
-        
+
         # Generate oscillations based on envelope dynamics
         for mu in range(7):
             for nu in range(7):
-                oscillations[mu, nu] = envelope_amplitude * np.sin(2 * np.pi * mu * nu / 7)
-        
+                oscillations[mu, nu] = envelope_amplitude * np.sin(
+                    2 * np.pi * mu * nu / 7
+                )
+
         return oscillations
 
     def _compute_wave_amplitude_with_gw1_law(self, strain_tensor: np.ndarray) -> float:
@@ -205,17 +213,17 @@ class VBPGravitationalWavesCalculator:
         """
         # Compute base amplitude from strain tensor
         amplitude_squared = 0.0
-        
+
         for mu in range(7):
             for nu in range(7):
-                amplitude_squared += strain_tensor[mu, nu]**2
-        
+                amplitude_squared += strain_tensor[mu, nu] ** 2
+
         base_amplitude = np.sqrt(amplitude_squared)
-        
+
         # Apply GW-1 law: |h|∝a^{-1} when Γ=K=0
         scale_factor = self.params.get("scale_factor", 1.0)
         gw1_amplitude = base_amplitude / scale_factor
-        
+
         return gw1_amplitude
 
     def _compute_frequency_spectrum(self, strain_tensor: np.ndarray) -> np.ndarray:
@@ -236,19 +244,21 @@ class VBPGravitationalWavesCalculator:
         # Extract time series from strain tensor (7D)
         # For a 7x7 strain tensor, we'll use the diagonal elements
         time_series = np.diag(strain_tensor)
-        
+
         # Compute Fourier transform
         frequency_spectrum = np.fft.fft(time_series)
-        
+
         # Compute frequency bins
         frequencies = np.fft.fftfreq(len(time_series), d=1.0)
-        
+
         # Return power spectrum
-        power_spectrum = np.abs(frequency_spectrum)**2
-        
+        power_spectrum = np.abs(frequency_spectrum) ** 2
+
         return power_spectrum
 
-    def _compute_polarization_modes(self, strain_tensor: np.ndarray) -> Dict[str, np.ndarray]:
+    def _compute_polarization_modes(
+        self, strain_tensor: np.ndarray
+    ) -> Dict[str, np.ndarray]:
         """
         Compute polarization modes of gravitational waves from VBP envelope.
 
@@ -274,25 +284,25 @@ class VBPGravitationalWavesCalculator:
         h_xy = strain_tensor[1, 2]
         h_xz = strain_tensor[1, 3]
         h_yz = strain_tensor[2, 3]
-        
+
         # Extract phase space components (3D phase space)
         h_ph1_ph1 = strain_tensor[4, 4]
         h_ph2_ph2 = strain_tensor[5, 5]
         h_ph3_ph3 = strain_tensor[6, 6]
         h_ph1_ph2 = strain_tensor[4, 5]
-        
+
         # Compute standard polarization modes
         plus_polarization = h_xx - h_yy
         cross_polarization = 2 * h_xy
-        
+
         # Additional spatial polarization modes
         x_polarization = h_xz
         y_polarization = h_yz
-        
+
         # Phase space polarization modes
         phase_plus = h_ph1_ph1 - h_ph2_ph2
         phase_cross = 2 * h_ph1_ph2
-        
+
         return {
             "plus": plus_polarization,
             "cross": cross_polarization,
@@ -300,7 +310,7 @@ class VBPGravitationalWavesCalculator:
             "y_mode": y_polarization,
             "phase_plus": phase_plus,
             "phase_cross": phase_cross,
-            "phase_z": h_ph3_ph3
+            "phase_z": h_ph3_ph3,
         }
 
     def _compute_wave_energy(self, strain_tensor: np.ndarray) -> float:
@@ -324,57 +334,55 @@ class VBPGravitationalWavesCalculator:
         """
         # Compute time derivative of strain
         time_derivative = self._compute_time_derivative(strain_tensor)
-        
+
         # Compute spatial gradient of strain
         spatial_gradient = self._compute_spatial_gradient(strain_tensor)
-        
+
         # Compute energy density
         energy_density = 0.5 * (time_derivative**2 + spatial_gradient**2)
-        
+
         return energy_density
 
     def _compute_time_derivative(self, strain_tensor: np.ndarray) -> float:
         """
         Compute time derivative of strain tensor from VBP envelope.
-        
+
         Physical Meaning:
             Calculates the time derivative of the strain
             tensor from VBP envelope dynamics for energy computation.
         """
         # Simplified implementation
         dt = self.params.get("time_step", 0.01)
-        
+
         # Compute time derivative using finite differences (7D)
         time_derivative = 0.0
         for mu in range(7):
             for nu in range(7):
-                time_derivative += (strain_tensor[mu, nu] / dt)**2
-        
+                time_derivative += (strain_tensor[mu, nu] / dt) ** 2
+
         return np.sqrt(time_derivative)
 
     def _compute_spatial_gradient(self, strain_tensor: np.ndarray) -> float:
         """
         Compute spatial gradient of strain tensor from VBP envelope.
-        
+
         Physical Meaning:
             Calculates the spatial gradient of the strain
             tensor from VBP envelope dynamics for energy computation.
         """
         # Simplified implementation
         dx = self.domain.L / self.domain.N
-        
+
         # Compute spatial gradient using finite differences (7D)
         spatial_gradient = 0.0
         for mu in range(1, 4):  # Spatial components only
             for nu in range(7):
-                spatial_gradient += (strain_tensor[mu, nu] / dx)**2
-        
+                spatial_gradient += (strain_tensor[mu, nu] / dx) ** 2
+
         return np.sqrt(spatial_gradient)
 
     def compute_detection_sensitivity(
-        self, 
-        amplitude: float, 
-        frequency: float
+        self, amplitude: float, frequency: float
     ) -> Dict[str, Any]:
         """
         Compute detection sensitivity for VBP gravitational waves.
@@ -393,13 +401,13 @@ class VBPGravitationalWavesCalculator:
         """
         # Compute signal-to-noise ratio
         snr = amplitude / self.detection_sensitivity
-        
+
         # Determine detectability
         detectable = snr > 1.0
-        
+
         # Compute detection probability
         detection_probability = min(1.0, snr / 10.0)
-        
+
         return {
             "signal_to_noise_ratio": snr,
             "detectable": detectable,
@@ -407,5 +415,5 @@ class VBPGravitationalWavesCalculator:
             "amplitude": amplitude,
             "frequency": frequency,
             "c_T": self.c_T,
-            "c_phi": self.c_phi
+            "c_phi": self.c_phi,
         }

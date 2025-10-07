@@ -265,6 +265,25 @@ class FFTPlan7D:
 
         self.logger.info(f"FFT plans setup complete: {len(self.plans)} plans created")
 
+    def setup_optimized_plans(self, precision: str = "float64", plan_type: str = "MEASURE") -> None:
+        """
+        Setup or reconfigure optimized FFT plans.
+
+        Physical Meaning:
+            Configures FFT planning parameters. For numpy backend this is a no-op,
+            but we keep the API to satisfy advanced core expectations.
+
+        Args:
+            precision: Numerical precision hint.
+            plan_type: Planning strategy hint (e.g., 'MEASURE', 'ESTIMATE').
+        """
+        # Store hints for potential downstream backends
+        self.precision = precision
+        self.plan_type = plan_type
+        optimize = plan_type.upper() != "ESTIMATE"
+        # Rebuild internal plan configs with the optimize flag
+        self._setup_fft_plans(optimize=optimize)
+
     def _create_fft_plan(
         self, direction: str, optimize: bool = False
     ) -> Dict[str, Any]:

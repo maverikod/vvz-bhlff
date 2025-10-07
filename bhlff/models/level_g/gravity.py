@@ -64,12 +64,14 @@ class VBPGravitationalEffectsModel(ModelBase):
         super().__init__()
         self.system = system
         self.gravity_params = gravity_params
-        
+
         # Initialize specialized calculators
-        self.curvature_calc = VBPEnvelopeCurvatureCalculator(system.domain, gravity_params)
+        self.curvature_calc = VBPEnvelopeCurvatureCalculator(
+            system.domain, gravity_params
+        )
         self.envelope_solver = PhaseEnvelopeBalanceSolver(system.domain, gravity_params)
         self.waves_calc = VBPGravitationalWavesCalculator(system.domain, gravity_params)
-        
+
         self._setup_gravitational_parameters()
 
     def _setup_gravitational_parameters(self) -> None:
@@ -85,11 +87,11 @@ class VBPGravitationalEffectsModel(ModelBase):
         self.chi_kappa = self.gravity_params.get("chi_kappa", 1.0)  # Bridge parameter
         self.beta = self.gravity_params.get("beta", 0.5)  # Fractional order
         self.mu = self.gravity_params.get("mu", 1.0)  # Diffusion coefficient
-        
+
         # Stability: assert c_φ^2>0, M_*^2>0 wherever built
         assert self.c_phi**2 > 0, f"Stability violation: c_φ^2 = {self.c_phi**2} ≤ 0"
         assert self.mu > 0, f"Stability violation: μ = {self.mu} ≤ 0"
-        
+
         # M_*^2 = μ (effective mass squared)
         M_star_squared = self.mu
         assert M_star_squared > 0, f"Stability violation: M_*^2 = {M_star_squared} ≤ 0"
@@ -109,10 +111,10 @@ class VBPGravitationalEffectsModel(ModelBase):
         """
         # Get phase field from system
         phase_field = self._get_phase_field_from_system()
-        
+
         # Solve phase envelope balance equation
         envelope_result = self.envelope_solver.solve_phase_envelope_balance(phase_field)
-        
+
         return envelope_result["effective_metric"]
 
     def _get_phase_field_from_system(self) -> np.ndarray:
@@ -123,7 +125,7 @@ class VBPGravitationalEffectsModel(ModelBase):
             Extracts the phase field configuration from the
             system for gravitational calculations.
         """
-        if hasattr(self.system, 'phase_field'):
+        if hasattr(self.system, "phase_field"):
             return self.system.phase_field
         else:
             return self._create_default_phase_field()
@@ -154,19 +156,23 @@ class VBPGravitationalEffectsModel(ModelBase):
         """
         # Get phase field from system
         phase_field = self._get_phase_field_from_system()
-        
+
         # Compute envelope curvature descriptors
-        curvature_descriptors = self.curvature_calc.compute_envelope_curvature(phase_field)
-        
+        curvature_descriptors = self.curvature_calc.compute_envelope_curvature(
+            phase_field
+        )
+
         # Compute envelope invariants
         invariants = self.curvature_calc.compute_envelope_invariants(phase_field)
-        
+
         return {
-            "envelope_curvature_scalar": curvature_descriptors["envelope_curvature_scalar"],
+            "envelope_curvature_scalar": curvature_descriptors[
+                "envelope_curvature_scalar"
+            ],
             "anisotropy_index": curvature_descriptors["anisotropy_index"],
             "focusing_rate": curvature_descriptors["focusing_rate"],
             "effective_metric": curvature_descriptors["effective_metric"],
-            "curvature_invariants": invariants
+            "curvature_invariants": invariants,
         }
 
     def compute_gravitational_waves(self) -> Dict[str, Any]:
@@ -183,13 +189,15 @@ class VBPGravitationalEffectsModel(ModelBase):
         """
         # Get phase field from system
         phase_field = self._get_phase_field_from_system()
-        
+
         # Solve phase envelope balance equation
         envelope_result = self.envelope_solver.solve_phase_envelope_balance(phase_field)
-        
+
         # Compute gravitational waves from envelope solution
-        waves = self.waves_calc.compute_gravitational_waves(envelope_result["envelope_solution"])
-        
+        waves = self.waves_calc.compute_gravitational_waves(
+            envelope_result["envelope_solution"]
+        )
+
         return waves
 
     def compute_envelope_effects(self) -> Dict[str, Any]:
@@ -206,18 +214,18 @@ class VBPGravitationalEffectsModel(ModelBase):
         """
         # Get phase field
         phase_field = self._get_phase_field_from_system()
-        
+
         # Solve phase envelope balance equation
         envelope_result = self.envelope_solver.solve_phase_envelope_balance(phase_field)
-        
+
         # Compute all envelope gravitational effects
         curvature_analysis = self.analyze_envelope_curvature()
         gravitational_waves = self.compute_gravitational_waves()
-        
+
         return {
             "envelope_curvature": curvature_analysis,
             "gravitational_waves": gravitational_waves,
             "envelope_solution": envelope_result["envelope_solution"],
             "effective_metric": envelope_result["effective_metric"],
-            "curvature_descriptors": envelope_result["curvature_descriptors"]
+            "curvature_descriptors": envelope_result["curvature_descriptors"],
         }

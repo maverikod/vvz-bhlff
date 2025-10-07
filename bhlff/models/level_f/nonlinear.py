@@ -272,7 +272,7 @@ class NonlinearEffects(AbstractModel):
         Physical Meaning:
             Adds nonlinear potential terms to the
             effective potential of the system.
-            
+
         Mathematical Foundation:
             V_nonlinear = λ₁|φ|² + λ₂|φ|⁴ + λ₃|φ|⁶ + ...
             where φ is the field amplitude and λᵢ are coupling constants.
@@ -281,14 +281,14 @@ class NonlinearEffects(AbstractModel):
         self.lambda_1 = self.params.get("lambda_1", 0.1)  # Quadratic term
         self.lambda_2 = self.params.get("lambda_2", 0.01)  # Quartic term
         self.lambda_3 = self.params.get("lambda_3", 0.001)  # Sextic term
-        
+
         # Add nonlinear terms to effective potential
         self.nonlinear_terms = {
             "quadratic": self.lambda_1,
             "quartic": self.lambda_2,
-            "sextic": self.lambda_3
+            "sextic": self.lambda_3,
         }
-        
+
         # Update system parameters
         self.effective_potential = self._compute_effective_potential()
 
@@ -299,7 +299,7 @@ class NonlinearEffects(AbstractModel):
         Physical Meaning:
             Adds nonlinear terms to the equations
             of motion of the system.
-            
+
         Mathematical Foundation:
             ∂²φ/∂t² + γ∂φ/∂t + ω₀²φ + λ₁φ + λ₂φ³ + λ₃φ⁵ = F(t)
             where γ is damping, ω₀ is natural frequency, and F(t) is driving force.
@@ -309,12 +309,12 @@ class NonlinearEffects(AbstractModel):
         self.omega_0 = self.params.get("omega_0", 1.0)  # Natural frequency
         self.driving_amplitude = self.params.get("driving_amplitude", 0.1)
         self.driving_frequency = self.params.get("driving_frequency", 1.0)
-        
+
         # Define nonlinear force terms
         self.nonlinear_force = self._compute_nonlinear_force
         self.damping_force = self._compute_damping_force
         self.driving_force = self._compute_driving_force
-        
+
         # Update equations of motion
         self.equations_of_motion = self._formulate_equations_of_motion()
 
@@ -619,37 +619,43 @@ class NonlinearEffects(AbstractModel):
         stability = self.check_nonlinear_stability()
 
         return {"nonlinear_modes": modes, "solitons": solitons, "stability": stability}
-    
+
     def _compute_effective_potential(self) -> callable:
         """Compute effective potential including nonlinear terms."""
+
         def potential(phi):
-            return (self.lambda_1 * np.abs(phi)**2 + 
-                   self.lambda_2 * np.abs(phi)**4 + 
-                   self.lambda_3 * np.abs(phi)**6)
+            return (
+                self.lambda_1 * np.abs(phi) ** 2
+                + self.lambda_2 * np.abs(phi) ** 4
+                + self.lambda_3 * np.abs(phi) ** 6
+            )
+
         return potential
-    
+
     def _compute_nonlinear_force(self, phi: np.ndarray) -> np.ndarray:
         """Compute nonlinear force terms."""
-        return (self.lambda_1 * phi + 
-                self.lambda_2 * phi**3 + 
-                self.lambda_3 * phi**5)
-    
+        return self.lambda_1 * phi + self.lambda_2 * phi**3 + self.lambda_3 * phi**5
+
     def _compute_damping_force(self, phi_dot: np.ndarray) -> np.ndarray:
         """Compute damping force."""
         return -self.gamma * phi_dot
-    
+
     def _compute_driving_force(self, t: float) -> float:
         """Compute driving force."""
         return self.driving_amplitude * np.cos(self.driving_frequency * t)
-    
+
     def _formulate_equations_of_motion(self) -> callable:
         """Formulate complete equations of motion."""
+
         def equations(t, y):
             phi, phi_dot = y
             dphi_dt = phi_dot
-            dphi_dot_dt = (-self.omega_0**2 * phi - 
-                          self._compute_nonlinear_force(phi) + 
-                          self._compute_damping_force(phi_dot) + 
-                          self._compute_driving_force(t))
+            dphi_dot_dt = (
+                -self.omega_0**2 * phi
+                - self._compute_nonlinear_force(phi)
+                + self._compute_damping_force(phi_dot)
+                + self._compute_driving_force(t)
+            )
             return [dphi_dt, dphi_dot_dt]
+
         return equations

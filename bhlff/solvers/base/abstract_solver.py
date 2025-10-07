@@ -173,9 +173,11 @@ class AbstractSolver(ABC):
         Returns:
             np.ndarray: Residual r = L_β a - s.
         """
-        # Compute the fractional Riesz operator L_β a
-        # For the fractional Laplacian (-Δ)^β, we use spectral methods
-        field_spectral = np.fft.fftn(field)
+        # Compute the fractional Riesz operator L_β a using unified backend
+        from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
+
+        spectral_ops = UnifiedSpectralOperations(self.domain, precision="float64")
+        field_spectral = spectral_ops.forward_fft(field, normalization="physics")
 
         # Get 7D wave vectors for BVP theory
         kx = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
@@ -202,8 +204,8 @@ class AbstractSolver(ABC):
         operator_field_spectral = spectral_coeffs * field_spectral
 
         # Transform back to real space
-        operator_field = np.fft.ifftn(
-            operator_field_spectral, axes=(0, 1, 2, 3, 4, 5, 6)
+        operator_field = spectral_ops.inverse_fft(
+            operator_field_spectral, normalization="physics"
         ).real
 
         # Compute residual r = L_β a - s
@@ -233,8 +235,11 @@ class AbstractSolver(ABC):
         # Compute energy using the fractional Riesz operator
         # E = ½(μ⟨a,(-Δ)^β a⟩ + λ⟨a,a⟩) - ℜ⟨s,a⟩
 
-        # Transform field to spectral space
-        field_spectral = np.fft.fftn(field)
+        # Transform field to spectral space via unified backend
+        from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
+
+        spectral_ops = UnifiedSpectralOperations(self.domain, precision="float64")
+        field_spectral = spectral_ops.forward_fft(field, normalization="physics")
 
         # Get 7D wave vectors for BVP theory
         kx = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
@@ -262,8 +267,8 @@ class AbstractSolver(ABC):
         ) * field_spectral
 
         # Transform back to real space
-        fractional_laplacian_field = np.fft.ifftn(
-            fractional_laplacian_spectral, axes=(0, 1, 2, 3, 4, 5, 6)
+        fractional_laplacian_field = spectral_ops.inverse_fft(
+            fractional_laplacian_spectral, normalization="physics"
         ).real
 
         # Compute energy terms

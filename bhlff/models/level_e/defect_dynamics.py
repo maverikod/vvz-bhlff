@@ -61,7 +61,7 @@ class DefectDynamics:
     def _setup_dynamics_parameters(self) -> None:
         """
         Setup parameters for defect dynamics.
-        
+
         Physical Meaning:
             Initializes the physical parameters required for
             defect dynamics calculations including masses,
@@ -74,10 +74,7 @@ class DefectDynamics:
         self.max_velocity = self.params.get("max_velocity", 10.0)
 
     def simulate_defect_motion(
-        self, 
-        initial_position: np.ndarray, 
-        time_steps: int,
-        field: np.ndarray
+        self, initial_position: np.ndarray, time_steps: int, field: np.ndarray
     ) -> Dict[str, np.ndarray]:
         """
         Simulate defect motion over time.
@@ -119,14 +116,16 @@ class DefectDynamics:
             forces[step] = effective_force
 
             # Compute gyroscopic and dissipative forces
-            gyroscopic_force = self._compute_gyroscopic_force(velocities[step-1])
-            dissipative_force = self._compute_dissipative_force(velocities[step-1])
+            gyroscopic_force = self._compute_gyroscopic_force(velocities[step - 1])
+            dissipative_force = self._compute_dissipative_force(velocities[step - 1])
 
             # Total force
             total_force = effective_force + gyroscopic_force + dissipative_force
 
             # Update velocity using Euler method
-            velocities[step] = velocities[step-1] + self.time_step * total_force / self.defect_mass
+            velocities[step] = (
+                velocities[step - 1] + self.time_step * total_force / self.defect_mass
+            )
 
             # Limit velocity to prevent numerical instability
             velocity_magnitude = np.linalg.norm(velocities[step])
@@ -134,13 +133,9 @@ class DefectDynamics:
                 velocities[step] *= self.max_velocity / velocity_magnitude
 
             # Update position
-            positions[step] = positions[step-1] + self.time_step * velocities[step]
+            positions[step] = positions[step - 1] + self.time_step * velocities[step]
 
-        return {
-            "positions": positions,
-            "velocities": velocities,
-            "forces": forces
-        }
+        return {"positions": positions, "velocities": velocities, "forces": forces}
 
     def _find_defect_position(self, field: np.ndarray) -> np.ndarray:
         """
@@ -165,18 +160,14 @@ class DefectDynamics:
         # Convert to physical coordinates
         L = self.domain.L
         N = self.domain.N
-        position = np.array([
-            min_indices[0] * L / N,
-            min_indices[1] * L / N,
-            min_indices[2] * L / N
-        ])
+        position = np.array(
+            [min_indices[0] * L / N, min_indices[1] * L / N, min_indices[2] * L / N]
+        )
 
         return position
 
     def _compute_defect_force(
-        self, 
-        position: np.ndarray, 
-        field: np.ndarray
+        self, position: np.ndarray, field: np.ndarray
     ) -> np.ndarray:
         """
         Compute effective force on defect.
@@ -207,47 +198,53 @@ class DefectDynamics:
     def _compute_effective_potential(self, field: np.ndarray) -> np.ndarray:
         """
         Compute effective potential from field configuration.
-        
+
         Physical Meaning:
             Calculates the effective potential that governs
             defect motion based on the field configuration.
         """
         # Use field amplitude as potential
-        potential = np.abs(field)**2
-        
+        potential = np.abs(field) ** 2
+
         # Add smoothing to avoid singularities
         potential = potential + 1e-6
-        
+
         return potential
 
-    def _compute_potential_gradient(self, potential: np.ndarray, position: np.ndarray) -> np.ndarray:
+    def _compute_potential_gradient(
+        self, potential: np.ndarray, position: np.ndarray
+    ) -> np.ndarray:
         """
         Compute gradient of potential at defect position.
-        
+
         Physical Meaning:
             Calculates the spatial gradient of the effective
             potential at the defect position.
         """
         N = self.domain.N
         L = self.domain.L
-        
+
         # Convert position to grid indices
         i = int(position[0] * N / L) % N
         j = int(position[1] * N / L) % N
         k = int(position[2] * N / L) % N
-        
+
         # Compute gradients using finite differences
         dx = L / N
-        grad_x = (potential[(i+1)%N, j, k] - potential[(i-1)%N, j, k]) / (2 * dx)
-        grad_y = (potential[i, (j+1)%N, k] - potential[i, (j-1)%N, k]) / (2 * dx)
-        grad_z = (potential[i, j, (k+1)%N] - potential[i, j, (k-1)%N]) / (2 * dx)
-        
+        grad_x = (potential[(i + 1) % N, j, k] - potential[(i - 1) % N, j, k]) / (
+            2 * dx
+        )
+        grad_y = (potential[i, (j + 1) % N, k] - potential[i, (j - 1) % N, k]) / (
+            2 * dx
+        )
+        grad_z = (potential[i, j, (k + 1) % N] - potential[i, j, (k - 1) % N]) / (
+            2 * dx
+        )
+
         return np.array([grad_x, grad_y, grad_z])
 
     def _interpolate_potential(
-        self, 
-        potential: np.ndarray, 
-        position: np.ndarray
+        self, potential: np.ndarray, position: np.ndarray
     ) -> float:
         """
         Interpolate potential at arbitrary position.
@@ -291,14 +288,16 @@ class DefectDynamics:
         c111 = potential[x1, y1, z1]
 
         # Trilinear interpolation formula
-        result = (c000 * (1-wx) * (1-wy) * (1-wz) +
-                 c001 * (1-wx) * (1-wy) * wz +
-                 c010 * (1-wx) * wy * (1-wz) +
-                 c011 * (1-wx) * wy * wz +
-                 c100 * wx * (1-wy) * (1-wz) +
-                 c101 * wx * (1-wy) * wz +
-                 c110 * wx * wy * (1-wz) +
-                 c111 * wx * wy * wz)
+        result = (
+            c000 * (1 - wx) * (1 - wy) * (1 - wz)
+            + c001 * (1 - wx) * (1 - wy) * wz
+            + c010 * (1 - wx) * wy * (1 - wz)
+            + c011 * (1 - wx) * wy * wz
+            + c100 * wx * (1 - wy) * (1 - wz)
+            + c101 * wx * (1 - wy) * wz
+            + c110 * wx * wy * (1 - wz)
+            + c111 * wx * wy * wz
+        )
 
         return result
 
@@ -328,7 +327,7 @@ class DefectDynamics:
             perpendicular = np.array([-velocity[1], velocity[0], 0])
             if np.linalg.norm(perpendicular) < 1e-10:
                 perpendicular = np.array([0, -velocity[2], velocity[1]])
-            
+
             perpendicular = perpendicular / np.linalg.norm(perpendicular)
             gyroscopic_force = G * np.linalg.norm(velocity) * perpendicular
         else:

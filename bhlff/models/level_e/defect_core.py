@@ -63,7 +63,7 @@ class DefectModel(ABC):
     def _setup_defect_operators(self) -> None:
         """
         Setup operators for defect calculations.
-        
+
         Physical Meaning:
             Initializes the mathematical operators required for
             defect dynamics, including fractional Laplacian and
@@ -78,7 +78,7 @@ class DefectModel(ABC):
     def _setup_fractional_laplacian(self) -> None:
         """
         Setup fractional Laplacian operator.
-        
+
         Physical Meaning:
             Computes the spectral representation of the fractional
             Laplacian operator μ(-Δ)^β required for defect dynamics
@@ -101,7 +101,7 @@ class DefectModel(ABC):
     def _setup_interaction_potential(self) -> None:
         """
         Setup interaction potential between defects.
-        
+
         Physical Meaning:
             Initializes the interaction potential between topological
             defects, which governs their mutual forces and dynamics.
@@ -111,27 +111,32 @@ class DefectModel(ABC):
         self.interaction_strength = self.params.get("interaction_strength", 1.0)
         self.interaction_range = self.params.get("interaction_range", 1.0)
         self.cutoff_radius = self.params.get("cutoff_radius", 0.1)
-        
+
         # Setup fractional Green function parameters for defect interactions
         beta = self.params.get("beta", 1.0)
         self.beta = beta
-        
+
         # Fractional Green function normalization: C_β chosen so that (-Δ)^β G_β = δ in R³
         if beta < 1.5:
-            self.green_function_prefactor = self.interaction_strength * self._compute_fractional_green_normalization(beta)
+            self.green_function_prefactor = (
+                self.interaction_strength
+                * self._compute_fractional_green_normalization(beta)
+            )
         else:
             # Fallback for β ≥ 1.5
             self.green_function_prefactor = self.interaction_strength / (4 * np.pi)
-        
+
         # Remove default screening (λ=0 as per ALL.md)
         self.tempered_lambda = self.params.get("tempered_lambda", 0.0)
-        
+
         # Forbid mass terms: assert tempered_lambda==0 in base configs
         if self.tempered_lambda > 0:
             # Allow override only in diagnostic paths
             diagnostic_mode = self.params.get("diagnostic_mode", False)
             if not diagnostic_mode:
-                raise ValueError(f"Mass terms forbidden in base regime: tempered_lambda={self.tempered_lambda} > 0. Use diagnostic_mode=True for diagnostics only.")
+                raise ValueError(
+                    f"Mass terms forbidden in base regime: tempered_lambda={self.tempered_lambda} > 0. Use diagnostic_mode=True for diagnostics only."
+                )
             self.screening_length = self.tempered_lambda
         else:
             self.screening_length = 0.0
@@ -241,7 +246,7 @@ class DefectModel(ABC):
         L = self.domain.L
 
         # Create circular integration path
-        theta = np.linspace(0, 2*np.pi, 100)
+        theta = np.linspace(0, 2 * np.pi, 100)
         x_path = center[0] + integration_radius * np.cos(theta)
         y_path = center[1] + integration_radius * np.sin(theta)
 
@@ -253,61 +258,63 @@ class DefectModel(ABC):
         dphase = np.append(dphase, phase_path[0] - phase_path[-1])
 
         # Handle phase jumps
-        dphase = np.where(dphase > np.pi, dphase - 2*np.pi, dphase)
-        dphase = np.where(dphase < -np.pi, dphase + 2*np.pi, dphase)
+        dphase = np.where(dphase > np.pi, dphase - 2 * np.pi, dphase)
+        dphase = np.where(dphase < -np.pi, dphase + 2 * np.pi, dphase)
 
         # Integrate to get charge
         charge = np.sum(dphase) / (2 * np.pi)
 
         return np.round(charge)
 
-    def _interpolate_phase_along_path(self, phase: np.ndarray, x_path: np.ndarray, y_path: np.ndarray) -> np.ndarray:
+    def _interpolate_phase_along_path(
+        self, phase: np.ndarray, x_path: np.ndarray, y_path: np.ndarray
+    ) -> np.ndarray:
         """
         Interpolate phase along integration path.
-        
+
         Physical Meaning:
             Computes the phase values along a circular path around
             the defect for topological charge calculation.
         """
         N = self.domain.N
         L = self.domain.L
-        
+
         # Convert to grid indices
         i_path = np.round(x_path * N / L).astype(int) % N
         j_path = np.round(y_path * N / L).astype(int) % N
-        
+
         # Extract phase values
         phase_values = phase[i_path, j_path]
-        
+
         return phase_values
 
     def _compute_fractional_green_normalization(self, beta: float) -> float:
         """
         Compute normalization constant for fractional Green function.
-        
+
         Physical Meaning:
             Calculates the normalization constant C_β for the fractional
             Green function G_β such that (-Δ)^β G_β = δ in R³.
-            
+
         Mathematical Foundation:
             For 3D fractional Laplacian: C_β = Γ(3/2-β) / (2^(2β) π^(3/2) Γ(β))
             This ensures proper normalization of the fractional Green function.
             The exact formula ensures that ∫ G_β(r) d³r = 1 and (-Δ)^β G_β = δ.
-            
+
         Args:
             beta: Fractional order parameter
-            
+
         Returns:
             Normalization constant C_β
         """
         if beta <= 0 or beta >= 1.5:
             # Fallback to classical case for extreme values
             return 1.0 / (4 * np.pi)
-        
+
         # Exact normalization for 3D fractional Green function
         # C_β = Γ(3/2-β) / (2^(2β) π^(3/2) Γ(β))
         # This is the mathematically correct normalization
-        numerator = gamma(3/2 - beta)
-        denominator = (2**(2*beta)) * (np.pi**(3/2)) * gamma(beta)
-        
+        numerator = gamma(3 / 2 - beta)
+        denominator = (2 ** (2 * beta)) * (np.pi ** (3 / 2)) * gamma(beta)
+
         return numerator / denominator

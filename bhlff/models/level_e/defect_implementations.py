@@ -61,7 +61,7 @@ class VortexDefect(DefectModel):
     def _setup_vortex_parameters(self) -> None:
         """
         Setup parameters specific to vortex defects.
-        
+
         Physical Meaning:
             Initializes vortex-specific parameters including
             circulation, core size, and velocity field properties.
@@ -115,20 +115,20 @@ class VortexDefect(DefectModel):
     def _create_vortex_amplitude(self, r: np.ndarray) -> np.ndarray:
         """
         Create amplitude profile for vortex.
-        
+
         Physical Meaning:
             Generates the amplitude profile that determines the
             spatial extent of the vortex, with zero amplitude
             at the core and smooth transition to the background.
         """
         coherence_length = self.params.get("coherence_length", 0.5)
-        
+
         # Tanh profile for smooth amplitude transition
         amplitude = np.tanh(r / coherence_length)
-        
+
         # Ensure zero amplitude at core
         amplitude = np.where(r < self.core_radius, 0.0, amplitude)
-        
+
         return amplitude
 
 
@@ -146,10 +146,10 @@ class MultiDefectSystem(DefectModel):
     """
 
     def __init__(
-        self, 
-        domain: "Domain", 
+        self,
+        domain: "Domain",
         physics_params: Dict[str, Any],
-        initial_defects: Optional[List[Dict[str, Any]]] = None
+        initial_defects: Optional[List[Dict[str, Any]]] = None,
     ):
         """
         Initialize multi-defect system.
@@ -164,23 +164,23 @@ class MultiDefectSystem(DefectModel):
             initial_defects: List of initial defect configurations
         """
         super().__init__(domain, physics_params)
-        
+
         # Initialize defect dynamics and interactions
         self.dynamics = DefectDynamics(domain, physics_params)
         self.interactions = DefectInteractions(domain, physics_params)
-        
+
         # Setup initial defects
         if initial_defects is None:
             self.defects = []
         else:
             self.defects = initial_defects.copy()
-        
+
         self._setup_multi_defect_parameters()
 
     def _setup_multi_defect_parameters(self) -> None:
         """
         Setup parameters for multi-defect system.
-        
+
         Physical Meaning:
             Initializes parameters specific to multi-defect
             systems including interaction ranges, annihilation
@@ -194,7 +194,7 @@ class MultiDefectSystem(DefectModel):
     def _setup_interaction_potential(self) -> None:
         """
         Setup interaction potential for multi-defect system.
-        
+
         Physical Meaning:
             Initializes the interaction potential between multiple
             defects, including Green functions and screening effects.
@@ -226,9 +226,7 @@ class MultiDefectSystem(DefectModel):
         return np.array(forces)
 
     def _compute_pair_force(
-        self, 
-        defect_i: Dict[str, Any], 
-        defect_j: Dict[str, Any]
+        self, defect_i: Dict[str, Any], defect_j: Dict[str, Any]
     ) -> np.ndarray:
         """
         Compute force between defect pair.
@@ -274,7 +272,7 @@ class MultiDefectSystem(DefectModel):
             return {"annihilated": False, "reason": "Invalid defect pair"}
 
         i, j = defect_pair
-        
+
         # Extract defect information
         positions = [defect["position"] for defect in self.defects]
         charges = [defect["charge"] for defect in self.defects]
@@ -310,9 +308,9 @@ class MultiDefectSystem(DefectModel):
         new_defect = {
             "position": np.array(position),
             "charge": charge,
-            "id": len(self.defects)
+            "id": len(self.defects),
         }
-        
+
         self.defects.append(new_defect)
 
     def remove_defect(self, defect_id: int) -> None:
@@ -383,13 +381,13 @@ class MultiDefectSystem(DefectModel):
     def _check_and_handle_annihilation(self) -> None:
         """
         Check for and handle defect annihilation.
-        
+
         Physical Meaning:
             Checks if any defect pairs are close enough for
             annihilation and handles the annihilation process.
         """
         n_defects = len(self.defects)
-        
+
         # Check all pairs for annihilation
         for i in range(n_defects):
             for j in range(i + 1, n_defects):
@@ -398,7 +396,7 @@ class MultiDefectSystem(DefectModel):
                     # Check separation
                     r_ij = self.defects[j]["position"] - self.defects[i]["position"]
                     r_magnitude = np.linalg.norm(r_ij)
-                    
+
                     if r_magnitude < self.annihilation_radius:
                         # Handle annihilation
                         self.simulate_defect_annihilation([i, j])

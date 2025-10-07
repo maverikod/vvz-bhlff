@@ -32,9 +32,9 @@ from .defect_interactions import DefectInteractions
 
 # Make all classes available at package level
 __all__ = [
-    'DefectModel',
-    'VortexDefect', 
-    'MultiDefectSystem',
-    'DefectDynamics',
-    'DefectInteractions'
+    "DefectModel",
+    "VortexDefect",
+    "MultiDefectSystem",
+    "DefectDynamics",
+    "DefectInteractions",
 ]

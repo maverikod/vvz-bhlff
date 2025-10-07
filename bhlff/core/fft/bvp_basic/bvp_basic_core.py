@@ -395,4 +395,3 @@ class BVPCoreSolver(AbstractSolverCore):
             return False
 
         return True
-

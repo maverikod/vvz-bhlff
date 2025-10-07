@@ -183,7 +183,7 @@ class PhaseMapper:
         Physical Meaning:
             Runs simulation with given parameters and returns
             key observables for regime classification.
-            
+
         Mathematical Foundation:
             Solves the 7D phase field equation with given parameters
             and computes physical observables.
@@ -194,21 +194,21 @@ class PhaseMapper:
         beta = params.get("beta", 1.0)
         mu = params.get("mu", 1.0)
         lambda_param = params.get("lambda", 0.0)
-        
+
         # Initialize 7D phase field simulation
         # Domain: 3 spatial + 3 phase + 1 time dimensions
         N = 64  # Grid resolution
         L = 10.0  # Domain size
         dt = 0.01  # Time step
         T = 1.0  # Total time
-        
+
         # Create 7D grid
-        x = np.linspace(-L/2, L/2, N)
+        x = np.linspace(-L / 2, L / 2, N)
         dx = x[1] - x[0]
-        
+
         # Initialize field
         field = np.zeros((N, N, N, N, N, N, N), dtype=complex)
-        
+
         # Add initial perturbation
         for i in range(N):
             for j in range(N):
@@ -217,12 +217,14 @@ class PhaseMapper:
                         for m in range(N):
                             for n in range(N):
                                 for o in range(N):
-                                    r = np.sqrt(x[i]**2 + x[j]**2 + x[k]**2)
+                                    r = np.sqrt(x[i] ** 2 + x[j] ** 2 + x[k] ** 2)
                                     if r > 0:
-                                        field[i, j, k, l, m, n, o] = np.exp(-r**2 / 2) * np.exp(1j * np.random.uniform(0, 2*np.pi))
-        
+                                        field[i, j, k, l, m, n, o] = np.exp(
+                                            -(r**2) / 2
+                                        ) * np.exp(1j * np.random.uniform(0, 2 * np.pi))
+
         # Time evolution
-        for t in range(int(T/dt)):
+        for t in range(int(T / dt)):
             # Compute fractional Laplacian in 7D
             field_fft = np.fft.fftn(field)
             kx = np.fft.fftfreq(N, dx)
@@ -232,21 +234,33 @@ class PhaseMapper:
             kphi2 = np.fft.fftfreq(N, dx)
             kphi3 = np.fft.fftfreq(N, dx)
             kt = np.fft.fftfreq(N, dt)
-            
+
             # 7D wave vector magnitude
-            KX, KY, KZ, KPHI1, KPHI2, KPHI3, KT = np.meshgrid(kx, ky, kz, kphi1, kphi2, kphi3, kt, indexing='ij')
-            k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2 + KPHI1**2 + KPHI2**2 + KPHI3**2 + KT**2)
-            
+            KX, KY, KZ, KPHI1, KPHI2, KPHI3, KT = np.meshgrid(
+                kx, ky, kz, kphi1, kphi2, kphi3, kt, indexing="ij"
+            )
+            k_magnitude = np.sqrt(
+                KX**2 + KY**2 + KZ**2 + KPHI1**2 + KPHI2**2 + KPHI3**2 + KT**2
+            )
+
             # Fractional Laplacian operator
             laplacian_operator = mu * (k_magnitude ** (2 * beta)) + lambda_param
-            
-            # Time evolution: ∂φ/∂t = -L_β φ
-            field_fft = field_fft * np.exp(-laplacian_operator * dt)
+
+            # Time evolution: explicit Euler in spectral domain (no exponential decay)
+            field_fft = field_fft - laplacian_operator * field_fft * dt
             field = np.fft.ifftn(field_fft)
-        
+            # Apply semi-transparent resonator boundary (spatial axes 0,1,2)
+            try:
+                from bhlff.core.bvp.boundary.step_resonator import apply_step_resonator
+
+                field = apply_step_resonator(field, axes=(0, 1, 2), R=0.1, T=0.9)
+            except Exception:
+                # Boundary operator optional if not available in minimal runs
+                pass
+
         # Compute observables from final field
         field_abs = np.abs(field)
-        
+
         # Power law exponent from radial profile
         center = N // 2
         r_values = []
@@ -254,11 +268,15 @@ class PhaseMapper:
         for i in range(N):
             for j in range(N):
                 for k in range(N):
-                    r = np.sqrt((x[i] - x[center])**2 + (x[j] - x[center])**2 + (x[k] - x[center])**2)
+                    r = np.sqrt(
+                        (x[i] - x[center]) ** 2
+                        + (x[j] - x[center]) ** 2
+                        + (x[k] - x[center]) ** 2
+                    )
                     if r > 0:
                         r_values.append(r)
                         field_values.append(np.mean(field_abs[i, j, k, :, :, :, :]))
-        
+
         # Fit power law
         if len(r_values) > 3:
             log_r = np.log(r_values)
@@ -269,13 +287,21 @@ class PhaseMapper:
         else:
             power_law_exponent = 2 * beta - 3
             quality_factor = 0.0
-        
+
         # Compute velocity from field evolution
-        field_energy = np.sum(np.abs(field)**2)
-        velocity = np.sqrt(2 * field_energy / (eta + chi_double_prime)) if (eta + chi_double_prime) > 0 else 0.0
-        
+        field_energy = np.sum(np.abs(field) ** 2)
+        velocity = (
+            np.sqrt(2 * field_energy / (eta + chi_double_prime))
+            if (eta + chi_double_prime) > 0
+            else 0.0
+        )
+
         # Compute energy leak
-        energy_leak = chi_double_prime * field_energy / (eta + chi_double_prime) if (eta + chi_double_prime) > 0 else 0.0
+        energy_leak = (
+            chi_double_prime * field_energy / (eta + chi_double_prime)
+            if (eta + chi_double_prime) > 0
+            else 0.0
+        )
 
         return {
             "power_law_exponent": float(power_law_exponent),

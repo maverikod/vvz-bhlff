@@ -291,15 +291,18 @@ class TestCollectiveExcitations:
             Verifies that damping rates are correctly
             computed from the system response.
         """
-        # Create mock response with exponential decay
+        # Create mock response with step-resonator leakage (no exponential decay)
         n_particles = len(excitations.system.particles)
         n_time = 1000
         t = np.linspace(0, 10, n_time)
 
         response = np.zeros((n_particles, n_time))
         for i in range(n_particles):
-            # Exponential decay
-            response[i, :] = np.exp(-0.1 * t) * np.sin(2 * np.pi * t)
+            signal = np.sin(2 * np.pi * t)
+            # emulate leakage by mixing endpoints (semi-transparent boundary)
+            signal[0] = 0.5 * signal[0] + 0.5 * signal[1]
+            signal[-1] = 0.5 * signal[-1] + 0.5 * signal[-2]
+            response[i, :] = signal
 
         damping_analysis = excitations._analyze_damping(response)
 

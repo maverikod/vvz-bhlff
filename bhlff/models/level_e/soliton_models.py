@@ -39,11 +39,11 @@ from .soliton_optimization import SolitonOptimizer
 
 # Re-export for backward compatibility
 __all__ = [
-    'SolitonModel',
-    'BaryonSoliton', 
-    'SkyrmionSoliton',
-    'ConvergenceError',
-    'SolitonEnergyCalculator',
-    'SolitonStabilityAnalyzer',
-    'SolitonOptimizer'
+    "SolitonModel",
+    "BaryonSoliton",
+    "SkyrmionSoliton",
+    "ConvergenceError",
+    "SolitonEnergyCalculator",
+    "SolitonStabilityAnalyzer",
+    "SolitonOptimizer",
 ]

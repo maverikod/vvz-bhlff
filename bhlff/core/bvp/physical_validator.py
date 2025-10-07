@@ -9,8 +9,10 @@ ensuring that all results are consistent with the theoretical framework
 and physical principles of the 7D phase field theory.
 """
 
+# flake8: noqa: E501,E203
+
 import numpy as np
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Dict, Any, Optional, Tuple
 import logging
 from abc import ABC, abstractmethod
 
@@ -78,7 +80,9 @@ class PhysicalValidator(ABC):
             Validates that the result satisfies all physical constraints
             and theoretical requirements.
         """
-        pass
+        raise NotImplementedError(
+            "Subclasses must implement validate_physical_constraints"
+        )
 
     @abstractmethod
     def validate_theoretical_bounds(self, result: Dict[str, Any]) -> Dict[str, Any]:
@@ -89,7 +93,9 @@ class PhysicalValidator(ABC):
             Validates that the result is within theoretical bounds
             and limits.
         """
-        pass
+        raise NotImplementedError(
+            "Subclasses must implement validate_theoretical_bounds"
+        )
 
 
 class BVPPhysicalValidator(PhysicalValidator):

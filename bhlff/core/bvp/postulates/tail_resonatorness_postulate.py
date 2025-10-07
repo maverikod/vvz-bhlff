@@ -94,6 +94,19 @@ class BVPPostulate6_TailResonatorness(BVPPostulate):
                 - min_required_resonances (int): Minimum required resonances
                 - min_required_quality (float): Minimum required Q-factor
         """
+        # Apply semi-transparent resonator boundary mixing in real space
+        try:
+            from bhlff.core.bvp.boundary.step_resonator import apply_step_resonator
+
+            envelope = apply_step_resonator(
+                envelope,
+                axes=(0, 1, 2),
+                R=self.config.get("boundary_R", 0.1),
+                T=self.config.get("boundary_T", 0.9),
+            )
+        except Exception:
+            pass
+
         # Compute frequency spectrum
         fft_envelope = np.fft.fftn(envelope)
         power_spectrum = np.abs(fft_envelope) ** 2

@@ -17,10 +17,13 @@ Example:
     >>> result = analyzer.separate_zones(field, center, thresholds)
 """
 
+# flake8: noqa: E501
+
 import numpy as np
 from typing import Dict, Any, Tuple, List
 import matplotlib.pyplot as plt
-from pathlib import Path
+from .zone_analyzer_utils import visualize_zone_analysis as _viz_zone
+from .zone_analyzer_utils import run_zone_analysis_variations as _run_variations
 
 
 class LevelBZoneAnalyzer:
@@ -41,7 +44,23 @@ class LevelBZoneAnalyzer:
 
     def __init__(self):
         """Initialize zone analyzer."""
-        pass
+        # Default thresholds for zone separation (can be overridden per call)
+        self.default_thresholds: Dict[str, float] = {
+            "N_core": 0.7,
+            "S_core": 0.6,
+            "N_tail": 0.2,
+            "S_tail": 0.2,
+        }
+        # Visualization options
+        self.figure_size: Tuple[int, int] = (12, 10)
+        self.colormaps: Dict[str, str] = {
+            "core": "viridis",
+            "tail": "plasma",
+            "N": "hot",
+            "S": "cool",
+        }
+        # Numerical stability parameters
+        self.eps: float = 1e-15
 
     def separate_zones(
         self, field: np.ndarray, center: List[float], thresholds: Dict[str, float]
@@ -72,7 +91,6 @@ class LevelBZoneAnalyzer:
         indicators = self._compute_zone_indicators(field)
         N = indicators["N"]
         S = indicators["S"]
-        C = indicators["C"]
 
         # 2. Normalize indicators
         N_norm = N / np.max(N) if np.max(N) > 0 else N
@@ -111,7 +129,13 @@ class LevelBZoneAnalyzer:
             "thresholds": thresholds,
         }
 
-    def _compute_zone_indicators(self, field: np.ndarray) -> Dict[str, np.ndarray]:
+    def _compute_zone_indicators(
+        self,
+        field: np.ndarray,
+        spatial_axes: Tuple[int, int, int] = (0, 1, 2),
+        phase_axes: Tuple[int, int, int] = (3, 4, 5),
+        time_axis: int = 6,
+    ) -> Dict[str, np.ndarray]:
         """
         Compute zone indicators N, S, C.
 
@@ -124,65 +148,77 @@ class LevelBZoneAnalyzer:
             - S: second derivative (curvature indicator)
             - C: coherence indicator (local "stiffness")
         """
-        # 1. Indicator N: norm of gradient
-        N = self._compute_norm_gradient(field)
+        # 1. Indicator N: norm of gradient across all 7D axes
+        N = self._compute_norm_gradient(field, spatial_axes, phase_axes, time_axis)
 
-        # 2. Indicator S: second derivative
-        S = self._compute_second_derivative(field)
+        # 2. Indicator S: second derivative (7D Laplacian magnitude)
+        S = self._compute_second_derivative(field, spatial_axes, phase_axes, time_axis)
 
-        # 3. Indicator C: coherence
-        C = self._compute_coherence(field)
+        # 3. Indicator C: coherence (amplitude gradient norm over 7D)
+        C = self._compute_coherence(field, spatial_axes, phase_axes, time_axis)
 
         return {"N": N, "S": S, "C": C}
 
-    def _compute_norm_gradient(self, field: np.ndarray) -> np.ndarray:
-        """Compute norm of field gradient."""
-        # Compute gradients in all spatial dimensions
-        grad_x = np.gradient(field, axis=0)
-        grad_y = np.gradient(field, axis=1)
-        grad_z = np.gradient(field, axis=2)
+    def _compute_norm_gradient(
+        self,
+        field: np.ndarray,
+        spatial_axes: Tuple[int, int, int],
+        phase_axes: Tuple[int, int, int],
+        time_axis: int,
+    ) -> np.ndarray:
+        """Compute norm of field gradient across 7D axes."""
+        grads = []
+        for ax in (*spatial_axes, *phase_axes, time_axis):
+            grads.append(np.gradient(field, axis=ax))
+        # Sum of squares over all gradient components
+        sq_sum = np.zeros_like(field, dtype=float)
+        for g in grads:
+            sq_sum += np.abs(g) ** 2
+        return np.sqrt(sq_sum)
 
-        # Compute norm
-        N = np.sqrt(np.abs(grad_x) ** 2 + np.abs(grad_y) ** 2 + np.abs(grad_z) ** 2)
+    def _compute_second_derivative(
+        self,
+        field: np.ndarray,
+        spatial_axes: Tuple[int, int, int],
+        phase_axes: Tuple[int, int, int],
+        time_axis: int,
+    ) -> np.ndarray:
+        """Compute magnitude of 7D Laplacian (sum of second derivatives)."""
+        lap = self._compute_laplacian(field, spatial_axes, phase_axes, time_axis)
+        return np.abs(lap)
 
-        return N
+    def _compute_laplacian(
+        self,
+        field: np.ndarray,
+        spatial_axes: Tuple[int, int, int],
+        phase_axes: Tuple[int, int, int],
+        time_axis: int,
+    ) -> np.ndarray:
+        """Compute 7D Laplacian (sum of second derivatives along all axes)."""
+        # Accumulate in complex if field is complex to avoid casting issues
+        acc_dtype = complex if np.iscomplexobj(field) else field.dtype
+        lap = np.zeros_like(field, dtype=acc_dtype)
+        for ax in (*spatial_axes, *phase_axes, time_axis):
+            lap += np.gradient(np.gradient(field, axis=ax), axis=ax)
+        # Return magnitude for complex inputs to produce real-valued indicator
+        return lap if not np.iscomplexobj(field) else np.abs(lap)
 
-    def _compute_second_derivative(self, field: np.ndarray) -> np.ndarray:
-        """Compute second derivative indicator."""
-        # Compute Laplacian
-        laplacian = self._compute_laplacian(field)
-
-        # Second derivative indicator
-        S = np.abs(laplacian)
-
-        return S
-
-    def _compute_laplacian(self, field: np.ndarray) -> np.ndarray:
-        """Compute Laplacian of the field."""
-        # Second derivatives in each dimension
-        d2dx2 = np.gradient(np.gradient(field, axis=0), axis=0)
-        d2dy2 = np.gradient(np.gradient(field, axis=1), axis=1)
-        d2dz2 = np.gradient(np.gradient(field, axis=2), axis=2)
-
-        # Laplacian
-        laplacian = d2dx2 + d2dy2 + d2dz2
-
-        return laplacian
-
-    def _compute_coherence(self, field: np.ndarray) -> np.ndarray:
-        """Compute coherence indicator."""
-        # Field amplitude
+    def _compute_coherence(
+        self,
+        field: np.ndarray,
+        spatial_axes: Tuple[int, int, int],
+        phase_axes: Tuple[int, int, int],
+        time_axis: int,
+    ) -> np.ndarray:
+        """Compute coherence indicator as 7D amplitude gradient norm."""
         amplitude = np.abs(field)
-
-        # Gradient of amplitude
-        grad_amp_x = np.gradient(amplitude, axis=0)
-        grad_amp_y = np.gradient(amplitude, axis=1)
-        grad_amp_z = np.gradient(amplitude, axis=2)
-
-        # Coherence indicator (local "stiffness")
-        C = np.sqrt(grad_amp_x**2 + grad_amp_y**2 + grad_amp_z**2)
-
-        return C
+        grads = []
+        for ax in (*spatial_axes, *phase_axes, time_axis):
+            grads.append(np.gradient(amplitude, axis=ax))
+        sq_sum = np.zeros_like(amplitude, dtype=float)
+        for g in grads:
+            sq_sum += g**2
+        return np.sqrt(sq_sum)
 
     def _compute_zone_radius(self, mask: np.ndarray, center: List[float]) -> float:
         """Compute effective radius of a zone."""
@@ -296,74 +332,7 @@ class LevelBZoneAnalyzer:
             analysis_result (Dict[str, Any]): Results from separate_zones
             output_path (str): Path to save the plot
         """
-        fig, axes = plt.subplots(2, 2, figsize=(12, 10))
-
-        # Plot 1: Zone map (2D slice)
-        ax1 = axes[0, 0]
-        field_slice = analysis_result["core_mask"][
-            :, :, analysis_result["core_mask"].shape[2] // 2
-        ]
-        im1 = ax1.imshow(field_slice, cmap="viridis", origin="lower")
-        ax1.set_title("Core Zone Map")
-        ax1.set_xlabel("x")
-        ax1.set_ylabel("y")
-        plt.colorbar(im1, ax=ax1)
-
-        # Plot 2: Tail zone map
-        ax2 = axes[0, 1]
-        tail_slice = analysis_result["tail_mask"][
-            :, :, analysis_result["tail_mask"].shape[2] // 2
-        ]
-        im2 = ax2.imshow(tail_slice, cmap="plasma", origin="lower")
-        ax2.set_title("Tail Zone Map")
-        ax2.set_xlabel("x")
-        ax2.set_ylabel("y")
-        plt.colorbar(im2, ax=ax2)
-
-        # Plot 3: N indicator
-        ax3 = axes[1, 0]
-        N_slice = analysis_result["indicators"]["N"][
-            :, :, analysis_result["indicators"]["N"].shape[2] // 2
-        ]
-        im3 = ax3.imshow(N_slice, cmap="hot", origin="lower")
-        ax3.set_title("N Indicator (Norm Gradient)")
-        ax3.set_xlabel("x")
-        ax3.set_ylabel("y")
-        plt.colorbar(im3, ax=ax3)
-
-        # Plot 4: S indicator
-        ax4 = axes[1, 1]
-        S_slice = analysis_result["indicators"]["S"][
-            :, :, analysis_result["indicators"]["S"].shape[2] // 2
-        ]
-        im4 = ax4.imshow(S_slice, cmap="cool", origin="lower")
-        ax4.set_title("S Indicator (Second Derivative)")
-        ax4.set_xlabel("x")
-        ax4.set_ylabel("y")
-        plt.colorbar(im4, ax=ax4)
-
-        # Add text with results
-        zone_stats = analysis_result["zone_stats"]
-        quality = analysis_result["quality_metrics"]
-
-        textstr = f'Core Radius: {analysis_result["r_core"]:.2f}\n'
-        textstr += f'Tail Radius: {analysis_result["r_tail"]:.2f}\n'
-        textstr += f'Core Fraction: {zone_stats["core"]["volume_fraction"]:.3f}\n'
-        textstr += f'Tail Fraction: {zone_stats["tail"]["volume_fraction"]:.3f}\n'
-        textstr += f'Quality Score: {quality["overall_score"]:.3f}'
-
-        ax4.text(
-            0.05,
-            0.95,
-            textstr,
-            transform=ax4.transAxes,
-            verticalalignment="top",
-            bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.8),
-        )
-
-        plt.tight_layout()
-        plt.savefig(output_path, dpi=300, bbox_inches="tight")
-        plt.close()
+        _viz_zone(analysis_result, output_path)
 
     def run_zone_analysis_variations(
         self,
@@ -386,25 +355,4 @@ class LevelBZoneAnalyzer:
         Returns:
             Dict[str, Any]: Results for all threshold combinations
         """
-        results = {}
-
-        for N_core in threshold_ranges.get("N_core", [3.0]):
-            for S_core in threshold_ranges.get("S_core", [1.0]):
-                for N_tail in threshold_ranges.get("N_tail", [0.3]):
-                    for S_tail in threshold_ranges.get("S_tail", [0.3]):
-                        thresholds = {
-                            "N_core": N_core,
-                            "S_core": S_core,
-                            "N_tail": N_tail,
-                            "S_tail": S_tail,
-                        }
-
-                        try:
-                            result = self.separate_zones(field, center, thresholds)
-                            key = f"Nc{N_core}_Sc{S_core}_Nt{N_tail}_St{S_tail}"
-                            results[key] = result
-                        except Exception as e:
-                            key = f"Nc{N_core}_Sc{S_core}_Nt{N_tail}_St{S_tail}"
-                            results[key] = {"error": str(e), "passed": False}
-
-        return results
+        return _run_variations(self.separate_zones, field, center, threshold_ranges)

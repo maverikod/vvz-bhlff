@@ -2,14 +2,14 @@
 Generated for: .
 
 ## Statistics
-- Total files: 513
+- Total files: 518
 - Total classes: 486
 - Total functions: 4065
-- Total imports: 2426
+- Total imports: 2443
 
 ## Files Overview
 ### ./code_mapper.py
-- Lines: 185
+- Lines: 201
 - Classes: 1
 - Functions: 9
 - Imports: 6
@@ -129,7 +129,7 @@ Generated for: .
 - Imports: 4
 
 ### ./tests/unit/test_acceptance_criteria.py
-- Lines: 232
+- Lines: 226
 - Classes: 1
 - Functions: 8
 - Imports: 6
@@ -165,16 +165,28 @@ Generated for: .
 - Imports: 10
 
 ### ./tests/unit/test_level_g/test_gravity_physics.py
-- Lines: 377
+- Lines: 405
 - Classes: 2
 - Functions: 14
 - Imports: 7
 
 ### ./tests/unit/test_level_g/test_vbp_envelope_physics.py
-- Lines: 478
+- Lines: 511
 - Classes: 5
 - Functions: 27
 - Imports: 8
+
+### ./tests/unit/test_level_g/test_envelope_effective_metric.py
+- Lines: 54
+- Classes: 0
+- Functions: 2
+- Imports: 2
+
+### ./tests/unit/test_level_b/test_zone_analyzer_7d.py
+- Lines: 40
+- Classes: 0
+- Functions: 1
+- Imports: 2
 
 ### ./tests/unit/test_level_b/__init__.py
 - Lines: 21
@@ -213,13 +225,13 @@ Generated for: .
 - Imports: 7
 
 ### ./tests/unit/test_level_e/test_soliton_physics.py
-- Lines: 534
+- Lines: 580
 - Classes: 1
 - Functions: 21
 - Imports: 7
 
 ### ./tests/unit/test_level_e/test_defect_physics.py
-- Lines: 341
+- Lines: 357
 - Classes: 1
 - Functions: 12
 - Imports: 4
@@ -237,19 +249,19 @@ Generated for: .
 - Imports: 3
 
 ### ./tests/unit/test_level_e/test_soliton_topology_physics.py
-- Lines: 471
+- Lines: 529
 - Classes: 1
 - Functions: 15
 - Imports: 7
 
 ### ./tests/unit/test_level_e/test_defect_fractional_physics.py
-- Lines: 265
+- Lines: 299
 - Classes: 1
 - Functions: 11
 - Imports: 6
 
 ### ./tests/unit/test_level_e/test_soliton_energy_physics.py
-- Lines: 455
+- Lines: 509
 - Classes: 1
 - Functions: 13
 - Imports: 7
@@ -267,7 +279,7 @@ Generated for: .
 - Imports: 5
 
 ### ./tests/unit/test_level_f/test_collective.py
-- Lines: 526
+- Lines: 529
 - Classes: 1
 - Functions: 24
 - Imports: 6
@@ -331,6 +343,12 @@ Generated for: .
 - Classes: 1
 - Functions: 23
 - Imports: 5
+
+### ./tests/unit/test_core/test_step_resonator_boundary.py
+- Lines: 41
+- Classes: 0
+- Functions: 3
+- Imports: 2
 
 ### ./tests/unit/test_core/test_bvp_constants_numerical_coverage.py
 - Lines: 198
@@ -543,7 +561,7 @@ Generated for: .
 - Imports: 6
 
 ### ./tests/unit/test_core/test_spectral_derivatives.py
-- Lines: 192
+- Lines: 193
 - Classes: 1
 - Functions: 15
 - Imports: 6
@@ -1203,7 +1221,7 @@ Generated for: .
 - Imports: 8
 
 ### ./bhlff/models/level_f/nonlinear.py
-- Lines: 655
+- Lines: 661
 - Classes: 1
 - Functions: 30
 - Imports: 3
@@ -1269,10 +1287,16 @@ Generated for: .
 - Imports: 5
 
 ### ./bhlff/models/level_b/power_law_analyzer.py
-- Lines: 318
+- Lines: 328
 - Classes: 1
 - Functions: 6
-- Imports: 5
+- Imports: 4
+
+### ./bhlff/models/level_b/zone_analyzer_utils.py
+- Lines: 146
+- Classes: 0
+- Functions: 2
+- Imports: 3
 
 ### ./bhlff/models/level_b/__init__.py
 - Lines: 37
@@ -1293,10 +1317,10 @@ Generated for: .
 - Imports: 1
 
 ### ./bhlff/models/level_b/zone_analyzer.py
-- Lines: 410
+- Lines: 358
 - Classes: 1
 - Functions: 12
-- Imports: 4
+- Imports: 5
 
 ### ./bhlff/models/level_b/power_law/scaling_regions.py
 - Lines: 379
@@ -1389,13 +1413,13 @@ Generated for: .
 - Imports: 4
 
 ### ./bhlff/models/level_e/defect_dynamics.py
-- Lines: 370
+- Lines: 369
 - Classes: 1
 - Functions: 11
 - Imports: 2
 
 ### ./bhlff/models/level_e/defect_implementations.py
-- Lines: 406
+- Lines: 404
 - Classes: 2
 - Functions: 15
 - Imports: 5
@@ -1407,19 +1431,19 @@ Generated for: .
 - Imports: 5
 
 ### ./bhlff/models/level_e/soliton_implementations.py
-- Lines: 288
+- Lines: 295
 - Classes: 2
 - Functions: 10
 - Imports: 3
 
 ### ./bhlff/models/level_e/phase_mapping.py
-- Lines: 667
+- Lines: 693
 - Classes: 1
 - Functions: 26
-- Imports: 3
+- Imports: 4
 
 ### ./bhlff/models/level_e/soliton_optimization.py
-- Lines: 227
+- Lines: 228
 - Classes: 2
 - Functions: 10
 - Imports: 2
@@ -1437,7 +1461,7 @@ Generated for: .
 - Imports: 2
 
 ### ./bhlff/models/level_e/defect_core.py
-- Lines: 313
+- Lines: 320
 - Classes: 1
 - Functions: 9
 - Imports: 4
@@ -1461,7 +1485,7 @@ Generated for: .
 - Imports: 6
 
 ### ./bhlff/models/level_e/defect_interactions.py
-- Lines: 433
+- Lines: 415
 - Classes: 1
 - Functions: 11
 - Imports: 3
@@ -1479,7 +1503,7 @@ Generated for: .
 - Imports: 6
 
 ### ./bhlff/models/level_e/soliton_core.py
-- Lines: 284
+- Lines: 288
 - Classes: 1
 - Functions: 10
 - Imports: 6
@@ -1503,7 +1527,7 @@ Generated for: .
 - Imports: 3
 
 ### ./bhlff/models/level_g/gravity_curvature.py
-- Lines: 356
+- Lines: 358
 - Classes: 1
 - Functions: 9
 - Imports: 2
@@ -1521,9 +1545,9 @@ Generated for: .
 - Imports: 3
 
 ### ./bhlff/models/level_g/cosmology.py
-- Lines: 522
+- Lines: 447
 - Classes: 2
-- Functions: 16
+- Functions: 14
 - Imports: 3
 
 ### ./bhlff/models/level_g/structure.py
@@ -1539,13 +1563,13 @@ Generated for: .
 - Imports: 8
 
 ### ./bhlff/models/level_g/gravity_waves.py
-- Lines: 411
+- Lines: 419
 - Classes: 1
 - Functions: 12
 - Imports: 2
 
 ### ./bhlff/models/level_g/gravity.py
-- Lines: 223
+- Lines: 231
 - Classes: 1
 - Functions: 8
 - Imports: 6
@@ -1569,7 +1593,7 @@ Generated for: .
 - Imports: 3
 
 ### ./bhlff/models/level_g/gravity_einstein.py
-- Lines: 352
+- Lines: 346
 - Classes: 1
 - Functions: 10
 - Imports: 3
@@ -1689,10 +1713,10 @@ Generated for: .
 - Imports: 2
 
 ### ./bhlff/solvers/base/abstract_solver.py
-- Lines: 299
+- Lines: 304
 - Classes: 1
 - Functions: 8
-- Imports: 4
+- Imports: 6
 
 ### ./bhlff/solvers/base/__init__.py
 - Lines: 24
@@ -1845,7 +1869,7 @@ Generated for: .
 - Imports: 7
 
 ### ./bhlff/core/bvp/physical_validator.py
-- Lines: 897
+- Lines: 903
 - Classes: 2
 - Functions: 22
 - Imports: 4
@@ -1911,10 +1935,10 @@ Generated for: .
 - Imports: 6
 
 ### ./bhlff/core/bvp/envelope_linear_solver.py
-- Lines: 213
+- Lines: 215
 - Classes: 1
 - Functions: 4
-- Imports: 5
+- Imports: 6
 
 ### ./bhlff/core/bvp/quenches_analyzer.py
 - Lines: 266
@@ -1953,7 +1977,7 @@ Generated for: .
 - Imports: 5
 
 ### ./bhlff/core/bvp/topological_defect_analyzer.py
-- Lines: 370
+- Lines: 366
 - Classes: 1
 - Functions: 9
 - Imports: 7
@@ -2264,6 +2288,12 @@ Generated for: .
 - Functions: 0
 - Imports: 7
 
+### ./bhlff/core/bvp/boundary/step_resonator.py
+- Lines: 81
+- Classes: 0
+- Functions: 1
+- Imports: 2
+
 ### ./bhlff/core/bvp/power_law/power_law_comparison.py
 - Lines: 80
 - Classes: 1
@@ -2277,7 +2307,7 @@ Generated for: .
 - Imports: 4
 
 ### ./bhlff/core/bvp/power_law/power_law_statistics.py
-- Lines: 234
+- Lines: 258
 - Classes: 1
 - Functions: 5
 - Imports: 4
@@ -2463,10 +2493,10 @@ Generated for: .
 - Imports: 4
 
 ### ./bhlff/core/bvp/interface/tail_interface.py
-- Lines: 118
+- Lines: 122
 - Classes: 1
 - Functions: 3
-- Imports: 4
+- Imports: 5
 
 ### ./bhlff/core/bvp/interface/transition_interface.py
 - Lines: 179
@@ -2595,10 +2625,10 @@ Generated for: .
 - Imports: 4
 
 ### ./bhlff/core/bvp/postulates/tail_resonatorness_postulate.py
-- Lines: 203
+- Lines: 216
 - Classes: 1
 - Functions: 3
-- Imports: 5
+- Imports: 6
 
 ### ./bhlff/core/bvp/postulates/power_balance/radiation_calculator.py
 - Lines: 198
@@ -2739,10 +2769,10 @@ Generated for: .
 - Imports: 3
 
 ### ./bhlff/core/operators/fractional_laplacian.py
-- Lines: 175
+- Lines: 193
 - Classes: 1
-- Functions: 6
-- Imports: 2
+- Functions: 7
+- Imports: 4
 
 ### ./bhlff/core/operators/__init__.py
 - Lines: 28
@@ -2805,10 +2835,10 @@ Generated for: .
 - Imports: 3
 
 ### ./bhlff/core/fft/spectral_derivatives_impl.py
-- Lines: 309
+- Lines: 499
 - Classes: 1
-- Functions: 9
-- Imports: 6
+- Functions: 11
+- Imports: 13
 
 ### ./bhlff/core/fft/spectral_operations.py
 - Lines: 82
@@ -2865,10 +2895,10 @@ Generated for: .
 - Imports: 13
 
 ### ./bhlff/core/fft/fractional_laplacian.py
-- Lines: 396
+- Lines: 54
 - Classes: 1
-- Functions: 11
-- Imports: 5
+- Functions: 1
+- Imports: 3
 
 ### ./bhlff/core/fft/spectral_derivatives.py
 - Lines: 34
@@ -2997,7 +3027,7 @@ Generated for: .
 - Imports: 4
 
 ### ./bhlff/core/fft/bvp_basic/bvp_basic_core.py
-- Lines: 398
+- Lines: 397
 - Classes: 1
 - Functions: 10
 - Imports: 12

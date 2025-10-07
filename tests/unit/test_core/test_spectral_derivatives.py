@@ -136,8 +136,9 @@ class TestSpectralDerivatives:
         """Test numerical stability of spectral derivatives."""
         # Test with extreme values
         field = np.array([1e10, -1e10, 1e-10, -1e-10])
+        # Broadcast along an axis of length 4 (e.g., axis=3)
         field = np.broadcast_to(
-            field.reshape(-1, 1, 1, 1, 1, 1, 1),
+            field.reshape(1, 1, 1, -1, 1, 1, 1),
             spectral_derivs.fft_backend.domain.shape,
         )
 

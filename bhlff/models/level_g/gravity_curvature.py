@@ -61,7 +61,7 @@ class VBPEnvelopeCurvatureCalculator:
     def _setup_curvature_parameters(self) -> None:
         """
         Setup parameters for curvature calculations.
-        
+
         Physical Meaning:
             Initializes numerical parameters for curvature
             calculations including resolution and precision.
@@ -93,29 +93,31 @@ class VBPEnvelopeCurvatureCalculator:
         """
         # Compute phase field gradients
         phase_gradients = self._compute_phase_gradients(phase_field)
-        
+
         # Compute effective metric from phase field
         g_eff = self._compute_effective_metric(phase_field, phase_gradients)
-        
+
         # Compute envelope curvature invariants
         curvature_invariants = self._compute_envelope_invariants(phase_gradients, g_eff)
-        
+
         # Compute anisotropy index
         anisotropy_index = self._compute_anisotropy_index(g_eff)
-        
+
         # Compute focusing rate
         focusing_rate = self._compute_focusing_rate(phase_gradients, g_eff)
-        
+
         return {
             "envelope_curvature_scalar": curvature_invariants["scalar"],
             "anisotropy_index": anisotropy_index,
             "focusing_rate": focusing_rate,
             "effective_metric": g_eff,
             "phase_gradients": phase_gradients,
-            "curvature_invariants": curvature_invariants
+            "curvature_invariants": curvature_invariants,
         }
 
-    def _compute_phase_gradients(self, phase_field: np.ndarray) -> Dict[str, np.ndarray]:
+    def _compute_phase_gradients(
+        self, phase_field: np.ndarray
+    ) -> Dict[str, np.ndarray]:
         """
         Compute gradients of the phase field.
 
@@ -136,23 +138,21 @@ class VBPEnvelopeCurvatureCalculator:
         """
         # Compute spatial gradients (3D)
         spatial_gradients = np.gradient(phase_field, axis=(0, 1, 2))
-        
+
         # Compute phase gradients (3D phase space)
         phase_gradients = np.gradient(phase_field, axis=(3, 4, 5))
-        
+
         # Compute time gradient
         time_gradient = np.gradient(phase_field, axis=6)
-        
+
         return {
             "spatial": spatial_gradients,
             "phase": phase_gradients,
-            "time": time_gradient
+            "time": time_gradient,
         }
 
     def _compute_effective_metric(
-        self, 
-        phase_field: np.ndarray, 
-        phase_gradients: Dict[str, np.ndarray]
+        self, phase_field: np.ndarray, phase_gradients: Dict[str, np.ndarray]
     ) -> np.ndarray:
         """
         Compute effective metric from phase field.
@@ -176,34 +176,32 @@ class VBPEnvelopeCurvatureCalculator:
         # Get parameters
         c_phi = self.params.get("c_phi", 1.0)  # Phase velocity
         chi_kappa = self.params.get("chi_kappa", 1.0)  # Bridge parameter
-        
+
         # Initialize 7D effective metric
         g_eff = np.zeros((7, 7))
-        
+
         # Time component: g00 = -1/c_φ^2
         g_eff[0, 0] = -1.0 / (c_phi**2)
-        
+
         # Spatial components: gij = A^{ij} = χ'/κ δ^{ij} (isotropic)
         for i in range(1, 4):
             g_eff[i, i] = chi_kappa
-        
+
         # Phase components: gαβ (phase space metric)
         for alpha in range(4, 7):
             g_eff[alpha, alpha] = 1.0  # Unit phase space metric
-        
+
         # Add phase field dependent corrections
         phase_amplitude = np.mean(np.abs(phase_field))
         correction_factor = 1.0 + 0.1 * phase_amplitude  # Small correction
-        
+
         for i in range(7):
             g_eff[i, i] *= correction_factor
-        
+
         return g_eff
 
     def _compute_envelope_invariants(
-        self, 
-        phase_gradients: Dict[str, np.ndarray], 
-        g_eff: np.ndarray
+        self, phase_gradients: Dict[str, np.ndarray], g_eff: np.ndarray
     ) -> Dict[str, float]:
         """
         Compute envelope curvature invariants.
@@ -227,26 +225,32 @@ class VBPEnvelopeCurvatureCalculator:
         # Compute scalar curvature from phase gradients
         spatial_grads = phase_gradients["spatial"]
         phase_grads = phase_gradients["phase"]
-        
+
         # Scalar invariant: sum of squared gradients (ensure real and non-negative)
-        spatial_invariant = np.sum([np.sum(np.abs(grad)**2) for grad in spatial_grads])
-        phase_invariant = np.sum([np.sum(np.abs(grad)**2) for grad in phase_grads])
-        
+        spatial_invariant = np.sum(
+            [np.sum(np.abs(grad) ** 2) for grad in spatial_grads]
+        )
+        phase_invariant = np.sum([np.sum(np.abs(grad) ** 2) for grad in phase_grads])
+
         # Combined envelope curvature scalar (ensure real and non-negative)
         envelope_scalar = np.real(spatial_invariant + phase_invariant)
-        
+
         # Anisotropy measure (ensure real and non-negative)
-        anisotropy_measure = np.real(np.std([np.sum(np.abs(grad)**2) for grad in spatial_grads]))
-        
+        anisotropy_measure = np.real(
+            np.std([np.sum(np.abs(grad) ** 2) for grad in spatial_grads])
+        )
+
         # Focusing measure (ensure real and non-negative)
-        focusing_measure = np.real(np.sum([np.sum(np.abs(grad)) for grad in spatial_grads]))
-        
+        focusing_measure = np.real(
+            np.sum([np.sum(np.abs(grad)) for grad in spatial_grads])
+        )
+
         return {
             "scalar": envelope_scalar,
             "anisotropy": anisotropy_measure,
             "focusing": focusing_measure,
             "spatial_invariant": np.real(spatial_invariant),
-            "phase_invariant": np.real(phase_invariant)
+            "phase_invariant": np.real(phase_invariant),
         }
 
     def _compute_anisotropy_index(self, g_eff: np.ndarray) -> float:
@@ -270,22 +274,20 @@ class VBPEnvelopeCurvatureCalculator:
         """
         # Extract spatial diagonal components (indices 1,2,3)
         spatial_diagonals = [g_eff[i, i] for i in range(1, 4)]
-        
+
         # Compute anisotropy index
         mean_diagonal = np.mean(spatial_diagonals)
         std_diagonal = np.std(spatial_diagonals)
-        
+
         if mean_diagonal > 0:
             anisotropy_index = std_diagonal / mean_diagonal
         else:
             anisotropy_index = 0.0
-        
+
         return anisotropy_index
 
     def _compute_focusing_rate(
-        self, 
-        phase_gradients: Dict[str, np.ndarray], 
-        g_eff: np.ndarray
+        self, phase_gradients: Dict[str, np.ndarray], g_eff: np.ndarray
     ) -> float:
         """
         Compute focusing rate of the envelope.
@@ -307,22 +309,22 @@ class VBPEnvelopeCurvatureCalculator:
             Focusing rate
         """
         spatial_grads = phase_gradients["spatial"]
-        
+
         # Compute divergence of normalized gradients
         focusing_rate = 0.0
-        
+
         for i, grad in enumerate(spatial_grads):
             # Compute gradient magnitude
             grad_magnitude = np.sqrt(np.sum(grad**2))
-            
+
             if grad_magnitude > 1e-12:  # Avoid division by zero
                 # Normalize gradient
                 normalized_grad = grad / grad_magnitude
-                
+
                 # Compute divergence (simplified)
                 divergence = np.sum(np.gradient(normalized_grad, axis=i))
                 focusing_rate -= divergence
-        
+
         return focusing_rate
 
     def compute_envelope_invariants(self, phase_field: np.ndarray) -> Dict[str, float]:
@@ -346,11 +348,11 @@ class VBPEnvelopeCurvatureCalculator:
         """
         # Compute phase field gradients
         phase_gradients = self._compute_phase_gradients(phase_field)
-        
+
         # Compute effective metric
         g_eff = self._compute_effective_metric(phase_field, phase_gradients)
-        
+
         # Compute invariants
         invariants = self._compute_envelope_invariants(phase_gradients, g_eff)
-        
+
         return invariants

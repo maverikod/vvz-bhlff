@@ -17,11 +17,12 @@ Example:
     >>> result = analyzer.analyze_power_law_tail(field, beta, center)
 """
 
+# flake8: noqa: E501
+
 import numpy as np
 from typing import Dict, Any, Tuple, List
 from scipy import stats
 import matplotlib.pyplot as plt
-from pathlib import Path
 
 
 class LevelBPowerLawAnalyzer:
@@ -41,7 +42,16 @@ class LevelBPowerLawAnalyzer:
 
     def __init__(self):
         """Initialize power law analyzer."""
-        pass
+        # Regression and analysis defaults
+        self.min_decades_required: float = 1.5
+        self.required_r_squared: float = 0.99
+        self.max_relative_error: float = 0.05
+        # Visualization defaults
+        self.figure_size: Tuple[int, int] = (10, 8)
+        self.line_color: str = "#1f77b4"
+        self.theory_color: str = "#d62728"
+        # Numerical stability epsilon
+        self.eps: float = 1e-15
 
     def analyze_power_law_tail(
         self,

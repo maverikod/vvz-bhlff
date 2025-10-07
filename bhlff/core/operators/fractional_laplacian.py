@@ -21,11 +21,15 @@ Example:
     >>> result = laplacian.apply(field)
 """
 
+# flake8: noqa: E501
+
 import numpy as np
+import logging
 
 # No additional typing imports needed
 
 from ..domain import Domain
+from ..fft.unified_spectral_operations import UnifiedSpectralOperations
 
 
 class FractionalLaplacian:
@@ -47,7 +51,7 @@ class FractionalLaplacian:
         _spectral_coeffs (np.ndarray): Pre-computed spectral coefficients.
     """
 
-    def __init__(self, domain: Domain, beta: float) -> None:
+    def __init__(self, domain: Domain, beta: float, lambda_param: float = 0.0) -> None:
         """
         Initialize fractional Laplacian operator.
 
@@ -67,6 +71,10 @@ class FractionalLaplacian:
 
         self.domain = domain
         self.beta = beta
+        self.lambda_param = lambda_param
+        self.logger = logging.getLogger(__name__)
+        # Unified spectral backend (CPU/CUDA with consistent normalization)
+        self._spectral_ops = UnifiedSpectralOperations(domain, precision="float64")
         self._spectral_coeffs: np.ndarray
         self._setup_spectral_coefficients()
 
@@ -81,30 +89,17 @@ class FractionalLaplacian:
         Mathematical Foundation:
             Computes |k|^(2β) where |k| is the magnitude of the wave vector.
         """
-        # Get 7D wave vectors for BVP theory
-        kx = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
-        ky = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
-        kz = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
-        kphi1 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
-        kphi2 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
-        kphi3 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
-        kt = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
+        # Compute 7D wave vector magnitude using domain grids
+        k_magnitude = self._compute_k_magnitude()
 
-        # Create 7D meshgrids
-        KX, KY, KZ, KPHI1, KPHI2, KPHI3, KT = np.meshgrid(
-            kx, ky, kz, kphi1, kphi2, kphi3, kt, indexing="ij"
-        )
-
-        # Compute 7D wave vector magnitude
-        k_magnitude = np.sqrt(
-            KX**2 + KY**2 + KZ**2 + KPHI1**2 + KPHI2**2 + KPHI3**2 + KT**2
-        )
-
-        # Compute spectral coefficients |k|^(2β)
-        self._spectral_coeffs = k_magnitude ** (2 * self.beta)
-
-        # Handle k=0 mode (DC component) for 7D
-        self._spectral_coeffs[0, 0, 0, 0, 0, 0, 0] = 0.0
+        # Compute spectral coefficients with λ handling per spec: D(k)=|k|^(2β), D(0)=λ
+        k_zero_mask = k_magnitude == 0
+        coeffs = np.zeros_like(k_magnitude)
+        nonzero = ~k_zero_mask
+        if np.any(nonzero):
+            coeffs[nonzero] = k_magnitude[nonzero] ** (2 * self.beta)
+        coeffs[k_zero_mask] = self.lambda_param
+        self._spectral_coeffs = coeffs
 
     def apply(self, field: np.ndarray) -> np.ndarray:
         """
@@ -133,14 +128,16 @@ class FractionalLaplacian:
                 f"domain shape {self.domain.shape}"
             )
 
-        # Transform to spectral space
-        field_spectral = np.fft.fftn(field)
+        # Transform to spectral space with unified backend (physics normalization)
+        field_spectral = self._spectral_ops.forward_fft(field, normalization="physics")
 
         # Apply spectral operator
         result_spectral = self._spectral_coeffs * field_spectral
 
-        # Transform back to real space
-        result = np.fft.ifftn(result_spectral)
+        # Transform back to real space with unified backend
+        result = self._spectral_ops.inverse_fft(
+            result_spectral, normalization="physics"
+        )
 
         return result.real
 
@@ -169,6 +166,41 @@ class FractionalLaplacian:
             float: Fractional order β.
         """
         return self.beta
+
+    def _compute_k_magnitude(self) -> np.ndarray:
+        """Compute 7D wave vector magnitude |k| for the domain grids."""
+        # Support both legacy Domain and Domain7DBVP APIs
+        if hasattr(self.domain, "N_spatial"):
+            # New 7D BVP domain
+            dx = self.domain.L_spatial / self.domain.N_spatial
+            kx = 2 * np.pi * np.fft.fftfreq(self.domain.N_spatial, d=dx)
+            ky = 2 * np.pi * np.fft.fftfreq(self.domain.N_spatial, d=dx)
+            kz = 2 * np.pi * np.fft.fftfreq(self.domain.N_spatial, d=dx)
+
+            dphi = 2 * np.pi / self.domain.N_phase
+            kphi1 = 2 * np.pi * np.fft.fftfreq(self.domain.N_phase, d=dphi)
+            kphi2 = 2 * np.pi * np.fft.fftfreq(self.domain.N_phase, d=dphi)
+            kphi3 = 2 * np.pi * np.fft.fftfreq(self.domain.N_phase, d=dphi)
+
+            dt = self.domain.T / self.domain.N_t
+            kt = 2 * np.pi * np.fft.fftfreq(self.domain.N_t, d=dt)
+        else:
+            # Legacy domain
+            kx = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+            ky = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+            kz = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+            kphi1 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+            kphi2 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+            kphi3 = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+            kt = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
+
+        KX, KY, KZ, KPHI1, KPHI2, KPHI3, KT = np.meshgrid(
+            kx, ky, kz, kphi1, kphi2, kphi3, kt, indexing="ij"
+        )
+        k_magnitude = np.sqrt(
+            KX**2 + KY**2 + KZ**2 + KPHI1**2 + KPHI2**2 + KPHI3**2 + KT**2
+        )
+        return k_magnitude
 
     def __repr__(self) -> str:
         """String representation of the fractional Laplacian."""

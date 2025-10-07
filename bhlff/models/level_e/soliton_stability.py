@@ -23,7 +23,7 @@ from typing import Dict, Any
 class SolitonStabilityAnalyzer:
     """
     Stability analyzer for soliton models.
-    
+
     Physical Meaning:
         Analyzes the stability of soliton solutions by computing
         eigenvalues and eigenvectors of the energy Hessian.
@@ -32,7 +32,7 @@ class SolitonStabilityAnalyzer:
     def __init__(self, domain: "Domain", physics_params: Dict[str, Any]):
         """
         Initialize stability analyzer.
-        
+
         Args:
             domain: Computational domain
             physics_params: Physical parameters
@@ -43,38 +43,38 @@ class SolitonStabilityAnalyzer:
     def analyze_stability(self, soliton: np.ndarray) -> Dict[str, Any]:
         """
         Analyze stability of soliton solution.
-        
+
         Physical Meaning:
             Investigates the response of the soliton to small perturbations
             to determine if it represents a stable minimum of the energy
             functional.
-            
+
         Mathematical Foundation:
             Computes the spectrum of the Hessian matrix δ²E/δU² at the
             soliton solution to identify unstable modes.
-            
+
         Args:
             soliton: Soliton field configuration
-            
+
         Returns:
             Dict containing stability analysis, unstable modes, frequencies
         """
         # Compute Hessian
         hessian = self._compute_energy_hessian(soliton)
-        
+
         # Diagonalize to get eigenvalues
         eigenvalues, eigenvectors = np.linalg.eigh(hessian)
-        
+
         # Analyze stability
         stable_modes = eigenvalues >= 0
         unstable_modes = eigenvalues < 0
-        
+
         # Compute oscillation frequencies
         frequencies = np.sqrt(np.abs(eigenvalues)) / (2 * np.pi)
-        
+
         # Analyze eigenmodes
         mode_analysis = self._analyze_eigenmodes(eigenvalues, eigenvectors)
-        
+
         return {
             "eigenvalues": eigenvalues,
             "eigenvectors": eigenvectors,
@@ -90,7 +90,7 @@ class SolitonStabilityAnalyzer:
     def _compute_energy_hessian(self, field: np.ndarray) -> np.ndarray:
         """
         Compute Hessian of energy functional.
-        
+
         Physical Meaning:
             Calculates the second derivative of the energy functional
             for stability analysis.
@@ -134,21 +134,21 @@ class SolitonStabilityAnalyzer:
     def _compute_energy_functional(self, field: np.ndarray) -> float:
         """
         Compute energy functional for Hessian calculation.
-        
+
         Physical Meaning:
             Computes the total energy of the field configuration
             for numerical differentiation.
         """
         # Simplified energy calculation for Hessian
         # In practice, this would call the full energy calculator
-        return np.sum(np.abs(field)**2)
+        return np.sum(np.abs(field) ** 2)
 
     def _analyze_eigenmodes(
         self, eigenvalues: np.ndarray, eigenvectors: np.ndarray
     ) -> Dict[str, Any]:
         """
         Analyze eigenmodes for understanding perturbation types.
-        
+
         Physical Meaning:
             Classifies eigenmodes by their physical meaning (translational,
             rotational, deformational).
@@ -182,7 +182,7 @@ class SolitonStabilityAnalyzer:
     def _analyze_mode_symmetry(self, eigenvector: np.ndarray) -> str:
         """
         Analyze symmetry of eigenmode.
-        
+
         Physical Meaning:
             Determines the type of symmetry of the perturbation
             (translational, rotational, deformational).

@@ -20,7 +20,7 @@ from .test_soliton_energy_physics import TestSolitonEnergyPhysics
 from .test_soliton_topology_physics import TestSolitonTopologyPhysics
 
 __all__ = [
-    'TestSolitonPhysics',
-    'TestSolitonEnergyPhysics', 
-    'TestSolitonTopologyPhysics'
+    "TestSolitonPhysics",
+    "TestSolitonEnergyPhysics",
+    "TestSolitonTopologyPhysics",
 ]

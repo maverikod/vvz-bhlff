@@ -23,7 +23,7 @@ from typing import Dict, Any
 class SolitonOptimizer:
     """
     Optimizer for soliton models.
-    
+
     Physical Meaning:
         Finds stable soliton solutions using optimization algorithms
         that minimize the energy functional.
@@ -32,7 +32,7 @@ class SolitonOptimizer:
     def __init__(self, domain: "Domain", physics_params: Dict[str, Any]):
         """
         Initialize optimizer.
-        
+
         Args:
             domain: Computational domain
             physics_params: Physical parameters
@@ -43,18 +43,18 @@ class SolitonOptimizer:
     def find_solution(self, initial_guess: np.ndarray) -> np.ndarray:
         """
         Find soliton solution using iterative methods.
-        
+
         Physical Meaning:
             Searches for stable localized field configurations that minimize
             the energy functional while preserving topological charge.
-            
+
         Mathematical Foundation:
             Solves the stationary equation δE/δU = 0 where E is the energy
             functional with Skyrme terms and WZW contribution.
-            
+
         Args:
             initial_guess: Initial field configuration U(x)
-            
+
         Returns:
             Soliton solution
         """
@@ -65,11 +65,11 @@ class SolitonOptimizer:
     def _solve_stationary_equation(self, initial_guess: np.ndarray) -> np.ndarray:
         """
         Solve stationary equation using Newton-Raphson method.
-        
+
         Physical Meaning:
             Finds field configuration that minimizes the energy
             functional, representing a stable soliton solution.
-            
+
         Mathematical Foundation:
             Iteratively solves F(U) = δE/δU = 0 using Newton's method:
             U^(n+1) = U^(n) - J^(-1) F(U^(n)) where J is the Jacobian.
@@ -110,7 +110,7 @@ class SolitonOptimizer:
     def _compute_energy_gradient(self, field: np.ndarray) -> np.ndarray:
         """
         Compute gradient of energy functional.
-        
+
         Physical Meaning:
             Calculates the first derivative of the energy functional
             with respect to the field configuration.
@@ -128,7 +128,7 @@ class SolitonOptimizer:
     def _compute_energy_hessian(self, field: np.ndarray) -> np.ndarray:
         """
         Compute Hessian of energy functional.
-        
+
         Physical Meaning:
             Calculates the second derivative of the energy functional
             for Newton-Raphson iterations.
@@ -172,21 +172,21 @@ class SolitonOptimizer:
     def _compute_energy_functional(self, field: np.ndarray) -> float:
         """
         Compute energy functional for optimization.
-        
+
         Physical Meaning:
             Computes the total energy of the field configuration
             for optimization algorithms.
         """
         # Simplified energy calculation for optimization
         # In practice, this would call the full energy calculator
-        return np.sum(np.abs(field)**2)
+        return np.sum(np.abs(field) ** 2)
 
     def _update_with_line_search(
         self, U: np.ndarray, delta_U: np.ndarray, F: np.ndarray
     ) -> np.ndarray:
         """
         Update solution with line search for optimal step size.
-        
+
         Physical Meaning:
             Finds optimal step size to ensure energy decrease
             and convergence of the Newton-Raphson method.
@@ -224,4 +224,5 @@ class SolitonOptimizer:
 
 class ConvergenceError(Exception):
     """Exception raised when soliton finding fails to converge."""
+
     pass

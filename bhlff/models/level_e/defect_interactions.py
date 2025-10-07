@@ -59,7 +59,7 @@ class DefectInteractions:
     def _setup_interaction_parameters(self) -> None:
         """
         Setup parameters for defect interactions.
-        
+
         Physical Meaning:
             Initializes the physical parameters required for
             defect interaction calculations including interaction
@@ -69,31 +69,34 @@ class DefectInteractions:
         self.interaction_range = self.params.get("interaction_range", 1.0)
         self.screening_length = self.params.get("screening_length", 0.5)
         self.cutoff_radius = self.params.get("cutoff_radius", 0.1)
-        
+
         # Fractional Green function parameters
         beta = self.params.get("beta", 1.0)
         self.beta = beta
         # Fractional Green function normalization: C_β chosen so that (-Δ)^β G_β = δ in R³
         # For 3D fractional Laplacian: C_β = Γ(3/2-β) / (2^(2β) π^(3/2) Γ(β))
-        self.green_prefactor = self.interaction_strength * self._compute_fractional_green_normalization(beta)
-        
+        self.green_prefactor = (
+            self.interaction_strength
+            * self._compute_fractional_green_normalization(beta)
+        )
+
         # Remove default screening (λ=0 as per ALL.md)
         self.tempered_lambda = self.params.get("tempered_lambda", 0.0)
-        
+
         # Forbid mass terms: assert tempered_lambda==0 in base configs
         if self.tempered_lambda > 0:
             # Allow override only in diagnostic paths
             diagnostic_mode = self.params.get("diagnostic_mode", False)
             if not diagnostic_mode:
-                raise ValueError(f"Mass terms forbidden in base regime: tempered_lambda={self.tempered_lambda} > 0. Use diagnostic_mode=True for diagnostics only.")
+                raise ValueError(
+                    f"Mass terms forbidden in base regime: tempered_lambda={self.tempered_lambda} > 0. Use diagnostic_mode=True for diagnostics only."
+                )
             self.screening_factor = 1.0 / self.tempered_lambda
         else:
             self.screening_factor = 0.0  # No screening in base regime
 
     def compute_interaction_forces(
-        self, 
-        positions: List[np.ndarray], 
-        charges: List[int]
+        self, positions: List[np.ndarray], charges: List[int]
     ) -> List[np.ndarray]:
         """
         Compute interaction forces between defects.
@@ -137,11 +140,7 @@ class DefectInteractions:
         return forces
 
     def _compute_pair_force(
-        self, 
-        r_ij: np.ndarray, 
-        r_magnitude: float, 
-        charge_i: int, 
-        charge_j: int
+        self, r_ij: np.ndarray, r_magnitude: float, charge_i: int, charge_j: int
     ) -> np.ndarray:
         """
         Compute force between defect pair.
@@ -206,27 +205,26 @@ class DefectInteractions:
         # Fractional Green function: G_β(r) = C_β r^(2β-3)
         # Always use fractional Green function - no fallback to Coulomb
         power = 2 * self.beta - 3
-        green_value = self.green_prefactor * (r ** power)
-        
+        green_value = self.green_prefactor * (r**power)
+
         # Gradient: dG_β/dr = C_β (2β-3) r^(2β-4)
         if power != 0:
             green_gradient = self.green_prefactor * power * (r ** (power - 1))
         else:
             green_gradient = 0.0
-        
+
         # Apply tempered screening if λ > 0 (diagnostic only)
         if self.tempered_lambda > 0:
             screening_factor = np.exp(-r * self.screening_factor)
             green_value *= screening_factor
-            green_gradient = green_gradient * screening_factor - green_value * self.screening_factor
+            green_gradient = (
+                green_gradient * screening_factor - green_value * self.screening_factor
+            )
 
         return green_value, green_gradient
 
     def simulate_defect_annihilation(
-        self, 
-        defect_pair: List[int],
-        positions: List[np.ndarray],
-        charges: List[int]
+        self, defect_pair: List[int], positions: List[np.ndarray], charges: List[int]
     ) -> Dict[str, Any]:
         """
         Simulate annihilation of defect-antidefect pair.
@@ -250,13 +248,10 @@ class DefectInteractions:
             Dictionary containing annihilation results
         """
         i, j = defect_pair
-        
+
         # Check if defects have opposite charges
         if charges[i] * charges[j] >= 0:
-            return {
-                "annihilated": False,
-                "reason": "Defects have same sign charges"
-            }
+            return {"annihilated": False, "reason": "Defects have same sign charges"}
 
         # Compute separation
         r_ij = positions[j] - positions[i]
@@ -264,15 +259,17 @@ class DefectInteractions:
 
         # Check if defects are close enough for annihilation
         annihilation_radius = self.params.get("annihilation_radius", 0.2)
-        
+
         if r_magnitude > annihilation_radius:
             return {
                 "annihilated": False,
-                "reason": f"Defects too far apart: {r_magnitude:.3f} > {annihilation_radius}"
+                "reason": f"Defects too far apart: {r_magnitude:.3f} > {annihilation_radius}",
             }
 
         # Compute annihilation energy
-        annihilation_energy = self._compute_annihilation_energy(charges[i], charges[j], r_magnitude)
+        annihilation_energy = self._compute_annihilation_energy(
+            charges[i], charges[j], r_magnitude
+        )
 
         # Compute energy release rate
         energy_release_rate = self._compute_energy_release_rate(annihilation_energy)
@@ -285,55 +282,52 @@ class DefectInteractions:
             "annihilation_energy": annihilation_energy,
             "energy_release_rate": energy_release_rate,
             "relaxation_time": relaxation_time,
-            "final_separation": r_magnitude
+            "final_separation": r_magnitude,
         }
 
     def _compute_annihilation_energy(
-        self, 
-        charge1: int, 
-        charge2: int, 
-        separation: float
+        self, charge1: int, charge2: int, separation: float
     ) -> float:
         """
         Compute energy released during annihilation using fractional Green function.
-        
+
         Physical Meaning:
             Calculates the energy released when a defect-antidefect
             pair annihilates, based on their charges and separation
             using the fractional Green function G_β(r).
-            
+
         Mathematical Foundation:
             Energy scales with the fractional Green function value
             at the separation distance: E ∝ |q₁q₂| G_β(r).
         """
         # Energy scales with charge magnitude
         charge_factor = abs(charge1 * charge2)
-        
+
         # Get Green function value at separation
         green_value, _ = self._compute_green_function(separation)
-        
+
         # Total annihilation energy from fractional Green function
         energy = charge_factor * green_value
-        
+
         return energy
 
     def _compute_energy_release_rate(self, annihilation_energy: float) -> float:
         """
         Compute rate of energy release during annihilation.
-        
+
         Physical Meaning:
             Calculates how quickly energy is released during
             the annihilation process.
         """
         # Energy release rate depends on annihilation energy
         release_rate = annihilation_energy / self.params.get("annihilation_time", 1.0)
-        
+
         return release_rate
 
     def _compute_relaxation_time(self, separation: float) -> float:
         """
         Compute field relaxation time after annihilation.
-        
+
         Physical Meaning:
             Calculates the time required for the field to relax
             to its new configuration after defect annihilation.
@@ -341,15 +335,13 @@ class DefectInteractions:
         # Relaxation time increases with initial separation
         base_time = self.params.get("base_relaxation_time", 0.1)
         separation_factor = 1.0 + separation / self.screening_length
-        
+
         relaxation_time = base_time * separation_factor
-        
+
         return relaxation_time
 
     def compute_interaction_potential(
-        self, 
-        positions: List[np.ndarray], 
-        charges: List[int]
+        self, positions: List[np.ndarray], charges: List[int]
     ) -> float:
         """
         Compute total interaction potential energy.
@@ -394,30 +386,30 @@ class DefectInteractions:
     def _compute_fractional_green_normalization(self, beta: float) -> float:
         """
         Compute normalization constant for fractional Green function.
-        
+
         Physical Meaning:
             Calculates the normalization constant C_β for the fractional
             Green function G_β such that (-Δ)^β G_β = δ in R³.
-            
+
         Mathematical Foundation:
             For 3D fractional Laplacian: C_β = Γ(3/2-β) / (2^(2β) π^(3/2) Γ(β))
             This ensures proper normalization of the fractional Green function.
             The exact formula ensures that ∫ G_β(r) d³r = 1 and (-Δ)^β G_β = δ.
-            
+
         Args:
             beta: Fractional order parameter
-            
+
         Returns:
             Normalization constant C_β
         """
         if beta <= 0 or beta >= 1.5:
             # Fallback to classical case for extreme values
             return 1.0 / (4 * np.pi)
-        
+
         # Exact normalization for 3D fractional Green function
         # C_β = Γ(3/2-β) / (2^(2β) π^(3/2) Γ(β))
         # This is the mathematically correct normalization
-        numerator = gamma(3/2 - beta)
-        denominator = (2**(2*beta)) * (np.pi**(3/2)) * gamma(beta)
-        
+        numerator = gamma(3 / 2 - beta)
+        denominator = (2 ** (2 * beta)) * (np.pi ** (3 / 2)) * gamma(beta)
+
         return numerator / denominator

@@ -299,7 +299,7 @@ class TopologicalDefectAnalyzer:
                 # Always use fractional Green function: G_β(r) ∝ r^(2β-3)
                 power = 2 * beta - 3
                 green_value = (dist + 1e-6) ** power
-                
+
                 interaction = defect_charges[i] * defect_charges[j] * green_value
                 interactions.append(interaction)
 

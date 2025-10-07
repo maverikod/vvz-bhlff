@@ -64,7 +64,7 @@ class PhaseEnvelopeBalanceSolver:
     def _setup_envelope_parameters(self) -> None:
         """
         Setup parameters for phase envelope balance equations.
-        
+
         Physical Meaning:
             Initializes physical constants and numerical
             parameters for phase envelope balance solution.
@@ -98,19 +98,21 @@ class PhaseEnvelopeBalanceSolver:
         """
         # Build balance operator D
         balance_operator = self._build_balance_operator(phase_field)
-        
+
         # Solve envelope balance equation
         envelope_solution = self._solve_envelope_balance(balance_operator, phase_field)
-        
+
         # Compute effective metric and curvature
         g_eff = self._compute_effective_metric_from_solution(envelope_solution)
-        curvature_descriptors = self.curvature_calc.compute_envelope_curvature(envelope_solution)
-        
+        curvature_descriptors = self.curvature_calc.compute_envelope_curvature(
+            envelope_solution
+        )
+
         return {
             "envelope_solution": envelope_solution,
             "effective_metric": g_eff,
             "curvature_descriptors": curvature_descriptors,
-            "balance_operator": balance_operator
+            "balance_operator": balance_operator,
         }
 
     def _build_balance_operator(self, phase_field: np.ndarray) -> Dict[str, Any]:
@@ -134,20 +136,20 @@ class PhaseEnvelopeBalanceSolver:
         """
         # Build time memory kernels (Γ,K)
         memory_kernels = self._build_memory_kernels(phase_field)
-        
+
         # Build spatial fractional Laplacian operator
         spatial_operator = self._build_spatial_operator(phase_field)
-        
+
         # Build bridge terms (χ/κ)
         bridge_terms = self._build_bridge_terms(phase_field)
-        
+
         return {
             "memory_kernels": memory_kernels,
             "spatial_operator": spatial_operator,
             "bridge_terms": bridge_terms,
             "c_phi": self.c_phi,
             "beta": self.beta,
-            "mu": self.mu
+            "mu": self.mu,
         }
 
     def _build_memory_kernels(self, phase_field: np.ndarray) -> Dict[str, np.ndarray]:
@@ -171,17 +173,14 @@ class PhaseEnvelopeBalanceSolver:
         """
         # Simplified memory kernel construction
         # In practice, these would be computed from dispersion relations
-        
+
         # Gamma kernel (time response)
         gamma_kernel = np.ones_like(phase_field) * 0.1
-        
+
         # K kernel (memory decay)
         k_kernel = np.ones_like(phase_field) * 0.05
-        
-        return {
-            "gamma": gamma_kernel,
-            "k": k_kernel
-        }
+
+        return {"gamma": gamma_kernel, "k": k_kernel}
 
     def _build_spatial_operator(self, phase_field: np.ndarray) -> Dict[str, Any]:
         """
@@ -206,9 +205,9 @@ class PhaseEnvelopeBalanceSolver:
         spatial_operator = {
             "beta": self.beta,
             "mu": self.mu,
-            "coefficient": self.mu * (-1)**self.beta
+            "coefficient": self.mu * (-1) ** self.beta,
         }
-        
+
         return spatial_operator
 
     def _build_bridge_terms(self, phase_field: np.ndarray) -> Dict[str, float]:
@@ -229,15 +228,10 @@ class PhaseEnvelopeBalanceSolver:
         Returns:
             Dictionary containing bridge terms
         """
-        return {
-            "chi_kappa": self.chi_kappa,
-            "bridge_strength": 1.0 / self.chi_kappa
-        }
+        return {"chi_kappa": self.chi_kappa, "bridge_strength": 1.0 / self.chi_kappa}
 
     def _solve_envelope_balance(
-        self, 
-        balance_operator: Dict[str, Any], 
-        phase_field: np.ndarray
+        self, balance_operator: Dict[str, Any], phase_field: np.ndarray
     ) -> np.ndarray:
         """
         Solve envelope balance equation.
@@ -259,25 +253,23 @@ class PhaseEnvelopeBalanceSolver:
         """
         # Initialize solution
         solution = phase_field.copy()
-        
+
         # Iterative solution (simplified)
         for iteration in range(self.max_iterations):
             # Apply balance operator
             residual = self._apply_balance_operator(balance_operator, solution)
-            
+
             # Check convergence
             if np.max(np.abs(residual)) < self.tolerance:
                 break
-            
+
             # Update solution
             solution += 0.01 * residual
-        
+
         return solution
 
     def _apply_balance_operator(
-        self, 
-        balance_operator: Dict[str, Any], 
-        solution: np.ndarray
+        self, balance_operator: Dict[str, Any], solution: np.ndarray
     ) -> np.ndarray:
         """
         Apply balance operator to solution.
@@ -295,22 +287,24 @@ class PhaseEnvelopeBalanceSolver:
         """
         # Simplified application of balance operator
         # In practice, this would involve FFT operations and memory kernel convolutions
-        
+
         # Apply spatial operator
         spatial_residual = self.mu * solution
-        
+
         # Apply memory kernels
         memory_residual = 0.1 * solution
-        
+
         # Apply bridge terms
         bridge_residual = 0.05 * solution
-        
+
         # Total residual
         total_residual = spatial_residual + memory_residual + bridge_residual
-        
+
         return total_residual
 
-    def _compute_effective_metric_from_solution(self, solution: np.ndarray) -> np.ndarray:
+    def _compute_effective_metric_from_solution(
+        self, solution: np.ndarray
+    ) -> np.ndarray:
         """
         Compute effective metric from envelope solution.
 
@@ -330,23 +324,23 @@ class PhaseEnvelopeBalanceSolver:
         """
         # Initialize 7D effective metric
         g_eff = np.zeros((7, 7))
-        
+
         # Time component: g00 = -1/c_φ^2
         g_eff[0, 0] = -1.0 / (self.c_phi**2)
-        
+
         # Spatial components: gij = A^{ij} = χ'/κ δ^{ij} (isotropic)
         for i in range(1, 4):
             g_eff[i, i] = self.chi_kappa
-        
+
         # Phase components: gαβ (phase space metric)
         for alpha in range(4, 7):
             g_eff[alpha, alpha] = 1.0  # Unit phase space metric
-        
+
         # Add solution-dependent corrections
         solution_amplitude = np.mean(np.abs(solution))
         correction_factor = 1.0 + 0.1 * solution_amplitude
-        
+
         for i in range(7):
             g_eff[i, i] *= correction_factor
-        
+
         return g_eff

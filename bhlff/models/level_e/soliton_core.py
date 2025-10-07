@@ -60,7 +60,7 @@ class SolitonModel(ABC):
         self.params = physics_params
         self._setup_field_operators()
         self._setup_topological_charge()
-        
+
         # Initialize specialized components
         self._energy_calculator = SolitonEnergyCalculator(domain, physics_params)
         self._stability_analyzer = SolitonStabilityAnalyzer(domain, physics_params)
@@ -108,18 +108,18 @@ class SolitonModel(ABC):
     def _setup_wzw_term(self) -> None:
         """
         Setup Wess-Zumino-Witten term for baryon number conservation.
-        
+
         Physical Meaning:
             Initializes the WZW term that ensures baryon number conservation
             and provides the correct quantum statistics for solitons.
-            
+
         Mathematical Foundation:
             WZW coefficient: (N_c/240π²)∫ε^μνρστTr(L_μ L_ν L_ρ L_σ L_τ) d⁵x
         """
         self.N_c = self.params.get("N_c", 3)  # Number of colors
         self.wzw_coupling = self.params.get("wzw_coupling", 1.0)
         self.wzw_coefficient = self.N_c / (240 * np.pi**2)
-        
+
         # Setup WZW integration parameters
         self.wzw_integration_order = self.params.get("wzw_integration_order", 5)
         self.wzw_precision = self.params.get("wzw_precision", 1e-6)
@@ -127,11 +127,11 @@ class SolitonModel(ABC):
     def _setup_topological_charge(self) -> None:
         """
         Setup topological charge calculation for 7D U(1)^3 phase winding.
-        
+
         Physical Meaning:
             Initializes the calculation of topological charge which represents
             the baryon number of the soliton via U(1)^3 winding over φ-coordinates.
-            
+
         Mathematical Foundation:
             B = (1/8π²)∫_T³_φ dφ₁dφ₂dφ₃ ∇_φ·Θ(x,φ) for 7D phase field Θ(x,φ) ∈ T^3_φ
             The classical SU(3) form B = (1/24π²)∫ε^μνρσTr(L_ν L_ρ L_σ) is a
@@ -139,7 +139,9 @@ class SolitonModel(ABC):
         """
         self.charge_integration_radius = self.params.get("charge_radius", 2.0)
         self.charge_precision = self.params.get("charge_precision", 1e-6)
-        self.charge_integration_points = self.params.get("charge_integration_points", 64)
+        self.charge_integration_points = self.params.get(
+            "charge_integration_points", 64
+        )
 
     def find_soliton_solution(self, initial_guess: np.ndarray) -> Dict[str, Any]:
         """
@@ -236,14 +238,14 @@ class SolitonModel(ABC):
         """
         if soliton.ndim < 7:
             return 0.0
-            
+
         # For 7D phase field Θ(x,φ,t), compute U(1)^3 winding over φ-coordinates
         # B = (1/8π²)∫_T³_φ dφ₁dφ₂dφ₃ ∇_φ·Θ(x,φ)
-        
+
         # Extract phase coordinates (last 3 dimensions are φ-coordinates)
         if soliton.shape[-3:] != (8, 8, 8):  # Assuming 8x8x8 φ-grid
             return 0.0
-            
+
         # Compute phase gradients along φ-coordinates
         dphi = 2 * np.pi / 8  # Phase coordinate spacing
         phase_gradients = []
@@ -254,7 +256,7 @@ class SolitonModel(ABC):
                 phase_gradients.append(grad)
             else:
                 phase_gradients.append(np.zeros_like(soliton))
-        
+
         # Compute U(1)^3 winding integral
         # For each spatial point x, integrate ∇_φ·Θ over T³_φ
         charge_density = 0.0
@@ -263,10 +265,10 @@ class SolitonModel(ABC):
                 for k in range(soliton.shape[2]):
                     # Extract phase field at spatial point (i,j,k)
                     phase_field = soliton[i, j, k, :, :, :]
-                    
+
                     # Compute phase gradients at this spatial point
                     phase_grads = [grad[i, j, k, :, :, :] for grad in phase_gradients]
-                    
+
                     # Compute winding integral over T³_φ
                     # B = (1/8π²)∫_T³_φ dφ₁dφ₂dφ₃ ∇_φ·Θ(x,φ)
                     winding_integral = 0.0
@@ -274,11 +276,13 @@ class SolitonModel(ABC):
                         for phi2 in range(8):
                             for phi3 in range(8):
                                 # Compute divergence ∇_φ·Θ
-                                div_phi = (phase_grads[0][phi1, phi2, phi3] + 
-                                          phase_grads[1][phi1, phi2, phi3] + 
-                                          phase_grads[2][phi1, phi2, phi3])
+                                div_phi = (
+                                    phase_grads[0][phi1, phi2, phi3]
+                                    + phase_grads[1][phi1, phi2, phi3]
+                                    + phase_grads[2][phi1, phi2, phi3]
+                                )
                                 winding_integral += div_phi
-                    
+
                     charge_density += winding_integral
-        
+
         return float(charge_density / (8 * np.pi**2))

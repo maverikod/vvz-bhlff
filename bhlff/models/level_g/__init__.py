@@ -20,7 +20,7 @@ Example:
     >>> evolution = cosmology.evolve_universe(time_range)
 """
 
-from .cosmology import CosmologicalModel, StandardCosmologicalMetric
+from .cosmology import CosmologicalModel, EnvelopeEffectiveMetric
 from .astrophysics import AstrophysicalObjectModel
 from .gravity import VBPGravitationalEffectsModel
 from .structure import LargeScaleStructureModel
@@ -30,7 +30,7 @@ from .validation import ParticleInversion, ParticleValidation
 
 __all__ = [
     "CosmologicalModel",
-    "StandardCosmologicalMetric",
+    "EnvelopeEffectiveMetric",
     "AstrophysicalObjectModel",
     "VBPGravitationalEffectsModel",
     "LargeScaleStructureModel",

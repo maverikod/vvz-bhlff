@@ -12,7 +12,7 @@ import pytest
 import numpy as np
 from typing import Dict, Any, List
 
-from bhlff.core.domain import Domain
+from bhlff.core.domain.domain_7d_bvp import Domain7DBVP
 from bhlff.core.bvp.constants.bvp_constants_advanced import BVPConstantsAdvanced
 from bhlff.core.bvp.constants.nonlinear_coefficients import NonlinearCoefficients
 
@@ -23,7 +23,7 @@ class TestAdvancedCoefficients:
     @pytest.fixture
     def domain_7d(self):
         """Create 7D domain for constants testing."""
-        return Domain(L=1.0, N=32, dimensions=7, N_phi=16, N_t=64, T=1.0)
+        return Domain7DBVP(L_spatial=1.0, N_spatial=8, N_phase=4, T=1.0, N_t=8)
 
     @pytest.fixture
     def bvp_constants(self):
@@ -37,14 +37,14 @@ class TestAdvancedCoefficients:
                 "k0_squared": 4.0,
                 "carrier_frequency": 1.85e43,
             },
-            "basic_material": {"mu": 1.0, "beta": 1.5, "lambda_param": 0.1, "nu": 1.0},
+            "material_properties": {"mu": 1.0, "beta": 1.5, "lambda_param": 0.1, "nu": 1.0},
         }
         return BVPConstantsAdvanced(config)
 
     @pytest.fixture
-    def nonlinear_coeffs(self, domain_7d, bvp_constants):
+    def nonlinear_coeffs(self, bvp_constants):
         """Create nonlinear coefficients for testing."""
-        return NonlinearCoefficients(domain_7d, bvp_constants)
+        return NonlinearCoefficients(bvp_constants)
 
     def test_nonlinear_effects(self, nonlinear_coeffs):
         """Test nonlinear effects of coefficients."""
@@ -101,10 +101,10 @@ class TestAdvancedCoefficients:
     def test_material_properties(self, nonlinear_coeffs, bvp_constants):
         """Test material property relationships."""
         # Test relationships with basic material properties
-        mu = bvp_constants.basic_material.mu
-        beta = bvp_constants.basic_material.beta
-        lambda_param = bvp_constants.basic_material.lambda_param
-        nu = bvp_constants.basic_material.nu
+        mu = bvp_constants.get_basic_material_property("mu")
+        beta = bvp_constants.get_basic_material_property("beta")
+        lambda_param = bvp_constants.get_basic_material_property("lambda_param")
+        nu = bvp_constants.get_basic_material_property("nu")
 
         # All material properties should be positive
         assert mu > 0, "mu should be positive"
@@ -128,11 +128,11 @@ class TestAdvancedCoefficients:
                 "k0_squared": 4.0,
                 "carrier_frequency": 1.85e43,
             },
-            "basic_material": {"mu": 1.0, "beta": 1.5, "lambda_param": 0.1, "nu": 1.0},
+            "material_properties": {"mu": 1.0, "beta": 1.5, "lambda_param": 0.1, "nu": 1.0},
         }
 
         bvp_constants_small = BVPConstantsAdvanced(config_small)
-        nonlinear_coeffs_small = NonlinearCoefficients(domain_7d, bvp_constants_small)
+        nonlinear_coeffs_small = NonlinearCoefficients(bvp_constants_small)
 
         # Should still be finite
         assert np.isfinite(
@@ -152,11 +152,11 @@ class TestAdvancedCoefficients:
                 "k0_squared": 4.0,
                 "carrier_frequency": 1.85e43,
             },
-            "basic_material": {"mu": 1.0, "beta": 1.5, "lambda_param": 0.1, "nu": 1.0},
+            "material_properties": {"mu": 1.0, "beta": 1.5, "lambda_param": 0.1, "nu": 1.0},
         }
 
         bvp_constants_large = BVPConstantsAdvanced(config_large)
-        nonlinear_coeffs_large = NonlinearCoefficients(domain_7d, bvp_constants_large)
+        nonlinear_coeffs_large = NonlinearCoefficients(bvp_constants_large)
 
         # Should still be finite
         assert np.isfinite(
@@ -177,11 +177,11 @@ class TestAdvancedCoefficients:
                 "k0_squared": 4.0,
                 "carrier_frequency": 1.85e43,
             },
-            "basic_material": {"mu": 1.0, "beta": 1.5, "lambda_param": 0.1, "nu": 1.0},
+            "material_properties": {"mu": 1.0, "beta": 1.5, "lambda_param": 0.1, "nu": 1.0},
         }
 
         bvp_constants_zero = BVPConstantsAdvanced(config_zero)
-        nonlinear_coeffs_zero = NonlinearCoefficients(domain_7d, bvp_constants_zero)
+        nonlinear_coeffs_zero = NonlinearCoefficients(bvp_constants_zero)
 
         # Should be exactly zero
         assert (
@@ -208,11 +208,11 @@ class TestAdvancedCoefficients:
                 "k0_squared": 4.0,
                 "carrier_frequency": 1.85e43,
             },
-            "basic_material": {"mu": 1.0, "beta": 1.5, "lambda_param": 0.1, "nu": 1.0},
+            "material_properties": {"mu": 1.0, "beta": 1.5, "lambda_param": 0.1, "nu": 1.0},
         }
 
         bvp_constants_small = BVPConstantsAdvanced(config_small)
-        nonlinear_coeffs_small = NonlinearCoefficients(domain_7d, bvp_constants_small)
+        nonlinear_coeffs_small = NonlinearCoefficients(bvp_constants_small)
 
         # Should still be finite
         assert np.isfinite(
@@ -246,7 +246,7 @@ class TestAdvancedCoefficients:
             }
 
             bvp_constants = BVPConstantsAdvanced(config)
-            nonlinear_coeffs = NonlinearCoefficients(domain_7d, bvp_constants)
+            nonlinear_coeffs = NonlinearCoefficients(bvp_constants)
 
             # Should be finite for all frequencies
             assert np.isfinite(

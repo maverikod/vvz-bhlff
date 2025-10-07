@@ -127,6 +127,7 @@ class BVPConstantsBase:
         self.MU = material_config.get("mu", 1.0)
         self.BETA = material_config.get("beta", 1.5)
         self.LAMBDA_PARAM = material_config.get("lambda_param", 0.1)
+        self.NU = material_config.get("nu", 1.0)
 
     def get_conductivity(self, frequency: float) -> float:
         """Compute frequency-dependent conductivity σ(ω)."""
@@ -237,6 +238,7 @@ class BVPConstantsBase:
             "mu": self.MU,
             "beta": self.BETA,
             "lambda_param": self.LAMBDA_PARAM,
+            "nu": self.NU,
         }
         return float(property_map.get(property_name, 0.0))
 

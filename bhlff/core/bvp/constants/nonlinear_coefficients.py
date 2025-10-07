@@ -56,6 +56,14 @@ class NonlinearCoefficients:
             constants: BVP constants instance.
         """
         self.constants = constants
+        
+        # Initialize coefficient attributes from constants
+        self.kappa_0 = constants.get_envelope_parameter("kappa_0")
+        self.kappa_2 = constants.get_envelope_parameter("kappa_2")
+        self.chi_prime = constants.get_envelope_parameter("chi_prime")
+        self.chi_double_prime_0 = constants.get_envelope_parameter("chi_double_prime_0")
+        self.k0_squared = constants.get_envelope_parameter("k0_squared")
+        self.carrier_frequency = constants.get_envelope_parameter("carrier_frequency")
 
     def compute_admittance_coefficients(
         self, frequency: float, amplitude: float

@@ -197,7 +197,7 @@ Status: COMPLETED
 
 
 
-- [ ] 7) Duplicate fractional Laplacian implementations with divergent normalization
+- [x] 7) Duplicate fractional Laplacian implementations with divergent normalization
 - Rule: Single source of truth for core operators; use unified spectral backend with consistent physics normalization.
 - Essence: Two `FractionalLaplacian` implementations exist: one in `bhlff/core/operators/` (uses unified backend) and another legacy version in `bhlff/core/fft/` (custom normalization and direct np.fft). This risks drift and inconsistency.
 - Evidence:
@@ -229,6 +229,13 @@ result = self._spectral_ops.inverse_fft(result_spectral, normalization="physics"
 
 - Impact: Divergent normalization/behavior between modules; CPU/CUDA parity can break; theoretical consistency risk.
 - Fix: Deprecate `bhlff/core/fft/fractional_laplacian.py`; consolidate to `bhlff/core/operators/fractional_laplacian.py` using `UnifiedSpectralOperations`; update imports and tests.
+
+Status: COMPLETED
+- Edits:
+  - Replaced legacy implementation with deprecation shim delegating to operators module: `bhlff/core/fft/fractional_laplacian.py` emits `DeprecationWarning` and inherits from `bhlff.core.operators.fractional_laplacian.FractionalLaplacian`.
+  - Kept public symbol available for backward compatibility; unified source of truth in `bhlff/core/operators/fractional_laplacian.py`.
+- Notes:
+  - Follow-up: gradually switch imports in tests and FFT helpers to operators path; no functional changes expected.
 
 ---
 

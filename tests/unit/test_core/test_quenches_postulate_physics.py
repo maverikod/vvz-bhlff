@@ -24,7 +24,7 @@ import pytest
 import numpy as np
 from typing import Dict, Any
 
-from bhlff.core.domain import Domain
+from bhlff.core.domain.domain_7d_bvp import Domain7DBVP
 from bhlff.core.bvp.constants.bvp_constants_advanced import BVPConstantsAdvanced
 from bhlff.core.bvp.postulates.quenches_postulate import BVPPostulate5_Quenches
 
@@ -35,7 +35,7 @@ class TestQuenchesPostulatePhysics:
     @pytest.fixture
     def domain_7d(self):
         """Create 7D domain for postulate testing."""
-        return Domain(L=1.0, N=8, dimensions=3, N_phi=4, N_t=8, T=1.0)
+        return Domain7DBVP(L_spatial=1.0, N_spatial=8, N_phase=4, T=1.0, N_t=8)
 
     @pytest.fixture
     def bvp_constants(self):
@@ -48,10 +48,11 @@ class TestQuenchesPostulatePhysics:
                 "chi_double_prime_0": 0.01,
                 "k0_squared": 4.0,
             },
-            "basic_material": {
+            "material_properties": {
                 "mu": 1.0,
                 "beta": 1.5,
                 "lambda_param": 0.1,
+                "nu": 1.0,
             },
         }
         return BVPConstantsAdvanced(config)
@@ -62,7 +63,7 @@ class TestQuenchesPostulatePhysics:
         envelope = np.zeros(domain_7d.shape)
 
         # Create envelope with known properties
-        center = domain_7d.N // 2
+        center = domain_7d.N_spatial // 2
         envelope[
             center - 4 : center + 5,
             center - 4 : center + 5,
@@ -73,13 +74,19 @@ class TestQuenchesPostulatePhysics:
             :,
         ] = 1.0
 
-        # Add phase structure
-        phi1 = np.linspace(0, 2 * np.pi, domain_7d.N_phi)
-        phi2 = np.linspace(0, 2 * np.pi, domain_7d.N_phi)
-        phi3 = np.linspace(0, 2 * np.pi, domain_7d.N_phi)
+        # Add phase structure for 7D
+        phi1 = np.linspace(0, 2 * np.pi, domain_7d.N_phase)
+        phi2 = np.linspace(0, 2 * np.pi, domain_7d.N_phase)
+        phi3 = np.linspace(0, 2 * np.pi, domain_7d.N_phase)
+        t = np.linspace(0, domain_7d.T, domain_7d.N_t)
 
-        PHI1, PHI2, PHI3 = np.meshgrid(phi1, phi2, phi3, indexing="ij")
-        phase_factor = np.exp(1j * (PHI1 + PHI2 + PHI3))
+        # Create 7D coordinate grids
+        x = np.linspace(0, domain_7d.L_spatial, domain_7d.N_spatial)
+        y = np.linspace(0, domain_7d.L_spatial, domain_7d.N_spatial)
+        z = np.linspace(0, domain_7d.L_spatial, domain_7d.N_spatial)
+        
+        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(x, y, z, phi1, phi2, phi3, t, indexing="ij")
+        phase_factor = np.exp(1j * (PHI1 + PHI2 + PHI3 + 0.1 * T))
 
         envelope = envelope * phase_factor
 
@@ -97,24 +104,29 @@ class TestQuenchesPostulatePhysics:
             Tests quench condition: |∇a|² > threshold and validates
             quench dynamics and memory effects.
         """
-        postulate = BVPPostulate5_Quenches(domain_7d, bvp_constants)
+        config = {
+            "amplitude_threshold": 0.8,
+            "gradient_threshold": 0.1,
+            "quench_memory_time": 0.5
+        }
+        postulate = BVPPostulate5_Quenches(domain_7d, config)
 
         # Apply postulate
         result = postulate.apply(test_envelope)
 
         # Physical validation 1: Postulate should be satisfied
-        assert result["satisfied"], "Quenches postulate not satisfied"
+        assert result["postulate_satisfied"], "Quenches postulate not satisfied"
 
-        # Physical validation 2: Quench fraction should be reasonable
-        quench_fraction = result["quench_fraction"]
-        assert (
-            0 <= quench_fraction <= 1
-        ), f"Quench fraction out of range: {quench_fraction}"
+        # Physical validation 2: Quench count should be non-negative
+        quench_count = result["quench_count"]
+        assert quench_count >= 0, f"Negative quench count: {quench_count}"
 
-        # Physical validation 3: Quench intensity should be positive
-        quench_intensity = result["quench_intensity"]
-        assert quench_intensity >= 0, f"Negative quench intensity: {quench_intensity}"
+        # Physical validation 3: Energy dissipated should be non-negative
+        energy_dissipated = result["energy_dissipated"]
+        assert energy_dissipated >= 0, f"Negative energy dissipated: {energy_dissipated}"
 
-        # Physical validation 4: Memory effects should be present
-        memory_effects = result["memory_effects"]
-        assert memory_effects >= 0, f"Negative memory effects: {memory_effects}"
+        # Physical validation 4: Thresholds should be positive
+        amplitude_threshold = result["amplitude_threshold"]
+        gradient_threshold = result["gradient_threshold"]
+        assert amplitude_threshold > 0, f"Non-positive amplitude threshold: {amplitude_threshold}"
+        assert gradient_threshold > 0, f"Non-positive gradient threshold: {gradient_threshold}"

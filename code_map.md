@@ -3,13 +3,13 @@ Generated for: .
 
 ## Statistics
 - Total files: 518
-- Total classes: 486
-- Total functions: 4065
+- Total classes: 485
+- Total functions: 4066
 - Total imports: 2443
 
 ## Files Overview
 ### ./code_mapper.py
-- Lines: 201
+- Lines: 202
 - Classes: 1
 - Functions: 9
 - Imports: 6
@@ -135,7 +135,7 @@ Generated for: .
 - Imports: 6
 
 ### ./tests/unit/test_level_g_cosmology.py
-- Lines: 444
+- Lines: 425
 - Classes: 2
 - Functions: 16
 - Imports: 4
@@ -153,9 +153,9 @@ Generated for: .
 - Imports: 4
 
 ### ./tests/unit/test_7d_bvp_physics.py
-- Lines: 363
+- Lines: 261
 - Classes: 1
-- Functions: 13
+- Functions: 10
 - Imports: 6
 
 ### ./tests/unit/test_automated_testing.py
@@ -165,10 +165,10 @@ Generated for: .
 - Imports: 10
 
 ### ./tests/unit/test_level_g/test_gravity_physics.py
-- Lines: 405
+- Lines: 135
 - Classes: 2
 - Functions: 14
-- Imports: 7
+- Imports: 4
 
 ### ./tests/unit/test_level_g/test_vbp_envelope_physics.py
 - Lines: 511
@@ -741,22 +741,22 @@ Generated for: .
 - Imports: 6
 
 ### ./tests/unit/test_level_a/test_A02_multi_plane.py
-- Lines: 483
+- Lines: 491
 - Classes: 1
 - Functions: 11
 - Imports: 8
 
 ### ./tests/unit/test_level_a/test_A03_simple_zero_mode.py
-- Lines: 240
+- Lines: 241
 - Classes: 1
 - Functions: 7
-- Imports: 6
+- Imports: 7
 
 ### ./tests/unit/test_level_a/test_A02_simple_multi_frequency.py
-- Lines: 225
+- Lines: 226
 - Classes: 1
 - Functions: 8
-- Imports: 6
+- Imports: 7
 
 ### ./tests/unit/test_level_a/test_reporting.py
 - Lines: 477
@@ -765,16 +765,16 @@ Generated for: .
 - Imports: 10
 
 ### ./tests/unit/test_level_a/test_A03_zero_mode.py
-- Lines: 419
+- Lines: 427
 - Classes: 1
 - Functions: 12
 - Imports: 8
 
 ### ./tests/unit/test_level_a/test_A01_simple_plane_wave.py
-- Lines: 304
+- Lines: 305
 - Classes: 1
 - Functions: 8
-- Imports: 6
+- Imports: 7
 
 ### ./tests/unit/test_level_a/test_simple_basic.py
 - Lines: 159
@@ -789,10 +789,10 @@ Generated for: .
 - Imports: 6
 
 ### ./tests/unit/test_level_a/test_A01_plane_wave.py
-- Lines: 436
+- Lines: 497
 - Classes: 1
-- Functions: 11
-- Imports: 7
+- Functions: 13
+- Imports: 8
 
 ### ./tests/unit/test_level_a/test_A01_minimal.py
 - Lines: 188
@@ -801,9 +801,9 @@ Generated for: .
 - Imports: 6
 
 ### ./tests/unit/test_level_a/test_A05_residual_energy.py
-- Lines: 485
+- Lines: 528
 - Classes: 1
-- Functions: 12
+- Functions: 13
 - Imports: 8
 
 ### ./bhlff/__init__.py
@@ -1545,9 +1545,9 @@ Generated for: .
 - Imports: 3
 
 ### ./bhlff/models/level_g/cosmology.py
-- Lines: 447
+- Lines: 478
 - Classes: 2
-- Functions: 14
+- Functions: 15
 - Imports: 3
 
 ### ./bhlff/models/level_g/structure.py
@@ -1935,7 +1935,7 @@ Generated for: .
 - Imports: 6
 
 ### ./bhlff/core/bvp/envelope_linear_solver.py
-- Lines: 215
+- Lines: 224
 - Classes: 1
 - Functions: 4
 - Imports: 6
@@ -1947,7 +1947,7 @@ Generated for: .
 - Imports: 4
 
 ### ./bhlff/core/bvp/bvp_constants_numerical.py
-- Lines: 198
+- Lines: 202
 - Classes: 1
 - Functions: 8
 - Imports: 2
@@ -2769,7 +2769,7 @@ Generated for: .
 - Imports: 3
 
 ### ./bhlff/core/operators/fractional_laplacian.py
-- Lines: 193
+- Lines: 207
 - Classes: 1
 - Functions: 7
 - Imports: 4
@@ -2835,7 +2835,7 @@ Generated for: .
 - Imports: 3
 
 ### ./bhlff/core/fft/spectral_derivatives_impl.py
-- Lines: 499
+- Lines: 535
 - Classes: 1
 - Functions: 11
 - Imports: 13
@@ -2883,10 +2883,10 @@ Generated for: .
 - Imports: 1
 
 ### ./bhlff/core/fft/fft_solver_7d_basic.py
-- Lines: 290
+- Lines: 295
 - Classes: 1
 - Functions: 8
-- Imports: 12
+- Imports: 13
 
 ### ./bhlff/core/fft/fft_solver_time.py
 - Lines: 277
@@ -2895,10 +2895,10 @@ Generated for: .
 - Imports: 13
 
 ### ./bhlff/core/fft/fractional_laplacian.py
-- Lines: 54
-- Classes: 1
-- Functions: 1
-- Imports: 3
+- Lines: 8
+- Classes: 0
+- Functions: 0
+- Imports: 1
 
 ### ./bhlff/core/fft/spectral_derivatives.py
 - Lines: 34
@@ -2937,15 +2937,15 @@ Generated for: .
 - Imports: 5
 
 ### ./bhlff/core/fft/__init__.py
-- Lines: 42
+- Lines: 43
 - Classes: 0
 - Functions: 0
 - Imports: 7
 
 ### ./bhlff/core/fft/fft_plan_7d.py
-- Lines: 400
+- Lines: 419
 - Classes: 1
-- Functions: 11
+- Functions: 12
 - Imports: 4
 
 ### ./bhlff/core/fft/spectral_coefficient_cache.py

@@ -64,11 +64,15 @@ class FFTSolver7DBasic:
         self.logger = logging.getLogger(__name__)
 
         # Initialize components
-        self.fractional_laplacian = FractionalLaplacian(domain, parameters)
+        beta = getattr(parameters, "beta", 1.0)
+        lambda_param = getattr(parameters, "lambda_param", 0.0)
+        self.fractional_laplacian = FractionalLaplacian(domain, beta, lambda_param)
         self.spectral_operations = SpectralOperations(domain, parameters)
-        self.memory_manager = MemoryManager7D(domain, parameters)
+        max_memory_gb = getattr(parameters, "max_memory_gb", 8.0)
+        self.memory_manager = MemoryManager7D(domain.shape, max_memory_gb)
         self.fft_plan = FFTPlan7D(domain, parameters)
-        self.spectral_cache = SpectralCoefficientCache(domain, parameters)
+        max_cache_size = getattr(parameters, "max_cache_size", 100)
+        self.spectral_cache = SpectralCoefficientCache(max_cache_size)
 
         # Setup spectral coefficients
         self._setup_spectral_coefficients()
@@ -207,22 +211,21 @@ class FFTSolver7DBasic:
         self.logger.info("Setting up spectral coefficients")
 
         # Get parameters
-        mu = self.parameters.get("mu", 1.0)
-        beta = self.parameters.get("beta", 1.0)
-        lambda_param = self.parameters.get("lambda", 0.0)
+        mu = getattr(self.parameters, "mu", 1.0)
+        beta = getattr(self.parameters, "beta", 1.0)
+        lambda_param = getattr(self.parameters, "lambda_param", 0.0)
 
         # Compute wave vectors
-        wave_vectors = self.spectral_operations.get_wave_vectors()
+        wave_vectors = self.spectral_operations._get_wave_vectors()
 
         # Compute wave vector magnitudes
         k_magnitude_squared = np.zeros(self.domain.shape)
         for i, k_vec in enumerate(wave_vectors):
-            if i < 3:  # Spatial dimensions
-                k_magnitude_squared += k_vec**2
-            elif i < 6:  # Phase dimensions
-                k_magnitude_squared += k_vec**2
-            else:  # Temporal dimension
-                k_magnitude_squared += k_vec**2
+            # Reshape k_vec for broadcasting across the full domain shape
+            reshape_pattern = [1] * len(self.domain.shape)
+            reshape_pattern[i] = len(k_vec)
+            k_vec_reshaped = k_vec.reshape(reshape_pattern)
+            k_magnitude_squared += k_vec_reshaped**2
 
         # Compute spectral coefficients
         self.spectral_coefficients = mu * (k_magnitude_squared**beta) + lambda_param
@@ -247,7 +250,7 @@ class FFTSolver7DBasic:
         self.logger.info("Setting up FFT plan")
 
         # Setup FFT plan
-        self.fft_plan.setup_plan()
+        self.fft_plan._setup_fft_plans()
 
         self.logger.info("FFT plan setup completed")
 

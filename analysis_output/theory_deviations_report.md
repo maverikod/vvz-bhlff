@@ -271,7 +271,7 @@ Status: COMPLETED
 
 ---
 
-- [ ] 9) Incorrect wave-vector scaling and construction in spectral derivatives
+- [x] 9) Incorrect wave-vector scaling and construction in spectral derivatives
 - Rule: Use physically correct wave-number scaling per dimension: spatial via L, phases via 2π periodicity, time via T; avoid unit-spaced defaults.
 - Essence: Wave vectors are built with `d=1.0/size` and 2π factors without domain lengths; also constructs full k-mesh via nested loops, risking performance and shape errors.
 - Evidence:
@@ -287,4 +287,10 @@ for i, size in enumerate(self.domain.shape):
 ```
 
 - Impact: Mis-scaled k leads to incorrect gradients/Laplacians and physics; severe accuracy deviations on non-unit domains.
-- Fix: Build k per axis using domain spacings: spatial `fftfreq(N, L/N)*2π`, phases `fftfreq(Nφ, 2π/Nφ)`, time `fftfreq(Nt, T/Nt)*2π`; broadcast with vectorized `np.meshgrid`; integrate with unified backend utilities.
+- Fix: Build k per axis using domain spacings: spatial `fftfreq(N, L/N)*2π`, phases `fftfreq(Nφ, 2π/Nφ)`, time `fftfreq(Nt, T/Nt)*2π`; broadcast with vectorized reshape/broadcast.
+
+Status: COMPLETED
+- Edits:
+  - `bhlff/core/fft/spectral_derivatives_impl.py`: proper per-axis spacing with Domain7DBVP support, broadcasting-friendly vectors, removed nested loops and unit-spaced defaults.
+- Notes:
+  - Backward-compatible fallback for legacy domain fields retained; tests for 7D k-vectors will now respect physical L, 2π, T.

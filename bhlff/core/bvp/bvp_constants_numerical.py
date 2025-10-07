@@ -85,6 +85,9 @@ class BVPConstantsNumerical(BVPConstantsBase):
 
         # Gradient descent fallback
         self.GRADIENT_DESCENT_STEP = numerical_config.get("gradient_descent_step", 0.1)
+        
+        # Memory protection
+        self.MEMORY_THRESHOLD = numerical_config.get("memory_threshold", 0.8)
 
     def _setup_quench_constants(self) -> None:
         """Setup quench detection constants."""
@@ -146,6 +149,7 @@ class BVPConstantsNumerical(BVPConstantsBase):
             "armijo_c1": self.ARMIJO_C1,
             "curvature_c2": self.CURVATURE_C2,
             "gradient_descent_step": self.GRADIENT_DESCENT_STEP,
+            "memory_threshold": getattr(self, 'MEMORY_THRESHOLD', 0.8),
         }
         return parameter_map.get(parameter_name, 0.0)
 

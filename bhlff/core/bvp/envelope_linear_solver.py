@@ -103,7 +103,13 @@ class EnvelopeLinearSolver:
         # Compute wave vectors for 7D
         k_vectors = []
         for i, n in enumerate(self.domain.shape):
-            k = np.fft.fftfreq(n, self.domain.L / n)
+            if i < 3:  # Spatial dimensions
+                dx = self.domain.L_spatial / self.domain.N_spatial
+            elif i < 6:  # Phase dimensions
+                dx = 2 * np.pi / self.domain.N_phase
+            else:  # Temporal dimension
+                dx = self.domain.T / self.domain.N_t
+            k = np.fft.fftfreq(n, dx)
             k_vectors.append(k)
 
         # Create 7D wave vector grid
@@ -116,7 +122,10 @@ class EnvelopeLinearSolver:
         )
 
         # Avoid division by zero
-        regularization = self.constants.get_numerical_parameter("regularization", 1e-12)
+        try:
+            regularization = self.constants.get_numerical_parameter("regularization")
+        except KeyError:
+            regularization = 1e-12
         spectral_coeffs = np.where(
             np.abs(spectral_coeffs) < regularization, regularization, spectral_coeffs
         )

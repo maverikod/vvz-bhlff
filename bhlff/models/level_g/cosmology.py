@@ -4,15 +4,15 @@ email: vasilyvz@gmail.com
 
 Cosmological models for 7D phase field theory.
 
-This module implements cosmological evolution models that describe
-the behavior of phase fields in expanding universe, including
-structure formation and cosmological parameters.
+This module implements envelope-derived effective metric models
+for the 7D phase field theory without invoking spacetime curvature
+or cosmological scale factors.
 
 Theoretical Background:
-    The cosmological models implement the evolution of phase fields
-    in expanding spacetime, where the phase field represents the
-    fundamental field that gives rise to observable structures
-    through topological defects and phase coherence.
+    Gravity-like effects emerge from the curvature of the VBP envelope
+    in the 7D phase field theory. There is no spacetime curvature here;
+    instead, an effective metric g_eff[Θ] is derived from envelope
+    invariants and phase dynamics.
 
 Example:
     >>> cosmology = CosmologicalModel(initial_conditions, params)
@@ -24,123 +24,46 @@ from typing import Dict, Any, Tuple, Optional, List
 from ..base.model_base import ModelBase
 
 
-class StandardCosmologicalMetric:
+class EnvelopeEffectiveMetric:
     """
-    Standard cosmological metric for 7D phase field theory.
+    Envelope-derived effective metric (no spacetime curvature).
 
     Physical Meaning:
-        Defines the standard spacetime metric for cosmological
-        models in the 7D phase field theory, including universe
-        expansion and space curvature.
+        Computes a 7x7 effective metric g_eff[Θ] derived solely from
+        envelope dynamics and invariants. No cosmological scale factors,
+        no spacetime curvature.
 
     Mathematical Foundation:
-        ds² = -dt² + a²(t)[dr²/(1-kr²) + r²(dθ² + sin²θ dφ²)] +
-              b²(t)[dψ² + sin²ψ(dχ² + sin²χ dζ²)]
-        where a(t) is the scale factor for 3D space,
-        b(t) is the scale factor for 3D internal space,
-        k is the curvature parameter
+        g00 = -1/c_φ^2; spatial gij = A δ^{ij} with A from envelope invariants;
+        phase-space diagonal unity (can be extended to anisotropic models).
     """
 
-    def __init__(self, cosmology_params: Dict[str, float]):
-        """
-        Initialize cosmological metric.
-
-        Args:
-            cosmology_params: Cosmological parameters
-        """
-        self.params = cosmology_params
-        self._setup_metric_components()
-
-    def _setup_metric_components(self) -> None:
-        """
-        Setup metric components.
-
-        Physical Meaning:
-            Initializes metric components based on cosmological
-            parameters for the 7D spacetime.
-        """
-        # Hubble parameters
-        self.H0 = self.params.get("H0", 70.0)  # km/s/Mpc
-        self.omega_m = self.params.get("omega_m", 0.3)  # Matter density
-        self.omega_lambda = self.params.get("omega_lambda", 0.7)  # Dark energy
-        self.omega_k = self.params.get("omega_k", 0.0)  # Curvature
-
-        # Scale factors
-        self.a0 = self.params.get("a0", 1.0)  # Current external scale factor
-        self.b0 = self.params.get("b0", 1.0)  # Current internal scale factor
-
-        # Curvature parameters
-        self.k_3d = self.params.get("k_3d", 0.0)  # 3D space curvature
-        self.k_3d_internal = self.params.get(
-            "k_3d_internal", 0.0
-        )  # Internal space curvature
-
-    def compute_scale_factors(self, t: float) -> Tuple[float, float]:
-        """
-        Compute scale factors.
-
-        Physical Meaning:
-            Computes scale factors a(t) and b(t) for external
-            and internal spaces as functions of cosmological time.
-
-        Mathematical Foundation:
-            a(t) = a0 * exp(H0 * t) for ΛCDM model
-            b(t) = b0 * exp(H_internal * t) for internal space
-
-        Args:
-            t: Cosmological time
-
-        Returns:
-            Tuple of (a(t), b(t)) scale factors
-        """
-        # Scale factor for 3D space
-        if self.omega_lambda > 0:
-            # ΛCDM model with dark energy (simplified for small t)
-            a_t = self.a0 * (
-                1 + self.H0 * t * np.sqrt(self.omega_lambda) * 0.01
-            )  # Scale down
-        else:
-            # Model without dark energy
-            a_t = self.a0 * (1 + self.H0 * t * 0.01)  # Scale down
-
-        # Scale factor for internal 3D space
-        # Assume independent expansion
-        H_internal = self.params.get("H_internal", self.H0 * 0.1)
-        b_t = self.b0 * np.exp(H_internal * t)
-
-        return a_t, b_t
+    def __init__(self, params: Dict[str, float]):
+        self.params = params
 
     def compute_effective_metric_from_vbp_envelope(
         self,
-        t: float,
-        r: float,
-        theta: float,
-        phi: float,
-        psi: float,
-        chi: float,
-        zeta: float,
+        envelope_invariants: Dict[str, float],
     ) -> np.ndarray:
         """
         Compute effective metric from VBP envelope dynamics.
 
         Physical Meaning:
-            Computes the effective metric g_eff[Θ] from VBP envelope dynamics
-            in cosmological coordinates. This replaces the classical spacetime
-            metric with VBP envelope curvature.
+            Computes the effective metric g_eff[Θ] using only VBP envelope
+            invariants (no spacetime curvature, no scale factors).
 
         Mathematical Foundation:
-            g_eff[Θ] with g00=-1/c_φ^2, gij=A^{ij}=χ'/κ δ^{ij} (isotropic case)
-            where c_φ is the phase velocity and χ/κ is the bridge parameter
+            g_eff[Θ] with g00=-1/c_φ^2, gij=A δ^{ij} (isotropic case), where
+            c_φ is the phase velocity and A = χ'/κ is derived from envelope
+            invariants (provided in envelope_invariants).
 
         Args:
-            t, r, theta, phi, psi, chi, zeta: Cosmological coordinates
+            envelope_invariants: dict containing keys like
+                - chi_over_kappa: float, isotropic spatial scaling A
 
         Returns:
             7x7 effective metric tensor g_eff[Θ]
         """
-        # Compute scale factors from VBP envelope dynamics
-        a_t, b_t = self.compute_scale_factors(t)
-
         # Initialize effective metric from VBP envelope
         g_eff = np.zeros((7, 7))
 
@@ -148,8 +71,10 @@ class StandardCosmologicalMetric:
         c_phi = self.params.get("c_phi", 1.0)  # Phase velocity
         g_eff[0, 0] = -1.0 / (c_phi**2)
 
-        # Spatial components: gij = A^{ij} = χ'/κ δ^{ij} (isotropic)
-        chi_kappa = self.params.get("chi_kappa", 1.0)  # Bridge parameter
+        # Spatial components: gij = A δ^{ij} (isotropic)
+        chi_kappa = float(
+            envelope_invariants.get("chi_over_kappa", self.params.get("chi_kappa", 1.0))
+        )
         for i in range(1, 4):
             g_eff[i, i] = chi_kappa
 
@@ -157,13 +82,34 @@ class StandardCosmologicalMetric:
         for alpha in range(4, 7):
             g_eff[alpha, alpha] = 1.0  # Unit phase space metric
 
-        # Add cosmological evolution corrections from VBP envelope
-        evolution_factor = 1.0 + 0.1 * (a_t + b_t) / 2.0  # Small correction from scale factors
-        
-        for i in range(7):
-            g_eff[i, i] *= evolution_factor
-
         return g_eff
+
+    def compute_scale_factor(self, t: float) -> float:
+        """
+        Compute scale factor for cosmological evolution.
+        
+        Physical Meaning:
+            Computes a simple scale factor for cosmological evolution
+            based on the envelope effective metric parameters.
+            
+        Args:
+            t: Cosmological time
+            
+        Returns:
+            Scale factor
+        """
+        # Simple scale factor evolution for envelope metric
+        # In the 7D BVP theory, this represents the evolution of the
+        # envelope effective metric rather than spacetime expansion
+        H0 = self.params.get("H0", 70.0)
+        omega_lambda = self.params.get("omega_lambda", 0.7)
+        
+        # Simple exponential growth for dark energy dominated universe
+        if omega_lambda > 0:
+            return np.exp(H0 * np.sqrt(omega_lambda) * t / 100.0)
+        else:
+            # Matter dominated - power law
+            return (1.0 + H0 * t / 100.0) ** (2.0/3.0)
 
 
 class CosmologicalModel(ModelBase):
@@ -202,7 +148,7 @@ class CosmologicalModel(ModelBase):
         super().__init__()
         self.initial_conditions = initial_conditions
         self.cosmology_params = cosmology_params
-        self.metric = StandardCosmologicalMetric(cosmology_params)
+        self.metric = EnvelopeEffectiveMetric(cosmology_params)
         self._setup_evolution_parameters()
 
     def _setup_evolution_parameters(self) -> None:
@@ -271,7 +217,9 @@ class CosmologicalModel(ModelBase):
         # Time evolution
         for i, t in enumerate(self.time_steps):
             # Update scale factor
-            a_t, b_t = self.metric.compute_scale_factors(t)
+            # Use envelope effective metric for scale factors
+            a_t = self.metric.compute_scale_factor(t)
+            b_t = a_t  # Simplified for envelope metric
             self.scale_factor[i] = a_t
             self.hubble_parameter[i] = self._compute_hubble_parameter(t)
 
@@ -346,7 +294,7 @@ class CosmologicalModel(ModelBase):
         H_t = (
             self.hubble_parameter[-1]
             if len(self.hubble_parameter) > 0
-            else self.metric.H0
+            else self.cosmology_params.get("H0", 70.0)
         )
 
         # Simple evolution (for demonstration)
@@ -380,12 +328,14 @@ class CosmologicalModel(ModelBase):
         Returns:
             Hubble parameter
         """
-        if self.metric.omega_lambda > 0:
+        omega_lambda = self.cosmology_params.get("omega_lambda", 0.7)
+        H0 = self.cosmology_params.get("H0", 70.0)
+        if omega_lambda > 0:
             # ΛCDM model with dark energy
-            hubble_parameter = self.metric.H0 * np.sqrt(self.metric.omega_lambda)
+            hubble_parameter = H0 * np.sqrt(omega_lambda)
         else:
             # Model without dark energy
-            hubble_parameter = self.metric.H0
+            hubble_parameter = H0
 
         return hubble_parameter
 

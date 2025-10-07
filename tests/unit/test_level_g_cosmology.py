@@ -16,16 +16,12 @@ Physical Meaning:
 import pytest
 import numpy as np
 from unittest.mock import Mock, patch
-from bhlff.models.level_g.cosmology import CosmologicalModel, StandardCosmologicalMetric
+from bhlff.models.level_g.cosmology import CosmologicalModel, EnvelopeEffectiveMetric
 
 
-class TestStandardCosmologicalMetric:
+class TestEnvelopeEffectiveMetric:
     """
-    Test standard cosmological metric.
-
-    Physical Meaning:
-        Tests the standard cosmological metric for 7D phase field theory,
-        including scale factor evolution and metric tensor computation.
+    Tests the envelope-derived effective metric (no spacetime curvature).
     """
 
     def test_metric_initialization(self):
@@ -37,40 +33,25 @@ class TestStandardCosmologicalMetric:
             "omega_k": 0.0,
         }
 
-        metric = StandardCosmologicalMetric(cosmology_params)
-
-        assert metric.H0 == 70.0
-        assert metric.omega_m == 0.3
-        assert metric.omega_lambda == 0.7
-        assert metric.omega_k == 0.0
+        metric = EnvelopeEffectiveMetric({"c_phi": 2.0})
+        g = metric.compute_effective_metric_from_vbp_envelope({"chi_over_kappa": 3.0})
+        assert g.shape == (7, 7)
+        assert g[0, 0] == pytest.approx(-1.0 / (2.0**2))
 
     def test_scale_factors_computation(self):
         """Test scale factors computation."""
-        cosmology_params = {"H0": 70.0, "omega_lambda": 0.7}
-
-        metric = StandardCosmologicalMetric(cosmology_params)
-
-        # Test at different times
-        a_t1, b_t1 = metric.compute_scale_factors(0.0)
-        a_t2, b_t2 = metric.compute_scale_factors(1.0)
-
-        assert a_t1 > 0
-        assert b_t1 > 0
-        assert a_t2 > a_t1  # Universe should expand
-        assert b_t2 > b_t1  # Internal space should also expand
+        metric = EnvelopeEffectiveMetric({"c_phi": 1.0})
+        g1 = metric.compute_effective_metric_from_vbp_envelope({"chi_over_kappa": 1.0})
+        g2 = metric.compute_effective_metric_from_vbp_envelope({"chi_over_kappa": 2.0})
+        assert g2[1, 1] > g1[1, 1]
 
     def test_metric_tensor_computation(self):
         """Test metric tensor computation."""
-        cosmology_params = {"H0": 70.0, "omega_lambda": 0.7}
-
-        metric = StandardCosmologicalMetric(cosmology_params)
-
-        # Test metric tensor at non-zero position
-        g = metric.compute_metric_tensor(0.0, 1.0, 0.5, 0.5, 0.5, 0.5, 0.5)
-
+        metric = EnvelopeEffectiveMetric({"c_phi": 1.0})
+        g = metric.compute_effective_metric_from_vbp_envelope({"chi_over_kappa": 1.0})
         assert g.shape == (7, 7)
-        assert g[0, 0] == -1.0  # Time component
-        assert g[1, 1] > 0  # Space components should be positive
+        assert g[0, 0] < 0
+        assert g[1, 1] > 0
         assert g[2, 2] > 0
         assert g[3, 3] > 0
 

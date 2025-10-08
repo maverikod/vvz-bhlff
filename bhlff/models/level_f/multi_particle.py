@@ -239,24 +239,22 @@ class MultiParticleSystem(AbstractModel):
             collective mode calculations.
         """
         n_particles = len(self.particles)
-        self._mass_matrix = np.zeros((n_particles, n_particles))
-        self._stiffness_matrix = np.zeros((n_particles, n_particles))
+        self._energy_matrix = np.zeros((n_particles, n_particles))
+        self._phase_coherence_matrix = np.zeros((n_particles, n_particles))
 
         # Fill matrices
         for i, particle_i in enumerate(self.particles):
             for j, particle_j in enumerate(self.particles):
                 if i == j:
-                    # Diagonal elements
-                    self._mass_matrix[i, j] = particle_i.mass
-                    self._stiffness_matrix[i, j] = self._compute_self_stiffness(
-                        particle_i
-                    )
+                    # Diagonal elements - self energy
+                    self._energy_matrix[i, j] = self._compute_particle_energy(particle_i)
+                    self._phase_coherence_matrix[i, j] = 1.0  # Self coherence
                 else:
-                    # Off-diagonal elements
-                    self._mass_matrix[i, j] = self._compute_interaction_mass(
+                    # Off-diagonal elements - interaction energy and coherence
+                    self._energy_matrix[i, j] = self._compute_interaction_energy(
                         particle_i, particle_j
                     )
-                    self._stiffness_matrix[i, j] = self._compute_interaction_stiffness(
+                    self._phase_coherence_matrix[i, j] = self._compute_phase_coherence(
                         particle_i, particle_j
                     )
 
@@ -427,8 +425,11 @@ class MultiParticleSystem(AbstractModel):
         # Use 7D fractional Laplacian
         from bhlff.core.operators.fractional_laplacian import FractionalLaplacian
         
+        # Create fractional Laplacian instance
+        laplacian = FractionalLaplacian(self.domain, beta=1.0)
+        
         # Compute fractional Laplacian energy
-        laplacian_energy = FractionalLaplacian.apply(phase_field)
+        laplacian_energy = laplacian.apply(phase_field)
         energy = np.sum(np.abs(laplacian_energy)**2)
         
         return energy
@@ -489,31 +490,34 @@ class MultiParticleSystem(AbstractModel):
         
         return coherence_length
 
-    def _compute_interaction_mass(
+    def _compute_interaction_energy(
         self, particle_i: Particle, particle_j: Particle
     ) -> float:
         """
-        Compute interaction mass between particles.
+        Compute interaction energy between particles using 7D BVP theory.
 
         Physical Meaning:
-            Calculates the effective mass contribution
-            from particle interactions.
+            Calculates the interaction energy between particles
+            based on 7D phase field coherence rather than classical mass.
         """
         # Distance between particles
         r_ij = np.linalg.norm(particle_i.position - particle_j.position)
 
-        # Interaction mass (decreases with distance)
+        # Interaction energy (decreases with distance)
         if r_ij > self.interaction_range:
             return 0.0
 
-        interaction_mass = (
+        # Use 7D phase field energy instead of classical mass
+        phase_coherence = self._compute_phase_coherence(particle_i, particle_j)
+        interaction_energy = (
             self.interaction_strength
+            * phase_coherence
             * particle_i.charge
             * particle_j.charge
             / (r_ij + 1e-10)
         )
 
-        return interaction_mass
+        return interaction_energy
 
     def _compute_interaction_stiffness(
         self, particle_i: Particle, particle_j: Particle

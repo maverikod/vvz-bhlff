@@ -1227,7 +1227,7 @@ Generated for: .
 - Imports: 4
 
 ### ./bhlff/models/level_f/multi_particle.py
-- Lines: 666
+- Lines: 670
 - Classes: 2
 - Functions: 28
 - Imports: 5

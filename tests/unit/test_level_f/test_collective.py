@@ -181,7 +181,7 @@ class TestCollectiveExcitations:
         # Check that analysis is returned
         assert "frequencies" in analysis
         assert "peaks" in analysis
-        assert "damping_analysis" in analysis
+        assert "transmission_analysis" in analysis
         assert "participation" in analysis
         assert "quality_factors" in analysis
         assert "spectrum" in analysis
@@ -193,9 +193,9 @@ class TestCollectiveExcitations:
         assert "frequencies" in analysis["peaks"]
         assert "amplitudes" in analysis["peaks"]
 
-        # Check that damping analysis is performed
-        assert "damping_rates" in analysis["damping_analysis"]
-        assert "decay_times" in analysis["damping_analysis"]
+        # Check that transmission analysis is performed
+        assert "transmission_coefficients" in analysis["transmission_analysis"]
+        assert "reflection_coefficients" in analysis["transmission_analysis"]
 
     def test_dispersion_relations(self, excitations):
         """
@@ -283,15 +283,15 @@ class TestCollectiveExcitations:
         assert len(peaks["frequencies"]) > 0
         assert len(peaks["amplitudes"]) > 0
 
-    def test_damping_analysis(self, excitations):
+    def test_step_resonator_transmission_analysis(self, excitations):
         """
-        Test damping analysis.
+        Test step resonator transmission analysis.
 
         Physical Meaning:
-            Verifies that damping rates are correctly
-            computed from the system response.
+            Verifies that transmission/reflection coefficients
+            are correctly computed through step resonator boundaries.
         """
-        # Create mock response with step-resonator leakage (no exponential decay)
+        # Create mock response with step-resonator transmission
         n_particles = len(excitations.system.particles)
         n_time = 1000
         t = np.linspace(0, 10, n_time)
@@ -299,22 +299,22 @@ class TestCollectiveExcitations:
         response = np.zeros((n_particles, n_time))
         for i in range(n_particles):
             signal = np.sin(2 * np.pi * t)
-            # emulate leakage by mixing endpoints (semi-transparent boundary)
-            signal[0] = 0.5 * signal[0] + 0.5 * signal[1]
-            signal[-1] = 0.5 * signal[-1] + 0.5 * signal[-2]
+            # emulate step-resonator transmission
+            signal[0] = 0.9 * signal[0] + 0.1 * signal[1]  # 90% transmission, 10% reflection
+            signal[-1] = 0.9 * signal[-1] + 0.1 * signal[-2]
             response[i, :] = signal
 
-        damping_analysis = excitations._analyze_damping(response)
+        transmission_analysis = excitations._analyze_step_resonator_transmission(response)
 
-        # Check that damping analysis is returned
-        assert "damping_rates" in damping_analysis
-        assert "decay_times" in damping_analysis
-        assert "mean_damping" in damping_analysis
-        assert "mean_decay_time" in damping_analysis
+        # Check that transmission analysis is returned
+        assert "transmission_coefficients" in transmission_analysis
+        assert "reflection_coefficients" in transmission_analysis
+        assert "mean_transmission" in transmission_analysis
+        assert "mean_reflection" in transmission_analysis
 
-        # Check that damping rates are computed
-        assert len(damping_analysis["damping_rates"]) == n_particles
-        assert len(damping_analysis["decay_times"]) == n_particles
+        # Check that transmission coefficients are computed
+        assert len(transmission_analysis["transmission_coefficients"]) == n_particles
+        assert len(transmission_analysis["reflection_coefficients"]) == n_particles
 
     def test_participation_ratios(self, excitations):
         """
@@ -352,12 +352,12 @@ class TestCollectiveExcitations:
         # Create mock peaks and damping analysis
         peaks = {"frequencies": [1.0, 2.0, 3.0], "amplitudes": [0.5, 0.8, 0.3]}
 
-        damping_analysis = {
-            "damping_rates": [0.1, 0.2, 0.15],
-            "decay_times": [10.0, 5.0, 6.67],
+        transmission_analysis = {
+            "transmission_coefficients": [0.9, 0.8, 0.85],
+            "reflection_coefficients": [0.1, 0.2, 0.15],
         }
 
-        quality_factors = excitations._compute_quality_factors(peaks, damping_analysis)
+        quality_factors = excitations._compute_quality_factors(peaks, transmission_analysis)
 
         # Check that quality factors are returned
         assert isinstance(quality_factors, np.ndarray)

@@ -2,10 +2,10 @@
 Generated for: .
 
 ## Statistics
-- Total files: 518
-- Total classes: 485
-- Total functions: 4066
-- Total imports: 2443
+- Total files: 516
+- Total classes: 483
+- Total functions: 4071
+- Total imports: 2440
 
 ## Files Overview
 ### ./code_mapper.py
@@ -231,7 +231,7 @@ Generated for: .
 - Imports: 7
 
 ### ./tests/unit/test_level_e/test_defect_physics.py
-- Lines: 357
+- Lines: 358
 - Classes: 1
 - Functions: 12
 - Imports: 4
@@ -321,7 +321,7 @@ Generated for: .
 - Imports: 8
 
 ### ./tests/unit/test_core/test_quenches_postulate_physics.py
-- Lines: 120
+- Lines: 132
 - Classes: 1
 - Functions: 4
 - Imports: 6
@@ -357,10 +357,10 @@ Generated for: .
 - Imports: 5
 
 ### ./tests/unit/test_core/test_base_time_integrator.py
-- Lines: 159
+- Lines: 154
 - Classes: 1
 - Functions: 6
-- Imports: 5
+- Imports: 6
 
 ### ./tests/unit/test_core/test_fft_solver_7d_validation.py
 - Lines: 35
@@ -369,7 +369,7 @@ Generated for: .
 - Imports: 3
 
 ### ./tests/unit/test_core/test_scale_separation_postulate_physics.py
-- Lines: 130
+- Lines: 139
 - Classes: 1
 - Functions: 4
 - Imports: 6
@@ -537,7 +537,7 @@ Generated for: .
 - Imports: 2
 
 ### ./tests/unit/test_core/test_bvp_constants_physics.py
-- Lines: 283
+- Lines: 286
 - Classes: 1
 - Functions: 12
 - Imports: 5
@@ -608,12 +608,6 @@ Generated for: .
 - Functions: 44
 - Imports: 8
 
-### ./tests/unit/test_core/test_bvp_exponential_integrator.py
-- Lines: 221
-- Classes: 1
-- Functions: 10
-- Imports: 5
-
 ### ./tests/unit/test_core/test_memory_kernel.py
 - Lines: 259
 - Classes: 1
@@ -621,7 +615,7 @@ Generated for: .
 - Imports: 5
 
 ### ./tests/unit/test_core/test_renormalized_coefficients_physics.py
-- Lines: 337
+- Lines: 367
 - Classes: 1
 - Functions: 16
 - Imports: 6
@@ -645,7 +639,7 @@ Generated for: .
 - Imports: 6
 
 ### ./tests/unit/test_core/test_power_balance_postulate_physics.py
-- Lines: 126
+- Lines: 129
 - Classes: 1
 - Functions: 4
 - Imports: 6
@@ -681,10 +675,10 @@ Generated for: .
 - Imports: 0
 
 ### ./tests/unit/test_core/fft_solver_7d_validation/test_numerical_validation.py
-- Lines: 287
+- Lines: 284
 - Classes: 1
 - Functions: 9
-- Imports: 6
+- Imports: 7
 
 ### ./tests/unit/test_core/fft_solver_7d_validation/__init__.py
 - Lines: 9
@@ -696,25 +690,25 @@ Generated for: .
 - Lines: 247
 - Classes: 1
 - Functions: 9
-- Imports: 6
+- Imports: 7
 
 ### ./tests/unit/test_core/fft_solver_7d_validation/test_boundary_cases.py
-- Lines: 307
+- Lines: 304
 - Classes: 1
 - Functions: 12
-- Imports: 9
+- Imports: 10
 
 ### ./tests/unit/test_core/time_integrators/test_basic_integrators.py
-- Lines: 239
+- Lines: 235
 - Classes: 1
 - Functions: 14
-- Imports: 6
+- Imports: 7
 
 ### ./tests/unit/test_core/time_integrators/test_advanced_integrators.py
-- Lines: 295
+- Lines: 308
 - Classes: 1
 - Functions: 12
-- Imports: 7
+- Imports: 8
 
 ### ./tests/unit/test_core/time_integrators/__init__.py
 - Lines: 9
@@ -1221,10 +1215,10 @@ Generated for: .
 - Imports: 8
 
 ### ./bhlff/models/level_f/nonlinear.py
-- Lines: 661
+- Lines: 674
 - Classes: 1
 - Functions: 30
-- Imports: 3
+- Imports: 4
 
 ### ./bhlff/models/level_f/__init__.py
 - Lines: 35
@@ -1233,16 +1227,16 @@ Generated for: .
 - Imports: 4
 
 ### ./bhlff/models/level_f/multi_particle.py
-- Lines: 563
+- Lines: 666
 - Classes: 2
-- Functions: 19
-- Imports: 4
+- Functions: 28
+- Imports: 5
 
 ### ./bhlff/models/level_f/collective.py
-- Lines: 590
+- Lines: 595
 - Classes: 1
-- Functions: 19
-- Imports: 3
+- Functions: 20
+- Imports: 4
 
 ### ./bhlff/models/level_d/level_d_models.py
 - Lines: 337
@@ -1413,10 +1407,10 @@ Generated for: .
 - Imports: 4
 
 ### ./bhlff/models/level_e/defect_dynamics.py
-- Lines: 369
+- Lines: 457
 - Classes: 1
-- Functions: 11
-- Imports: 2
+- Functions: 15
+- Imports: 3
 
 ### ./bhlff/models/level_e/defect_implementations.py
 - Lines: 404
@@ -1773,7 +1767,7 @@ Generated for: .
 - Imports: 6
 
 ### ./bhlff/core/time/bvp_envelope_integrator.py
-- Lines: 378
+- Lines: 387
 - Classes: 1
 - Functions: 7
 - Imports: 7
@@ -1785,7 +1779,7 @@ Generated for: .
 - Imports: 4
 
 ### ./bhlff/core/time/quench_detector.py
-- Lines: 292
+- Lines: 321
 - Classes: 1
 - Functions: 8
 - Imports: 4
@@ -1803,22 +1797,16 @@ Generated for: .
 - Imports: 1
 
 ### ./bhlff/core/time/__init__.py
-- Lines: 42
+- Lines: 40
 - Classes: 0
 - Functions: 0
-- Imports: 7
+- Imports: 6
 
 ### ./bhlff/core/time/base_integrator.py
 - Lines: 238
 - Classes: 1
 - Functions: 10
 - Imports: 6
-
-### ./bhlff/core/time/exponential_integrator.py
-- Lines: 342
-- Classes: 1
-- Functions: 6
-- Imports: 7
 
 ### ./bhlff/core/time/adaptive/error_estimation.py
 - Lines: 295
@@ -2031,7 +2019,7 @@ Generated for: .
 - Imports: 2
 
 ### ./bhlff/core/bvp/bvp_constants_base.py
-- Lines: 312
+- Lines: 323
 - Classes: 1
 - Functions: 13
 - Imports: 2
@@ -2325,9 +2313,9 @@ Generated for: .
 - Imports: 7
 
 ### ./bhlff/core/bvp/constants/frequency_dependent_properties.py
-- Lines: 210
+- Lines: 358
 - Classes: 1
-- Functions: 5
+- Functions: 12
 - Imports: 2
 
 ### ./bhlff/core/bvp/constants/renormalized_coefficients.py
@@ -2349,7 +2337,7 @@ Generated for: .
 - Imports: 6
 
 ### ./bhlff/core/bvp/constants/nonlinear_coefficients.py
-- Lines: 112
+- Lines: 120
 - Classes: 1
 - Functions: 3
 - Imports: 2
@@ -2607,7 +2595,7 @@ Generated for: .
 - Imports: 4
 
 ### ./bhlff/core/bvp/postulates/scale_separation_postulate.py
-- Lines: 150
+- Lines: 147
 - Classes: 1
 - Functions: 2
 - Imports: 4

@@ -295,25 +295,24 @@ class NonlinearEffects(AbstractModel):
     def _add_nonlinear_dynamics(self) -> None:
         """
         Add nonlinear dynamics to the system.
-
+        
         Physical Meaning:
             Adds nonlinear terms to the equations
-            of motion of the system.
-
+            of motion using 7D BVP theory.
+        
         Mathematical Foundation:
-            ∂²φ/∂t² + γ∂φ/∂t + ω₀²φ + λ₁φ + λ₂φ³ + λ₃φ⁵ = F(t)
-            where γ is damping, ω₀ is natural frequency, and F(t) is driving force.
+            ∂²φ/∂t² + ω₀²φ + λ₁φ + λ₂φ³ + λ₃φ⁵ = F(t)
+            where energy exchange occurs through step resonator boundaries.
         """
-        # Initialize nonlinear dynamics parameters
-        self.gamma = self.params.get("gamma", 0.1)  # Damping coefficient
+        # Initialize nonlinear dynamics parameters (NO DAMPING)
         self.omega_0 = self.params.get("omega_0", 1.0)  # Natural frequency
         self.driving_amplitude = self.params.get("driving_amplitude", 0.1)
         self.driving_frequency = self.params.get("driving_frequency", 1.0)
-
-        # Define nonlinear force terms
+        
+        # Define nonlinear force terms (NO DAMPING FORCE)
         self.nonlinear_force = self._compute_nonlinear_force
-        self.damping_force = self._compute_damping_force
         self.driving_force = self._compute_driving_force
+        self.boundary_energy_exchange = self._compute_boundary_energy_exchange
 
         # Update equations of motion
         self.equations_of_motion = self._formulate_equations_of_motion()
@@ -636,16 +635,30 @@ class NonlinearEffects(AbstractModel):
         """Compute nonlinear force terms."""
         return self.lambda_1 * phi + self.lambda_2 * phi**3 + self.lambda_3 * phi**5
 
-    def _compute_damping_force(self, phi_dot: np.ndarray) -> np.ndarray:
-        """Compute damping force."""
-        return -self.gamma * phi_dot
+    def _compute_boundary_energy_exchange(self, field: np.ndarray) -> np.ndarray:
+        """
+        Compute energy exchange through step resonator boundaries.
+        
+        Physical Meaning:
+            Calculates energy exchange between field and environment
+            through semi-transparent step resonator boundaries.
+        """
+        from bhlff.core.bvp.boundary.step_resonator import apply_step_resonator
+        
+        # Apply step resonator boundary
+        boundary_field = apply_step_resonator(field, axes=(0, 1, 2), R=0.1, T=0.9)
+        
+        # Compute energy exchange rate
+        energy_exchange = np.real(boundary_field * np.conj(field))
+        
+        return energy_exchange
 
     def _compute_driving_force(self, t: float) -> float:
         """Compute driving force."""
         return self.driving_amplitude * np.cos(self.driving_frequency * t)
 
     def _formulate_equations_of_motion(self) -> callable:
-        """Formulate complete equations of motion."""
+        """Formulate complete equations of motion without damping."""
 
         def equations(t, y):
             phi, phi_dot = y
@@ -653,8 +666,8 @@ class NonlinearEffects(AbstractModel):
             dphi_dot_dt = (
                 -self.omega_0**2 * phi
                 - self._compute_nonlinear_force(phi)
-                + self._compute_damping_force(phi_dot)
                 + self._compute_driving_force(t)
+                + self._compute_boundary_energy_exchange(phi)
             )
             return [dphi_dt, dphi_dot_dt]
 

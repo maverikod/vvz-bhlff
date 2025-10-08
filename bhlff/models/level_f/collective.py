@@ -128,19 +128,19 @@ class CollectiveExcitations(AbstractModel):
         # Find spectral peaks
         peaks = self._find_spectral_peaks(np.abs(response_fft), frequencies)
 
-        # Analyze damping
-        damping_analysis = self._analyze_damping(response)
+        # Analyze step resonator transmission
+        transmission_analysis = self._analyze_step_resonator_transmission(response)
 
         # Compute participation ratios
         participation = self._compute_participation_ratios(response)
 
         # Quality factors
-        quality_factors = self._compute_quality_factors(peaks, damping_analysis)
+        quality_factors = self._compute_quality_factors(peaks, transmission_analysis)
 
         return {
             "frequencies": frequencies,
             "peaks": peaks,
-            "damping_analysis": damping_analysis,
+            "transmission_analysis": transmission_analysis,
             "participation": participation,
             "quality_factors": quality_factors,
             "spectrum": response_fft,
@@ -216,11 +216,8 @@ class CollectiveExcitations(AbstractModel):
         susceptibility = np.zeros_like(frequencies, dtype=complex)
 
         for i, (omega_n, A_n) in enumerate(zip(mode_frequencies, mode_amplitudes)):
-            # Lorentzian response
-            gamma = 0.1 * omega_n  # Damping rate
-            susceptibility += A_n / (
-                omega_n**2 - frequencies**2 - 1j * gamma * frequencies
-            )
+            # 7D BVP response without damping
+            susceptibility += A_n / (omega_n**2 - frequencies**2)
 
         return susceptibility
 
@@ -398,48 +395,55 @@ class CollectiveExcitations(AbstractModel):
             "amplitudes": peak_amplitudes,
         }
 
-    def _analyze_damping(self, response: np.ndarray) -> Dict[str, Any]:
+    def _analyze_step_resonator_transmission(self, response: np.ndarray) -> Dict[str, Any]:
         """
-        Analyze damping in the system response.
-
+        Analyze energy exchange through step resonator boundaries.
+        
         Physical Meaning:
-            Computes damping rates for collective modes
-            from the temporal decay of the response.
+            Computes transmission/reflection coefficients for collective modes
+            through semi-transparent step resonator boundaries.
         """
-        # Analyze each particle's response
-        damping_rates = []
-        decay_times = []
-
+        # Analyze boundary transmission/reflection
+        transmission_coeffs = []
+        reflection_coeffs = []
+        
         for i in range(response.shape[0]):
-            # Fit exponential decay
-            t = np.arange(response.shape[1]) * self.dt
-            y = np.abs(response[i, :])
-
-            # Find decay region
-            max_idx = np.argmax(y)
-            decay_region = y[max_idx:]
-            t_decay = t[max_idx:]
-
-            if len(decay_region) > 1:
-                # Fit exponential
-                try:
-                    log_y = np.log(decay_region + 1e-10)
-                    p = np.polyfit(t_decay, log_y, 1)
-                    gamma = -p[0]  # Damping rate
-                    damping_rates.append(gamma)
-                    decay_times.append(1.0 / gamma if gamma > 0 else np.inf)
-                except:
-                    damping_rates.append(0.0)
-                    decay_times.append(np.inf)
-            else:
-                damping_rates.append(0.0)
-                decay_times.append(np.inf)
-
+            # Compute boundary energy flux
+            boundary_flux = self._compute_boundary_energy_flux(response[i, :])
+            transmission_coeffs.append(boundary_flux['transmission'])
+            reflection_coeffs.append(boundary_flux['reflection'])
+        
         return {
-            "damping_rates": damping_rates,
-            "decay_times": decay_times,
-            "mean_damping": np.mean(damping_rates),
-            "mean_decay_time": np.mean(decay_times),
+            "transmission_coefficients": transmission_coeffs,
+            "reflection_coefficients": reflection_coeffs,
+            "mean_transmission": np.mean(transmission_coeffs),
+            "mean_reflection": np.mean(reflection_coeffs),
+        }
+
+    def _compute_boundary_energy_flux(self, field: np.ndarray) -> Dict[str, float]:
+        """
+        Compute energy flux through step resonator boundaries.
+        
+        Physical Meaning:
+            Calculates energy exchange through semi-transparent
+            step resonator boundaries using 7D BVP theory.
+        """
+        # Use step resonator boundary operator
+        from bhlff.core.bvp.boundary.step_resonator import apply_step_resonator
+        
+        # Apply boundary operator
+        transmitted_field = apply_step_resonator(field, axes=(0, 1, 2), R=0.1, T=0.9)
+        
+        # Compute transmission/reflection coefficients
+        incident_energy = np.sum(np.abs(field)**2)
+        transmitted_energy = np.sum(np.abs(transmitted_field)**2)
+        
+        transmission = transmitted_energy / (incident_energy + 1e-10)
+        reflection = 1.0 - transmission
+        
+        return {
+            "transmission": transmission,
+            "reflection": reflection
         }
 
     def _compute_participation_ratios(self, response: np.ndarray) -> np.ndarray:
@@ -465,26 +469,27 @@ class CollectiveExcitations(AbstractModel):
         return participation
 
     def _compute_quality_factors(
-        self, peaks: Dict[str, Any], damping_analysis: Dict[str, Any]
+        self, peaks: Dict[str, Any], transmission_analysis: Dict[str, Any]
     ) -> np.ndarray:
         """
         Compute quality factors for collective modes.
 
         Physical Meaning:
-            Calculates quality factors Q = ω/γ for
-            collective modes.
+            Calculates quality factors based on transmission
+            coefficients through step resonator boundaries.
         """
         peak_frequencies = peaks["frequencies"]
-        damping_rates = damping_analysis["damping_rates"]
+        transmission_coeffs = transmission_analysis["transmission_coefficients"]
 
         quality_factors = []
         for freq in peak_frequencies:
-            # Find corresponding damping rate
-            if damping_rates:
-                gamma = np.mean(damping_rates)
-                Q = freq / gamma if gamma > 0 else np.inf
+            # Use transmission coefficient as quality measure
+            if transmission_coeffs:
+                transmission = np.mean(transmission_coeffs)
+                # Higher transmission = higher quality
+                Q = transmission * freq if transmission > 0 else 0
             else:
-                Q = np.inf
+                Q = 0
             quality_factors.append(Q)
 
         return np.array(quality_factors)

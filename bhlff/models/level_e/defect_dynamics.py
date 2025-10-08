@@ -61,81 +61,44 @@ class DefectDynamics:
     def _setup_dynamics_parameters(self) -> None:
         """
         Setup parameters for defect dynamics.
-
+        
         Physical Meaning:
             Initializes the physical parameters required for
-            defect dynamics calculations including masses,
-            gyroscopic coefficients, and dissipation rates.
+            defect dynamics calculations using energy-based dynamics.
         """
-        self.defect_mass = self.params.get("defect_mass", 1.0)
+        # NO MASS PARAMETERS - use energy-based dynamics
         self.gyroscopic_coefficient = self.params.get("gyroscopic_coefficient", 1.0)
-        self.dissipation_coefficient = self.params.get("dissipation_coefficient", 0.1)
         self.time_step = self.params.get("time_step", 0.01)
         self.max_velocity = self.params.get("max_velocity", 10.0)
+        
+        # Energy-based parameters
+        self.energy_threshold = self.params.get("energy_threshold", 1.0)
+        self.phase_coherence_length = self.params.get("phase_coherence_length", 1.0)
 
     def simulate_defect_motion(
         self, initial_position: np.ndarray, time_steps: int, field: np.ndarray
     ) -> Dict[str, np.ndarray]:
         """
-        Simulate defect motion over time.
-
+        Simulate defect motion using energy-based dynamics.
+        
         Physical Meaning:
-            Computes the trajectory of a topological defect under
-            the influence of effective forces, gyroscopic effects,
-            and dissipation.
-
-        Mathematical Foundation:
-            Integrates the Thiele equation: ẋ = -∇U_eff + G × ẋ + D ẋ
-            using a numerical scheme to obtain the defect trajectory.
-
-        Args:
-            initial_position: Starting position of defect
-            time_steps: Number of time steps
-            field: Background field configuration
-
-        Returns:
-            Dictionary containing position, velocity, and forces
+            Computes defect motion based on energy gradients
+            rather than classical mass-based dynamics.
         """
-        # Initialize trajectory arrays
-        positions = np.zeros((time_steps, 3))
-        velocities = np.zeros((time_steps, 3))
-        forces = np.zeros((time_steps, 3))
-
-        # Set initial conditions
-        positions[0] = initial_position
-        velocities[0] = np.zeros(3)
-
-        # Time integration
-        for step in range(1, time_steps):
-            # Find current defect position
-            current_position = self._find_defect_position(field)
-            positions[step] = current_position
-
-            # Compute forces
-            effective_force = self._compute_defect_force(current_position, field)
-            forces[step] = effective_force
-
-            # Compute gyroscopic and dissipative forces
-            gyroscopic_force = self._compute_gyroscopic_force(velocities[step - 1])
-            dissipative_force = self._compute_dissipative_force(velocities[step - 1])
-
-            # Total force
-            total_force = effective_force + gyroscopic_force + dissipative_force
-
-            # Update velocity using Euler method
-            velocities[step] = (
-                velocities[step - 1] + self.time_step * total_force / self.defect_mass
-            )
-
-            # Limit velocity to prevent numerical instability
-            velocity_magnitude = np.linalg.norm(velocities[step])
-            if velocity_magnitude > self.max_velocity:
-                velocities[step] *= self.max_velocity / velocity_magnitude
-
-            # Update position
-            positions[step] = positions[step - 1] + self.time_step * velocities[step]
-
-        return {"positions": positions, "velocities": velocities, "forces": forces}
+        # Compute energy landscape
+        energy_landscape = self._compute_energy_landscape(field)
+        
+        # Compute energy gradients (instead of forces)
+        energy_gradients = self._compute_energy_gradients(energy_landscape)
+        
+        # Energy-based motion (no mass)
+        positions = self._integrate_energy_dynamics(initial_position, energy_gradients, time_steps)
+        
+        return {
+            "positions": positions,
+            "energy_landscape": energy_landscape,
+            "energy_gradients": energy_gradients
+        }
 
     def _find_defect_position(self, field: np.ndarray) -> np.ndarray:
         """
@@ -355,15 +318,140 @@ class DefectDynamics:
         D = self.dissipation_coefficient
         return -D * velocity
 
-    def _get_defect_mass(self) -> float:
+    def _compute_energy_landscape(self, field: np.ndarray) -> np.ndarray:
         """
-        Get effective mass of defect.
-
+        Compute energy landscape from field configuration.
+        
         Physical Meaning:
-            Returns the effective mass of the topological defect,
-            which determines its inertia and response to forces.
-
-        Returns:
-            Defect mass
+            Calculates the energy landscape that governs
+            defect motion based on 7D phase field theory.
         """
-        return self.defect_mass
+        # Use 7D phase field energy
+        from bhlff.core.operators.fractional_laplacian import FractionalLaplacian
+        
+        # Compute fractional Laplacian energy
+        laplacian_energy = FractionalLaplacian.apply(field)
+        energy_landscape = np.abs(laplacian_energy)**2
+        
+        return energy_landscape
+    
+    def _compute_energy_gradients(self, energy_landscape: np.ndarray) -> np.ndarray:
+        """
+        Compute energy gradients for defect motion.
+        
+        Physical Meaning:
+            Calculates energy gradients that drive
+            defect motion in 7D phase field theory.
+        """
+        # Compute spatial gradients of energy
+        grad_x = np.gradient(energy_landscape, axis=0)
+        grad_y = np.gradient(energy_landscape, axis=1)
+        grad_z = np.gradient(energy_landscape, axis=2)
+        
+        # Stack gradients
+        energy_gradients = np.stack([grad_x, grad_y, grad_z], axis=-1)
+        
+        return energy_gradients
+    
+    def _integrate_energy_dynamics(
+        self, initial_position: np.ndarray, energy_gradients: np.ndarray, time_steps: int
+    ) -> np.ndarray:
+        """
+        Integrate energy-based dynamics for defect motion.
+        
+        Physical Meaning:
+            Integrates the energy-based equations of motion
+            to obtain defect trajectory.
+        """
+        # Initialize trajectory
+        positions = np.zeros((time_steps, 3))
+        positions[0] = initial_position
+        
+        # Energy-based integration
+        for step in range(1, time_steps):
+            # Get current position
+            current_pos = positions[step - 1]
+            
+            # Interpolate energy gradient at current position
+            gradient = self._interpolate_energy_gradient(energy_gradients, current_pos)
+            
+            # Energy-based velocity (no mass)
+            velocity = -gradient * self.time_step
+            
+            # Limit velocity
+            velocity_magnitude = np.linalg.norm(velocity)
+            if velocity_magnitude > self.max_velocity:
+                velocity *= self.max_velocity / velocity_magnitude
+            
+            # Update position
+            positions[step] = current_pos + velocity
+        
+        return positions
+    
+    def _interpolate_energy_gradient(
+        self, energy_gradients: np.ndarray, position: np.ndarray
+    ) -> np.ndarray:
+        """
+        Interpolate energy gradient at arbitrary position.
+        
+        Physical Meaning:
+            Computes the energy gradient at an arbitrary position
+            using interpolation from the grid values.
+        """
+        N = self.domain.N
+        L = self.domain.L
+        
+        # Convert to grid coordinates
+        x = position[0] * N / L
+        y = position[1] * N / L
+        z = position[2] * N / L
+        
+        # Trilinear interpolation for each component
+        gradient = np.zeros(3)
+        for i in range(3):
+            gradient[i] = self._interpolate_scalar_field(
+                energy_gradients[:, :, :, i], x, y, z
+            )
+        
+        return gradient
+    
+    def _interpolate_scalar_field(
+        self, field: np.ndarray, x: float, y: float, z: float
+    ) -> float:
+        """
+        Interpolate scalar field at arbitrary position.
+        """
+        N = field.shape[0]
+        
+        # Trilinear interpolation
+        x0, y0, z0 = int(x) % N, int(y) % N, int(z) % N
+        x1, y1, z1 = (x0 + 1) % N, (y0 + 1) % N, (z0 + 1) % N
+        
+        # Interpolation weights
+        wx = x - int(x)
+        wy = y - int(y)
+        wz = z - int(z)
+        
+        # Interpolate
+        c000 = field[x0, y0, z0]
+        c001 = field[x0, y0, z1]
+        c010 = field[x0, y1, z0]
+        c011 = field[x0, y1, z1]
+        c100 = field[x1, y0, z0]
+        c101 = field[x1, y0, z1]
+        c110 = field[x1, y1, z0]
+        c111 = field[x1, y1, z1]
+        
+        # Trilinear interpolation formula
+        result = (
+            c000 * (1 - wx) * (1 - wy) * (1 - wz)
+            + c001 * (1 - wx) * (1 - wy) * wz
+            + c010 * (1 - wx) * wy * (1 - wz)
+            + c011 * (1 - wx) * wy * wz
+            + c100 * wx * (1 - wy) * (1 - wz)
+            + c101 * wx * (1 - wy) * wz
+            + c110 * wx * wy * (1 - wz)
+            + c111 * wx * wy * wz
+        )
+        
+        return result

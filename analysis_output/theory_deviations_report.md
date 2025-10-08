@@ -81,6 +81,138 @@ b_t = self.b0 * np.exp(H_internal * t)
 Status: COMPLETED
 - Edits:
   - Added semi-transparent boundary operator: `bhlff/core/bvp/boundary/step_resonator.py`
+
+---
+
+- [ ] 10) Exponential decay patterns in collective systems
+- Rule: No exponential temporal/spatial decay as physical loss model; energy exchange via semi-transparent step resonator boundaries.
+- Essence: Explicit exponential decay fitting and damping analysis in collective systems.
+- Evidence:
+
+```401:443:bhlff/models/level_f/collective.py
+def _analyze_damping(self, response: np.ndarray) -> Dict[str, Any]:
+    """
+    Analyze damping in the system response.
+    ...
+    # Fit exponential decay
+    t = np.arange(response.shape[1]) * self.dt
+    y = np.abs(response[i, :])
+    ...
+    # Fit exponential
+    try:
+        log_y = np.log(decay_region + 1e-10)
+        p = np.polyfit(t_decay, log_y, 1)
+        gamma = -p[0]  # Damping rate
+        damping_rates.append(gamma)
+        decay_times.append(1.0 / gamma if gamma > 0 else np.inf)
+```
+
+- Impact: Exponential decay analysis conflicts with step-resonator energy exchange model; introduces classical damping concepts.
+- Fix: Replace exponential decay analysis with step-resonator transmission/reflection analysis; analyze energy exchange through boundary operators instead of temporal decay.
+
+---
+
+- [ ] 11) Classical damping coefficients in nonlinear dynamics
+- Rule: No exponential temporal/spatial decay as physical loss model; use semi-transparent step resonator boundaries.
+- Essence: Explicit damping coefficient γ in nonlinear dynamics equations.
+- Evidence:
+
+```295:319:bhlff/models/level_f/nonlinear.py
+def _add_nonlinear_dynamics(self) -> None:
+    """
+    Add nonlinear dynamics to the system.
+    ...
+    Mathematical Foundation:
+        ∂²φ/∂t² + γ∂φ/∂t + ω₀²φ + λ₁φ + λ₂φ³ + λ₃φ⁵ = F(t)
+        where γ is damping, ω₀ is natural frequency, and F(t) is driving force.
+    """
+    # Initialize nonlinear dynamics parameters
+    self.gamma = self.params.get("gamma", 0.1)  # Damping coefficient
+    self.omega_0 = self.params.get("omega_0", 1.0)  # Natural frequency
+    ...
+    self.damping_force = self._compute_damping_force
+```
+
+- Impact: Classical damping terms conflict with 7D BVP theory; energy exchange should occur through step resonators, not exponential decay.
+- Fix: Remove damping coefficient γ; replace with step-resonator boundary conditions; implement energy exchange through transmission/reflection operators.
+
+---
+
+- [ ] 12) Mass terms in defect interactions
+- Rule: No mass terms in Lagrangian; mass as energy of stationary solution.
+- Essence: Explicit mass parameters in defect dynamics and interactions.
+- Evidence:
+
+```61:74:bhlff/models/level_e/defect_dynamics.py
+def _setup_dynamics_parameters(self) -> None:
+    """
+    Setup parameters for defect dynamics.
+    ...
+    Physical Meaning:
+        Initializes the physical parameters required for
+        defect dynamics calculations including masses,
+        gyroscopic coefficients, and dissipation rates.
+    """
+    self.defect_mass = self.params.get("defect_mass", 1.0)
+    self.gyroscopic_coefficient = self.params.get("gyroscopic_coefficient", 1.0)
+    self.dissipation_coefficient = self.params.get("dissipation_coefficient", 0.1)
+```
+
+```372:425:bhlff/models/level_f/multi_particle.py
+def _compute_dynamics_matrix(self) -> np.ndarray:
+    """
+    Compute dynamics matrix M⁻¹K.
+    ...
+    Physical Meaning:
+        Computes the dynamics matrix for collective modes
+        from mass and stiffness matrices.
+    """
+    # Invert mass matrix
+    mass_inv = np.linalg.inv(self._mass_matrix)
+    # Dynamics matrix
+    dynamics_matrix = mass_inv @ self._stiffness_matrix
+```
+
+- Impact: Mass terms violate "no mass terms in Lagrangian" principle; mass should be derived from energy of stationary solutions.
+- Fix: Remove explicit mass parameters; compute effective mass from energy of stationary solutions; use energy-based dynamics instead of mass-based.
+
+---
+
+- [ ] 13) Classical physics patterns in multi-particle systems
+- Rule: Use 7D BVP theory; avoid classical Newtonian mechanics patterns.
+- Essence: Classical mass-spring-damper models in multi-particle systems.
+- Evidence:
+
+```372:425:bhlff/models/level_f/multi_particle.py
+def _compute_dynamics_matrix(self) -> np.ndarray:
+    """
+    Compute dynamics matrix M⁻¹K.
+    ...
+    Physical Meaning:
+        Computes the dynamics matrix for collective modes
+        from mass and stiffness matrices.
+    """
+    # Invert mass matrix
+    mass_inv = np.linalg.inv(self._mass_matrix)
+    # Dynamics matrix
+    dynamics_matrix = mass_inv @ self._stiffness_matrix
+```
+
+```388:425:bhlff/models/level_f/multi_particle.py
+def _compute_self_stiffness(self, particle: Particle) -> float:
+    """
+    Compute self-stiffness for a particle.
+    ...
+    Physical Meaning:
+        Calculates the self-stiffness coefficient
+        for a single particle.
+    """
+    # Self-stiffness based on particle properties
+    stiffness = particle.mass * (2 * np.pi) ** 2  # Natural frequency squared
+```
+
+- Impact: Classical mass-spring-damper models conflict with 7D BVP theory; should use phase field dynamics instead.
+- Fix: Replace mass-spring-damper models with 7D phase field dynamics; use BVP envelope equations instead of classical mechanics.
   - Replaced exponential update in Level E mapping with Euler update and boundary operator: `bhlff/models/level_e/phase_mapping.py`
   - Updated test signal in Level F collective tests to remove exponential decay: `tests/unit/test_level_f/test_collective.py`
 - Tests (all passed):

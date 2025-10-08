@@ -19,7 +19,7 @@ Mathematical Foundation:
     with support for memory kernels and quench detection.
 
 Example:
-    >>> integrator = BVPExponentialIntegrator(domain, parameters)
+    >>> integrator = BVPEnvelopeIntegrator(domain, parameters)
     >>> solution = integrator.integrate(source_field, time_steps)
 """
 
@@ -27,7 +27,6 @@ from .base_integrator import BaseTimeIntegrator
 from .bvp_envelope_integrator import BVPEnvelopeIntegrator
 from .crank_nicolson_integrator import CrankNicolsonIntegrator
 from .adaptive_integrator import AdaptiveIntegrator
-from .exponential_integrator import BVPExponentialIntegrator
 from .memory_kernel import MemoryKernel
 from .quench_detector import QuenchDetector
 
@@ -36,7 +35,6 @@ __all__ = [
     "BVPEnvelopeIntegrator",
     "CrankNicolsonIntegrator",
     "AdaptiveIntegrator",
-    "BVPExponentialIntegrator",
     "MemoryKernel",
     "QuenchDetector",
 ]

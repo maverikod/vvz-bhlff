@@ -18,7 +18,8 @@ from bhlff.core.time import (
     MemoryKernel,
     QuenchDetector,
 )
-from bhlff.core.domain import Domain, Parameters
+from bhlff.core.domain.domain_7d_bvp import Domain7DBVP
+from bhlff.core.domain.parameters_7d_bvp import Parameters7DBVP
 
 
 class TestAdvancedIntegrators:
@@ -33,18 +34,17 @@ class TestAdvancedIntegrators:
     @pytest.fixture
     def domain_7d(self):
         """Create 7D domain for testing."""
-        return Domain(L=1.0, N=8, N_phi=4, N_t=8, dimensions=7)
+        return Domain7DBVP(L_spatial=1.0, N_spatial=8, N_phase=4, T=1.0, N_t=8)
 
     @pytest.fixture
     def parameters_basic(self):
         """Basic parameters for testing."""
-        return Parameters(
+        return Parameters7DBVP(
             mu=1.0,
             beta=1.0,
             lambda_param=0.1,
             nu=1.0,
             precision="float64",
-            fft_plan="MEASURE",
             tolerance=1e-12,
         )
 
@@ -58,18 +58,17 @@ class TestAdvancedIntegrators:
         ]
 
         for params in test_params:
-            test_params_obj = Parameters(
+            test_params_obj = Parameters7DBVP(
                 mu=params["mu"],
                 beta=params["beta"],
                 lambda_param=params["lambda_param"],
                 nu=params["nu"],
                 precision="float64",
-                fft_plan="MEASURE",
                 tolerance=1e-12,
             )
 
             # Test exponential integrator
-            exp_integrator = BVPExponentialIntegrator(domain_7d, test_params_obj)
+            exp_integrator = BVPEnvelopeIntegrator(domain_7d, test_params_obj)
             assert (
                 exp_integrator is not None
             ), f"Exponential integrator should be stable for params {params}"
@@ -83,21 +82,23 @@ class TestAdvancedIntegrators:
     def test_integrator_accuracy(self, domain_7d, parameters_basic):
         """Test integrator accuracy with known solutions."""
         # Create integrators
-        exp_integrator = BVPExponentialIntegrator(domain_7d, parameters_basic)
+        exp_integrator = BVPEnvelopeIntegrator(domain_7d, parameters_basic)
         cn_integrator = CrankNicolsonIntegrator(domain_7d, parameters_basic)
 
         # Test with simple field
         test_field = np.ones(domain_7d.shape)
 
         try:
-            # Test exponential integrator
-            exp_result = exp_integrator.integrate(test_field)
+            # Test envelope integrator
+            time_steps = np.linspace(0, 0.1, 10)
+            source_field = np.zeros((len(time_steps),) + test_field.shape, dtype=test_field.dtype)
+            exp_result = exp_integrator.integrate(test_field, source_field, time_steps)
             assert np.all(
                 np.isfinite(exp_result)
-            ), "Exponential integrator should produce finite results"
+            ), "Envelope integrator should produce finite results"
 
             # Test Crank-Nicolson integrator
-            cn_result = cn_integrator.integrate(test_field)
+            cn_result = cn_integrator.integrate(test_field, source_field, time_steps)
             assert np.all(
                 np.isfinite(cn_result)
             ), "Crank-Nicolson integrator should produce finite results"
@@ -108,13 +109,13 @@ class TestAdvancedIntegrators:
 
     def test_memory_kernel_advanced(self, domain_7d, parameters_basic):
         """Test advanced memory kernel functionality."""
-        kernel = MemoryKernel(domain_7d, parameters_basic)
+        kernel = MemoryKernel(domain_7d, num_memory_vars=3)
 
         # Test with different field configurations
         test_fields = [
-            np.ones(domain_7d.shape),
-            np.random.randn(*domain_7d.shape),
-            np.zeros(domain_7d.shape),
+            np.ones(domain_7d.shape) + 1j * np.ones(domain_7d.shape),
+            np.random.randn(*domain_7d.shape) + 1j * np.random.randn(*domain_7d.shape),
+            np.zeros(domain_7d.shape) + 1j * np.zeros(domain_7d.shape),
         ]
 
         for field in test_fields:
@@ -137,19 +138,19 @@ class TestAdvancedIntegrators:
 
     def test_quench_detector_advanced(self, domain_7d, parameters_basic):
         """Test advanced quench detector functionality."""
-        detector = QuenchDetector(domain_7d, parameters_basic)
+        detector = QuenchDetector(domain_7d, energy_threshold=0.1, rate_threshold=0.01, magnitude_threshold=0.5)
 
         # Test with different field configurations
         test_fields = [
-            np.ones(domain_7d.shape),
-            np.random.randn(*domain_7d.shape),
-            np.zeros(domain_7d.shape),
+            np.ones(domain_7d.shape) + 1j * np.ones(domain_7d.shape),
+            np.random.randn(*domain_7d.shape) + 1j * np.random.randn(*domain_7d.shape),
+            np.zeros(domain_7d.shape) + 1j * np.zeros(domain_7d.shape),
         ]
 
         for field in test_fields:
             try:
                 # Test quench detection
-                quench_result = detector.detect_quench(field)
+                quench_result = detector.detect_quench(field, time=0.0)
                 assert isinstance(
                     quench_result, (bool, np.ndarray)
                 ), "Quench detection should return boolean or array"
@@ -170,10 +171,10 @@ class TestAdvancedIntegrators:
         resolutions = [4, 8, 16]
 
         for N in resolutions:
-            test_domain = Domain(L=1.0, N=N, N_phi=4, N_t=8, dimensions=7)
+            test_domain = Domain7DBVP(L_spatial=1.0, N_spatial=N, N_phase=4, T=1.0, N_t=8)
 
             # Test exponential integrator
-            exp_integrator = BVPExponentialIntegrator(test_domain, parameters_basic)
+            exp_integrator = BVPEnvelopeIntegrator(test_domain, parameters_basic)
             assert (
                 exp_integrator is not None
             ), f"Exponential integrator should work with resolution {N}"
@@ -186,7 +187,7 @@ class TestAdvancedIntegrators:
 
     def test_integrator_boundary_conditions(self, domain_7d, parameters_basic):
         """Test integrator behavior with boundary conditions."""
-        integrator = BVPExponentialIntegrator(domain_7d, parameters_basic)
+        integrator = BVPEnvelopeIntegrator(domain_7d, parameters_basic)
 
         # Test with fields that have boundary effects
         boundary_field = np.zeros(domain_7d.shape)
@@ -194,7 +195,9 @@ class TestAdvancedIntegrators:
         boundary_field[-1, :, :, :, :, :, :] = 1.0  # Right boundary
 
         try:
-            result = integrator.integrate(boundary_field)
+            time_steps = np.linspace(0, 0.1, 10)
+            source_field = np.zeros((len(time_steps),) + boundary_field.shape, dtype=boundary_field.dtype)
+            result = integrator.integrate(boundary_field, source_field, time_steps)
             assert np.all(
                 np.isfinite(result)
             ), "Integrator should handle boundary conditions"
@@ -205,13 +208,15 @@ class TestAdvancedIntegrators:
 
     def test_integrator_extreme_values(self, domain_7d, parameters_basic):
         """Test integrator behavior with extreme values."""
-        integrator = BVPExponentialIntegrator(domain_7d, parameters_basic)
+        integrator = BVPEnvelopeIntegrator(domain_7d, parameters_basic)
 
         # Test with very large values
         large_field = np.full(domain_7d.shape, 1e10)
 
         try:
-            result = integrator.integrate(large_field)
+            time_steps = np.linspace(0, 0.1, 10)
+            source_field = np.zeros((len(time_steps),) + large_field.shape, dtype=large_field.dtype)
+            result = integrator.integrate(large_field, source_field, time_steps)
             assert np.all(np.isfinite(result)), "Integrator should handle large values"
 
         except (NotImplementedError, AttributeError):
@@ -222,7 +227,9 @@ class TestAdvancedIntegrators:
         small_field = np.full(domain_7d.shape, 1e-10)
 
         try:
-            result = integrator.integrate(small_field)
+            time_steps = np.linspace(0, 0.1, 10)
+            source_field = np.zeros((len(time_steps),) + small_field.shape, dtype=small_field.dtype)
+            result = integrator.integrate(small_field, source_field, time_steps)
             assert np.all(np.isfinite(result)), "Integrator should handle small values"
 
         except (NotImplementedError, AttributeError):
@@ -231,14 +238,16 @@ class TestAdvancedIntegrators:
 
     def test_integrator_consistency_across_runs(self, domain_7d, parameters_basic):
         """Test that integrators produce consistent results across runs."""
-        integrator = BVPExponentialIntegrator(domain_7d, parameters_basic)
+        integrator = BVPEnvelopeIntegrator(domain_7d, parameters_basic)
         test_field = np.random.randn(*domain_7d.shape)
 
         try:
             # Run integration multiple times
             results = []
             for i in range(3):
-                result = integrator.integrate(test_field)
+                time_steps = np.linspace(0, 0.1, 10)
+                source_field = np.zeros((len(time_steps),) + test_field.shape, dtype=test_field.dtype)
+                result = integrator.integrate(test_field, source_field, time_steps)
                 results.append(result)
 
             # Results should be identical
@@ -263,7 +272,7 @@ class TestAdvancedIntegrators:
         # Create multiple integrators
         integrators = []
         for i in range(5):
-            integrator = BVPExponentialIntegrator(domain_7d, parameters_basic)
+            integrator = BVPEnvelopeIntegrator(domain_7d, parameters_basic)
             integrators.append(integrator)
 
         # Get final memory usage
@@ -277,17 +286,21 @@ class TestAdvancedIntegrators:
 
     def test_integrator_error_recovery(self, domain_7d, parameters_basic):
         """Test integrator error recovery."""
-        integrator = BVPExponentialIntegrator(domain_7d, parameters_basic)
+        integrator = BVPEnvelopeIntegrator(domain_7d, parameters_basic)
 
         # Test with invalid input
         with pytest.raises((ValueError, TypeError)):
-            integrator.integrate("invalid_input")
+            time_steps = np.linspace(0, 0.1, 10)
+            source_field = np.zeros((len(time_steps),) + domain_7d.shape, dtype=np.complex128)
+            integrator.integrate("invalid_input", source_field, time_steps)
 
         # Test that integrator still works after error
         test_field = np.random.randn(*domain_7d.shape)
 
         try:
-            result = integrator.integrate(test_field)
+            time_steps = np.linspace(0, 0.1, 10)
+            source_field = np.zeros((len(time_steps),) + test_field.shape, dtype=test_field.dtype)
+            result = integrator.integrate(test_field, source_field, time_steps)
             assert np.all(np.isfinite(result)), "Integrator should work after error"
 
         except (NotImplementedError, AttributeError):

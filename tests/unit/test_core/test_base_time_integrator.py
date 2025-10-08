@@ -23,7 +23,8 @@ import pytest
 from typing import Dict, Any, Tuple
 
 from bhlff.core.time import BaseTimeIntegrator, BVPEnvelopeIntegrator
-from bhlff.core.domain import Domain, Parameters
+from bhlff.core.domain.domain_7d_bvp import Domain7DBVP
+from bhlff.core.domain.parameters_7d_bvp import Parameters7DBVP
 
 
 class TestBaseTimeIntegrator:
@@ -38,18 +39,17 @@ class TestBaseTimeIntegrator:
     @pytest.fixture
     def domain_7d(self):
         """Create 7D domain for testing."""
-        return Domain(L=1.0, N=8, N_phi=4, N_t=8, dimensions=7)
+        return Domain7DBVP(L_spatial=1.0, N_spatial=8, N_phase=4, T=1.0, N_t=8)
 
     @pytest.fixture
     def parameters_basic(self):
         """Basic parameters for testing."""
-        return Parameters(
+        return Parameters7DBVP(
             mu=1.0,
             beta=1.0,
             lambda_param=0.1,
             nu=1.0,
             precision="float64",
-            fft_plan="MEASURE",
             tolerance=1e-12,
         )
 
@@ -62,51 +62,45 @@ class TestBaseTimeIntegrator:
             parameters and raises appropriate errors for invalid values.
         """
         # Test valid parameters
-        integrator = BVPExponentialIntegrator(domain_7d, parameters_basic)
+        integrator = BVPEnvelopeIntegrator(domain_7d, parameters_basic)
         assert integrator.is_initialized
 
-        # Test invalid nu (negative)
-        invalid_params = Parameters(
-            mu=1.0,
-            beta=1.0,
-            lambda_param=0.1,
-            nu=-1.0,
-            precision="float64",
-            fft_plan="MEASURE",
-            tolerance=1e-12,
-        )
+        # Test invalid nu (negative) - this will fail in Parameters7DBVP constructor
         with pytest.raises(
-            ValueError, match="Diffusion coefficient ν must be positive"
+            ValueError, match="nu must be positive"
         ):
-            BVPExponentialIntegrator(domain_7d, invalid_params)
+            invalid_params = Parameters7DBVP(
+                mu=1.0,
+                beta=1.0,
+                lambda_param=0.1,
+                nu=-1.0,
+                precision="float64",
+                tolerance=1e-12,
+            )
 
-        # Test invalid beta (out of range)
-        invalid_params = Parameters(
-            mu=1.0,
-            beta=2.5,
-            lambda_param=0.1,
-            nu=1.0,
-            precision="float64",
-            fft_plan="MEASURE",
-            tolerance=1e-12,
-        )
-        with pytest.raises(ValueError, match="Fractional order β must be in \\(0,2\\)"):
-            BVPExponentialIntegrator(domain_7d, invalid_params)
+        # Test invalid beta (out of range) - this will fail in Parameters7DBVP constructor
+        with pytest.raises(ValueError, match="beta must be in \\(0,2\\)"):
+            invalid_params = Parameters7DBVP(
+                mu=1.0,
+                beta=2.5,
+                lambda_param=0.1,
+                nu=1.0,
+                precision="float64",
+                tolerance=1e-12,
+            )
 
-        # Test invalid lambda (negative)
-        invalid_params = Parameters(
-            mu=1.0,
-            beta=1.0,
-            lambda_param=-0.1,
-            nu=1.0,
-            precision="float64",
-            fft_plan="MEASURE",
-            tolerance=1e-12,
-        )
+        # Test invalid lambda (negative) - this will fail in Parameters7DBVP constructor
         with pytest.raises(
-            ValueError, match="Damping parameter λ must be non-negative"
+            ValueError, match="lambda_param must be non-negative"
         ):
-            BVPExponentialIntegrator(domain_7d, invalid_params)
+            invalid_params = Parameters7DBVP(
+                mu=1.0,
+                beta=1.0,
+                lambda_param=-0.1,
+                nu=1.0,
+                precision="float64",
+                tolerance=1e-12,
+            )
 
     def test_abstract_methods(self, domain_7d, parameters_basic):
         """
@@ -128,15 +122,13 @@ class TestBaseTimeIntegrator:
             Validates that the integrator correctly validates the
             computational domain and raises appropriate errors.
         """
-        # Test invalid domain (negative L)
-        invalid_domain = Domain(L=-1.0, N=8, N_phi=4, N_t=8, dimensions=7)
-        with pytest.raises(ValueError, match="Domain size L must be positive"):
-            BVPExponentialIntegrator(invalid_domain, parameters_basic)
+        # Test invalid domain (negative L_spatial) - this will fail in Domain7DBVP constructor
+        with pytest.raises(ValueError, match="L_spatial must be positive"):
+            invalid_domain = Domain7DBVP(L_spatial=-1.0, N_spatial=8, N_phase=4, T=1.0, N_t=8)
 
-        # Test invalid domain (N too small)
-        invalid_domain = Domain(L=1.0, N=1, N_phi=4, N_t=8, dimensions=7)
-        with pytest.raises(ValueError, match="Grid size N must be at least 2"):
-            BVPExponentialIntegrator(invalid_domain, parameters_basic)
+        # Test invalid domain (N_spatial zero) - this will fail in Domain7DBVP constructor
+        with pytest.raises(ValueError, match="N_spatial must be positive"):
+            invalid_domain = Domain7DBVP(L_spatial=1.0, N_spatial=0, N_phase=4, T=1.0, N_t=8)
 
     def test_initialization_state(self, domain_7d, parameters_basic):
         """
@@ -147,13 +139,16 @@ class TestBaseTimeIntegrator:
             initialization state and prevents operations before
             proper initialization.
         """
-        integrator = BVPExponentialIntegrator(domain_7d, parameters_basic)
+        integrator = BVPEnvelopeIntegrator(domain_7d, parameters_basic)
         assert integrator.is_initialized
 
         # Test that operations work after initialization
-        source = np.random.random(domain_7d.shape) + 1j * np.random.random(
+        current_field = np.random.random(domain_7d.shape) + 1j * np.random.random(
             domain_7d.shape
         )
-        result = integrator.step(source, 0.01)
+        source_field = np.random.random(domain_7d.shape) + 1j * np.random.random(
+            domain_7d.shape
+        )
+        result = integrator.step(current_field, source_field, 0.01)
         assert result is not None
         assert result.shape == domain_7d.shape

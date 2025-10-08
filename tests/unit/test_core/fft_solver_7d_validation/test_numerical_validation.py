@@ -12,9 +12,10 @@ import numpy as np
 import pytest
 from typing import Dict, Any, Tuple
 
-from bhlff.core.fft import FFTSolver7D, FractionalLaplacian
-from bhlff.core.domain import Domain
-from bhlff.core.domain.parameters import Parameters
+from bhlff.core.fft.fft_solver_7d_basic import FFTSolver7DBasic
+from bhlff.core.operators.fractional_laplacian import FractionalLaplacian
+from bhlff.core.domain.domain_7d_bvp import Domain7DBVP
+from bhlff.core.domain.parameters_7d_bvp import Parameters7DBVP
 
 
 class TestNumericalValidation:
@@ -29,36 +30,35 @@ class TestNumericalValidation:
     @pytest.fixture
     def domain_7d(self):
         """Create 7D domain for testing."""
-        return Domain(L=1.0, N=8, N_phi=4, N_t=8, dimensions=7)
+        return Domain7DBVP(L_spatial=1.0, N_spatial=8, N_phase=4, T=1.0, N_t=8)
 
     @pytest.fixture
     def parameters_basic(self):
         """Basic parameters for testing."""
-        return Parameters(
+        return Parameters7DBVP(
             mu=1.0,
             beta=1.0,
             lambda_param=0.1,
             precision="float64",
-            fft_plan="MEASURE",
             tolerance=1e-12,
         )
 
     @pytest.fixture
     def solver(self, domain_7d, parameters_basic):
         """Create FFT solver for testing."""
-        return FFTSolver7D(domain_7d, parameters_basic)
+        return FFTSolver7DBasic(domain_7d, parameters_basic)
 
     def _create_gaussian_source(
-        self, domain: Domain, center: Tuple[float, float, float], width: float = 0.1
+        self, domain: Domain7DBVP, center: Tuple[float, float, float], width: float = 0.1
     ) -> np.ndarray:
         """Create a Gaussian source for testing."""
         # Create coordinate arrays
-        x = np.linspace(0, domain.L, domain.N, endpoint=False)
-        y = np.linspace(0, domain.L, domain.N, endpoint=False)
-        z = np.linspace(0, domain.L, domain.N, endpoint=False)
-        phi1 = np.linspace(0, 2 * np.pi, domain.N_phi, endpoint=False)
-        phi2 = np.linspace(0, 2 * np.pi, domain.N_phi, endpoint=False)
-        phi3 = np.linspace(0, 2 * np.pi, domain.N_phi, endpoint=False)
+        x = np.linspace(0, domain.L_spatial, domain.N_spatial, endpoint=False)
+        y = np.linspace(0, domain.L_spatial, domain.N_spatial, endpoint=False)
+        z = np.linspace(0, domain.L_spatial, domain.N_spatial, endpoint=False)
+        phi1 = np.linspace(0, 2 * np.pi, domain.N_phase, endpoint=False)
+        phi2 = np.linspace(0, 2 * np.pi, domain.N_phase, endpoint=False)
+        phi3 = np.linspace(0, 2 * np.pi, domain.N_phase, endpoint=False)
         t = np.linspace(0, domain.T, domain.N_t, endpoint=False)
 
         # Create meshgrids
@@ -88,16 +88,15 @@ class TestNumericalValidation:
 
         for N in resolutions:
             # Create domain with different resolution
-            test_domain = Domain(L=1.0, N=N, N_phi=4, N_t=8, dimensions=7)
-            test_params = Parameters(
+            test_domain = Domain7DBVP(L_spatial=1.0, N_spatial=N, N_phase=4, T=1.0, N_t=8)
+            test_params = Parameters7DBVP(
                 mu=1.0,
                 beta=1.0,
                 lambda_param=0.1,
                 precision="float64",
-                fft_plan="MEASURE",
                 tolerance=1e-12,
             )
-            test_solver = FFTSolver7D(test_domain, test_params)
+            test_solver = FFTSolver7DBasic(test_domain, test_params)
 
             # Create Gaussian source
             source = self._create_gaussian_source(
@@ -179,15 +178,14 @@ class TestNumericalValidation:
 
         for case in test_cases:
             # Create solver with test parameters
-            test_params = Parameters(
+            test_params = Parameters7DBVP(
                 mu=case["mu"],
                 beta=case["beta"],
                 lambda_param=case["lambda_param"],
                 precision="float64",
-                fft_plan="MEASURE",
                 tolerance=1e-12,
             )
-            test_solver = FFTSolver7D(domain_7d, test_params)
+            test_solver = FFTSolver7DBasic(domain_7d, test_params)
 
             # Create test source
             source = self._create_gaussian_source(domain_7d, (0.5, 0.5, 0.5), width=0.3)
@@ -219,15 +217,14 @@ class TestNumericalValidation:
         solutions = []
 
         for precision in precisions:
-            test_params = Parameters(
+            test_params = Parameters7DBVP(
                 mu=1.0,
                 beta=1.0,
                 lambda_param=0.1,
                 precision=precision,
-                fft_plan="MEASURE",
                 tolerance=1e-12,
             )
-            test_solver = FFTSolver7D(domain_7d, test_params)
+            test_solver = FFTSolver7DBasic(domain_7d, test_params)
 
             # Create test source
             source = self._create_gaussian_source(domain_7d, (0.5, 0.5, 0.5), width=0.2)
@@ -254,12 +251,12 @@ class TestNumericalValidation:
             validating the FFT operations and spectral coefficients.
         """
         # Create a simple sinusoidal source
-        x = np.linspace(0, domain_7d.L, domain_7d.N, endpoint=False)
-        y = np.linspace(0, domain_7d.L, domain_7d.N, endpoint=False)
-        z = np.linspace(0, domain_7d.L, domain_7d.N, endpoint=False)
-        phi1 = np.linspace(0, 2 * np.pi, domain_7d.N_phi, endpoint=False)
-        phi2 = np.linspace(0, 2 * np.pi, domain_7d.N_phi, endpoint=False)
-        phi3 = np.linspace(0, 2 * np.pi, domain_7d.N_phi, endpoint=False)
+        x = np.linspace(0, domain_7d.L_spatial, domain_7d.N_spatial, endpoint=False)
+        y = np.linspace(0, domain_7d.L_spatial, domain_7d.N_spatial, endpoint=False)
+        z = np.linspace(0, domain_7d.L_spatial, domain_7d.N_spatial, endpoint=False)
+        phi1 = np.linspace(0, 2 * np.pi, domain_7d.N_phase, endpoint=False)
+        phi2 = np.linspace(0, 2 * np.pi, domain_7d.N_phase, endpoint=False)
+        phi3 = np.linspace(0, 2 * np.pi, domain_7d.N_phase, endpoint=False)
         t = np.linspace(0, domain_7d.T, domain_7d.N_t, endpoint=False)
 
         X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(
@@ -268,8 +265,8 @@ class TestNumericalValidation:
 
         # Create sinusoidal source
         kx, ky, kz = 2, 1, 0
-        source = np.sin(2 * np.pi * kx * X / domain_7d.L) * np.sin(
-            2 * np.pi * ky * Y / domain_7d.L
+        source = np.sin(2 * np.pi * kx * X / domain_7d.L_spatial) * np.sin(
+            2 * np.pi * ky * Y / domain_7d.L_spatial
         )
 
         # Solve

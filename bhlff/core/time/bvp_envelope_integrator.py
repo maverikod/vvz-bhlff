@@ -98,9 +98,9 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
             if i < 3:  # Spatial dimensions
                 # Create 7D array by broadcasting
                 k_7d = np.zeros(self.domain.shape)
-                for j in range(self.domain.N):
-                    for k in range(self.domain.N):
-                        for l in range(self.domain.N):
+                for j in range(self.domain.N_spatial):
+                    for k in range(self.domain.N_spatial):
+                        for l in range(self.domain.N_spatial):
                             k_7d[j, k, l, :, :, :, :] = (
                                 k_vec[j]
                                 if i == 0
@@ -110,7 +110,7 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
             elif i < 6:  # Phase dimensions
                 # Create 7D array by broadcasting
                 k_7d = np.zeros(self.domain.shape)
-                for j in range(self.domain.N_phi):
+                for j in range(self.domain.N_phase):
                     k_7d[:, :, :, j, :, :, :] = (
                         k_vec[j] if i == 3 else (k_vec[j] if i == 4 else k_vec[j])
                     )
@@ -170,9 +170,9 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
             raise RuntimeError("Integrator not initialized")
 
         # Validate inputs
-        if initial_field.shape != self.domain.shape:
+        if not hasattr(initial_field, 'shape') or initial_field.shape != self.domain.shape:
             raise ValueError(
-                f"Initial field shape {initial_field.shape} incompatible with domain {self.domain.shape}"
+                f"Initial field shape {getattr(initial_field, 'shape', 'no shape')} incompatible with domain {self.domain.shape}"
             )
 
         if source_field.shape != (len(time_steps),) + self.domain.shape:
@@ -262,23 +262,32 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
         effective_susceptibility = 1.0 + 1j * chi_double_prime * field_magnitude_squared
 
         # Envelope modulation factor
-        envelope_factor = np.exp(
-            -self._envelope_coeffs * dt * nonlinear_stiffness * effective_susceptibility
-        )
+        with np.errstate(under='ignore', over='ignore'):
+            envelope_factor = np.exp(
+                -self._envelope_coeffs * dt * nonlinear_stiffness * effective_susceptibility
+            )
 
         # Source contribution with envelope modulation
-        source_factor = (1.0 - envelope_factor) / (
-            self._envelope_coeffs * nonlinear_stiffness * effective_susceptibility
-        )
+        denominator = self._envelope_coeffs * nonlinear_stiffness * effective_susceptibility
+        # Avoid division by zero and underflow
+        denominator = np.where(denominator == 0, 1e-12, denominator)
+        denominator = np.maximum(denominator, 1e-12)  # Prevent underflow
+        
+        # Prevent underflow in division
+        with np.errstate(divide='ignore', invalid='ignore', under='ignore'):
+            source_factor = (1.0 - envelope_factor) / denominator
+            source_factor = np.where(np.isfinite(source_factor), source_factor, dt)
         source_factor = np.where(
             self._envelope_coeffs * nonlinear_stiffness * effective_susceptibility != 0,
             source_factor,
             dt,  # Handle division by zero
         )
 
-        next_spectral = (
-            current_spectral * envelope_factor + source_spectral * source_factor
-        )
+        # Prevent underflow in multiplication
+        with np.errstate(under='ignore', over='ignore'):
+            next_spectral = (
+                current_spectral * envelope_factor + source_spectral * source_factor
+            )
 
         # Transform back to real space
         next_field = self._spectral_ops.inverse_fft(next_spectral, "ortho")

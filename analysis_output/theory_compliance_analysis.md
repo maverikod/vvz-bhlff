@@ -175,16 +175,16 @@
 **Ответственный**: Implementation team
 
 #### 2.1.1. Реализация полных 7D симуляций ✅ ЗАВЕРШЕН
-- [x] `bhlff/models/level_e/sensitivity_analysis.py` - заменить плейсхолдеры
 
+- [x] `bhlff/models/level_e/sensitivity_analysis.py` - заменить плейсхолдеры
 **Результаты:**
 - Заменена упрощенная реализация `_compute_total_order_index` на полную реализацию с методом Saltelli для Monte Carlo оценки
 - Заменен метод `_simulate_single_case` на полную интеграцию с 7D BVP симуляциями (Domain7D, FFTSolver7D, PowerLawAnalyzer)
 - Заменен метод `_compute_mass_metrics` на полную реализацию с учетом 7D BVP теории (масса как мера сопротивления перестройке фазового состояния)
 - Заменен метод `_compute_complexity_metrics` на полную реализацию с учетом топологической сложности, фазовых градиентов и связи пространственных и фазовых степеней свободы
 - Добавлен метод `_create_source_field` для генерации локализованного источника в 7D пространстве-времени
-- [x] `bhlff/models/level_g/astrophysics.py` - реализовать полные вычисления ✅ ЗАВЕРШЕН
 
+- [x] `bhlff/models/level_g/astrophysics.py` - реализовать полные вычисления ✅ ЗАВЕРШЕН
 **Результаты:**
 - Заменен упрощенный `_compute_phase_correlation_length` на полную реализацию с 7D BVP теорией (ξ = ∫ |∇Θ|² d³x d³φ dt / ∫ |Θ|² d³x d³φ dt)
 - Заменен упрощенный `_compute_effective_radius` на полную реализацию с амплитудно-взвешенным радиусом (R_eff = ∫ r |a(r)|² d³x d³φ dt / ∫ |a(r)|² d³x d³φ dt)
@@ -192,7 +192,18 @@
 - Заменен упрощенный `_compute_defect_density` на полную реализацию с топологическим анализом (ρ_defects = ∫ |∇×∇Θ| d³x d³φ dt / ∫ d³x d³φ dt)
 - Добавлен метод `_compute_phase_coherence` для измерения степени фазовой когерентности в 7D пространстве-времени
 - Добавлен метод `_compute_nonlinear_energy` для вычисления нелинейных энергетических членов
-- [ ] `bhlff/models/level_g/validation.py` - заменить упрощенные алгоритмы
+
+- [x] `bhlff/models/level_g/validation.py` - заменить упрощенные алгоритмы ✅ ЗАВЕРШЕН
+
+**Результаты:**
+- Заменен упрощенный `_optimize_parameters` на полную реализацию с L-BFGS-B оптимизацией, адаптивными learning rates, momentum и second-order методами
+- Заменен упрощенный `_compute_model_predictions` на полную реализацию с 7D BVP framework, включая phase field evolution, power law analysis, topological charge и energy functional
+- Заменен упрощенный `_compute_gradients` на полную реализацию с адаптивными step sizes, central difference и error handling
+- Заменена заглушка `_get_convergence_info` на полную реализацию с tracking convergence metrics, stability analysis и convergence quality assessment
+- Заменен упрощенный `_compute_parameter_uncertainties` на полную реализацию с Hessian analysis, bootstrap sampling, Bayesian inference и sensitivity analysis
+- Заменен упрощенный `_validate_energy_balance` на полную реализацию с 7D BVP theory, включая energy components computation и conservation laws
+- Заменен упрощенный `_validate_physical_constraints` на полную реализацию с passivity, causality, unitarity, gauge invariance и 7D BVP specific constraints
+- Заменен упрощенный `_validate_experimental_data` на полную реализацию с mass spectrum, charge spectrum, magnetic moment, lifetime и 7D BVP observables validation
 
 #### 2.1.2. Удаление упрощенных алгоритмов
 - [ ] Заменить все "Simplified computation" на полные реализации

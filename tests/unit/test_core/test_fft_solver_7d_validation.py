@@ -23,13 +23,4 @@ from tests.unit.test_core.fft_solver_7d_validation.test_boundary_cases import (
 __all__ = ["TestBasicValidation", "TestNumericalValidation", "TestBoundaryCases"]
 
 
-# Legacy class name for backward compatibility - inherits from basic validation
-class TestFFTSolver7DValidation(TestBasicValidation):
-    """
-    Legacy validation tests for 7D FFT Solver.
-
-    Physical Meaning:
-        Maintains backward compatibility while using the modular test structure.
-    """
-
-    pass
+# Legacy class removed - no longer needed

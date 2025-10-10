@@ -20,13 +20,4 @@ from tests.unit.test_core.nonlinear_coefficients.test_advanced_coefficients impo
 __all__ = ["TestBasicCoefficients", "TestAdvancedCoefficients"]
 
 
-# Legacy class name for backward compatibility
-class TestNonlinearCoefficientsPhysics(TestBasicCoefficients):
-    """
-    Legacy nonlinear coefficients physics tests.
-
-    Physical Meaning:
-        Maintains backward compatibility while using the modular test structure.
-    """
-
-    pass
+# Legacy class removed - no longer needed

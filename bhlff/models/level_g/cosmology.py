@@ -30,8 +30,8 @@ class EnvelopeEffectiveMetric:
 
     Physical Meaning:
         Computes a 7x7 effective metric g_eff[Θ] derived solely from
-        envelope dynamics and invariants. No cosmological scale factors,
-        no spacetime curvature.
+        envelope dynamics and invariants in 7D phase space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
+        No cosmological scale factors, no spacetime curvature.
 
     Mathematical Foundation:
         g00 = -1/c_φ^2; spatial gij = A δ^{ij} with A from envelope invariants;

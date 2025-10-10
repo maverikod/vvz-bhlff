@@ -20,13 +20,4 @@ from tests.unit.test_core.time_integrators.test_advanced_integrators import (
 __all__ = ["TestBasicIntegrators", "TestAdvancedIntegrators"]
 
 
-# Legacy class name for backward compatibility
-class TestPhysicalValidation(TestBasicIntegrators):
-    """
-    Legacy time integrators physics tests.
-
-    Physical Meaning:
-        Maintains backward compatibility while using the modular test structure.
-    """
-
-    pass
+# Legacy class removed - no longer needed

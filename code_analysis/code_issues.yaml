@@ -523,6 +523,8 @@ issues:
     line: 26
   - file: ./tests/unit/test_core/test_base_time_integrator.py
     line: 27
+  - file: ./tests/unit/test_core/test_legacy_code_absence.py
+    line: 84
   - file: ./tests/unit/test_core/test_scale_separation_postulate_physics.py
     line: 24
   - file: ./tests/unit/test_core/test_scale_separation_postulate_physics.py
@@ -3761,8 +3763,8 @@ issues:
 summary:
   classes_without_docstrings: 13
   files_without_docstrings: 0
-  imports_in_middle: 1625
+  imports_in_middle: 1626
   methods_with_pass: 0
   methods_without_docstrings: 116
   not_implemented_in_non_abstract: 0
-  total_issues: 1754
+  total_issues: 1755

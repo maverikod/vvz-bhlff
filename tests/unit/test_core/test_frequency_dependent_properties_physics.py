@@ -20,13 +20,4 @@ from tests.unit.test_core.frequency_dependent_properties.test_advanced_propertie
 __all__ = ["TestBasicProperties", "TestAdvancedProperties"]
 
 
-# Legacy class name for backward compatibility
-class TestFrequencyDependentPropertiesPhysics(TestBasicProperties):
-    """
-    Legacy frequency-dependent properties physics tests.
-
-    Physical Meaning:
-        Maintains backward compatibility while using the modular test structure.
-    """
-
-    pass
+# Legacy class removed - no longer needed

@@ -149,60 +149,7 @@ class BeatingValidationPatterns:
         )
         return validation_result
 
-    def validate_interference_patterns(
-        self, patterns: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
-        """
-        Legacy method for backward compatibility.
-
-        Physical Meaning:
-            Basic pattern validation for backward compatibility.
-            For comprehensive validation, use validate_interference_patterns_physical.
-
-        Args:
-            patterns (List[Dict[str, Any]]): List of interference patterns.
-
-        Returns:
-            Dict[str, Any]: Basic pattern validation results.
-        """
-        self.logger.info("Starting basic interference pattern validation (legacy)")
-
-        validation_result = {
-            "patterns_valid": True,
-            "pattern_errors": [],
-            "pattern_warnings": [],
-            "pattern_metrics": {},
-        }
-
-        # Basic pattern validation
-        if not patterns:
-            validation_result["pattern_errors"].append("Empty pattern list")
-            validation_result["patterns_valid"] = False
-            return validation_result
-
-        # Validate each pattern
-        for i, pattern in enumerate(patterns):
-            pattern_validation = self._validate_single_pattern(pattern)
-            if not pattern_validation.get("pattern_valid", True):
-                validation_result["pattern_errors"].extend(
-                    pattern_validation.get("pattern_errors", [])
-                )
-                validation_result["patterns_valid"] = False
-
-        # Calculate pattern metrics
-        validation_result["pattern_metrics"] = {
-            "pattern_count": len(patterns),
-            "valid_patterns": sum(
-                1
-                for p in patterns
-                if self._validate_single_pattern(p).get("pattern_valid", True)
-            ),
-        }
-
-        self.logger.info(
-            f"Basic interference pattern validation completed: {'PASSED' if validation_result['patterns_valid'] else 'FAILED'}"
-        )
-        return validation_result
+    # Legacy method removed - no longer needed
 
     def _validate_single_pattern(self, pattern: Dict[str, Any]) -> Dict[str, Any]:
         """Validate a single interference pattern."""

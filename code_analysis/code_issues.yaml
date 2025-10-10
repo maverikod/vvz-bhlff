@@ -1251,6 +1251,14 @@ issues:
     line: 30
   - file: ./bhlff/models/level_e/sensitivity_analysis.py
     line: 31
+  - file: ./bhlff/models/level_e/sensitivity_analysis.py
+    line: 290
+  - file: ./bhlff/models/level_e/sensitivity_analysis.py
+    line: 291
+  - file: ./bhlff/models/level_e/sensitivity_analysis.py
+    line: 292
+  - file: ./bhlff/models/level_e/sensitivity_analysis.py
+    line: 498
   - file: ./bhlff/models/level_e/soliton_implementations.py
     line: 21
   - file: ./bhlff/models/level_e/soliton_implementations.py
@@ -3763,8 +3771,8 @@ issues:
 summary:
   classes_without_docstrings: 13
   files_without_docstrings: 0
-  imports_in_middle: 1626
+  imports_in_middle: 1630
   methods_with_pass: 0
   methods_without_docstrings: 116
   not_implemented_in_non_abstract: 0
-  total_issues: 1755
+  total_issues: 1759

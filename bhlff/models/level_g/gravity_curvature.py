@@ -119,6 +119,66 @@ class VBPEnvelopeCurvatureCalculator:
             "curvature_invariants": curvature_invariants,
         }
 
+    def compute_envelope_effective_metric(self, phase_field: np.ndarray) -> np.ndarray:
+        """
+        Compute effective metric using integrated EnvelopeEffectiveMetric.
+        
+        Physical Meaning:
+            Computes the effective metric g_eff[Θ] using the integrated
+            EnvelopeEffectiveMetric for VBP envelope dynamics.
+            
+        Args:
+            phase_field: Phase field configuration Θ(x,φ,t)
+            
+        Returns:
+            Effective metric tensor g_eff[Θ]
+        """
+        return self.envelope_metric.compute_envelope_curvature_metric(phase_field)
+    
+    def compute_anisotropic_envelope_metric(self, phase_field: np.ndarray) -> np.ndarray:
+        """
+        Compute anisotropic effective metric using integrated EnvelopeEffectiveMetric.
+        
+        Physical Meaning:
+            Computes an anisotropic effective metric g_eff[Θ] using the integrated
+            EnvelopeEffectiveMetric for VBP envelope dynamics with anisotropy.
+            
+        Args:
+            phase_field: Phase field configuration Θ(x,φ,t)
+            
+        Returns:
+            Anisotropic effective metric tensor g_eff[Θ]
+        """
+        phase_gradients = self._compute_phase_gradients(phase_field)
+        envelope_invariants = self._compute_envelope_invariants(phase_gradients, None)
+        
+        anisotropy_measure = envelope_invariants.get("anisotropy", 0.0)
+        chi_kappa = self.params.get("chi_kappa", 1.0)
+        
+        anisotropic_invariants = {
+            "A_xx": chi_kappa * (1.0 + 0.1 * anisotropy_measure),
+            "A_yy": chi_kappa * (1.0 - 0.05 * anisotropy_measure),
+            "A_zz": chi_kappa * (1.0 + 0.02 * anisotropy_measure)
+        }
+        
+        return self.envelope_metric.compute_anisotropic_metric(anisotropic_invariants)
+    
+    def compute_cosmological_scale_factor(self, t: float) -> float:
+        """
+        Compute cosmological scale factor using integrated EnvelopeEffectiveMetric.
+        
+        Physical Meaning:
+            Computes the cosmological scale factor using the integrated
+            EnvelopeEffectiveMetric for VBP envelope dynamics.
+            
+        Args:
+            t: Cosmological time
+            
+        Returns:
+            Scale factor from VBP envelope dynamics
+        """
+        return self.envelope_metric.compute_scale_factor(t)
+
     def _compute_phase_gradients(
         self, phase_field: np.ndarray
     ) -> Dict[str, np.ndarray]:

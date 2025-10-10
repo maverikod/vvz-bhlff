@@ -462,3 +462,28 @@ class PhaseEnvelopeBalanceSolver:
             "scale_factor": scale_factor,
             "cosmological_time": t
         }
+    
+    def solve_with_envelope_effective_metric(self, source: np.ndarray) -> Dict[str, Any]:
+        """
+        Solve phase envelope balance equation using integrated EnvelopeEffectiveMetric.
+        
+        Physical Meaning:
+            Solves the phase envelope balance equation using the integrated
+            EnvelopeEffectiveMetric for VBP envelope dynamics.
+            
+        Args:
+            source: Source term for the phase envelope balance equation
+            
+        Returns:
+            Dictionary containing solution, effective metric, and envelope invariants
+        """
+        solution = self.solve_phase_envelope_balance(source)
+        g_eff = self.envelope_metric.compute_envelope_curvature_metric(solution)
+        envelope_invariants = self.curvature_calc.compute_envelope_invariants(solution)
+        
+        return {
+            "solution": solution,
+            "effective_metric": g_eff,
+            "envelope_invariants": envelope_invariants,
+            "envelope_curvature": self.curvature_calc.compute_envelope_curvature(solution)
+        }

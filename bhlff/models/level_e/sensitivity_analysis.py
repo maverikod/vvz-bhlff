@@ -263,7 +263,7 @@ class SensitivityAnalyzer:
                 # Create parameter dictionary
                 params = dict(zip(self.param_names, sample))
 
-                # Run simulation (placeholder implementation)
+                # Run full 7D simulation
                 output = self._simulate_single_case(params)
                 outputs.append(output)
 

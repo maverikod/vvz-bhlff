@@ -99,10 +99,28 @@
 **Срок**: 2-3 недели  
 **Ответственный**: Gravity team
 
-#### 1.3.1. Замена классических метрик
-- [ ] `bhlff/models/level_g/gravity_curvature.py` - заменить на огибающие ВБП
-- [ ] `bhlff/models/level_g/gravity_einstein.py` - убрать классические уравнения
-- [ ] `bhlff/models/level_g/cosmology.py` - заменить `StandardCosmologicalMetric`
+#### 1.3.1. Замена классических метрик ✅ ЗАВЕРШЕН
+- [x] `bhlff/models/level_g/gravity_curvature.py` - заменить на огибающие ВБП (уже использует VBPEnvelopeCurvatureCalculator)
+- [x] `bhlff/models/level_g/gravity_einstein.py` - убрать классические уравнения (уже использует PhaseEnvelopeBalanceSolver)
+- [x] `bhlff/models/level_g/cosmology.py` - заменить `StandardCosmologicalMetric` (уже использует EnvelopeEffectiveMetric)
+
+**ВЫПОЛНЕННЫЕ ПРОВЕРКИ:**
+- ✅ Отсутствие StandardCosmologicalMetric в cosmology.py
+- ✅ Отсутствие классических уравнений Эйнштейна (G_μν, R_μν, Riemann, Christoffel)
+- ✅ Отсутствие уравнений Фридмана (Friedmann, FLRW, Robertson-Walker)
+- ✅ Наличие VBP envelope подходов во всех файлах
+- ✅ Правильная реализация EnvelopeEffectiveMetric с g00=-1/c_φ^2 и gij=A^{ij}
+- ✅ Все файлы используют огибающие ВБП вместо искривления пространства-времени
+
+**ТЕСТЫ ПРОВЕРКИ:**
+- ✅ test_no_standard_cosmological_metric_in_cosmology - проверка отсутствия StandardCosmologicalMetric
+- ✅ test_no_einstein_equations_in_gravity_einstein - проверка отсутствия уравнений Эйнштейна
+- ✅ test_no_friedmann_equations_in_cosmology - проверка отсутствия уравнений Фридмана
+- ✅ test_vbp_envelope_approaches_used - проверка использования VBP envelope подходов
+- ✅ test_effective_metric_implementation - проверка реализации EnvelopeEffectiveMetric
+- ✅ test_no_spacetime_curvature_references - проверка отсутствия ссылок на искривление пространства-времени
+- ✅ test_envelope_curvature_implementation - проверка реализации VBPEnvelopeCurvatureCalculator
+- ✅ test_phase_envelope_balance_implementation - проверка реализации PhaseEnvelopeBalanceSolver
 
 #### 1.3.2. Реализация эффективной метрики из огибающих
 - [ ] Расширить `EnvelopeEffectiveMetric`

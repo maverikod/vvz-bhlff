@@ -174,8 +174,15 @@
 **Срок**: 3-4 недели  
 **Ответственный**: Implementation team
 
-#### 2.1.1. Реализация полных 7D симуляций
-- [ ] `bhlff/models/level_e/sensitivity_analysis.py` - заменить плейсхолдеры
+#### 2.1.1. Реализация полных 7D симуляций ✅ ЗАВЕРШЕН
+- [x] `bhlff/models/level_e/sensitivity_analysis.py` - заменить плейсхолдеры
+
+**Результаты:**
+- Заменена упрощенная реализация `_compute_total_order_index` на полную реализацию с методом Saltelli для Monte Carlo оценки
+- Заменен метод `_simulate_single_case` на полную интеграцию с 7D BVP симуляциями (Domain7D, FFTSolver7D, PowerLawAnalyzer)
+- Заменен метод `_compute_mass_metrics` на полную реализацию с учетом 7D BVP теории (масса как мера сопротивления перестройке фазового состояния)
+- Заменен метод `_compute_complexity_metrics` на полную реализацию с учетом топологической сложности, фазовых градиентов и связи пространственных и фазовых степеней свободы
+- Добавлен метод `_create_source_field` для генерации локализованного источника в 7D пространстве-времени
 - [ ] `bhlff/models/level_g/astrophysics.py` - реализовать полные вычисления
 - [ ] `bhlff/models/level_g/validation.py` - заменить упрощенные алгоритмы
 

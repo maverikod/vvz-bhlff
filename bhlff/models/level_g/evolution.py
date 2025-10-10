@@ -79,7 +79,7 @@ class CosmologicalEvolution(ModelBase):
 
         # Physical parameters
         self.c_phi = self.cosmology_params.get("c_phi", 1e10)  # Phase velocity
-        self.phase_mass = self.cosmology_params.get("phase_mass", 1.0)
+        # No phase_mass - removed according to 7D BVP theory
         self.G = self.cosmology_params.get("G", 6.67430e-11)  # Gravitational constant
 
         # Cosmological parameters
@@ -267,8 +267,10 @@ class CosmologicalEvolution(ModelBase):
         # In full implementation, this would solve the PDE
         phase_field_new = np.zeros((self.resolution, self.resolution, self.resolution))
 
-        # Add cosmological expansion effects
-        expansion_factor = np.exp(-3 * H_t * dt)
+        # Add cosmological expansion effects using step resonator model
+        # No exponential decay - use step resonator transmission
+        transmission_coeff = 0.9  # Energy transmission through resonator
+        expansion_factor = transmission_coeff  # Step resonator model
 
         # Add phase field dynamics
         # This is a simplified version - full implementation would

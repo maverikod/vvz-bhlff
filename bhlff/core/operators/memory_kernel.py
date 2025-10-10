@@ -26,6 +26,7 @@ import numpy as np
 from typing import Dict, Any, Optional
 
 from ..domain import Domain
+from ..bvp.boundary.step_resonator import FrequencyDependentResonator, CascadeResonatorFilter
 
 
 class MemoryKernel:
@@ -66,7 +67,7 @@ class MemoryKernel:
         Args:
             domain (Domain): Computational domain for the kernel.
             kernel_type (str): Type of memory kernel ("power_law",
-                "exponential", "gaussian").
+                "exponential" (uses resonator model), "gaussian").
             parameters (Dict[str, Any], optional): Kernel parameters.
 
         Raises:
@@ -98,7 +99,7 @@ class MemoryKernel:
         if self.kernel_type == "power_law":
             self._setup_power_law_kernel()
         elif self.kernel_type == "exponential":
-            self._setup_exponential_kernel()
+            self._setup_resonator_kernel()
         elif self.kernel_type == "gaussian":
             self._setup_gaussian_kernel()
 
@@ -149,17 +150,18 @@ class MemoryKernel:
                 self.domain.N // 2, self.domain.N // 2, self.domain.N // 2
             ] = 0.0
 
-    def _setup_exponential_kernel(self) -> None:
+    def _setup_resonator_kernel(self) -> None:
         """
-        Setup exponential memory kernel.
+        Setup step resonator memory kernel.
 
         Physical Meaning:
-            Implements an exponential kernel K(r) ∝ exp(-r/λ) that represents
-            short-range interactions with exponential decay.
+            Implements a step resonator kernel K(r) that represents
+            energy exchange through semi-transparent resonator boundaries
+            according to 7D BVP theory.
 
         Mathematical Foundation:
-            Exponential kernel: K(r) = A * exp(-r/λ)
-            where A is the amplitude and λ is the characteristic length.
+            Resonator kernel: K(r) = T(r) * R(r) where T is transmission
+            and R is reflection coefficient through step resonator boundaries.
         """
         length_scale = self.parameters.get("length_scale", 1.0)
         amplitude = self.parameters.get("amplitude", 1.0)
@@ -180,8 +182,25 @@ class MemoryKernel:
             X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
             r = np.sqrt(X**2 + Y**2 + Z**2)
 
-        # Exponential kernel
-        self._kernel_data = amplitude * np.exp(-r / length_scale)
+        # Initialize frequency-dependent resonator
+        if not hasattr(self, '_resonator'):
+            self._resonator = FrequencyDependentResonator(
+                R0=self.parameters.get("R0", 0.1),
+                T0=self.parameters.get("T0", 0.9),
+                omega0=self.parameters.get("omega0", 1.0)
+            )
+
+        # Compute frequency-dependent coefficients
+        # Use radial distance as proxy for frequency content
+        field_frequencies = r / length_scale  # Normalized frequency
+        R, T = self._resonator.compute_coefficients(field_frequencies)
+
+        # Step resonator kernel: frequency-dependent T/R coefficients
+        self._kernel_data = amplitude * np.where(
+            r < length_scale,
+            T,  # Use frequency-dependent transmission
+            R   # Use frequency-dependent reflection
+        )
 
     def _setup_gaussian_kernel(self) -> None:
         """
@@ -214,8 +233,9 @@ class MemoryKernel:
             X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
             r = np.sqrt(X**2 + Y**2 + Z**2)
 
-        # Gaussian kernel
-        self._kernel_data = amplitude * np.exp(-(r**2) / (2 * sigma**2))
+        # Power law kernel instead of Gaussian (no exponential attenuation)
+        # Power law: kernel = amplitude / (1 + r^2/sigma^2)
+        self._kernel_data = amplitude / (1.0 + (r**2) / (sigma**2))
 
     def apply(self, field: np.ndarray) -> np.ndarray:
         """

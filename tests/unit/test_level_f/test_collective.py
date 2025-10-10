@@ -349,7 +349,7 @@ class TestCollectiveExcitations:
             Verifies that quality factors are correctly
             computed for collective modes.
         """
-        # Create mock peaks and damping analysis
+        # Create mock peaks and transmission analysis
         peaks = {"frequencies": [1.0, 2.0, 3.0], "amplitudes": [0.5, 0.8, 0.3]}
 
         transmission_analysis = {
@@ -527,3 +527,59 @@ class TestCollectiveExcitations:
             excitations = CollectiveExcitations(system, params)
             external_field = np.random.randn(64, 64, 64)
             excitations.excite_system(external_field)
+
+    def test_step_resonator_transmission(self, excitations):
+        """
+        Test step resonator transmission analysis.
+        
+        Physical Meaning:
+            Verifies that step resonator transmission/reflection
+            coefficients are correctly computed.
+        """
+        # Create test response data
+        response = np.random.randn(3, 100) + 1j * np.random.randn(3, 100)
+        
+        # Test transmission analysis
+        transmission_analysis = excitations._analyze_step_resonator_transmission(response)
+        
+        # Check that analysis contains required keys
+        assert "transmission_coefficients" in transmission_analysis
+        assert "reflection_coefficients" in transmission_analysis
+        assert "mean_transmission" in transmission_analysis
+        assert "mean_reflection" in transmission_analysis
+        
+        # Check that coefficients are finite
+        assert np.all(np.isfinite(transmission_analysis["transmission_coefficients"]))
+        assert np.all(np.isfinite(transmission_analysis["reflection_coefficients"]))
+        
+        # Check that mean values are finite
+        assert np.isfinite(transmission_analysis["mean_transmission"])
+        assert np.isfinite(transmission_analysis["mean_reflection"])
+
+    def test_boundary_energy_flux(self, excitations):
+        """
+        Test boundary energy flux computation.
+        
+        Physical Meaning:
+            Verifies that energy flux through step resonator
+            boundaries is correctly computed.
+        """
+        # Create test field
+        field = np.random.randn(16, 16, 16) + 1j * np.random.randn(16, 16, 16)
+        
+        # Test boundary energy flux computation
+        boundary_flux = excitations._compute_boundary_energy_flux(field)
+        
+        # Check that flux contains required keys
+        assert "transmission" in boundary_flux
+        assert "reflection" in boundary_flux
+        
+        # Check that coefficients are finite and in valid range
+        assert np.isfinite(boundary_flux["transmission"])
+        assert np.isfinite(boundary_flux["reflection"])
+        assert 0.0 <= boundary_flux["transmission"] <= 1.0
+        assert 0.0 <= boundary_flux["reflection"] <= 1.0
+        
+        # Check that transmission + reflection = 1
+        total = boundary_flux["transmission"] + boundary_flux["reflection"]
+        assert np.isclose(total, 1.0, rtol=1e-10)

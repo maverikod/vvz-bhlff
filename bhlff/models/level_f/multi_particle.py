@@ -51,7 +51,7 @@ class Particle:
     position: np.ndarray
     charge: int
     phase: float
-    mass: float = 1.0
+    # No mass attribute - removed according to 7D BVP theory
 
 
 class MultiParticleSystem(AbstractModel):
@@ -103,6 +103,7 @@ class MultiParticleSystem(AbstractModel):
         self.particles = particles
         self.interaction_range = interaction_range
         self.interaction_strength = interaction_strength
+        self.phase_coherence_length = 1.0  # Phase coherence length
         self._setup_interaction_matrices()
 
     def compute_effective_potential(self) -> np.ndarray:
@@ -668,3 +669,114 @@ class MultiParticleSystem(AbstractModel):
             "correlations": correlations,
             "stability": stability,
         }
+
+    def _compute_phase_field_energy(self, particle: 'Particle') -> float:
+        """
+        Compute 7D phase field energy for particle.
+        
+        Physical Meaning:
+            Calculates the energy of the 7D phase field
+            around a particle using 7D BVP theory.
+        """
+        # Compute 7D phase field around particle
+        phase_field = self._get_phase_field_around_particle(particle)
+        
+        # Compute energy using 7D BVP theory
+        energy = self._compute_7d_bvp_energy(phase_field)
+        
+        return energy
+    
+    def _compute_7d_bvp_energy(self, phase_field: np.ndarray) -> float:
+        """
+        Compute energy using 7D BVP theory.
+        
+        Physical Meaning:
+            Calculates the energy of the phase field
+            using the 7D fractional Laplacian operator.
+        """
+        # Use 7D fractional Laplacian
+        from bhlff.core.operators.fractional_laplacian import FractionalLaplacian
+        
+        # Create fractional Laplacian operator
+        laplacian = FractionalLaplacian(self.domain, beta=1.0)
+        
+        # Compute fractional Laplacian energy
+        laplacian_energy = laplacian.apply(phase_field)
+        energy = np.sum(np.abs(laplacian_energy)**2)
+        
+        return energy
+    
+    def _compute_7d_phase_coherence(self, particle_i: 'Particle', particle_j: 'Particle') -> float:
+        """
+        Compute 7D phase coherence between particles.
+        
+        Physical Meaning:
+            Calculates the phase coherence between two particles
+            using 7D phase field theory.
+        """
+        # Get phase fields around both particles
+        field_i = self._get_phase_field_around_particle(particle_i)
+        field_j = self._get_phase_field_around_particle(particle_j)
+        
+        # Compute 7D phase coherence
+        coherence = np.real(np.sum(field_i * np.conj(field_j))) / (
+            np.sqrt(np.sum(np.abs(field_i)**2) * np.sum(np.abs(field_j)**2)) + 1e-10
+        )
+        
+        return coherence
+    
+    def _get_phase_field_around_particle(self, particle: 'Particle') -> np.ndarray:
+        """
+        Get 7D phase field around a particle.
+        
+        Physical Meaning:
+            Extracts the phase field configuration
+            in the vicinity of a particle.
+        """
+        # Define extraction region around particle
+        radius = self.interaction_range
+        
+        # Extract field in spherical region around particle
+        center = particle.position
+        field_region = self._extract_spherical_field(center, radius)
+        
+        return field_region
+    
+    def _extract_spherical_field(self, center: np.ndarray, radius: float) -> np.ndarray:
+        """
+        Extract field in spherical region.
+        
+        Physical Meaning:
+            Extracts the phase field in a spherical
+            region around the given center point.
+        """
+        # Create 7D field with correct shape
+        field_region = np.zeros(self.domain.shape, dtype=complex)
+        
+        # Create spherical mask for spatial dimensions only
+        x, y, z = np.meshgrid(
+            np.arange(self.domain.N),
+            np.arange(self.domain.N),
+            np.arange(self.domain.N),
+            indexing='ij'
+        )
+        
+        # Compute distances from center
+        distances = np.sqrt(
+            (x - center[0])**2 + 
+            (y - center[1])**2 + 
+            (z - center[2])**2
+        )
+        
+        # Create spherical mask
+        mask = distances <= radius
+        
+        # Apply mask to spatial dimensions, set phase and time dimensions to default values
+        for i in range(self.domain.N):
+            for j in range(self.domain.N):
+                for k in range(self.domain.N):
+                    if mask[i, j, k]:
+                        # Set field in all phase and time dimensions
+                        field_region[i, j, k, :, :, :, :] = 1.0 + 1j * 0.0
+        
+        return field_region

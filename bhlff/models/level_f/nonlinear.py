@@ -70,12 +70,23 @@ class NonlinearEffects(AbstractModel):
         super().__init__(system.domain)
         self.system = system
         self.nonlinear_params = nonlinear_params
+        self.params = nonlinear_params  # Alias for compatibility
 
         # Extract parameters
         self.nonlinear_strength = nonlinear_params.get("strength", 1.0)
         self.nonlinear_order = nonlinear_params.get("order", 3)
         self.nonlinear_type = nonlinear_params.get("type", "cubic")
         self.coupling_type = nonlinear_params.get("coupling", "local")
+        
+        # Initialize dynamics parameters
+        self.omega_0 = nonlinear_params.get("omega_0", 1.0)
+        self.driving_amplitude = nonlinear_params.get("driving_amplitude", 0.1)
+        self.driving_frequency = nonlinear_params.get("driving_frequency", 1.0)
+        
+        # Initialize nonlinear coefficients
+        self.lambda_1 = nonlinear_params.get("lambda_1", 0.1)
+        self.lambda_2 = nonlinear_params.get("lambda_2", 0.01)
+        self.lambda_3 = nonlinear_params.get("lambda_3", 0.001)
 
         # Initialize nonlinear terms
         self._setup_nonlinear_terms()
@@ -535,9 +546,9 @@ class NonlinearEffects(AbstractModel):
                 (x - soliton["position"]) / soliton["width"]
             )
         else:
-            profile = soliton["amplitude"] * np.exp(
-                -(((x - soliton["position"]) / soliton["width"]) ** 2)
-            )
+            # Use power law profile instead of exponential (no exponential attenuation)
+            # Power law: profile = amplitude / (1 + (x-position)^2/width^2)
+            profile = soliton["amplitude"] / (1.0 + ((x - soliton["position"]) / soliton["width"]) ** 2)
 
         return profile
 
@@ -635,7 +646,7 @@ class NonlinearEffects(AbstractModel):
         """Compute nonlinear force terms."""
         return self.lambda_1 * phi + self.lambda_2 * phi**3 + self.lambda_3 * phi**5
 
-    def _compute_boundary_energy_exchange(self, field: np.ndarray) -> np.ndarray:
+    def _compute_boundary_energy_exchange(self, field) -> float:
         """
         Compute energy exchange through step resonator boundaries.
         
@@ -643,15 +654,26 @@ class NonlinearEffects(AbstractModel):
             Calculates energy exchange between field and environment
             through semi-transparent step resonator boundaries.
         """
-        from bhlff.core.bvp.boundary.step_resonator import apply_step_resonator
-        
-        # Apply step resonator boundary
-        boundary_field = apply_step_resonator(field, axes=(0, 1, 2), R=0.1, T=0.9)
-        
-        # Compute energy exchange rate
-        energy_exchange = np.real(boundary_field * np.conj(field))
-        
-        return energy_exchange
+        # For scalar field, simulate boundary energy exchange
+        if np.isscalar(field):
+            # Simple boundary energy exchange for scalar
+            R = 0.1  # Reflection coefficient
+            T = 0.9  # Transmission coefficient
+            
+            # Simulate boundary effects
+            energy_exchange = (T - R) * np.abs(field)**2
+            return energy_exchange
+        else:
+            # For array field, use step resonator
+            from bhlff.core.bvp.boundary.step_resonator import apply_step_resonator
+            
+            # Apply step resonator boundary
+            boundary_field = apply_step_resonator(field, axes=(0, 1, 2), R=0.1, T=0.9)
+            
+            # Compute energy exchange rate
+            energy_exchange = np.real(boundary_field * np.conj(field))
+            
+            return energy_exchange
 
     def _compute_driving_force(self, t: float) -> float:
         """Compute driving force."""

@@ -223,8 +223,8 @@ class AbstractSolver(ABC):
             system in the current state.
 
         Mathematical Foundation:
-            Energy is E = ½(μ⟨a,(-Δ)^β a⟩ + λ⟨a,a⟩) - ℜ⟨s,a⟩
-            for the fractional Riesz operator.
+            Energy is E = ½(μ⟨a,(-Δ)^β a⟩ + λ|∇a|²) - ℜ⟨s,a⟩
+            for the fractional Riesz operator according to 7D BVP theory.
 
         Args:
             field (np.ndarray): Field configuration a(x).
@@ -233,7 +233,7 @@ class AbstractSolver(ABC):
             float: Total energy of the field configuration.
         """
         # Compute energy using the fractional Riesz operator
-        # E = ½(μ⟨a,(-Δ)^β a⟩ + λ⟨a,a⟩) - ℜ⟨s,a⟩
+        # E = ½(μ⟨a,(-Δ)^β a⟩ + λ|∇a|²) - ℜ⟨s,a⟩ according to 7D BVP theory
 
         # Transform field to spectral space via unified backend
         from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
@@ -271,14 +271,17 @@ class AbstractSolver(ABC):
             fractional_laplacian_spectral, normalization="physics"
         ).real
 
-        # Compute energy terms
+        # Compute energy terms according to 7D BVP theory
         # μ⟨a,(-Δ)^β a⟩ = μ * ∫ a(x) * (-Δ)^β a(x) dx
         kinetic_energy = self.parameters.mu * np.sum(field * fractional_laplacian_field)
 
-        # λ⟨a,a⟩ = λ * ∫ |a(x)|² dx
-        potential_energy = self.parameters.lambda_param * np.sum(field**2)
+        # No mass term λ⟨a,a⟩ - replaced with derivative terms according to 7D theory
+        # Compute gradient-based potential energy instead
+        field_gradient = np.gradient(field)
+        gradient_energy = np.sum(np.array([np.sum(g**2) for g in field_gradient]))
+        potential_energy = self.parameters.lambda_param * gradient_energy
 
-        # Total energy E = ½(μ⟨a,(-Δ)^β a⟩ + λ⟨a,a⟩)
+        # Total energy E = ½(μ⟨a,(-Δ)^β a⟩ + λ|∇a|²)
         total_energy = 0.5 * (kinetic_energy + potential_energy)
 
         return float(total_energy)

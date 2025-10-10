@@ -551,3 +551,54 @@ class TestNonlinearEffects:
             stability["stability_margin"], (int, float, np.integer, np.floating)
         )
         assert isinstance(stability["eigenvalues"], np.ndarray)
+
+    def test_boundary_energy_exchange(self, nonlinear):
+        """
+        Test boundary energy exchange computation.
+        
+        Physical Meaning:
+            Verifies that energy exchange through step resonator
+            boundaries is correctly computed.
+        """
+        # Create test field
+        field = np.random.randn(16, 16, 16) + 1j * np.random.randn(16, 16, 16)
+        
+        # Test boundary energy exchange computation
+        energy_exchange = nonlinear._compute_boundary_energy_exchange(field)
+        
+        # Check that energy exchange is finite
+        assert np.all(np.isfinite(energy_exchange))
+        
+        # Check that energy exchange has correct shape
+        assert energy_exchange.shape == field.shape
+        
+        # Check that energy exchange is real (as expected for energy)
+        assert np.all(np.isreal(energy_exchange))
+
+    def test_equations_of_motion_without_damping(self, nonlinear):
+        """
+        Test equations of motion without damping.
+        
+        Physical Meaning:
+            Verifies that equations of motion are correctly
+            formulated without classical damping terms.
+        """
+        # Test equations of motion formulation
+        equations = nonlinear._formulate_equations_of_motion()
+        
+        # Check that equations is callable
+        assert callable(equations)
+        
+        # Test with sample values
+        t = 0.0
+        y = [1.0, 0.0]  # [phi, phi_dot]
+        
+        # Compute derivatives
+        derivatives = equations(t, y)
+        
+        # Check that derivatives are returned
+        assert len(derivatives) == 2
+        assert np.all(np.isfinite(derivatives))
+        
+        # Check that first derivative is phi_dot (as expected)
+        assert np.isclose(derivatives[0], y[1], rtol=1e-10)

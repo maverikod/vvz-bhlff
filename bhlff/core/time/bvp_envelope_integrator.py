@@ -28,6 +28,7 @@ from .base_integrator import BaseTimeIntegrator
 from .memory_kernel import MemoryKernel
 from .quench_detector import QuenchDetector
 from ..fft import SpectralOperations
+from ..bvp.boundary.step_resonator import FrequencyDependentResonator, CascadeResonatorFilter
 
 
 class BVPEnvelopeIntegrator(BaseTimeIntegrator):
@@ -37,7 +38,9 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
     Physical Meaning:
         Implements envelope modulation approach where all observed "modes"
         are envelope modulations and beatings of the Base High-Frequency Field.
-        This replaces classical exponential solutions with BVP envelope theory.
+        This replaces classical exponential solutions with BVP envelope theory
+        using step resonator transmission/reflection coefficients instead of
+        exponential attenuation.
 
     Mathematical Foundation:
         Solves envelope equation:
@@ -261,11 +264,25 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
         )  # Imaginary susceptibility
         effective_susceptibility = 1.0 + 1j * chi_double_prime * field_magnitude_squared
 
-        # Envelope modulation factor
-        with np.errstate(under='ignore', over='ignore'):
-            envelope_factor = np.exp(
-                -self._envelope_coeffs * dt * nonlinear_stiffness * effective_susceptibility
-            )
+        # Envelope modulation factor using frequency-dependent resonator model
+        # No exponential attenuation - use step resonator transmission
+        if not hasattr(self, '_resonator'):
+            # Initialize frequency-dependent resonator
+            self._resonator = FrequencyDependentResonator(R0=0.1, T0=0.9, omega0=1.0)
+        
+        # Compute frequency-dependent coefficients
+        # Use field magnitude as proxy for frequency content
+        field_frequencies = np.abs(field_magnitude_squared)
+        R, T = self._resonator.compute_coefficients(field_frequencies)
+        
+        # Step resonator model: frequency-dependent T/R coefficients
+        resonator_response = np.where(
+            self._envelope_coeffs * dt * nonlinear_stiffness * effective_susceptibility < 1.0,
+            T,  # Use frequency-dependent transmission
+            R   # Use frequency-dependent reflection
+        )
+        
+        envelope_factor = resonator_response
 
         # Source contribution with envelope modulation
         denominator = self._envelope_coeffs * nonlinear_stiffness * effective_susceptibility

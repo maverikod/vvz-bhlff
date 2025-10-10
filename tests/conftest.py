@@ -32,6 +32,13 @@ from typing import Dict, Any, Generator
 from bhlff.core.domain import Domain
 from bhlff.core.bvp.constants.bvp_constants_advanced import BVPConstantsAdvanced
 
+# Import CUDA utilities for memory management
+try:
+    import cupy as cp
+    CUDA_AVAILABLE = True
+except ImportError:
+    CUDA_AVAILABLE = False
+
 
 @pytest.fixture(scope="session")
 def test_domain_7d() -> Domain:
@@ -283,6 +290,28 @@ def setup_test_environment():
 
     # Cleanup after tests
     np.seterr(all="warn")
+
+
+@pytest.fixture(autouse=True)
+def cleanup_cuda_memory():
+    """
+    Cleanup CUDA memory after each test.
+
+    Physical Meaning:
+        Ensures CUDA memory is properly freed after each test
+        to prevent memory accumulation and out-of-memory errors.
+    """
+    yield
+    
+    # Cleanup CUDA memory after each test
+    if CUDA_AVAILABLE:
+        try:
+            # Clear CuPy memory pool
+            cp.get_default_memory_pool().free_all_blocks()
+            cp.get_default_pinned_memory_pool().free_all_blocks()
+        except Exception:
+            # Ignore errors if CUDA is not available or memory is already freed
+            pass
 
 
 def pytest_configure(config):

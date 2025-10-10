@@ -192,13 +192,13 @@ class EnergyComputer:
             + np.abs(laplacian_phi3) ** 2
         )
 
-        # 7D energy density according to theory
+        # 7D energy density according to theory (no mass term)
         energy_density = (
             f_phi**2 * grad_spatial_sq
             + f_phi**2 * grad_phase_sq  # f_φ²|∇_xΘ|²
             + beta4 * laplacian_sq  # f_φ²|∇_φΘ|²
             + gamma6 * (grad_total_sq**3)  # β₄(ΔΘ)²
-            + k0**2 * np.abs(a) ** 2  # γ₆|∇Θ|⁶  # k₀²|a|² (mass term)
+            # No mass term k₀²|a|² - removed according to 7D BVP theory
         )
 
         return energy_density

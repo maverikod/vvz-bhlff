@@ -4,15 +4,15 @@ Generated for: .
 ## Statistics
 - Total files: 516
 - Total classes: 483
-- Total functions: 4071
-- Total imports: 2440
+- Total functions: 4092
+- Total imports: 2441
 
 ## Files Overview
 ### ./code_mapper.py
-- Lines: 202
+- Lines: 538
 - Classes: 1
-- Functions: 9
-- Imports: 6
+- Functions: 19
+- Imports: 7
 
 ### ./setup.py
 - Lines: 188
@@ -33,10 +33,10 @@ Generated for: .
 - Imports: 7
 
 ### ./tests/conftest.py
-- Lines: 368
+- Lines: 397
 - Classes: 0
-- Functions: 17
-- Imports: 5
+- Functions: 18
+- Imports: 6
 
 ### ./tests/test_bvp_levels_integration.py
 - Lines: 33
@@ -279,15 +279,15 @@ Generated for: .
 - Imports: 5
 
 ### ./tests/unit/test_level_f/test_collective.py
-- Lines: 529
+- Lines: 585
 - Classes: 1
-- Functions: 24
+- Functions: 26
 - Imports: 6
 
 ### ./tests/unit/test_level_f/test_nonlinear.py
-- Lines: 553
+- Lines: 604
 - Classes: 1
-- Functions: 27
+- Functions: 29
 - Imports: 6
 
 ### ./tests/unit/test_level_f/test_transitions.py
@@ -303,9 +303,9 @@ Generated for: .
 - Imports: 0
 
 ### ./tests/unit/test_level_f/test_multi_particle.py
-- Lines: 460
+- Lines: 572
 - Classes: 1
-- Functions: 21
+- Functions: 26
 - Imports: 5
 
 ### ./tests/unit/test_core/test_spectral_filtering.py
@@ -1215,7 +1215,7 @@ Generated for: .
 - Imports: 8
 
 ### ./bhlff/models/level_f/nonlinear.py
-- Lines: 674
+- Lines: 696
 - Classes: 1
 - Functions: 30
 - Imports: 4
@@ -1227,16 +1227,16 @@ Generated for: .
 - Imports: 4
 
 ### ./bhlff/models/level_f/multi_particle.py
-- Lines: 670
+- Lines: 782
 - Classes: 2
-- Functions: 28
-- Imports: 5
+- Functions: 33
+- Imports: 6
 
 ### ./bhlff/models/level_f/collective.py
-- Lines: 595
+- Lines: 694
 - Classes: 1
-- Functions: 20
-- Imports: 4
+- Functions: 24
+- Imports: 3
 
 ### ./bhlff/models/level_d/level_d_models.py
 - Lines: 337

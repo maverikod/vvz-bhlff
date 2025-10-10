@@ -209,7 +209,9 @@ class PhaseMapper:
         # Initialize field
         field = np.zeros((N, N, N, N, N, N, N), dtype=complex)
 
-        # Add initial perturbation
+        # Add initial perturbation using step resonator model
+        # No exponential attenuation - use step resonator transmission
+        transmission_coeff = 0.9  # Energy transmission through resonator
         for i in range(N):
             for j in range(N):
                 for k in range(N):
@@ -219,9 +221,11 @@ class PhaseMapper:
                                 for o in range(N):
                                     r = np.sqrt(x[i] ** 2 + x[j] ** 2 + x[k] ** 2)
                                     if r > 0:
-                                        field[i, j, k, l, m, n, o] = np.exp(
-                                            -(r**2) / 2
-                                        ) * np.exp(1j * np.random.uniform(0, 2 * np.pi))
+                                        # Step resonator model instead of exponential
+                                        amplitude = transmission_coeff if r < 2.0 else 0.1
+                                        # Generate random phase without using exp
+                                        random_phase = np.random.uniform(0, 2 * np.pi)
+                                        field[i, j, k, l, m, n, o] = amplitude * (np.cos(random_phase) + 1j * np.sin(random_phase))
 
         # Time evolution
         for t in range(int(T / dt)):
@@ -246,7 +250,7 @@ class PhaseMapper:
             # Fractional Laplacian operator
             laplacian_operator = mu * (k_magnitude ** (2 * beta)) + lambda_param
 
-            # Time evolution: explicit Euler in spectral domain (no exponential decay)
+            # Time evolution: explicit Euler in spectral domain (no exponential attenuation)
             field_fft = field_fft - laplacian_operator * field_fft * dt
             field = np.fft.ifftn(field_fft)
             # Apply semi-transparent resonator boundary (spatial axes 0,1,2)

@@ -458,3 +458,115 @@ class TestMultiParticleSystem:
         # Check that total charge is conserved
         total_charge = sum(particle.charge for particle in system.particles)
         assert total_charge == 0
+
+    def test_7d_phase_field_energy(self, system):
+        """
+        Test 7D phase field energy computation.
+        
+        Physical Meaning:
+            Verifies that 7D phase field energy is correctly
+            computed for particles using 7D BVP theory.
+        """
+        # Test energy computation for first particle
+        particle = system.particles[0]
+        energy = system._compute_phase_field_energy(particle)
+        
+        # Check that energy is finite and positive
+        assert np.isfinite(energy)
+        assert energy >= 0.0
+        
+        # Check that energy is reasonable
+        assert energy < 20000.0  # Reasonable upper bound for 7D field
+
+    def test_7d_bvp_energy(self, system):
+        """
+        Test 7D BVP energy computation.
+        
+        Physical Meaning:
+            Verifies that 7D BVP energy is correctly computed
+            using the fractional Laplacian operator.
+        """
+        # Create test phase field with correct 7D shape
+        phase_field = np.random.rand(16, 16, 16, 8, 8, 8, 16) + 1j * np.random.rand(16, 16, 16, 8, 8, 8, 16)
+        
+        # Compute 7D BVP energy
+        energy = system._compute_7d_bvp_energy(phase_field)
+        
+        # Check that energy is finite and positive
+        assert np.isfinite(energy)
+        assert energy >= 0.0
+
+    def test_7d_phase_coherence(self, system):
+        """
+        Test 7D phase coherence computation.
+        
+        Physical Meaning:
+            Verifies that 7D phase coherence is correctly
+            computed between particles.
+        """
+        # Test coherence between first two particles
+        particle_i = system.particles[0]
+        particle_j = system.particles[1]
+        
+        coherence = system._compute_7d_phase_coherence(particle_i, particle_j)
+        
+        # Check that coherence is finite and in valid range
+        assert np.isfinite(coherence)
+        assert -1.0 <= coherence <= 1.0
+
+    def test_get_phase_field_around_particle(self, system):
+        """
+        Test phase field extraction around particle.
+        
+        Physical Meaning:
+            Verifies that phase field is correctly extracted
+            in the vicinity of a particle.
+        """
+        # Test extraction for first particle
+        particle = system.particles[0]
+        field_region = system._get_phase_field_around_particle(particle)
+        
+        # Check that field region has correct 7D shape
+        assert field_region.shape == (16, 16, 16, 8, 8, 8, 16)
+        
+        # Check that field region is finite
+        assert np.all(np.isfinite(field_region))
+
+    def test_extract_spherical_field(self, system):
+        """
+        Test spherical field extraction.
+        
+        Physical Meaning:
+            Verifies that phase field is correctly extracted
+            in a spherical region around a center point.
+        """
+        # Test extraction around center of domain
+        center = np.array([8.0, 8.0, 8.0])
+        radius = 3.0
+        
+        field_region = system._extract_spherical_field(center, radius)
+        
+        # Check that field region has correct 7D shape
+        assert field_region.shape == (16, 16, 16, 8, 8, 8, 16)
+        
+        # Check that field region is finite
+        assert np.all(np.isfinite(field_region))
+        
+        # Check that field is zero outside spherical region (spatial dimensions only)
+        distances = np.sqrt(
+            (np.arange(16)[:, None, None] - center[0])**2 +
+            (np.arange(16)[None, :, None] - center[1])**2 +
+            (np.arange(16)[None, None, :] - center[2])**2
+        )
+        outside_mask = distances > radius
+        
+        # Field should be zero outside the spherical region in spatial dimensions
+        for i in range(16):
+            for j in range(16):
+                for k in range(16):
+                    if outside_mask[i, j, k]:
+                        assert np.all(field_region[i, j, k, :, :, :, :] == 0.0)
+        
+        # Field should be non-zero inside the spherical region
+        inside_mask = distances <= radius
+        assert np.any(field_region[inside_mask] != 0.0)

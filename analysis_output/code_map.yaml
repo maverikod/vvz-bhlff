@@ -5883,11 +5883,23 @@ classes:
     - _optimize_parameters
     - _compute_loss
     - _compute_model_predictions
+    - _compute_power_law_exponent
+    - _compute_phase_velocity
+    - _compute_topological_invariant
+    - _compute_topological_defects
+    - _compute_phase_resistance
+    - _compute_mass_resistance
     - _compute_distance_metric
     - _compute_regularization
     - _compute_gradients
     - _get_convergence_info
+    - _analyze_optimization_stability
+    - _assess_convergence_quality
     - _compute_parameter_uncertainties
+    - _compute_hessian_uncertainty
+    - _compute_bootstrap_uncertainty
+    - _compute_prior_uncertainty
+    - _compute_sensitivity_uncertainty
     name: ParticleInversion
   ./bhlff/models/level_g/validation.py::ParticleValidation:
     bases:
@@ -5907,8 +5919,19 @@ classes:
     - validate_parameters
     - _validate_parameters
     - _validate_energy_balance
+    - _compute_energy_components
     - _validate_physical_constraints
+    - _validate_passivity_constraint
+    - _validate_causality_constraint
+    - _validate_unitarity_constraint
+    - _validate_gauge_invariance
+    - _validate_7d_bvp_constraints
     - _validate_experimental_data
+    - _validate_mass_spectrum
+    - _validate_charge_spectrum
+    - _validate_magnetic_moment
+    - _validate_lifetime
+    - _validate_7d_bvp_observables
     - _compute_overall_validation
     name: ParticleValidation
   ./bhlff/models/levels/bvp_integration_base.py::BVPLevelIntegrationBase:
@@ -8537,7 +8560,7 @@ classes:
     name: LevelBFundamentalPropertiesTests
   ./tests/unit/test_level_b/test_simple_level_b.py::TestSimpleLevelB:
     bases:
-    - <ast.Attribute object at 0x7edb5d215c50>
+    - <ast.Attribute object at 0x751346ae6ed0>
     docstring: "Simple Level B tests for fundamental properties.\n\nPhysical Meaning:\n\
       \    Tests the basic functionality of Level B analysis tools,\n    validating\
       \ that the power law analysis works correctly\n    with analytical test solutions."
@@ -9122,6 +9145,24 @@ classes:
     - test_order_parameter_consistency
     - test_critical_point_properties
     name: TestPhaseTransitions
+  ./tests/unit/test_level_g/test_astrophysics_compliance.py::TestAstrophysicsCompliance:
+    bases: []
+    docstring: "Test suite for astrophysics.py compliance with 7D BVP theory.\n\n\
+      Physical Meaning:\n    Ensures that astrophysical object models fully implement\n\
+      \    7D phase field computations without classical patterns or placeholders."
+    file: ''
+    line: 0
+    methods:
+    - test_no_placeholders_or_unimplemented
+    - test_no_classical_mass_patterns
+    - test_no_exponential_damping
+    - test_full_computations_implementation
+    - test_7d_bvp_theory_compliance
+    - test_astrophysical_object_models
+    - test_phase_field_analysis
+    - test_no_classical_approximations
+    - test_step_resonator_model_usage
+    name: TestAstrophysicsCompliance
   ./tests/unit/test_level_g/test_gravity_physics.py::MockSystem:
     bases: []
     docstring: null
@@ -12245,7 +12286,7 @@ files:
     docstring: ''
     functions_count: 0
     imports_count: 0
-    lines: 683
+    lines: 1470
     path: ./bhlff/models/level_g/validation.py
     size: 0
   ./bhlff/models/levels/__init__.py:
@@ -13583,6 +13624,14 @@ files:
     imports_count: 0
     lines: 554
     path: ./tests/unit/test_level_f/test_transitions.py
+    size: 0
+  ./tests/unit/test_level_g/test_astrophysics_compliance.py:
+    classes_count: 0
+    docstring: ''
+    functions_count: 0
+    imports_count: 0
+    lines: 302
+    path: ./tests/unit/test_level_g/test_astrophysics_compliance.py
     size: 0
   ./tests/unit/test_level_g/test_envelope_effective_metric.py:
     classes_count: 0
@@ -15305,7 +15354,7 @@ functions:
     - self
     - source
     decorators:
-    - <ast.Call object at 0x7edb5ce56d50>
+    - <ast.Call object at 0x751346726f90>
     docstring: "Solve 7D BVP envelope equation.\n\nPhysical Meaning:\n    Computes\
       \ the envelope a(x,φ,t) of the Base High-Frequency Field\n    in 7D space-time\
       \ M₇ = ℝ³ₓ × \U0001D54B³_φ × ℝₜ that modulates the high-frequency carrier.\n\
@@ -15327,7 +15376,7 @@ functions:
     - self
     - source
     decorators:
-    - <ast.Call object at 0x7edb5ce54b50>
+    - <ast.Call object at 0x7513467241d0>
     docstring: "Solve linearized 7D BVP envelope equation.\n\nPhysical Meaning:\n\
       \    Solves the linearized version of the envelope equation\n    ∇·(κ₀∇a) +\
       \ k₀²χ'a = s(x,φ,t) for initial guess generation.\n\nMathematical Foundation:\n\
@@ -18342,7 +18391,7 @@ functions:
     - self
     - source
     decorators:
-    - <ast.Call object at 0x7edb5cca1810>
+    - <ast.Call object at 0x751346552010>
     docstring: "Solve linearized 7D BVP envelope equation.\n\nPhysical Meaning:\n\
       \    Solves the linearized version of the envelope equation\n    ∇·(κ₀∇a) +\
       \ k₀²χ'a = s(x,φ,t) for initial guess generation.\n\nMathematical Foundation:\n\
@@ -18446,7 +18495,7 @@ functions:
     - self
     - envelope
     decorators:
-    - <ast.Call object at 0x7edb5cdaa010>
+    - <ast.Call object at 0x751346679990>
     docstring: "Compute nonlinear coefficients as functions of field amplitude.\n\n\
       Physical Meaning:\n    Computes the nonlinear stiffness κ(|a|) and susceptibility\
       \ χ(|a|)\n    as functions of the local field amplitude, ensuring proper\n \
@@ -19907,7 +19956,7 @@ functions:
   ./bhlff/core/bvp/memory_decorator.py::wrapper:
     args: []
     decorators:
-    - <ast.Call object at 0x7edb5cddeb10>
+    - <ast.Call object at 0x7513465b2210>
     docstring: null
     file: ''
     is_async: false
@@ -20553,7 +20602,7 @@ functions:
   ./bhlff/core/bvp/physical_validation_decorator.py::wrapper:
     args: []
     decorators:
-    - <ast.Call object at 0x7edb5ce3f7d0>
+    - <ast.Call object at 0x75134671bf10>
     docstring: null
     file: ''
     is_async: false
@@ -22302,7 +22351,7 @@ functions:
     - self
     - field
     decorators:
-    - <ast.Call object at 0x7edb5ccb8090>
+    - <ast.Call object at 0x75134675be90>
     docstring: "Analyze power law behavior in the field.\n\nPhysical Meaning:\n  \
       \  Computes power law exponents and scaling behavior\n    in the BVP field according\
       \ to the theoretical framework.\n\nMathematical Foundation:\n    Analyzes the\
@@ -24288,7 +24337,7 @@ functions:
     - self
     - phase
     decorators:
-    - <ast.Call object at 0x7edb5cddc3d0>
+    - <ast.Call object at 0x7513465a47d0>
     docstring: "Find topological defects in the phase field with CUDA optimization.\n\
       \nPhysical Meaning:\n    Identifies points where the phase field has singularities\n\
       \    or rapid changes, indicating topological defects.\n\nMathematical Foundation:\n\
@@ -46805,6 +46854,46 @@ functions:
     line: 0
     name: __init__
     returns: null
+  ./bhlff/models/level_g/validation.py::_analyze_optimization_stability:
+    args:
+    - self
+    - state
+    decorators: []
+    docstring: "Analyze optimization stability.\n\nPhysical Meaning:\n    Analyzes\
+      \ the stability of the optimization process\n    to detect oscillations, divergence,\
+      \ or other issues."
+    file: ''
+    is_async: false
+    line: 0
+    name: _analyze_optimization_stability
+    returns: null
+  ./bhlff/models/level_g/validation.py::_assess_convergence_quality:
+    args:
+    - self
+    - state
+    decorators: []
+    docstring: "Assess the quality of convergence.\n\nPhysical Meaning:\n    Assesses\
+      \ the quality of convergence based on\n    multiple criteria including loss\
+      \ reduction,\n    gradient norms, and parameter stability."
+    file: ''
+    is_async: false
+    line: 0
+    name: _assess_convergence_quality
+    returns: str
+  ./bhlff/models/level_g/validation.py::_compute_bootstrap_uncertainty:
+    args:
+    - self
+    - param_name
+    - params
+    decorators: []
+    docstring: "Compute uncertainty from bootstrap sampling.\n\nPhysical Meaning:\n\
+      \    Computes parameter uncertainty using bootstrap\n    resampling to estimate\
+      \ the sampling distribution."
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_bootstrap_uncertainty
+    returns: float
   ./bhlff/models/level_g/validation.py::_compute_distance_metric:
     args:
     - self
@@ -46822,19 +46911,50 @@ functions:
     line: 0
     name: _compute_distance_metric
     returns: float
+  ./bhlff/models/level_g/validation.py::_compute_energy_components:
+    args:
+    - self
+    - params
+    decorators: []
+    docstring: "Compute energy components from 7D BVP theory.\n\nPhysical Meaning:\n\
+      \    Computes the energy components of the 7D phase field\n    configuration\
+      \ including kinetic, potential, and nonlinear\n    energy terms."
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_energy_components
+    returns: null
   ./bhlff/models/level_g/validation.py::_compute_gradients:
     args:
     - self
     - params
     decorators: []
-    docstring: "Compute gradients of loss function.\n\nPhysical Meaning:\n    Computes\
-      \ the gradients of the loss function\n    with respect to the model parameters.\n\
-      \nArgs:\n    params: Model parameters\n\nReturns:\n    Parameter gradients"
+    docstring: "Compute gradients using advanced numerical methods.\n\nPhysical Meaning:\n\
+      \    Computes the gradients of the loss function using\n    advanced numerical\
+      \ differentiation methods optimized\n    for 7D BVP theory parameter space.\n\
+      \nMathematical Foundation:\n    Implements adaptive step size numerical differentiation:\n\
+      \    ∇f(x) ≈ [f(x + h) - f(x - h)] / (2h)\n    where h is adaptively chosen\
+      \ based on parameter scale.\n\nArgs:\n    params: Model parameters\n\nReturns:\n\
+      \    Parameter gradients with adaptive step sizes"
     file: ''
     is_async: false
     line: 0
     name: _compute_gradients
     returns: null
+  ./bhlff/models/level_g/validation.py::_compute_hessian_uncertainty:
+    args:
+    - self
+    - param_name
+    - params
+    decorators: []
+    docstring: "Compute uncertainty from Hessian matrix.\n\nPhysical Meaning:\n  \
+      \  Computes parameter uncertainty from the Hessian matrix\n    of the loss function,\
+      \ which provides the curvature\n    information around the optimum."
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_hessian_uncertainty
+    returns: float
   ./bhlff/models/level_g/validation.py::_compute_loss:
     args:
     - self
@@ -46850,15 +46970,35 @@ functions:
     line: 0
     name: _compute_loss
     returns: float
+  ./bhlff/models/level_g/validation.py::_compute_mass_resistance:
+    args:
+    - self
+    - tau
+    - q
+    - beta
+    decorators: []
+    docstring: "Compute mass resistance from 7D BVP theory.\n\nPhysical Meaning:\n\
+      \    Computes the resistance to phase state rearrangement\n    in 7D space-time,\
+      \ which defines the effective mass."
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_mass_resistance
+    returns: float
   ./bhlff/models/level_g/validation.py::_compute_model_predictions:
     args:
     - self
     - params
     decorators: []
-    docstring: "Compute model predictions for given parameters.\n\nPhysical Meaning:\n\
-      \    Computes the model predictions for observable\n    metrics given the model\
-      \ parameters.\n\nArgs:\n    params: Model parameters\n\nReturns:\n    Model\
-      \ predictions"
+    docstring: "Compute model predictions using full 7D BVP framework.\n\nPhysical\
+      \ Meaning:\n    Computes the model predictions for observable metrics\n    using\
+      \ the complete 7D BVP framework with proper\n    phase field dynamics and topological\
+      \ analysis.\n\nMathematical Foundation:\n    Implements full 7D BVP simulations:\n\
+      \    - Phase field evolution: ∂a/∂t = L_β a + nonlinear_terms\n    - Power law\
+      \ analysis: P(k) ∝ k^(-α) where α = 2β - 3\n    - Topological charge: Q = (1/2π)\
+      \ ∫ ∇×∇φ d²x\n    - Energy functional: E = ∫ [μ|∇a|² + λ|a|² + nonlinear] d³x\
+      \ d³φ dt\n\nArgs:\n    params: Model parameters\n\nReturns:\n    Model predictions\
+      \ from 7D BVP theory"
     file: ''
     is_async: false
     line: 0
@@ -46881,14 +47021,78 @@ functions:
     - self
     - params
     decorators: []
-    docstring: "Compute parameter uncertainties.\n\nPhysical Meaning:\n    Computes\
-      \ the uncertainties in the optimized\n    parameters using statistical methods.\n\
-      \nArgs:\n    params: Optimized parameters\n\nReturns:\n    Parameter uncertainties"
+    docstring: "Compute parameter uncertainties using advanced statistical methods.\n\
+      \nPhysical Meaning:\n    Computes the uncertainties in the optimized parameters\n\
+      \    using advanced statistical methods including Hessian\n    analysis, bootstrap\
+      \ sampling, and Bayesian inference.\n\nMathematical Foundation:\n    Implements\
+      \ multiple uncertainty estimation methods:\n    - Hessian-based: σ² = H⁻¹ where\
+      \ H is the Hessian matrix\n    - Bootstrap: σ² = Var(θ_bootstrap) from resampling\n\
+      \    - Bayesian: σ² = Var(θ|data) from posterior distribution\n\nArgs:\n   \
+      \ params: Optimized parameters\n\nReturns:\n    Parameter uncertainties from\
+      \ statistical analysis"
     file: ''
     is_async: false
     line: 0
     name: _compute_parameter_uncertainties
     returns: null
+  ./bhlff/models/level_g/validation.py::_compute_phase_resistance:
+    args:
+    - self
+    - gamma
+    - mu
+    - lambda_param
+    decorators: []
+    docstring: "Compute phase resistance from 7D dynamics.\n\nPhysical Meaning:\n\
+      \    Computes the resistance to phase changes in 7D space-time\n    based on\
+      \ the phase field dynamics and energy landscape."
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_phase_resistance
+    returns: float
+  ./bhlff/models/level_g/validation.py::_compute_phase_velocity:
+    args:
+    - self
+    - eta
+    - gamma
+    - mu
+    decorators: []
+    docstring: "Compute phase velocity from 7D phase field dynamics.\n\nPhysical Meaning:\n\
+      \    Computes the phase velocity in 7D space-time based on\n    the phase field\
+      \ evolution and topological structure."
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_phase_velocity
+    returns: float
+  ./bhlff/models/level_g/validation.py::_compute_power_law_exponent:
+    args:
+    - self
+    - beta
+    - mu
+    - lambda_param
+    decorators: []
+    docstring: "Compute power law exponent from 7D BVP theory.\n\nPhysical Meaning:\n\
+      \    Computes the power law exponent α for the tail behavior\n    in 7D phase\
+      \ space-time using the fractional Laplacian operator."
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_power_law_exponent
+    returns: float
+  ./bhlff/models/level_g/validation.py::_compute_prior_uncertainty:
+    args:
+    - self
+    - param_name
+    decorators: []
+    docstring: "Compute uncertainty from prior distribution.\n\nPhysical Meaning:\n\
+      \    Computes parameter uncertainty based on the\n    prior distribution and\
+      \ its variance."
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_prior_uncertainty
+    returns: float
   ./bhlff/models/level_g/validation.py::_compute_regularization:
     args:
     - self
@@ -46902,13 +47106,57 @@ functions:
     line: 0
     name: _compute_regularization
     returns: float
+  ./bhlff/models/level_g/validation.py::_compute_sensitivity_uncertainty:
+    args:
+    - self
+    - param_name
+    - params
+    decorators: []
+    docstring: "Compute uncertainty from parameter sensitivity.\n\nPhysical Meaning:\n\
+      \    Computes parameter uncertainty based on the\n    sensitivity of the loss\
+      \ function to parameter changes."
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_sensitivity_uncertainty
+    returns: float
+  ./bhlff/models/level_g/validation.py::_compute_topological_defects:
+    args:
+    - self
+    - layers_count
+    - beta
+    - q
+    decorators: []
+    docstring: "Compute number of topological defects from 7D analysis.\n\nPhysical\
+      \ Meaning:\n    Computes the number of topological defects in 7D space-time\n\
+      \    based on the phase field structure and topological charge."
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_topological_defects
+    returns: int
+  ./bhlff/models/level_g/validation.py::_compute_topological_invariant:
+    args:
+    - self
+    - gamma
+    - layers_count
+    decorators: []
+    docstring: "Compute topological invariant from 7D structure.\n\nPhysical Meaning:\n\
+      \    Computes the topological invariant that characterizes\n    the 7D phase\
+      \ field structure and defect configuration."
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_topological_invariant
+    returns: float
   ./bhlff/models/level_g/validation.py::_get_convergence_info:
     args:
     - self
     decorators: []
-    docstring: "Get convergence information.\n\nPhysical Meaning:\n    Returns information\
-      \ about the convergence of\n    the optimization process.\n\nReturns:\n    Convergence\
-      \ information"
+    docstring: "Get convergence information from optimization tracking.\n\nPhysical\
+      \ Meaning:\n    Returns detailed information about the convergence\n    of the\
+      \ optimization process including convergence\n    rate, stability analysis,\
+      \ and convergence criteria.\n\nReturns:\n    Detailed convergence information"
     file: ''
     is_async: false
     line: 0
@@ -46931,10 +47179,13 @@ functions:
     - self
     - initial_params
     decorators: []
-    docstring: "Optimize parameters using loss function.\n\nPhysical Meaning:\n  \
-      \  Optimizes the model parameters to minimize the\n    loss function with respect\
-      \ to observables.\n\nArgs:\n    initial_params: Initial parameter values\n\n\
-      Returns:\n    Optimized parameter values"
+    docstring: "Optimize parameters using advanced optimization algorithms.\n\nPhysical\
+      \ Meaning:\n    Optimizes the model parameters using advanced optimization\n\
+      \    algorithms including adaptive learning rates, momentum,\n    and second-order\
+      \ methods for 7D BVP theory.\n\nMathematical Foundation:\n    Implements L-BFGS-B\
+      \ optimization with line search:\n    x_{k+1} = x_k - α_k H_k^{-1} ∇f(x_k)\n\
+      \    where H_k is the approximate Hessian matrix.\n\nArgs:\n    initial_params:\
+      \ Initial parameter values\n\nReturns:\n    Optimized parameter values"
     file: ''
     is_async: false
     line: 0
@@ -46964,13 +47215,69 @@ functions:
     line: 0
     name: _setup_validation_parameters
     returns: null
+  ./bhlff/models/level_g/validation.py::_validate_7d_bvp_constraints:
+    args:
+    - self
+    - params
+    decorators: []
+    docstring: "Validate 7D BVP specific constraints.\n\nPhysical Meaning:\n    Validates\
+      \ that the parameters satisfy the specific\n    constraints of 7D BVP theory\
+      \ including phase field\n    dynamics and topological structure."
+    file: ''
+    is_async: false
+    line: 0
+    name: _validate_7d_bvp_constraints
+    returns: bool
+  ./bhlff/models/level_g/validation.py::_validate_7d_bvp_observables:
+    args:
+    - self
+    - params
+    decorators: []
+    docstring: "Validate 7D BVP specific observables.\n\nPhysical Meaning:\n    Validates\
+      \ that the predicted 7D BVP observables\n    agree with experimental data within\
+      \ uncertainties."
+    file: ''
+    is_async: false
+    line: 0
+    name: _validate_7d_bvp_observables
+    returns: bool
+  ./bhlff/models/level_g/validation.py::_validate_causality_constraint:
+    args:
+    - self
+    - params
+    decorators: []
+    docstring: "Validate causality constraint.\n\nPhysical Meaning:\n    Validates\
+      \ that the system satisfies causality,\n    i.e., effects cannot precede causes."
+    file: ''
+    is_async: false
+    line: 0
+    name: _validate_causality_constraint
+    returns: bool
+  ./bhlff/models/level_g/validation.py::_validate_charge_spectrum:
+    args:
+    - self
+    - params
+    decorators: []
+    docstring: "Validate charge spectrum agreement.\n\nPhysical Meaning:\n    Validates\
+      \ that the predicted charge spectrum agrees\n    with experimental data within\
+      \ uncertainties."
+    file: ''
+    is_async: false
+    line: 0
+    name: _validate_charge_spectrum
+    returns: bool
   ./bhlff/models/level_g/validation.py::_validate_energy_balance:
     args:
     - self
     decorators: []
-    docstring: "Validate energy balance.\n\nPhysical Meaning:\n    Validates that\
-      \ the energy balance is conserved\n    in the phase field configuration.\n\n\
-      Returns:\n    Energy balance validation results"
+    docstring: "Validate energy balance using 7D BVP theory.\n\nPhysical Meaning:\n\
+      \    Validates that the energy balance is conserved\n    in the 7D phase field\
+      \ configuration using the\n    complete energy functional and conservation laws.\n\
+      \nMathematical Foundation:\n    Implements energy balance validation:\n    -\
+      \ Total energy: E_total = E_kinetic + E_potential + E_nonlinear\n    - Energy\
+      \ conservation: ∂E/∂t = 0 (within tolerance)\n    - Energy positivity: E_kinetic\
+      \ ≥ 0, E_potential ≥ 0\n\nReturns:\n    Energy balance validation results from\
+      \ 7D analysis"
     file: ''
     is_async: false
     line: 0
@@ -46980,14 +47287,70 @@ functions:
     args:
     - self
     decorators: []
-    docstring: "Validate against experimental data.\n\nPhysical Meaning:\n    Validates\
-      \ that the inverted parameters reproduce\n    experimental observations within\
-      \ uncertainties.\n\nReturns:\n    Experimental validation results"
+    docstring: "Validate against experimental data using 7D BVP theory.\n\nPhysical\
+      \ Meaning:\n    Validates that the inverted parameters reproduce\n    experimental\
+      \ observations within uncertainties\n    using 7D BVP theory predictions.\n\n\
+      Mathematical Foundation:\n    Implements comprehensive experimental validation:\n\
+      \    - Mass spectrum: m_predicted vs m_experimental\n    - Charge spectrum:\
+      \ q_predicted vs q_experimental  \n    - Magnetic moment: μ_predicted vs μ_experimental\n\
+      \    - Lifetime: τ_predicted vs τ_experimental\n    - 7D BVP specific observables:\
+      \ Phase field properties\n\nReturns:\n    Experimental validation results from\
+      \ 7D analysis"
     file: ''
     is_async: false
     line: 0
     name: _validate_experimental_data
     returns: null
+  ./bhlff/models/level_g/validation.py::_validate_gauge_invariance:
+    args:
+    - self
+    - params
+    decorators: []
+    docstring: "Validate gauge invariance.\n\nPhysical Meaning:\n    Validates that\
+      \ the system preserves gauge invariance,\n    i.e., U(1) symmetry is maintained."
+    file: ''
+    is_async: false
+    line: 0
+    name: _validate_gauge_invariance
+    returns: bool
+  ./bhlff/models/level_g/validation.py::_validate_lifetime:
+    args:
+    - self
+    - params
+    decorators: []
+    docstring: "Validate lifetime agreement.\n\nPhysical Meaning:\n    Validates that\
+      \ the predicted lifetime agrees\n    with experimental data within uncertainties."
+    file: ''
+    is_async: false
+    line: 0
+    name: _validate_lifetime
+    returns: bool
+  ./bhlff/models/level_g/validation.py::_validate_magnetic_moment:
+    args:
+    - self
+    - params
+    decorators: []
+    docstring: "Validate magnetic moment agreement.\n\nPhysical Meaning:\n    Validates\
+      \ that the predicted magnetic moment agrees\n    with experimental data within\
+      \ uncertainties."
+    file: ''
+    is_async: false
+    line: 0
+    name: _validate_magnetic_moment
+    returns: bool
+  ./bhlff/models/level_g/validation.py::_validate_mass_spectrum:
+    args:
+    - self
+    - params
+    decorators: []
+    docstring: "Validate mass spectrum agreement.\n\nPhysical Meaning:\n    Validates\
+      \ that the predicted mass spectrum agrees\n    with experimental data within\
+      \ uncertainties."
+    file: ''
+    is_async: false
+    line: 0
+    name: _validate_mass_spectrum
+    returns: bool
   ./bhlff/models/level_g/validation.py::_validate_parameters:
     args:
     - self
@@ -47000,18 +47363,49 @@ functions:
     line: 0
     name: _validate_parameters
     returns: null
+  ./bhlff/models/level_g/validation.py::_validate_passivity_constraint:
+    args:
+    - self
+    - params
+    decorators: []
+    docstring: "Validate passivity constraint.\n\nPhysical Meaning:\n    Validates\
+      \ that the system is passive, i.e., it cannot\n    generate energy, which is\
+      \ a fundamental physical constraint."
+    file: ''
+    is_async: false
+    line: 0
+    name: _validate_passivity_constraint
+    returns: bool
   ./bhlff/models/level_g/validation.py::_validate_physical_constraints:
     args:
     - self
     decorators: []
-    docstring: "Validate physical constraints.\n\nPhysical Meaning:\n    Validates\
-      \ that the inverted parameters satisfy\n    physical constraints and conservation\
-      \ laws.\n\nReturns:\n    Physical constraint validation results"
+    docstring: "Validate physical constraints using 7D BVP theory.\n\nPhysical Meaning:\n\
+      \    Validates that the inverted parameters satisfy\n    physical constraints\
+      \ and conservation laws in\n    7D phase space-time according to BVP theory.\n\
+      \nMathematical Foundation:\n    Implements comprehensive physical constraint\
+      \ validation:\n    - Passivity: Re[Z(ω)] ≥ 0 for all frequencies\n    - Causality:\
+      \ Kramers-Kronig relations satisfied\n    - Unitarity: |S|² = 1 for scattering\
+      \ matrix\n    - Gauge invariance: U(1) symmetry preserved\n    - 7D BVP constraints:\
+      \ Phase field dynamics consistent\n\nReturns:\n    Physical constraint validation\
+      \ results from 7D analysis"
     file: ''
     is_async: false
     line: 0
     name: _validate_physical_constraints
     returns: null
+  ./bhlff/models/level_g/validation.py::_validate_unitarity_constraint:
+    args:
+    - self
+    - params
+    decorators: []
+    docstring: "Validate unitarity constraint.\n\nPhysical Meaning:\n    Validates\
+      \ that the system preserves unitarity,\n    i.e., probability is conserved."
+    file: ''
+    is_async: false
+    line: 0
+    name: _validate_unitarity_constraint
+    returns: bool
   ./bhlff/models/level_g/validation.py::invert_parameters:
     args:
     - self
@@ -50158,7 +50552,7 @@ functions:
   ./tests/conftest.py::cleanup_cuda_memory:
     args: []
     decorators:
-    - <ast.Call object at 0x7edb5d37add0>
+    - <ast.Call object at 0x751346c73210>
     docstring: "Cleanup CUDA memory after each test.\n\nPhysical Meaning:\n    Ensures\
       \ CUDA memory is properly freed after each test\n    to prevent memory accumulation\
       \ and out-of-memory errors."
@@ -50218,7 +50612,7 @@ functions:
   ./tests/conftest.py::setup_test_environment:
     args: []
     decorators:
-    - <ast.Call object at 0x7edb5d356bd0>
+    - <ast.Call object at 0x751346c4eed0>
     docstring: "Setup test environment.\n\nPhysical Meaning:\n    Configures the test\
       \ environment for reproducible\n    physical validation testing."
     file: ''
@@ -50229,7 +50623,7 @@ functions:
   ./tests/conftest.py::test_amplitudes:
     args: []
     decorators:
-    - <ast.Attribute object at 0x7edb5d354b90>
+    - <ast.Attribute object at 0x751346c4ca90>
     docstring: "Create test amplitudes for nonlinear testing.\n\nPhysical Meaning:\n\
       \    Provides a range of amplitudes for testing nonlinear\n    material properties\
       \ and effects."
@@ -50241,7 +50635,7 @@ functions:
   ./tests/conftest.py::test_bvp_constants:
     args: []
     decorators:
-    - <ast.Call object at 0x7edb5d290150>
+    - <ast.Call object at 0x751346b387d0>
     docstring: "Create BVP constants for testing.\n\nPhysical Meaning:\n    Provides\
       \ physically meaningful BVP constants for testing\n    the 7D BVP theory implementation.\n\
       \nMathematical Foundation:\n    Constants satisfying physical constraints:\n\
@@ -50254,7 +50648,7 @@ functions:
   ./tests/conftest.py::test_bvp_constants_extreme:
     args: []
     decorators:
-    - <ast.Call object at 0x7edb5d3ef110>
+    - <ast.Call object at 0x751346ce7610>
     docstring: "Create extreme BVP constants for testing.\n\nPhysical Meaning:\n \
       \   Provides extreme but physically valid BVP constants for\n    testing robustness\
       \ and edge cases."
@@ -50266,7 +50660,7 @@ functions:
   ./tests/conftest.py::test_domain_7d:
     args: []
     decorators:
-    - <ast.Call object at 0x7edb5d347f90>
+    - <ast.Call object at 0x751346c3fa90>
     docstring: "Create 7D domain for testing.\n\nPhysical Meaning:\n    Provides a\
       \ 7D computational domain M₇ = ℝ³ₓ × \U0001D54B³_φ × ℝₜ\n    for testing the\
       \ BVP theory implementation.\n\nMathematical Foundation:\n    Domain with periodic\
@@ -50280,7 +50674,7 @@ functions:
   ./tests/conftest.py::test_domain_7d_high_res:
     args: []
     decorators:
-    - <ast.Call object at 0x7edb5d3477d0>
+    - <ast.Call object at 0x751346c3ea10>
     docstring: "Create high-resolution 7D domain for testing.\n\nPhysical Meaning:\n\
       \    Provides a high-resolution 7D computational domain for\n    testing spectral\
       \ accuracy and convergence."
@@ -50293,7 +50687,7 @@ functions:
     args:
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d3a0190>
+    - <ast.Attribute object at 0x751346c981d0>
     docstring: "Create analytical envelope for testing.\n\nPhysical Meaning:\n   \
       \ Provides an envelope with known analytical properties\n    for testing postulate\
       \ validation."
@@ -50305,7 +50699,7 @@ functions:
   ./tests/conftest.py::test_frequencies:
     args: []
     decorators:
-    - <ast.Attribute object at 0x7edb5d354290>
+    - <ast.Attribute object at 0x751346c4c410>
     docstring: "Create test frequencies for frequency-dependent testing.\n\nPhysical\
       \ Meaning:\n    Provides a range of frequencies for testing frequency-dependent\n\
       \    material properties and spectral methods."
@@ -50317,7 +50711,7 @@ functions:
   ./tests/conftest.py::test_results_cache:
     args: []
     decorators:
-    - <ast.Call object at 0x7edb5d383850>
+    - <ast.Call object at 0x751346c5df10>
     docstring: "Create test results cache.\n\nPhysical Meaning:\n    Provides a cache\
       \ for storing test results to avoid\n    recomputation in long-running physical\
       \ validation tests."
@@ -50329,7 +50723,7 @@ functions:
   ./tests/conftest.py::test_scales:
     args: []
     decorators:
-    - <ast.Attribute object at 0x7edb5d355e10>
+    - <ast.Attribute object at 0x751346c4d6d0>
     docstring: "Create test scales for renormalization testing.\n\nPhysical Meaning:\n\
       \    Provides a range of scales for testing renormalization\n    group flow\
       \ and scaling behavior."
@@ -50342,7 +50736,7 @@ functions:
     args:
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d28ac50>
+    - <ast.Attribute object at 0x751346b32a50>
     docstring: "Create Gaussian source for testing.\n\nPhysical Meaning:\n    Provides\
       \ a Gaussian source with known analytical properties\n    for testing BVP equation\
       \ solution."
@@ -50355,7 +50749,7 @@ functions:
     args:
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d271190>
+    - <ast.Attribute object at 0x751346b19b50>
     docstring: "Create localized source for testing.\n\nPhysical Meaning:\n    Provides\
       \ a localized source for testing boundary conditions\n    and field propagation."
     file: ''
@@ -50367,7 +50761,7 @@ functions:
     args:
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d270690>
+    - <ast.Attribute object at 0x751346b18950>
     docstring: "Create sinusoidal source for testing.\n\nPhysical Meaning:\n    Provides\
       \ a sinusoidal source with known analytical derivatives\n    for testing spectral\
       \ methods."
@@ -50607,7 +51001,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3b9710>
+    - <ast.Attribute object at 0x751346cb66d0>
     docstring: Create BVP constants for complete pipeline testing.
     file: ''
     is_async: false
@@ -50620,7 +51014,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x7edb5d3b9cd0>
+    - <ast.Attribute object at 0x751346cb6110>
     docstring: Create BVP core for complete pipeline testing.
     file: ''
     is_async: false
@@ -50631,7 +51025,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3b8b90>
+    - <ast.Attribute object at 0x751346cb74d0>
     docstring: Create 7D domain for complete pipeline testing.
     file: ''
     is_async: false
@@ -50685,7 +51079,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d382990>
+    - <ast.Attribute object at 0x751346c5ca10>
     docstring: Create BVP constants for complete pipeline testing.
     file: ''
     is_async: false
@@ -50698,7 +51092,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x7edb5d381ed0>
+    - <ast.Attribute object at 0x751346c77b90>
     docstring: Create BVP core for complete pipeline testing.
     file: ''
     is_async: false
@@ -50709,7 +51103,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d382a50>
+    - <ast.Attribute object at 0x751346c5e790>
     docstring: Create 7D domain for complete pipeline testing.
     file: ''
     is_async: false
@@ -50746,7 +51140,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d355710>
+    - <ast.Attribute object at 0x751346c4db10>
     docstring: Create BVP constants for complete pipeline testing.
     file: ''
     is_async: false
@@ -50759,7 +51153,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x7edb5d354b90>
+    - <ast.Attribute object at 0x751346c4ce10>
     docstring: Create BVP interface for complete pipeline testing.
     file: ''
     is_async: false
@@ -50770,7 +51164,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d356b90>
+    - <ast.Attribute object at 0x751346c4cb50>
     docstring: Create 7D domain for complete pipeline testing.
     file: ''
     is_async: false
@@ -50808,7 +51202,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d37b090>
+    - <ast.Attribute object at 0x751346c735d0>
     docstring: Create BVP constants for complete pipeline testing.
     file: ''
     is_async: false
@@ -50821,7 +51215,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x7edb5d35e490>
+    - <ast.Attribute object at 0x751346c54b90>
     docstring: Create BVP core for complete pipeline testing.
     file: ''
     is_async: false
@@ -50832,7 +51226,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3797d0>
+    - <ast.Attribute object at 0x751346c71790>
     docstring: Create 7D domain for complete pipeline testing.
     file: ''
     is_async: false
@@ -50881,7 +51275,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d28a390>
+    - <ast.Attribute object at 0x751346b32310>
     docstring: Create BVP constants for complete pipeline testing.
     file: ''
     is_async: false
@@ -50894,7 +51288,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x7edb5d28b510>
+    - <ast.Attribute object at 0x751346b33910>
     docstring: Create BVP core for complete pipeline testing.
     file: ''
     is_async: false
@@ -50905,7 +51299,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d288f50>
+    - <ast.Attribute object at 0x751346b324d0>
     docstring: Create 7D domain for complete pipeline testing.
     file: ''
     is_async: false
@@ -50931,7 +51325,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d2e2c10>
+    - <ast.Attribute object at 0x751346b8ad90>
     docstring: Create BVP configuration for testing.
     file: ''
     is_async: false
@@ -50944,7 +51338,7 @@ functions:
     - domain_7d
     - bvp_config
     decorators:
-    - <ast.Attribute object at 0x7edb5d2e3310>
+    - <ast.Attribute object at 0x751346b8b490>
     docstring: Create BVP core instance for testing.
     file: ''
     is_async: false
@@ -50955,7 +51349,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d2e1a10>
+    - <ast.Attribute object at 0x751346b89b90>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -51131,7 +51525,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d383e50>
+    - <ast.Attribute object at 0x751346c77f90>
     docstring: Create BVP configuration.
     file: ''
     is_async: false
@@ -51142,7 +51536,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d381ad0>
+    - <ast.Attribute object at 0x751346c75f50>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -51189,7 +51583,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d356d50>
+    - <ast.Attribute object at 0x751346c4ee50>
     docstring: Create BVP configuration.
     file: ''
     is_async: false
@@ -51200,7 +51594,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3579d0>
+    - <ast.Attribute object at 0x751346c4f050>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -51247,7 +51641,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d379a90>
+    - <ast.Attribute object at 0x751346c720d0>
     docstring: Create BVP configuration.
     file: ''
     is_async: false
@@ -51258,7 +51652,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d37add0>
+    - <ast.Attribute object at 0x751346c73210>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -51305,7 +51699,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d28a3d0>
+    - <ast.Attribute object at 0x751346b33990>
     docstring: Create BVP configuration.
     file: ''
     is_async: false
@@ -51316,7 +51710,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d289c90>
+    - <ast.Attribute object at 0x751346b31790>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -51363,7 +51757,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3eec10>
+    - <ast.Attribute object at 0x751346ce6bd0>
     docstring: Create BVP configuration.
     file: ''
     is_async: false
@@ -51374,7 +51768,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3ee2d0>
+    - <ast.Attribute object at 0x751346ce6090>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -51421,7 +51815,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d381550>
+    - <ast.Attribute object at 0x751346c5e810>
     docstring: Create BVP configuration.
     file: ''
     is_async: false
@@ -51432,7 +51826,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d380c10>
+    - <ast.Attribute object at 0x751346c5cc10>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -51479,7 +51873,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d35f550>
+    - <ast.Attribute object at 0x751346c57710>
     docstring: Create BVP configuration.
     file: ''
     is_async: false
@@ -51490,7 +51884,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d35c650>
+    - <ast.Attribute object at 0x751346c55c50>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -51537,7 +51931,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3a0050>
+    - <ast.Attribute object at 0x751346b18a10>
     docstring: Create 7D BVP domain for testing.
     file: ''
     is_async: false
@@ -51548,7 +51942,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3a0390>
+    - <ast.Attribute object at 0x751346b1a510>
     docstring: Create 7D BVP parameters for testing.
     file: ''
     is_async: false
@@ -51561,7 +51955,7 @@ functions:
     - domain_7d
     - parameters_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d347b90>
+    - <ast.Attribute object at 0x751346c9bbd0>
     docstring: Create 7D BVP solver for testing.
     file: ''
     is_async: false
@@ -51663,7 +52057,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d214d10>
+    - <ast.Attribute object at 0x751346ad8f50>
     docstring: Create 3D domain for testing.
     file: ''
     is_async: false
@@ -52090,7 +52484,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d0208d0>
+    - <ast.Attribute object at 0x7513468b6190>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -52101,7 +52495,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d0214d0>
+    - <ast.Attribute object at 0x7513468b7310>
     docstring: Basic parameters for testing.
     file: ''
     is_async: false
@@ -52114,7 +52508,7 @@ functions:
     - domain_7d
     - parameters_basic
     decorators:
-    - <ast.Attribute object at 0x7edb5d021f10>
+    - <ast.Attribute object at 0x7513468b5610>
     docstring: Create FFT solver for testing.
     file: ''
     is_async: false
@@ -52195,7 +52589,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d176fd0>
+    - <ast.Attribute object at 0x751346a1de90>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -52206,7 +52600,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1cee90>
+    - <ast.Attribute object at 0x751346a74110>
     docstring: Basic parameters for testing.
     file: ''
     is_async: false
@@ -52219,7 +52613,7 @@ functions:
     - domain_7d
     - parameters_basic
     decorators:
-    - <ast.Attribute object at 0x7edb5d1ce890>
+    - <ast.Attribute object at 0x751346a771d0>
     docstring: Create FFT solver for testing.
     file: ''
     is_async: false
@@ -52361,7 +52755,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d176710>
+    - <ast.Attribute object at 0x7513469fde50>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -52372,7 +52766,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3e0f10>
+    - <ast.Attribute object at 0x7513469ff3d0>
     docstring: Basic parameters for testing.
     file: ''
     is_async: false
@@ -52385,7 +52779,7 @@ functions:
     - domain_7d
     - parameters_basic
     decorators:
-    - <ast.Attribute object at 0x7edb5d3e3a90>
+    - <ast.Attribute object at 0x7513469ff8d0>
     docstring: Create FFT solver for testing.
     file: ''
     is_async: false
@@ -52464,7 +52858,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d031790>
+    - <ast.Attribute object at 0x7513468d67d0>
     docstring: Create BVP constants for testing.
     file: ''
     is_async: false
@@ -52475,7 +52869,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d032850>
+    - <ast.Attribute object at 0x7513468d6710>
     docstring: Create 7D domain for constants testing.
     file: ''
     is_async: false
@@ -52488,7 +52882,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x7edb5d0312d0>
+    - <ast.Attribute object at 0x7513468d6010>
     docstring: Create frequency-dependent properties for testing.
     file: ''
     is_async: false
@@ -52598,7 +52992,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d146dd0>
+    - <ast.Attribute object at 0x751346cff090>
     docstring: Create BVP constants for testing.
     file: ''
     is_async: false
@@ -52609,7 +53003,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1e8f10>
+    - <ast.Attribute object at 0x751346a93b50>
     docstring: Create 7D domain for constants testing.
     file: ''
     is_async: false
@@ -52622,7 +53016,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x7edb5d10fdd0>
+    - <ast.Attribute object at 0x751346a35bd0>
     docstring: Create frequency-dependent properties for testing.
     file: ''
     is_async: false
@@ -52733,7 +53127,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d003090>
+    - <ast.Attribute object at 0x7513468cec90>
     docstring: Create BVP constants for testing.
     file: ''
     is_async: false
@@ -52744,7 +53138,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d0009d0>
+    - <ast.Attribute object at 0x7513468cf610>
     docstring: Create 7D domain for constants testing.
     file: ''
     is_async: false
@@ -52756,7 +53150,7 @@ functions:
     - self
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x7edb5d003450>
+    - <ast.Attribute object at 0x7513468ce710>
     docstring: Create nonlinear coefficients for testing.
     file: ''
     is_async: false
@@ -52867,7 +53261,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3e0190>
+    - <ast.Attribute object at 0x751346a5a950>
     docstring: Create BVP constants for testing.
     file: ''
     is_async: false
@@ -52878,7 +53272,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d177fd0>
+    - <ast.Attribute object at 0x751346a58a50>
     docstring: Create 7D domain for constants testing.
     file: ''
     is_async: false
@@ -52890,7 +53284,7 @@ functions:
     - self
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x7edb5d1cc510>
+    - <ast.Attribute object at 0x7513469fdb50>
     docstring: Create nonlinear coefficients for testing.
     file: ''
     is_async: false
@@ -53128,7 +53522,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d146c50>
+    - <ast.Attribute object at 0x7513469f4b50>
     docstring: Create BVP constants for physical testing.
     file: ''
     is_async: false
@@ -53139,7 +53533,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1474d0>
+    - <ast.Attribute object at 0x7513469f42d0>
     docstring: Create 7D domain for physical testing.
     file: ''
     is_async: false
@@ -53152,7 +53546,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x7edb5d144350>
+    - <ast.Attribute object at 0x7513469f5250>
     docstring: Create envelope solver for physical testing.
     file: ''
     is_async: false
@@ -53165,7 +53559,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x7edb5d144a50>
+    - <ast.Attribute object at 0x7513469f5950>
     docstring: Create quench detector for physical testing.
     file: ''
     is_async: false
@@ -53376,7 +53770,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3ceb10>
+    - <ast.Attribute object at 0x751346b25010>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -53387,7 +53781,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3cee50>
+    - <ast.Attribute object at 0x751346b26750>
     docstring: Basic parameters for testing.
     file: ''
     is_async: false
@@ -53533,7 +53927,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d19b610>
+    - <ast.Attribute object at 0x751346a7fe90>
     docstring: Create 7D domain for basic testing.
     file: ''
     is_async: false
@@ -53640,7 +54034,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1d3e10>
+    - <ast.Attribute object at 0x751346a759d0>
     docstring: Create test configuration.
     file: ''
     is_async: false
@@ -53651,7 +54045,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1d3cd0>
+    - <ast.Attribute object at 0x751346a76390>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -53782,7 +54176,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d11dfd0>
+    - <ast.Attribute object at 0x751346a59510>
     docstring: Create test configuration.
     file: ''
     is_async: false
@@ -53794,7 +54188,7 @@ functions:
     - self
     - config
     decorators:
-    - <ast.Attribute object at 0x7edb5d17da10>
+    - <ast.Attribute object at 0x751346a16050>
     docstring: Create BVPConstantsAdvanced instance.
     file: ''
     is_async: false
@@ -53806,7 +54200,7 @@ functions:
     - self
     - config
     decorators:
-    - <ast.Attribute object at 0x7edb5d1d9150>
+    - <ast.Attribute object at 0x751346a92950>
     docstring: Create BVPConstantsBase instance.
     file: ''
     is_async: false
@@ -53818,7 +54212,7 @@ functions:
     - self
     - mock_constants
     decorators:
-    - <ast.Attribute object at 0x7edb5d1cf310>
+    - <ast.Attribute object at 0x7513469fc5d0>
     docstring: Create FrequencyDependentProperties instance.
     file: ''
     is_async: false
@@ -53829,7 +54223,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1df590>
+    - <ast.Attribute object at 0x751346aa2510>
     docstring: Create mock constants.
     file: ''
     is_async: false
@@ -53841,7 +54235,7 @@ functions:
     - self
     - mock_constants
     decorators:
-    - <ast.Attribute object at 0x7edb5d00ec90>
+    - <ast.Attribute object at 0x7513468c3d10>
     docstring: Create NonlinearCoefficients instance.
     file: ''
     is_async: false
@@ -53853,7 +54247,7 @@ functions:
     - self
     - mock_constants
     decorators:
-    - <ast.Attribute object at 0x7edb5d1ded10>
+    - <ast.Attribute object at 0x751346aa1c90>
     docstring: Create RenormalizedCoefficients instance.
     file: ''
     is_async: false
@@ -54380,7 +54774,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3dd6d0>
+    - <ast.Attribute object at 0x751346aeb250>
     docstring: Create test configuration.
     file: ''
     is_async: false
@@ -54391,7 +54785,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d2406d0>
+    - <ast.Attribute object at 0x751346aeb6d0>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -54534,7 +54928,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1cc550>
+    - <ast.Attribute object at 0x751346a44a90>
     docstring: Create BVP constants for testing.
     file: ''
     is_async: false
@@ -54545,7 +54939,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1cfc10>
+    - <ast.Attribute object at 0x751346a46310>
     docstring: Create 7D domain for constants testing.
     file: ''
     is_async: false
@@ -54693,7 +55087,7 @@ functions:
     - self
     - config
     decorators:
-    - <ast.Attribute object at 0x7edb5d17e4d0>
+    - <ast.Attribute object at 0x7513469f5e50>
     docstring: Create BVP constants.
     file: ''
     is_async: false
@@ -54704,7 +55098,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d17eed0>
+    - <ast.Attribute object at 0x7513469f4310>
     docstring: Create test configuration.
     file: ''
     is_async: false
@@ -54715,7 +55109,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d17dc50>
+    - <ast.Attribute object at 0x7513469f6c50>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -54871,7 +55265,7 @@ functions:
     - self
     - config
     decorators:
-    - <ast.Attribute object at 0x7edb5d38ae90>
+    - <ast.Attribute object at 0x751346ce6f10>
     docstring: Create BVP constants.
     file: ''
     is_async: false
@@ -54882,7 +55276,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d38b710>
+    - <ast.Attribute object at 0x751346ce7190>
     docstring: Create test configuration.
     file: ''
     is_async: false
@@ -54893,7 +55287,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d389290>
+    - <ast.Attribute object at 0x751346ce7a10>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -55177,7 +55571,7 @@ functions:
     - self
     - config
     decorators:
-    - <ast.Attribute object at 0x7edb5d38b4d0>
+    - <ast.Attribute object at 0x751346cfdc50>
     docstring: Create BVP constants.
     file: ''
     is_async: false
@@ -55188,7 +55582,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d38aed0>
+    - <ast.Attribute object at 0x751346cfead0>
     docstring: Create test configuration.
     file: ''
     is_async: false
@@ -55199,7 +55593,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d38b850>
+    - <ast.Attribute object at 0x751346cfe9d0>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -55353,7 +55747,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3887d0>
+    - <ast.Attribute object at 0x751346a35910>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -55364,7 +55758,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d38b910>
+    - <ast.Attribute object at 0x751346ad41d0>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -55393,7 +55787,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d226650>
+    - <ast.Attribute object at 0x751346af7310>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -55404,7 +55798,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d11f050>
+    - <ast.Attribute object at 0x7513469f4190>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -55415,7 +55809,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d11ff90>
+    - <ast.Attribute object at 0x751346cb9950>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -55444,7 +55838,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d17da50>
+    - <ast.Attribute object at 0x751346a1e310>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -55455,7 +55849,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1cd390>
+    - <ast.Attribute object at 0x7513469fd8d0>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -55466,7 +55860,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1cf2d0>
+    - <ast.Attribute object at 0x7513469fea90>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -55496,7 +55890,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d1d1910>
+    - <ast.Attribute object at 0x751346b8bd50>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -55507,7 +55901,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1017d0>
+    - <ast.Attribute object at 0x751346c65c10>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -55518,7 +55912,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3cebd0>
+    - <ast.Attribute object at 0x751346b27350>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -55546,7 +55940,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d3b96d0>
+    - <ast.Attribute object at 0x751346c7f850>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -55557,7 +55951,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d23a890>
+    - <ast.Attribute object at 0x7513469f68d0>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -55570,7 +55964,7 @@ functions:
     - domain_7d
     - parameters_basic
     decorators:
-    - <ast.Attribute object at 0x7edb5d239050>
+    - <ast.Attribute object at 0x7513469f77d0>
     docstring: Create Crank-Nicolson integrator for testing.
     file: ''
     is_async: false
@@ -55581,7 +55975,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d239610>
+    - <ast.Attribute object at 0x7513469f40d0>
     docstring: Basic parameters for testing.
     file: ''
     is_async: false
@@ -55723,7 +56117,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d239b10>
+    - <ast.Attribute object at 0x7513469f7650>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -55734,7 +56128,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d273250>
+    - <ast.Attribute object at 0x751346ad7b90>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -55746,7 +56140,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x7edb5d238e10>
+    - <ast.Attribute object at 0x751346c67290>
     docstring: Create field for testing.
     file: ''
     is_async: false
@@ -55757,7 +56151,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d185f50>
+    - <ast.Attribute object at 0x751346a36dd0>
     docstring: Create parameters for testing.
     file: ''
     is_async: false
@@ -56642,7 +57036,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1c0b10>
+    - <ast.Attribute object at 0x751346a46150>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -56654,7 +57048,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x7edb5d1c13d0>
+    - <ast.Attribute object at 0x751346a45950>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -56799,7 +57193,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x7edb5d3e0090>
+    - <ast.Attribute object at 0x751346ad6610>
     docstring: Create FFT butterfly computer for testing.
     file: ''
     is_async: false
@@ -56810,7 +57204,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3e0d90>
+    - <ast.Attribute object at 0x751346ad5090>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -56822,7 +57216,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x7edb5d3e0810>
+    - <ast.Attribute object at 0x751346ad4b90>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -57032,7 +57426,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1dcf90>
+    - <ast.Attribute object at 0x751346aa0e50>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -57263,7 +57657,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d388d50>
+    - <ast.Attribute object at 0x751346a74910>
     docstring: Create 7D domain for spectral testing.
     file: ''
     is_async: false
@@ -57275,7 +57669,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d389ed0>
+    - <ast.Attribute object at 0x751346a75390>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -57287,7 +57681,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x7edb5d38abd0>
+    - <ast.Attribute object at 0x751346a74ed0>
     docstring: Create spectral operations for testing.
     file: ''
     is_async: false
@@ -57401,7 +57795,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d20b8d0>
+    - <ast.Attribute object at 0x751346a24790>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -57413,7 +57807,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x7edb5d2f4910>
+    - <ast.Attribute object at 0x751346a246d0>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -57425,7 +57819,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x7edb5d2f6810>
+    - <ast.Attribute object at 0x751346a24250>
     docstring: Create FFT plan manager for testing.
     file: ''
     is_async: false
@@ -57668,7 +58062,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1d9690>
+    - <ast.Attribute object at 0x7513468c3dd0>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -57680,7 +58074,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x7edb5d1da0d0>
+    - <ast.Attribute object at 0x7513468c2c50>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -57957,7 +58351,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x7edb5d1db5d0>
+    - <ast.Attribute object at 0x7513468c3110>
     docstring: Create FFT twiddle computer for testing.
     file: ''
     is_async: false
@@ -58054,7 +58448,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3be850>
+    - <ast.Attribute object at 0x751346a7db10>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -58066,7 +58460,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d19b790>
+    - <ast.Attribute object at 0x751346a7d610>
     docstring: Create memory kernel for testing.
     file: ''
     is_async: false
@@ -58676,7 +59070,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1af550>
+    - <ast.Attribute object at 0x751346a5f550>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -58951,7 +59345,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1b9650>
+    - <ast.Attribute object at 0x751346a5f890>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -58962,7 +59356,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d150410>
+    - <ast.Attribute object at 0x751346a5e310>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -58974,7 +59368,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d199390>
+    - <ast.Attribute object at 0x7513468c2010>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -59001,7 +59395,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d2f5810>
+    - <ast.Attribute object at 0x751346a24750>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -59013,7 +59407,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d2f5010>
+    - <ast.Attribute object at 0x751346a27c90>
     docstring: Create quench detector for testing.
     file: ''
     is_async: false
@@ -59157,7 +59551,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d238c50>
+    - <ast.Attribute object at 0x751346ba7c90>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -59168,7 +59562,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d23a450>
+    - <ast.Attribute object at 0x751346c4ccd0>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -59180,7 +59574,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d3bd6d0>
+    - <ast.Attribute object at 0x751346cb34d0>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -59208,7 +59602,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1ac4d0>
+    - <ast.Attribute object at 0x7513469b4b10>
     docstring: Create BVP constants for testing.
     file: ''
     is_async: false
@@ -59219,7 +59613,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1ac310>
+    - <ast.Attribute object at 0x7513469f5e90>
     docstring: Create 7D domain for constants testing.
     file: ''
     is_async: false
@@ -59231,7 +59625,7 @@ functions:
     - self
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x7edb5d2e1190>
+    - <ast.Attribute object at 0x7513469b7a90>
     docstring: Create renormalized coefficients for testing.
     file: ''
     is_async: false
@@ -59496,7 +59890,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3b85d0>
+    - <ast.Attribute object at 0x7513469c2bd0>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -59507,7 +59901,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3bb650>
+    - <ast.Attribute object at 0x7513469c2c90>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -59519,7 +59913,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d356cd0>
+    - <ast.Attribute object at 0x751346c4d690>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -59547,7 +59941,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d187550>
+    - <ast.Attribute object at 0x751346a36c90>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -59558,7 +59952,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1870d0>
+    - <ast.Attribute object at 0x751346a36790>
     docstring: Create parameters for testing.
     file: ''
     is_async: false
@@ -59983,7 +60377,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d2f4fd0>
+    - <ast.Attribute object at 0x7513469f0d90>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -60291,7 +60685,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3bec10>
+    - <ast.Attribute object at 0x7513469b4c50>
     docstring: Create 7D domain for spectral testing.
     file: ''
     is_async: false
@@ -60303,7 +60697,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d3a37d0>
+    - <ast.Attribute object at 0x7513469b6f50>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -60315,7 +60709,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x7edb5d2e3e50>
+    - <ast.Attribute object at 0x7513469b44d0>
     docstring: Create spectral operations for testing.
     file: ''
     is_async: false
@@ -60520,7 +60914,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d19b610>
+    - <ast.Attribute object at 0x751346a45d10>
     docstring: Create 7D domain for spectral testing.
     file: ''
     is_async: false
@@ -60532,7 +60926,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d19b290>
+    - <ast.Attribute object at 0x751346a45990>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -60544,7 +60938,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x7edb5d19af90>
+    - <ast.Attribute object at 0x751346a45690>
     docstring: Create spectral operations for testing.
     file: ''
     is_async: false
@@ -60702,7 +61096,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1bab50>
+    - <ast.Attribute object at 0x751346a5f810>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -60714,7 +61108,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x7edb5d1bacd0>
+    - <ast.Attribute object at 0x751346a5fa10>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -60726,7 +61120,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x7edb5d1b9a90>
+    - <ast.Attribute object at 0x751346a5f190>
     docstring: Create spectral derivatives for testing.
     file: ''
     is_async: false
@@ -60881,7 +61275,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d377bd0>
+    - <ast.Attribute object at 0x751346ce5810>
     docstring: Create 7D domain for spectral testing.
     file: ''
     is_async: false
@@ -60893,7 +61287,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d377090>
+    - <ast.Attribute object at 0x751346ce7890>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -60905,7 +61299,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x7edb5d152c50>
+    - <ast.Attribute object at 0x751346ce61d0>
     docstring: Create spectral derivatives for testing.
     file: ''
     is_async: false
@@ -61084,7 +61478,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d151510>
+    - <ast.Attribute object at 0x751346a47590>
     docstring: Create 7D domain for spectral testing.
     file: ''
     is_async: false
@@ -61096,7 +61490,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d388750>
+    - <ast.Attribute object at 0x751346a45850>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -61108,7 +61502,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x7edb5d38a7d0>
+    - <ast.Attribute object at 0x751346a92990>
     docstring: Create spectral operations for testing.
     file: ''
     is_async: false
@@ -61269,7 +61663,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d225310>
+    - <ast.Attribute object at 0x751346cb8790>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -61281,7 +61675,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x7edb5d2270d0>
+    - <ast.Attribute object at 0x751346cba950>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -61293,7 +61687,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x7edb5d226b50>
+    - <ast.Attribute object at 0x751346cba110>
     docstring: Create spectral filtering for testing.
     file: ''
     is_async: false
@@ -61459,7 +61853,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d21fb50>
+    - <ast.Attribute object at 0x751346a24a90>
     docstring: Create 7D domain for spectral testing.
     file: ''
     is_async: false
@@ -61471,7 +61865,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d21c2d0>
+    - <ast.Attribute object at 0x751346a24e10>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -61483,7 +61877,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d258b10>
+    - <ast.Attribute object at 0x751346a27d50>
     docstring: Create fractional Laplacian for testing.
     file: ''
     is_async: false
@@ -61495,7 +61889,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x7edb5d25a590>
+    - <ast.Attribute object at 0x751346a27c90>
     docstring: Create spectral operations for testing.
     file: ''
     is_async: false
@@ -61686,7 +62080,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d246950>
+    - <ast.Attribute object at 0x751346c75c50>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -61698,7 +62092,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x7edb5d357c50>
+    - <ast.Attribute object at 0x751346b9c450>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -61710,7 +62104,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x7edb5d354fd0>
+    - <ast.Attribute object at 0x751346b9c210>
     docstring: Create spectral operations for testing.
     file: ''
     is_async: false
@@ -62015,7 +62409,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d2eeb90>
+    - <ast.Attribute object at 0x751346b1a410>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -62026,7 +62420,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d246f10>
+    - <ast.Attribute object at 0x751346b1b610>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -62038,7 +62432,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d10e390>
+    - <ast.Attribute object at 0x7513469b5850>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -62066,7 +62460,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d356290>
+    - <ast.Attribute object at 0x751346cd8a90>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -62077,7 +62471,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3bde50>
+    - <ast.Attribute object at 0x7513469e40d0>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -62089,7 +62483,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d103fd0>
+    - <ast.Attribute object at 0x7513469c1dd0>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -62116,7 +62510,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1c3350>
+    - <ast.Attribute object at 0x7513469f66d0>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -62127,7 +62521,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d1c34d0>
+    - <ast.Attribute object at 0x7513469f7790>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -62139,7 +62533,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d1cd210>
+    - <ast.Attribute object at 0x751346a46810>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -62167,7 +62561,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d01b550>
+    - <ast.Attribute object at 0x751346a5c450>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -62178,7 +62572,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d01afd0>
+    - <ast.Attribute object at 0x751346a5c350>
     docstring: Basic parameters for testing.
     file: ''
     is_async: false
@@ -62309,7 +62703,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d0004d0>
+    - <ast.Attribute object at 0x7513468d7550>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -62320,7 +62714,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d003c10>
+    - <ast.Attribute object at 0x7513468d6fd0>
     docstring: Basic parameters for testing.
     file: ''
     is_async: false
@@ -64144,7 +64538,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3e21d0>
+    - <ast.Attribute object at 0x751346ccf490>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -64155,7 +64549,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3e2d50>
+    - <ast.Attribute object at 0x751346ccff50>
     docstring: Create test parameters.
     file: ''
     is_async: false
@@ -64166,7 +64560,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d2ee710>
+    - <ast.Attribute object at 0x751346c76ad0>
     docstring: Create projection parameters.
     file: ''
     is_async: false
@@ -64255,7 +64649,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x7edb5d38ae10>
+    - <ast.Attribute object at 0x751346aed4d0>
     docstring: Create test field.
     file: ''
     is_async: false
@@ -64399,7 +64793,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d347b90>
+    - <ast.Attribute object at 0x751346b32b10>
     docstring: Create 3D domain for testing.
     file: ''
     is_async: false
@@ -64410,7 +64804,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d347850>
+    - <ast.Attribute object at 0x751346b30e90>
     docstring: Physics parameters with β=0.5 (fractional case).
     file: ''
     is_async: false
@@ -64421,7 +64815,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d2ef6d0>
+    - <ast.Attribute object at 0x751346ae6350>
     docstring: Physics parameters with β=1.0 (classical case).
     file: ''
     is_async: false
@@ -64527,7 +64921,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3ec450>
+    - <ast.Attribute object at 0x751346c9b6d0>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -64538,7 +64932,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3ec810>
+    - <ast.Attribute object at 0x751346c9b650>
     docstring: Create realistic physics parameters.
     file: ''
     is_async: false
@@ -65179,7 +65573,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d135010>
+    - <ast.Attribute object at 0x7513469f3310>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -65190,7 +65584,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d134cd0>
+    - <ast.Attribute object at 0x7513469f2550>
     docstring: Create realistic physics parameters.
     file: ''
     is_async: false
@@ -65202,7 +65596,7 @@ functions:
     - self
     - domain_3d
     decorators:
-    - <ast.Attribute object at 0x7edb5d23a2d0>
+    - <ast.Attribute object at 0x751346b27490>
     docstring: "Create simple U(1)^3 phase field for testing.\n\nPhysical Meaning:\n\
       \    Creates a simplified U(1)^3 phase field configuration that\n    is easier\
       \ to analyze and has known theoretical properties."
@@ -65334,7 +65728,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3bf2d0>
+    - <ast.Attribute object at 0x751346cb29d0>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -65345,7 +65739,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3be4d0>
+    - <ast.Attribute object at 0x751346cb2710>
     docstring: Create realistic physics parameters.
     file: ''
     is_async: false
@@ -65621,7 +66015,7 @@ functions:
     - self
     - domain_3d
     decorators:
-    - <ast.Attribute object at 0x7edb5d3e0650>
+    - <ast.Attribute object at 0x751346c640d0>
     docstring: "Create U(1)^3 phase field configuration.\n\nPhysical Meaning:\n  \
       \  Creates a 7D phase field configuration Θ(x,φ) ∈ T^3_φ with\n    controlled\
       \ winding over φ-coordinates. This represents a B=1\n    soliton with U(1)^3\
@@ -65647,7 +66041,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3eef10>
+    - <ast.Attribute object at 0x7513469e4290>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -65658,7 +66052,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d375110>
+    - <ast.Attribute object at 0x751346cffc90>
     docstring: Create realistic physics parameters.
     file: ''
     is_async: false
@@ -65800,7 +66194,7 @@ functions:
     - self
     - domain_3d
     decorators:
-    - <ast.Attribute object at 0x7edb5d226cd0>
+    - <ast.Attribute object at 0x751346b9fe90>
     docstring: "Create trivial field configuration.\n\nPhysical Meaning:\n    Creates\
       \ a trivial field configuration U(x) = I everywhere,\n    which should have\
       \ topological charge B=0."
@@ -65814,7 +66208,7 @@ functions:
     - self
     - domain_3d
     decorators:
-    - <ast.Attribute object at 0x7edb5d11cf50>
+    - <ast.Attribute object at 0x7513469c9150>
     docstring: "Create B=1 U(1)^3 phase field configuration.\n\nPhysical Meaning:\n\
       \    Creates a U(1)^3 phase field configuration with topological\n    charge\
       \ B=1, representing a single baryon."
@@ -65827,7 +66221,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d103590>
+    - <ast.Attribute object at 0x751346c83590>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -65838,7 +66232,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d101a10>
+    - <ast.Attribute object at 0x751346c81a10>
     docstring: Create test excitation parameters.
     file: ''
     is_async: false
@@ -65851,7 +66245,7 @@ functions:
     - system
     - excitation_params
     decorators:
-    - <ast.Attribute object at 0x7edb5d101310>
+    - <ast.Attribute object at 0x751346c80650>
     docstring: Create test excitations.
     file: ''
     is_async: false
@@ -65862,7 +66256,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d102b90>
+    - <ast.Attribute object at 0x751346c82b90>
     docstring: Create test particles.
     file: ''
     is_async: false
@@ -65875,7 +66269,7 @@ functions:
     - domain
     - particles
     decorators:
-    - <ast.Attribute object at 0x7edb5d102390>
+    - <ast.Attribute object at 0x751346c82390>
     docstring: Create test system.
     file: ''
     is_async: false
@@ -66145,7 +66539,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d11b610>
+    - <ast.Attribute object at 0x7513469c3650>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -66156,7 +66550,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d11ac50>
+    - <ast.Attribute object at 0x7513469c2b90>
     docstring: Create test particles.
     file: ''
     is_async: false
@@ -66169,7 +66563,7 @@ functions:
     - domain
     - particles
     decorators:
-    - <ast.Attribute object at 0x7edb5d11a450>
+    - <ast.Attribute object at 0x7513469c25d0>
     docstring: Create test system.
     file: ''
     is_async: false
@@ -66465,7 +66859,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d10f590>
+    - <ast.Attribute object at 0x7513469b4610>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -66478,7 +66872,7 @@ functions:
     - system
     - nonlinear_params
     decorators:
-    - <ast.Attribute object at 0x7edb5d10d8d0>
+    - <ast.Attribute object at 0x7513469b6650>
     docstring: Create test nonlinear effects.
     file: ''
     is_async: false
@@ -66489,7 +66883,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d10d1d0>
+    - <ast.Attribute object at 0x7513469b6e90>
     docstring: Create test nonlinear parameters.
     file: ''
     is_async: false
@@ -66500,7 +66894,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d10c150>
+    - <ast.Attribute object at 0x7513469b5010>
     docstring: Create test particles.
     file: ''
     is_async: false
@@ -66513,7 +66907,7 @@ functions:
     - domain
     - particles
     decorators:
-    - <ast.Attribute object at 0x7edb5d10c950>
+    - <ast.Attribute object at 0x7513469b5810>
     docstring: Create test system.
     file: ''
     is_async: false
@@ -66820,7 +67214,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3e07d0>
+    - <ast.Attribute object at 0x751346b33550>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -66831,7 +67225,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3e2f10>
+    - <ast.Attribute object at 0x751346c55c50>
     docstring: Create test particles.
     file: ''
     is_async: false
@@ -66844,7 +67238,7 @@ functions:
     - domain
     - particles
     decorators:
-    - <ast.Attribute object at 0x7edb5d3e3a90>
+    - <ast.Attribute object at 0x751346cd9290>
     docstring: Create test system.
     file: ''
     is_async: false
@@ -67120,12 +67514,120 @@ functions:
     - self
     - system
     decorators:
-    - <ast.Attribute object at 0x7edb5d3e2810>
+    - <ast.Attribute object at 0x751346cd9910>
     docstring: Create test transitions.
     file: ''
     is_async: false
     line: 0
     name: transitions
+    returns: null
+  ./tests/unit/test_level_g/test_astrophysics_compliance.py::test_7d_bvp_theory_compliance:
+    args:
+    - self
+    decorators: []
+    docstring: "Verify that astrophysics.py follows 7D BVP theory principles.\n\n\
+      Physical Meaning:\n    Checks that the implementation follows 7D BVP theory\
+      \ where\n    astrophysical objects are phase field configurations."
+    file: ''
+    is_async: false
+    line: 0
+    name: test_7d_bvp_theory_compliance
+    returns: null
+  ./tests/unit/test_level_g/test_astrophysics_compliance.py::test_astrophysical_object_models:
+    args:
+    - self
+    decorators: []
+    docstring: "Verify that astrophysical object models are properly implemented.\n\
+      \nPhysical Meaning:\n    Checks that different types of astrophysical objects\n\
+      \    (stars, galaxies, black holes) are properly modeled."
+    file: ''
+    is_async: false
+    line: 0
+    name: test_astrophysical_object_models
+    returns: null
+  ./tests/unit/test_level_g/test_astrophysics_compliance.py::test_full_computations_implementation:
+    args:
+    - self
+    decorators: []
+    docstring: "Verify that astrophysics.py uses full computations.\n\nPhysical Meaning:\n\
+      \    Checks that astrophysical object models use complete\n    7D phase field\
+      \ computations with proper mathematical foundations."
+    file: ''
+    is_async: false
+    line: 0
+    name: test_full_computations_implementation
+    returns: null
+  ./tests/unit/test_level_g/test_astrophysics_compliance.py::test_no_classical_approximations:
+    args:
+    - self
+    decorators: []
+    docstring: "Verify that astrophysics.py doesn't use classical approximations.\n\
+      \nPhysical Meaning:\n    Checks that the implementation doesn't fall back to\n\
+      \    classical physics approximations or simplified models."
+    file: ''
+    is_async: false
+    line: 0
+    name: test_no_classical_approximations
+    returns: null
+  ./tests/unit/test_level_g/test_astrophysics_compliance.py::test_no_classical_mass_patterns:
+    args:
+    - self
+    decorators: []
+    docstring: "Verify that astrophysics.py doesn't use classical mass patterns.\n\
+      \nPhysical Meaning:\n    Checks that mass is computed from field complexity\
+      \ and energy,\n    not from classical mass terms or parameters."
+    file: ''
+    is_async: false
+    line: 0
+    name: test_no_classical_mass_patterns
+    returns: null
+  ./tests/unit/test_level_g/test_astrophysics_compliance.py::test_no_exponential_damping:
+    args:
+    - self
+    decorators: []
+    docstring: "Verify that astrophysics.py doesn't use exponential damping.\n\nPhysical\
+      \ Meaning:\n    Checks that allowed exponentials (Gaussian sources, phase modulation)\n\
+      \    are used correctly without introducing damping mechanisms."
+    file: ''
+    is_async: false
+    line: 0
+    name: test_no_exponential_damping
+    returns: null
+  ./tests/unit/test_level_g/test_astrophysics_compliance.py::test_no_placeholders_or_unimplemented:
+    args:
+    - self
+    decorators: []
+    docstring: "Verify that astrophysics.py has no placeholders or unimplemented methods.\n\
+      \nPhysical Meaning:\n    Checks that all methods are fully implemented without\n\
+      \    placeholder implementations or stub methods."
+    file: ''
+    is_async: false
+    line: 0
+    name: test_no_placeholders_or_unimplemented
+    returns: null
+  ./tests/unit/test_level_g/test_astrophysics_compliance.py::test_phase_field_analysis:
+    args:
+    - self
+    decorators: []
+    docstring: "Verify that phase field analysis is properly implemented.\n\nPhysical\
+      \ Meaning:\n    Checks that phase field properties are analyzed\n    using proper\
+      \ 7D BVP theory methods."
+    file: ''
+    is_async: false
+    line: 0
+    name: test_phase_field_analysis
+    returns: null
+  ./tests/unit/test_level_g/test_astrophysics_compliance.py::test_step_resonator_model_usage:
+    args:
+    - self
+    decorators: []
+    docstring: "Verify that step resonator model is used instead of exponential damping.\n\
+      \nPhysical Meaning:\n    Checks that the implementation uses step resonator\
+      \ transmission\n    model instead of classical exponential damping."
+    file: ''
+    is_async: false
+    line: 0
+    name: test_step_resonator_model_usage
     returns: null
   ./tests/unit/test_level_g/test_envelope_effective_metric.py::test_effective_metric_basic_isotropic:
     args: []
@@ -67160,7 +67662,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d367410>
+    - <ast.Attribute object at 0x751346c5ca10>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -67171,7 +67673,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d381ed0>
+    - <ast.Attribute object at 0x751346c5c450>
     docstring: Create realistic gravity parameters.
     file: ''
     is_async: false
@@ -67183,7 +67685,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d3bb590>
+    - <ast.Attribute object at 0x751346cb4e10>
     docstring: Create mock system for testing.
     file: ''
     is_async: false
@@ -67306,7 +67808,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d21cd50>
+    - <ast.Attribute object at 0x751346c55390>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -67317,7 +67819,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3a3d50>
+    - <ast.Attribute object at 0x751346ae7250>
     docstring: Create VBP envelope parameters.
     file: ''
     is_async: false
@@ -67329,7 +67831,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d25a990>
+    - <ast.Attribute object at 0x751346c5db10>
     docstring: Create 7D envelope solution for testing.
     file: ''
     is_async: false
@@ -67340,7 +67842,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d2ed1d0>
+    - <ast.Attribute object at 0x751346b01b10>
     docstring: Create gravitational parameters.
     file: ''
     is_async: false
@@ -67352,7 +67854,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d271310>
+    - <ast.Attribute object at 0x751346cb9fd0>
     docstring: Create mock system with phase field.
     file: ''
     is_async: false
@@ -67364,7 +67866,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x7edb5d347950>
+    - <ast.Attribute object at 0x751346c9a710>
     docstring: Create 7D phase field for testing.
     file: ''
     is_async: false
@@ -67555,7 +68057,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d356b90>
+    - <ast.Attribute object at 0x751346b9ef10>
     docstring: Create gravitational wave parameters.
     file: ''
     is_async: false
@@ -68087,7 +68589,7 @@ functions:
     - self
     - domain_3d
     decorators:
-    - <ast.Attribute object at 0x7edb5d2f5250>
+    - <ast.Attribute object at 0x751346b03410>
     docstring: Create BVP core for testing.
     file: ''
     is_async: false
@@ -68109,7 +68611,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d2f6490>
+    - <ast.Attribute object at 0x751346b01350>
     docstring: Create 3D domain for testing.
     file: ''
     is_async: false
@@ -68121,7 +68623,7 @@ functions:
     - self
     - bvp_core
     decorators:
-    - <ast.Attribute object at 0x7edb5d2f55d0>
+    - <ast.Attribute object at 0x751346b00890>
     docstring: Create power law core for testing.
     file: ''
     is_async: false
@@ -68161,7 +68663,7 @@ functions:
     - self
     - domain_3d
     decorators:
-    - <ast.Attribute object at 0x7edb5d3b9990>
+    - <ast.Attribute object at 0x751346b1b4d0>
     docstring: Create test 3D envelope field.
     file: ''
     is_async: false
@@ -68270,7 +68772,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d3e32d0>
+    - <ast.Attribute object at 0x751346cb0c50>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -68281,7 +68783,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d2585d0>
+    - <ast.Attribute object at 0x751346cb0290>
     docstring: Create parameters for testing.
     file: ''
     is_async: false
@@ -68319,7 +68821,7 @@ functions:
     - domain
     - parameters
     decorators:
-    - <ast.Attribute object at 0x7edb5d25bd90>
+    - <ast.Attribute object at 0x751346cb2d50>
     docstring: Create concrete solver for testing.
     file: ''
     is_async: false
@@ -68564,7 +69066,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d2f4090>
+    - <ast.Attribute object at 0x751346cb9dd0>
     docstring: Create config for testing.
     file: ''
     is_async: false
@@ -68575,7 +69077,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d2f5a10>
+    - <ast.Attribute object at 0x751346cbbe50>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -68598,7 +69100,7 @@ functions:
     - domain
     - config
     decorators:
-    - <ast.Attribute object at 0x7edb5d271dd0>
+    - <ast.Attribute object at 0x751346b1a5d0>
     docstring: Create time integrator for testing.
     file: ''
     is_async: false
@@ -68612,7 +69114,7 @@ functions:
     - config
     - mock_bvp_core
     decorators:
-    - <ast.Attribute object at 0x7edb5d2720d0>
+    - <ast.Attribute object at 0x751346ae9390>
     docstring: Create time integrator with BVP core for testing.
     file: ''
     is_async: false
@@ -68623,7 +69125,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x7edb5d271410>
+    - <ast.Attribute object at 0x751346b1a390>
     docstring: Create mock BVP core.
     file: ''
     is_async: false
@@ -81231,6 +81733,21 @@ imports:
     line: 0
     module: ''
     type: import
+  ./tests/unit/test_level_g/test_astrophysics_compliance.py::Path:
+    file: ''
+    line: 0
+    module: pathlib
+    type: from_import
+  ./tests/unit/test_level_g/test_astrophysics_compliance.py::numpy:
+    file: ''
+    line: 0
+    module: ''
+    type: import
+  ./tests/unit/test_level_g/test_astrophysics_compliance.py::pytest:
+    file: ''
+    line: 0
+    module: ''
+    type: import
   ./tests/unit/test_level_g/test_envelope_effective_metric.py::EnvelopeEffectiveMetric:
     file: ''
     line: 0
@@ -81447,7 +81964,7 @@ imports:
     module: ''
     type: import
 summary:
-  total_classes: 495
-  total_files: 530
-  total_functions: 4228
-  total_imports: 2503
+  total_classes: 496
+  total_files: 531
+  total_functions: 4260
+  total_imports: 2506

@@ -86,30 +86,119 @@ class EnvelopeEffectiveMetric:
 
     def compute_scale_factor(self, t: float) -> float:
         """
-        Compute scale factor for cosmological evolution.
+        Compute scale factor for cosmological evolution using VBP envelope dynamics.
         
         Physical Meaning:
-            Computes a simple scale factor for cosmological evolution
-            based on the envelope effective metric parameters.
+            Computes a scale factor for cosmological evolution based on
+            VBP envelope dynamics rather than classical spacetime expansion.
+            Uses power law evolution instead of exponential growth.
             
         Args:
             t: Cosmological time
             
         Returns:
-            Scale factor
+            Scale factor from VBP envelope dynamics
         """
-        # Simple scale factor evolution for envelope metric
+        # VBP envelope scale factor evolution (no exponential attenuation)
         # In the 7D BVP theory, this represents the evolution of the
         # envelope effective metric rather than spacetime expansion
         H0 = self.params.get("H0", 70.0)
         omega_lambda = self.params.get("omega_lambda", 0.7)
         
-        # Simple exponential growth for dark energy dominated universe
+        # Power law evolution for VBP envelope dynamics
         if omega_lambda > 0:
-            return np.exp(H0 * np.sqrt(omega_lambda) * t / 100.0)
+            # Dark energy dominated - power law instead of exponential
+            return (1.0 + H0 * np.sqrt(omega_lambda) * t / 100.0) ** 2.0
         else:
             # Matter dominated - power law
             return (1.0 + H0 * t / 100.0) ** (2.0/3.0)
+    
+    def compute_envelope_curvature_metric(self, phase_field: np.ndarray) -> np.ndarray:
+        """
+        Compute effective metric from phase field envelope curvature.
+        
+        Physical Meaning:
+            Computes the effective metric g_eff[Θ] directly from the
+            phase field envelope curvature, incorporating local
+            envelope dynamics and phase gradients.
+            
+        Mathematical Foundation:
+            g_eff[Θ] = f(∇Θ, c_φ(a,k), A^{ij}) where the metric components
+            depend on local phase field gradients and envelope properties.
+            
+        Args:
+            phase_field: Phase field configuration Θ(x,φ,t)
+            
+        Returns:
+            7x7 effective metric tensor g_eff[Θ] from envelope curvature
+        """
+        # Compute phase field gradients
+        phase_gradients = np.gradient(phase_field)
+        
+        # Compute envelope curvature invariants
+        envelope_amplitude = np.mean(np.abs(phase_field))
+        envelope_gradient_magnitude = np.mean([np.mean(np.abs(grad)) for grad in phase_gradients])
+        
+        # Initialize effective metric
+        g_eff = np.zeros((7, 7))
+        
+        # Time component: g00 = -1/c_φ^2 with envelope corrections
+        c_phi = self.params.get("c_phi", 1.0)
+        envelope_correction = 1.0 + 0.1 * envelope_amplitude
+        g_eff[0, 0] = -1.0 / (c_phi**2 * envelope_correction)
+        
+        # Spatial components: gij = A δ^{ij} with envelope curvature
+        chi_kappa = self.params.get("chi_kappa", 1.0)
+        curvature_correction = 1.0 + 0.05 * envelope_gradient_magnitude
+        for i in range(1, 4):
+            g_eff[i, i] = chi_kappa * curvature_correction
+        
+        # Phase components: gαβ with envelope dynamics
+        for alpha in range(4, 7):
+            g_eff[alpha, alpha] = 1.0 + 0.02 * envelope_amplitude
+        
+        return g_eff
+    
+    def compute_anisotropic_metric(self, envelope_invariants: Dict[str, float]) -> np.ndarray:
+        """
+        Compute anisotropic effective metric from envelope invariants.
+        
+        Physical Meaning:
+            Computes an anisotropic effective metric g_eff[Θ] where
+            spatial components can differ, reflecting anisotropic
+            envelope dynamics in the VBP.
+            
+        Mathematical Foundation:
+            g_eff[Θ] with g00=-1/c_φ^2, gij=A^{ij} (anisotropic case),
+            where A^{ij} can have different values for different spatial directions.
+            
+        Args:
+            envelope_invariants: Dictionary containing anisotropic envelope properties
+            
+        Returns:
+            7x7 anisotropic effective metric tensor g_eff[Θ]
+        """
+        # Initialize anisotropic effective metric
+        g_eff = np.zeros((7, 7))
+        
+        # Time component: g00 = -1/c_φ^2
+        c_phi = self.params.get("c_phi", 1.0)
+        g_eff[0, 0] = -1.0 / (c_phi**2)
+        
+        # Anisotropic spatial components: gij = A^{ij}
+        A_xx = envelope_invariants.get("A_xx", self.params.get("chi_kappa", 1.0))
+        A_yy = envelope_invariants.get("A_yy", self.params.get("chi_kappa", 1.0))
+        A_zz = envelope_invariants.get("A_zz", self.params.get("chi_kappa", 1.0))
+        
+        g_eff[1, 1] = A_xx
+        g_eff[2, 2] = A_yy
+        g_eff[3, 3] = A_zz
+        
+        # Phase components: gαβ (phase space metric)
+        for alpha in range(4, 7):
+            g_eff[alpha, alpha] = 1.0
+        
+        return g_eff
 
 
 class CosmologicalModel(ModelBase):

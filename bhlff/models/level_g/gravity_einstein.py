@@ -26,6 +26,7 @@ Example:
 import numpy as np
 from typing import Dict, Any, Tuple, Optional
 from .gravity_curvature import VBPEnvelopeCurvatureCalculator
+from .cosmology import EnvelopeEffectiveMetric
 
 
 class PhaseEnvelopeBalanceSolver:
@@ -59,6 +60,10 @@ class PhaseEnvelopeBalanceSolver:
         self.domain = domain
         self.params = params
         self.curvature_calc = VBPEnvelopeCurvatureCalculator(domain, params)
+        
+        # Initialize EnvelopeEffectiveMetric for integration
+        self.envelope_metric = EnvelopeEffectiveMetric(params)
+        
         self._setup_envelope_parameters()
 
     def _setup_envelope_parameters(self) -> None:
@@ -344,3 +349,116 @@ class PhaseEnvelopeBalanceSolver:
             g_eff[i, i] *= correction_factor
 
         return g_eff
+    
+    def solve_with_envelope_effective_metric(self, source: np.ndarray) -> Dict[str, Any]:
+        """
+        Solve phase envelope balance equation using integrated EnvelopeEffectiveMetric.
+        
+        Physical Meaning:
+            Solves the phase envelope balance equation D[Θ] = source using
+            the integrated EnvelopeEffectiveMetric class for computing
+            the effective metric from envelope dynamics.
+            
+        Mathematical Foundation:
+            Combines PhaseEnvelopeBalanceSolver with EnvelopeEffectiveMetric
+            to solve D[Θ] = source where the effective metric g_eff[Θ] is
+            computed from envelope curvature and phase field dynamics.
+            
+        Args:
+            source: Source term for the phase envelope balance equation
+            
+        Returns:
+            Dictionary containing solution and effective metric from envelope dynamics
+        """
+        # Solve the phase envelope balance equation
+        solution = self.solve_phase_envelope_balance(source)
+        
+        # Compute effective metric using integrated EnvelopeEffectiveMetric
+        g_eff = self.envelope_metric.compute_envelope_curvature_metric(solution)
+        
+        # Compute envelope invariants
+        envelope_invariants = self.curvature_calc.compute_envelope_invariants(solution)
+        
+        return {
+            "solution": solution,
+            "effective_metric": g_eff,
+            "envelope_invariants": envelope_invariants,
+            "envelope_curvature": self.curvature_calc.compute_envelope_curvature(solution)
+        }
+    
+    def compute_anisotropic_envelope_solution(self, source: np.ndarray) -> Dict[str, Any]:
+        """
+        Solve phase envelope balance equation with anisotropic envelope metric.
+        
+        Physical Meaning:
+            Solves the phase envelope balance equation using an anisotropic
+            effective metric computed from envelope dynamics, allowing for
+            different spatial components reflecting anisotropic envelope behavior.
+            
+        Mathematical Foundation:
+            Uses EnvelopeEffectiveMetric.compute_anisotropic_metric() to
+            compute g_eff[Θ] with different spatial components A^{ij},
+            then solves D[Θ] = source with this anisotropic metric.
+            
+        Args:
+            source: Source term for the phase envelope balance equation
+            
+        Returns:
+            Dictionary containing solution and anisotropic effective metric
+        """
+        # Solve the phase envelope balance equation
+        solution = self.solve_phase_envelope_balance(source)
+        
+        # Compute anisotropic effective metric using integrated EnvelopeEffectiveMetric
+        g_eff_anisotropic = self.curvature_calc.compute_anisotropic_envelope_metric(solution)
+        
+        # Compute envelope invariants
+        envelope_invariants = self.curvature_calc.compute_envelope_invariants(solution)
+        
+        return {
+            "solution": solution,
+            "anisotropic_effective_metric": g_eff_anisotropic,
+            "envelope_invariants": envelope_invariants,
+            "anisotropy_measure": envelope_invariants.get("anisotropy", 0.0)
+        }
+    
+    def compute_cosmological_envelope_evolution(self, source: np.ndarray, t: float) -> Dict[str, Any]:
+        """
+        Solve phase envelope balance equation with cosmological evolution.
+        
+        Physical Meaning:
+            Solves the phase envelope balance equation including cosmological
+            evolution effects using the integrated EnvelopeEffectiveMetric
+            for scale factor computation.
+            
+        Mathematical Foundation:
+            Combines phase envelope balance solution with cosmological
+            scale factor evolution using VBP envelope dynamics rather
+            than classical spacetime expansion.
+            
+        Args:
+            source: Source term for the phase envelope balance equation
+            t: Cosmological time
+            
+        Returns:
+            Dictionary containing solution, effective metric, and cosmological evolution
+        """
+        # Solve the phase envelope balance equation
+        solution = self.solve_phase_envelope_balance(source)
+        
+        # Compute effective metric
+        g_eff = self.envelope_metric.compute_envelope_curvature_metric(solution)
+        
+        # Compute cosmological scale factor using VBP envelope dynamics
+        scale_factor = self.envelope_metric.compute_scale_factor(t)
+        
+        # Apply cosmological evolution to solution
+        evolved_solution = solution * scale_factor
+        
+        return {
+            "solution": solution,
+            "evolved_solution": evolved_solution,
+            "effective_metric": g_eff,
+            "scale_factor": scale_factor,
+            "cosmological_time": t
+        }

@@ -24,26 +24,26 @@ from ..base.model_base import ModelBase
 
 
 class AstrophysicalObjectModel(ModelBase):
-        """
-        Model for astrophysical objects in 7D phase field theory.
+    """
+    Model for astrophysical objects in 7D phase field theory.
 
-        Physical Meaning:
-            Represents stars, galaxies, and black holes as phase field
-            configurations with specific topological properties.
+    Physical Meaning:
+        Represents stars, galaxies, and black holes as phase field
+        configurations with specific topological properties.
 
-        Mathematical Foundation:
-            Implements phase field profiles for different object types:
-            - Stars: a(r) = A₀ T(r) cos(φ(r)) where T is transmission coefficient
-            - Galaxies: a(r,θ) = A(r) exp(i(mθ + φ(r)))
-            - Black holes: a(r) = A₀ (r/r_s)^(-α) exp(iφ(r))
+    Mathematical Foundation:
+        Implements phase field profiles for different object types:
+        - Stars: a(r) = A₀ T(r) cos(φ(r)) where T is transmission coefficient
+        - Galaxies: a(r,θ) = A(r) exp(i(mθ + φ(r)))
+        - Black holes: a(r) = A₀ (r/r_s)^(-α) exp(iφ(r))
 
-        Attributes:
-            object_type (str): Type of astrophysical object
-            phase_profile (np.ndarray): Phase field profile
-            topological_charge (int): Topological charge
-            physical_params (dict): Physical parameters
-        """
-    
+    Attributes:
+        object_type (str): Type of astrophysical object
+        phase_profile (np.ndarray): Phase field profile
+        topological_charge (int): Topological charge
+        physical_params (dict): Physical parameters
+    """
+
     def __init__(self, object_type: str, object_params: Dict[str, Any]):
         """
         Initialize astrophysical object model.

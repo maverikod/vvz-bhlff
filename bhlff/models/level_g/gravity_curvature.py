@@ -24,6 +24,7 @@ Example:
 
 import numpy as np
 from typing import Dict, Any, Tuple, Optional
+from .cosmology import EnvelopeEffectiveMetric
 
 
 class VBPEnvelopeCurvatureCalculator:
@@ -57,6 +58,9 @@ class VBPEnvelopeCurvatureCalculator:
         self.domain = domain
         self.params = params
         self._setup_curvature_parameters()
+        
+        # Initialize EnvelopeEffectiveMetric for integration
+        self.envelope_metric = EnvelopeEffectiveMetric(params)
 
     def _setup_curvature_parameters(self) -> None:
         """
@@ -356,3 +360,81 @@ class VBPEnvelopeCurvatureCalculator:
         invariants = self._compute_envelope_invariants(phase_gradients, g_eff)
 
         return invariants
+    
+    def compute_envelope_effective_metric(self, phase_field: np.ndarray) -> np.ndarray:
+        """
+        Compute effective metric using integrated EnvelopeEffectiveMetric.
+        
+        Physical Meaning:
+            Computes the effective metric g_eff[Θ] using the integrated
+            EnvelopeEffectiveMetric class, incorporating envelope curvature
+            and phase field dynamics.
+            
+        Mathematical Foundation:
+            Uses EnvelopeEffectiveMetric.compute_envelope_curvature_metric()
+            to compute g_eff[Θ] = f(∇Θ, c_φ(a,k), A^{ij}) from phase field.
+            
+        Args:
+            phase_field: Phase field configuration Θ(x,φ,t)
+            
+        Returns:
+            7x7 effective metric tensor g_eff[Θ] from integrated envelope metric
+        """
+        return self.envelope_metric.compute_envelope_curvature_metric(phase_field)
+    
+    def compute_anisotropic_envelope_metric(self, phase_field: np.ndarray) -> np.ndarray:
+        """
+        Compute anisotropic effective metric using integrated EnvelopeEffectiveMetric.
+        
+        Physical Meaning:
+            Computes an anisotropic effective metric g_eff[Θ] using the
+            integrated EnvelopeEffectiveMetric class, allowing for
+            different spatial components reflecting anisotropic envelope dynamics.
+            
+        Mathematical Foundation:
+            Uses EnvelopeEffectiveMetric.compute_anisotropic_metric() with
+            envelope invariants derived from phase field gradients.
+            
+        Args:
+            phase_field: Phase field configuration Θ(x,φ,t)
+            
+        Returns:
+            7x7 anisotropic effective metric tensor g_eff[Θ]
+        """
+        # Compute envelope invariants from phase field
+        phase_gradients = self._compute_phase_gradients(phase_field)
+        envelope_invariants = self._compute_envelope_invariants(phase_gradients, None)
+        
+        # Extract anisotropic components
+        anisotropy_measure = envelope_invariants.get("anisotropy", 0.0)
+        chi_kappa = self.params.get("chi_kappa", 1.0)
+        
+        # Create anisotropic envelope invariants
+        anisotropic_invariants = {
+            "A_xx": chi_kappa * (1.0 + 0.1 * anisotropy_measure),
+            "A_yy": chi_kappa * (1.0 - 0.05 * anisotropy_measure),
+            "A_zz": chi_kappa * (1.0 + 0.02 * anisotropy_measure)
+        }
+        
+        return self.envelope_metric.compute_anisotropic_metric(anisotropic_invariants)
+    
+    def compute_cosmological_scale_factor(self, t: float) -> float:
+        """
+        Compute cosmological scale factor using integrated EnvelopeEffectiveMetric.
+        
+        Physical Meaning:
+            Computes the cosmological scale factor using the integrated
+            EnvelopeEffectiveMetric class, based on VBP envelope dynamics
+            rather than classical spacetime expansion.
+            
+        Mathematical Foundation:
+            Uses EnvelopeEffectiveMetric.compute_scale_factor() with
+            power law evolution instead of exponential growth.
+            
+        Args:
+            t: Cosmological time
+            
+        Returns:
+            Scale factor from VBP envelope dynamics
+        """
+        return self.envelope_metric.compute_scale_factor(t)

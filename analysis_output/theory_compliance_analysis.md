@@ -122,10 +122,35 @@
 - ✅ test_envelope_curvature_implementation - проверка реализации VBPEnvelopeCurvatureCalculator
 - ✅ test_phase_envelope_balance_implementation - проверка реализации PhaseEnvelopeBalanceSolver
 
-#### 1.3.2. Реализация эффективной метрики из огибающих
-- [ ] Расширить `EnvelopeEffectiveMetric`
-- [ ] Реализовать вычисление метрики из огибающих ВБП
-- [ ] Интегрировать во все гравитационные модули
+#### 1.3.2. Реализация эффективной метрики из огибающих ✅ ЗАВЕРШЕН
+- [x] Расширить `EnvelopeEffectiveMetric` (добавлены новые методы)
+- [x] Реализовать вычисление метрики из огибающих ВБП (compute_envelope_curvature_metric, compute_anisotropic_metric)
+- [x] Интегрировать во все гравитационные модули (gravity_curvature.py, gravity_einstein.py)
+
+**ВЫПОЛНЕННЫЕ РАСШИРЕНИЯ:**
+- ✅ `compute_envelope_curvature_metric()` - вычисление метрики из огибающих ВБП
+- ✅ `compute_anisotropic_metric()` - анизотропная метрика с разными пространственными компонентами
+- ✅ `compute_scale_factor()` - степенная функция вместо экспоненциальной
+- ✅ Интеграция в `VBPEnvelopeCurvatureCalculator` с методами:
+  - `compute_envelope_effective_metric()`
+  - `compute_anisotropic_envelope_metric()`
+  - `compute_cosmological_scale_factor()`
+- ✅ Интеграция в `PhaseEnvelopeBalanceSolver` с методами:
+  - `solve_with_envelope_effective_metric()`
+  - `compute_anisotropic_envelope_solution()`
+  - `compute_cosmological_envelope_evolution()`
+
+**ТЕСТЫ ПРОВЕРКИ:**
+- ✅ test_envelope_effective_metric_imported_in_gravity_curvature - проверка импорта
+- ✅ test_envelope_effective_metric_imported_in_gravity_einstein - проверка импорта
+- ✅ test_envelope_effective_metric_methods_in_gravity_curvature - проверка методов
+- ✅ test_envelope_effective_metric_methods_in_gravity_einstein - проверка методов
+- ✅ test_envelope_effective_metric_extended_methods - проверка расширенных методов
+- ✅ test_no_exponential_in_scale_factor - проверка отсутствия экспоненциальных функций
+- ✅ test_envelope_curvature_metric_implementation - проверка реализации
+- ✅ test_anisotropic_metric_implementation - проверка анизотропной метрики
+- ✅ test_integration_consistency - проверка консистентности интеграции
+- ✅ test_vbp_envelope_dynamics_compliance - проверка соответствия VBP envelope dynamics
 
 #### 1.3.3. Тестирование
 - [ ] Создать тесты для эффективной метрики

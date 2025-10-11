@@ -2,10 +2,36 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 709
+Total issues found: 721
 
-METHODS_WITHOUT_DOCSTRINGS: 91 issues
+METHODS_WITHOUT_DOCSTRINGS: 97 issues
 ----------------------------------------
+  ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
+    Line 77
+    Method: __init__
+
+  ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
+    Line 77
+    Class: MockDomain
+    Method: __init__
+
+  ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
+    Line 146
+    Method: __init__
+
+  ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
+    Line 146
+    Class: MockDomain
+    Method: __init__
+
+  ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
+    Line 77
+    Method: __init__
+
+  ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
+    Line 146
+    Method: __init__
+
   ./tests/unit/test_level_g/test_gravity_physics.py
     Line 67
     Method: test_effective_metric_basic_properties
@@ -404,8 +430,16 @@ FILES_WITHOUT_DOCSTRINGS: 4 issues
     Line 1
 
 
-CLASSES_WITHOUT_DOCSTRINGS: 4 issues
+CLASSES_WITHOUT_DOCSTRINGS: 6 issues
 ----------------------------------------
+  ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
+    Line 76
+    Class: MockDomain
+
+  ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
+    Line 145
+    Class: MockDomain
+
   ./tests/unit/test_level_g/test_gravity_physics.py
     Line 60
     Class: MockSystem
@@ -423,7 +457,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 4 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 548 issues
+IMPORTS_IN_MIDDLE: 549 issues
 ----------------------------------------
   ./setup.py
     Line 28
@@ -609,7 +643,7 @@ IMPORTS_IN_MIDDLE: 548 issues
     Line 23
 
   ./tests/unit/test_level_f/test_multi_particle_basic.py
-    Line 21
+    Line 22
 
   ./tests/unit/test_level_f/test_collective_basic.py
     Line 22
@@ -618,7 +652,7 @@ IMPORTS_IN_MIDDLE: 548 issues
     Line 22
 
   ./tests/unit/test_level_f/test_multi_particle_advanced.py
-    Line 21
+    Line 22
 
   ./tests/unit/test_level_f/test_transitions_basic.py
     Line 22
@@ -1018,6 +1052,9 @@ IMPORTS_IN_MIDDLE: 548 issues
 
   ./bhlff/models/level_f/multi_particle_modes.py
     Line 24
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 35
 
   ./bhlff/models/level_f/nonlinear.py
     Line 33
@@ -2070,7 +2107,7 @@ IMPORTS_IN_MIDDLE: 548 issues
     Line 23
 
 
-FILES_TOO_LARGE: 62 issues
+FILES_TOO_LARGE: 65 issues
 ----------------------------------------
   ./tests/unit/automated_testing/test_integration.py
 
@@ -2112,11 +2149,15 @@ FILES_TOO_LARGE: 62 issues
 
   ./bhlff/models/level_c/memory/memory_evolution.py
 
+  ./bhlff/models/level_c/resonators/resonator_analyzer.py
+
   ./bhlff/models/level_c/resonators/resonator_analysis.py
 
   ./bhlff/models/level_f/multi_particle_analysis.py
 
   ./bhlff/models/level_f/bvp_integration.py
+
+  ./bhlff/models/level_f/multi_particle_modes.py
 
   ./bhlff/models/level_f/nonlinear.py
 
@@ -2125,6 +2166,8 @@ FILES_TOO_LARGE: 62 issues
   ./bhlff/models/level_f/collective/excitation_analysis.py
 
   ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+
+  ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py
 
   ./bhlff/models/level_f/multi_particle/data_structures.py
 

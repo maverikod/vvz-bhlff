@@ -101,22 +101,22 @@ class TestSensitivityAnalysisCompliance:
             assert pattern not in content, \
                 f"Found classical mass pattern '{pattern}' in sensitivity_analysis.py"
         
-        # Verify that mass is computed from field properties
-        assert "_compute_mass_metrics" in content, \
-            "Should have _compute_mass_metrics method"
+        # Verify that energy is computed from field properties
+        assert "_compute_energy_metrics" in content, \
+            "Should have _compute_energy_metrics method"
         
-        # Check mass computation method
-        method_start = content.find("def _compute_mass_metrics")
+        # Check energy computation method
+        method_start = content.find("def _compute_energy_metrics")
         method_content = content[method_start:method_start+2000]
         
         assert "localization_energy" in method_content, \
-            "Mass should be computed from localization energy"
+            "Energy should be computed from localization energy"
         assert "phase_gradient_energy" in method_content, \
-            "Mass should include phase gradient energy"
+            "Energy should include phase gradient energy"
         assert "topological_energy" in method_content, \
-            "Mass should include topological contributions"
-        assert "M_eff ~ ∫ [μ|∇a|² + |∇Θ|^(2β)] d³x d³φ dt" in method_content, \
-            "Should use 7D BVP mass formula"
+            "Energy should include topological contributions"
+        assert "E_eff ~ ∫ [μ|∇a|² + |∇Θ|^(2β)] d³x d³φ dt" in method_content, \
+            "Should use 7D BVP energy formula"
     
     def test_no_exponential_damping(self):
         """
@@ -238,17 +238,17 @@ class TestSensitivityAnalysisCompliance:
         file_path = Path("bhlff/models/level_e/sensitivity_analysis.py")
         content = file_path.read_text()
         
-        # Check for mass-complexity methods
-        assert "analyze_mass_complexity_correlation" in content, \
-            "Should analyze mass-complexity correlation"
-        assert "_compute_mass_metrics" in content, \
-            "Should compute mass from field properties"
+        # Check for energy-complexity methods
+        assert "analyze_energy_complexity_correlation" in content, \
+            "Should analyze energy-complexity correlation"
+        assert "_compute_energy_metrics" in content, \
+            "Should compute energy from field properties"
         assert "_compute_complexity_metrics" in content, \
             "Should compute field complexity"
         
         # Check for correlation analysis
         assert "correlation" in content, \
-            "Should compute correlation between mass and complexity"
+            "Should compute correlation between energy and complexity"
         assert "t_statistic" in content, \
             "Should compute statistical significance"
         assert "p_value" in content, \

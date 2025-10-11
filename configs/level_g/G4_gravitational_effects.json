@@ -11,13 +11,12 @@
             "lambda": 0.0,
             "nu": 1.0
         },
-        "gravity": {
-            "einstein_equations": true,
-            "spacetime_curvature": true,
-            "gravitational_waves": true,
-            "tidal_effects": true,
-            "black_hole_physics": true,
-            "cosmological_constant": 1e-52
+        "vbp_envelope": {
+            "envelope_effective_metric": true,
+            "phase_field_oscillations": true,
+            "envelope_curvature": true,
+            "phase_gravity_coupling": true,
+            "7d_phase_space": true
         },
         "phase_gravity_coupling": {
             "coupling_strength": 1.0,
@@ -26,11 +25,11 @@
             "speed_of_light": 299792458.0
         },
         "analysis": {
-            "metric_tensor": true,
-            "curvature_analysis": true,
-            "gravitational_wave_spectrum": true,
-            "spacetime_geometry": true,
-            "energy_momentum_tensor": true
+            "envelope_effective_metric": true,
+            "phase_field_curvature": true,
+            "phase_field_oscillations": true,
+            "envelope_geometry": true,
+            "phase_field_energy": true
         },
         "output": {
             "save_fields": true,

@@ -7196,24 +7196,24 @@ method_index:
       - self
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
       line: 131
-      name: _create_mass_matrix
+      name: _create_energy_matrix
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 151
+      line: 157
       name: _create_stiffness_matrix
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 179
+      line: 185
       name: _setup_mode_analysis_methods
       returns: None
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 193
+      line: 199
       name: _compute_dynamics_matrix
       returns: np.ndarray
     - args:
@@ -7221,14 +7221,14 @@ method_index:
       - eigenvalues
       - eigenvectors
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 209
+      line: 215
       name: _analyze_collective_modes
       returns: Dict[str, Any]
     - args:
       - self
       - eigenvalues
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 244
+      line: 250
       name: _analyze_mode_stability
       returns: Dict[str, Any]
     - args:
@@ -7236,7 +7236,7 @@ method_index:
       - eigenvalues
       - eigenvectors
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 273
+      line: 279
       name: _analyze_mode_interactions
       returns: Dict[str, Any]
     - args:
@@ -7244,30 +7244,51 @@ method_index:
       - eigenvalues
       - eigenvectors
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 303
+      line: 309
       name: _calculate_mode_coupling
       returns: float
     - args:
       - self
       - eigenvectors
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 329
+      line: 335
       name: _calculate_mode_overlap
       returns: float
     - args:
       - self
       - eigenvectors
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 359
+      line: 365
       name: _calculate_mode_correlation
       returns: float
     - args:
       - self
       - distance
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 390
+      line: 396
       name: _calculate_interaction_strength
       returns: float
+    - args:
+      - self
+      - distance
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 417
+      name: _step_interaction_potential
+      returns: float
+    - args:
+      - self
+      - particle
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 443
+      name: _compute_particle_energy_from_field
+      returns: float
+    - args:
+      - self
+      - energy_matrix
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 482
+      name: _compute_energy_matrix_inverse
+      returns: np.ndarray
     CollectiveModesSpectrumAnalyzer:
     - args:
       - self
@@ -8104,6 +8125,14 @@ method_index:
       line: 163
       name: _compute_memory_term
       returns: np.ndarray
+    - args:
+      - self
+      - index
+      - tau
+      file: ./bhlff/models/level_c/memory/correlation_analysis_core.py
+      line: 202
+      name: _step_memory_weight
+      returns: float
     CorrelationAnalyzer:
     - args:
       - self
@@ -8704,7 +8733,7 @@ method_index:
       - positions
       - charges
       file: ./bhlff/models/level_e/defect_interactions.py
-      line: 98
+      line: 102
       name: compute_interaction_forces
       returns: List[np.ndarray]
     - args:
@@ -8714,14 +8743,14 @@ method_index:
       - charge_i
       - charge_j
       file: ./bhlff/models/level_e/defect_interactions.py
-      line: 142
+      line: 146
       name: _compute_pair_force
       returns: np.ndarray
     - args:
       - self
       - r
       file: ./bhlff/models/level_e/defect_interactions.py
-      line: 181
+      line: 185
       name: _compute_green_function
       returns: Tuple[float, float]
     - args:
@@ -8730,7 +8759,7 @@ method_index:
       - positions
       - charges
       file: ./bhlff/models/level_e/defect_interactions.py
-      line: 226
+      line: 230
       name: simulate_defect_annihilation
       returns: Dict[str, Any]
     - args:
@@ -8739,21 +8768,21 @@ method_index:
       - charge2
       - separation
       file: ./bhlff/models/level_e/defect_interactions.py
-      line: 288
+      line: 292
       name: _compute_annihilation_energy
       returns: float
     - args:
       - self
       - annihilation_energy
       file: ./bhlff/models/level_e/defect_interactions.py
-      line: 314
+      line: 318
       name: _compute_energy_release_rate
       returns: float
     - args:
       - self
       - separation
       file: ./bhlff/models/level_e/defect_interactions.py
-      line: 327
+      line: 331
       name: _compute_relaxation_time
       returns: float
     - args:
@@ -8761,15 +8790,21 @@ method_index:
       - positions
       - charges
       file: ./bhlff/models/level_e/defect_interactions.py
-      line: 343
+      line: 347
       name: compute_interaction_potential
       returns: float
     - args:
       - self
       - beta
       file: ./bhlff/models/level_e/defect_interactions.py
-      line: 386
+      line: 390
       name: _compute_fractional_green_normalization
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_e/defect_interactions.py
+      line: 421
+      name: _compute_defect_energy_from_field
       returns: float
     DefectModel:
     - args:
@@ -9605,6 +9640,37 @@ method_index:
       line: 112
       name: compute_total_energy
       returns: float
+    EnergyComplexityAnalyzer:
+    - args:
+      - self
+      file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - samples
+      - outputs
+      file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
+      line: 51
+      name: analyze_energy_complexity_correlation
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - samples
+      - energy_params
+      file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
+      line: 89
+      name: _compute_energy_metrics
+      returns: np.ndarray
+    - args:
+      - self
+      - samples
+      - complexity_params
+      file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
+      line: 139
+      name: _compute_complexity_metrics
+      returns: np.ndarray
     EnergyComputer:
     - args:
       - self
@@ -11191,7 +11257,7 @@ method_index:
     - args:
       - self
       file: ./bhlff/models/level_d/projections.py
-      line: 448
+      line: 475
       name: __init__
       returns: null
     - args:
@@ -11227,14 +11293,14 @@ method_index:
       - self
       - projections
       file: ./bhlff/models/level_d/projections.py
-      line: 452
+      line: 479
       name: analyze_field_signatures
       returns: Dict[str, Any]
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 386
+      line: 413
       name: project
       returns: np.ndarray
     - args:
@@ -11248,7 +11314,7 @@ method_index:
       - self
       - shape
       file: ./bhlff/models/level_d/projections.py
-      line: 421
+      line: 448
       name: _create_frequency_grid
       returns: np.ndarray
     - args:
@@ -11268,16 +11334,24 @@ method_index:
       returns: np.ndarray
     - args:
       - self
+      - frequencies
+      - q_factor
+      file: ./bhlff/models/level_d/projections.py
+      line: 375
+      name: _step_q_factor_filter
+      returns: np.ndarray
+    - args:
+      - self
       - shape
       file: ./bhlff/models/level_d/projections.py
-      line: 402
+      line: 429
       name: _create_weak_filter
       returns: np.ndarray
     - args:
       - self
       - chiral_factor
       file: ./bhlff/models/level_d/projections.py
-      line: 434
+      line: 461
       name: _apply_chiral_filter
       returns: np.ndarray
     - args:
@@ -11285,63 +11359,63 @@ method_index:
       - field
       - field_type
       file: ./bhlff/models/level_d/projections.py
-      line: 478
+      line: 505
       name: _analyze_single_field_signature
       returns: Dict[str, Any]
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 518
+      line: 545
       name: _compute_localization
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 524
+      line: 551
       name: _compute_range_characteristics
       returns: Dict[str, float]
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 537
+      line: 564
       name: _compute_anisotropy
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 553
+      line: 580
       name: _compute_chirality
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 559
+      line: 586
       name: _compute_confinement
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 568
+      line: 595
       name: _compute_parity_violation
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 574
+      line: 601
       name: _compute_correlation_length
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 580
+      line: 607
       name: _compute_decay_rate
       returns: float
     FluxComputer:
@@ -13181,6 +13255,13 @@ method_index:
       line: 390
       name: _check_bvp_compliance
       returns: Dict[str, Any]
+    - args:
+      - self
+      - phase
+      file: ./bhlff/models/level_f/bvp_integration.py
+      line: 413
+      name: _step_resonator_phase_coherence
+      returns: float
     LevelFInterface:
     - args:
       - self
@@ -13349,37 +13430,6 @@ method_index:
       line: 111
       name: _analyze_gravitational_effects
       returns: Dict[str, Any]
-    MassComplexityAnalyzer:
-    - args:
-      - self
-      file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
-      line: 41
-      name: __init__
-      returns: null
-    - args:
-      - self
-      - samples
-      - outputs
-      file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
-      line: 51
-      name: analyze_mass_complexity_correlation
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - samples
-      - mass_params
-      file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
-      line: 89
-      name: _compute_mass_metrics
-      returns: np.ndarray
-    - args:
-      - self
-      - samples
-      - complexity_params
-      file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
-      line: 139
-      name: _compute_complexity_metrics
-      returns: np.ndarray
     MemoryAnalyzer:
     - args:
       - self
@@ -13506,6 +13556,13 @@ method_index:
       line: 398
       name: _calculate_encoding_efficiency
       returns: float
+    - args:
+      - self
+      - length
+      file: ./bhlff/models/level_c/memory/memory_analyzer.py
+      line: 411
+      name: _step_autocorrelation_damping
+      returns: np.ndarray
     MemoryEvolutionAnalyzer:
     - args:
       - self
@@ -13543,7 +13600,7 @@ method_index:
       - memory_kernel
       - memory
       file: ./bhlff/models/level_c/memory/memory_evolution.py
-      line: 194
+      line: 187
       name: _apply_memory_term
       returns: np.ndarray
     - args:
@@ -13552,7 +13609,7 @@ method_index:
       - memory_term
       - dt
       file: ./bhlff/models/level_c/memory/memory_evolution.py
-      line: 234
+      line: 227
       name: _apply_evolution_operator
       returns: np.ndarray
     - args:
@@ -13560,7 +13617,7 @@ method_index:
       - field
       - t
       file: ./bhlff/models/level_c/memory/memory_evolution.py
-      line: 265
+      line: 258
       name: _detect_quench_events
       returns: List[QuenchEvent]
     - args:
@@ -13568,7 +13625,7 @@ method_index:
       - field_history
       - memory
       file: ./bhlff/models/level_c/memory/memory_evolution.py
-      line: 296
+      line: 289
       name: _analyze_memory_effects
       returns: Dict[str, Any]
     - args:
@@ -13576,7 +13633,7 @@ method_index:
       - field_history
       - memory
       file: ./bhlff/models/level_c/memory/memory_evolution.py
-      line: 329
+      line: 322
       name: _analyze_memory_formation
       returns: Dict[str, Any]
     - args:
@@ -13584,7 +13641,7 @@ method_index:
       - field_history
       - memory
       file: ./bhlff/models/level_c/memory/memory_evolution.py
-      line: 357
+      line: 350
       name: _analyze_memory_retention
       returns: Dict[str, Any]
     - args:
@@ -13592,16 +13649,35 @@ method_index:
       - field_history
       - memory
       file: ./bhlff/models/level_c/memory/memory_evolution.py
-      line: 385
+      line: 378
       name: _analyze_memory_stability
       returns: Dict[str, Any]
     - args:
       - self
       - field_history
       file: ./bhlff/models/level_c/memory/memory_evolution.py
-      line: 413
+      line: 406
       name: _collect_quench_events
       returns: List[QuenchEvent]
+    - args:
+      - self
+      - t_points
+      - tau
+      file: ./bhlff/models/level_c/memory/memory_evolution.py
+      line: 435
+      name: _step_memory_kernel
+      returns: np.ndarray
+    - args:
+      - self
+      - X
+      - Y
+      - Z
+      - center
+      - sigma
+      file: ./bhlff/models/level_c/memory/memory_evolution.py
+      line: 462
+      name: _step_spatial_kernel
+      returns: np.ndarray
     MemoryKernel:
     - args:
       - self
@@ -14375,6 +14451,7 @@ method_index:
       - domain
       - particles
       - interaction_range
+      - params
       file: ./bhlff/models/level_f/multi_particle_modes.py
       line: 41
       name: __init__
@@ -14382,7 +14459,7 @@ method_index:
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 59
+      line: 61
       name: find_collective_modes
       returns: Dict[str, Any]
     - args:
@@ -14390,25 +14467,25 @@ method_index:
       - field
       - time_points
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 103
+      line: 105
       name: compute_correlation_function
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 133
+      line: 135
       name: _create_dynamics_matrix
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 155
-      name: _create_mass_matrix
+      line: 157
+      name: _create_energy_matrix
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 175
+      line: 183
       name: _create_stiffness_matrix
       returns: np.ndarray
     - args:
@@ -14416,21 +14493,21 @@ method_index:
       - eigenvalues
       - eigenvectors
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 203
+      line: 211
       name: _analyze_mode_spectrum
       returns: Dict[str, Any]
     - args:
       - self
       - eigenvalues
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 234
+      line: 242
       name: _calculate_mode_frequencies
       returns: np.ndarray
     - args:
       - self
       - eigenvectors
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 253
+      line: 261
       name: _calculate_mode_amplitudes
       returns: np.ndarray
     - args:
@@ -14438,22 +14515,44 @@ method_index:
       - field
       - time
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 272
+      line: 280
       name: _compute_time_correlation
       returns: np.ndarray
     - args:
       - self
       - distance
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 294
+      line: 302
       name: _calculate_interaction_strength
       returns: float
+    - args:
+      - self
+      - distance
+      file: ./bhlff/models/level_f/multi_particle_modes.py
+      line: 320
+      name: _step_interaction_potential
+      returns: float
+    - args:
+      - self
+      - particle
+      file: ./bhlff/models/level_f/multi_particle_modes.py
+      line: 345
+      name: _compute_particle_energy_from_field
+      returns: float
+    - args:
+      - self
+      - energy_matrix
+      file: ./bhlff/models/level_f/multi_particle_modes.py
+      line: 383
+      name: _compute_energy_matrix_inverse
+      returns: np.ndarray
     MultiParticlePotentialAnalyzer:
     - args:
       - self
       - domain
       - particles
       - interaction_range
+      - params
       file: ./bhlff/models/level_f/multi_particle_potential.py
       line: 40
       name: __init__
@@ -14461,20 +14560,20 @@ method_index:
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 61
+      line: 63
       name: compute_effective_potential
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 95
+      line: 97
       name: _setup_interaction_matrices
       returns: None
     - args:
       - self
       - particle
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 115
+      line: 117
       name: _compute_single_particle_potential
       returns: np.ndarray
     - args:
@@ -14482,13 +14581,13 @@ method_index:
       - particle1
       - particle2
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 147
+      line: 149
       name: _compute_pair_interaction
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 177
+      line: 179
       name: _compute_higher_order_interactions
       returns: np.ndarray
     - args:
@@ -14497,14 +14596,14 @@ method_index:
       - particle2
       - particle3
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 202
+      line: 204
       name: _compute_three_body_interaction
       returns: np.ndarray
     - args:
       - self
       - distance
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 237
+      line: 239
       name: _calculate_interaction_strength
       returns: float
     - args:
@@ -14513,10 +14612,62 @@ method_index:
       - distance_13
       - distance_23
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 258
+      line: 257
       name: _calculate_three_body_strength
       returns: float
+    - args:
+      - self
+      - distance
+      file: ./bhlff/models/level_f/multi_particle_potential.py
+      line: 282
+      name: _step_interaction_potential
+      returns: float
+    - args:
+      - self
+      - distance_12
+      - distance_13
+      - distance_23
+      file: ./bhlff/models/level_f/multi_particle_potential.py
+      line: 307
+      name: _step_three_body_interaction_potential
+      returns: float
     MultiParticleSystem:
+    - args:
+      - self
+      - domain
+      - particles
+      - interaction_range
+      - system_params
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 54
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 80
+      name: compute_effective_potential
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 96
+      name: find_collective_modes
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - field
+      - time_points
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 113
+      name: compute_correlation_function
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 133
+      name: analyze_system_properties
+      returns: Dict[str, Any]
     - args:
       - self
       - domain
@@ -16855,26 +17006,26 @@ method_index:
       - self
       - phase_field
       file: ./bhlff/models/level_g/gravity_einstein.py
-      line: 210
+      line: 211
       name: _build_spatial_operator
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_g/gravity_einstein.py
-      line: 244
+      line: 245
       name: _compute_phase_field_gradient
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_g/gravity_einstein.py
-      line: 258
+      line: 259
       name: _compute_spectral_representation
       returns: Dict[str, Any]
     - args:
       - self
       - phase_field
       file: ./bhlff/models/level_g/gravity_einstein.py
-      line: 274
+      line: 275
       name: _build_bridge_terms
       returns: Dict[str, float]
     - args:
@@ -16882,7 +17033,7 @@ method_index:
       - balance_operator
       - phase_field
       file: ./bhlff/models/level_g/gravity_einstein.py
-      line: 294
+      line: 295
       name: _solve_envelope_balance
       returns: np.ndarray
     - args:
@@ -16890,28 +17041,28 @@ method_index:
       - balance_operator
       - solution
       file: ./bhlff/models/level_g/gravity_einstein.py
-      line: 332
+      line: 333
       name: _apply_balance_operator
       returns: np.ndarray
     - args:
       - self
       - solution
       file: ./bhlff/models/level_g/gravity_einstein.py
-      line: 388
+      line: 389
       name: _compute_effective_metric_from_solution
       returns: np.ndarray
     - args:
       - self
       - source
       file: ./bhlff/models/level_g/gravity_einstein.py
-      line: 544
+      line: 545
       name: solve_with_envelope_effective_metric
       returns: Dict[str, Any]
     - args:
       - self
       - source
       file: ./bhlff/models/level_g/gravity_einstein.py
-      line: 467
+      line: 468
       name: compute_anisotropic_envelope_solution
       returns: Dict[str, Any]
     - args:
@@ -16919,9 +17070,16 @@ method_index:
       - source
       - t
       file: ./bhlff/models/level_g/gravity_einstein.py
-      line: 503
+      line: 504
       name: compute_cosmological_envelope_evolution
       returns: Dict[str, Any]
+    - args:
+      - self
+      - k_magnitude
+      file: ./bhlff/models/level_g/gravity_einstein.py
+      line: 570
+      name: _step_resonator_transmission
+      returns: np.ndarray
     PhaseFieldEvolution:
     - args:
       - self
@@ -17210,20 +17368,20 @@ method_index:
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 319
+      line: 316
       name: _compute_spatial_order
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 345
+      line: 342
       name: _compute_energy_density
       returns: float
     - args:
       - self
       - phase_diagram
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 365
+      line: 362
       name: _find_discontinuities
       returns: List[Dict[str, Any]]
     - args:
@@ -17231,7 +17389,7 @@ method_index:
       - phase_diagram
       - discontinuities
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 398
+      line: 395
       name: _find_critical_points
       returns: List[Dict[str, Any]]
     - args:
@@ -17239,42 +17397,48 @@ method_index:
       - phase_diagram
       - critical_point
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 423
+      line: 420
       name: _compute_critical_exponents
       returns: Dict[str, float]
     - args:
       - self
       - state
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 444
+      line: 441
       name: _check_phase_stability
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 469
+      line: 466
       name: _analyze_phase_boundaries
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 486
+      line: 483
       name: _identify_stability_regions
       returns: Dict[str, Any]
     - args:
       - self
       - order_params
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 503
+      line: 500
       name: _classify_phase
       returns: str
     - args:
       - self
       - data
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 523
+      line: 520
       name: analyze
       returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
+      line: 543
+      name: _step_resonator_phase_coherence
+      returns: float
     PhaseVector:
     - args:
       - self
@@ -18162,6 +18326,30 @@ method_index:
       line: 368
       name: _calculate_interaction_strength
       returns: float
+    - args:
+      - self
+      - distance
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py
+      line: 389
+      name: _step_interaction_potential
+      returns: float
+    - args:
+      - self
+      - distance_i
+      - distance_j
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py
+      line: 415
+      name: _step_three_body_interaction_potential
+      returns: float
+    - args:
+      - self
+      - distances_i
+      - distances_j
+      - distances_k
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py
+      line: 445
+      name: _step_three_particle_interaction_potential
+      returns: np.ndarray
     PotentialEvolution:
     - args:
       - self
@@ -20502,6 +20690,14 @@ method_index:
       line: 372
       name: _calculate_energy_transfer
       returns: float
+    - args:
+      - self
+      - index
+      - shape_length
+      file: ./bhlff/models/level_c/resonators/resonator_analyzer.py
+      line: 386
+      name: _step_resonator_damping
+      returns: float
     ResonatorLayer:
     - args:
       - self
@@ -20676,6 +20872,14 @@ method_index:
       line: 311
       name: _find_peaks_in_1d
       returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - amplitude
+      - max_amplitude
+      file: ./bhlff/models/level_c/resonators/resonator_spectrum.py
+      line: 328
+      name: _step_quality_damping
+      returns: float
     ResourceAnalyzer:
     - args:
       - self
@@ -30743,13 +30947,13 @@ method_index:
     - args:
       - self
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 35
+      line: 36
       name: domain
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 40
+      line: 41
       name: particles
       returns: null
     - args:
@@ -30757,118 +30961,118 @@ method_index:
       - domain
       - particles
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 48
+      line: 49
       name: system
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 52
+      line: 53
       name: test_energy_conservation
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 70
+      line: 71
       name: test_topological_charge_conservation
       returns: null
     - args:
       - self
       - domain
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 88
+      line: 89
       name: test_system_with_single_particle
       returns: null
     - args:
       - self
       - domain
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 103
+      line: 104
       name: test_system_with_multiple_particles
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 122
+      line: 123
       name: test_7d_phase_field_energy
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 141
+      line: 142
       name: test_7d_bvp_energy
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 158
+      line: 159
       name: test_7d_phase_coherence
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 175
+      line: 176
       name: test_get_phase_field_around_particle
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 190
+      line: 191
       name: test_extract_spherical_field
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 205
+      line: 206
       name: test_advanced_correlation_analysis
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 224
+      line: 225
       name: test_energy_optimization
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 241
+      line: 242
       name: test_phase_field_dynamics
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 258
+      line: 259
       name: test_collective_excitations
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_advanced.py
-      line: 275
+      line: 276
       name: test_thermodynamic_properties
       returns: null
     TestMultiParticleSystemBasic:
     - args:
       - self
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 35
+      line: 36
       name: domain
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 40
+      line: 41
       name: particles
       returns: null
     - args:
@@ -30876,7 +31080,7 @@ method_index:
       - domain
       - particles
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 48
+      line: 49
       name: system
       returns: null
     - args:
@@ -30884,84 +31088,84 @@ method_index:
       - domain
       - particles
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 52
+      line: 53
       name: test_initialization
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 61
+      line: 62
       name: test_effective_potential_computation
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 78
+      line: 79
       name: test_collective_modes_analysis
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 93
+      line: 94
       name: test_correlation_analysis
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 110
+      line: 111
       name: test_stability_check
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 127
+      line: 128
       name: test_single_particle_potential
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 140
+      line: 141
       name: test_pair_interaction
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 154
+      line: 155
       name: test_three_body_interaction
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 169
+      line: 170
       name: test_dynamics_matrix
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 181
+      line: 182
       name: test_participation_ratios
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 193
+      line: 194
       name: test_spatial_correlations
       returns: null
     - args:
       - self
       - system
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 208
+      line: 209
       name: test_phase_correlations
       returns: null
     - args:
@@ -30969,7 +31173,7 @@ method_index:
       - domain
       - particles
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 223
+      line: 224
       name: test_interaction_strength_dependence
       returns: null
     - args:
@@ -30977,7 +31181,7 @@ method_index:
       - domain
       - particles
       file: ./tests/unit/test_level_f/test_multi_particle_basic.py
-      line: 240
+      line: 241
       name: test_interaction_range_dependence
       returns: null
     TestNoClassicalMetrics:
@@ -35333,6 +35537,49 @@ method_index:
       line: 179
       name: test_spectral_ops_precision
       returns: null
+    TestStep111ExponentialDecayFix:
+    - args:
+      - self
+      file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
+      line: 20
+      name: test_no_exponential_decay_in_gravity_einstein
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
+      line: 38
+      name: test_no_exponential_decay_in_gravity_waves
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
+      line: 65
+      name: test_step_resonator_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
+      line: 109
+      name: test_no_exponential_in_other_models
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
+      line: 134
+      name: test_step_resonator_physics_correctness
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
+      line: 176
+      name: test_classical_comparison_preserved
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
+      line: 146
+      name: __init__
+      returns: null
     TestStepResonatorIntegration:
     - args:
       - self
@@ -35628,7 +35875,7 @@ method_index:
       - wave_params
       - envelope_solution_7d
       file: ./tests/unit/test_level_g/test_vbp_gravitational_waves_physics.py
-      line: 61
+      line: 62
       name: test_gravitational_waves_c_T_equals_c_phi
       returns: null
     - args:
@@ -35637,7 +35884,7 @@ method_index:
       - wave_params
       - envelope_solution_7d
       file: ./tests/unit/test_level_g/test_vbp_gravitational_waves_physics.py
-      line: 78
+      line: 79
       name: test_gw1_amplitude_law
       returns: null
     - args:
@@ -35646,7 +35893,7 @@ method_index:
       - wave_params
       - envelope_solution_7d
       file: ./tests/unit/test_level_g/test_vbp_gravitational_waves_physics.py
-      line: 97
+      line: 98
       name: test_7d_polarization_modes
       returns: null
     - args:
@@ -35655,7 +35902,7 @@ method_index:
       - wave_params
       - envelope_solution_7d
       file: ./tests/unit/test_level_g/test_vbp_gravitational_waves_physics.py
-      line: 120
+      line: 121
       name: test_strain_tensor_7d_structure
       returns: null
     TestValidationCompliance:
@@ -36995,6 +37242,20 @@ method_index:
       line: 422
       name: compute_detection_sensitivity
       returns: Dict[str, Any]
+    - args:
+      - self
+      - dt
+      file: ./bhlff/models/level_g/gravity_waves.py
+      line: 459
+      name: _step_resonator_boundary_condition
+      returns: float
+    - args:
+      - self
+      - dx
+      file: ./bhlff/models/level_g/gravity_waves.py
+      line: 485
+      name: _step_resonator_spatial_boundary
+      returns: float
     VelocityEvolution:
     - args:
       - self
@@ -37252,6 +37513,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 5207
-    total_classes: 558
+    total_class_methods: 5243
+    total_classes: 559
     total_standalone_functions: 0

@@ -2,20 +2,20 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-Mass-complexity correlation analysis for 7D phase field theory.
+Energy-complexity correlation analysis for 7D phase field theory.
 
-This module implements analysis of the correlation between mass
+This module implements analysis of the correlation between energy
 and complexity in the 7D phase field theory, investigating
-the "mass = complexity" thesis.
+the "energy = complexity" thesis.
 
 Theoretical Background:
-    In 7D BVP theory, mass emerges from field localization energy
+    In 7D BVP theory, energy emerges from field localization energy
     and phase gradient energy, while complexity measures the
     structural richness of the phase field configuration.
 
 Example:
-    >>> analyzer = MassComplexityAnalyzer()
-    >>> correlation = analyzer.analyze_mass_complexity_correlation(samples, outputs)
+    >>> analyzer = EnergyComplexityAnalyzer()
+    >>> correlation = analyzer.analyze_energy_complexity_correlation(samples, outputs)
 """
 
 import numpy as np
@@ -23,57 +23,57 @@ from typing import Dict, Any, List, Tuple, Optional
 from scipy import stats
 
 
-class MassComplexityAnalyzer:
+class EnergyComplexityAnalyzer:
     """
-    Mass-complexity correlation analysis for 7D phase field theory.
+    Energy-complexity correlation analysis for 7D phase field theory.
 
     Physical Meaning:
-        Analyzes the correlation between particle mass and field
+        Analyzes the correlation between particle energy and field
         complexity in the 7D phase field theory, investigating
-        the "mass = complexity" thesis.
+        the "energy = complexity" thesis.
 
     Mathematical Foundation:
-        Mass emerges from field energy density and topological
+        Energy emerges from field energy density and topological
         stability, while complexity measures structural richness
         of the phase field configuration.
     """
 
     def __init__(self):
         """
-        Initialize mass-complexity analyzer.
+        Initialize energy-complexity analyzer.
 
         Physical Meaning:
             Sets up the analyzer for studying the relationship
-            between mass and complexity in 7D phase field theory.
+            between energy and complexity in 7D phase field theory.
         """
         pass
 
-    def analyze_mass_complexity_correlation(
+    def analyze_energy_complexity_correlation(
         self, samples: np.ndarray, outputs: np.ndarray
     ) -> Dict[str, Any]:
         """
-        Analyze correlation between mass and complexity.
+        Analyze correlation between energy and complexity.
 
         Physical Meaning:
-            Investigates the "mass = complexity" thesis by analyzing
-            the correlation between particle mass and field complexity
+            Investigates the "energy = complexity" thesis by analyzing
+            the correlation between particle energy and field complexity
             in the 7D phase field theory.
         """
-        # Extract mass and complexity parameters
-        mass_params = ["mu", "beta"]  # Parameters related to mass
+        # Extract energy and complexity parameters
+        energy_params = ["mu", "beta"]  # Parameters related to energy
         complexity_params = ["eta", "gamma"]  # Parameters related to complexity
 
-        # Compute mass and complexity metrics
-        mass_metrics = self._compute_mass_metrics(samples, mass_params)
+        # Compute energy and complexity metrics
+        energy_metrics = self._compute_energy_metrics(samples, energy_params)
         complexity_metrics = self._compute_complexity_metrics(
             samples, complexity_params
         )
 
         # Compute correlation
-        correlation = np.corrcoef(mass_metrics, complexity_metrics)[0, 1]
+        correlation = np.corrcoef(energy_metrics, complexity_metrics)[0, 1]
 
         # Statistical significance test
-        n_samples = len(mass_metrics)
+        n_samples = len(energy_metrics)
         t_statistic = correlation * np.sqrt((n_samples - 2) / (1 - correlation**2))
         p_value = 2 * (1 - stats.t.cdf(abs(t_statistic), n_samples - 2))
 
@@ -82,29 +82,29 @@ class MassComplexityAnalyzer:
             "t_statistic": t_statistic,
             "p_value": p_value,
             "is_significant": p_value < 0.05,
-            "mass_metrics": mass_metrics,
+            "energy_metrics": energy_metrics,
             "complexity_metrics": complexity_metrics,
         }
 
-    def _compute_mass_metrics(
-        self, samples: np.ndarray, mass_params: List[str]
+    def _compute_energy_metrics(
+        self, samples: np.ndarray, energy_params: List[str]
     ) -> np.ndarray:
         """
-        Compute mass-related metrics from parameters using 7D BVP theory.
+        Compute energy-related metrics from parameters using 7D BVP theory.
         
         Physical Meaning:
-            In 7D BVP theory, mass is not a fundamental property but a measure
-            of resistance to phase state rearrangement. Mass emerges from:
+            In 7D BVP theory, energy emerges from field configuration and
+            phase gradient contributions. Energy metrics include:
             - Field localization energy (μ|∇a|²)
             - Phase gradient energy (β-dependent terms)
             - Topological stability (winding numbers)
         
         Mathematical Foundation:
-            M_eff ~ ∫ [μ|∇a|² + |∇Θ|^(2β)] d³x d³φ dt
+            E_eff ~ ∫ [μ|∇a|² + |∇Θ|^(2β)] d³x d³φ dt
         """
         from ...models.level_b.power_law_tails import PowerLawAnalyzer
         
-        mass_values = []
+        energy_values = []
 
         for sample in samples:
             # Create parameter dictionary
@@ -115,26 +115,26 @@ class MassComplexityAnalyzer:
             mu = params.get("mu", 1.0)
             eta = params.get("eta", 0.1)
             
-            # Compute effective mass from field energy density
-            # Mass ~ integral of energy density over field configuration
+            # Compute effective energy from field energy density
+            # Energy ~ integral of energy density over field configuration
             
             # Localization energy contribution (scales with μ)
             localization_energy = mu * (1.0 + eta)
             
             # Phase gradient energy (scales with β)
-            # Higher β → stronger gradients → higher effective mass
+            # Higher β → stronger gradients → higher effective energy
             phase_gradient_energy = beta * (2.0 + 0.5 * eta**2)
             
             # Topological contribution (winding number energy)
-            # Stable topological configurations have discrete "mass" values
+            # Stable topological configurations have discrete energy values
             topological_energy = np.sqrt(mu * beta) * (1.0 + 0.1 * eta)
             
-            # Total effective mass
-            mass_metric = localization_energy + phase_gradient_energy + topological_energy
+            # Total effective energy
+            energy_metric = localization_energy + phase_gradient_energy + topological_energy
             
-            mass_values.append(mass_metric)
+            energy_values.append(energy_metric)
 
-        return np.array(mass_values)
+        return np.array(energy_values)
 
     def _compute_complexity_metrics(
         self, samples: np.ndarray, complexity_params: List[str]

@@ -15,12 +15,12 @@ Example:
     >>> pytest tests/unit/test_level_e/ -v
 """
 
-from .test_soliton_physics import TestSolitonPhysics
-from .test_soliton_energy_physics import TestSolitonEnergyPhysics
-from .test_soliton_topology_physics import TestSolitonTopologyPhysics
+from .test_soliton_physics_basic import TestSolitonPhysicsBasic
+from .test_soliton_energy_physics_basic import TestSolitonEnergyPhysicsBasic
+from .test_soliton_topology_physics_basic import TestSolitonTopologyPhysicsBasic
 
 __all__ = [
-    "TestSolitonPhysics",
-    "TestSolitonEnergyPhysics",
-    "TestSolitonTopologyPhysics",
+    "TestSolitonPhysicsBasic",
+    "TestSolitonEnergyPhysicsBasic",
+    "TestSolitonTopologyPhysicsBasic",
 ]

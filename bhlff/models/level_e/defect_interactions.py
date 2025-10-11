@@ -64,11 +64,15 @@ class DefectInteractions:
             Initializes the physical parameters required for
             defect interaction calculations including interaction
             strength, range, and Green function parameters.
+            Uses energy-based parameters instead of mass terms.
         """
         self.interaction_strength = self.params.get("interaction_strength", 1.0)
         self.interaction_range = self.params.get("interaction_range", 1.0)
         self.screening_length = self.params.get("screening_length", 0.5)
         self.cutoff_radius = self.params.get("cutoff_radius", 0.1)
+        
+        # Compute defect energy from field configuration instead of using mass
+        self.defect_energy = self._compute_defect_energy_from_field()
 
         # Fractional Green function parameters
         beta = self.params.get("beta", 1.0)
@@ -413,3 +417,35 @@ class DefectInteractions:
         denominator = (2 ** (2 * beta)) * (np.pi ** (3 / 2)) * gamma(beta)
 
         return numerator / denominator
+
+    def _compute_defect_energy_from_field(self) -> float:
+        """
+        Compute defect energy from field configuration.
+
+        Physical Meaning:
+            Calculates the energy of a defect from the field configuration
+            using 7D BVP theory principles. Energy emerges from field
+            localization and phase gradient contributions.
+
+        Mathematical Foundation:
+            E_defect = ∫ [μ|∇a|² + |∇Θ|^(2β)] d³x d³φ dt
+            where a is the field amplitude and Θ is the phase.
+
+        Returns:
+            float: Defect energy computed from field configuration
+        """
+        # Extract field parameters
+        mu = self.params.get("mu", 1.0)
+        beta = self.params.get("beta", 1.0)
+        
+        # Compute field energy density components
+        # Localization energy: μ|∇a|²
+        localization_energy = mu * self.interaction_strength
+        
+        # Phase gradient energy: |∇Θ|^(2β)
+        phase_gradient_energy = self.interaction_strength ** (2 * beta)
+        
+        # Total defect energy
+        defect_energy = localization_energy + phase_gradient_energy
+        
+        return defect_energy

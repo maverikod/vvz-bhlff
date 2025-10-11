@@ -440,6 +440,22 @@ Class: TestAcceptanceCriteria
   test_acceptance_criteria_integration(self, domain_3d)
     File: ./tests/unit/test_acceptance_criteria.py, Line: 191
 
+Class: TestStep111ExponentialDecayFix
+  test_no_exponential_decay_in_gravity_einstein(self)
+    File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py, Line: 20
+  test_no_exponential_decay_in_gravity_waves(self)
+    File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py, Line: 38
+  test_step_resonator_implementation(self)
+    File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py, Line: 65
+  test_no_exponential_in_other_models(self)
+    File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py, Line: 109
+  test_step_resonator_physics_correctness(self)
+    File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py, Line: 134
+  test_classical_comparison_preserved(self)
+    File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py, Line: 176
+  __init__(self)
+    File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py, Line: 146
+
 Class: TestEnvelopeEffectiveMetric
   test_metric_initialization(self)
     File: ./tests/unit/test_level_g_cosmology_metric.py, Line: 26
@@ -752,13 +768,13 @@ Class: TestVBPGravitationalWavesPhysics
   envelope_solution_7d(self, domain_7d)
     File: ./tests/unit/test_level_g/test_vbp_gravitational_waves_physics.py, Line: 46
   test_gravitational_waves_c_T_equals_c_phi(self, domain_7d, wave_params, envelope_solution_7d)
-    File: ./tests/unit/test_level_g/test_vbp_gravitational_waves_physics.py, Line: 61
+    File: ./tests/unit/test_level_g/test_vbp_gravitational_waves_physics.py, Line: 62
   test_gw1_amplitude_law(self, domain_7d, wave_params, envelope_solution_7d)
-    File: ./tests/unit/test_level_g/test_vbp_gravitational_waves_physics.py, Line: 78
+    File: ./tests/unit/test_level_g/test_vbp_gravitational_waves_physics.py, Line: 79
   test_7d_polarization_modes(self, domain_7d, wave_params, envelope_solution_7d)
-    File: ./tests/unit/test_level_g/test_vbp_gravitational_waves_physics.py, Line: 97
+    File: ./tests/unit/test_level_g/test_vbp_gravitational_waves_physics.py, Line: 98
   test_strain_tensor_7d_structure(self, domain_7d, wave_params, envelope_solution_7d)
-    File: ./tests/unit/test_level_g/test_vbp_gravitational_waves_physics.py, Line: 120
+    File: ./tests/unit/test_level_g/test_vbp_gravitational_waves_physics.py, Line: 121
 
 Class: TestPhaseEnvelopeBalancePhysics
   domain_7d(self)
@@ -1558,39 +1574,39 @@ Class: ConcreteTimeIntegrator
 
 Class: TestMultiParticleSystemBasic
   domain(self)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 35
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 36
   particles(self)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 40
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 41
   system(self, domain, particles)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 48
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 49
   test_initialization(self, domain, particles)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 52
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 53
   test_effective_potential_computation(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 61
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 62
   test_collective_modes_analysis(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 78
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 79
   test_correlation_analysis(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 93
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 94
   test_stability_check(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 110
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 111
   test_single_particle_potential(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 127
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 128
   test_pair_interaction(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 140
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 141
   test_three_body_interaction(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 154
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 155
   test_dynamics_matrix(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 169
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 170
   test_participation_ratios(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 181
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 182
   test_spatial_correlations(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 193
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 194
   test_phase_correlations(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 208
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 209
   test_interaction_strength_dependence(self, domain, particles)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 223
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 224
   test_interaction_range_dependence(self, domain, particles)
-    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 240
+    File: ./tests/unit/test_level_f/test_multi_particle_basic.py, Line: 241
 
 Class: TestCollectiveExcitationsBasic
   domain(self)
@@ -1662,39 +1678,39 @@ Class: TestPhaseTransitionsAdvanced
 
 Class: TestMultiParticleSystemAdvanced
   domain(self)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 35
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 36
   particles(self)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 40
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 41
   system(self, domain, particles)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 48
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 49
   test_energy_conservation(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 52
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 53
   test_topological_charge_conservation(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 70
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 71
   test_system_with_single_particle(self, domain)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 88
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 89
   test_system_with_multiple_particles(self, domain)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 103
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 104
   test_7d_phase_field_energy(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 122
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 123
   test_7d_bvp_energy(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 141
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 142
   test_7d_phase_coherence(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 158
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 159
   test_get_phase_field_around_particle(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 175
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 176
   test_extract_spherical_field(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 190
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 191
   test_advanced_correlation_analysis(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 205
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 206
   test_energy_optimization(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 224
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 225
   test_phase_field_dynamics(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 241
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 242
   test_collective_excitations(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 258
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 259
   test_thermodynamic_properties(self, system)
-    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 275
+    File: ./tests/unit/test_level_f/test_multi_particle_advanced.py, Line: 276
 
 Class: TestPhaseTransitionsBasic
   domain(self)
@@ -5517,6 +5533,8 @@ Class: CorrelationAnalysisCore
     File: ./bhlff/models/level_c/memory/correlation_analysis_core.py, Line: 126
   _compute_memory_term(self, field_history, memory) -> np.ndarray
     File: ./bhlff/models/level_c/memory/correlation_analysis_core.py, Line: 163
+  _step_memory_weight(self, index, tau) -> float
+    File: ./bhlff/models/level_c/memory/correlation_analysis_core.py, Line: 202
 
 Class: TemporalCoherenceAnalyzer
   __init__(self)
@@ -5589,6 +5607,8 @@ Class: MemoryAnalyzer
     File: ./bhlff/models/level_c/memory/memory_analyzer.py, Line: 390
   _calculate_encoding_efficiency(self, envelope, persistence_patterns) -> float
     File: ./bhlff/models/level_c/memory/memory_analyzer.py, Line: 398
+  _step_autocorrelation_damping(self, length) -> np.ndarray
+    File: ./bhlff/models/level_c/memory/memory_analyzer.py, Line: 411
 
 Class: PatternStabilityAnalyzer
   __init__(self)
@@ -5656,21 +5676,25 @@ Class: MemoryEvolutionAnalyzer
   _create_memory_kernel(self, memory) -> MemoryKernel
     File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 142
   _apply_memory_term(self, field_history, memory_kernel, memory) -> np.ndarray
-    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 194
+    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 187
   _apply_evolution_operator(self, field, memory_term, dt) -> np.ndarray
-    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 234
+    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 227
   _detect_quench_events(self, field, t) -> List[QuenchEvent]
-    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 265
+    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 258
   _analyze_memory_effects(self, field_history, memory) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 296
+    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 289
   _analyze_memory_formation(self, field_history, memory) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 329
+    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 322
   _analyze_memory_retention(self, field_history, memory) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 357
+    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 350
   _analyze_memory_stability(self, field_history, memory) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 385
+    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 378
   _collect_quench_events(self, field_history) -> List[QuenchEvent]
-    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 413
+    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 406
+  _step_memory_kernel(self, t_points, tau) -> np.ndarray
+    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 435
+  _step_spatial_kernel(self, X, Y, Z, center, sigma) -> np.ndarray
+    File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 462
 
 Class: PinningEvolutionAnalyzer
   __init__(self, bvp_core)
@@ -5711,6 +5735,8 @@ Class: ResonatorSpectrumAnalyzer
     File: ./bhlff/models/level_c/resonators/resonator_spectrum.py, Line: 293
   _find_peaks_in_1d(self, data) -> List[Dict[str, Any]]
     File: ./bhlff/models/level_c/resonators/resonator_spectrum.py, Line: 311
+  _step_quality_damping(self, amplitude, max_amplitude) -> float
+    File: ./bhlff/models/level_c/resonators/resonator_spectrum.py, Line: 328
 
 Class: ResonatorAnalyzer
   __init__(self, bvp_core)
@@ -5743,6 +5769,8 @@ Class: ResonatorAnalyzer
     File: ./bhlff/models/level_c/resonators/resonator_analyzer.py, Line: 362
   _calculate_energy_transfer(self, envelope, resonance_peaks) -> float
     File: ./bhlff/models/level_c/resonators/resonator_analyzer.py, Line: 372
+  _step_resonator_damping(self, index, shape_length) -> float
+    File: ./bhlff/models/level_c/resonators/resonator_analyzer.py, Line: 386
 
 Class: ResonatorAnalysis
   __init__(self, bvp_core)
@@ -5841,30 +5869,60 @@ Class: LevelFBVPIntegration
     File: ./bhlff/models/level_f/bvp_integration.py, Line: 364
   _check_bvp_compliance(self, envelope) -> Dict[str, Any]
     File: ./bhlff/models/level_f/bvp_integration.py, Line: 390
+  _step_resonator_phase_coherence(self, phase) -> float
+    File: ./bhlff/models/level_f/bvp_integration.py, Line: 413
 
 Class: MultiParticleModesAnalyzer
-  __init__(self, domain, particles, interaction_range)
+  __init__(self, domain, particles, interaction_range, params)
     File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 41
   find_collective_modes(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 59
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 61
   compute_correlation_function(self, field, time_points) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 103
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 105
   _create_dynamics_matrix(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 133
-  _create_mass_matrix(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 155
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 135
+  _create_energy_matrix(self) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 157
   _create_stiffness_matrix(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 175
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 183
   _analyze_mode_spectrum(self, eigenvalues, eigenvectors) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 203
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 211
   _calculate_mode_frequencies(self, eigenvalues) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 234
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 242
   _calculate_mode_amplitudes(self, eigenvectors) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 253
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 261
   _compute_time_correlation(self, field, time) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 272
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 280
   _calculate_interaction_strength(self, distance) -> float
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 294
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 302
+  _step_interaction_potential(self, distance) -> float
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 320
+  _compute_particle_energy_from_field(self, particle) -> float
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 345
+  _compute_energy_matrix_inverse(self, energy_matrix) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 383
+
+Class: MultiParticleSystem
+  __init__(self, domain, particles, interaction_range, system_params)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 54
+  compute_effective_potential(self) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 80
+  find_collective_modes(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 96
+  compute_correlation_function(self, field, time_points) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 113
+  analyze_system_properties(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 133
+  __init__(self, domain, particles, interaction_range, system_params)
+    File: ./bhlff/models/level_f/multi_particle.py, Line: 54
+  compute_effective_potential(self) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle.py, Line: 80
+  find_collective_modes(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle.py, Line: 96
+  compute_correlation_function(self, field, time_points) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle.py, Line: 113
+  analyze_system_properties(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle.py, Line: 133
 
 Class: NonlinearEffects
   __init__(self, system, nonlinear_params)
@@ -5912,37 +5970,29 @@ Class: NonlinearEffects
   _calculate_overall_validation(self, basic_validation, soliton_validation, mode_validation) -> Dict[str, Any]
     File: ./bhlff/models/level_f/nonlinear.py, Line: 479
 
-Class: MultiParticleSystem
-  __init__(self, domain, particles, interaction_range, system_params)
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 54
-  compute_effective_potential(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 80
-  find_collective_modes(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 96
-  compute_correlation_function(self, field, time_points) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 113
-  analyze_system_properties(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 133
-
 Class: MultiParticlePotentialAnalyzer
-  __init__(self, domain, particles, interaction_range)
+  __init__(self, domain, particles, interaction_range, params)
     File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 40
   compute_effective_potential(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 61
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 63
   _setup_interaction_matrices(self) -> None
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 95
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 97
   _compute_single_particle_potential(self, particle) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 115
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 117
   _compute_pair_interaction(self, particle1, particle2) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 147
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 149
   _compute_higher_order_interactions(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 177
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 179
   _compute_three_body_interaction(self, particle1, particle2, particle3) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 202
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 204
   _calculate_interaction_strength(self, distance) -> float
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 237
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 239
   _calculate_three_body_strength(self, distance_12, distance_13, distance_23) -> float
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 258
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 257
+  _step_interaction_potential(self, distance) -> float
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 282
+  _step_three_body_interaction_potential(self, distance_12, distance_13, distance_23) -> float
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 307
 
 Class: CollectiveExcitations
   __init__(self, system, excitation_params)
@@ -6175,6 +6225,12 @@ Class: PotentialComputationAnalyzer
     File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 339
   _calculate_interaction_strength(self, distance) -> float
     File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 368
+  _step_interaction_potential(self, distance) -> float
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 389
+  _step_three_body_interaction_potential(self, distance_i, distance_j) -> float
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 415
+  _step_three_particle_interaction_potential(self, distances_i, distances_j, distances_k) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 445
 
 Class: Particle
   __post_init__(self)
@@ -6225,28 +6281,34 @@ Class: CollectiveModesFinder
     File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 100
   _setup_dynamics_matrices(self) -> None
     File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 114
-  _create_mass_matrix(self) -> np.ndarray
+  _create_energy_matrix(self) -> np.ndarray
     File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 131
   _create_stiffness_matrix(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 151
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 157
   _setup_mode_analysis_methods(self) -> None
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 179
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 185
   _compute_dynamics_matrix(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 193
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 199
   _analyze_collective_modes(self, eigenvalues, eigenvectors) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 209
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 215
   _analyze_mode_stability(self, eigenvalues) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 244
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 250
   _analyze_mode_interactions(self, eigenvalues, eigenvectors) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 273
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 279
   _calculate_mode_coupling(self, eigenvalues, eigenvectors) -> float
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 303
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 309
   _calculate_mode_overlap(self, eigenvectors) -> float
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 329
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 335
   _calculate_mode_correlation(self, eigenvectors) -> float
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 359
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 365
   _calculate_interaction_strength(self, distance) -> float
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 390
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 396
+  _step_interaction_potential(self, distance) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 417
+  _compute_particle_energy_from_field(self, particle) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 443
+  _compute_energy_matrix_inverse(self, energy_matrix) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 482
 
 Class: PotentialOptimizationAnalyzer
   __init__(self, domain, particles, system_params)
@@ -6340,25 +6402,27 @@ Class: PhaseTransitions
   _compute_phase_coherence(self) -> float
     File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 294
   _compute_spatial_order(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 319
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 316
   _compute_energy_density(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 345
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 342
   _find_discontinuities(self, phase_diagram) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 365
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 362
   _find_critical_points(self, phase_diagram, discontinuities) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 398
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 395
   _compute_critical_exponents(self, phase_diagram, critical_point) -> Dict[str, float]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 423
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 420
   _check_phase_stability(self, state) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 444
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 441
   _analyze_phase_boundaries(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 469
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 466
   _identify_stability_regions(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 486
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 483
   _classify_phase(self, order_params) -> str
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 503
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 500
   analyze(self, data) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 523
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 520
+  _step_resonator_phase_coherence(self) -> float
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 543
 
 Class: LevelDModels
   __init__(self, domain, parameters)
@@ -6382,7 +6446,7 @@ Class: LevelDModels
 
 Class: FieldProjection
   __init__(self)
-    File: ./bhlff/models/level_d/projections.py, Line: 448
+    File: ./bhlff/models/level_d/projections.py, Line: 475
   project_em_field(self, field) -> np.ndarray
     File: ./bhlff/models/level_d/projections.py, Line: 87
   project_strong_field(self, field) -> np.ndarray
@@ -6392,39 +6456,41 @@ Class: FieldProjection
   project_field_windows(self, field, window_params) -> Dict[str, Any]
     File: ./bhlff/models/level_d/projections.py, Line: 227
   analyze_field_signatures(self, projections) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/projections.py, Line: 452
+    File: ./bhlff/models/level_d/projections.py, Line: 479
   project(self, field) -> np.ndarray
-    File: ./bhlff/models/level_d/projections.py, Line: 386
+    File: ./bhlff/models/level_d/projections.py, Line: 413
   _create_em_filter(self, shape) -> np.ndarray
     File: ./bhlff/models/level_d/projections.py, Line: 280
   _create_frequency_grid(self, shape) -> np.ndarray
-    File: ./bhlff/models/level_d/projections.py, Line: 421
+    File: ./bhlff/models/level_d/projections.py, Line: 448
   _create_strong_filter(self, shape) -> np.ndarray
     File: ./bhlff/models/level_d/projections.py, Line: 335
   _apply_q_factor_filter(self, frequencies, q_factor) -> np.ndarray
     File: ./bhlff/models/level_d/projections.py, Line: 367
+  _step_q_factor_filter(self, frequencies, q_factor) -> np.ndarray
+    File: ./bhlff/models/level_d/projections.py, Line: 375
   _create_weak_filter(self, shape) -> np.ndarray
-    File: ./bhlff/models/level_d/projections.py, Line: 402
+    File: ./bhlff/models/level_d/projections.py, Line: 429
   _apply_chiral_filter(self, chiral_factor) -> np.ndarray
-    File: ./bhlff/models/level_d/projections.py, Line: 434
+    File: ./bhlff/models/level_d/projections.py, Line: 461
   _analyze_single_field_signature(self, field, field_type) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/projections.py, Line: 478
+    File: ./bhlff/models/level_d/projections.py, Line: 505
   _compute_localization(self, field) -> float
-    File: ./bhlff/models/level_d/projections.py, Line: 518
+    File: ./bhlff/models/level_d/projections.py, Line: 545
   _compute_range_characteristics(self, field) -> Dict[str, float]
-    File: ./bhlff/models/level_d/projections.py, Line: 524
+    File: ./bhlff/models/level_d/projections.py, Line: 551
   _compute_anisotropy(self, field) -> float
-    File: ./bhlff/models/level_d/projections.py, Line: 537
+    File: ./bhlff/models/level_d/projections.py, Line: 564
   _compute_chirality(self, field) -> float
-    File: ./bhlff/models/level_d/projections.py, Line: 553
-  _compute_confinement(self, field) -> float
-    File: ./bhlff/models/level_d/projections.py, Line: 559
-  _compute_parity_violation(self, field) -> float
-    File: ./bhlff/models/level_d/projections.py, Line: 568
-  _compute_correlation_length(self, field) -> float
-    File: ./bhlff/models/level_d/projections.py, Line: 574
-  _compute_decay_rate(self, field) -> float
     File: ./bhlff/models/level_d/projections.py, Line: 580
+  _compute_confinement(self, field) -> float
+    File: ./bhlff/models/level_d/projections.py, Line: 586
+  _compute_parity_violation(self, field) -> float
+    File: ./bhlff/models/level_d/projections.py, Line: 595
+  _compute_correlation_length(self, field) -> float
+    File: ./bhlff/models/level_d/projections.py, Line: 601
+  _compute_decay_rate(self, field) -> float
+    File: ./bhlff/models/level_d/projections.py, Line: 607
 
 Class: LevelDBVPIntegration
   __init__(self, bvp_core)
@@ -7164,23 +7230,25 @@ Class: DefectInteractions
   _setup_interaction_parameters(self) -> None
     File: ./bhlff/models/level_e/defect_interactions.py, Line: 59
   compute_interaction_forces(self, positions, charges) -> List[np.ndarray]
-    File: ./bhlff/models/level_e/defect_interactions.py, Line: 98
+    File: ./bhlff/models/level_e/defect_interactions.py, Line: 102
   _compute_pair_force(self, r_ij, r_magnitude, charge_i, charge_j) -> np.ndarray
-    File: ./bhlff/models/level_e/defect_interactions.py, Line: 142
+    File: ./bhlff/models/level_e/defect_interactions.py, Line: 146
   _compute_green_function(self, r) -> Tuple[float, float]
-    File: ./bhlff/models/level_e/defect_interactions.py, Line: 181
+    File: ./bhlff/models/level_e/defect_interactions.py, Line: 185
   simulate_defect_annihilation(self, defect_pair, positions, charges) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/defect_interactions.py, Line: 226
+    File: ./bhlff/models/level_e/defect_interactions.py, Line: 230
   _compute_annihilation_energy(self, charge1, charge2, separation) -> float
-    File: ./bhlff/models/level_e/defect_interactions.py, Line: 288
+    File: ./bhlff/models/level_e/defect_interactions.py, Line: 292
   _compute_energy_release_rate(self, annihilation_energy) -> float
-    File: ./bhlff/models/level_e/defect_interactions.py, Line: 314
+    File: ./bhlff/models/level_e/defect_interactions.py, Line: 318
   _compute_relaxation_time(self, separation) -> float
-    File: ./bhlff/models/level_e/defect_interactions.py, Line: 327
+    File: ./bhlff/models/level_e/defect_interactions.py, Line: 331
   compute_interaction_potential(self, positions, charges) -> float
-    File: ./bhlff/models/level_e/defect_interactions.py, Line: 343
+    File: ./bhlff/models/level_e/defect_interactions.py, Line: 347
   _compute_fractional_green_normalization(self, beta) -> float
-    File: ./bhlff/models/level_e/defect_interactions.py, Line: 386
+    File: ./bhlff/models/level_e/defect_interactions.py, Line: 390
+  _compute_defect_energy_from_field(self) -> float
+    File: ./bhlff/models/level_e/defect_interactions.py, Line: 421
 
 Class: SolitonModel
   __init__(self, domain, physics_params)
@@ -7544,12 +7612,12 @@ Class: ResonanceAnalyzer
   _summarize_classifications(self, classifications) -> Dict[str, Any]
     File: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py, Line: 142
 
-Class: MassComplexityAnalyzer
+Class: EnergyComplexityAnalyzer
   __init__(self)
     File: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py, Line: 41
-  analyze_mass_complexity_correlation(self, samples, outputs) -> Dict[str, Any]
+  analyze_energy_complexity_correlation(self, samples, outputs) -> Dict[str, Any]
     File: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py, Line: 51
-  _compute_mass_metrics(self, samples, mass_params) -> np.ndarray
+  _compute_energy_metrics(self, samples, energy_params) -> np.ndarray
     File: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py, Line: 89
   _compute_complexity_metrics(self, samples, complexity_params) -> np.ndarray
     File: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py, Line: 139
@@ -7873,6 +7941,10 @@ Class: VBPGravitationalWavesCalculator
     File: ./bhlff/models/level_g/gravity_waves.py, Line: 384
   compute_detection_sensitivity(self, amplitude, frequency) -> Dict[str, Any]
     File: ./bhlff/models/level_g/gravity_waves.py, Line: 422
+  _step_resonator_boundary_condition(self, dt) -> float
+    File: ./bhlff/models/level_g/gravity_waves.py, Line: 459
+  _step_resonator_spatial_boundary(self, dx) -> float
+    File: ./bhlff/models/level_g/gravity_waves.py, Line: 485
 
 Class: ParticleInversionComputations
   compute_model_predictions(self, params) -> Dict[str, float]
@@ -7956,25 +8028,27 @@ Class: PhaseEnvelopeBalanceSolver
   _build_memory_kernels(self, phase_field) -> Dict[str, np.ndarray]
     File: ./bhlff/models/level_g/gravity_einstein.py, Line: 160
   _build_spatial_operator(self, phase_field) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 210
+    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 211
   _compute_phase_field_gradient(self) -> np.ndarray
-    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 244
+    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 245
   _compute_spectral_representation(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 258
+    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 259
   _build_bridge_terms(self, phase_field) -> Dict[str, float]
-    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 274
+    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 275
   _solve_envelope_balance(self, balance_operator, phase_field) -> np.ndarray
-    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 294
+    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 295
   _apply_balance_operator(self, balance_operator, solution) -> np.ndarray
-    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 332
+    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 333
   _compute_effective_metric_from_solution(self, solution) -> np.ndarray
-    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 388
+    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 389
   solve_with_envelope_effective_metric(self, source) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 544
+    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 545
   compute_anisotropic_envelope_solution(self, source) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 467
+    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 468
   compute_cosmological_envelope_evolution(self, source, t) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 503
+    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 504
+  _step_resonator_transmission(self, k_magnitude) -> np.ndarray
+    File: ./bhlff/models/level_g/gravity_einstein.py, Line: 570
 
 Class: ObservablePropertiesCalculator
   __init__(self, config)

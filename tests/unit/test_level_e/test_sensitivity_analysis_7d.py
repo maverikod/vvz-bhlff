@@ -77,12 +77,12 @@ class TestSensitivityAnalysis7D:
         file_path = Path("bhlff/models/level_e/sensitivity_analysis.py")
         content = file_path.read_text()
         
-        # Find _compute_mass_metrics method
-        assert "_compute_mass_metrics" in content, \
-            "Should have _compute_mass_metrics method"
+        # Find _compute_energy_metrics method
+        assert "_compute_energy_metrics" in content, \
+            "Should have _compute_energy_metrics method"
         
         # Check that it uses field energy, not classical mass
-        method_start = content.find("def _compute_mass_metrics")
+        method_start = content.find("def _compute_energy_metrics")
         method_content = content[method_start:method_start+3000]
         
         assert "localization_energy" in method_content, \
@@ -172,10 +172,10 @@ class TestSensitivityAnalysis7D:
         content = file_path.read_text()
         
         # Check for mass-complexity methods
-        assert "analyze_mass_complexity_correlation" in content, \
-            "Should analyze mass-complexity correlation"
-        assert "_compute_mass_metrics" in content, \
-            "Should compute mass from field properties"
+        assert "analyze_energy_complexity_correlation" in content, \
+            "Should analyze energy-complexity correlation"
+        assert "_compute_energy_metrics" in content, \
+            "Should compute energy from field properties"
         assert "_compute_complexity_metrics" in content, \
             "Should compute field complexity"
     

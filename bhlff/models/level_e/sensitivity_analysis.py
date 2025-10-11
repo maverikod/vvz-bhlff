@@ -31,7 +31,7 @@ from scipy import stats
 from scipy.optimize import minimize
 
 from .sensitivity.sobol_analysis import SobolAnalyzer
-from .sensitivity.mass_complexity_analysis import MassComplexityAnalyzer
+from .sensitivity.mass_complexity_analysis import EnergyComplexityAnalyzer
 
 
 class SensitivityAnalyzer:

@@ -162,7 +162,7 @@ class MemoryEvolutionAnalyzer:
         t_max = 100.0  # Maximum time for kernel
         dt = 0.01
         t_points = np.arange(0, t_max, dt)
-        temporal_kernel = (1.0 / memory.tau) * np.exp(-t_points / memory.tau)
+        temporal_kernel = (1.0 / memory.tau) * self._step_memory_kernel(t_points, memory.tau)
 
         # Create spatial kernel
         N = 64
@@ -175,14 +175,7 @@ class MemoryEvolutionAnalyzer:
         # Gaussian spatial kernel
         center = np.array([L / 2, L / 2, L / 2])
         sigma = L / 8
-        spatial_kernel = np.exp(
-            -(
-                (X - center[0]) ** 2
-                + (Y - center[1]) ** 2
-                + (Z - center[2]) ** 2
-            )
-            / (2 * sigma ** 2)
-        )
+        spatial_kernel = self._step_spatial_kernel(X, Y, Z, center, sigma)
 
         return MemoryKernel(
             temporal_kernel=temporal_kernel,
@@ -438,3 +431,62 @@ class MemoryEvolutionAnalyzer:
                 quench_events.append(quench_event)
 
         return quench_events
+    
+    def _step_memory_kernel(self, t_points: np.ndarray, tau: float) -> np.ndarray:
+        """
+        Step function memory kernel.
+        
+        Physical Meaning:
+            Implements step resonator model for memory kernel instead of
+            exponential decay. This follows 7D BVP theory principles where
+            energy exchange occurs through semi-transparent boundaries.
+            
+        Mathematical Foundation:
+            K(t) = (1/τ) * Θ(t_cutoff - t) where Θ is the Heaviside step function
+            and t_cutoff is the cutoff time for the memory kernel.
+            
+        Args:
+            t_points (np.ndarray): Time points
+            tau (float): Relaxation time
+            
+        Returns:
+            np.ndarray: Step function memory kernel
+        """
+        # Step resonator parameters
+        cutoff_ratio = 0.8  # 80% of relaxation time
+        t_cutoff = tau * cutoff_ratio
+        
+        # Step function kernel: 1.0 below cutoff, 0.0 above
+        return np.where(t_points < t_cutoff, 1.0, 0.0)
+    
+    def _step_spatial_kernel(self, X: np.ndarray, Y: np.ndarray, Z: np.ndarray, 
+                             center: np.ndarray, sigma: float) -> np.ndarray:
+        """
+        Step function spatial kernel.
+        
+        Physical Meaning:
+            Implements step resonator model for spatial kernel instead of
+            Gaussian decay. This follows 7D BVP theory principles where
+            energy exchange occurs through semi-transparent boundaries.
+            
+        Mathematical Foundation:
+            K(x) = Θ(r_cutoff - r) where Θ is the Heaviside step function
+            and r_cutoff is the cutoff radius for the spatial kernel.
+            
+        Args:
+            X, Y, Z (np.ndarray): Coordinate arrays
+            center (np.ndarray): Center coordinates
+            sigma (float): Characteristic length scale
+            
+        Returns:
+            np.ndarray: Step function spatial kernel
+        """
+        # Step resonator parameters
+        cutoff_ratio = 2.0  # 2 sigma cutoff
+        r_cutoff = sigma * cutoff_ratio
+        
+        # Calculate distance from center
+        r = np.sqrt((X - center[0])**2 + (Y - center[1])**2 + (Z - center[2])**2)
+        
+        # Step function kernel: 1.0 below cutoff, 0.0 above
+        return np.where(r < r_cutoff, 1.0, 0.0)

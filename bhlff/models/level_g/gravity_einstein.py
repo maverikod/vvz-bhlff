@@ -199,7 +199,8 @@ class PhaseEnvelopeBalanceSolver:
         
         # K kernel: 7D phase field memory decay
         # Describes phase coherence decay in 7D space-time
-        k_kernel = 0.1 * k_magnitude * np.exp(-k_magnitude / 10.0)
+        # Using step resonator model instead of exponential decay
+        k_kernel = 0.1 * k_magnitude * self._step_resonator_transmission(k_magnitude)
         
         # Transform to real space for 7D phase field operations
         gamma_kernel_real = np.fft.ifftn(gamma_kernel).real
@@ -565,3 +566,29 @@ class PhaseEnvelopeBalanceSolver:
             "envelope_invariants": envelope_invariants,
             "envelope_curvature": self.curvature_calc.compute_envelope_curvature(solution)
         }
+    
+    def _step_resonator_transmission(self, k_magnitude: np.ndarray) -> np.ndarray:
+        """
+        Step resonator transmission coefficient.
+        
+        Physical Meaning:
+            Implements step resonator model for energy exchange instead of
+            exponential decay. This follows 7D BVP theory principles where
+            energy exchange occurs through semi-transparent boundaries.
+            
+        Mathematical Foundation:
+            T(k) = T₀ * Θ(k_cutoff - |k|) where Θ is the Heaviside step function
+            and k_cutoff is the cutoff frequency for the resonator.
+            
+        Args:
+            k_magnitude: Wave vector magnitude
+            
+        Returns:
+            Step function transmission coefficient
+        """
+        # Step resonator parameters
+        cutoff_frequency = self.params.get("resonator_cutoff_frequency", 10.0)
+        transmission_coeff = self.params.get("transmission_coefficient", 0.9)
+        
+        # Step function transmission: 1.0 below cutoff, 0.0 above
+        return transmission_coeff * np.where(k_magnitude < cutoff_frequency, 1.0, 0.0)

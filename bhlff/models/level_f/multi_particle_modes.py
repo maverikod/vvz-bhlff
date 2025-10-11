@@ -38,7 +38,7 @@ class MultiParticleModesAnalyzer:
         - Correlation functions: G(x,t) = ⟨ψ*(x,t)ψ(0,0)⟩
     """
     
-    def __init__(self, domain, particles: List[Particle], interaction_range: float = 2.0):
+    def __init__(self, domain, particles: List[Particle], interaction_range: float = 2.0, params: Dict[str, Any] = None):
         """
         Initialize multi-particle modes analyzer.
         
@@ -50,10 +50,12 @@ class MultiParticleModesAnalyzer:
             domain: Domain parameters.
             particles (List[Particle]): List of particles.
             interaction_range (float): Interaction range parameter.
+            params (Dict[str, Any]): Additional parameters for step resonator model.
         """
         self.domain = domain
         self.particles = particles
         self.interaction_range = interaction_range
+        self.params = params or {}
         self.logger = logging.getLogger(__name__)
     
     def find_collective_modes(self) -> Dict[str, Any]:
@@ -305,9 +307,31 @@ class MultiParticleModesAnalyzer:
         Returns:
             float: Interaction strength.
         """
-        # Simplified interaction strength calculation
-        # In practice, this would involve proper interaction calculation
-        if distance < self.interaction_range:
-            return np.exp(-distance / self.interaction_range)
-        else:
-            return 0.0
+        # Step resonator interaction strength calculation
+        # Based on 7D BVP theory principles
+        return self._step_interaction_potential(distance)
+    
+    def _step_interaction_potential(self, distance: float) -> float:
+        """
+        Step function interaction potential.
+        
+        Physical Meaning:
+            Implements step resonator model for particle interactions instead of
+            exponential decay. This follows 7D BVP theory principles where
+            energy exchange occurs through semi-transparent boundaries.
+            
+        Mathematical Foundation:
+            V(r) = V₀ * Θ(r_cutoff - r) where Θ is the Heaviside step function
+            and r_cutoff is the cutoff distance for the interaction.
+            
+        Args:
+            distance (float): Distance between particles
+            
+        Returns:
+            float: Step function interaction potential
+        """
+        # Step resonator parameters
+        interaction_strength = self.params.get("interaction_strength", 1.0)
+        
+        # Step function interaction: 1.0 below cutoff, 0.0 above
+        return interaction_strength if distance < self.interaction_range else 0.0

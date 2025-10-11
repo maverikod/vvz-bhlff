@@ -37,7 +37,7 @@ class MultiParticlePotentialAnalyzer:
         - Effective potential: U_eff = Σᵢ Uᵢ + Σᵢ<ⱼ Uᵢⱼ + Σᵢ<ⱼ<ₖ Uᵢⱼₖ
     """
     
-    def __init__(self, domain, particles: List[Particle], interaction_range: float = 2.0):
+    def __init__(self, domain, particles: List[Particle], interaction_range: float = 2.0, params: Dict[str, Any] = None):
         """
         Initialize multi-particle potential analyzer.
         
@@ -49,10 +49,12 @@ class MultiParticlePotentialAnalyzer:
             domain: Domain parameters.
             particles (List[Particle]): List of particles.
             interaction_range (float): Interaction range parameter.
+            params (Dict[str, Any]): Additional parameters for step resonator model.
         """
         self.domain = domain
         self.particles = particles
         self.interaction_range = interaction_range
+        self.params = params or {}
         self.logger = logging.getLogger(__name__)
         
         # Setup interaction matrices
@@ -139,8 +141,8 @@ class MultiParticlePotentialAnalyzer:
             (Z - particle.position[2])**2
         )
         
-        # Compute potential
-        potential = particle.charge * np.exp(-distance / self.interaction_range)
+        # Compute potential using step resonator model
+        potential = particle.charge * self._step_interaction_potential(distance)
         
         return potential
     
@@ -248,12 +250,9 @@ class MultiParticlePotentialAnalyzer:
         Returns:
             float: Interaction strength.
         """
-        # Simplified interaction strength calculation
-        # In practice, this would involve proper interaction calculation
-        if distance < self.interaction_range:
-            return np.exp(-distance / self.interaction_range)
-        else:
-            return 0.0
+        # Step resonator interaction strength calculation
+        # Based on 7D BVP theory principles
+        return self._step_interaction_potential(distance)
     
     def _calculate_three_body_strength(self, distance_12: float, distance_13: float, distance_23: float) -> float:
         """
@@ -271,11 +270,66 @@ class MultiParticlePotentialAnalyzer:
         Returns:
             float: Three-body interaction strength.
         """
-        # Simplified three-body interaction strength calculation
-        # In practice, this would involve proper three-body interaction calculation
+        # Step resonator three-body interaction strength calculation
+        # Based on 7D BVP theory principles
         if (distance_12 < self.interaction_range and 
             distance_13 < self.interaction_range and 
             distance_23 < self.interaction_range):
-            return np.exp(-(distance_12 + distance_13 + distance_23) / (3 * self.interaction_range))
+            return self._step_three_body_interaction_potential(distance_12, distance_13, distance_23)
         else:
             return 0.0
+    
+    def _step_interaction_potential(self, distance: float) -> float:
+        """
+        Step function interaction potential.
+        
+        Physical Meaning:
+            Implements step resonator model for particle interactions instead of
+            exponential decay. This follows 7D BVP theory principles where
+            energy exchange occurs through semi-transparent boundaries.
+            
+        Mathematical Foundation:
+            V(r) = V₀ * Θ(r_cutoff - r) where Θ is the Heaviside step function
+            and r_cutoff is the cutoff distance for the interaction.
+            
+        Args:
+            distance (float): Distance between particles
+            
+        Returns:
+            float: Step function interaction potential
+        """
+        # Step resonator parameters
+        interaction_strength = self.params.get("interaction_strength", 1.0)
+        
+        # Step function interaction: 1.0 below cutoff, 0.0 above
+        return interaction_strength if distance < self.interaction_range else 0.0
+    
+    def _step_three_body_interaction_potential(self, distance_12: float, distance_13: float, distance_23: float) -> float:
+        """
+        Step function three-body interaction potential.
+        
+        Physical Meaning:
+            Implements step resonator model for three-body interactions instead of
+            exponential decay. This follows 7D BVP theory principles where
+            energy exchange occurs through semi-transparent boundaries.
+            
+        Mathematical Foundation:
+            V(r₁₂,r₁₃,r₂₃) = V₀ * Θ(r_cutoff - r_avg) where Θ is the Heaviside step function
+            and r_avg is the average distance between particles.
+            
+        Args:
+            distance_12 (float): Distance between particles 1 and 2
+            distance_13 (float): Distance between particles 1 and 3
+            distance_23 (float): Distance between particles 2 and 3
+            
+        Returns:
+            float: Step function three-body interaction potential
+        """
+        # Step resonator parameters
+        interaction_strength = self.params.get("interaction_strength", 1.0)
+        
+        # Average distance for three-body interaction
+        avg_distance = (distance_12 + distance_13 + distance_23) / 3.0
+        
+        # Step function three-body interaction: 1.0 below cutoff, 0.0 above
+        return interaction_strength if avg_distance < self.interaction_range else 0.0

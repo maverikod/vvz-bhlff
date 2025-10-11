@@ -365,8 +365,8 @@ class VBPGravitationalWavesCalculator:
             phase_correction = 1.0 + 0.1 * np.sin(np.sum(strain_tensor))
             strain_derivative *= phase_correction
             
-            # Apply 7D phase field damping
-            damping_factor = np.exp(-dt / self.params.get("damping_time", 1.0))
+            # Apply 7D phase field damping using step resonator model
+            damping_factor = self._step_resonator_boundary_condition(dt)
             strain_derivative *= damping_factor
         else:
             strain_derivative = np.zeros_like(strain_tensor)
@@ -403,8 +403,8 @@ class VBPGravitationalWavesCalculator:
             phase_correction = 1.0 + 0.1 * np.cos(np.sum(strain_tensor))
             strain_gradient *= phase_correction
             
-            # Apply 7D phase field spatial damping
-            spatial_damping = np.exp(-dx / self.params.get("spatial_damping", 1.0))
+            # Apply 7D phase field spatial damping using step resonator model
+            spatial_damping = self._step_resonator_spatial_boundary(dx)
             strain_gradient *= spatial_damping
         else:
             strain_gradient = np.zeros_like(strain_tensor)
@@ -455,3 +455,55 @@ class VBPGravitationalWavesCalculator:
             "c_T": self.c_T,
             "c_phi": self.c_phi,
         }
+    
+    def _step_resonator_boundary_condition(self, dt: float) -> float:
+        """
+        Step resonator boundary condition for temporal damping.
+        
+        Physical Meaning:
+            Implements step resonator model for temporal energy exchange instead of
+            exponential decay. This follows 7D BVP theory principles where
+            energy exchange occurs through semi-transparent boundaries.
+            
+        Mathematical Foundation:
+            T(t) = T₀ * Θ(t_cutoff - t) where Θ is the Heaviside step function
+            and t_cutoff is the cutoff time for the resonator.
+            
+        Args:
+            dt: Time step
+            
+        Returns:
+            Step function transmission coefficient
+        """
+        # Step resonator parameters
+        time_cutoff = self.params.get("resonator_time_cutoff", 1.0)
+        transmission_coeff = self.params.get("transmission_coefficient", 0.9)
+        
+        # Step function transmission: 1.0 below cutoff, 0.0 above
+        return transmission_coeff if dt < time_cutoff else 0.0
+    
+    def _step_resonator_spatial_boundary(self, dx: float) -> float:
+        """
+        Step resonator spatial boundary condition.
+        
+        Physical Meaning:
+            Implements step resonator model for spatial energy exchange instead of
+            exponential decay. This follows 7D BVP theory principles where
+            energy exchange occurs through semi-transparent boundaries.
+            
+        Mathematical Foundation:
+            T(x) = T₀ * Θ(x_cutoff - x) where Θ is the Heaviside step function
+            and x_cutoff is the cutoff distance for the resonator.
+            
+        Args:
+            dx: Spatial step
+            
+        Returns:
+            Step function transmission coefficient
+        """
+        # Step resonator parameters
+        spatial_cutoff = self.params.get("resonator_spatial_cutoff", 1.0)
+        transmission_coeff = self.params.get("transmission_coefficient", 0.9)
+        
+        # Step function transmission: 1.0 below cutoff, 0.0 above
+        return transmission_coeff if dx < spatial_cutoff else 0.0

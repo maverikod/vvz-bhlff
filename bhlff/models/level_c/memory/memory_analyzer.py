@@ -281,8 +281,8 @@ class MemoryAnalyzer:
         phase_correction = 1.0 + 0.1 * np.sin(np.sum(envelope_flat))
         autocorr *= phase_correction
         
-        # Apply 7D phase field damping
-        damping_factor = np.exp(-np.arange(len(autocorr)) / len(autocorr))
+        # Apply 7D phase field damping using step resonator model
+        damping_factor = self._step_autocorrelation_damping(len(autocorr))
         autocorr *= damping_factor
         
         return autocorr
@@ -407,3 +407,33 @@ class MemoryAnalyzer:
         encoding_efficiency = total_persistence / len(persistence_patterns)
 
         return float(encoding_efficiency)
+    
+    def _step_autocorrelation_damping(self, length: int) -> np.ndarray:
+        """
+        Step function autocorrelation damping.
+        
+        Physical Meaning:
+            Implements step resonator model for autocorrelation damping instead of
+            exponential decay. This follows 7D BVP theory principles where
+            energy exchange occurs through semi-transparent boundaries.
+            
+        Mathematical Foundation:
+            D(i) = D₀ * Θ(i_cutoff - i) where Θ is the Heaviside step function
+            and i_cutoff is the cutoff index for the autocorrelation.
+            
+        Args:
+            length (int): Length of autocorrelation array
+            
+        Returns:
+            np.ndarray: Step function damping factor
+        """
+        # Step resonator parameters
+        damping_strength = 1.0
+        cutoff_ratio = 0.8  # 80% of length
+        
+        # Create step function damping
+        indices = np.arange(length)
+        cutoff_index = int(length * cutoff_ratio)
+        
+        # Step function damping: 1.0 below cutoff, 0.0 above
+        return np.where(indices < cutoff_index, damping_strength, 0.0)

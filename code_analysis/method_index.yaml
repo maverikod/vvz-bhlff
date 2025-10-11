@@ -1000,6 +1000,263 @@ method_index:
       line: 344
       name: _handle_critical_failure
       returns: None
+    BVP7DAnalytics:
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 36
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - phase_features
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 45
+      name: compute_7d_frequency_prediction
+      returns: List[float]
+    - args:
+      - self
+      - phase_features
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 86
+      name: compute_7d_coupling_prediction
+      returns: Dict[str, float]
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 140
+      name: compute_analytical_confidence
+      returns: float
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 161
+      name: compute_coupling_analytical_confidence
+      returns: float
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 182
+      name: compute_analytical_feature_importance
+      returns: Dict[str, float]
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 204
+      name: compute_coupling_analytical_feature_importance
+      returns: Dict[str, float]
+    - args:
+      - self
+      - spectral_entropy
+      - phase_coherence
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 227
+      name: _compute_base_frequency_7d
+      returns: float
+    - args:
+      - self
+      - frequency_spacing
+      - topological_charge
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 232
+      name: _compute_spacing_factor_7d
+      returns: float
+    - args:
+      - self
+      - frequency_bandwidth
+      - phase_coherence
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 237
+      name: _compute_bandwidth_factor_7d
+      returns: float
+    - args:
+      - self
+      - coupling_strength
+      - phase_coherence
+      - topological_charge
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 242
+      name: _compute_coupling_strength_7d
+      returns: float
+    - args:
+      - self
+      - interaction_energy
+      - phase_coherence
+      - topological_charge
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 247
+      name: _compute_interaction_energy_7d
+      returns: float
+    - args:
+      - self
+      - coupling_symmetry
+      - phase_coherence
+      - topological_charge
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 252
+      name: _compute_coupling_symmetry_7d
+      returns: float
+    - args:
+      - self
+      - nonlinear_strength
+      - phase_coherence
+      - topological_charge
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 257
+      name: _compute_nonlinear_strength_7d
+      returns: float
+    - args:
+      - self
+      - mixing_degree
+      - phase_coherence
+      - topological_charge
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 262
+      name: _compute_mixing_degree_7d
+      returns: float
+    - args:
+      - self
+      - coupling_efficiency
+      - phase_coherence
+      - topological_charge
+      file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
+      line: 267
+      name: _compute_coupling_efficiency_7d
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 36
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - phase_features
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 45
+      name: compute_7d_frequency_prediction
+      returns: List[float]
+    - args:
+      - self
+      - phase_features
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 86
+      name: compute_7d_coupling_prediction
+      returns: Dict[str, float]
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 140
+      name: compute_analytical_confidence
+      returns: float
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 161
+      name: compute_coupling_analytical_confidence
+      returns: float
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 182
+      name: compute_analytical_feature_importance
+      returns: Dict[str, float]
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 204
+      name: compute_coupling_analytical_feature_importance
+      returns: Dict[str, float]
+    - args:
+      - self
+      - spectral_entropy
+      - phase_coherence
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 227
+      name: _compute_base_frequency_7d
+      returns: float
+    - args:
+      - self
+      - frequency_spacing
+      - topological_charge
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 232
+      name: _compute_spacing_factor_7d
+      returns: float
+    - args:
+      - self
+      - frequency_bandwidth
+      - phase_coherence
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 237
+      name: _compute_bandwidth_factor_7d
+      returns: float
+    - args:
+      - self
+      - coupling_strength
+      - phase_coherence
+      - topological_charge
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 242
+      name: _compute_coupling_strength_7d
+      returns: float
+    - args:
+      - self
+      - interaction_energy
+      - phase_coherence
+      - topological_charge
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 247
+      name: _compute_interaction_energy_7d
+      returns: float
+    - args:
+      - self
+      - coupling_symmetry
+      - phase_coherence
+      - topological_charge
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 252
+      name: _compute_coupling_symmetry_7d
+      returns: float
+    - args:
+      - self
+      - nonlinear_strength
+      - phase_coherence
+      - topological_charge
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 257
+      name: _compute_nonlinear_strength_7d
+      returns: float
+    - args:
+      - self
+      - mixing_degree
+      - phase_coherence
+      - topological_charge
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 262
+      name: _compute_mixing_degree_7d
+      returns: float
+    - args:
+      - self
+      - coupling_efficiency
+      - phase_coherence
+      - topological_charge
+      file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
+      line: 267
+      name: _compute_coupling_efficiency_7d
+      returns: float
     BVPAdaptive:
     - args:
       - self
@@ -1105,6 +1362,265 @@ method_index:
       line: 219
       name: _apply_operator
       returns: np.ndarray
+    BVPBlockProcessor:
+    - args:
+      - self
+      - domain
+      - config
+      - block_size
+      - overlap
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+      line: 44
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - source
+      - max_iterations
+      - tolerance
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+      line: 69
+      name: solve_envelope_blocked
+      returns: np.ndarray
+    - args:
+      - self
+      - source
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+      line: 124
+      name: _extract_source_block
+      returns: np.ndarray
+    - args:
+      - self
+      - current_block
+      - source_block
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+      line: 132
+      name: _solve_block_bvp
+      returns: np.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+      line: 174
+      name: _compute_block_stiffness
+      returns: np.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+      line: 189
+      name: _compute_block_susceptibility
+      returns: np.ndarray
+    - args:
+      - self
+      - lhs
+      - rhs
+      - initial_guess
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+      line: 205
+      name: _solve_block_iterative
+      returns: np.ndarray
+    - args:
+      - self
+      - old_solution
+      - new_solution
+      - tolerance
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+      line: 225
+      name: _check_convergence
+      returns: bool
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+      line: 234
+      name: detect_quenches_blocked
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+      line: 272
+      name: _extract_envelope_block
+      returns: np.ndarray
+    - args:
+      - self
+      - envelope_block
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+      line: 280
+      name: _detect_block_quenches
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+      line: 306
+      name: compute_impedance_blocked
+      returns: np.ndarray
+    - args:
+      - self
+      - envelope_block
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+      line: 340
+      name: _compute_block_impedance
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+      line: 351
+      name: get_memory_usage
+      returns: Dict[str, Any]
+    BVPCUDABlockProcessor:
+    - args:
+      - self
+      - domain
+      - config
+      - block_size
+      - overlap
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 54
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 81
+      name: _setup_cuda_bvp_parameters
+      returns: None
+    - args:
+      - self
+      - source
+      - max_iterations
+      - tolerance
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 100
+      name: solve_envelope_cuda_blocked
+      returns: np.ndarray
+    - args:
+      - self
+      - source
+      - max_iterations
+      - tolerance
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 169
+      name: _solve_envelope_cpu_fallback
+      returns: np.ndarray
+    - args:
+      - self
+      - source_gpu
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 177
+      name: _extract_source_block_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - current_block
+      - source_block
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 185
+      name: _solve_block_bvp_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 221
+      name: _compute_block_stiffness_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 232
+      name: _compute_block_susceptibility_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - lhs
+      - rhs
+      - initial_guess
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 243
+      name: _solve_block_iterative_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - old_solution
+      - new_solution
+      - tolerance
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 263
+      name: _check_convergence_cuda
+      returns: bool
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 272
+      name: detect_quenches_cuda_blocked
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 321
+      name: _detect_quenches_cpu_fallback
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope_gpu
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 328
+      name: _extract_envelope_block_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - envelope_block
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 336
+      name: _detect_block_quenches_cuda
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 366
+      name: compute_impedance_cuda_blocked
+      returns: np.ndarray
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 414
+      name: _compute_impedance_cpu_fallback
+      returns: np.ndarray
+    - args:
+      - self
+      - envelope_block
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 421
+      name: _compute_block_impedance_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+      line: 432
+      name: get_cuda_bvp_info
+      returns: Dict[str, Any]
     BVPConstants:
     - args:
       - self
@@ -3179,6 +3695,195 @@ method_index:
       line: 229
       name: get_source_info
       returns: Dict[str, Any]
+    BVPVectorizedProcessor:
+    - args:
+      - self
+      - domain
+      - config
+      - block_size
+      - overlap
+      - use_cuda
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 55
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 83
+      name: _setup_vectorized_bvp_parameters
+      returns: None
+    - args:
+      - self
+      - source
+      - max_iterations
+      - tolerance
+      - batch_size
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 108
+      name: solve_envelope_vectorized
+      returns: np.ndarray
+    - args:
+      - self
+      - source
+      - max_iterations
+      - tolerance
+      - batch_size
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 139
+      name: _solve_envelope_cuda_vectorized
+      returns: np.ndarray
+    - args:
+      - self
+      - source
+      - max_iterations
+      - tolerance
+      - batch_size
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 187
+      name: _solve_envelope_cpu_vectorized
+      returns: np.ndarray
+    - args:
+      - self
+      - source
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 225
+      name: _extract_source_block_vectorized
+      returns: np.ndarray
+    - args:
+      - self
+      - current_block
+      - source_block
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 233
+      name: _solve_block_bvp_vectorized
+      returns: np.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 278
+      name: _compute_block_stiffness_vectorized
+      returns: np.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 289
+      name: _compute_block_susceptibility_vectorized
+      returns: np.ndarray
+    - args:
+      - self
+      - lhs
+      - rhs
+      - initial_guess
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 300
+      name: _solve_block_iterative_vectorized
+      returns: np.ndarray
+    - args:
+      - self
+      - old_solution
+      - new_solution
+      - tolerance
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 329
+      name: _check_convergence_vectorized
+      returns: bool
+    - args:
+      - self
+      - envelope
+      - batch_size
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 342
+      name: detect_quenches_vectorized
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      - batch_size
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 364
+      name: _detect_quenches_cuda_vectorized
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      - batch_size
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 401
+      name: _detect_quenches_cpu_vectorized
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 431
+      name: _extract_envelope_block_vectorized
+      returns: np.ndarray
+    - args:
+      - self
+      - envelope_blocks
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 439
+      name: _detect_batch_quenches_cuda_vectorized
+      returns: List[Tuple[List[Dict[str, Any]], BlockInfo]]
+    - args:
+      - self
+      - envelope_blocks
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 473
+      name: _detect_batch_quenches_cpu_vectorized
+      returns: List[Tuple[List[Dict[str, Any]], BlockInfo]]
+    - args:
+      - self
+      - envelope
+      - batch_size
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 503
+      name: compute_impedance_vectorized
+      returns: np.ndarray
+    - args:
+      - self
+      - envelope
+      - batch_size
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 525
+      name: _compute_impedance_cuda_vectorized
+      returns: np.ndarray
+    - args:
+      - self
+      - envelope
+      - batch_size
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 561
+      name: _compute_impedance_cpu_vectorized
+      returns: np.ndarray
+    - args:
+      - self
+      - envelope_blocks
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 587
+      name: _compute_batch_impedance_cuda_vectorized
+      returns: List[Tuple['cp.ndarray', BlockInfo]]
+    - args:
+      - self
+      - envelope_blocks
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 603
+      name: _compute_batch_impedance_cpu_vectorized
+      returns: List[Tuple[np.ndarray, BlockInfo]]
+    - args:
+      - self
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+      line: 619
+      name: get_vectorized_bvp_info
+      returns: Dict[str, Any]
     BackgroundBeatingAnalyzer:
     - args:
       - self
@@ -4344,25 +5049,55 @@ method_index:
       returns: Dict[str, Any]
     - args:
       - self
+      - performance_array
+      - parameters
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 310
+      name: _optimize_with_vectorized_classification
+      returns: Optional[Dict[str, Any]]
+    - args:
+      - self
+      - parameters
+      - current_performance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 335
+      name: _compute_7d_classification_metric
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 361
+      name: _compute_spectral_entropy
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 387
+      name: _compute_phase_coherence
+      returns: float
+    - args:
+      - self
       - current_performance
       - best_performance
       - tolerance
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
-      line: 279
+      line: 413
       name: _check_classification_convergence
       returns: bool
     - args:
       - self
       - parameters
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
-      line: 299
+      line: 433
       name: _validate_classification_parameters
       returns: Dict[str, Any]
     - args:
       - self
       - performance
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
-      line: 328
+      line: 462
       name: _validate_classification_performance
       returns: Dict[str, Any]
     - args:
@@ -4370,7 +5105,7 @@ method_index:
       - parameter_validation
       - performance_validation
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
-      line: 348
+      line: 482
       name: _calculate_classification_overall_validation
       returns: Dict[str, Any]
     - args:
@@ -4378,7 +5113,7 @@ method_index:
       - parameters
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
-      line: 382
+      line: 516
       name: _calculate_classification_accuracy
       returns: float
     - args:
@@ -4386,7 +5121,7 @@ method_index:
       - parameters
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
-      line: 401
+      line: 561
       name: _calculate_classification_precision
       returns: float
     - args:
@@ -4394,7 +5129,7 @@ method_index:
       - parameters
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
-      line: 420
+      line: 606
       name: _calculate_classification_recall
       returns: float
     - args:
@@ -4402,9 +5137,15 @@ method_index:
       - parameters
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
-      line: 439
+      line: 651
       name: _calculate_classification_f1_score
       returns: float
+    - args:
+      - param_values
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 282
+      name: classification_objective_function
+      returns: null
     BeatingMLCore:
     - args:
       - self
@@ -4514,31 +5255,53 @@ method_index:
       returns: Dict[str, Any]
     - args:
       - self
+      - parameters
+      - current_performance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 279
+      name: _compute_7d_performance_metric
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 305
+      name: _compute_spectral_entropy
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 331
+      name: _compute_phase_coherence
+      returns: float
+    - args:
+      - self
       - current_performance
       - best_performance
       - tolerance
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
-      line: 254
+      line: 357
       name: _check_convergence
       returns: bool
     - args:
       - self
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
-      line: 274
+      line: 377
       name: _initialize_parameters
       returns: Dict[str, Any]
     - args:
       - self
       - parameters
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
-      line: 293
+      line: 396
       name: _validate_parameters
       returns: Dict[str, Any]
     - args:
       - self
       - performance
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
-      line: 326
+      line: 429
       name: _validate_performance
       returns: Dict[str, Any]
     - args:
@@ -4546,7 +5309,7 @@ method_index:
       - parameter_validation
       - performance_validation
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
-      line: 346
+      line: 449
       name: _calculate_overall_validation
       returns: Dict[str, Any]
     - args:
@@ -4554,7 +5317,7 @@ method_index:
       - parameters
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
-      line: 380
+      line: 483
       name: _calculate_accuracy
       returns: float
     - args:
@@ -4562,7 +5325,7 @@ method_index:
       - parameters
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
-      line: 399
+      line: 516
       name: _calculate_precision
       returns: float
     - args:
@@ -4570,7 +5333,7 @@ method_index:
       - parameters
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
-      line: 418
+      line: 549
       name: _calculate_recall
       returns: float
     - args:
@@ -4578,65 +5341,204 @@ method_index:
       - parameters
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
-      line: 437
+      line: 582
       name: _calculate_f1_score
       returns: float
+    - args:
+      - param_values
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 251
+      name: objective_function
+      returns: null
     BeatingMLPatterns:
     - args:
       - self
       - bvp_core
       file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
-      line: 31
+      line: 33
       name: __init__
       returns: null
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
-      line: 45
+      line: 50
       name: classify_beating_patterns
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
-      line: 73
+      line: 78
       name: _extract_pattern_features
       returns: Dict[str, Any]
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
-      line: 121
+      line: 126
       name: _classify_patterns_ml
       returns: Dict[str, Any]
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
-      line: 170
+      line: 177
       name: _classify_patterns_simple
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
-      line: 204
+      line: 233
       name: _calculate_symmetry_score
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
-      line: 217
+      line: 256
       name: _calculate_regularity_score
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
-      line: 230
+      line: 279
       name: _calculate_complexity_score
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 302
+      name: _load_trained_pattern_classifier
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 327
+      name: _load_pattern_scaler
+      returns: null
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 352
+      name: _extract_ml_pattern_features
+      returns: np.ndarray
+    - args:
+      - self
+      - model
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 387
+      name: _get_pattern_feature_importance
+      returns: Dict[str, float]
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 419
+      name: _classify_patterns_analytical
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 471
+      name: _compute_7d_pattern_coherence
+      returns: float
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 498
+      name: _compute_7d_pattern_stability
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 525
+      name: _compute_7d_phase_field_symmetry
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 561
+      name: _compute_vbp_envelope_symmetry
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 784
+      name: _setup_vectorized_processor
+      returns: None
+    - args:
+      - self
+      - phase_field_symmetry
+      - vbp_symmetry
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 607
+      name: _combine_7d_symmetries
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 618
+      name: _compute_7d_phase_field_regularity
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 647
+      name: _compute_vbp_envelope_regularity
+      returns: float
+    - args:
+      - self
+      - phase_field_regularity
+      - vbp_regularity
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 665
+      name: _combine_7d_regularities
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 676
+      name: _compute_7d_phase_field_complexity
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 719
+      name: _compute_vbp_envelope_complexity
+      returns: float
+    - args:
+      - self
+      - phase_field_complexity
+      - vbp_complexity
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 738
+      name: _combine_7d_complexities
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 749
+      name: _compute_topological_charge
+      returns: float
+    - args:
+      - self
+      - energy_density
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+      line: 766
+      name: _compute_energy_symmetry
       returns: float
     BeatingMLPrediction:
     - args:
@@ -4665,22 +5567,175 @@ method_index:
       - self
       - bvp_core
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 40
+      line: 42
       name: __init__
       returns: null
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 64
+      line: 70
       name: predict_beating_frequencies
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 99
+      line: 130
       name: predict_mode_coupling
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 200
+      name: train_frequency_model
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 221
+      name: train_coupling_model
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 242
+      name: train_all_models
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 259
+      name: validate_models
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 276
+      name: get_model_performance
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 289
+      name: _load_trained_frequency_model
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 306
+      name: _load_frequency_scaler
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 322
+      name: _load_trained_coupling_model
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 339
+      name: _load_coupling_scaler
+      returns: null
+    - args:
+      - self
+      - features
+      - model
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 355
+      name: _compute_prediction_confidence
+      returns: float
+    - args:
+      - self
+      - model
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 394
+      name: _get_feature_importance
+      returns: Dict[str, float]
+    - args:
+      - self
+      - features
+      - model
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 440
+      name: _compute_prediction_variance
+      returns: float
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 471
+      name: _predict_frequencies_analytical
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 527
+      name: _predict_coupling_analytical
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 590
+      name: _setup_vectorized_processor
+      returns: None
+    - args:
+      - self
+      - envelope
+      - parameters
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 623
+      name: _optimize_with_vectorized_processing
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - vectorized_results
+      - parameters
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 664
+      name: _extract_vectorized_optimization_results
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - vectorized_results
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 704
+      name: _compute_vectorized_optimization_metrics
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - vectorized_results
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 734
+      name: _compute_optimal_horizon_from_vectorized
+      returns: int
+    - args:
+      - self
+      - vectorized_results
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 754
+      name: _compute_optimal_regularization_from_vectorized
+      returns: float
+    - args:
+      - self
+      - vectorized_results
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 774
+      name: _compute_optimization_quality_from_vectorized
+      returns: float
+    - args:
+      - self
+      - envelope
+      - parameters
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 791
+      name: _optimize_without_vectorization
       returns: Dict[str, Any]
     BeatingMLPredictionFeatures:
     - args:
@@ -4780,14 +5835,14 @@ method_index:
       - self
       - bvp_core
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-      line: 39
+      line: 41
       name: __init__
       returns: null
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-      line: 58
+      line: 63
       name: optimize_prediction_parameters
       returns: Dict[str, Any]
     - args:
@@ -4796,7 +5851,7 @@ method_index:
       - max_iterations
       - tolerance
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-      line: 97
+      line: 102
       name: _optimize_prediction_parameters
       returns: Dict[str, Any]
     - args:
@@ -4804,7 +5859,7 @@ method_index:
       - optimization_results
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-      line: 148
+      line: 153
       name: _validate_prediction_optimization
       returns: Dict[str, Any]
     - args:
@@ -4812,13 +5867,13 @@ method_index:
       - optimization_results
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-      line: 189
+      line: 194
       name: _calculate_prediction_performance
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-      line: 229
+      line: 234
       name: _initialize_prediction_parameters
       returns: Dict[str, Any]
     - args:
@@ -4826,7 +5881,7 @@ method_index:
       - parameters
       - performance
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-      line: 248
+      line: 253
       name: _adjust_prediction_parameters
       returns: Dict[str, Any]
     - args:
@@ -4835,21 +5890,21 @@ method_index:
       - best_performance
       - tolerance
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-      line: 279
+      line: 302
       name: _check_prediction_convergence
       returns: bool
     - args:
       - self
       - parameters
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-      line: 299
+      line: 322
       name: _validate_prediction_parameters
       returns: Dict[str, Any]
     - args:
       - self
       - performance
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-      line: 330
+      line: 353
       name: _validate_prediction_performance
       returns: Dict[str, Any]
     - args:
@@ -4857,7 +5912,7 @@ method_index:
       - parameter_validation
       - performance_validation
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-      line: 350
+      line: 373
       name: _calculate_prediction_overall_validation
       returns: Dict[str, Any]
     - args:
@@ -4865,15 +5920,29 @@ method_index:
       - parameters
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-      line: 384
+      line: 407
       name: _calculate_prediction_accuracy
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 594
+      name: _compute_spectral_entropy
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 624
+      name: _compute_phase_coherence
       returns: float
     - args:
       - self
       - parameters
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-      line: 403
+      line: 504
       name: _calculate_prediction_precision
       returns: float
     - args:
@@ -4881,7 +5950,7 @@ method_index:
       - parameters
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-      line: 422
+      line: 534
       name: _calculate_prediction_recall
       returns: float
     - args:
@@ -4889,9 +5958,75 @@ method_index:
       - parameters
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-      line: 441
+      line: 564
       name: _calculate_prediction_f1_score
       returns: float
+    - args:
+      - self
+      - performance
+      - parameters
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 651
+      name: _compute_7d_phase_field_optimization
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 698
+      name: _setup_vectorized_processor
+      returns: None
+    - args:
+      - self
+      - envelope
+      - parameters
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 731
+      name: _optimize_with_vectorized_processing
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - vectorized_results
+      - parameters
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 772
+      name: _extract_vectorized_optimization_results
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - vectorized_results
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 812
+      name: _compute_vectorized_optimization_metrics
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - vectorized_results
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 842
+      name: _compute_optimal_horizon_from_vectorized
+      returns: int
+    - args:
+      - self
+      - vectorized_results
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 862
+      name: _compute_optimal_regularization_from_vectorized
+      returns: float
+    - args:
+      - self
+      - vectorized_results
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 882
+      name: _compute_optimization_quality_from_vectorized
+      returns: float
+    - args:
+      - self
+      - envelope
+      - parameters
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 899
+      name: _optimize_without_vectorization
+      returns: Dict[str, Any]
     BeatingMethodOptimizer:
     - args:
       - self
@@ -5861,6 +6996,109 @@ method_index:
       line: 349
       name: _compute_defect_density
       returns: float
+    BlockInfo:
+    - args:
+      - self
+      - domain
+      - block_size
+      - overlap
+      file: ./bhlff/core/domain/block_processor.py
+      line: 54
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/core/domain/block_processor.py
+      line: 82
+      name: _compute_block_configuration
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/domain/block_processor.py
+      line: 112
+      name: iterate_blocks
+      returns: Iterator[Tuple[np.ndarray, BlockInfo]]
+    - args:
+      - self
+      file: ./bhlff/core/domain/block_processor.py
+      line: 146
+      name: _generate_block_indices
+      returns: Iterator[Tuple[int, ...]]
+    - args:
+      - self
+      - block_indices
+      file: ./bhlff/core/domain/block_processor.py
+      line: 154
+      name: _compute_block_boundaries
+      returns: Tuple[Tuple[int, ...], Tuple[int, ...]]
+    - args:
+      - self
+      - start_indices
+      - end_indices
+      file: ./bhlff/core/domain/block_processor.py
+      line: 178
+      name: _extract_block_data
+      returns: np.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      - operation
+      file: ./bhlff/core/domain/block_processor.py
+      line: 189
+      name: process_block
+      returns: np.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/domain/block_processor.py
+      line: 215
+      name: _process_block_fft
+      returns: np.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/domain/block_processor.py
+      line: 226
+      name: _process_block_convolution
+      returns: np.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/domain/block_processor.py
+      line: 238
+      name: _process_block_gradient
+      returns: np.ndarray
+    - args:
+      - self
+      - processed_blocks
+      file: ./bhlff/core/domain/block_processor.py
+      line: 248
+      name: merge_blocks
+      returns: np.ndarray
+    - args:
+      - self
+      - block_info
+      file: ./bhlff/core/domain/block_processor.py
+      line: 286
+      name: _create_weight_mask
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/core/domain/block_processor.py
+      line: 307
+      name: get_memory_usage
+      returns: Dict[str, float]
+    - args:
+      - self
+      - available_memory_gb
+      file: ./bhlff/core/domain/block_processor.py
+      line: 316
+      name: optimize_block_size
+      returns: int
     BoundaryAnalysis:
     - args:
       - self
@@ -6498,6 +7736,122 @@ method_index:
       line: 171
       name: get_memory_info
       returns: dict
+    CUDABlockProcessor:
+    - args:
+      - self
+      - domain
+      - block_size
+      - overlap
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 53
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 79
+      name: _initialize_cuda
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 103
+      name: iterate_blocks_cuda
+      returns: Iterator[Tuple[cp.ndarray, BlockInfo]]
+    - args:
+      - self
+      - start_indices
+      - end_indices
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 143
+      name: _extract_block_data_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      - operation
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 158
+      name: process_block_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 192
+      name: _process_block_fft_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 203
+      name: _process_block_convolution_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 214
+      name: _process_block_gradient_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 224
+      name: _process_block_bvp_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - processed_blocks
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 238
+      name: merge_blocks_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - block_info
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 283
+      name: _create_weight_mask_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - available_memory_gb
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 304
+      name: optimize_block_size_cuda
+      returns: int
+    - args:
+      - self
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 338
+      name: get_cuda_info
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 351
+      name: get_memory_usage_cuda
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 363
+      name: cleanup_cuda_memory
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/domain/cuda_block_processor.py
+      line: 382
+      name: __del__
+      returns: null
     CarrierPrimacyPostulate:
     - args:
       - self
@@ -7129,49 +8483,49 @@ method_index:
       - particles
       - system_params
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 42
+      line: 43
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 63
+      line: 73
       name: find_collective_modes
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 100
+      line: 110
       name: _initialize_collective_modes_analysis
       returns: None
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 114
+      line: 124
       name: _setup_dynamics_matrices
       returns: None
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 131
+      line: 141
       name: _create_energy_matrix
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 157
+      line: 167
       name: _create_stiffness_matrix
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 185
+      line: 195
       name: _setup_mode_analysis_methods
       returns: None
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 199
+      line: 209
       name: _compute_dynamics_matrix
       returns: np.ndarray
     - args:
@@ -7179,14 +8533,14 @@ method_index:
       - eigenvalues
       - eigenvectors
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 215
+      line: 225
       name: _analyze_collective_modes
       returns: Dict[str, Any]
     - args:
       - self
       - eigenvalues
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 250
+      line: 260
       name: _analyze_mode_stability
       returns: Dict[str, Any]
     - args:
@@ -7194,7 +8548,7 @@ method_index:
       - eigenvalues
       - eigenvectors
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 279
+      line: 289
       name: _analyze_mode_interactions
       returns: Dict[str, Any]
     - args:
@@ -7202,51 +8556,114 @@ method_index:
       - eigenvalues
       - eigenvectors
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 309
+      line: 319
       name: _calculate_mode_coupling
       returns: float
     - args:
       - self
       - eigenvectors
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 335
+      line: 376
       name: _calculate_mode_overlap
       returns: float
     - args:
       - self
       - eigenvectors
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 365
+      line: 435
       name: _calculate_mode_correlation
       returns: float
     - args:
       - self
       - distance
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 396
+      line: 491
       name: _calculate_interaction_strength
       returns: float
     - args:
       - self
       - distance
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 417
+      line: 533
       name: _step_interaction_potential
       returns: float
     - args:
       - self
       - particle
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 443
+      line: 559
       name: _compute_particle_energy_from_field
       returns: float
     - args:
       - self
       - energy_matrix
       file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-      line: 482
+      line: 598
       name: _compute_energy_matrix_inverse
       returns: np.ndarray
+    - args:
+      - self
+      - eigenvalues
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 628
+      name: _compute_mode_interaction_strength
+      returns: float
+    - args:
+      - self
+      - eigenvalues
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 674
+      name: _compute_mode_resonance_effects
+      returns: float
+    - args:
+      - self
+      - eigenvectors
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 712
+      name: _compute_mode_mixing_degree
+      returns: float
+    - args:
+      - self
+      - eigenvectors
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 755
+      name: _compute_mode_coherence
+      returns: float
+    - args:
+      - self
+      - eigenvectors
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 791
+      name: _compute_mode_interaction_strength_from_eigenvectors
+      returns: float
+    - args:
+      - self
+      - eigenvectors
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 827
+      name: _compute_mode_phase_coherence
+      returns: float
+    - args:
+      - self
+      - distance
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 863
+      name: _compute_distance_coupling_factor
+      returns: float
+    - args:
+      - self
+      - distance
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 886
+      name: _compute_phase_coherence_factor
+      returns: float
+    - args:
+      - self
+      - distance
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 909
+      name: _compute_energy_exchange_factor
+      returns: float
     CollectiveModesSpectrumAnalyzer:
     - args:
       - self
@@ -11168,65 +12585,136 @@ method_index:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 156
+      line: 160
       name: calculate_mode_interaction_energy
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 175
+      line: 179
       name: calculate_coupling_symmetry
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 221
+      line: 225
       name: calculate_nonlinear_strength
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 237
+      line: 241
       name: calculate_mode_mixing_degree
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 262
+      line: 266
       name: calculate_coupling_efficiency
       returns: float
     FeatureExtractor:
     - args:
       - self
       file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
-      line: 39
+      line: 42
       name: __init__
       returns: null
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
-      line: 49
+      line: 52
       name: extract_frequency_features
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
-      line: 86
+      line: 101
       name: extract_coupling_features
       returns: Dict[str, Any]
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
-      line: 131
+      line: 168
       name: extract_7d_phase_features
       returns: np.ndarray
+    - args:
+      - self
+      - model_path
+      file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+      line: 217
+      name: load_trained_models
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - models
+      - model_path
+      file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+      line: 264
+      name: save_trained_models
+      returns: bool
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+      line: 316
+      name: extract_7d_phase_features_advanced
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+      line: 380
+      name: _compute_topological_charge_advanced
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+      line: 398
+      name: _compute_phase_coherence_advanced
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+      line: 416
+      name: _compute_energy_density_advanced
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+      line: 429
+      name: _compute_phase_velocity_advanced
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+      line: 443
+      name: _compute_phase_acceleration_advanced
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+      line: 457
+      name: _compute_interaction_strength_advanced
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+      line: 470
+      name: _compute_coupling_symmetry_advanced
+      returns: float
     Field:
     - args:
       - self
@@ -13562,6 +15050,48 @@ method_index:
       line: 222
       name: is_model_loaded
       returns: bool
+    MLTrainer:
+    - args:
+      - self
+      - model_manager
+      file: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py
+      line: 47
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py
+      line: 81
+      name: train_frequency_model
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py
+      line: 147
+      name: train_coupling_model
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py
+      line: 207
+      name: train_all_models
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py
+      line: 235
+      name: validate_models
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py
+      line: 288
+      name: get_model_performance
+      returns: Dict[str, Any]
     MemoryAnalyzer:
     - args:
       - self
@@ -19045,14 +20575,14 @@ method_index:
       - self
       - bvp_core
       file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 27
+      line: 30
       name: __init__
       returns: null
     - args:
       - self
       - region_data
       file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 33
+      line: 45
       name: fit_power_law
       returns: Dict[str, float]
     - args:
@@ -19060,16 +20590,56 @@ method_index:
       - region_data
       - power_law_fit
       file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 55
+      line: 124
       name: calculate_fitting_quality
       returns: float
     - args:
       - self
       - power_law_fit
       file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 75
+      line: 190
       name: calculate_decay_rate
       returns: float
+    - args:
+      - self
+      - region_data
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+      line: 247
+      name: _extract_radial_profile
+      returns: Dict[str, np.ndarray]
+    - args:
+      - self
+      - radial_profile
+      - popt
+      - func
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+      line: 312
+      name: _compute_r_squared
+      returns: float
+    - args:
+      - self
+      - pcov
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+      line: 349
+      name: _compute_fitting_quality
+      returns: float
+    - args:
+      - self
+      - radial_profile
+      - popt
+      - func
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+      line: 379
+      name: _compute_chi_squared
+      returns: float
+    - args:
+      - r
+      - amplitude
+      - exponent
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+      line: 71
+      name: power_law_func
+      returns: null
     PowerLawOptimization:
     - args:
       - self
@@ -19218,35 +20788,35 @@ method_index:
       - model_manager
       - feature_extractor
       file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
-      line: 40
+      line: 41
       name: __init__
       returns: null
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
-      line: 56
+      line: 58
       name: predict_frequencies
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
-      line: 118
+      line: 120
       name: predict_coupling
       returns: Dict[str, Any]
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
-      line: 190
+      line: 192
       name: _predict_frequencies_simple
       returns: Dict[str, Any]
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
-      line: 217
+      line: 248
       name: _predict_coupling_simple
       returns: Dict[str, Any]
     - args:
@@ -19254,14 +20824,14 @@ method_index:
       - features
       - model
       file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
-      line: 244
+      line: 311
       name: _compute_prediction_confidence
       returns: float
     - args:
       - self
       - model
       file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
-      line: 279
+      line: 346
       name: _get_feature_importance
       returns: Dict[str, float]
     - args:
@@ -19269,7 +20839,7 @@ method_index:
       - features
       - model
       file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
-      line: 321
+      line: 388
       name: _compute_prediction_variance
       returns: float
     Profiler:
@@ -24008,6 +25578,79 @@ method_index:
       file: ./tests/unit/test_core/test_7d_theory_compliance.py
       line: 299
       name: test_power_balance_postulate
+      returns: null
+    Test7DVectorizedProcessing:
+    - args:
+      - self
+      file: ./tests/unit/test_7d_vectorized_processing.py
+      line: 31
+      name: setup_method
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_vectorized_processing.py
+      line: 50
+      name: test_7d_processor_initialization
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_vectorized_processing.py
+      line: 69
+      name: test_7d_processor_memory_management
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_vectorized_processing.py
+      line: 88
+      name: test_7d_fft_processing
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_vectorized_processing.py
+      line: 108
+      name: test_7d_ifft_processing
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_vectorized_processing.py
+      line: 128
+      name: test_7d_gradient_processing
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_vectorized_processing.py
+      line: 148
+      name: test_7d_laplacian_processing
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_vectorized_processing.py
+      line: 168
+      name: test_7d_processor_error_handling
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_vectorized_processing.py
+      line: 189
+      name: test_7d_processor_physics_consistency
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_vectorized_processing.py
+      line: 214
+      name: test_7d_processor_memory_efficiency
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_vectorized_processing.py
+      line: 232
+      name: test_7d_processor_cuda_support
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_vectorized_processing.py
+      line: 257
+      name: test_comprehensive_7d_processing
       returns: null
     TestA01Minimal:
     - args:
@@ -31085,6 +32728,410 @@ method_index:
       line: 342
       name: test_experiment_report
       returns: null
+    TestMLPrediction7DBVP:
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_7d_bvp.py
+      line: 24
+      name: setup_method
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_7d_bvp.py
+      line: 52
+      name: test_7d_frequency_prediction_analytics
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_7d_bvp.py
+      line: 77
+      name: test_7d_coupling_prediction_analytics
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_7d_bvp.py
+      line: 104
+      name: test_analytical_confidence_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_7d_bvp.py
+      line: 122
+      name: test_feature_importance_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_7d_bvp.py
+      line: 150
+      name: test_full_frequency_prediction_pipeline
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_7d_bvp.py
+      line: 177
+      name: test_full_coupling_prediction_pipeline
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_7d_bvp.py
+      line: 204
+      name: test_7d_phase_field_feature_extraction
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_7d_bvp.py
+      line: 229
+      name: test_7d_bvp_theory_consistency
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_7d_bvp.py
+      line: 267
+      name: test_no_classical_patterns_in_7d_bvp
+      returns: null
+    TestMLPredictionFullImplementation:
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_full_implementation.py
+      line: 30
+      name: setup_method
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_full_implementation.py
+      line: 46
+      name: test_full_ml_frequency_prediction
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_full_implementation.py
+      line: 91
+      name: test_full_ml_coupling_prediction
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_full_implementation.py
+      line: 137
+      name: test_analytical_fallback_frequency_prediction
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_full_implementation.py
+      line: 174
+      name: test_analytical_fallback_coupling_prediction
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_full_implementation.py
+      line: 213
+      name: test_full_analytical_pattern_classification
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_full_implementation.py
+      line: 250
+      name: test_7d_phase_field_feature_extraction
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_full_implementation.py
+      line: 284
+      name: test_prediction_confidence_calculation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_full_implementation.py
+      line: 307
+      name: test_feature_importance_extraction
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_full_implementation.py
+      line: 335
+      name: test_prediction_variance_calculation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_full_implementation.py
+      line: 358
+      name: test_no_simplified_predictions
+      returns: null
+    TestMLPredictionPhysicsValidation:
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_physics_validation.py
+      line: 38
+      name: test_envelope
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_physics_validation.py
+      line: 64
+      name: test_parameters
+      returns: null
+    - args:
+      - self
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_physics_validation.py
+      line: 77
+      name: test_prediction_accuracy_physics
+      returns: null
+    - args:
+      - self
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_physics_validation.py
+      line: 112
+      name: test_prediction_precision_physics
+      returns: null
+    - args:
+      - self
+      - test_envelope
+      file: ./tests/unit/test_ml_prediction_physics_validation.py
+      line: 140
+      name: test_spectral_entropy_physics
+      returns: null
+    - args:
+      - self
+      - test_envelope
+      file: ./tests/unit/test_ml_prediction_physics_validation.py
+      line: 173
+      name: test_phase_coherence_physics
+      returns: null
+    - args:
+      - self
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_physics_validation.py
+      line: 206
+      name: test_ml_optimization_core_physics
+      returns: null
+    - args:
+      - self
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_physics_validation.py
+      line: 241
+      name: test_classification_physics
+      returns: null
+    - args:
+      - self
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_physics_validation.py
+      line: 276
+      name: test_7d_performance_metrics_physics
+      returns: null
+    - args:
+      - self
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_physics_validation.py
+      line: 308
+      name: test_no_simplified_calculations_physics
+      returns: null
+    TestMLPredictionVectorizedImplementation:
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 39
+      name: bvp_core
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 69
+      name: test_envelope
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 78
+      name: test_parameters
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 91
+      name: test_prediction_accuracy_calculation
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 119
+      name: test_prediction_precision_calculation
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 140
+      name: test_prediction_recall_calculation
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 161
+      name: test_prediction_f1_score_calculation
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 182
+      name: test_ml_optimization_core_accuracy
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 203
+      name: test_ml_optimization_core_precision
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 224
+      name: test_ml_optimization_core_recall
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 245
+      name: test_ml_optimization_core_f1_score
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 266
+      name: test_classification_accuracy_calculation
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 287
+      name: test_classification_precision_calculation
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 308
+      name: test_classification_recall_calculation
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 329
+      name: test_classification_f1_score_calculation
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 350
+      name: test_spectral_entropy_computation
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 371
+      name: test_phase_coherence_computation
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 392
+      name: test_parameter_optimization_with_vectorization
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 414
+      name: test_classification_parameter_optimization_with_vectorization
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 436
+      name: test_7d_performance_metric_computation
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 457
+      name: test_7d_classification_metric_computation
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 478
+      name: test_vectorized_processing_integration
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 519
+      name: test_no_simplified_calculations
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      - test_envelope
+      - test_parameters
+      file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+      line: 549
+      name: test_vectorized_block_processing_physics
+      returns: null
     TestMemoryKernel:
     - args:
       - self
@@ -32630,6 +34677,91 @@ method_index:
       line: 311
       name: _create_mock_test_results_with_failures
       returns: TestResults
+    TestPhysicsValidationStep2_1_1:
+    - args:
+      - self
+      file: ./tests/unit/test_physics_validation_step_2_1_1.py
+      line: 34
+      name: setup_method
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_physics_validation_step_2_1_1.py
+      line: 53
+      name: test_7d_bvp_theory_compliance
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_physics_validation_step_2_1_1.py
+      line: 100
+      name: test_no_classical_physics_patterns
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_physics_validation_step_2_1_1.py
+      line: 127
+      name: test_ml_models_7d_bvp_compliance
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_physics_validation_step_2_1_1.py
+      line: 163
+      name: test_vectorized_processing_7d_bvp_compliance
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_physics_validation_step_2_1_1.py
+      line: 214
+      name: test_bvp_vectorized_processor_physics
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_physics_validation_step_2_1_1.py
+      line: 222
+      name: test_memory_efficiency_7d_processing
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_physics_validation_step_2_1_1.py
+      line: 244
+      name: test_7d_phase_field_consistency
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_physics_validation_step_2_1_1.py
+      line: 275
+      name: test_no_classical_approximations
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_physics_validation_step_2_1_1.py
+      line: 307
+      name: test_7d_bvp_analytics_physics
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_physics_validation_step_2_1_1.py
+      line: 340
+      name: test_ml_training_physics_consistency
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_physics_validation_step_2_1_1.py
+      line: 370
+      name: test_vectorized_processing_physics_consistency
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_physics_validation_step_2_1_1.py
+      line: 401
+      name: _generate_synthetic_source
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_physics_validation_step_2_1_1.py
+      line: 419
+      name: test_comprehensive_physics_validation
+      returns: null
     TestPowerBalancePostulatePhysics:
     - args:
       - self
@@ -36834,6 +38966,62 @@ method_index:
       line: 320
       name: _compute_distribution_uniformity
       returns: float
+    TrainingDataGenerator:
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py
+      line: 39
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py
+      line: 64
+      name: generate_frequency_training_data
+      returns: Tuple[np.ndarray, np.ndarray]
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py
+      line: 105
+      name: generate_coupling_training_data
+      returns: Tuple[np.ndarray, np.ndarray]
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py
+      line: 146
+      name: _generate_random_phase_params
+      returns: Dict[str, float]
+    - args:
+      - self
+      - phase_params
+      file: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py
+      line: 153
+      name: _generate_synthetic_envelope
+      returns: np.ndarray
+    - args:
+      - self
+      - envelope
+      - phase_params
+      file: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py
+      line: 194
+      name: _extract_training_features
+      returns: np.ndarray
+    - args:
+      - self
+      - phase_params
+      file: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py
+      line: 227
+      name: _compute_target_frequencies
+      returns: np.ndarray
+    - args:
+      - self
+      - phase_params
+      file: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py
+      line: 247
+      name: _compute_target_coupling
+      returns: np.ndarray
     TransitionAnalysis:
     - args:
       - self
@@ -37490,6 +39678,352 @@ method_index:
       line: 485
       name: _step_resonator_spatial_boundary
       returns: float
+    Vectorized7DProcessor:
+    - args:
+      - self
+      - domain
+      - config
+      - use_cuda
+      - memory_limit
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 61
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 95
+      name: _compute_optimal_block_size
+      returns: Tuple[int, ...]
+    - args:
+      - self
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 118
+      name: _setup_processing_components
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 136
+      name: _setup_fft_plans
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 150
+      name: _setup_spectral_operators
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 164
+      name: _setup_memory_management
+      returns: None
+    - args:
+      - self
+      - field
+      - operation
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 181
+      name: process_7d_field
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 226
+      name: _process_fft_7d
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 257
+      name: _process_fft_7d_blocks
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 292
+      name: _process_ifft_7d
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 322
+      name: _process_ifft_7d_blocks
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 352
+      name: _process_gradient_7d
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 384
+      name: _process_laplacian_7d
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 416
+      name: _check_memory_usage
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 426
+      name: _cleanup_memory
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/domain/7d_vectorized_processor.py
+      line: 444
+      name: get_memory_info
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - domain
+      - config
+      - use_cuda
+      - memory_limit
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 61
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 95
+      name: _compute_optimal_block_size
+      returns: Tuple[int, ...]
+    - args:
+      - self
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 118
+      name: _setup_processing_components
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 136
+      name: _setup_fft_plans
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 150
+      name: _setup_spectral_operators
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 164
+      name: _setup_memory_management
+      returns: None
+    - args:
+      - self
+      - field
+      - operation
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 181
+      name: process_7d_field
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 226
+      name: _process_fft_7d
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 257
+      name: _process_fft_7d_blocks
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 292
+      name: _process_ifft_7d
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 322
+      name: _process_ifft_7d_blocks
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 352
+      name: _process_gradient_7d
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 384
+      name: _process_laplacian_7d
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 416
+      name: _check_memory_usage
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 426
+      name: _cleanup_memory
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/domain/vectorized_7d_processor.py
+      line: 444
+      name: get_memory_info
+      returns: Dict[str, Any]
+    VectorizedBlockProcessor:
+    - args:
+      - self
+      - domain
+      - block_size
+      - overlap
+      - use_cuda
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 51
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - operation
+      - batch_size
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 76
+      name: process_blocks_vectorized
+      returns: np.ndarray
+    - args:
+      - self
+      - all_blocks
+      - operation
+      - batch_size
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 105
+      name: _process_blocks_cuda_vectorized
+      returns: np.ndarray
+    - args:
+      - self
+      - all_blocks
+      - operation
+      - batch_size
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 133
+      name: _process_blocks_cpu_vectorized
+      returns: np.ndarray
+    - args:
+      - self
+      - batch_blocks
+      - operation
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 148
+      name: _process_batch_cuda_vectorized
+      returns: List[Tuple[np.ndarray, BlockInfo]]
+    - args:
+      - self
+      - batch_blocks
+      - operation
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 183
+      name: _process_batch_cpu_vectorized
+      returns: List[Tuple[np.ndarray, BlockInfo]]
+    - args:
+      - self
+      - stacked_blocks
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 215
+      name: _vectorized_fft_cuda
+      returns: np.ndarray
+    - args:
+      - self
+      - stacked_blocks
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 233
+      name: _vectorized_fft_cpu
+      returns: np.ndarray
+    - args:
+      - self
+      - stacked_blocks
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 244
+      name: _vectorized_convolution_cuda
+      returns: np.ndarray
+    - args:
+      - self
+      - stacked_blocks
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 267
+      name: _vectorized_convolution_cpu
+      returns: np.ndarray
+    - args:
+      - self
+      - stacked_blocks
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 280
+      name: _vectorized_gradient_cuda
+      returns: np.ndarray
+    - args:
+      - self
+      - stacked_blocks
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 300
+      name: _vectorized_gradient_cpu
+      returns: np.ndarray
+    - args:
+      - self
+      - stacked_blocks
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 311
+      name: _vectorized_bvp_solve_cuda
+      returns: np.ndarray
+    - args:
+      - self
+      - stacked_blocks
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 330
+      name: _vectorized_bvp_solve_cpu
+      returns: np.ndarray
+    - args:
+      - self
+      - processed_blocks
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 341
+      name: merge_blocks_cuda
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - block_info
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 370
+      name: _create_weight_mask_cuda
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      file: ./bhlff/core/domain/vectorized_block_processor.py
+      line: 391
+      name: get_vectorization_info
+      returns: Dict[str, Any]
     VelocityEvolution:
     - args:
       - self
@@ -37747,6 +40281,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 5276
-    total_classes: 564
+    total_class_methods: 5622
+    total_classes: 580
     total_standalone_functions: 0

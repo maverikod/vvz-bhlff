@@ -4,25 +4,25 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 781
+Total files analyzed: 805
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 651
+Total classes: 670
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 5357
+Total functions: 5724
 
 ISSUES SUMMARY:
 ----------------------------------------
 methods_with_pass: 0
 not_implemented_in_non_abstract: 0
-methods_without_docstrings: 97
+methods_without_docstrings: 98
 files_without_docstrings: 4
 classes_without_docstrings: 6
-imports_in_middle: 552
-files_too_large: 65
+imports_in_middle: 573
+files_too_large: 77
 
 METHODS_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -70,7 +70,7 @@ METHODS_WITHOUT_DOCSTRINGS:
   Class: TestEnvelopeEffectiveMetricGravity
   Method: test_metric_sensitivity_to_invariants
 
-  ... and 87 more
+  ... and 88 more
 
 FILES_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -119,6 +119,24 @@ IMPORTS_IN_MIDDLE:
   File: ./setup.py
   Line: 28
 
+  File: ./scripts/demo_vectorized_power_law.py
+  Line: 203
+
+  File: ./scripts/demo_7d_vectorized_processing.py
+  Line: 30
+
+  File: ./scripts/demo_vectorized_processing.py
+  Line: 22
+
+  File: ./scripts/demo_vectorized_ml_methods.py
+  Line: 205
+
+  File: ./scripts/demo_ml_prediction_simple.py
+  Line: 24
+
+  File: ./scripts/demo_ml_prediction_models.py
+  Line: 22
+
   File: ./tests/test_bvp_level_c_integration.py
   Line: 30
 
@@ -128,28 +146,14 @@ IMPORTS_IN_MIDDLE:
   File: ./tests/conftest.py
   Line: 37
 
-  File: ./tests/test_bvp_levels_integration.py
-  Line: 33
-
-  File: ./tests/test_bvp_level_e_integration.py
-  Line: 30
-
-  File: ./tests/test_bvp_level_d_integration.py
-  Line: 30
-
-  File: ./tests/test_bvp_level_b_integration.py
-  Line: 30
-
-  File: ./tests/test_bvp_framework.py
-  Line: 25
-
-  File: ./tests/test_bvp_level_f_integration.py
-  Line: 30
-
-  ... and 542 more
+  ... and 563 more
 
 FILES_TOO_LARGE:
 ----------------------------------------
+  File: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+
+  File: ./tests/unit/test_physics_validation_step_2_1_1.py
+
   File: ./tests/unit/automated_testing/test_integration.py
 
   File: ./tests/unit/automated_testing/test_quality_monitor.py
@@ -166,8 +170,4 @@ FILES_TOO_LARGE:
 
   File: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
 
-  File: ./bhlff/models/level_c/boundaries_core.py
-
-  File: ./bhlff/models/level_c/abcd_model.py
-
-  ... and 55 more
+  ... and 67 more

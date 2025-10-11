@@ -19,6 +19,14 @@ issues:
     file: ./examples/level_g_example.py
     line: 174
   files_too_large:
+  - exceeds_limit: 192
+    file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+    limit: 400
+    lines: 592
+  - exceeds_limit: 73
+    file: ./tests/unit/test_physics_validation_step_2_1_1.py
+    limit: 400
+    lines: 473
   - exceeds_limit: 48
     file: ./tests/unit/automated_testing/test_integration.py
     limit: 400
@@ -71,18 +79,34 @@ issues:
     file: ./bhlff/models/level_c/beating/background_analysis.py
     limit: 400
     lines: 452
-  - exceeds_limit: 56
+  - exceeds_limit: 289
     file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
     limit: 400
-    lines: 456
-  - exceeds_limit: 54
+    lines: 689
+  - exceeds_limit: 423
+    file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+    limit: 400
+    lines: 823
+  - exceeds_limit: 212
     file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
     limit: 400
-    lines: 454
-  - exceeds_limit: 58
+    lines: 612
+  - exceeds_limit: 530
     file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
     limit: 400
-    lines: 458
+    lines: 930
+  - exceeds_limit: 410
+    file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+    limit: 400
+    lines: 810
+  - exceeds_limit: 88
+    file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+    limit: 400
+    lines: 488
+  - exceeds_limit: 13
+    file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
+    limit: 400
+    lines: 413
   - exceeds_limit: 98
     file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
     limit: 400
@@ -143,10 +167,10 @@ issues:
     file: ./bhlff/models/level_f/multi_particle/data_structures.py
     limit: 400
     lines: 471
-  - exceeds_limit: 110
+  - exceeds_limit: 530
     file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
     limit: 400
-    lines: 510
+    lines: 930
   - exceeds_limit: 36
     file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
     limit: 400
@@ -255,6 +279,10 @@ issues:
     file: ./bhlff/core/bvp/validation/physical_constraints.py
     limit: 400
     lines: 417
+  - exceeds_limit: 9
+    file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+    limit: 400
+    lines: 409
   - exceeds_limit: 41
     file: ./bhlff/core/bvp/envelope_equation/solver_core_basic.py
     limit: 400
@@ -263,6 +291,26 @@ issues:
     file: ./bhlff/core/bvp/envelope_equation/advanced/solver_advanced_core.py
     limit: 400
     lines: 401
+  - exceeds_limit: 51
+    file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+    limit: 400
+    lines: 451
+  - exceeds_limit: 235
+    file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+    limit: 400
+    lines: 635
+  - exceeds_limit: 4
+    file: ./bhlff/core/domain/vectorized_block_processor.py
+    limit: 400
+    lines: 404
+  - exceeds_limit: 56
+    file: ./bhlff/core/domain/7d_vectorized_processor.py
+    limit: 400
+    lines: 456
+  - exceeds_limit: 56
+    file: ./bhlff/core/domain/vectorized_7d_processor.py
+    limit: 400
+    lines: 456
   - exceeds_limit: 135
     file: ./bhlff/core/fft/spectral_derivatives_impl.py
     limit: 400
@@ -291,6 +339,18 @@ issues:
   imports_in_middle:
   - file: ./setup.py
     line: 28
+  - file: ./scripts/demo_vectorized_power_law.py
+    line: 203
+  - file: ./scripts/demo_7d_vectorized_processing.py
+    line: 30
+  - file: ./scripts/demo_vectorized_processing.py
+    line: 22
+  - file: ./scripts/demo_vectorized_ml_methods.py
+    line: 205
+  - file: ./scripts/demo_ml_prediction_simple.py
+    line: 24
+  - file: ./scripts/demo_ml_prediction_models.py
+    line: 22
   - file: ./tests/test_bvp_level_c_integration.py
     line: 30
   - file: ./tests/test_bvp_level_a_integration.py
@@ -337,10 +397,18 @@ issues:
     line: 45
   - file: ./tests/integration/automated_testing/test_performance_integration.py
     line: 217
+  - file: ./tests/unit/test_ml_prediction_physics_validation.py
+    line: 25
   - file: ./tests/unit/test_acceptance_criteria.py
     line: 23
+  - file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+    line: 42
+  - file: ./tests/unit/test_7d_vectorized_processing.py
+    line: 26
   - file: ./tests/unit/test_7d_bvp_physics.py
     line: 33
+  - file: ./tests/unit/test_physics_validation_step_2_1_1.py
+    line: 168
   - file: ./tests/unit/test_automated_testing.py
     line: 24
   - file: ./tests/unit/test_level_g/test_gravity_physics.py
@@ -596,21 +664,27 @@ issues:
   - file: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py
     line: 21
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
-    line: 23
+    line: 268
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-    line: 24
+    line: 26
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
-    line: 23
+    line: 246
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-    line: 23
+    line: 25
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
     line: 23
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+    line: 340
   - file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
-    line: 23
+    line: 26
   - file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
-    line: 24
+    line: 25
+  - file: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py
+    line: 31
   - file: ./bhlff/models/level_c/beating/ml/core/ml_models.py
     line: 25
+  - file: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py
+    line: 23
   - file: ./bhlff/models/level_c/beating/basic/comparison_patterns.py
     line: 22
   - file: ./bhlff/models/level_c/beating/basic/core_analysis_frequency.py
@@ -728,7 +802,7 @@ issues:
   - file: ./bhlff/models/level_f/multi_particle/__init__.py
     line: 22
   - file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-    line: 25
+    line: 26
   - file: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
     line: 24
   - file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
@@ -1287,6 +1361,10 @@ issues:
     line: 24
   - file: ./bhlff/core/bvp/postulates/power_balance/power_balance_postulate.py
     line: 29
+  - file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+    line: 26
+  - file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+    line: 416
   - file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
     line: 105
   - file: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py
@@ -1297,12 +1375,24 @@ issues:
     line: 30
   - file: ./bhlff/core/bvp/bvp_core/bvp_7d_interface.py
     line: 32
+  - file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+    line: 38
+  - file: ./bhlff/core/domain/cuda_block_processor.py
+    line: 36
+  - file: ./bhlff/core/domain/block_processor.py
+    line: 233
   - file: ./bhlff/core/domain/domain_7d.py
     line: 31
   - file: ./bhlff/core/domain/field.py
     line: 26
+  - file: ./bhlff/core/domain/vectorized_block_processor.py
+    line: 34
   - file: ./bhlff/core/domain/config.py
     line: 28
+  - file: ./bhlff/core/domain/7d_vectorized_processor.py
+    line: 439
+  - file: ./bhlff/core/domain/vectorized_7d_processor.py
+    line: 439
   - file: ./bhlff/core/domain/__init__.py
     line: 24
   - file: ./bhlff/core/domain/parameters.py
@@ -1752,6 +1842,10 @@ issues:
     line: 38
     method: __init__
   - class: null
+    file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+    line: 71
+    method: power_law_func
+  - class: null
     file: ./bhlff/core/bvp/envelope_equation/bvp_envelope_equation_7d_facade.py
     line: 119
     method: residual_func
@@ -1786,9 +1880,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 6
-  files_too_large: 65
+  files_too_large: 77
   files_without_docstrings: 4
-  imports_in_middle: 552
+  imports_in_middle: 573
   methods_with_pass: 0
-  methods_without_docstrings: 97
+  methods_without_docstrings: 98
   not_implemented_in_non_abstract: 0

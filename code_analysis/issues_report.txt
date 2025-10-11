@@ -2,9 +2,9 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 724
+Total issues found: 758
 
-METHODS_WITHOUT_DOCSTRINGS: 97 issues
+METHODS_WITHOUT_DOCSTRINGS: 98 issues
 ----------------------------------------
   ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
     Line 77
@@ -380,6 +380,10 @@ METHODS_WITHOUT_DOCSTRINGS: 97 issues
     Line 38
     Method: __init__
 
+  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+    Line 71
+    Method: power_law_func
+
   ./bhlff/core/bvp/envelope_equation/bvp_envelope_equation_7d_facade.py
     Line 119
     Method: residual_func
@@ -457,10 +461,28 @@ CLASSES_WITHOUT_DOCSTRINGS: 6 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 552 issues
+IMPORTS_IN_MIDDLE: 573 issues
 ----------------------------------------
   ./setup.py
     Line 28
+
+  ./scripts/demo_vectorized_power_law.py
+    Line 203
+
+  ./scripts/demo_7d_vectorized_processing.py
+    Line 30
+
+  ./scripts/demo_vectorized_processing.py
+    Line 22
+
+  ./scripts/demo_vectorized_ml_methods.py
+    Line 205
+
+  ./scripts/demo_ml_prediction_simple.py
+    Line 24
+
+  ./scripts/demo_ml_prediction_models.py
+    Line 22
 
   ./tests/test_bvp_level_c_integration.py
     Line 30
@@ -531,11 +553,23 @@ IMPORTS_IN_MIDDLE: 552 issues
   ./tests/integration/automated_testing/test_performance_integration.py
     Line 217
 
+  ./tests/unit/test_ml_prediction_physics_validation.py
+    Line 25
+
   ./tests/unit/test_acceptance_criteria.py
     Line 23
 
+  ./tests/unit/test_ml_prediction_vectorized_implementation.py
+    Line 42
+
+  ./tests/unit/test_7d_vectorized_processing.py
+    Line 26
+
   ./tests/unit/test_7d_bvp_physics.py
     Line 33
+
+  ./tests/unit/test_physics_validation_step_2_1_1.py
+    Line 168
 
   ./tests/unit/test_automated_testing.py
     Line 24
@@ -919,28 +953,37 @@ IMPORTS_IN_MIDDLE: 552 issues
     Line 21
 
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
-    Line 23
+    Line 268
 
   ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-    Line 24
+    Line 26
 
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
-    Line 23
+    Line 246
 
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-    Line 23
+    Line 25
 
   ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
     Line 23
 
+  ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+    Line 340
+
   ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
-    Line 23
+    Line 26
 
   ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
-    Line 24
+    Line 25
+
+  ./bhlff/models/level_c/beating/ml/core/ml_trainer.py
+    Line 31
 
   ./bhlff/models/level_c/beating/ml/core/ml_models.py
     Line 25
+
+  ./bhlff/models/level_c/beating/ml/core/training_data_generator.py
+    Line 23
 
   ./bhlff/models/level_c/beating/basic/comparison_patterns.py
     Line 22
@@ -1117,7 +1160,7 @@ IMPORTS_IN_MIDDLE: 552 issues
     Line 22
 
   ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-    Line 25
+    Line 26
 
   ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
     Line 24
@@ -1956,6 +1999,12 @@ IMPORTS_IN_MIDDLE: 552 issues
   ./bhlff/core/bvp/postulates/power_balance/power_balance_postulate.py
     Line 29
 
+  ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+    Line 26
+
+  ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+    Line 416
+
   ./bhlff/core/bvp/bvp_core/bvp_operations.py
     Line 105
 
@@ -1971,14 +2020,32 @@ IMPORTS_IN_MIDDLE: 552 issues
   ./bhlff/core/bvp/bvp_core/bvp_7d_interface.py
     Line 32
 
+  ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+    Line 38
+
+  ./bhlff/core/domain/cuda_block_processor.py
+    Line 36
+
+  ./bhlff/core/domain/block_processor.py
+    Line 233
+
   ./bhlff/core/domain/domain_7d.py
     Line 31
 
   ./bhlff/core/domain/field.py
     Line 26
 
+  ./bhlff/core/domain/vectorized_block_processor.py
+    Line 34
+
   ./bhlff/core/domain/config.py
     Line 28
+
+  ./bhlff/core/domain/7d_vectorized_processor.py
+    Line 439
+
+  ./bhlff/core/domain/vectorized_7d_processor.py
+    Line 439
 
   ./bhlff/core/domain/__init__.py
     Line 24
@@ -2116,8 +2183,12 @@ IMPORTS_IN_MIDDLE: 552 issues
     Line 23
 
 
-FILES_TOO_LARGE: 65 issues
+FILES_TOO_LARGE: 77 issues
 ----------------------------------------
+  ./tests/unit/test_ml_prediction_vectorized_implementation.py
+
+  ./tests/unit/test_physics_validation_step_2_1_1.py
+
   ./tests/unit/automated_testing/test_integration.py
 
   ./tests/unit/automated_testing/test_quality_monitor.py
@@ -2146,9 +2217,17 @@ FILES_TOO_LARGE: 65 issues
 
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
 
+  ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
 
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+
+  ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+
+  ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
 
   ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
 
@@ -2236,9 +2315,21 @@ FILES_TOO_LARGE: 65 issues
 
   ./bhlff/core/bvp/validation/physical_constraints.py
 
+  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+
   ./bhlff/core/bvp/envelope_equation/solver_core_basic.py
 
   ./bhlff/core/bvp/envelope_equation/advanced/solver_advanced_core.py
+
+  ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
+
+  ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
+
+  ./bhlff/core/domain/vectorized_block_processor.py
+
+  ./bhlff/core/domain/7d_vectorized_processor.py
+
+  ./bhlff/core/domain/vectorized_7d_processor.py
 
   ./bhlff/core/fft/spectral_derivatives_impl.py
 

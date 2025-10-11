@@ -422,6 +422,52 @@ Class: TestPerformanceIntegration
   _create_mock_test_results(self) -> TestResults
     File: ./tests/integration/automated_testing/test_performance_integration.py, Line: 343
 
+Class: TestMLPredictionPhysicsValidation
+  test_envelope(self)
+    File: ./tests/unit/test_ml_prediction_physics_validation.py, Line: 38
+  test_parameters(self)
+    File: ./tests/unit/test_ml_prediction_physics_validation.py, Line: 64
+  test_prediction_accuracy_physics(self, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_physics_validation.py, Line: 77
+  test_prediction_precision_physics(self, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_physics_validation.py, Line: 112
+  test_spectral_entropy_physics(self, test_envelope)
+    File: ./tests/unit/test_ml_prediction_physics_validation.py, Line: 140
+  test_phase_coherence_physics(self, test_envelope)
+    File: ./tests/unit/test_ml_prediction_physics_validation.py, Line: 173
+  test_ml_optimization_core_physics(self, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_physics_validation.py, Line: 206
+  test_classification_physics(self, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_physics_validation.py, Line: 241
+  test_7d_performance_metrics_physics(self, test_parameters)
+    File: ./tests/unit/test_ml_prediction_physics_validation.py, Line: 276
+  test_no_simplified_calculations_physics(self, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_physics_validation.py, Line: 308
+
+Class: TestMLPredictionFullImplementation
+  setup_method(self)
+    File: ./tests/unit/test_ml_prediction_full_implementation.py, Line: 30
+  test_full_ml_frequency_prediction(self)
+    File: ./tests/unit/test_ml_prediction_full_implementation.py, Line: 46
+  test_full_ml_coupling_prediction(self)
+    File: ./tests/unit/test_ml_prediction_full_implementation.py, Line: 91
+  test_analytical_fallback_frequency_prediction(self)
+    File: ./tests/unit/test_ml_prediction_full_implementation.py, Line: 137
+  test_analytical_fallback_coupling_prediction(self)
+    File: ./tests/unit/test_ml_prediction_full_implementation.py, Line: 174
+  test_full_analytical_pattern_classification(self)
+    File: ./tests/unit/test_ml_prediction_full_implementation.py, Line: 213
+  test_7d_phase_field_feature_extraction(self)
+    File: ./tests/unit/test_ml_prediction_full_implementation.py, Line: 250
+  test_prediction_confidence_calculation(self)
+    File: ./tests/unit/test_ml_prediction_full_implementation.py, Line: 284
+  test_feature_importance_extraction(self)
+    File: ./tests/unit/test_ml_prediction_full_implementation.py, Line: 307
+  test_prediction_variance_calculation(self)
+    File: ./tests/unit/test_ml_prediction_full_implementation.py, Line: 335
+  test_no_simplified_predictions(self)
+    File: ./tests/unit/test_ml_prediction_full_implementation.py, Line: 358
+
 Class: TestAcceptanceCriteria
   domain_3d(self)
     File: ./tests/unit/test_acceptance_criteria.py, Line: 30
@@ -536,6 +582,78 @@ Class: TestCosmologicalModel
   test_redshift_limits(self)
     File: ./tests/unit/test_level_g_cosmology_model.py, Line: 372
 
+Class: TestMLPredictionVectorizedImplementation
+  bvp_core(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 39
+  test_envelope(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 69
+  test_parameters(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 78
+  test_prediction_accuracy_calculation(self, bvp_core, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 91
+  test_prediction_precision_calculation(self, bvp_core, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 119
+  test_prediction_recall_calculation(self, bvp_core, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 140
+  test_prediction_f1_score_calculation(self, bvp_core, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 161
+  test_ml_optimization_core_accuracy(self, bvp_core, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 182
+  test_ml_optimization_core_precision(self, bvp_core, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 203
+  test_ml_optimization_core_recall(self, bvp_core, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 224
+  test_ml_optimization_core_f1_score(self, bvp_core, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 245
+  test_classification_accuracy_calculation(self, bvp_core, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 266
+  test_classification_precision_calculation(self, bvp_core, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 287
+  test_classification_recall_calculation(self, bvp_core, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 308
+  test_classification_f1_score_calculation(self, bvp_core, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 329
+  test_spectral_entropy_computation(self, bvp_core, test_envelope)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 350
+  test_phase_coherence_computation(self, bvp_core, test_envelope)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 371
+  test_parameter_optimization_with_vectorization(self, bvp_core, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 392
+  test_classification_parameter_optimization_with_vectorization(self, bvp_core, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 414
+  test_7d_performance_metric_computation(self, bvp_core, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 436
+  test_7d_classification_metric_computation(self, bvp_core, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 457
+  test_vectorized_processing_integration(self, bvp_core, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 478
+  test_no_simplified_calculations(self, bvp_core, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 519
+  test_vectorized_block_processing_physics(self, bvp_core, test_envelope, test_parameters)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 549
+
+Class: TestMLPrediction7DBVP
+  setup_method(self)
+    File: ./tests/unit/test_ml_prediction_7d_bvp.py, Line: 24
+  test_7d_frequency_prediction_analytics(self)
+    File: ./tests/unit/test_ml_prediction_7d_bvp.py, Line: 52
+  test_7d_coupling_prediction_analytics(self)
+    File: ./tests/unit/test_ml_prediction_7d_bvp.py, Line: 77
+  test_analytical_confidence_computation(self)
+    File: ./tests/unit/test_ml_prediction_7d_bvp.py, Line: 104
+  test_feature_importance_computation(self)
+    File: ./tests/unit/test_ml_prediction_7d_bvp.py, Line: 122
+  test_full_frequency_prediction_pipeline(self)
+    File: ./tests/unit/test_ml_prediction_7d_bvp.py, Line: 150
+  test_full_coupling_prediction_pipeline(self)
+    File: ./tests/unit/test_ml_prediction_7d_bvp.py, Line: 177
+  test_7d_phase_field_feature_extraction(self)
+    File: ./tests/unit/test_ml_prediction_7d_bvp.py, Line: 204
+  test_7d_bvp_theory_consistency(self)
+    File: ./tests/unit/test_ml_prediction_7d_bvp.py, Line: 229
+  test_no_classical_patterns_in_7d_bvp(self)
+    File: ./tests/unit/test_ml_prediction_7d_bvp.py, Line: 267
+
 Class: TestParticleInversion
   test_inversion_initialization(self)
     File: ./tests/unit/test_level_g_particle_inversion_basic.py, Line: 29
@@ -588,6 +706,32 @@ Class: TestAstrophysicalObjectModelBasic
   test_defect_density_computation(self)
     File: ./tests/unit/test_level_g_astrophysics_basic.py, Line: 311
 
+Class: Test7DVectorizedProcessing
+  setup_method(self)
+    File: ./tests/unit/test_7d_vectorized_processing.py, Line: 31
+  test_7d_processor_initialization(self)
+    File: ./tests/unit/test_7d_vectorized_processing.py, Line: 50
+  test_7d_processor_memory_management(self)
+    File: ./tests/unit/test_7d_vectorized_processing.py, Line: 69
+  test_7d_fft_processing(self)
+    File: ./tests/unit/test_7d_vectorized_processing.py, Line: 88
+  test_7d_ifft_processing(self)
+    File: ./tests/unit/test_7d_vectorized_processing.py, Line: 108
+  test_7d_gradient_processing(self)
+    File: ./tests/unit/test_7d_vectorized_processing.py, Line: 128
+  test_7d_laplacian_processing(self)
+    File: ./tests/unit/test_7d_vectorized_processing.py, Line: 148
+  test_7d_processor_error_handling(self)
+    File: ./tests/unit/test_7d_vectorized_processing.py, Line: 168
+  test_7d_processor_physics_consistency(self)
+    File: ./tests/unit/test_7d_vectorized_processing.py, Line: 189
+  test_7d_processor_memory_efficiency(self)
+    File: ./tests/unit/test_7d_vectorized_processing.py, Line: 214
+  test_7d_processor_cuda_support(self)
+    File: ./tests/unit/test_7d_vectorized_processing.py, Line: 232
+  test_comprehensive_7d_processing(self)
+    File: ./tests/unit/test_7d_vectorized_processing.py, Line: 257
+
 Class: Test7DBVPPhysics
   domain_7d(self) -> Domain7DBVP
     File: ./tests/unit/test_7d_bvp_physics.py, Line: 47
@@ -609,6 +753,36 @@ Class: Test7DBVPPhysics
     File: ./tests/unit/test_7d_bvp_physics.py, Line: 210
   test_solution_validation(self, solver_7d)
     File: ./tests/unit/test_7d_bvp_physics.py, Line: 239
+
+Class: TestPhysicsValidationStep2_1_1
+  setup_method(self)
+    File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 34
+  test_7d_bvp_theory_compliance(self)
+    File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 53
+  test_no_classical_physics_patterns(self)
+    File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 100
+  test_ml_models_7d_bvp_compliance(self)
+    File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 127
+  test_vectorized_processing_7d_bvp_compliance(self)
+    File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 163
+  test_bvp_vectorized_processor_physics(self)
+    File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 214
+  test_memory_efficiency_7d_processing(self)
+    File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 222
+  test_7d_phase_field_consistency(self)
+    File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 244
+  test_no_classical_approximations(self)
+    File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 275
+  test_7d_bvp_analytics_physics(self)
+    File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 307
+  test_ml_training_physics_consistency(self)
+    File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 340
+  test_vectorized_processing_physics_consistency(self)
+    File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 370
+  _generate_synthetic_source(self)
+    File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 401
+  test_comprehensive_physics_validation(self)
+    File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 419
 
 Class: TestParticleValidation
   test_validation_initialization(self)
@@ -4829,30 +5003,84 @@ Class: BeatingMLClassificationOptimizer
     File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 229
   _adjust_classification_parameters(self, parameters, performance) -> Dict[str, Any]
     File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 248
+  _optimize_with_vectorized_classification(self, performance_array, parameters) -> Optional[Dict[str, Any]]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 310
+  _compute_7d_classification_metric(self, parameters, current_performance) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 335
+  _compute_spectral_entropy(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 361
+  _compute_phase_coherence(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 387
   _check_classification_convergence(self, current_performance, best_performance, tolerance) -> bool
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 279
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 413
   _validate_classification_parameters(self, parameters) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 299
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 433
   _validate_classification_performance(self, performance) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 328
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 462
   _calculate_classification_overall_validation(self, parameter_validation, performance_validation) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 348
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 482
   _calculate_classification_accuracy(self, parameters, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 382
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 516
   _calculate_classification_precision(self, parameters, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 401
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 561
   _calculate_classification_recall(self, parameters, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 420
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 606
   _calculate_classification_f1_score(self, parameters, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 439
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 651
+  classification_objective_function(param_values)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 282
 
 Class: BeatingMLPredictionCore
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 40
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 42
   predict_beating_frequencies(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 64
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 70
   predict_mode_coupling(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 99
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 130
+  train_frequency_model(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 200
+  train_coupling_model(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 221
+  train_all_models(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 242
+  validate_models(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 259
+  get_model_performance(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 276
+  _load_trained_frequency_model(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 289
+  _load_frequency_scaler(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 306
+  _load_trained_coupling_model(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 322
+  _load_coupling_scaler(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 339
+  _compute_prediction_confidence(self, features, model) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 355
+  _get_feature_importance(self, model) -> Dict[str, float]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 394
+  _compute_prediction_variance(self, features, model) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 440
+  _predict_frequencies_analytical(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 471
+  _predict_coupling_analytical(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 527
+  _setup_vectorized_processor(self) -> None
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 590
+  _optimize_with_vectorized_processing(self, envelope, parameters) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 623
+  _extract_vectorized_optimization_results(self, vectorized_results, parameters) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 664
+  _compute_vectorized_optimization_metrics(self, vectorized_results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 704
+  _compute_optimal_horizon_from_vectorized(self, vectorized_results) -> int
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 734
+  _compute_optimal_regularization_from_vectorized(self, vectorized_results) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 754
+  _compute_optimization_quality_from_vectorized(self, vectorized_results) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 774
+  _optimize_without_vectorization(self, envelope, parameters) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 791
 
 Class: BeatingMLOptimizationCore
   __init__(self, bvp_core)
@@ -4867,56 +5095,86 @@ Class: BeatingMLOptimizationCore
     File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 189
   _adjust_parameters(self, parameters, performance) -> Dict[str, Any]
     File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 226
+  _compute_7d_performance_metric(self, parameters, current_performance) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 279
+  _compute_spectral_entropy(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 305
+  _compute_phase_coherence(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 331
   _check_convergence(self, current_performance, best_performance, tolerance) -> bool
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 254
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 357
   _initialize_parameters(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 274
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 377
   _validate_parameters(self, parameters) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 293
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 396
   _validate_performance(self, performance) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 326
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 429
   _calculate_overall_validation(self, parameter_validation, performance_validation) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 346
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 449
   _calculate_accuracy(self, parameters, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 380
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 483
   _calculate_precision(self, parameters, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 399
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 516
   _calculate_recall(self, parameters, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 418
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 549
   _calculate_f1_score(self, parameters, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 437
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 582
+  objective_function(param_values)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 251
 
 Class: BeatingMLPredictionOptimizer
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 39
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 41
   optimize_prediction_parameters(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 58
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 63
   _optimize_prediction_parameters(self, envelope, max_iterations, tolerance) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 97
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 102
   _validate_prediction_optimization(self, optimization_results, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 148
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 153
   _calculate_prediction_performance(self, optimization_results, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 189
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 194
   _initialize_prediction_parameters(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 229
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 234
   _adjust_prediction_parameters(self, parameters, performance) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 248
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 253
   _check_prediction_convergence(self, current_performance, best_performance, tolerance) -> bool
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 279
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 302
   _validate_prediction_parameters(self, parameters) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 299
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 322
   _validate_prediction_performance(self, performance) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 330
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 353
   _calculate_prediction_overall_validation(self, parameter_validation, performance_validation) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 350
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 373
   _calculate_prediction_accuracy(self, parameters, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 384
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 407
+  _compute_spectral_entropy(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 594
+  _compute_phase_coherence(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 624
   _calculate_prediction_precision(self, parameters, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 403
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 504
   _calculate_prediction_recall(self, parameters, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 422
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 534
   _calculate_prediction_f1_score(self, parameters, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 441
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 564
+  _compute_7d_phase_field_optimization(self, performance, parameters) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 651
+  _setup_vectorized_processor(self) -> None
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 698
+  _optimize_with_vectorized_processing(self, envelope, parameters) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 731
+  _extract_vectorized_optimization_results(self, vectorized_results, parameters) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 772
+  _compute_vectorized_optimization_metrics(self, vectorized_results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 812
+  _compute_optimal_horizon_from_vectorized(self, vectorized_results) -> int
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 842
+  _compute_optimal_regularization_from_vectorized(self, vectorized_results) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 862
+  _compute_optimization_quality_from_vectorized(self, vectorized_results) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 882
+  _optimize_without_vectorization(self, envelope, parameters) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 899
 
 Class: BeatingMLCore
   __init__(self, bvp_core)
@@ -4966,21 +5224,59 @@ Class: BeatingMLPrediction
 
 Class: BeatingMLPatterns
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 31
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 33
   classify_beating_patterns(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 45
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 50
   _extract_pattern_features(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 73
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 78
   _classify_patterns_ml(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 121
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 126
   _classify_patterns_simple(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 170
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 177
   _calculate_symmetry_score(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 204
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 233
   _calculate_regularity_score(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 217
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 256
   _calculate_complexity_score(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 230
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 279
+  _load_trained_pattern_classifier(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 302
+  _load_pattern_scaler(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 327
+  _extract_ml_pattern_features(self, features) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 352
+  _get_pattern_feature_importance(self, model) -> Dict[str, float]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 387
+  _classify_patterns_analytical(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 419
+  _compute_7d_pattern_coherence(self, features) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 471
+  _compute_7d_pattern_stability(self, features) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 498
+  _compute_7d_phase_field_symmetry(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 525
+  _compute_vbp_envelope_symmetry(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 561
+  _setup_vectorized_processor(self) -> None
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 784
+  _combine_7d_symmetries(self, phase_field_symmetry, vbp_symmetry) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 607
+  _compute_7d_phase_field_regularity(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 618
+  _compute_vbp_envelope_regularity(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 647
+  _combine_7d_regularities(self, phase_field_regularity, vbp_regularity) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 665
+  _compute_7d_phase_field_complexity(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 676
+  _compute_vbp_envelope_complexity(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 719
+  _combine_7d_complexities(self, phase_field_complexity, vbp_complexity) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 738
+  _compute_topological_charge(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 749
+  _compute_energy_symmetry(self, energy_density) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 766
 
 Class: BeatingMLOptimization
   __init__(self, bvp_core)
@@ -4994,13 +5290,99 @@ Class: BeatingMLOptimization
 
 Class: FeatureExtractor
   __init__(self)
-    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 39
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 42
   extract_frequency_features(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 49
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 52
   extract_coupling_features(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 86
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 101
   extract_7d_phase_features(self, features) -> np.ndarray
-    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 131
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 168
+  load_trained_models(self, model_path) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 217
+  save_trained_models(self, models, model_path) -> bool
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 264
+  extract_7d_phase_features_advanced(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 316
+  _compute_topological_charge_advanced(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 380
+  _compute_phase_coherence_advanced(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 398
+  _compute_energy_density_advanced(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 416
+  _compute_phase_velocity_advanced(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 429
+  _compute_phase_acceleration_advanced(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 443
+  _compute_interaction_strength_advanced(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 457
+  _compute_coupling_symmetry_advanced(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 470
+
+Class: BVP7DAnalytics
+  __init__(self)
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 36
+  compute_7d_frequency_prediction(self, phase_features, features) -> List[float]
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 45
+  compute_7d_coupling_prediction(self, phase_features, features) -> Dict[str, float]
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 86
+  compute_analytical_confidence(self, features) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 140
+  compute_coupling_analytical_confidence(self, features) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 161
+  compute_analytical_feature_importance(self, features) -> Dict[str, float]
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 182
+  compute_coupling_analytical_feature_importance(self, features) -> Dict[str, float]
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 204
+  _compute_base_frequency_7d(self, spectral_entropy, phase_coherence) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 227
+  _compute_spacing_factor_7d(self, frequency_spacing, topological_charge) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 232
+  _compute_bandwidth_factor_7d(self, frequency_bandwidth, phase_coherence) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 237
+  _compute_coupling_strength_7d(self, coupling_strength, phase_coherence, topological_charge) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 242
+  _compute_interaction_energy_7d(self, interaction_energy, phase_coherence, topological_charge) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 247
+  _compute_coupling_symmetry_7d(self, coupling_symmetry, phase_coherence, topological_charge) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 252
+  _compute_nonlinear_strength_7d(self, nonlinear_strength, phase_coherence, topological_charge) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 257
+  _compute_mixing_degree_7d(self, mixing_degree, phase_coherence, topological_charge) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 262
+  _compute_coupling_efficiency_7d(self, coupling_efficiency, phase_coherence, topological_charge) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 267
+  __init__(self)
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 36
+  compute_7d_frequency_prediction(self, phase_features, features) -> List[float]
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 45
+  compute_7d_coupling_prediction(self, phase_features, features) -> Dict[str, float]
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 86
+  compute_analytical_confidence(self, features) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 140
+  compute_coupling_analytical_confidence(self, features) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 161
+  compute_analytical_feature_importance(self, features) -> Dict[str, float]
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 182
+  compute_coupling_analytical_feature_importance(self, features) -> Dict[str, float]
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 204
+  _compute_base_frequency_7d(self, spectral_entropy, phase_coherence) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 227
+  _compute_spacing_factor_7d(self, frequency_spacing, topological_charge) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 232
+  _compute_bandwidth_factor_7d(self, frequency_bandwidth, phase_coherence) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 237
+  _compute_coupling_strength_7d(self, coupling_strength, phase_coherence, topological_charge) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 242
+  _compute_interaction_energy_7d(self, interaction_energy, phase_coherence, topological_charge) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 247
+  _compute_coupling_symmetry_7d(self, coupling_symmetry, phase_coherence, topological_charge) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 252
+  _compute_nonlinear_strength_7d(self, nonlinear_strength, phase_coherence, topological_charge) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 257
+  _compute_mixing_degree_7d(self, mixing_degree, phase_coherence, topological_charge) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 262
+  _compute_coupling_efficiency_7d(self, coupling_efficiency, phase_coherence, topological_charge) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 267
 
 Class: PhaseFieldFeatures
   __init__(self)
@@ -5018,21 +5400,35 @@ Class: PhaseFieldFeatures
 
 Class: PredictionEngine
   __init__(self, model_manager, feature_extractor)
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 40
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 41
   predict_frequencies(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 56
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 58
   predict_coupling(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 118
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 120
   _predict_frequencies_simple(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 190
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 192
   _predict_coupling_simple(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 217
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 248
   _compute_prediction_confidence(self, features, model) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 244
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 311
   _get_feature_importance(self, model) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 279
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 346
   _compute_prediction_variance(self, features, model) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 321
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 388
+
+Class: MLTrainer
+  __init__(self, model_manager)
+    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 47
+  train_frequency_model(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 81
+  train_coupling_model(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 147
+  train_all_models(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 207
+  validate_models(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 235
+  get_model_performance(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 288
 
 Class: MLModelManager
   __init__(self, model_dir)
@@ -5070,15 +5466,33 @@ Class: FeatureCalculator
   calculate_frequency_coupling_strength(self, envelope) -> float
     File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 132
   calculate_mode_interaction_energy(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 156
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 160
   calculate_coupling_symmetry(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 175
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 179
   calculate_nonlinear_strength(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 221
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 225
   calculate_mode_mixing_degree(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 237
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 241
   calculate_coupling_efficiency(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 262
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 266
+
+Class: TrainingDataGenerator
+  __init__(self)
+    File: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py, Line: 39
+  generate_frequency_training_data(self, n_samples) -> Tuple[np.ndarray, np.ndarray]
+    File: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py, Line: 64
+  generate_coupling_training_data(self, n_samples) -> Tuple[np.ndarray, np.ndarray]
+    File: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py, Line: 105
+  _generate_random_phase_params(self) -> Dict[str, float]
+    File: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py, Line: 146
+  _generate_synthetic_envelope(self, phase_params) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py, Line: 153
+  _extract_training_features(self, envelope, phase_params) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py, Line: 194
+  _compute_target_frequencies(self, phase_params) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py, Line: 227
+  _compute_target_coupling(self, phase_params) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py, Line: 247
 
 Class: PatternComparator
   __init__(self)
@@ -6350,41 +6764,59 @@ Class: Particle
 
 Class: CollectiveModesFinder
   __init__(self, domain, particles, system_params)
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 42
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 43
   find_collective_modes(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 63
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 73
   _initialize_collective_modes_analysis(self) -> None
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 100
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 110
   _setup_dynamics_matrices(self) -> None
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 114
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 124
   _create_energy_matrix(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 131
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 141
   _create_stiffness_matrix(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 157
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 167
   _setup_mode_analysis_methods(self) -> None
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 185
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 195
   _compute_dynamics_matrix(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 199
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 209
   _analyze_collective_modes(self, eigenvalues, eigenvectors) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 215
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 225
   _analyze_mode_stability(self, eigenvalues) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 250
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 260
   _analyze_mode_interactions(self, eigenvalues, eigenvectors) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 279
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 289
   _calculate_mode_coupling(self, eigenvalues, eigenvectors) -> float
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 309
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 319
   _calculate_mode_overlap(self, eigenvectors) -> float
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 335
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 376
   _calculate_mode_correlation(self, eigenvectors) -> float
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 365
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 435
   _calculate_interaction_strength(self, distance) -> float
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 396
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 491
   _step_interaction_potential(self, distance) -> float
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 417
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 533
   _compute_particle_energy_from_field(self, particle) -> float
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 443
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 559
   _compute_energy_matrix_inverse(self, energy_matrix) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 482
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 598
+  _compute_mode_interaction_strength(self, eigenvalues) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 628
+  _compute_mode_resonance_effects(self, eigenvalues) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 674
+  _compute_mode_mixing_degree(self, eigenvectors) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 712
+  _compute_mode_coherence(self, eigenvectors) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 755
+  _compute_mode_interaction_strength_from_eigenvectors(self, eigenvectors) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 791
+  _compute_mode_phase_coherence(self, eigenvectors) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 827
+  _compute_distance_coupling_factor(self, distance) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 863
+  _compute_phase_coherence_factor(self, distance) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 886
+  _compute_energy_exchange_factor(self, distance) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 909
 
 Class: PotentialOptimizationAnalyzer
   __init__(self, domain, particles, system_params)
@@ -10326,13 +10758,23 @@ Class: PowerLawTailAnalysis
 
 Class: PowerLawFitting
   __init__(self, bvp_core)
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 27
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 30
   fit_power_law(self, region_data) -> Dict[str, float]
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 33
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 45
   calculate_fitting_quality(self, region_data, power_law_fit) -> float
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 55
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 124
   calculate_decay_rate(self, power_law_fit) -> float
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 75
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 190
+  _extract_radial_profile(self, region_data) -> Dict[str, np.ndarray]
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 247
+  _compute_r_squared(self, radial_profile, popt, func) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 312
+  _compute_fitting_quality(self, pcov) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 349
+  _compute_chi_squared(self, radial_profile, popt, func) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 379
+  power_law_func(r, amplitude, exponent)
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 71
 
 Class: EnvelopeSolverCoreBasic
   __init__(self, domain, config)
@@ -10790,6 +11232,74 @@ Class: PowerBalancePostulate
   _validate_power_balance(self, power_balance) -> bool
     File: ./bhlff/core/bvp/postulates/power_balance/power_balance_postulate.py, Line: 163
 
+Class: BVPBlockProcessor
+  __init__(self, domain, config, block_size, overlap)
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 44
+  solve_envelope_blocked(self, source, max_iterations, tolerance) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 69
+  _extract_source_block(self, source, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 124
+  _solve_block_bvp(self, current_block, source_block, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 132
+  _compute_block_stiffness(self, block_data, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 174
+  _compute_block_susceptibility(self, block_data, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 189
+  _solve_block_iterative(self, lhs, rhs, initial_guess) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 205
+  _check_convergence(self, old_solution, new_solution, tolerance) -> bool
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 225
+  detect_quenches_blocked(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 234
+  _extract_envelope_block(self, envelope, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 272
+  _detect_block_quenches(self, envelope_block, block_info) -> List[Dict[str, Any]]
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 280
+  compute_impedance_blocked(self, envelope) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 306
+  _compute_block_impedance(self, envelope_block, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 340
+  get_memory_usage(self) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 351
+
+Class: BVPCUDABlockProcessor
+  __init__(self, domain, config, block_size, overlap)
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 54
+  _setup_cuda_bvp_parameters(self) -> None
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 81
+  solve_envelope_cuda_blocked(self, source, max_iterations, tolerance) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 100
+  _solve_envelope_cpu_fallback(self, source, max_iterations, tolerance) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 169
+  _extract_source_block_cuda(self, source_gpu, block_info) -> cp.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 177
+  _solve_block_bvp_cuda(self, current_block, source_block, block_info) -> cp.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 185
+  _compute_block_stiffness_cuda(self, block_data, block_info) -> cp.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 221
+  _compute_block_susceptibility_cuda(self, block_data, block_info) -> cp.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 232
+  _solve_block_iterative_cuda(self, lhs, rhs, initial_guess) -> cp.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 243
+  _check_convergence_cuda(self, old_solution, new_solution, tolerance) -> bool
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 263
+  detect_quenches_cuda_blocked(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 272
+  _detect_quenches_cpu_fallback(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 321
+  _extract_envelope_block_cuda(self, envelope_gpu, block_info) -> cp.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 328
+  _detect_block_quenches_cuda(self, envelope_block, block_info) -> List[Dict[str, Any]]
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 336
+  compute_impedance_cuda_blocked(self, envelope) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 366
+  _compute_impedance_cpu_fallback(self, envelope) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 414
+  _compute_block_impedance_cuda(self, envelope_block, block_info) -> cp.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 421
+  get_cuda_bvp_info(self) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 432
+
 Class: BVPCoreOperations
   __init__(self, domain, config, domain_7d)
     File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 54
@@ -10862,6 +11372,118 @@ Class: BVPCore7DInterface
   get_7d_parameters(self) -> Dict[str, Any]
     File: ./bhlff/core/bvp/bvp_core/bvp_7d_interface.py, Line: 193
 
+Class: BVPVectorizedProcessor
+  __init__(self, domain, config, block_size, overlap, use_cuda)
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 55
+  _setup_vectorized_bvp_parameters(self) -> None
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 83
+  solve_envelope_vectorized(self, source, max_iterations, tolerance, batch_size) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 108
+  _solve_envelope_cuda_vectorized(self, source, max_iterations, tolerance, batch_size) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 139
+  _solve_envelope_cpu_vectorized(self, source, max_iterations, tolerance, batch_size) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 187
+  _extract_source_block_vectorized(self, source, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 225
+  _solve_block_bvp_vectorized(self, current_block, source_block, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 233
+  _compute_block_stiffness_vectorized(self, block_data, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 278
+  _compute_block_susceptibility_vectorized(self, block_data, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 289
+  _solve_block_iterative_vectorized(self, lhs, rhs, initial_guess) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 300
+  _check_convergence_vectorized(self, old_solution, new_solution, tolerance) -> bool
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 329
+  detect_quenches_vectorized(self, envelope, batch_size) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 342
+  _detect_quenches_cuda_vectorized(self, envelope, batch_size) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 364
+  _detect_quenches_cpu_vectorized(self, envelope, batch_size) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 401
+  _extract_envelope_block_vectorized(self, envelope, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 431
+  _detect_batch_quenches_cuda_vectorized(self, envelope_blocks) -> List[Tuple[List[Dict[str, Any]], BlockInfo]]
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 439
+  _detect_batch_quenches_cpu_vectorized(self, envelope_blocks) -> List[Tuple[List[Dict[str, Any]], BlockInfo]]
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 473
+  compute_impedance_vectorized(self, envelope, batch_size) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 503
+  _compute_impedance_cuda_vectorized(self, envelope, batch_size) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 525
+  _compute_impedance_cpu_vectorized(self, envelope, batch_size) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 561
+  _compute_batch_impedance_cuda_vectorized(self, envelope_blocks) -> List[Tuple['cp.ndarray', BlockInfo]]
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 587
+  _compute_batch_impedance_cpu_vectorized(self, envelope_blocks) -> List[Tuple[np.ndarray, BlockInfo]]
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 603
+  get_vectorized_bvp_info(self) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 619
+
+Class: CUDABlockProcessor
+  __init__(self, domain, block_size, overlap)
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 53
+  _initialize_cuda(self) -> None
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 79
+  iterate_blocks_cuda(self) -> Iterator[Tuple[cp.ndarray, BlockInfo]]
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 103
+  _extract_block_data_cuda(self, start_indices, end_indices) -> cp.ndarray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 143
+  process_block_cuda(self, block_data, block_info, operation) -> cp.ndarray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 158
+  _process_block_fft_cuda(self, block_data, block_info) -> cp.ndarray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 192
+  _process_block_convolution_cuda(self, block_data, block_info) -> cp.ndarray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 203
+  _process_block_gradient_cuda(self, block_data, block_info) -> cp.ndarray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 214
+  _process_block_bvp_cuda(self, block_data, block_info) -> cp.ndarray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 224
+  merge_blocks_cuda(self, processed_blocks) -> cp.ndarray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 238
+  _create_weight_mask_cuda(self, block_info) -> cp.ndarray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 283
+  optimize_block_size_cuda(self, available_memory_gb) -> int
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 304
+  get_cuda_info(self) -> Dict[str, Any]
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 338
+  get_memory_usage_cuda(self) -> Dict[str, Any]
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 351
+  cleanup_cuda_memory(self) -> None
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 363
+  __del__(self)
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 382
+
+Class: BlockInfo
+  __init__(self, domain, block_size, overlap)
+    File: ./bhlff/core/domain/block_processor.py, Line: 54
+  _compute_block_configuration(self) -> None
+    File: ./bhlff/core/domain/block_processor.py, Line: 82
+  iterate_blocks(self) -> Iterator[Tuple[np.ndarray, BlockInfo]]
+    File: ./bhlff/core/domain/block_processor.py, Line: 112
+  _generate_block_indices(self) -> Iterator[Tuple[int, ...]]
+    File: ./bhlff/core/domain/block_processor.py, Line: 146
+  _compute_block_boundaries(self, block_indices) -> Tuple[Tuple[int, ...], Tuple[int, ...]]
+    File: ./bhlff/core/domain/block_processor.py, Line: 154
+  _extract_block_data(self, start_indices, end_indices) -> np.ndarray
+    File: ./bhlff/core/domain/block_processor.py, Line: 178
+  process_block(self, block_data, block_info, operation) -> np.ndarray
+    File: ./bhlff/core/domain/block_processor.py, Line: 189
+  _process_block_fft(self, block_data, block_info) -> np.ndarray
+    File: ./bhlff/core/domain/block_processor.py, Line: 215
+  _process_block_convolution(self, block_data, block_info) -> np.ndarray
+    File: ./bhlff/core/domain/block_processor.py, Line: 226
+  _process_block_gradient(self, block_data, block_info) -> np.ndarray
+    File: ./bhlff/core/domain/block_processor.py, Line: 238
+  merge_blocks(self, processed_blocks) -> np.ndarray
+    File: ./bhlff/core/domain/block_processor.py, Line: 248
+  _create_weight_mask(self, block_info) -> np.ndarray
+    File: ./bhlff/core/domain/block_processor.py, Line: 286
+  get_memory_usage(self) -> Dict[str, float]
+    File: ./bhlff/core/domain/block_processor.py, Line: 307
+  optimize_block_size(self, available_memory_gb) -> int
+    File: ./bhlff/core/domain/block_processor.py, Line: 316
+
 Class: Domain7D
   __init__(self, spatial_config, phase_config, temporal_config)
     File: ./bhlff/core/domain/domain_7d.py, Line: 51
@@ -10929,6 +11551,108 @@ Class: Field
     File: ./bhlff/core/domain/field.py, Line: 280
   __repr__(self) -> str
     File: ./bhlff/core/domain/field.py, Line: 298
+
+Class: VectorizedBlockProcessor
+  __init__(self, domain, block_size, overlap, use_cuda)
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 51
+  process_blocks_vectorized(self, operation, batch_size) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 76
+  _process_blocks_cuda_vectorized(self, all_blocks, operation, batch_size) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 105
+  _process_blocks_cpu_vectorized(self, all_blocks, operation, batch_size) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 133
+  _process_batch_cuda_vectorized(self, batch_blocks, operation) -> List[Tuple[np.ndarray, BlockInfo]]
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 148
+  _process_batch_cpu_vectorized(self, batch_blocks, operation) -> List[Tuple[np.ndarray, BlockInfo]]
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 183
+  _vectorized_fft_cuda(self, stacked_blocks) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 215
+  _vectorized_fft_cpu(self, stacked_blocks) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 233
+  _vectorized_convolution_cuda(self, stacked_blocks) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 244
+  _vectorized_convolution_cpu(self, stacked_blocks) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 267
+  _vectorized_gradient_cuda(self, stacked_blocks) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 280
+  _vectorized_gradient_cpu(self, stacked_blocks) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 300
+  _vectorized_bvp_solve_cuda(self, stacked_blocks) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 311
+  _vectorized_bvp_solve_cpu(self, stacked_blocks) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 330
+  merge_blocks_cuda(self, processed_blocks) -> 'cp.ndarray'
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 341
+  _create_weight_mask_cuda(self, block_info) -> 'cp.ndarray'
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 370
+  get_vectorization_info(self) -> Dict[str, Any]
+    File: ./bhlff/core/domain/vectorized_block_processor.py, Line: 391
+
+Class: Vectorized7DProcessor
+  __init__(self, domain, config, use_cuda, memory_limit)
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 61
+  _compute_optimal_block_size(self) -> Tuple[int, ...]
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 95
+  _setup_processing_components(self) -> None
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 118
+  _setup_fft_plans(self) -> None
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 136
+  _setup_spectral_operators(self) -> None
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 150
+  _setup_memory_management(self) -> None
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 164
+  process_7d_field(self, field, operation) -> np.ndarray
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 181
+  _process_fft_7d(self, field) -> np.ndarray
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 226
+  _process_fft_7d_blocks(self, field) -> np.ndarray
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 257
+  _process_ifft_7d(self, field) -> np.ndarray
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 292
+  _process_ifft_7d_blocks(self, field) -> np.ndarray
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 322
+  _process_gradient_7d(self, field) -> np.ndarray
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 352
+  _process_laplacian_7d(self, field) -> np.ndarray
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 384
+  _check_memory_usage(self) -> float
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 416
+  _cleanup_memory(self) -> None
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 426
+  get_memory_info(self) -> Dict[str, Any]
+    File: ./bhlff/core/domain/7d_vectorized_processor.py, Line: 444
+  __init__(self, domain, config, use_cuda, memory_limit)
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 61
+  _compute_optimal_block_size(self) -> Tuple[int, ...]
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 95
+  _setup_processing_components(self) -> None
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 118
+  _setup_fft_plans(self) -> None
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 136
+  _setup_spectral_operators(self) -> None
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 150
+  _setup_memory_management(self) -> None
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 164
+  process_7d_field(self, field, operation) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 181
+  _process_fft_7d(self, field) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 226
+  _process_fft_7d_blocks(self, field) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 257
+  _process_ifft_7d(self, field) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 292
+  _process_ifft_7d_blocks(self, field) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 322
+  _process_gradient_7d(self, field) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 352
+  _process_laplacian_7d(self, field) -> np.ndarray
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 384
+  _check_memory_usage(self) -> float
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 416
+  _cleanup_memory(self) -> None
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 426
+  get_memory_info(self) -> Dict[str, Any]
+    File: ./bhlff/core/domain/vectorized_7d_processor.py, Line: 444
 
 Class: Parameters
   __post_init__(self) -> None

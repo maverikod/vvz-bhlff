@@ -145,10 +145,10 @@ class VectorizedBlockProcessor(BlockProcessor):
         
         return result
     
-    def _process_batch_cuda_vectorized(self, batch_blocks: List[Tuple[cp.ndarray, BlockInfo]], 
-                                     operation: str) -> List[Tuple[cp.ndarray, BlockInfo]]:
+    def _process_batch_cuda_vectorized(self, batch_blocks: List[Tuple[np.ndarray, BlockInfo]], 
+                                     operation: str) -> List[Tuple[np.ndarray, BlockInfo]]:
         """Process a batch of blocks using CUDA vectorized operations."""
-        if not batch_blocks:
+        if not batch_blocks or not CUDA_AVAILABLE:
             return []
         
         # Extract block data and info
@@ -156,7 +156,10 @@ class VectorizedBlockProcessor(BlockProcessor):
         block_info_list = [block_info for _, block_info in batch_blocks]
         
         # Stack blocks for vectorized processing
-        stacked_blocks = cp.stack(block_data_list)
+        if CUDA_AVAILABLE:
+            stacked_blocks = cp.stack(block_data_list)
+        else:
+            stacked_blocks = np.stack(block_data_list)
         
         # Apply vectorized operation
         if operation == "fft":
@@ -209,16 +212,23 @@ class VectorizedBlockProcessor(BlockProcessor):
         
         return processed_blocks
     
-    def _vectorized_fft_cuda(self, stacked_blocks: cp.ndarray) -> cp.ndarray:
+    def _vectorized_fft_cuda(self, stacked_blocks: np.ndarray) -> np.ndarray:
         """Vectorized FFT operation on CUDA."""
-        # Apply FFT to all blocks at once
-        fft_result = cp.fft.fftn(stacked_blocks, axes=tuple(range(1, stacked_blocks.ndim)))
-        
-        # Apply 7D phase field specific processing vectorized
-        phase = cp.angle(fft_result)
-        processed_result = fft_result * cp.exp(-1j * phase)
-        
-        return processed_result
+        if CUDA_AVAILABLE:
+            # Apply FFT to all blocks at once
+            fft_result = cp.fft.fftn(stacked_blocks, axes=tuple(range(1, stacked_blocks.ndim)))
+            
+            # Apply 7D phase field specific processing vectorized
+            phase = cp.angle(fft_result)
+            processed_result = fft_result * cp.exp(-1j * phase)
+            
+            return processed_result.get()  # Convert back to numpy
+        else:
+            # Fallback to CPU FFT
+            fft_result = np.fft.fftn(stacked_blocks, axes=tuple(range(1, stacked_blocks.ndim)))
+            phase = np.angle(fft_result)
+            processed_result = fft_result * np.exp(-1j * phase)
+            return processed_result
     
     def _vectorized_fft_cpu(self, stacked_blocks: np.ndarray) -> np.ndarray:
         """Vectorized FFT operation on CPU."""
@@ -231,18 +241,28 @@ class VectorizedBlockProcessor(BlockProcessor):
         
         return processed_result
     
-    def _vectorized_convolution_cuda(self, stacked_blocks: cp.ndarray) -> cp.ndarray:
+    def _vectorized_convolution_cuda(self, stacked_blocks: np.ndarray) -> np.ndarray:
         """Vectorized convolution operation on CUDA."""
-        # Create convolution kernel for 7D phase field
-        kernel_shape = tuple(min(3, size) for size in stacked_blocks.shape[1:])
-        kernel = cp.ones(kernel_shape, dtype=cp.complex128) / cp.prod(kernel_shape)
+        if CUDA_AVAILABLE:
+            # Create convolution kernel for 7D phase field
+            kernel_shape = tuple(min(3, size) for size in stacked_blocks.shape[1:])
+            kernel = cp.ones(kernel_shape, dtype=cp.complex128) / cp.prod(kernel_shape)
+        else:
+            # Fallback to CPU convolution
+            kernel_shape = tuple(min(3, size) for size in stacked_blocks.shape[1:])
+            kernel = np.ones(kernel_shape, dtype=np.complex128) / np.prod(kernel_shape)
         
         # Apply convolution to all blocks at once
-        convolved = cp.zeros_like(stacked_blocks)
-        for i in range(stacked_blocks.shape[0]):
-            convolved[i] = cp.convolve(stacked_blocks[i].real, kernel, mode='same')
-        
-        return convolved.astype(cp.complex128)
+        if CUDA_AVAILABLE:
+            convolved = cp.zeros_like(stacked_blocks)
+            for i in range(stacked_blocks.shape[0]):
+                convolved[i] = cp.convolve(stacked_blocks[i].real, kernel, mode='same')
+            return convolved.get()  # Convert back to numpy
+        else:
+            convolved = np.zeros_like(stacked_blocks)
+            for i in range(stacked_blocks.shape[0]):
+                convolved[i] = np.convolve(stacked_blocks[i].real, kernel, mode='same')
+            return convolved.astype(np.complex128)
     
     def _vectorized_convolution_cpu(self, stacked_blocks: np.ndarray) -> np.ndarray:
         """Vectorized convolution operation on CPU."""
@@ -257,16 +277,25 @@ class VectorizedBlockProcessor(BlockProcessor):
         
         return convolved.astype(np.complex128)
     
-    def _vectorized_gradient_cuda(self, stacked_blocks: cp.ndarray) -> cp.ndarray:
+    def _vectorized_gradient_cuda(self, stacked_blocks: np.ndarray) -> np.ndarray:
         """Vectorized gradient operation on CUDA."""
-        # Compute gradient for all blocks at once
-        gradients = []
-        for i in range(stacked_blocks.shape[0]):
-            block_gradients = cp.gradient(stacked_blocks[i].real)
-            gradient_magnitude = cp.sqrt(cp.sum(cp.array([g**2 for g in block_gradients]), axis=0))
+        if CUDA_AVAILABLE:
+            # Compute gradient for all blocks at once
+            gradients = []
+            for i in range(stacked_blocks.shape[0]):
+                block_gradients = cp.gradient(stacked_blocks[i].real)
+                gradient_magnitude = cp.sqrt(cp.sum(cp.array([g**2 for g in block_gradients]), axis=0))
+                gradients.append(gradient_magnitude)
+            return cp.stack(gradients).get()  # Convert back to numpy
+        else:
+            # Fallback to CPU gradient
+            gradients = []
+            for i in range(stacked_blocks.shape[0]):
+                block_gradients = np.gradient(stacked_blocks[i].real)
+            gradient_magnitude = np.sqrt(np.sum(np.array([g**2 for g in block_gradients]), axis=0))
             gradients.append(gradient_magnitude)
         
-        return cp.stack(gradients).astype(cp.complex128)
+        return np.stack(gradients).astype(np.complex128)
     
     def _vectorized_gradient_cpu(self, stacked_blocks: np.ndarray) -> np.ndarray:
         """Vectorized gradient operation on CPU."""
@@ -279,16 +308,24 @@ class VectorizedBlockProcessor(BlockProcessor):
         
         return np.stack(gradients).astype(np.complex128)
     
-    def _vectorized_bvp_solve_cuda(self, stacked_blocks: cp.ndarray) -> cp.ndarray:
+    def _vectorized_bvp_solve_cuda(self, stacked_blocks: np.ndarray) -> np.ndarray:
         """Vectorized BVP solving on CUDA."""
-        # CUDA-accelerated BVP solving for all blocks at once
-        amplitude = cp.abs(stacked_blocks)
-        phase = cp.angle(stacked_blocks)
+        if CUDA_AVAILABLE:
+            # CUDA-accelerated BVP solving for all blocks at once
+            amplitude = cp.abs(stacked_blocks)
+            phase = cp.angle(stacked_blocks)
+        else:
+            # Fallback to CPU BVP solving
+            amplitude = np.abs(stacked_blocks)
+            phase = np.angle(stacked_blocks)
         
         # Apply BVP-specific processing vectorized
-        result = amplitude * cp.exp(1j * phase)
-        
-        return result
+        if CUDA_AVAILABLE:
+            result = amplitude * cp.exp(1j * phase)
+            return result.get()  # Convert back to numpy
+        else:
+            result = amplitude * np.exp(1j * phase)
+            return result
     
     def _vectorized_bvp_solve_cpu(self, stacked_blocks: np.ndarray) -> np.ndarray:
         """Vectorized BVP solving on CPU."""
@@ -301,7 +338,7 @@ class VectorizedBlockProcessor(BlockProcessor):
         
         return result
     
-    def merge_blocks_cuda(self, processed_blocks: List[Tuple[cp.ndarray, BlockInfo]]) -> cp.ndarray:
+    def merge_blocks_cuda(self, processed_blocks: List[Tuple['cp.ndarray', BlockInfo]]) -> 'cp.ndarray':
         """Merge processed blocks using CUDA operations."""
         if not processed_blocks:
             return cp.zeros(self.domain_shape, dtype=cp.complex128)
@@ -330,7 +367,7 @@ class VectorizedBlockProcessor(BlockProcessor):
         
         return result
     
-    def _create_weight_mask_cuda(self, block_info: BlockInfo) -> cp.ndarray:
+    def _create_weight_mask_cuda(self, block_info: BlockInfo) -> 'cp.ndarray':
         """Create weight mask for overlap handling on GPU."""
         block_shape = block_info.shape
         weight_mask = cp.ones(block_shape, dtype=cp.float64)

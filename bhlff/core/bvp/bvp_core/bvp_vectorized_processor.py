@@ -436,7 +436,7 @@ class BVPVectorizedProcessor(VectorizedBlockProcessor):
         slices = tuple(slice(start, end) for start, end in zip(start_indices, end_indices))
         return envelope[slices]
     
-    def _detect_batch_quenches_cuda_vectorized(self, envelope_blocks: List[Tuple[cp.ndarray, BlockInfo]]) -> List[Tuple[List[Dict[str, Any]], BlockInfo]]:
+    def _detect_batch_quenches_cuda_vectorized(self, envelope_blocks: List[Tuple['cp.ndarray', BlockInfo]]) -> List[Tuple[List[Dict[str, Any]], BlockInfo]]:
         """Detect quenches in a batch of blocks using CUDA vectorized operations."""
         batch_quenches = []
         
@@ -584,7 +584,7 @@ class BVPVectorizedProcessor(VectorizedBlockProcessor):
         self.logger.info("Vectorized impedance computation completed")
         return impedance
     
-    def _compute_batch_impedance_cuda_vectorized(self, envelope_blocks: List[Tuple[cp.ndarray, BlockInfo]]) -> List[Tuple[cp.ndarray, BlockInfo]]:
+    def _compute_batch_impedance_cuda_vectorized(self, envelope_blocks: List[Tuple['cp.ndarray', BlockInfo]]) -> List[Tuple['cp.ndarray', BlockInfo]]:
         """Compute impedance for a batch of blocks using CUDA vectorized operations."""
         batch_impedance = []
         

@@ -359,8 +359,8 @@ class PotentialComputationAnalyzer:
         """
         # Create higher-order potential based on three-particle interaction
         interaction_strength = particle_i.charge * particle_j.charge * particle_k.charge
-        potential = interaction_strength * np.exp(
-            -(distances_i + distances_j + distances_k) / (3 * self.system_params.interaction_range)
+        potential = interaction_strength * self._step_three_particle_interaction_potential(
+            distances_i, distances_j, distances_k
         )
         
         return potential
@@ -441,3 +441,34 @@ class PotentialComputationAnalyzer:
             return interaction_strength
         else:
             return 0.0
+    
+    def _step_three_particle_interaction_potential(self, distances_i: np.ndarray, distances_j: np.ndarray, distances_k: np.ndarray) -> np.ndarray:
+        """
+        Step function three-particle interaction potential.
+        
+        Physical Meaning:
+            Implements step resonator model for three-particle interactions instead of
+            exponential decay. This follows 7D BVP theory principles where
+            multi-particle interactions occur through semi-transparent boundaries.
+            
+        Mathematical Foundation:
+            V(r₁,r₂,r₃) = V₀ * Θ(r_cutoff - r₁) * Θ(r_cutoff - r₂) * Θ(r_cutoff - r₃) 
+            where Θ is the Heaviside step function and r_cutoff is the interaction cutoff distance.
+            
+        Args:
+            distances_i: Distance field to first particle
+            distances_j: Distance field to second particle  
+            distances_k: Distance field to third particle
+            
+        Returns:
+            Step function three-particle interaction potential field
+        """
+        # Step resonator parameters
+        interaction_cutoff = self.system_params.interaction_range
+        
+        # Step function three-particle interaction: 1.0 if all distances below cutoff, 0.0 otherwise
+        step_condition = ((distances_i < interaction_cutoff) & 
+                         (distances_j < interaction_cutoff) & 
+                         (distances_k < interaction_cutoff))
+        
+        return np.where(step_condition, 1.0, 0.0)

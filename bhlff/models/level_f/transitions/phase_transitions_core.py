@@ -309,11 +309,8 @@ class PhaseTransitions(AbstractModel):
         if not self.system.particles:
             return 0.0
         
-        phase_sum = 0.0
-        for particle in self.system.particles:
-            phase_sum += np.exp(1j * particle.phase)
-        
-        coherence = abs(phase_sum) / len(self.system.particles)
+        # Use step resonator model for phase coherence calculation
+        coherence = self._step_resonator_phase_coherence()
         return coherence
 
     def _compute_spatial_order(self) -> float:
@@ -542,3 +539,37 @@ class PhaseTransitions(AbstractModel):
             "phase_stability": stability,
             "analysis_complete": True
         }
+    
+    def _step_resonator_phase_coherence(self) -> float:
+        """
+        Step resonator phase coherence calculation.
+        
+        Physical Meaning:
+            Implements step resonator model for phase coherence calculation instead of
+            exponential phase factors. This follows 7D BVP theory principles where
+            phase coherence is determined by step function boundaries.
+            
+        Mathematical Foundation:
+            Phase coherence = |⟨Θ(φ - φ₀)⟩| where Θ is the Heaviside step function
+            and φ₀ is the phase threshold for coherence.
+            
+        Returns:
+            float: Step resonator phase coherence
+        """
+        if not self.system.particles:
+            return 0.0
+        
+        # Step resonator parameters
+        phase_threshold = np.pi/4  # 45 degrees threshold
+        coherence_strength = 1.0
+        
+        # Count particles with phase within threshold
+        coherent_particles = 0
+        for particle in self.system.particles:
+            if abs(particle.phase) < phase_threshold:
+                coherent_particles += 1
+        
+        # Step function phase coherence: fraction of coherent particles
+        coherence = (coherent_particles / len(self.system.particles)) * coherence_strength
+        
+        return coherence

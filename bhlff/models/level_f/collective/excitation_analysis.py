@@ -20,7 +20,7 @@ Example:
 
 import numpy as np
 from typing import Dict, Any, Optional, Tuple
-from ...base.abstract_model import AbstractModel
+from bhlff.models.base.abstract_model import AbstractModel
 
 
 class ExcitationAnalyzer(AbstractModel):

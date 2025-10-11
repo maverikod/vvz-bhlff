@@ -22,14 +22,15 @@ Example:
     >>> modes = system.find_collective_modes()
 """
 
-from .multi_particle import MultiParticleSystem
-from .collective import CollectiveExcitations
+from .multi_particle_system import MultiParticleSystem
+from .collective import ExcitationAnalyzer, DispersionAnalyzer
 from .transitions import PhaseTransitions
 from .nonlinear import NonlinearEffects
 
 __all__ = [
     "MultiParticleSystem",
-    "CollectiveExcitations",
+    "ExcitationAnalyzer",
+    "DispersionAnalyzer", 
     "PhaseTransitions",
     "NonlinearEffects",
 ]

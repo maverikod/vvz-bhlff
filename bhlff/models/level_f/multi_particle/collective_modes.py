@@ -19,7 +19,7 @@ Example:
 import numpy as np
 from typing import Dict, Any, List, Optional, Tuple
 from scipy.linalg import eig
-from ..base.abstract_model import AbstractModel
+from bhlff.models.base.abstract_model import AbstractModel
 from .data_structures import Particle, SystemParameters
 from .collective_modes_finding import CollectiveModesFinder
 from .collective_modes_spectrum import CollectiveModesSpectrumAnalyzer

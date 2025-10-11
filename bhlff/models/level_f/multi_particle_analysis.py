@@ -21,7 +21,7 @@ from typing import List, Dict, Any, Optional, Tuple
 import logging
 
 from bhlff.core.bvp import BVPCore
-from .data_structures import Particle, SystemParameters
+from .multi_particle.data_structures import Particle, SystemParameters
 
 
 class MultiParticleSystemAnalyzer:

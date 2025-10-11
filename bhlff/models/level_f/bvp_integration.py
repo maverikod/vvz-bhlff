@@ -343,8 +343,8 @@ class LevelFBVPIntegration:
         amplitude = np.abs(envelope)
         phase = np.angle(envelope)
 
-        # Analyze collective mode indicators
-        phase_coherence = np.abs(np.mean(np.exp(1j * phase)))
+        # Analyze collective mode indicators using step resonator model
+        phase_coherence = self._step_resonator_phase_coherence(phase)
         amplitude_correlation = np.corrcoef(amplitude.flatten(), phase.flatten())[0, 1]
 
         # Analyze frequency content for collective modes
@@ -409,3 +409,32 @@ class LevelFBVPIntegration:
             and envelope_norm > 0
             and impedance_compatible,
         }
+    
+    def _step_resonator_phase_coherence(self, phase: np.ndarray) -> float:
+        """
+        Step resonator phase coherence calculation.
+        
+        Physical Meaning:
+            Implements step resonator model for phase coherence calculation instead of
+            exponential phase factors. This follows 7D BVP theory principles where
+            phase coherence is determined by step function boundaries.
+            
+        Mathematical Foundation:
+            Phase coherence = |⟨Θ(φ - φ₀)⟩| where Θ is the Heaviside step function
+            and φ₀ is the phase threshold for coherence.
+            
+        Args:
+            phase (np.ndarray): Phase field array
+            
+        Returns:
+            float: Step resonator phase coherence
+        """
+        # Step resonator parameters
+        phase_threshold = self.constants.get("phase_threshold", np.pi/4)
+        coherence_strength = self.constants.get("coherence_strength", 1.0)
+        
+        # Step function phase coherence: 1.0 if phase within threshold, 0.0 otherwise
+        phase_within_threshold = np.abs(phase) < phase_threshold
+        step_coherence = np.mean(phase_within_threshold) * coherence_strength
+        
+        return float(step_coherence)

@@ -17,7 +17,8 @@ Physical Meaning:
 import pytest
 import numpy as np
 from unittest.mock import Mock, patch
-from bhlff.models.level_f.multi_particle import MultiParticleSystem, Particle
+from bhlff.models.level_f.multi_particle_system import MultiParticleSystem
+from bhlff.models.level_f.multi_particle import Particle
 from bhlff.core.domain import Domain
 
 

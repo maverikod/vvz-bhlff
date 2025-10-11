@@ -22,6 +22,7 @@ import logging
 from scipy.linalg import eig
 
 from bhlff.core.bvp import BVPCore
+from bhlff.core.domain.vectorized_7d_processor import Vectorized7DProcessor
 from .data_structures import Particle, SystemParameters
 
 
@@ -56,6 +57,15 @@ class CollectiveModesFinder:
         self.particles = particles
         self.system_params = system_params
         self.logger = logging.getLogger(__name__)
+        
+        # Initialize vectorized processor for 7D computations
+        if domain is not None:
+            self.vectorized_processor = Vectorized7DProcessor(
+                domain=domain,
+                config=getattr(domain, 'config', {})
+            )
+        else:
+            self.vectorized_processor = None
         
         # Initialize collective modes analysis
         self._initialize_collective_modes_analysis()
@@ -617,11 +627,11 @@ class CollectiveModesFinder:
     
     def _compute_mode_interaction_strength(self, eigenvalues: np.ndarray) -> float:
         """
-        Compute mode interaction strength from eigenvalues.
+        Compute mode interaction strength from eigenvalues using vectorized processing.
         
         Physical Meaning:
             Computes interaction strength between modes based on
-            eigenvalue analysis and 7D phase field theory.
+            eigenvalue analysis and 7D phase field theory using vectorized operations.
             
         Args:
             eigenvalues (np.ndarray): Eigenvalues of dynamics matrix.
@@ -633,14 +643,23 @@ class CollectiveModesFinder:
             if len(eigenvalues) < 2:
                 return 0.0
             
-            # Compute eigenvalue spacing
-            sorted_eigenvalues = np.sort(eigenvalues)
-            spacing = np.diff(sorted_eigenvalues)
+            # Use vectorized processor if available
+            if self.vectorized_processor is not None:
+                # Vectorized eigenvalue analysis
+                sorted_eigenvalues = self.vectorized_processor.sort_eigenvalues_vectorized(eigenvalues)
+                spacing = self.vectorized_processor.compute_eigenvalue_spacing_vectorized(sorted_eigenvalues)
+                
+                # Vectorized statistical analysis
+                mean_spacing = self.vectorized_processor.compute_mean_vectorized(spacing)
+                std_spacing = self.vectorized_processor.compute_std_vectorized(spacing)
+            else:
+                # Standard numpy operations
+                sorted_eigenvalues = np.sort(eigenvalues)
+                spacing = np.diff(sorted_eigenvalues)
+                mean_spacing = np.mean(spacing)
+                std_spacing = np.std(spacing)
             
             # Interaction strength based on spacing
-            mean_spacing = np.mean(spacing)
-            std_spacing = np.std(spacing)
-            
             if std_spacing > 1e-10:
                 interaction_strength = mean_spacing / std_spacing
             else:
@@ -692,11 +711,11 @@ class CollectiveModesFinder:
     
     def _compute_mode_mixing_degree(self, eigenvectors: np.ndarray) -> float:
         """
-        Compute mode mixing degree from eigenvectors.
+        Compute mode mixing degree from eigenvectors using vectorized processing.
         
         Physical Meaning:
             Computes mixing degree between modes based on
-            eigenvector analysis and 7D phase field theory.
+            eigenvector analysis and 7D phase field theory using vectorized operations.
             
         Args:
             eigenvectors (np.ndarray): Eigenvectors of dynamics matrix.
@@ -708,19 +727,26 @@ class CollectiveModesFinder:
             if eigenvectors.shape[1] < 2:
                 return 0.0
             
-            # Compute mixing degree
-            mixing_degrees = []
-            for i in range(eigenvectors.shape[1]):
-                for j in range(i + 1, eigenvectors.shape[1]):
-                    # Compute mixing between modes i and j
-                    mixing = np.abs(np.dot(eigenvectors[:, i], eigenvectors[:, j]))
-                    mixing_degrees.append(mixing)
-            
-            if mixing_degrees:
-                mean_mixing = np.mean(mixing_degrees)
-                return float(mean_mixing)
+            # Use vectorized processor if available
+            if self.vectorized_processor is not None:
+                # Vectorized eigenvector mixing analysis
+                mixing_degrees = self.vectorized_processor.compute_eigenvector_mixing_vectorized(eigenvectors)
+                mean_mixing = self.vectorized_processor.compute_mean_vectorized(mixing_degrees)
             else:
-                return 0.0
+                # Standard numpy operations
+                mixing_degrees = []
+                for i in range(eigenvectors.shape[1]):
+                    for j in range(i + 1, eigenvectors.shape[1]):
+                        # Compute mixing between modes i and j
+                        mixing = np.abs(np.dot(eigenvectors[:, i], eigenvectors[:, j]))
+                        mixing_degrees.append(mixing)
+                
+                if mixing_degrees:
+                    mean_mixing = np.mean(mixing_degrees)
+                else:
+                    mean_mixing = 0.0
+            
+            return float(mean_mixing)
                 
         except Exception as e:
             self.logger.error(f"Mode mixing degree computation failed: {e}")

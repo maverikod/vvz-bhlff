@@ -15,6 +15,7 @@ from scipy.optimize import curve_fit
 from scipy import stats
 
 from ..bvp_core.bvp_core_facade import BVPCoreFacade as BVPCore
+from ...domain.vectorized_7d_processor import Vectorized7DProcessor
 
 
 class PowerLawFitting:
@@ -31,6 +32,15 @@ class PowerLawFitting:
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
         self.power_law_tolerance = 1e-3
+        
+        # Initialize vectorized processor for 7D computations
+        if bvp_core is not None:
+            self.vectorized_processor = Vectorized7DProcessor(
+                domain=bvp_core.domain,
+                config=bvp_core.config
+            )
+        else:
+            self.vectorized_processor = None
 
     def fit_power_law(self, region_data: Dict[str, np.ndarray]) -> Dict[str, float]:
         """
@@ -236,11 +246,11 @@ class PowerLawFitting:
     
     def _extract_radial_profile(self, region_data: Dict[str, np.ndarray]) -> Dict[str, np.ndarray]:
         """
-        Extract radial profile from region data.
+        Extract radial profile from region data using vectorized processing.
         
         Physical Meaning:
             Extracts radial profile from region data for power law fitting
-            using 7D phase field theory principles.
+            using 7D phase field theory principles and vectorized operations.
             
         Args:
             region_data (Dict[str, np.ndarray]): Region data dictionary.
@@ -254,25 +264,41 @@ class PowerLawFitting:
                 r = region_data['r']
                 values = region_data['values']
             elif 'x' in region_data and 'y' in region_data:
-                # Convert Cartesian to radial
+                # Convert Cartesian to radial using vectorized operations
                 x = region_data['x']
                 y = region_data['y']
-                r = np.sqrt(x**2 + y**2)
+                
+                # Use vectorized processor if available
+                if self.vectorized_processor is not None:
+                    r = self.vectorized_processor.compute_radial_distance_vectorized(x, y)
+                else:
+                    r = np.sqrt(x**2 + y**2)
+                
                 values = region_data.get('values', np.ones_like(r))
             else:
                 # Fallback: generate synthetic radial profile
                 r = np.linspace(0.1, 10.0, 100)
                 values = np.exp(-r) * r**(-2.0)
             
-            # Ensure positive values and sort by radius
-            valid_mask = (r > 0) & (values > 0)
-            r = r[valid_mask]
-            values = values[valid_mask]
-            
-            # Sort by radius
-            sort_indices = np.argsort(r)
-            r = r[sort_indices]
-            values = values[sort_indices]
+            # Use vectorized operations for data processing
+            if self.vectorized_processor is not None:
+                # Vectorized data validation and sorting
+                valid_mask = self.vectorized_processor.validate_positive_values(r, values)
+                r = r[valid_mask]
+                values = values[valid_mask]
+                
+                # Vectorized sorting
+                r, values = self.vectorized_processor.sort_by_radius_vectorized(r, values)
+            else:
+                # Standard numpy operations
+                valid_mask = (r > 0) & (values > 0)
+                r = r[valid_mask]
+                values = values[valid_mask]
+                
+                # Sort by radius
+                sort_indices = np.argsort(r)
+                r = r[sort_indices]
+                values = values[sort_indices]
             
             return {'r': r, 'values': values}
             

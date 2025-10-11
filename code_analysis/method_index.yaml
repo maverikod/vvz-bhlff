@@ -4643,148 +4643,178 @@ method_index:
       - self
       - bvp_core
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 31
+      line: 33
       name: __init__
       returns: null
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 46
+      line: 56
       name: predict_beating_frequencies
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 74
+      line: 76
+      name: predict_mode_coupling
+      returns: Dict[str, Any]
+    BeatingMLPredictionCore:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 39
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 58
+      name: predict_beating_frequencies
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 94
       name: predict_mode_coupling
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 102
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 130
       name: _extract_frequency_features
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 155
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 163
       name: _extract_coupling_features
       returns: Dict[str, Any]
     - args:
       - self
       - features
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 203
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 204
       name: _predict_frequencies_ml
       returns: Dict[str, Any]
     - args:
       - self
       - features
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 239
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 236
       name: _predict_frequencies_simple
       returns: Dict[str, Any]
     - args:
       - self
       - features
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 268
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 263
       name: _predict_coupling_ml
       returns: Dict[str, Any]
     - args:
       - self
       - features
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 304
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 295
       name: _predict_coupling_simple
       returns: Dict[str, Any]
+    BeatingMLPredictionFeatures:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
+      line: 40
+      name: __init__
+      returns: null
     - args:
       - self
       - spectrum
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 339
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
+      line: 54
       name: _calculate_spectral_entropy
       returns: float
     - args:
       - self
       - indices
       - shape
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 345
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
+      line: 77
       name: _calculate_frequency_spacing
       returns: float
     - args:
       - self
       - spectrum
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 352
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
+      line: 100
       name: _calculate_frequency_bandwidth
       returns: float
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 363
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
+      line: 119
       name: _calculate_autocorrelation
       returns: float
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 369
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
+      line: 138
       name: _calculate_laplacian
       returns: np.ndarray
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 387
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
+      line: 167
       name: _calculate_spatial_correlation
       returns: float
     - args:
       - self
       - spectrum
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 399
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
+      line: 187
       name: _calculate_frequency_coupling_strength
       returns: float
     - args:
       - self
       - spectrum
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 405
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
+      line: 206
       name: _calculate_mode_interaction_energy
       returns: float
     - args:
       - self
       - spectrum
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 410
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
+      line: 225
       name: _calculate_coupling_symmetry
       returns: float
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 422
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
+      line: 248
       name: _calculate_nonlinear_strength
       returns: float
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 429
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
+      line: 267
       name: _calculate_mode_mixing_degree
       returns: float
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-      line: 439
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
+      line: 286
       name: _calculate_coupling_efficiency
       returns: float
     BeatingMLPredictionOptimizer:
@@ -5921,114 +5951,113 @@ method_index:
       line: 248
       name: _validate_c1_results
       returns: bool
-    BoundaryAnalyzer:
+    BoundaryAnalysisCore:
     - args:
       - self
       - bvp_core
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 51
+      file: ./bhlff/models/level_c/boundaries_core.py
+      line: 41
       name: __init__
       returns: null
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 61
+      file: ./bhlff/models/level_c/boundaries_core.py
+      line: 55
       name: analyze_boundaries
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 107
+      file: ./bhlff/models/level_c/boundaries_core.py
+      line: 101
       name: _analyze_level_set_boundaries
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 139
+      file: ./bhlff/models/level_c/boundaries_core.py
+      line: 128
       name: _analyze_phase_field_boundaries
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 168
+      file: ./bhlff/models/level_c/boundaries_core.py
+      line: 158
       name: _analyze_topological_boundaries
       returns: Dict[str, Any]
     - args:
       - self
-      - envelope
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 192
-      name: _analyze_boundary_energy
-      returns: Dict[str, Any]
-    - args:
-      - self
       - level_set
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 218
+      file: ./bhlff/models/level_c/boundaries_core.py
+      line: 187
       name: _find_level_set_boundary
       returns: np.ndarray
     - args:
       - self
       - boundary_mask
-      - field
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 229
+      - envelope
+      file: ./bhlff/models/level_c/boundaries_core.py
+      line: 215
       name: _analyze_boundary_properties
       returns: Dict[str, Any]
     - args:
       - self
       - field
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 260
+      file: ./bhlff/models/level_c/boundaries_core.py
+      line: 249
       name: _find_critical_points
       returns: List[Dict[str, Any]]
     - args:
       - self
-      - critical_points
       - field
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 300
+      - i
+      - j
+      - k
+      file: ./bhlff/models/level_c/boundaries_core.py
+      line: 279
+      name: _is_critical_point
+      returns: bool
+    - args:
+      - self
+      - field
+      - i
+      - j
+      - k
+      file: ./bhlff/models/level_c/boundaries_core.py
+      line: 315
+      name: _classify_critical_point
+      returns: str
+    - args:
+      - self
+      - field
+      - critical_points
+      file: ./bhlff/models/level_c/boundaries_core.py
+      line: 362
       name: _analyze_topological_structure
       returns: Dict[str, Any]
     - args:
       - self
-      - critical_points
       - field
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 314
+      - critical_points
+      file: ./bhlff/models/level_c/boundaries_core.py
+      line: 391
       name: _classify_topological_boundaries
       returns: Dict[str, Any]
     - args:
       - self
-      - energy_density
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 333
-      name: _analyze_energy_landscape
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - energy_density
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 342
-      name: _find_energy_boundaries
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - energy_boundaries
-      - energy_density
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 354
+      - boundary_mask
+      - envelope
+      file: ./bhlff/models/level_c/boundaries_core.py
+      line: 417
       name: _analyze_boundary_stability
       returns: Dict[str, Any]
     - args:
       - self
       - boundary_mask
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 371
+      file: ./bhlff/models/level_c/boundaries_core.py
+      line: 444
       name: _estimate_boundary_curvature
       returns: float
     - args:
@@ -6036,10 +6065,31 @@ method_index:
       - level_set_analysis
       - phase_field_analysis
       - topological_analysis
-      - energy_analysis
-      file: ./bhlff/models/level_c/boundaries.py
-      line: 383
+      file: ./bhlff/models/level_c/boundaries_core.py
+      line: 468
       name: _create_boundary_summary
+      returns: Dict[str, Any]
+    BoundaryAnalyzer:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/boundaries.py
+      line: 53
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/boundaries.py
+      line: 71
+      name: analyze_boundaries
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/boundaries.py
+      line: 92
+      name: analyze_boundary_energy
       returns: Dict[str, Any]
     - args:
       - self
@@ -6238,6 +6288,85 @@ method_index:
       line: 378
       name: _identify_transition_regions
       returns: Dict[str, Any]
+    BoundaryEnergyAnalyzer:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/boundaries_energy.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/boundaries_energy.py
+      line: 55
+      name: analyze_boundary_energy
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/boundaries_energy.py
+      line: 100
+      name: _calculate_energy_density
+      returns: np.ndarray
+    - args:
+      - self
+      - energy_density
+      file: ./bhlff/models/level_c/boundaries_energy.py
+      line: 126
+      name: _analyze_energy_landscape
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - energy_density
+      file: ./bhlff/models/level_c/boundaries_energy.py
+      line: 153
+      name: _find_energy_boundaries
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - energy_density
+      - energy_boundaries
+      file: ./bhlff/models/level_c/boundaries_energy.py
+      line: 180
+      name: _analyze_boundary_stability
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - energy_density
+      file: ./bhlff/models/level_c/boundaries_energy.py
+      line: 207
+      name: _calculate_energy_gradient
+      returns: float
+    - args:
+      - self
+      - energy_density
+      file: ./bhlff/models/level_c/boundaries_energy.py
+      line: 227
+      name: _calculate_stability_index
+      returns: float
+    - args:
+      - self
+      - energy_density
+      file: ./bhlff/models/level_c/boundaries_energy.py
+      line: 252
+      name: _calculate_stability_ratio
+      returns: float
+    - args:
+      - self
+      - data
+      file: ./bhlff/models/level_c/boundaries_energy.py
+      line: 277
+      name: _calculate_skewness
+      returns: float
+    - args:
+      - self
+      - data
+      file: ./bhlff/models/level_c/boundaries_energy.py
+      line: 301
+      name: _calculate_kurtosis
+      returns: float
     BoundaryGeometry:
     - args:
       - self
@@ -37123,6 +37252,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 5190
-    total_classes: 554
+    total_class_methods: 5207
+    total_classes: 558
     total_standalone_functions: 0

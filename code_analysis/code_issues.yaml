@@ -45,10 +45,10 @@ issues:
     file: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
     limit: 400
     lines: 460
-  - exceeds_limit: 9
-    file: ./bhlff/models/level_c/boundaries.py
+  - exceeds_limit: 98
+    file: ./bhlff/models/level_c/boundaries_core.py
     limit: 400
-    lines: 409
+    lines: 498
   - exceeds_limit: 66
     file: ./bhlff/models/level_c/abcd_model.py
     limit: 400
@@ -77,10 +77,6 @@ issues:
     file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
     limit: 400
     lines: 458
-  - exceeds_limit: 47
-    file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
-    limit: 400
-    lines: 447
   - exceeds_limit: 98
     file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
     limit: 400
@@ -523,8 +519,10 @@ issues:
     line: 31
   - file: ./bhlff/models/level_c/mode_beating_analysis.py
     line: 39
+  - file: ./bhlff/models/level_c/boundaries_energy.py
+    line: 23
   - file: ./bhlff/models/level_c/boundaries.py
-    line: 265
+    line: 36
   - file: ./bhlff/models/level_c/level_c_integration_config.py
     line: 22
   - file: ./bhlff/models/level_c/quench_memory_analysis.py
@@ -539,6 +537,8 @@ issues:
     line: 21
   - file: ./bhlff/models/level_c/__init__.py
     line: 37
+  - file: ./bhlff/models/level_c/boundaries_core.py
+    line: 24
   - file: ./bhlff/models/level_c/abcd_model.py
     line: 35
   - file: ./bhlff/models/level_c/boundary/radial_analysis_core.py
@@ -579,9 +579,13 @@ issues:
     line: 21
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
     line: 23
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+    line: 23
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
     line: 23
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
     line: 23
   - file: ./bhlff/models/level_c/beating/basic/comparison_patterns.py
     line: 22
@@ -1732,9 +1736,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 4
-  files_too_large: 63
+  files_too_large: 62
   files_without_docstrings: 4
-  imports_in_middle: 544
+  imports_in_middle: 548
   methods_with_pass: 0
   methods_without_docstrings: 91
   not_implemented_in_non_abstract: 0

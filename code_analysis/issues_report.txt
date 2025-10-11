@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 706
+Total issues found: 709
 
 METHODS_WITHOUT_DOCSTRINGS: 91 issues
 ----------------------------------------
@@ -423,7 +423,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 4 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 544 issues
+IMPORTS_IN_MIDDLE: 548 issues
 ----------------------------------------
   ./setup.py
     Line 28
@@ -797,8 +797,11 @@ IMPORTS_IN_MIDDLE: 544 issues
   ./bhlff/models/level_c/mode_beating_analysis.py
     Line 39
 
+  ./bhlff/models/level_c/boundaries_energy.py
+    Line 23
+
   ./bhlff/models/level_c/boundaries.py
-    Line 265
+    Line 36
 
   ./bhlff/models/level_c/level_c_integration_config.py
     Line 22
@@ -820,6 +823,9 @@ IMPORTS_IN_MIDDLE: 544 issues
 
   ./bhlff/models/level_c/__init__.py
     Line 37
+
+  ./bhlff/models/level_c/boundaries_core.py
+    Line 24
 
   ./bhlff/models/level_c/abcd_model.py
     Line 35
@@ -881,10 +887,16 @@ IMPORTS_IN_MIDDLE: 544 issues
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
     Line 23
 
+  ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+    Line 23
+
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
     Line 23
 
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+    Line 23
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
     Line 23
 
   ./bhlff/models/level_c/beating/basic/comparison_patterns.py
@@ -2058,7 +2070,7 @@ IMPORTS_IN_MIDDLE: 544 issues
     Line 23
 
 
-FILES_TOO_LARGE: 63 issues
+FILES_TOO_LARGE: 62 issues
 ----------------------------------------
   ./tests/unit/automated_testing/test_integration.py
 
@@ -2076,7 +2088,7 @@ FILES_TOO_LARGE: 63 issues
 
   ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
 
-  ./bhlff/models/level_c/boundaries.py
+  ./bhlff/models/level_c/boundaries_core.py
 
   ./bhlff/models/level_c/abcd_model.py
 
@@ -2091,8 +2103,6 @@ FILES_TOO_LARGE: 63 issues
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
 
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-
-  ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
 
   ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
 

@@ -4254,39 +4254,37 @@ Class: ModeBeatingAnalysis
   _validate_c4_results(self, beating_results) -> bool
     File: ./bhlff/models/level_c/mode_beating_analysis.py, Line: 284
 
+Class: BoundaryEnergyAnalyzer
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/boundaries_energy.py, Line: 41
+  analyze_boundary_energy(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundaries_energy.py, Line: 55
+  _calculate_energy_density(self, envelope) -> np.ndarray
+    File: ./bhlff/models/level_c/boundaries_energy.py, Line: 100
+  _analyze_energy_landscape(self, energy_density) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundaries_energy.py, Line: 126
+  _find_energy_boundaries(self, energy_density) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundaries_energy.py, Line: 153
+  _analyze_boundary_stability(self, energy_density, energy_boundaries) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundaries_energy.py, Line: 180
+  _calculate_energy_gradient(self, energy_density) -> float
+    File: ./bhlff/models/level_c/boundaries_energy.py, Line: 207
+  _calculate_stability_index(self, energy_density) -> float
+    File: ./bhlff/models/level_c/boundaries_energy.py, Line: 227
+  _calculate_stability_ratio(self, energy_density) -> float
+    File: ./bhlff/models/level_c/boundaries_energy.py, Line: 252
+  _calculate_skewness(self, data) -> float
+    File: ./bhlff/models/level_c/boundaries_energy.py, Line: 277
+  _calculate_kurtosis(self, data) -> float
+    File: ./bhlff/models/level_c/boundaries_energy.py, Line: 301
+
 Class: BoundaryAnalyzer
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/boundaries.py, Line: 51
+    File: ./bhlff/models/level_c/boundaries.py, Line: 53
   analyze_boundaries(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundaries.py, Line: 61
-  _analyze_level_set_boundaries(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundaries.py, Line: 107
-  _analyze_phase_field_boundaries(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundaries.py, Line: 139
-  _analyze_topological_boundaries(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundaries.py, Line: 168
-  _analyze_boundary_energy(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundaries.py, Line: 192
-  _find_level_set_boundary(self, level_set) -> np.ndarray
-    File: ./bhlff/models/level_c/boundaries.py, Line: 218
-  _analyze_boundary_properties(self, boundary_mask, field) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundaries.py, Line: 229
-  _find_critical_points(self, field) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_c/boundaries.py, Line: 260
-  _analyze_topological_structure(self, critical_points, field) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundaries.py, Line: 300
-  _classify_topological_boundaries(self, critical_points, field) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundaries.py, Line: 314
-  _analyze_energy_landscape(self, energy_density) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundaries.py, Line: 333
-  _find_energy_boundaries(self, energy_density) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundaries.py, Line: 342
-  _analyze_boundary_stability(self, energy_boundaries, energy_density) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundaries.py, Line: 354
-  _estimate_boundary_curvature(self, boundary_mask) -> float
-    File: ./bhlff/models/level_c/boundaries.py, Line: 371
-  _create_boundary_summary(self, level_set_analysis, phase_field_analysis, topological_analysis, energy_analysis) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundaries.py, Line: 383
+    File: ./bhlff/models/level_c/boundaries.py, Line: 71
+  analyze_boundary_energy(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundaries.py, Line: 92
   __init__(self)
     File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py, Line: 35
   analyze_regime_boundaries(self, parameter_grid, classifications) -> Dict[str, Any]
@@ -4385,6 +4383,38 @@ Class: LevelCIntegrationValidation
     File: ./bhlff/models/level_c/level_c_integration_validation.py, Line: 131
   validate_overall_results(self, c1_results, c2_results, c3_results, c4_results) -> Dict[str, Any]
     File: ./bhlff/models/level_c/level_c_integration_validation.py, Line: 159
+
+Class: BoundaryAnalysisCore
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/boundaries_core.py, Line: 41
+  analyze_boundaries(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundaries_core.py, Line: 55
+  _analyze_level_set_boundaries(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundaries_core.py, Line: 101
+  _analyze_phase_field_boundaries(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundaries_core.py, Line: 128
+  _analyze_topological_boundaries(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundaries_core.py, Line: 158
+  _find_level_set_boundary(self, level_set) -> np.ndarray
+    File: ./bhlff/models/level_c/boundaries_core.py, Line: 187
+  _analyze_boundary_properties(self, boundary_mask, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundaries_core.py, Line: 215
+  _find_critical_points(self, field) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_c/boundaries_core.py, Line: 249
+  _is_critical_point(self, field, i, j, k) -> bool
+    File: ./bhlff/models/level_c/boundaries_core.py, Line: 279
+  _classify_critical_point(self, field, i, j, k) -> str
+    File: ./bhlff/models/level_c/boundaries_core.py, Line: 315
+  _analyze_topological_structure(self, field, critical_points) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundaries_core.py, Line: 362
+  _classify_topological_boundaries(self, field, critical_points) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundaries_core.py, Line: 391
+  _analyze_boundary_stability(self, boundary_mask, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundaries_core.py, Line: 417
+  _estimate_boundary_curvature(self, boundary_mask) -> float
+    File: ./bhlff/models/level_c/boundaries_core.py, Line: 444
+  _create_boundary_summary(self, level_set_analysis, phase_field_analysis, topological_analysis) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundaries_core.py, Line: 468
 
 Class: ResonatorLayer
   __init__(self, resonators, bvp_core)
@@ -4800,6 +4830,26 @@ Class: BeatingMLClassificationOptimizer
   _calculate_classification_f1_score(self, parameters, envelope) -> float
     File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 439
 
+Class: BeatingMLPredictionCore
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 39
+  predict_beating_frequencies(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 58
+  predict_mode_coupling(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 94
+  _extract_frequency_features(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 130
+  _extract_coupling_features(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 163
+  _predict_frequencies_ml(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 204
+  _predict_frequencies_simple(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 236
+  _predict_coupling_ml(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 263
+  _predict_coupling_simple(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 295
+
 Class: BeatingMLOptimizationCore
   __init__(self, bvp_core)
     File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 39
@@ -4874,49 +4924,41 @@ Class: BeatingMLCore
   _analyze_beating_basic(self, envelope) -> Dict[str, Any]
     File: ./bhlff/models/level_c/beating/ml/beating_ml_core.py, Line: 132
 
+Class: BeatingMLPredictionFeatures
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py, Line: 40
+  _calculate_spectral_entropy(self, spectrum) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py, Line: 54
+  _calculate_frequency_spacing(self, indices, shape) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py, Line: 77
+  _calculate_frequency_bandwidth(self, spectrum) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py, Line: 100
+  _calculate_autocorrelation(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py, Line: 119
+  _calculate_laplacian(self, envelope) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py, Line: 138
+  _calculate_spatial_correlation(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py, Line: 167
+  _calculate_frequency_coupling_strength(self, spectrum) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py, Line: 187
+  _calculate_mode_interaction_energy(self, spectrum) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py, Line: 206
+  _calculate_coupling_symmetry(self, spectrum) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py, Line: 225
+  _calculate_nonlinear_strength(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py, Line: 248
+  _calculate_mode_mixing_degree(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py, Line: 267
+  _calculate_coupling_efficiency(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py, Line: 286
+
 Class: BeatingMLPrediction
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 31
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 33
   predict_beating_frequencies(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 46
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 56
   predict_mode_coupling(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 74
-  _extract_frequency_features(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 102
-  _extract_coupling_features(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 155
-  _predict_frequencies_ml(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 203
-  _predict_frequencies_simple(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 239
-  _predict_coupling_ml(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 268
-  _predict_coupling_simple(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 304
-  _calculate_spectral_entropy(self, spectrum) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 339
-  _calculate_frequency_spacing(self, indices, shape) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 345
-  _calculate_frequency_bandwidth(self, spectrum) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 352
-  _calculate_autocorrelation(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 363
-  _calculate_laplacian(self, envelope) -> np.ndarray
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 369
-  _calculate_spatial_correlation(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 387
-  _calculate_frequency_coupling_strength(self, spectrum) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 399
-  _calculate_mode_interaction_energy(self, spectrum) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 405
-  _calculate_coupling_symmetry(self, spectrum) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 410
-  _calculate_nonlinear_strength(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 422
-  _calculate_mode_mixing_degree(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 429
-  _calculate_coupling_efficiency(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 439
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 76
 
 Class: BeatingMLPatterns
   __init__(self, bvp_core)

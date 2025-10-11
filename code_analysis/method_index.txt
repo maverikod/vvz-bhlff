@@ -4848,23 +4848,11 @@ Class: BeatingMLClassificationOptimizer
 
 Class: BeatingMLPredictionCore
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 39
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 40
   predict_beating_frequencies(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 58
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 64
   predict_mode_coupling(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 94
-  _extract_frequency_features(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 130
-  _extract_coupling_features(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 163
-  _predict_frequencies_ml(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 204
-  _predict_frequencies_simple(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 236
-  _predict_coupling_ml(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 263
-  _predict_coupling_simple(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 295
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 99
 
 Class: BeatingMLOptimizationCore
   __init__(self, bvp_core)
@@ -5003,6 +4991,94 @@ Class: BeatingMLOptimization
     File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 78
   optimize_prediction_parameters(self, envelope) -> Dict[str, Any]
     File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 98
+
+Class: FeatureExtractor
+  __init__(self)
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 39
+  extract_frequency_features(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 49
+  extract_coupling_features(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 86
+  extract_7d_phase_features(self, features) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 131
+
+Class: PhaseFieldFeatures
+  __init__(self)
+    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 36
+  compute_7d_phase_field_features(self, features) -> list
+    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 45
+  _compute_phase_coherence(self, features) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 73
+  _compute_topological_charge(self, features) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 87
+  _compute_energy_density(self, features) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 101
+  _compute_phase_velocity(self, features) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 115
+
+Class: PredictionEngine
+  __init__(self, model_manager, feature_extractor)
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 40
+  predict_frequencies(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 56
+  predict_coupling(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 118
+  _predict_frequencies_simple(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 190
+  _predict_coupling_simple(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 217
+  _compute_prediction_confidence(self, features, model) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 244
+  _get_feature_importance(self, model) -> Dict[str, float]
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 279
+  _compute_prediction_variance(self, features, model) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 321
+
+Class: MLModelManager
+  __init__(self, model_dir)
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 41
+  _initialize_models(self) -> None
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 68
+  _load_trained_model(self, model_type) -> None
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 93
+  _create_default_model(self, model_type) -> None
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 119
+  get_frequency_model(self) -> Optional[RandomForestRegressor]
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 146
+  get_coupling_model(self) -> Optional[MLPRegressor]
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 158
+  get_frequency_scaler(self) -> StandardScaler
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 170
+  get_coupling_scaler(self) -> StandardScaler
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 182
+  save_model(self, model_type, model, scaler) -> None
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 194
+  is_model_loaded(self, model_type) -> bool
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 222
+
+Class: FeatureCalculator
+  __init__(self)
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 36
+  calculate_spectral_entropy(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 45
+  calculate_frequency_spacing(self, envelope, shape) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 68
+  calculate_frequency_bandwidth(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 87
+  calculate_autocorrelation(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 110
+  calculate_frequency_coupling_strength(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 132
+  calculate_mode_interaction_energy(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 156
+  calculate_coupling_symmetry(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 175
+  calculate_nonlinear_strength(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 221
+  calculate_mode_mixing_degree(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 237
+  calculate_coupling_efficiency(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 262
 
 Class: PatternComparator
   __init__(self)

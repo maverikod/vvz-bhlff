@@ -4,15 +4,15 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 775
+Total files analyzed: 781
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 646
+Total classes: 651
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 5324
+Total functions: 5357
 
 ISSUES SUMMARY:
 ----------------------------------------
@@ -21,7 +21,7 @@ not_implemented_in_non_abstract: 0
 methods_without_docstrings: 97
 files_without_docstrings: 4
 classes_without_docstrings: 6
-imports_in_middle: 549
+imports_in_middle: 552
 files_too_large: 65
 
 METHODS_WITHOUT_DOCSTRINGS:
@@ -146,7 +146,7 @@ IMPORTS_IN_MIDDLE:
   File: ./tests/test_bvp_level_f_integration.py
   Line: 30
 
-  ... and 539 more
+  ... and 542 more
 
 FILES_TOO_LARGE:
 ----------------------------------------

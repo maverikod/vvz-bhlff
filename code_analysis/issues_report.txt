@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 721
+Total issues found: 724
 
 METHODS_WITHOUT_DOCSTRINGS: 97 issues
 ----------------------------------------
@@ -457,7 +457,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 6 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 549 issues
+IMPORTS_IN_MIDDLE: 552 issues
 ----------------------------------------
   ./setup.py
     Line 28
@@ -922,7 +922,7 @@ IMPORTS_IN_MIDDLE: 549 issues
     Line 23
 
   ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-    Line 23
+    Line 24
 
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
     Line 23
@@ -932,6 +932,15 @@ IMPORTS_IN_MIDDLE: 549 issues
 
   ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
     Line 23
+
+  ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+    Line 23
+
+  ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
+    Line 24
+
+  ./bhlff/models/level_c/beating/ml/core/ml_models.py
+    Line 25
 
   ./bhlff/models/level_c/beating/basic/comparison_patterns.py
     Line 22

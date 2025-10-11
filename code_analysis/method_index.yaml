@@ -4665,64 +4665,22 @@ method_index:
       - self
       - bvp_core
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 39
+      line: 40
       name: __init__
       returns: null
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 58
+      line: 64
       name: predict_beating_frequencies
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 94
+      line: 99
       name: predict_mode_coupling
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 130
-      name: _extract_frequency_features
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 163
-      name: _extract_coupling_features
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - features
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 204
-      name: _predict_frequencies_ml
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - features
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 236
-      name: _predict_frequencies_simple
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - features
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 263
-      name: _predict_coupling_ml
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - features
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 295
-      name: _predict_coupling_simple
       returns: Dict[str, Any]
     BeatingMLPredictionFeatures:
     - args:
@@ -11163,6 +11121,112 @@ method_index:
       line: 573
       name: _make_serializable
       returns: Any
+    FeatureCalculator:
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
+      line: 36
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
+      line: 45
+      name: calculate_spectral_entropy
+      returns: float
+    - args:
+      - self
+      - envelope
+      - shape
+      file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
+      line: 68
+      name: calculate_frequency_spacing
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
+      line: 87
+      name: calculate_frequency_bandwidth
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
+      line: 110
+      name: calculate_autocorrelation
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
+      line: 132
+      name: calculate_frequency_coupling_strength
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
+      line: 156
+      name: calculate_mode_interaction_energy
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
+      line: 175
+      name: calculate_coupling_symmetry
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
+      line: 221
+      name: calculate_nonlinear_strength
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
+      line: 237
+      name: calculate_mode_mixing_degree
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
+      line: 262
+      name: calculate_coupling_efficiency
+      returns: float
+    FeatureExtractor:
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+      line: 39
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+      line: 49
+      name: extract_frequency_features
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+      line: 86
+      name: extract_coupling_features
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+      line: 131
+      name: extract_7d_phase_features
+      returns: np.ndarray
     Field:
     - args:
       - self
@@ -13430,6 +13494,74 @@ method_index:
       line: 111
       name: _analyze_gravitational_effects
       returns: Dict[str, Any]
+    MLModelManager:
+    - args:
+      - self
+      - model_dir
+      file: ./bhlff/models/level_c/beating/ml/core/ml_models.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/core/ml_models.py
+      line: 68
+      name: _initialize_models
+      returns: None
+    - args:
+      - self
+      - model_type
+      file: ./bhlff/models/level_c/beating/ml/core/ml_models.py
+      line: 93
+      name: _load_trained_model
+      returns: None
+    - args:
+      - self
+      - model_type
+      file: ./bhlff/models/level_c/beating/ml/core/ml_models.py
+      line: 119
+      name: _create_default_model
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/core/ml_models.py
+      line: 146
+      name: get_frequency_model
+      returns: Optional[RandomForestRegressor]
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/core/ml_models.py
+      line: 158
+      name: get_coupling_model
+      returns: Optional[MLPRegressor]
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/core/ml_models.py
+      line: 170
+      name: get_frequency_scaler
+      returns: StandardScaler
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/core/ml_models.py
+      line: 182
+      name: get_coupling_scaler
+      returns: StandardScaler
+    - args:
+      - self
+      - model_type
+      - model
+      - scaler
+      file: ./bhlff/models/level_c/beating/ml/core/ml_models.py
+      line: 194
+      name: save_model
+      returns: None
+    - args:
+      - self
+      - model_type
+      file: ./bhlff/models/level_c/beating/ml/core/ml_models.py
+      line: 222
+      name: is_model_loaded
+      returns: bool
     MemoryAnalyzer:
     - args:
       - self
@@ -17160,6 +17292,48 @@ method_index:
       line: 176
       name: _apply_7d_bvp_corrections
       returns: np.ndarray
+    PhaseFieldFeatures:
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py
+      line: 36
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py
+      line: 45
+      name: compute_7d_phase_field_features
+      returns: list
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py
+      line: 73
+      name: _compute_phase_coherence
+      returns: float
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py
+      line: 87
+      name: _compute_topological_charge
+      returns: float
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py
+      line: 101
+      name: _compute_energy_density
+      returns: float
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py
+      line: 115
+      name: _compute_phase_velocity
+      returns: float
     PhaseMapper:
     - args:
       - self
@@ -19038,6 +19212,66 @@ method_index:
       line: 84
       name: _analyze_tail_region
       returns: Dict[str, Any]
+    PredictionEngine:
+    - args:
+      - self
+      - model_manager
+      - feature_extractor
+      file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
+      line: 40
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
+      line: 56
+      name: predict_frequencies
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
+      line: 118
+      name: predict_coupling
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
+      line: 190
+      name: _predict_frequencies_simple
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
+      line: 217
+      name: _predict_coupling_simple
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - features
+      - model
+      file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
+      line: 244
+      name: _compute_prediction_confidence
+      returns: float
+    - args:
+      - self
+      - model
+      file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
+      line: 279
+      name: _get_feature_importance
+      returns: Dict[str, float]
+    - args:
+      - self
+      - features
+      - model
+      file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
+      line: 321
+      name: _compute_prediction_variance
+      returns: float
     Profiler:
     - args:
       - self
@@ -37513,6 +37747,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 5243
-    total_classes: 559
+    total_class_methods: 5276
+    total_classes: 564
     total_standalone_functions: 0

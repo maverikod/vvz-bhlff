@@ -9,8 +9,10 @@ for power law analysis in the BVP framework.
 """
 
 import numpy as np
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
 import logging
+from scipy.optimize import curve_fit
+from scipy import stats
 
 from ..bvp_core.bvp_core_facade import BVPCoreFacade as BVPCore
 

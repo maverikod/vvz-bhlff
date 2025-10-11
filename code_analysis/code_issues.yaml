@@ -598,13 +598,19 @@ issues:
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
     line: 23
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-    line: 23
+    line: 24
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
     line: 23
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
     line: 23
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
     line: 23
+  - file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
+    line: 24
+  - file: ./bhlff/models/level_c/beating/ml/core/ml_models.py
+    line: 25
   - file: ./bhlff/models/level_c/beating/basic/comparison_patterns.py
     line: 22
   - file: ./bhlff/models/level_c/beating/basic/core_analysis_frequency.py
@@ -1782,7 +1788,7 @@ summary:
   classes_without_docstrings: 6
   files_too_large: 65
   files_without_docstrings: 4
-  imports_in_middle: 549
+  imports_in_middle: 552
   methods_with_pass: 0
   methods_without_docstrings: 97
   not_implemented_in_non_abstract: 0

@@ -21,6 +21,7 @@ from typing import Dict, Any
 import logging
 
 from bhlff.core.bvp import BVPCore
+from .core import MLModelManager, FeatureExtractor, PredictionEngine, MLTrainer
 
 
 class BeatingMLPredictionCore:
@@ -54,6 +55,12 @@ class BeatingMLPredictionCore:
         self.frequency_prediction_enabled = True
         self.coupling_prediction_enabled = True
         self.prediction_confidence = 0.7
+        
+        # Initialize core components
+        self.model_manager = MLModelManager()
+        self.feature_extractor = FeatureExtractor()
+        self.prediction_engine = PredictionEngine(self.model_manager, self.feature_extractor)
+        self.ml_trainer = MLTrainer(self.model_manager)
     
     def predict_beating_frequencies(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
@@ -75,14 +82,13 @@ class BeatingMLPredictionCore:
         """
         self.logger.info("Starting frequency prediction")
         
-        # Extract frequency features
-        features = self._extract_frequency_features(envelope)
-        
-        # Predict frequencies using ML
+        # Use prediction engine for ML prediction
         if self.frequency_prediction_enabled:
-            prediction_results = self._predict_frequencies_ml(features)
+            prediction_results = self.prediction_engine.predict_frequencies(envelope)
         else:
-            prediction_results = self._predict_frequencies_simple(features)
+            # Fallback to simple prediction
+            features = self.feature_extractor.extract_frequency_features(envelope)
+            prediction_results = self.prediction_engine._predict_frequencies_simple(features)
         
         # Add confidence and validation
         prediction_results["confidence"] = self.prediction_confidence
@@ -111,14 +117,13 @@ class BeatingMLPredictionCore:
         """
         self.logger.info("Starting mode coupling prediction")
         
-        # Extract coupling features
-        features = self._extract_coupling_features(envelope)
-        
-        # Predict coupling using ML
+        # Use prediction engine for ML prediction
         if self.coupling_prediction_enabled:
-            prediction_results = self._predict_coupling_ml(features)
+            prediction_results = self.prediction_engine.predict_coupling(envelope)
         else:
-            prediction_results = self._predict_coupling_simple(features)
+            # Fallback to simple prediction
+            features = self.feature_extractor.extract_coupling_features(envelope)
+            prediction_results = self.prediction_engine._predict_coupling_simple(features)
         
         # Add confidence and validation
         prediction_results["confidence"] = self.prediction_confidence
@@ -127,194 +132,92 @@ class BeatingMLPredictionCore:
         self.logger.info("Mode coupling prediction completed")
         return prediction_results
     
-    def _extract_frequency_features(self, envelope: np.ndarray) -> Dict[str, Any]:
+    def train_frequency_model(self, n_samples: int = 1000) -> Dict[str, Any]:
         """
-        Extract frequency features.
+        Train frequency prediction model using 7D BVP theory.
         
         Physical Meaning:
-            Extracts frequency-related features from envelope
-            for ML prediction.
+            Trains Random Forest model for frequency prediction using
+            7D phase field theory and VBP envelope configurations.
+            
+        Mathematical Foundation:
+            Uses Random Forest regression trained on synthetic 7D phase field
+            data to predict beating frequencies from spectral features.
             
         Args:
-            envelope (np.ndarray): 7D envelope field data.
+            n_samples (int): Number of training samples to generate.
             
         Returns:
-            Dict[str, Any]: Frequency features.
+            Dict[str, Any]: Training results and model performance.
         """
-        # Calculate spectral entropy
-        spectral_entropy = self._calculate_spectral_entropy(envelope)
-        
-        # Calculate frequency spacing
-        frequency_spacing = self._calculate_frequency_spacing(envelope, envelope.shape)
-        
-        # Calculate frequency bandwidth
-        frequency_bandwidth = self._calculate_frequency_bandwidth(envelope)
-        
-        # Calculate autocorrelation
-        autocorrelation = self._calculate_autocorrelation(envelope)
-        
-        return {
-            "spectral_entropy": spectral_entropy,
-            "frequency_spacing": frequency_spacing,
-            "frequency_bandwidth": frequency_bandwidth,
-            "autocorrelation": autocorrelation,
-        }
+        self.logger.info(f"Training frequency model with {n_samples} samples")
+        return self.ml_trainer.train_frequency_model(n_samples)
     
-    def _extract_coupling_features(self, envelope: np.ndarray) -> Dict[str, Any]:
+    def train_coupling_model(self, n_samples: int = 1000) -> Dict[str, Any]:
         """
-        Extract coupling features.
+        Train coupling prediction model using 7D BVP theory.
         
         Physical Meaning:
-            Extracts coupling-related features from envelope
-            for ML prediction.
+            Trains Neural Network model for coupling prediction using
+            7D phase field theory and VBP envelope interactions.
+            
+        Mathematical Foundation:
+            Uses Neural Network regression trained on synthetic 7D phase field
+            data to predict mode coupling from interaction features.
             
         Args:
-            envelope (np.ndarray): 7D envelope field data.
+            n_samples (int): Number of training samples to generate.
             
         Returns:
-            Dict[str, Any]: Coupling features.
+            Dict[str, Any]: Training results and model performance.
         """
-        # Calculate frequency coupling strength
-        coupling_strength = self._calculate_frequency_coupling_strength(envelope)
-        
-        # Calculate mode interaction energy
-        interaction_energy = self._calculate_mode_interaction_energy(envelope)
-        
-        # Calculate coupling symmetry
-        coupling_symmetry = self._calculate_coupling_symmetry(envelope)
-        
-        # Calculate nonlinear strength
-        nonlinear_strength = self._calculate_nonlinear_strength(envelope)
-        
-        # Calculate mode mixing degree
-        mixing_degree = self._calculate_mode_mixing_degree(envelope)
-        
-        # Calculate coupling efficiency
-        coupling_efficiency = self._calculate_coupling_efficiency(envelope)
-        
-        return {
-            "coupling_strength": coupling_strength,
-            "interaction_energy": interaction_energy,
-            "coupling_symmetry": coupling_symmetry,
-            "nonlinear_strength": nonlinear_strength,
-            "mixing_degree": mixing_degree,
-            "coupling_efficiency": coupling_efficiency,
-        }
+        self.logger.info(f"Training coupling model with {n_samples} samples")
+        return self.ml_trainer.train_coupling_model(n_samples)
     
-    def _predict_frequencies_ml(self, features: Dict[str, Any]) -> Dict[str, Any]:
+    def train_all_models(self, n_samples: int = 1000) -> Dict[str, Any]:
         """
-        Predict frequencies using ML.
+        Train all ML models using 7D BVP theory.
         
         Physical Meaning:
-            Predicts frequencies using machine learning
-            based on extracted features.
+            Trains both frequency and coupling prediction models using
+            7D phase field theory and VBP envelope configurations.
             
         Args:
-            features (Dict[str, Any]): Frequency features.
+            n_samples (int): Number of training samples to generate.
             
         Returns:
-            Dict[str, Any]: ML frequency prediction results.
+            Dict[str, Any]: Training results for all models.
         """
-        # Simplified ML prediction
-        # In practice, this would involve proper ML model
-        predicted_frequencies = [
-            features["spectral_entropy"] * 100,
-            features["frequency_spacing"] * 50,
-            features["frequency_bandwidth"] * 25,
-        ]
-        
-        return {
-            "predicted_frequencies": predicted_frequencies,
-            "prediction_confidence": 0.85,
-            "feature_importance": {
-                "spectral_entropy": 0.4,
-                "frequency_spacing": 0.3,
-                "frequency_bandwidth": 0.3,
-            },
-        }
+        self.logger.info(f"Training all models with {n_samples} samples")
+        return self.ml_trainer.train_all_models(n_samples)
     
-    def _predict_frequencies_simple(self, features: Dict[str, Any]) -> Dict[str, Any]:
+    def validate_models(self, n_samples: int = 200) -> Dict[str, Any]:
         """
-        Predict frequencies using simple method.
+        Validate trained ML models.
         
         Physical Meaning:
-            Predicts frequencies using simple analytical
-            methods based on features.
+            Validates trained ML models using independent test data
+            to ensure prediction accuracy and reliability.
             
         Args:
-            features (Dict[str, Any]): Frequency features.
+            n_samples (int): Number of validation samples to generate.
             
         Returns:
-            Dict[str, Any]: Simple frequency prediction results.
+            Dict[str, Any]: Validation results for all models.
         """
-        # Simple analytical prediction
-        predicted_frequencies = [
-            features["spectral_entropy"] * 50,
-            features["frequency_spacing"] * 25,
-            features["frequency_bandwidth"] * 15,
-        ]
-        
-        return {
-            "predicted_frequencies": predicted_frequencies,
-            "prediction_confidence": 0.7,
-            "prediction_method": "analytical",
-        }
+        self.logger.info(f"Validating models with {n_samples} samples")
+        return self.ml_trainer.validate_models(n_samples)
     
-    def _predict_coupling_ml(self, features: Dict[str, Any]) -> Dict[str, Any]:
+    def get_model_performance(self) -> Dict[str, Any]:
         """
-        Predict coupling using ML.
+        Get model performance metrics.
         
         Physical Meaning:
-            Predicts mode coupling using machine learning
-            based on extracted features.
-            
-        Args:
-            features (Dict[str, Any]): Coupling features.
+            Returns performance metrics for trained ML models
+            to assess prediction quality and reliability.
             
         Returns:
-            Dict[str, Any]: ML coupling prediction results.
+            Dict[str, Any]: Model performance metrics.
         """
-        # Simplified ML prediction
-        # In practice, this would involve proper ML model
-        predicted_coupling = {
-            "coupling_strength": features["coupling_strength"] * 0.8,
-            "interaction_energy": features["interaction_energy"] * 1.2,
-            "coupling_symmetry": features["coupling_symmetry"] * 0.9,
-        }
-        
-        return {
-            "predicted_coupling": predicted_coupling,
-            "prediction_confidence": 0.8,
-            "feature_importance": {
-                "coupling_strength": 0.4,
-                "interaction_energy": 0.3,
-                "coupling_symmetry": 0.3,
-            },
-        }
+        return self.ml_trainer.get_model_performance()
     
-    def _predict_coupling_simple(self, features: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Predict coupling using simple method.
-        
-        Physical Meaning:
-            Predicts mode coupling using simple analytical
-            methods based on features.
-            
-        Args:
-            features (Dict[str, Any]): Coupling features.
-            
-        Returns:
-            Dict[str, Any]: Simple coupling prediction results.
-        """
-        # Simple analytical prediction
-        predicted_coupling = {
-            "coupling_strength": features["coupling_strength"] * 0.6,
-            "interaction_energy": features["interaction_energy"] * 1.0,
-            "coupling_symmetry": features["coupling_symmetry"] * 0.8,
-        }
-        
-        return {
-            "predicted_coupling": predicted_coupling,
-            "prediction_confidence": 0.6,
-            "prediction_method": "analytical",
-        }

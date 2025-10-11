@@ -5338,37 +5338,17 @@ Class: CorrelationAnalyzer
   analyze_correlation_effects(self, domain, memory, time_params) -> Dict[str, Any]
     File: ./bhlff/models/level_c/memory/correlation_analysis.py, Line: 62
 
+Class: PinningPotentialCreator
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/memory/pinning_analysis_potential.py, Line: 40
+  create_pinning_potential(self, domain, pinning_params) -> np.ndarray
+    File: ./bhlff/models/level_c/memory/pinning_analysis_potential.py, Line: 54
+
 Class: PinningAnalyzer
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 42
+    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 45
   analyze_pinning_effects(self, domain, memory, time_params, pinning_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 52
-  _create_pinning_potential(self, domain, pinning_params) -> np.ndarray
-    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 107
-  _evolve_with_pinning(self, domain, memory, time_params, pinning_params) -> List[np.ndarray]
-    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 156
-  _create_initial_field(self, domain) -> np.ndarray
-    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 211
-  _compute_pinning_force(self, field, pinning_potential) -> np.ndarray
-    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 240
-  _apply_evolution_operator_with_pinning(self, field, pinning_force, dt) -> np.ndarray
-    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 268
-  _analyze_pinning_effects(self, field_evolution, pinning_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 299
-  _analyze_field_stabilization(self, field_evolution, pinning_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 338
-  _analyze_pattern_modification(self, field_evolution, pinning_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 366
-  _analyze_pinning_effectiveness(self, field_evolution, pinning_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 394
-  _analyze_drift_suppression(self, field_evolution, pinning_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 422
-  _compute_drift_suppression(self, field_evolution, pinning_params) -> float
-    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 467
-  _analyze_suppression_effectiveness(self, field_evolution, pinning_params) -> float
-    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 489
-  _compute_suppression_factors(self, field_evolution, pinning_params) -> List[float]
-    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 511
+    File: ./bhlff/models/level_c/memory/pinning_analysis.py, Line: 64
 
 Class: CorrelationAnalysisCore
   __init__(self, bvp_core)
@@ -5397,6 +5377,26 @@ Class: TemporalCoherenceAnalyzer
     File: ./bhlff/models/level_c/memory/correlation_analysis_coherence.py, Line: 167
   _analyze_coherence_stability(self, coherence_values) -> Dict[str, Any]
     File: ./bhlff/models/level_c/memory/correlation_analysis_coherence.py, Line: 200
+
+Class: PinningEffectsAnalyzer
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/memory/pinning_analysis_effects.py, Line: 41
+  analyze_pinning_effects(self, evolution_results, pinning_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/memory/pinning_analysis_effects.py, Line: 55
+  _analyze_field_stabilization(self, evolution_results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/memory/pinning_analysis_effects.py, Line: 103
+  _analyze_pattern_modification(self, evolution_results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/memory/pinning_analysis_effects.py, Line: 139
+  _analyze_pinning_effectiveness(self, evolution_results, pinning_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/memory/pinning_analysis_effects.py, Line: 174
+  _analyze_drift_suppression(self, evolution_results, pinning_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/memory/pinning_analysis_effects.py, Line: 205
+  _compute_drift_suppression(self, evolution_results, pinning_strength) -> float
+    File: ./bhlff/models/level_c/memory/pinning_analysis_effects.py, Line: 241
+  _analyze_suppression_effectiveness(self, evolution_results, pinning_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/memory/pinning_analysis_effects.py, Line: 265
+  _compute_suppression_factors(self, evolution_results, pinning_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/memory/pinning_analysis_effects.py, Line: 291
 
 Class: MemoryAnalyzer
   __init__(self, bvp_core)
@@ -5516,6 +5516,18 @@ Class: MemoryEvolutionAnalyzer
   _collect_quench_events(self, field_history) -> List[QuenchEvent]
     File: ./bhlff/models/level_c/memory/memory_evolution.py, Line: 413
 
+Class: PinningEvolutionAnalyzer
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/memory/pinning_analysis_evolution.py, Line: 40
+  evolve_with_pinning(self, field, pinning_potential, time_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/memory/pinning_analysis_evolution.py, Line: 54
+  _create_initial_field(self, domain) -> np.ndarray
+    File: ./bhlff/models/level_c/memory/pinning_analysis_evolution.py, Line: 111
+  _compute_pinning_force(self, field, pinning_potential) -> np.ndarray
+    File: ./bhlff/models/level_c/memory/pinning_analysis_evolution.py, Line: 135
+  _apply_evolution_operator_with_pinning(self, field, pinning_force, dt) -> np.ndarray
+    File: ./bhlff/models/level_c/memory/pinning_analysis_evolution.py, Line: 165
+
 Class: ResonatorSpectrumAnalyzer
   __init__(self, bvp_core)
     File: ./bhlff/models/level_c/resonators/resonator_spectrum.py, Line: 27
@@ -5616,6 +5628,40 @@ Class: ResonatorAnalysis
   _find_local_maxima(self, data) -> List[Tuple[int, ...]]
     File: ./bhlff/models/level_c/resonators/resonator_analysis.py, Line: 409
 
+Class: MultiParticleSystemAnalyzer
+  __init__(self, domain, particles, interaction_range)
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 42
+  analyze_system_properties(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 60
+  _calculate_system_energy(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 106
+  _calculate_potential_energy(self) -> float
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 139
+  _calculate_kinetic_energy(self) -> float
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 167
+  _calculate_system_stability(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 187
+  optimize_system_configuration(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 211
+  _optimize_particle_positions(self) -> List[np.ndarray]
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 243
+  _optimize_interaction_parameters(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 265
+  _calculate_optimization_improvement(self) -> float
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 285
+  validate_system_analysis(self, results) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 302
+  _validate_potential_analysis(self, potential_analysis) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 348
+  _validate_mode_spectrum(self, mode_spectrum) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 372
+  _validate_system_energy(self, system_energy) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 396
+  _validate_system_stability(self, system_stability) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 420
+  _calculate_overall_validation(self, potential_validation, mode_spectrum_validation, system_energy_validation, system_stability_validation) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_analysis.py, Line: 444
+
 Class: LevelFBVPIntegration
   __init__(self, bvp_core)
     File: ./bhlff/models/level_f/bvp_integration.py, Line: 56
@@ -5639,6 +5685,30 @@ Class: LevelFBVPIntegration
     File: ./bhlff/models/level_f/bvp_integration.py, Line: 364
   _check_bvp_compliance(self, envelope) -> Dict[str, Any]
     File: ./bhlff/models/level_f/bvp_integration.py, Line: 390
+
+Class: MultiParticleModesAnalyzer
+  __init__(self, domain, particles, interaction_range)
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 41
+  find_collective_modes(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 59
+  compute_correlation_function(self, field, time_points) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 103
+  _create_dynamics_matrix(self) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 133
+  _create_mass_matrix(self) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 155
+  _create_stiffness_matrix(self) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 175
+  _analyze_mode_spectrum(self, eigenvalues, eigenvectors) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 203
+  _calculate_mode_frequencies(self, eigenvalues) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 234
+  _calculate_mode_amplitudes(self, eigenvectors) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 253
+  _compute_time_correlation(self, field, time) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 272
+  _calculate_interaction_strength(self, distance) -> float
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 294
 
 Class: NonlinearEffects
   __init__(self, system, nonlinear_params)
@@ -5687,36 +5757,36 @@ Class: NonlinearEffects
     File: ./bhlff/models/level_f/nonlinear.py, Line: 479
 
 Class: MultiParticleSystem
-  __init__(self, domain, particles, interaction_range, interaction_strength)
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 59
-  _setup_interaction_matrices(self) -> None
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 94
+  __init__(self, domain, particles, interaction_range, system_params)
+    File: ./bhlff/models/level_f/multi_particle.py, Line: 54
   compute_effective_potential(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 128
+    File: ./bhlff/models/level_f/multi_particle.py, Line: 80
   find_collective_modes(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 145
+    File: ./bhlff/models/level_f/multi_particle.py, Line: 96
   compute_correlation_function(self, field, time_points) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 163
+    File: ./bhlff/models/level_f/multi_particle.py, Line: 113
   analyze_system_properties(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 189
-  _calculate_system_energy(self, potential) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 228
-  _calculate_system_stability(self, modes) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 257
-  optimize_system_configuration(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 298
-  validate_system_analysis(self, results) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 330
-  _validate_potential_analysis(self, potential_analysis) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 370
-  _validate_mode_spectrum(self, mode_spectrum) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 401
-  _validate_system_energy(self, system_energy) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 432
-  _validate_system_stability(self, system_stability) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 463
-  _calculate_overall_validation(self, potential_validation, mode_validation, energy_validation, stability_validation) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle.py, Line: 494
+    File: ./bhlff/models/level_f/multi_particle.py, Line: 133
+
+Class: MultiParticlePotentialAnalyzer
+  __init__(self, domain, particles, interaction_range)
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 40
+  compute_effective_potential(self) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 61
+  _setup_interaction_matrices(self) -> None
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 95
+  _compute_single_particle_potential(self, particle) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 115
+  _compute_pair_interaction(self, particle1, particle2) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 147
+  _compute_higher_order_interactions(self) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 177
+  _compute_three_body_interaction(self, particle1, particle2, particle3) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 202
+  _calculate_interaction_strength(self, distance) -> float
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 237
+  _calculate_three_body_strength(self, distance_12, distance_13, distance_23) -> float
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 258
 
 Class: CollectiveExcitations
   __init__(self, system, excitation_params)
@@ -5893,6 +5963,34 @@ Class: ExcitationAnalyzer
     File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 391
   _compute_quality_factors(self, peaks, transmission_analysis) -> np.ndarray
     File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 413
+
+Class: PotentialComputationAnalyzer
+  __init__(self, domain, particles, system_params)
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 42
+  compute_effective_potential(self) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 63
+  _initialize_potential_analysis(self) -> None
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 100
+  _setup_interaction_matrices(self) -> None
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 114
+  _setup_potential_functions(self) -> None
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 134
+  _compute_single_particle_potential(self, particle) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 150
+  _create_single_particle_potential(self, distances, particle) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 182
+  _compute_pair_interaction(self, particle_i, particle_j) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 202
+  _create_pair_potential(self, distances_i, distances_j, particle_i, particle_j) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 241
+  _compute_higher_order_interactions(self) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 265
+  _compute_three_particle_interaction(self, particle_i, particle_j, particle_k) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 290
+  _create_higher_order_potential(self, distances_i, distances_j, distances_k, particle_i, particle_j, particle_k) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 339
+  _calculate_interaction_strength(self, distance) -> float
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 368
 
 Class: Particle
   __post_init__(self)

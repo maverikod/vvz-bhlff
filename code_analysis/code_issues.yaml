@@ -89,10 +89,6 @@ issues:
     file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
     limit: 400
     lines: 450
-  - exceeds_limit: 132
-    file: ./bhlff/models/level_c/memory/pinning_analysis.py
-    limit: 400
-    lines: 532
   - exceeds_limit: 9
     file: ./bhlff/models/level_c/memory/memory_analyzer.py
     limit: 400
@@ -105,6 +101,10 @@ issues:
     file: ./bhlff/models/level_c/resonators/resonator_analysis.py
     limit: 400
     lines: 439
+  - exceeds_limit: 79
+    file: ./bhlff/models/level_f/multi_particle_analysis.py
+    limit: 400
+    lines: 479
   - exceeds_limit: 11
     file: ./bhlff/models/level_f/bvp_integration.py
     limit: 400
@@ -113,10 +113,6 @@ issues:
     file: ./bhlff/models/level_f/nonlinear.py
     limit: 400
     lines: 518
-  - exceeds_limit: 133
-    file: ./bhlff/models/level_f/multi_particle.py
-    limit: 400
-    lines: 533
   - exceeds_limit: 111
     file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
     limit: 400
@@ -619,12 +615,16 @@ issues:
     line: 22
   - file: ./bhlff/models/level_c/memory/correlation_analysis.py
     line: 28
+  - file: ./bhlff/models/level_c/memory/pinning_analysis_potential.py
+    line: 23
   - file: ./bhlff/models/level_c/memory/pinning_analysis.py
-    line: 24
+    line: 27
   - file: ./bhlff/models/level_c/memory/correlation_analysis_core.py
     line: 24
   - file: ./bhlff/models/level_c/memory/correlation_analysis_coherence.py
     line: 21
+  - file: ./bhlff/models/level_c/memory/pinning_analysis_effects.py
+    line: 23
   - file: ./bhlff/models/level_c/memory/correlation_analysis_stability.py
     line: 21
   - file: ./bhlff/models/level_c/memory/correlation_analysis_cross.py
@@ -635,16 +635,24 @@ issues:
     line: 24
   - file: ./bhlff/models/level_c/memory/__init__.py
     line: 24
+  - file: ./bhlff/models/level_c/memory/pinning_analysis_evolution.py
+    line: 23
   - file: ./bhlff/models/level_f/transitions.py
     line: 23
+  - file: ./bhlff/models/level_f/multi_particle_analysis.py
+    line: 24
   - file: ./bhlff/models/level_f/bvp_integration.py
     line: 35
+  - file: ./bhlff/models/level_f/multi_particle_modes.py
+    line: 24
   - file: ./bhlff/models/level_f/nonlinear.py
     line: 33
   - file: ./bhlff/models/level_f/__init__.py
     line: 28
   - file: ./bhlff/models/level_f/multi_particle.py
-    line: 34
+    line: 35
+  - file: ./bhlff/models/level_f/multi_particle_potential.py
+    line: 24
   - file: ./bhlff/models/level_f/collective.py
     line: 30
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
@@ -663,6 +671,8 @@ issues:
     line: 22
   - file: ./bhlff/models/level_f/collective/excitation_analysis.py
     line: 325
+  - file: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py
+    line: 24
   - file: ./bhlff/models/level_f/multi_particle/data_structures.py
     line: 21
   - file: ./bhlff/models/level_f/multi_particle/__init__.py
@@ -1696,9 +1706,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 4
-  files_too_large: 63
+  files_too_large: 62
   files_without_docstrings: 4
-  imports_in_middle: 526
+  imports_in_middle: 533
   methods_with_pass: 0
   methods_without_docstrings: 91
   not_implemented_in_non_abstract: 0

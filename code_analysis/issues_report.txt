@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 688
+Total issues found: 694
 
 METHODS_WITHOUT_DOCSTRINGS: 91 issues
 ----------------------------------------
@@ -423,7 +423,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 4 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 526 issues
+IMPORTS_IN_MIDDLE: 533 issues
 ----------------------------------------
   ./setup.py
     Line 28
@@ -941,14 +941,20 @@ IMPORTS_IN_MIDDLE: 526 issues
   ./bhlff/models/level_c/memory/correlation_analysis.py
     Line 28
 
+  ./bhlff/models/level_c/memory/pinning_analysis_potential.py
+    Line 23
+
   ./bhlff/models/level_c/memory/pinning_analysis.py
-    Line 24
+    Line 27
 
   ./bhlff/models/level_c/memory/correlation_analysis_core.py
     Line 24
 
   ./bhlff/models/level_c/memory/correlation_analysis_coherence.py
     Line 21
+
+  ./bhlff/models/level_c/memory/pinning_analysis_effects.py
+    Line 23
 
   ./bhlff/models/level_c/memory/correlation_analysis_stability.py
     Line 21
@@ -965,11 +971,20 @@ IMPORTS_IN_MIDDLE: 526 issues
   ./bhlff/models/level_c/memory/__init__.py
     Line 24
 
+  ./bhlff/models/level_c/memory/pinning_analysis_evolution.py
+    Line 23
+
   ./bhlff/models/level_f/transitions.py
     Line 23
 
+  ./bhlff/models/level_f/multi_particle_analysis.py
+    Line 24
+
   ./bhlff/models/level_f/bvp_integration.py
     Line 35
+
+  ./bhlff/models/level_f/multi_particle_modes.py
+    Line 24
 
   ./bhlff/models/level_f/nonlinear.py
     Line 33
@@ -978,7 +993,10 @@ IMPORTS_IN_MIDDLE: 526 issues
     Line 28
 
   ./bhlff/models/level_f/multi_particle.py
-    Line 34
+    Line 35
+
+  ./bhlff/models/level_f/multi_particle_potential.py
+    Line 24
 
   ./bhlff/models/level_f/collective.py
     Line 30
@@ -1006,6 +1024,9 @@ IMPORTS_IN_MIDDLE: 526 issues
 
   ./bhlff/models/level_f/collective/excitation_analysis.py
     Line 325
+
+  ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py
+    Line 24
 
   ./bhlff/models/level_f/multi_particle/data_structures.py
     Line 21
@@ -2004,7 +2025,7 @@ IMPORTS_IN_MIDDLE: 526 issues
     Line 23
 
 
-FILES_TOO_LARGE: 63 issues
+FILES_TOO_LARGE: 62 issues
 ----------------------------------------
   ./tests/unit/automated_testing/test_integration.py
 
@@ -2044,19 +2065,17 @@ FILES_TOO_LARGE: 63 issues
 
   ./bhlff/models/level_c/beating/basic/optimization_methods.py
 
-  ./bhlff/models/level_c/memory/pinning_analysis.py
-
   ./bhlff/models/level_c/memory/memory_analyzer.py
 
   ./bhlff/models/level_c/memory/memory_evolution.py
 
   ./bhlff/models/level_c/resonators/resonator_analysis.py
 
+  ./bhlff/models/level_f/multi_particle_analysis.py
+
   ./bhlff/models/level_f/bvp_integration.py
 
   ./bhlff/models/level_f/nonlinear.py
-
-  ./bhlff/models/level_f/multi_particle.py
 
   ./bhlff/models/level_f/nonlinear/mode_analysis.py
 

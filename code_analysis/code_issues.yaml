@@ -49,10 +49,6 @@ issues:
     file: ./bhlff/models/level_c/boundaries.py
     limit: 400
     lines: 409
-  - exceeds_limit: 182
-    file: ./bhlff/models/level_c/level_c_integration.py
-    limit: 400
-    lines: 582
   - exceeds_limit: 66
     file: ./bhlff/models/level_c/abcd_model.py
     limit: 400
@@ -77,10 +73,6 @@ issues:
     file: ./bhlff/models/level_c/beating/background_analysis.py
     limit: 400
     lines: 452
-  - exceeds_limit: 212
-    file: ./bhlff/models/level_c/beating/pinned_analysis.py
-    limit: 400
-    lines: 612
   - exceeds_limit: 47
     file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
     limit: 400
@@ -89,18 +81,14 @@ issues:
     file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
     limit: 400
     lines: 522
-  - exceeds_limit: 245
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
+  - exceeds_limit: 98
+    file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
     limit: 400
-    lines: 645
-  - exceeds_limit: 176
-    file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
+    lines: 498
+  - exceeds_limit: 50
+    file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
     limit: 400
-    lines: 576
-  - exceeds_limit: 154
-    file: ./bhlff/models/level_c/beating/basic/optimization.py
-    limit: 400
-    lines: 554
+    lines: 450
   - exceeds_limit: 132
     file: ./bhlff/models/level_c/memory/pinning_analysis.py
     limit: 400
@@ -129,10 +117,6 @@ issues:
     file: ./bhlff/models/level_f/multi_particle.py
     limit: 400
     lines: 533
-  - exceeds_limit: 244
-    file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-    limit: 400
-    lines: 644
   - exceeds_limit: 111
     file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
     limit: 400
@@ -541,12 +525,18 @@ issues:
     line: 39
   - file: ./bhlff/models/level_c/boundaries.py
     line: 265
+  - file: ./bhlff/models/level_c/level_c_integration_config.py
+    line: 22
   - file: ./bhlff/models/level_c/quench_memory_analysis.py
     line: 39
+  - file: ./bhlff/models/level_c/level_c_integration_tests.py
+    line: 27
   - file: ./bhlff/models/level_c/boundary_analysis.py
     line: 38
   - file: ./bhlff/models/level_c/level_c_integration.py
-    line: 39
+    line: 38
+  - file: ./bhlff/models/level_c/level_c_integration_validation.py
+    line: 21
   - file: ./bhlff/models/level_c/__init__.py
     line: 37
   - file: ./bhlff/models/level_c/abcd_model.py
@@ -559,7 +549,13 @@ issues:
     line: 24
   - file: ./bhlff/models/level_c/boundary/radial_analysis.py
     line: 24
+  - file: ./bhlff/models/level_c/beating/pinned_analysis_evolution.py
+    line: 23
   - file: ./bhlff/models/level_c/beating/theoretical_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/pinned_analysis_patterns.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py
     line: 23
   - file: ./bhlff/models/level_c/beating/data_structures.py
     line: 21
@@ -568,35 +564,55 @@ issues:
   - file: ./bhlff/models/level_c/beating/background_analysis.py
     line: 24
   - file: ./bhlff/models/level_c/beating/pinned_analysis.py
-    line: 24
+    line: 28
   - file: ./bhlff/models/level_c/beating/beating_patterns.py
     line: 297
+  - file: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py
+    line: 21
   - file: ./bhlff/models/level_c/beating/basic/comparison_patterns.py
     line: 22
   - file: ./bhlff/models/level_c/beating/basic/core_analysis_frequency.py
     line: 22
+  - file: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/basic/beating_basic_core_optimization.py
+    line: 24
   - file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 30
+    line: 29
   - file: ./bhlff/models/level_c/beating/basic/core_analysis_interference.py
     line: 22
   - file: ./bhlff/models/level_c/beating/basic/comparison_metrics.py
     line: 22
+  - file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+    line: 21
+  - file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/basic/beating_basic_core_analysis.py
+    line: 26
   - file: ./bhlff/models/level_c/beating/basic/core_analysis_phase.py
     line: 22
+  - file: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py
+    line: 24
   - file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-    line: 26
+    line: 27
+  - file: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py
+    line: 24
   - file: ./bhlff/models/level_c/beating/basic/core_analysis_coupling.py
     line: 22
   - file: ./bhlff/models/level_c/beating/basic/__init__.py
     line: 23
   - file: ./bhlff/models/level_c/beating/basic/optimization.py
-    line: 25
+    line: 27
   - file: ./bhlff/models/level_c/beating/basic/comparison.py
     line: 27
   - file: ./bhlff/models/level_c/beating/basic/comparison_overall.py
     line: 22
+  - file: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py
+    line: 23
   - file: ./bhlff/models/level_c/beating/basic/core_analysis.py
     line: 32
+  - file: ./bhlff/models/level_c/beating/basic/optimization_parameters.py
+    line: 24
   - file: ./bhlff/models/level_c/beating/basic/core_analysis_basic.py
     line: 22
   - file: ./bhlff/models/level_c/beating/optimization/beating_validation_optimization_core.py
@@ -631,10 +647,14 @@ issues:
     line: 34
   - file: ./bhlff/models/level_f/collective.py
     line: 30
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
+    line: 24
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py
+    line: 23
   - file: ./bhlff/models/level_f/nonlinear/basic_effects.py
     line: 21
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-    line: 22
+    line: 25
   - file: ./bhlff/models/level_f/nonlinear/__init__.py
     line: 22
   - file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
@@ -1514,20 +1534,16 @@ issues:
     line: 47
     method: test_admittance_scales_with_conductivity
   - class: null
-    file: ./bhlff/models/level_c/beating/basic/optimization.py
-    line: 177
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
+    line: 145
     method: objective
   - class: null
-    file: ./bhlff/models/level_c/beating/basic/optimization.py
-    line: 428
-    method: threshold_objective
-  - class: null
-    file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-    line: 187
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
+    line: 218
     method: objective
   - class: null
-    file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-    line: 262
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
+    line: 266
     method: objective
   - class: null
     file: ./bhlff/core/bvp/memory_decorator.py
@@ -1680,9 +1696,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 4
-  files_too_large: 67
+  files_too_large: 63
   files_without_docstrings: 4
-  imports_in_middle: 508
+  imports_in_middle: 526
   methods_with_pass: 0
-  methods_without_docstrings: 92
+  methods_without_docstrings: 91
   not_implemented_in_non_abstract: 0

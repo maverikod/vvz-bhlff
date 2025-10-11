@@ -4308,6 +4308,22 @@ Class: BoundaryAnalyzer
   _split_boundary_flux_phase(self, envelope) -> Tuple[float, float]
     File: ./bhlff/core/bvp/postulates/power_balance/boundary_analyzer.py, Line: 183
 
+Class: TestConfiguration
+  __init__(self)
+    File: ./bhlff/models/level_c/level_c_integration_config.py, Line: 59
+  create_test_configuration(self, domain, test_params) -> TestConfiguration
+    File: ./bhlff/models/level_c/level_c_integration_config.py, Line: 63
+  _create_boundary_params(self, test_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/level_c_integration_config.py, Line: 123
+  _create_abcd_params(self, test_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/level_c_integration_config.py, Line: 144
+  _create_memory_params(self, test_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/level_c_integration_config.py, Line: 165
+  _create_beating_params(self, test_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/level_c_integration_config.py, Line: 186
+  _create_time_params(self, test_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/level_c_integration_config.py, Line: 208
+
 Class: QuenchMemoryAnalysis
   __init__(self, bvp_core)
     File: ./bhlff/models/level_c/quench_memory_analysis.py, Line: 59
@@ -4317,6 +4333,22 @@ Class: QuenchMemoryAnalysis
     File: ./bhlff/models/level_c/quench_memory_analysis.py, Line: 140
   _validate_c3_results(self, memory_evolution, pinning_analysis, correlation_analysis) -> bool
     File: ./bhlff/models/level_c/quench_memory_analysis.py, Line: 180
+
+Class: LevelCIntegrationTests
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/level_c_integration_tests.py, Line: 46
+  run_c1_test(self, test_config) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/level_c_integration_tests.py, Line: 66
+  run_c2_test(self, test_config) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/level_c_integration_tests.py, Line: 108
+  run_c3_test(self, test_config) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/level_c_integration_tests.py, Line: 144
+  run_c4_test(self, test_config) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/level_c_integration_tests.py, Line: 177
+  _create_resonator_layers(self, test_config) -> List[ResonatorLayer]
+    File: ./bhlff/models/level_c/level_c_integration_tests.py, Line: 210
+  _run_abcd_analysis(self, domain, resonator_layers, abcd_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/level_c_integration_tests.py, Line: 238
 
 Class: BoundaryAnalysis
   __init__(self, bvp_core)
@@ -4334,33 +4366,25 @@ Class: BoundaryAnalysis
 
 Class: LevelCResults
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/level_c_integration.py, Line: 97
+    File: ./bhlff/models/level_c/level_c_integration.py, Line: 78
   run_all_tests(self, test_config) -> LevelCResults
-    File: ./bhlff/models/level_c/level_c_integration.py, Line: 112
-  _run_c1_test(self, test_config) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/level_c_integration.py, Line: 171
-  _run_c2_test(self, test_config) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/level_c_integration.py, Line: 202
-  _run_c3_test(self, test_config) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/level_c_integration.py, Line: 237
-  _run_c4_test(self, test_config) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/level_c_integration.py, Line: 268
-  _create_resonator_layers(self, c2_params) -> List[ResonatorLayer]
-    File: ./bhlff/models/level_c/level_c_integration.py, Line: 299
-  _run_abcd_analysis(self, abcd_model, c2_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/level_c_integration.py, Line: 324
-  _validate_c1_results(self, c1_results) -> bool
-    File: ./bhlff/models/level_c/level_c_integration.py, Line: 371
-  _validate_c2_results(self, c2_results) -> bool
-    File: ./bhlff/models/level_c/level_c_integration.py, Line: 401
-  _validate_c3_results(self, c3_results) -> bool
-    File: ./bhlff/models/level_c/level_c_integration.py, Line: 426
-  _validate_c4_results(self, c4_results) -> bool
-    File: ./bhlff/models/level_c/level_c_integration.py, Line: 454
-  _validate_overall_results(self, c1_results, c2_results, c3_results, c4_results) -> str
-    File: ./bhlff/models/level_c/level_c_integration.py, Line: 482
-  create_test_configuration(self, domain_params, physics_params) -> TestConfiguration
-    File: ./bhlff/models/level_c/level_c_integration.py, Line: 508
+    File: ./bhlff/models/level_c/level_c_integration.py, Line: 97
+  create_test_configuration(self, domain, test_params) -> TestConfiguration
+    File: ./bhlff/models/level_c/level_c_integration.py, Line: 144
+
+Class: LevelCIntegrationValidation
+  __init__(self)
+    File: ./bhlff/models/level_c/level_c_integration_validation.py, Line: 37
+  validate_c1_results(self, c1_results) -> bool
+    File: ./bhlff/models/level_c/level_c_integration_validation.py, Line: 41
+  validate_c2_results(self, c2_results) -> bool
+    File: ./bhlff/models/level_c/level_c_integration_validation.py, Line: 75
+  validate_c3_results(self, c3_results) -> bool
+    File: ./bhlff/models/level_c/level_c_integration_validation.py, Line: 103
+  validate_c4_results(self, c4_results) -> bool
+    File: ./bhlff/models/level_c/level_c_integration_validation.py, Line: 131
+  validate_overall_results(self, c1_results, c2_results, c3_results, c4_results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/level_c_integration_validation.py, Line: 159
 
 Class: ResonatorLayer
   __init__(self, resonators, bvp_core)
@@ -4462,6 +4486,14 @@ Class: RadialAnalyzer
   _analyze_overall_concentration_pattern(self, profile) -> Dict[str, Any]
     File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 369
 
+Class: PinnedFieldEvolution
+  __init__(self)
+    File: ./bhlff/models/level_c/beating/pinned_analysis_evolution.py, Line: 39
+  evolve_pinned_dual_mode_field(self, field_pinned, dual_mode, time_params, pinning_params) -> List[np.ndarray]
+    File: ./bhlff/models/level_c/beating/pinned_analysis_evolution.py, Line: 43
+  _apply_pinning_effects(self, field, dual_mode, t, pinning_params) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/pinned_analysis_evolution.py, Line: 88
+
 Class: BeatingSpectrumAnalyzer
   __init__(self, bvp_core)
     File: ./bhlff/models/level_c/beating/beating_spectrum.py, Line: 28
@@ -4513,6 +4545,30 @@ Class: TheoreticalBeatingAnalyzer
     File: ./bhlff/models/level_c/beating/theoretical_analysis.py, Line: 359
   _compute_error_bounds(self, dual_mode, domain_params) -> Dict[str, Any]
     File: ./bhlff/models/level_c/beating/theoretical_analysis.py, Line: 410
+
+Class: PinnedPatternAnalyzer
+  __init__(self)
+    File: ./bhlff/models/level_c/beating/pinned_analysis_patterns.py, Line: 42
+  analyze_pinned_beating_patterns(self, time_evolution, dual_mode, pinning_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/pinned_analysis_patterns.py, Line: 46
+  _analyze_modified_amplitude_modulation(self, time_evolution, dual_mode, pinning_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/pinned_analysis_patterns.py, Line: 107
+  _compute_modified_modulation_frequency(self, time_evolution, dual_mode, pinning_params) -> float
+    File: ./bhlff/models/level_c/beating/pinned_analysis_patterns.py, Line: 145
+  _analyze_modified_spatial_patterns(self, time_evolution, dual_mode, pinning_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/pinned_analysis_patterns.py, Line: 178
+  _compute_modified_pattern_correlation(self, time_evolution, dual_mode, pinning_params) -> float
+    File: ./bhlff/models/level_c/beating/pinned_analysis_patterns.py, Line: 217
+  _compute_modified_pattern_drift(self, time_evolution, dual_mode, pinning_params) -> float
+    File: ./bhlff/models/level_c/beating/pinned_analysis_patterns.py, Line: 255
+
+Class: PinnedFieldCreator
+  __init__(self)
+    File: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py, Line: 40
+  create_pinned_dual_mode_field(self, domain, dual_mode, pinning_params) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py, Line: 44
+  _create_pinning_potential(self, domain, pinning_params) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py, Line: 117
 
 Class: BeatingCoreBasic
   __init__(self, bvp_core)
@@ -4632,37 +4688,9 @@ Class: BackgroundBeatingAnalyzer
 
 Class: PinnedBeatingAnalyzer
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 42
+    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 46
   analyze_pinned_beating(self, domain, dual_mode, time_params, pinning_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 52
-  _create_pinned_dual_mode_field(self, domain, dual_mode, pinning_params) -> np.ndarray
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 109
-  _create_pinning_potential(self, domain, pinning_params) -> np.ndarray
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 174
-  _evolve_pinned_dual_mode_field(self, field_pinned, dual_mode, time_params, pinning_params) -> List[np.ndarray]
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 220
-  _apply_pinning_effects(self, field, pinning_params) -> np.ndarray
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 279
-  _analyze_pinned_beating_patterns(self, time_evolution, dual_mode, pinning_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 309
-  _analyze_modified_amplitude_modulation(self, amplitude_evolution, pinning_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 360
-  _compute_modified_modulation_frequency(self, amplitude_evolution, pinning_params) -> float
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 400
-  _analyze_modified_spatial_patterns(self, time_evolution, pinning_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 423
-  _compute_modified_pattern_correlation(self, time_evolution, pinning_params) -> float
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 457
-  _compute_modified_pattern_drift(self, time_evolution, pinning_params) -> float
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 480
-  _analyze_drift_suppression(self, time_evolution, pinning_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 503
-  _compute_drift_suppression(self, time_evolution, pinning_params) -> float
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 547
-  _analyze_suppression_effectiveness(self, time_evolution, pinning_params) -> float
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 569
-  _compute_suppression_factors(self, time_evolution, pinning_params) -> List[float]
-    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 591
+    File: ./bhlff/models/level_c/beating/pinned_analysis.py, Line: 62
 
 Class: BeatingPatternDetector
   __init__(self, bvp_core)
@@ -4687,6 +4715,18 @@ Class: BeatingPatternDetector
     File: ./bhlff/models/level_c/beating/beating_patterns.py, Line: 283
   _calculate_spectral_statistics(self, envelope) -> Dict[str, float]
     File: ./bhlff/models/level_c/beating/beating_patterns.py, Line: 305
+
+Class: PinnedSuppressionAnalyzer
+  __init__(self)
+    File: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py, Line: 40
+  analyze_drift_suppression(self, time_evolution, pinning_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py, Line: 44
+  _compute_drift_suppression(self, time_evolution, pinning_params) -> float
+    File: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py, Line: 91
+  _analyze_suppression_effectiveness(self, time_evolution, pinning_params) -> float
+    File: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py, Line: 133
+  _compute_suppression_factors(self, time_evolution, pinning_params) -> List[float]
+    File: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py, Line: 159
 
 Class: BeatingMLCore
   __init__(self, bvp_core)
@@ -4822,47 +4862,43 @@ Class: BeatingFrequencyAnalyzer
   _calculate_beating_strength(self, envelope) -> float
     File: ./bhlff/models/level_c/beating/basic/core_analysis_frequency.py, Line: 130
 
+Class: StatisticalPatternRecognizer
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py, Line: 41
+  recognize_beating_patterns(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py, Line: 60
+  _analyze_pattern_characteristics(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py, Line: 105
+  _calculate_pattern_symmetry(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py, Line: 132
+  _calculate_spatial_correlation(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py, Line: 157
+  _calculate_temporal_correlation(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py, Line: 183
+  _classify_patterns(self, pattern_characteristics) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py, Line: 209
+  _calculate_classification_confidence(self, pattern_size, pattern_intensity, pattern_regularity, pattern_symmetry) -> float
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py, Line: 253
+
+Class: BeatingCoreOptimization
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_optimization.py, Line: 40
+  optimize_analysis_parameters(self, envelope, results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_optimization.py, Line: 61
+
 Class: BeatingAnalysisCore
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 47
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 46
   analyze_beating_comprehensive(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 79
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 77
   analyze_beating_statistical(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 133
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 124
   compare_beating_analyses(self, results1, results2) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 169
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 140
   optimize_analysis_parameters(self, envelope, results) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 194
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 159
   validate_analysis_results(self, results) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 217
-  _validate_core_analysis(self, core_results) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 258
-  _assess_basic_analysis_quality(self, basic_analysis) -> float
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 304
-  _assess_interference_analysis_quality(self, interference_analysis) -> float
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 326
-  _assess_coupling_analysis_quality(self, coupling_analysis) -> float
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 348
-  _assess_phase_analysis_quality(self, phase_analysis) -> float
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 370
-  _validate_statistical_analysis(self, statistical_results) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 392
-  _assess_significance_testing_quality(self, significance_testing) -> float
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 433
-  _assess_pattern_recognition_quality(self, pattern_recognition) -> float
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 455
-  _assess_confidence_analysis_quality(self, confidence_analysis) -> float
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 477
-  _validate_optimization_results(self, optimization_results) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 499
-  _assess_parameter_optimization_quality(self, parameter_optimization) -> float
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 540
-  _assess_threshold_optimization_quality(self, threshold_optimization) -> float
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 562
-  _assess_method_optimization_quality(self, method_optimization) -> float
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 584
-  _calculate_overall_validation(self, core_validation, statistical_validation, optimization_validation) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 606
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 178
 
 Class: InterferencePatternAnalyzer
   __init__(self, interference_threshold)
@@ -4916,6 +4952,80 @@ Class: BeatingBasicStatistics
   calculate_confidence_intervals(self, data, confidence_level) -> Dict[str, list]
     File: ./bhlff/models/level_c/beating/basic/beating_basic_statistics.py, Line: 199
 
+Class: BeatingCoreValidation
+  __init__(self)
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 37
+  validate_analysis_results(self, results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 41
+  _validate_core_analysis(self, core_results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 86
+  _assess_basic_analysis_quality(self, basic_analysis) -> float
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 131
+  _assess_interference_analysis_quality(self, interference_analysis) -> float
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 156
+  _assess_coupling_analysis_quality(self, coupling_analysis) -> float
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 181
+  _assess_phase_analysis_quality(self, phase_analysis) -> float
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 206
+  _validate_statistical_analysis(self, statistical_results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 231
+  _assess_significance_testing_quality(self, significance_testing) -> float
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 271
+  _assess_pattern_recognition_quality(self, pattern_recognition) -> float
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 296
+  _assess_confidence_analysis_quality(self, confidence_analysis) -> float
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 321
+  _validate_optimization_results(self, optimization_results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 346
+  _assess_parameter_optimization_quality(self, parameter_optimization) -> float
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 386
+  _assess_threshold_optimization_quality(self, threshold_optimization) -> float
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 411
+  _assess_method_optimization_quality(self, method_optimization) -> float
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 436
+  _calculate_overall_validation(self, core_validation, statistical_validation, optimization_validation) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py, Line: 461
+
+Class: BeatingMethodOptimizer
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/basic/optimization_methods.py, Line: 39
+  optimize_methods(self, envelope, results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/optimization_methods.py, Line: 62
+  _test_method(self, envelope, method, results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/optimization_methods.py, Line: 105
+  _evaluate_method_performance(self, envelope, method, parameters) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/optimization_methods.py, Line: 137
+  _estimate_processing_time(self, envelope, method, parameters) -> float
+    File: ./bhlff/models/level_c/beating/basic/optimization_methods.py, Line: 168
+  _estimate_memory_usage(self, envelope, method, parameters) -> float
+    File: ./bhlff/models/level_c/beating/basic/optimization_methods.py, Line: 200
+  _estimate_accuracy(self, envelope, method, parameters) -> float
+    File: ./bhlff/models/level_c/beating/basic/optimization_methods.py, Line: 232
+  _calculate_method_quality(self, envelope, method, parameters) -> float
+    File: ./bhlff/models/level_c/beating/basic/optimization_methods.py, Line: 264
+  _select_best_method(self, method_results) -> str
+    File: ./bhlff/models/level_c/beating/basic/optimization_methods.py, Line: 293
+  _optimize_method_parameters(self, envelope, method, results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/optimization_methods.py, Line: 319
+  _optimize_fft_parameters(self, envelope, base_parameters) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/optimization_methods.py, Line: 352
+  _optimize_wavelet_parameters(self, envelope, base_parameters) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/optimization_methods.py, Line: 381
+  _optimize_spectral_parameters(self, envelope, base_parameters) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/optimization_methods.py, Line: 407
+  _optimize_statistical_parameters(self, envelope, base_parameters) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/optimization_methods.py, Line: 432
+
+Class: BeatingCoreAnalysis
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_analysis.py, Line: 43
+  analyze_beating_comprehensive(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_analysis.py, Line: 72
+  analyze_beating_statistical(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_analysis.py, Line: 119
+  compare_beating_analyses(self, results1, results2) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/beating_basic_core_analysis.py, Line: 146
+
 Class: BeatingBasicComparison
   __init__(self, bvp_core)
     File: ./bhlff/models/level_c/beating/basic/beating_basic_comparison.py, Line: 27
@@ -4942,47 +5052,49 @@ Class: PhaseCoherenceAnalyzer
   _calculate_phase_correlation(self, envelope) -> float
     File: ./bhlff/models/level_c/beating/basic/core_analysis_phase.py, Line: 126
 
+Class: StatisticalSignificanceTester
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py, Line: 42
+  test_statistical_significance(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py, Line: 61
+  _test_amplitude_significance(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py, Line: 106
+  _test_pattern_significance(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py, Line: 142
+  _calculate_pattern_distribution(self, envelope) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py, Line: 177
+  _test_mode_significance(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py, Line: 195
+  _calculate_mode_statistics(self, envelope) -> List[np.ndarray]
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py, Line: 230
+  _calculate_overall_significance(self, amplitude_significance, pattern_significance, mode_significance) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py, Line: 260
+
 Class: StatisticalBeatingAnalyzer
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 45
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 46
   perform_statistical_analysis(self, envelope, basic_results) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 65
-  _test_statistical_significance(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 108
-  _test_amplitude_significance(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 140
-  _test_pattern_significance(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 173
-  _calculate_pattern_distribution(self, envelope) -> np.ndarray
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 203
-  _test_mode_significance(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 225
-  _calculate_mode_statistics(self, envelope) -> List[np.ndarray]
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 255
-  _calculate_overall_significance(self, amplitude_significance, pattern_significance, mode_significance) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 277
-  _recognize_beating_patterns(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 310
-  _analyze_pattern_characteristics(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 340
-  _calculate_spatial_correlation(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 364
-  _calculate_temporal_correlation(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 385
-  _classify_patterns(self, pattern_characteristics) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 402
-  _calculate_pattern_confidence(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 436
-  _analyze_confidence_intervals(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 454
-  _analyze_correlations(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 485
-  _calculate_amplitude_phase_correlation(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 519
-  _calculate_spatial_temporal_correlation(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 542
-  _calculate_mode_correlation(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 560
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis.py, Line: 70
+
+Class: BeatingThresholdOptimizer
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py, Line: 40
+  optimize_thresholds(self, envelope, results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py, Line: 59
+  _define_threshold_bounds(self) -> List[Tuple[float, float]]
+    File: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py, Line: 118
+  _create_threshold_objective_function(self, envelope, results)
+    File: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py, Line: 140
+  _calculate_threshold_objective_value(self, envelope, thresholds, results) -> float
+    File: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py, Line: 176
+  _calculate_detection_accuracy(self, envelope, thresholds) -> float
+    File: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py, Line: 205
+  _calculate_false_positive_rate(self, envelope, thresholds) -> float
+    File: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py, Line: 240
+  _get_initial_thresholds(self) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py, Line: 270
+  threshold_objective(x)
+    File: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py, Line: 155
 
 Class: ModeCouplingAnalyzer
   __init__(self, coupling_threshold)
@@ -4998,45 +5110,9 @@ Class: ModeCouplingAnalyzer
 
 Class: BeatingOptimizer
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 43
+    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 45
   optimize_analysis(self, envelope, results) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 64
-  _optimize_parameters(self, envelope, results) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 101
-  _define_parameter_bounds(self) -> List[Tuple[float, float]]
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 143
-  _create_objective_function(self, envelope, results)
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 162
-  _calculate_objective_value(self, envelope, interference_threshold, coupling_threshold, phase_coherence_threshold) -> float
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 192
-  _calculate_quality_metrics(self, envelope, interference_threshold, coupling_threshold, phase_coherence_threshold) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 221
-  _calculate_interference_quality(self, envelope, threshold) -> float
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 259
-  _calculate_coupling_quality(self, envelope, threshold) -> float
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 285
-  _calculate_phase_coherence_quality(self, envelope, threshold) -> float
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 311
-  _get_initial_parameters(self) -> np.ndarray
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 337
-  _optimize_thresholds(self, envelope, results) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 352
-  _define_threshold_bounds(self) -> List[Tuple[float, float]]
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 394
-  _create_threshold_objective_function(self, envelope, results)
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 413
-  _calculate_threshold_objective_value(self, envelope, interference_threshold, coupling_threshold, phase_coherence_threshold) -> float
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 443
-  _calculate_detection_accuracy(self, envelope, interference_threshold, coupling_threshold, phase_coherence_threshold) -> float
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 477
-  _calculate_false_positive_rate(self, envelope, interference_threshold, coupling_threshold, phase_coherence_threshold) -> float
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 506
-  _optimize_methods(self, envelope, results) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 531
-  objective(x)
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 177
-  threshold_objective(x)
-    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 428
+    File: ./bhlff/models/level_c/beating/basic/optimization.py, Line: 70
 
 Class: BeatingBasicOptimization
   __init__(self, bvp_core)
@@ -5074,11 +5150,53 @@ Class: OverallComparator
   _calculate_consistency(self, basic_comparison, interference_comparison, coupling_comparison, phase_comparison, frequency_comparison) -> float
     File: ./bhlff/models/level_c/beating/basic/comparison_overall.py, Line: 104
 
+Class: StatisticalConfidenceAnalyzer
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py, Line: 41
+  analyze_confidence_intervals(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py, Line: 60
+  _calculate_pattern_confidence(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py, Line: 99
+  _analyze_correlations(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py, Line: 130
+  _calculate_amplitude_phase_correlation(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py, Line: 159
+  _calculate_spatial_temporal_correlation(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py, Line: 186
+  _calculate_mode_correlation(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py, Line: 214
+  _calculate_overall_confidence(self, pattern_confidence, correlation_analysis) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py, Line: 242
+
 Class: CoreBeatingAnalyzer
   __init__(self, bvp_core)
     File: ./bhlff/models/level_c/beating/basic/core_analysis.py, Line: 50
   analyze_beating_comprehensive(self, envelope) -> Dict[str, Any]
     File: ./bhlff/models/level_c/beating/basic/core_analysis.py, Line: 78
+
+Class: BeatingParameterOptimizer
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/basic/optimization_parameters.py, Line: 40
+  optimize_parameters(self, envelope, results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/optimization_parameters.py, Line: 59
+  _define_parameter_bounds(self) -> List[Tuple[float, float]]
+    File: ./bhlff/models/level_c/beating/basic/optimization_parameters.py, Line: 118
+  _create_objective_function(self, envelope, results)
+    File: ./bhlff/models/level_c/beating/basic/optimization_parameters.py, Line: 141
+  _calculate_objective_value(self, envelope, parameters, results) -> float
+    File: ./bhlff/models/level_c/beating/basic/optimization_parameters.py, Line: 177
+  _calculate_quality_metrics(self, envelope, parameters, results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/basic/optimization_parameters.py, Line: 210
+  _calculate_interference_quality(self, envelope, threshold) -> float
+    File: ./bhlff/models/level_c/beating/basic/optimization_parameters.py, Line: 248
+  _calculate_coupling_quality(self, envelope, threshold) -> float
+    File: ./bhlff/models/level_c/beating/basic/optimization_parameters.py, Line: 275
+  _calculate_phase_coherence_quality(self, envelope, threshold) -> float
+    File: ./bhlff/models/level_c/beating/basic/optimization_parameters.py, Line: 302
+  _get_initial_parameters(self) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/basic/optimization_parameters.py, Line: 329
+  objective(x)
+    File: ./bhlff/models/level_c/beating/basic/optimization_parameters.py, Line: 156
 
 Class: BasicBeatingAnalyzer
   __init__(self)
@@ -5616,6 +5734,38 @@ Class: CollectiveExcitations
   analyze(self, data) -> Dict[str, Any]
     File: ./bhlff/models/level_f/collective.py, Line: 171
 
+Class: SolitonAnalysisSolutions
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 42
+  find_soliton_solutions(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 59
+  _find_soliton_profiles(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 102
+  _find_single_soliton(self) -> Optional[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 126
+  _find_multi_soliton_solutions(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 176
+  _find_two_soliton_solution(self) -> Optional[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 201
+  _find_three_soliton_solution(self) -> Optional[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 249
+  _calculate_solution_quality(self, soliton_profiles) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 298
+  objective(params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 266
+
+Class: SolitonAnalysisInitialization
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py, Line: 41
+  _initialize_soliton_methods(self) -> None
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py, Line: 61
+  _setup_cubic_soliton_analysis(self) -> None
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py, Line: 78
+  _setup_quartic_soliton_analysis(self) -> None
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py, Line: 90
+  _setup_sine_gordon_soliton_analysis(self) -> None
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py, Line: 102
+
 Class: BasicNonlinearEffects
   __init__(self, system, nonlinear_params)
     File: ./bhlff/models/level_f/nonlinear/basic_effects.py, Line: 45
@@ -5654,55 +5804,9 @@ Class: BasicNonlinearEffects
 
 Class: SolitonAnalyzer
   __init__(self, system, nonlinear_params)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 40
-  _initialize_soliton_methods(self) -> None
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 64
-  _setup_cubic_soliton_analysis(self) -> None
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 84
-  _setup_quartic_soliton_analysis(self) -> None
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 95
-  _setup_sine_gordon_soliton_analysis(self) -> None
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 106
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 43
   find_soliton_solutions(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 117
-  _find_soliton_profiles(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 151
-  _find_single_soliton(self) -> Optional[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 175
-  _find_multi_soliton_solutions(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 225
-  _find_two_soliton_solution(self) -> Optional[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 250
-  _find_three_soliton_solution(self) -> Optional[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 316
-  _compute_soliton_energies(self, soliton_profiles) -> List[float]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 331
-  _analyze_soliton_stability(self, soliton_profiles) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 360
-  _analyze_soliton_interactions(self, soliton_profiles) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 397
-  _calculate_interaction_strength(self, soliton_profiles) -> float
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 433
-  _cubic_soliton_profile(self, amplitude, width, position) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 452
-  _quartic_soliton_profile(self, amplitude, width, position) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 475
-  _sine_gordon_soliton_profile(self, amplitude, width, position) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 498
-  _cubic_soliton_energy(self, profile) -> float
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 522
-  _quartic_soliton_energy(self, profile) -> float
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 540
-  _sine_gordon_soliton_energy(self, profile) -> float
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 558
-  _cubic_soliton_stability(self, profile) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 577
-  _quartic_soliton_stability(self, profile) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 600
-  _sine_gordon_soliton_stability(self, profile) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 623
-  objective(params)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 262
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis.py, Line: 64
 
 Class: NonlinearModeAnalyzer
   __init__(self, system, nonlinear_params)

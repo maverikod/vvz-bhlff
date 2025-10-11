@@ -4,25 +4,25 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 733
+Total files analyzed: 751
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 603
+Total classes: 621
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 5123
+Total functions: 5157
 
 ISSUES SUMMARY:
 ----------------------------------------
 methods_with_pass: 0
 not_implemented_in_non_abstract: 0
-methods_without_docstrings: 92
+methods_without_docstrings: 91
 files_without_docstrings: 4
 classes_without_docstrings: 4
-imports_in_middle: 508
-files_too_large: 67
+imports_in_middle: 526
+files_too_large: 63
 
 METHODS_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -71,7 +71,7 @@ METHODS_WITHOUT_DOCSTRINGS:
   Class: TestEnvelopeEffectiveMetricGravity
   Method: test_phase_block_is_identity
 
-  ... and 82 more
+  ... and 81 more
 
 FILES_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -139,7 +139,7 @@ IMPORTS_IN_MIDDLE:
   File: ./tests/test_bvp_level_f_integration.py
   Line: 30
 
-  ... and 498 more
+  ... and 516 more
 
 FILES_TOO_LARGE:
 ----------------------------------------
@@ -161,6 +161,6 @@ FILES_TOO_LARGE:
 
   File: ./bhlff/models/level_c/boundaries.py
 
-  File: ./bhlff/models/level_c/level_c_integration.py
+  File: ./bhlff/models/level_c/abcd_model.py
 
-  ... and 57 more
+  ... and 53 more

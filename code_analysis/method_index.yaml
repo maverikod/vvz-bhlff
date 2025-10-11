@@ -3537,21 +3537,21 @@ method_index:
       - self
       - bvp_core
       file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 47
+      line: 46
       name: __init__
       returns: null
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 79
+      line: 77
       name: analyze_beating_comprehensive
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 133
+      line: 124
       name: analyze_beating_statistical
       returns: Dict[str, Any]
     - args:
@@ -3559,7 +3559,7 @@ method_index:
       - results1
       - results2
       file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 169
+      line: 140
       name: compare_beating_analyses
       returns: Dict[str, Any]
     - args:
@@ -3567,115 +3567,15 @@ method_index:
       - envelope
       - results
       file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 194
+      line: 159
       name: optimize_analysis_parameters
       returns: Dict[str, Any]
     - args:
       - self
       - results
       file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 217
+      line: 178
       name: validate_analysis_results
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - core_results
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 258
-      name: _validate_core_analysis
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - basic_analysis
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 304
-      name: _assess_basic_analysis_quality
-      returns: float
-    - args:
-      - self
-      - interference_analysis
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 326
-      name: _assess_interference_analysis_quality
-      returns: float
-    - args:
-      - self
-      - coupling_analysis
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 348
-      name: _assess_coupling_analysis_quality
-      returns: float
-    - args:
-      - self
-      - phase_analysis
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 370
-      name: _assess_phase_analysis_quality
-      returns: float
-    - args:
-      - self
-      - statistical_results
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 392
-      name: _validate_statistical_analysis
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - significance_testing
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 433
-      name: _assess_significance_testing_quality
-      returns: float
-    - args:
-      - self
-      - pattern_recognition
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 455
-      name: _assess_pattern_recognition_quality
-      returns: float
-    - args:
-      - self
-      - confidence_analysis
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 477
-      name: _assess_confidence_analysis_quality
-      returns: float
-    - args:
-      - self
-      - optimization_results
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 499
-      name: _validate_optimization_results
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - parameter_optimization
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 540
-      name: _assess_parameter_optimization_quality
-      returns: float
-    - args:
-      - self
-      - threshold_optimization
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 562
-      name: _assess_threshold_optimization_quality
-      returns: float
-    - args:
-      - self
-      - method_optimization
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 584
-      name: _assess_method_optimization_quality
-      returns: float
-    - args:
-      - self
-      - core_validation
-      - statistical_validation
-      - optimization_validation
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 606
-      name: _calculate_overall_validation
       returns: Dict[str, Any]
     BeatingBasicComparison:
     - args:
@@ -3886,6 +3786,36 @@ method_index:
       line: 122
       name: _compare_basic_analysis
       returns: Dict[str, Any]
+    BeatingCoreAnalysis:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_analysis.py
+      line: 43
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_analysis.py
+      line: 72
+      name: analyze_beating_comprehensive
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_analysis.py
+      line: 119
+      name: analyze_beating_statistical
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - results1
+      - results2
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_analysis.py
+      line: 146
+      name: compare_beating_analyses
+      returns: Dict[str, Any]
     BeatingCoreBasic:
     - args:
       - self
@@ -4069,6 +3999,136 @@ method_index:
       line: 456
       name: _has_parametric_coupling
       returns: bool
+    BeatingCoreOptimization:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_optimization.py
+      line: 40
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      - results
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_optimization.py
+      line: 61
+      name: optimize_analysis_parameters
+      returns: Dict[str, Any]
+    BeatingCoreValidation:
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 37
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - results
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 41
+      name: validate_analysis_results
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - core_results
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 86
+      name: _validate_core_analysis
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - basic_analysis
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 131
+      name: _assess_basic_analysis_quality
+      returns: float
+    - args:
+      - self
+      - interference_analysis
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 156
+      name: _assess_interference_analysis_quality
+      returns: float
+    - args:
+      - self
+      - coupling_analysis
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 181
+      name: _assess_coupling_analysis_quality
+      returns: float
+    - args:
+      - self
+      - phase_analysis
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 206
+      name: _assess_phase_analysis_quality
+      returns: float
+    - args:
+      - self
+      - statistical_results
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 231
+      name: _validate_statistical_analysis
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - significance_testing
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 271
+      name: _assess_significance_testing_quality
+      returns: float
+    - args:
+      - self
+      - pattern_recognition
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 296
+      name: _assess_pattern_recognition_quality
+      returns: float
+    - args:
+      - self
+      - confidence_analysis
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 321
+      name: _assess_confidence_analysis_quality
+      returns: float
+    - args:
+      - self
+      - optimization_results
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 346
+      name: _validate_optimization_results
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - parameter_optimization
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 386
+      name: _assess_parameter_optimization_quality
+      returns: float
+    - args:
+      - self
+      - threshold_optimization
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 411
+      name: _assess_threshold_optimization_quality
+      returns: float
+    - args:
+      - self
+      - method_optimization
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 436
+      name: _assess_method_optimization_quality
+      returns: float
+    - args:
+      - self
+      - core_validation
+      - statistical_validation
+      - optimization_validation
+      file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
+      line: 461
+      name: _calculate_overall_validation
+      returns: Dict[str, Any]
     BeatingCorrelationAnalyzer:
     - args:
       - self
@@ -4520,12 +4580,130 @@ method_index:
       line: 439
       name: _calculate_coupling_efficiency
       returns: float
+    BeatingMethodOptimizer:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
+      line: 39
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      - results
+      file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
+      line: 62
+      name: optimize_methods
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      - method
+      - results
+      file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
+      line: 105
+      name: _test_method
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      - method
+      - parameters
+      file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
+      line: 137
+      name: _evaluate_method_performance
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      - method
+      - parameters
+      file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
+      line: 168
+      name: _estimate_processing_time
+      returns: float
+    - args:
+      - self
+      - envelope
+      - method
+      - parameters
+      file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
+      line: 200
+      name: _estimate_memory_usage
+      returns: float
+    - args:
+      - self
+      - envelope
+      - method
+      - parameters
+      file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
+      line: 232
+      name: _estimate_accuracy
+      returns: float
+    - args:
+      - self
+      - envelope
+      - method
+      - parameters
+      file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
+      line: 264
+      name: _calculate_method_quality
+      returns: float
+    - args:
+      - self
+      - method_results
+      file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
+      line: 293
+      name: _select_best_method
+      returns: str
+    - args:
+      - self
+      - envelope
+      - method
+      - results
+      file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
+      line: 319
+      name: _optimize_method_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      - base_parameters
+      file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
+      line: 352
+      name: _optimize_fft_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      - base_parameters
+      file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
+      line: 381
+      name: _optimize_wavelet_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      - base_parameters
+      file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
+      line: 407
+      name: _optimize_spectral_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      - base_parameters
+      file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
+      line: 432
+      name: _optimize_statistical_parameters
+      returns: Dict[str, Any]
     BeatingOptimizer:
     - args:
       - self
       - bvp_core
       file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 43
+      line: 45
       name: __init__
       returns: null
     - args:
@@ -4533,152 +4711,92 @@ method_index:
       - envelope
       - results
       file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 64
+      line: 70
       name: optimize_analysis
       returns: Dict[str, Any]
+    BeatingParameterOptimizer:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/beating/basic/optimization_parameters.py
+      line: 40
+      name: __init__
+      returns: null
     - args:
       - self
       - envelope
       - results
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 101
-      name: _optimize_parameters
+      file: ./bhlff/models/level_c/beating/basic/optimization_parameters.py
+      line: 59
+      name: optimize_parameters
       returns: Dict[str, Any]
     - args:
       - self
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 143
+      file: ./bhlff/models/level_c/beating/basic/optimization_parameters.py
+      line: 118
       name: _define_parameter_bounds
       returns: List[Tuple[float, float]]
     - args:
       - self
       - envelope
       - results
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 162
+      file: ./bhlff/models/level_c/beating/basic/optimization_parameters.py
+      line: 141
       name: _create_objective_function
       returns: null
     - args:
       - self
       - envelope
-      - interference_threshold
-      - coupling_threshold
-      - phase_coherence_threshold
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 192
+      - parameters
+      - results
+      file: ./bhlff/models/level_c/beating/basic/optimization_parameters.py
+      line: 177
       name: _calculate_objective_value
       returns: float
     - args:
       - self
       - envelope
-      - interference_threshold
-      - coupling_threshold
-      - phase_coherence_threshold
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 221
+      - parameters
+      - results
+      file: ./bhlff/models/level_c/beating/basic/optimization_parameters.py
+      line: 210
       name: _calculate_quality_metrics
-      returns: Dict[str, float]
+      returns: Dict[str, Any]
     - args:
       - self
       - envelope
       - threshold
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 259
+      file: ./bhlff/models/level_c/beating/basic/optimization_parameters.py
+      line: 248
       name: _calculate_interference_quality
       returns: float
     - args:
       - self
       - envelope
       - threshold
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 285
+      file: ./bhlff/models/level_c/beating/basic/optimization_parameters.py
+      line: 275
       name: _calculate_coupling_quality
       returns: float
     - args:
       - self
       - envelope
       - threshold
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 311
+      file: ./bhlff/models/level_c/beating/basic/optimization_parameters.py
+      line: 302
       name: _calculate_phase_coherence_quality
       returns: float
     - args:
       - self
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 337
+      file: ./bhlff/models/level_c/beating/basic/optimization_parameters.py
+      line: 329
       name: _get_initial_parameters
       returns: np.ndarray
     - args:
-      - self
-      - envelope
-      - results
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 352
-      name: _optimize_thresholds
-      returns: Dict[str, Any]
-    - args:
-      - self
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 394
-      name: _define_threshold_bounds
-      returns: List[Tuple[float, float]]
-    - args:
-      - self
-      - envelope
-      - results
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 413
-      name: _create_threshold_objective_function
-      returns: null
-    - args:
-      - self
-      - envelope
-      - interference_threshold
-      - coupling_threshold
-      - phase_coherence_threshold
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 443
-      name: _calculate_threshold_objective_value
-      returns: float
-    - args:
-      - self
-      - envelope
-      - interference_threshold
-      - coupling_threshold
-      - phase_coherence_threshold
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 477
-      name: _calculate_detection_accuracy
-      returns: float
-    - args:
-      - self
-      - envelope
-      - interference_threshold
-      - coupling_threshold
-      - phase_coherence_threshold
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 506
-      name: _calculate_false_positive_rate
-      returns: float
-    - args:
-      - self
-      - envelope
-      - results
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 531
-      name: _optimize_methods
-      returns: Dict[str, Any]
-    - args:
       - x
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 177
+      file: ./bhlff/models/level_c/beating/basic/optimization_parameters.py
+      line: 156
       name: objective
-      returns: null
-    - args:
-      - x
-      file: ./bhlff/models/level_c/beating/basic/optimization.py
-      line: 428
-      name: threshold_objective
       returns: null
     BeatingPatternDetector:
     - args:
@@ -4842,6 +4960,73 @@ method_index:
       line: 355
       name: _calculate_interference_statistics
       returns: Dict[str, Any]
+    BeatingThresholdOptimizer:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py
+      line: 40
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      - results
+      file: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py
+      line: 59
+      name: optimize_thresholds
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py
+      line: 118
+      name: _define_threshold_bounds
+      returns: List[Tuple[float, float]]
+    - args:
+      - self
+      - envelope
+      - results
+      file: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py
+      line: 140
+      name: _create_threshold_objective_function
+      returns: null
+    - args:
+      - self
+      - envelope
+      - thresholds
+      - results
+      file: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py
+      line: 176
+      name: _calculate_threshold_objective_value
+      returns: float
+    - args:
+      - self
+      - envelope
+      - thresholds
+      file: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py
+      line: 205
+      name: _calculate_detection_accuracy
+      returns: float
+    - args:
+      - self
+      - envelope
+      - thresholds
+      file: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py
+      line: 240
+      name: _calculate_false_positive_rate
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py
+      line: 270
+      name: _get_initial_thresholds
+      returns: np.ndarray
+    - args:
+      - x
+      file: ./bhlff/models/level_c/beating/basic/optimization_thresholds.py
+      line: 155
+      name: threshold_objective
+      returns: null
     BeatingValidationAccuracyOptimization:
     - args:
       - self
@@ -11847,6 +12032,103 @@ method_index:
       line: 337
       name: run_zone_analysis_variations
       returns: Dict[str, Any]
+    LevelCIntegrationTests:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/level_c_integration_tests.py
+      line: 46
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - test_config
+      file: ./bhlff/models/level_c/level_c_integration_tests.py
+      line: 66
+      name: run_c1_test
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - test_config
+      file: ./bhlff/models/level_c/level_c_integration_tests.py
+      line: 108
+      name: run_c2_test
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - test_config
+      file: ./bhlff/models/level_c/level_c_integration_tests.py
+      line: 144
+      name: run_c3_test
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - test_config
+      file: ./bhlff/models/level_c/level_c_integration_tests.py
+      line: 177
+      name: run_c4_test
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - test_config
+      file: ./bhlff/models/level_c/level_c_integration_tests.py
+      line: 210
+      name: _create_resonator_layers
+      returns: List[ResonatorLayer]
+    - args:
+      - self
+      - domain
+      - resonator_layers
+      - abcd_params
+      file: ./bhlff/models/level_c/level_c_integration_tests.py
+      line: 238
+      name: _run_abcd_analysis
+      returns: Dict[str, Any]
+    LevelCIntegrationValidation:
+    - args:
+      - self
+      file: ./bhlff/models/level_c/level_c_integration_validation.py
+      line: 37
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - c1_results
+      file: ./bhlff/models/level_c/level_c_integration_validation.py
+      line: 41
+      name: validate_c1_results
+      returns: bool
+    - args:
+      - self
+      - c2_results
+      file: ./bhlff/models/level_c/level_c_integration_validation.py
+      line: 75
+      name: validate_c2_results
+      returns: bool
+    - args:
+      - self
+      - c3_results
+      file: ./bhlff/models/level_c/level_c_integration_validation.py
+      line: 103
+      name: validate_c3_results
+      returns: bool
+    - args:
+      - self
+      - c4_results
+      file: ./bhlff/models/level_c/level_c_integration_validation.py
+      line: 131
+      name: validate_c4_results
+      returns: bool
+    - args:
+      - self
+      - c1_results
+      - c2_results
+      - c3_results
+      - c4_results
+      file: ./bhlff/models/level_c/level_c_integration_validation.py
+      line: 159
+      name: validate_overall_results
+      returns: Dict[str, Any]
     LevelCInterface:
     - args:
       - self
@@ -11895,103 +12177,22 @@ method_index:
       - self
       - bvp_core
       file: ./bhlff/models/level_c/level_c_integration.py
-      line: 97
+      line: 78
       name: __init__
       returns: null
     - args:
       - self
       - test_config
       file: ./bhlff/models/level_c/level_c_integration.py
-      line: 112
+      line: 97
       name: run_all_tests
       returns: LevelCResults
     - args:
       - self
-      - test_config
+      - domain
+      - test_params
       file: ./bhlff/models/level_c/level_c_integration.py
-      line: 171
-      name: _run_c1_test
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - test_config
-      file: ./bhlff/models/level_c/level_c_integration.py
-      line: 202
-      name: _run_c2_test
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - test_config
-      file: ./bhlff/models/level_c/level_c_integration.py
-      line: 237
-      name: _run_c3_test
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - test_config
-      file: ./bhlff/models/level_c/level_c_integration.py
-      line: 268
-      name: _run_c4_test
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - c2_params
-      file: ./bhlff/models/level_c/level_c_integration.py
-      line: 299
-      name: _create_resonator_layers
-      returns: List[ResonatorLayer]
-    - args:
-      - self
-      - abcd_model
-      - c2_params
-      file: ./bhlff/models/level_c/level_c_integration.py
-      line: 324
-      name: _run_abcd_analysis
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - c1_results
-      file: ./bhlff/models/level_c/level_c_integration.py
-      line: 371
-      name: _validate_c1_results
-      returns: bool
-    - args:
-      - self
-      - c2_results
-      file: ./bhlff/models/level_c/level_c_integration.py
-      line: 401
-      name: _validate_c2_results
-      returns: bool
-    - args:
-      - self
-      - c3_results
-      file: ./bhlff/models/level_c/level_c_integration.py
-      line: 426
-      name: _validate_c3_results
-      returns: bool
-    - args:
-      - self
-      - c4_results
-      file: ./bhlff/models/level_c/level_c_integration.py
-      line: 454
-      name: _validate_c4_results
-      returns: bool
-    - args:
-      - self
-      - c1_results
-      - c2_results
-      - c3_results
-      - c4_results
-      file: ./bhlff/models/level_c/level_c_integration.py
-      line: 482
-      name: _validate_overall_results
-      returns: str
-    - args:
-      - self
-      - domain_params
-      - physics_params
-      file: ./bhlff/models/level_c/level_c_integration.py
-      line: 508
+      line: 144
       name: create_test_configuration
       returns: TestConfiguration
     LevelDBVPIntegration:
@@ -16803,7 +17004,7 @@ method_index:
       - self
       - bvp_core
       file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 42
+      line: 46
       name: __init__
       returns: null
     - args:
@@ -16813,123 +17014,158 @@ method_index:
       - time_params
       - pinning_params
       file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 52
+      line: 62
       name: analyze_pinned_beating
       returns: Dict[str, Any]
+    PinnedFieldCreator:
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py
+      line: 40
+      name: __init__
+      returns: null
     - args:
       - self
       - domain
       - dual_mode
       - pinning_params
-      file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 109
-      name: _create_pinned_dual_mode_field
+      file: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py
+      line: 44
+      name: create_pinned_dual_mode_field
       returns: np.ndarray
     - args:
       - self
       - domain
       - pinning_params
-      file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 174
+      file: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py
+      line: 117
       name: _create_pinning_potential
       returns: np.ndarray
+    PinnedFieldEvolution:
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/pinned_analysis_evolution.py
+      line: 39
+      name: __init__
+      returns: null
     - args:
       - self
       - field_pinned
       - dual_mode
       - time_params
       - pinning_params
-      file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 220
-      name: _evolve_pinned_dual_mode_field
+      file: ./bhlff/models/level_c/beating/pinned_analysis_evolution.py
+      line: 43
+      name: evolve_pinned_dual_mode_field
       returns: List[np.ndarray]
     - args:
       - self
       - field
+      - dual_mode
+      - t
       - pinning_params
-      file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 279
+      file: ./bhlff/models/level_c/beating/pinned_analysis_evolution.py
+      line: 88
       name: _apply_pinning_effects
       returns: np.ndarray
+    PinnedPatternAnalyzer:
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/pinned_analysis_patterns.py
+      line: 42
+      name: __init__
+      returns: null
     - args:
       - self
       - time_evolution
       - dual_mode
       - pinning_params
-      file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 309
-      name: _analyze_pinned_beating_patterns
+      file: ./bhlff/models/level_c/beating/pinned_analysis_patterns.py
+      line: 46
+      name: analyze_pinned_beating_patterns
       returns: Dict[str, Any]
     - args:
       - self
-      - amplitude_evolution
+      - time_evolution
+      - dual_mode
       - pinning_params
-      file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 360
+      file: ./bhlff/models/level_c/beating/pinned_analysis_patterns.py
+      line: 107
       name: _analyze_modified_amplitude_modulation
       returns: Dict[str, Any]
     - args:
       - self
-      - amplitude_evolution
+      - time_evolution
+      - dual_mode
       - pinning_params
-      file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 400
+      file: ./bhlff/models/level_c/beating/pinned_analysis_patterns.py
+      line: 145
       name: _compute_modified_modulation_frequency
       returns: float
     - args:
       - self
       - time_evolution
+      - dual_mode
       - pinning_params
-      file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 423
+      file: ./bhlff/models/level_c/beating/pinned_analysis_patterns.py
+      line: 178
       name: _analyze_modified_spatial_patterns
       returns: Dict[str, Any]
     - args:
       - self
       - time_evolution
+      - dual_mode
       - pinning_params
-      file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 457
+      file: ./bhlff/models/level_c/beating/pinned_analysis_patterns.py
+      line: 217
       name: _compute_modified_pattern_correlation
       returns: float
     - args:
       - self
       - time_evolution
+      - dual_mode
       - pinning_params
-      file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 480
+      file: ./bhlff/models/level_c/beating/pinned_analysis_patterns.py
+      line: 255
       name: _compute_modified_pattern_drift
       returns: float
+    PinnedSuppressionAnalyzer:
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py
+      line: 40
+      name: __init__
+      returns: null
     - args:
       - self
       - time_evolution
       - pinning_params
-      file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 503
-      name: _analyze_drift_suppression
+      file: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py
+      line: 44
+      name: analyze_drift_suppression
       returns: Dict[str, Any]
     - args:
       - self
       - time_evolution
       - pinning_params
-      file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 547
+      file: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py
+      line: 91
       name: _compute_drift_suppression
       returns: float
     - args:
       - self
       - time_evolution
       - pinning_params
-      file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 569
+      file: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py
+      line: 133
       name: _analyze_suppression_effectiveness
       returns: float
     - args:
       - self
       - time_evolution
       - pinning_params
-      file: ./bhlff/models/level_c/beating/pinned_analysis.py
-      line: 591
+      file: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py
+      line: 159
       name: _compute_suppression_factors
       returns: List[float]
     PinningAnalyzer:
@@ -20012,178 +20248,112 @@ method_index:
       line: 360
       name: _compute_stability_metrics
       returns: Dict[str, Any]
+    SolitonAnalysisInitialization:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py
+      line: 61
+      name: _initialize_soliton_methods
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py
+      line: 78
+      name: _setup_cubic_soliton_analysis
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py
+      line: 90
+      name: _setup_quartic_soliton_analysis
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py
+      line: 102
+      name: _setup_sine_gordon_soliton_analysis
+      returns: None
+    SolitonAnalysisSolutions:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
+      line: 42
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
+      line: 59
+      name: find_soliton_solutions
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
+      line: 102
+      name: _find_soliton_profiles
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
+      line: 126
+      name: _find_single_soliton
+      returns: Optional[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
+      line: 176
+      name: _find_multi_soliton_solutions
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
+      line: 201
+      name: _find_two_soliton_solution
+      returns: Optional[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
+      line: 249
+      name: _find_three_soliton_solution
+      returns: Optional[Dict[str, Any]]
+    - args:
+      - self
+      - soliton_profiles
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
+      line: 298
+      name: _calculate_solution_quality
+      returns: Dict[str, Any]
+    - args:
+      - params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
+      line: 266
+      name: objective
+      returns: null
     SolitonAnalyzer:
     - args:
       - self
       - system
       - nonlinear_params
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 40
+      line: 43
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
       line: 64
-      name: _initialize_soliton_methods
-      returns: None
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 84
-      name: _setup_cubic_soliton_analysis
-      returns: None
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 95
-      name: _setup_quartic_soliton_analysis
-      returns: None
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 106
-      name: _setup_sine_gordon_soliton_analysis
-      returns: None
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 117
       name: find_soliton_solutions
       returns: Dict[str, Any]
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 151
-      name: _find_soliton_profiles
-      returns: List[Dict[str, Any]]
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 175
-      name: _find_single_soliton
-      returns: Optional[Dict[str, Any]]
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 225
-      name: _find_multi_soliton_solutions
-      returns: List[Dict[str, Any]]
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 250
-      name: _find_two_soliton_solution
-      returns: Optional[Dict[str, Any]]
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 316
-      name: _find_three_soliton_solution
-      returns: Optional[Dict[str, Any]]
-    - args:
-      - self
-      - soliton_profiles
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 331
-      name: _compute_soliton_energies
-      returns: List[float]
-    - args:
-      - self
-      - soliton_profiles
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 360
-      name: _analyze_soliton_stability
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - soliton_profiles
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 397
-      name: _analyze_soliton_interactions
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - soliton_profiles
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 433
-      name: _calculate_interaction_strength
-      returns: float
-    - args:
-      - self
-      - amplitude
-      - width
-      - position
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 452
-      name: _cubic_soliton_profile
-      returns: np.ndarray
-    - args:
-      - self
-      - amplitude
-      - width
-      - position
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 475
-      name: _quartic_soliton_profile
-      returns: np.ndarray
-    - args:
-      - self
-      - amplitude
-      - width
-      - position
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 498
-      name: _sine_gordon_soliton_profile
-      returns: np.ndarray
-    - args:
-      - self
-      - profile
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 522
-      name: _cubic_soliton_energy
-      returns: float
-    - args:
-      - self
-      - profile
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 540
-      name: _quartic_soliton_energy
-      returns: float
-    - args:
-      - self
-      - profile
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 558
-      name: _sine_gordon_soliton_energy
-      returns: float
-    - args:
-      - self
-      - profile
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 577
-      name: _cubic_soliton_stability
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - profile
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 600
-      name: _quartic_soliton_stability
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - profile
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 623
-      name: _sine_gordon_soliton_stability
-      returns: Dict[str, Any]
-    - args:
-      - params
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
-      line: 262
-      name: objective
-      returns: null
     SolitonEnergyCalculator:
     - args:
       - self
@@ -21328,7 +21498,7 @@ method_index:
       - self
       - bvp_core
       file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 45
+      line: 46
       name: __init__
       returns: null
     - args:
@@ -21336,49 +21506,175 @@ method_index:
       - envelope
       - basic_results
       file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 65
+      line: 70
       name: perform_statistical_analysis
       returns: Dict[str, Any]
+    StatisticalConfidenceAnalyzer:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py
+      line: 41
+      name: __init__
+      returns: null
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 108
-      name: _test_statistical_significance
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py
+      line: 60
+      name: analyze_confidence_intervals
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 140
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py
+      line: 99
+      name: _calculate_pattern_confidence
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py
+      line: 130
+      name: _analyze_correlations
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py
+      line: 159
+      name: _calculate_amplitude_phase_correlation
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py
+      line: 186
+      name: _calculate_spatial_temporal_correlation
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py
+      line: 214
+      name: _calculate_mode_correlation
+      returns: float
+    - args:
+      - self
+      - pattern_confidence
+      - correlation_analysis
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py
+      line: 242
+      name: _calculate_overall_confidence
+      returns: Dict[str, Any]
+    StatisticalPatternRecognizer:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py
+      line: 60
+      name: recognize_beating_patterns
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py
+      line: 105
+      name: _analyze_pattern_characteristics
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py
+      line: 132
+      name: _calculate_pattern_symmetry
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py
+      line: 157
+      name: _calculate_spatial_correlation
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py
+      line: 183
+      name: _calculate_temporal_correlation
+      returns: float
+    - args:
+      - self
+      - pattern_characteristics
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py
+      line: 209
+      name: _classify_patterns
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - pattern_size
+      - pattern_intensity
+      - pattern_regularity
+      - pattern_symmetry
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_patterns.py
+      line: 253
+      name: _calculate_classification_confidence
+      returns: float
+    StatisticalSignificanceTester:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py
+      line: 42
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py
+      line: 61
+      name: test_statistical_significance
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py
+      line: 106
       name: _test_amplitude_significance
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 173
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py
+      line: 142
       name: _test_pattern_significance
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 203
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py
+      line: 177
       name: _calculate_pattern_distribution
       returns: np.ndarray
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 225
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py
+      line: 195
       name: _test_mode_significance
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 255
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py
+      line: 230
       name: _calculate_mode_statistics
       returns: List[np.ndarray]
     - args:
@@ -21386,87 +21682,10 @@ method_index:
       - amplitude_significance
       - pattern_significance
       - mode_significance
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 277
+      file: ./bhlff/models/level_c/beating/basic/statistical_analysis_significance.py
+      line: 260
       name: _calculate_overall_significance
       returns: Dict[str, Any]
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 310
-      name: _recognize_beating_patterns
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 340
-      name: _analyze_pattern_characteristics
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 364
-      name: _calculate_spatial_correlation
-      returns: float
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 385
-      name: _calculate_temporal_correlation
-      returns: float
-    - args:
-      - self
-      - pattern_characteristics
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 402
-      name: _classify_patterns
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 436
-      name: _calculate_pattern_confidence
-      returns: float
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 454
-      name: _analyze_confidence_intervals
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 485
-      name: _analyze_correlations
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 519
-      name: _calculate_amplitude_phase_correlation
-      returns: float
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 542
-      name: _calculate_spatial_temporal_correlation
-      returns: float
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
-      line: 560
-      name: _calculate_mode_correlation
-      returns: float
     StellarModel:
     - args:
       - self
@@ -26556,6 +26775,56 @@ method_index:
       line: 340
       name: test_quality_factors
       returns: null
+    TestConfiguration:
+    - args:
+      - self
+      file: ./bhlff/models/level_c/level_c_integration_config.py
+      line: 59
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - domain
+      - test_params
+      file: ./bhlff/models/level_c/level_c_integration_config.py
+      line: 63
+      name: create_test_configuration
+      returns: TestConfiguration
+    - args:
+      - self
+      - test_params
+      file: ./bhlff/models/level_c/level_c_integration_config.py
+      line: 123
+      name: _create_boundary_params
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - test_params
+      file: ./bhlff/models/level_c/level_c_integration_config.py
+      line: 144
+      name: _create_abcd_params
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - test_params
+      file: ./bhlff/models/level_c/level_c_integration_config.py
+      line: 165
+      name: _create_memory_params
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - test_params
+      file: ./bhlff/models/level_c/level_c_integration_config.py
+      line: 186
+      name: _create_beating_params
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - test_params
+      file: ./bhlff/models/level_c/level_c_integration_config.py
+      line: 208
+      name: _create_time_params
+      returns: Dict[str, Any]
     TestCoreRenormalizationPostulatePhysics:
     - args:
       - self
@@ -35982,6 +36251,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 5042
-    total_classes: 518
+    total_class_methods: 5076
+    total_classes: 536
     total_standalone_functions: 0

@@ -490,11 +490,11 @@ method_index:
       line: 385
       name: get_integrator_info
       returns: Dict[str, Any]
-    AdmittanceAnalyzer:
+    AdmittanceAnalysisCore:
     - args:
       - self
       - bvp_core
-      file: ./bhlff/models/level_c/boundary/admittance_analysis.py
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_core.py
       line: 42
       name: __init__
       returns: null
@@ -503,8 +503,8 @@ method_index:
       - domain
       - boundary
       - frequency_range
-      file: ./bhlff/models/level_c/boundary/admittance_analysis.py
-      line: 52
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_core.py
+      line: 56
       name: analyze_admittance_spectrum
       returns: AdmittanceSpectrum
     - args:
@@ -512,16 +512,16 @@ method_index:
       - domain
       - boundary
       - omega
-      file: ./bhlff/models/level_c/boundary/admittance_analysis.py
-      line: 99
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_core.py
+      line: 104
       name: _compute_admittance_at_frequency
       returns: complex
     - args:
       - self
       - domain
       - omega
-      file: ./bhlff/models/level_c/boundary/admittance_analysis.py
-      line: 140
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_core.py
+      line: 142
       name: _create_source_field
       returns: np.ndarray
     - args:
@@ -530,77 +530,141 @@ method_index:
       - boundary
       - source_field
       - omega
-      file: ./bhlff/models/level_c/boundary/admittance_analysis.py
-      line: 181
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_core.py
+      line: 173
       name: _solve_bvp_with_boundary
+      returns: np.ndarray
+    - args:
+      - self
+      - source_field
+      - boundary_mask
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_core.py
+      line: 202
+      name: _apply_boundary_conditions
       returns: np.ndarray
     - args:
       - self
       - domain
       - boundary
-      - source_field
-      file: ./bhlff/models/level_c/boundary/admittance_analysis.py
-      line: 214
-      name: _apply_boundary_conditions
-      returns: np.ndarray
-    - args:
-      - self
-      - X
-      - Y
-      - Z
-      - boundary
-      file: ./bhlff/models/level_c/boundary/admittance_analysis.py
-      line: 255
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_core.py
+      line: 222
       name: _create_boundary_mask
       returns: np.ndarray
     - args:
       - self
       - solution_field
-      - source_field
       - domain
-      file: ./bhlff/models/level_c/boundary/admittance_analysis.py
-      line: 288
+      - boundary
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_core.py
+      line: 261
       name: _compute_current
       returns: complex
     - args:
       - self
       - solution_field
       - domain
-      file: ./bhlff/models/level_c/boundary/admittance_analysis.py
-      line: 314
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_core.py
+      line: 283
       name: _compute_voltage
       returns: complex
+    AdmittanceAnalyzer:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/boundary/admittance_analysis.py
+      line: 44
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - domain
+      - boundary
+      - frequency_range
+      file: ./bhlff/models/level_c/boundary/admittance_analysis.py
+      line: 62
+      name: analyze_admittance_spectrum
+      returns: AdmittanceSpectrum
     - args:
       - self
       - spectrum
       - threshold
       file: ./bhlff/models/level_c/boundary/admittance_analysis.py
-      line: 337
+      line: 87
+      name: detect_resonances
+      returns: List[Dict[str, Any]]
+    AdmittanceResonanceAnalyzer:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - spectrum
+      - threshold
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py
+      line: 55
       name: detect_resonances
       returns: List[Dict[str, Any]]
     - args:
       - self
       - signal
       - height
-      file: ./bhlff/models/level_c/boundary/admittance_analysis.py
-      line: 366
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py
+      line: 88
       name: _find_peaks
       returns: List[int]
     - args:
       - self
       - spectrum
-      - peak_idx
-      file: ./bhlff/models/level_c/boundary/admittance_analysis.py
-      line: 393
+      - peak_index
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py
+      line: 116
       name: _analyze_resonance_peak
       returns: Dict[str, Any]
     - args:
       - self
       - spectrum
-      - peak_idx
-      file: ./bhlff/models/level_c/boundary/admittance_analysis.py
-      line: 426
+      - peak_index
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py
+      line: 158
       name: _compute_quality_factor
+      returns: float
+    - args:
+      - self
+      - spectrum
+      - peak_index
+      - half_maximum
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py
+      line: 196
+      name: _find_left_boundary
+      returns: int
+    - args:
+      - self
+      - spectrum
+      - peak_index
+      - half_maximum
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py
+      line: 219
+      name: _find_right_boundary
+      returns: int
+    - args:
+      - self
+      - spectrum
+      - peak_index
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py
+      line: 242
+      name: _calculate_resonance_width
+      returns: float
+    - args:
+      - self
+      - spectrum
+      - peak_index
+      file: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py
+      line: 270
+      name: _calculate_resonance_strength
       returns: float
     AlertSystem:
     - args:
@@ -4224,6 +4288,123 @@ method_index:
       line: 130
       name: _calculate_beating_strength
       returns: float
+    BeatingMLClassificationOptimizer:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 39
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 58
+      name: optimize_classification_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      - max_iterations
+      - tolerance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 97
+      name: _optimize_classification_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - optimization_results
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 148
+      name: _validate_classification_optimization
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - optimization_results
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 189
+      name: _calculate_classification_performance
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 229
+      name: _initialize_classification_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - parameters
+      - performance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 248
+      name: _adjust_classification_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - current_performance
+      - best_performance
+      - tolerance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 279
+      name: _check_classification_convergence
+      returns: bool
+    - args:
+      - self
+      - parameters
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 299
+      name: _validate_classification_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - performance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 328
+      name: _validate_classification_performance
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - parameter_validation
+      - performance_validation
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 348
+      name: _calculate_classification_overall_validation
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - parameters
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 382
+      name: _calculate_classification_accuracy
+      returns: float
+    - args:
+      - self
+      - parameters
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 401
+      name: _calculate_classification_precision
+      returns: float
+    - args:
+      - self
+      - parameters
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 420
+      name: _calculate_classification_recall
+      returns: float
+    - args:
+      - self
+      - parameters
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+      line: 439
+      name: _calculate_classification_f1_score
+      returns: float
     BeatingMLCore:
     - args:
       - self
@@ -4259,120 +4440,146 @@ method_index:
       - self
       - bvp_core
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-      line: 31
+      line: 34
       name: __init__
       returns: null
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-      line: 46
+      line: 58
       name: optimize_ml_parameters
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
-      - initial_params
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-      line: 87
-      name: _optimize_ml_parameters
-      returns: Dict[str, float]
-    - args:
-      - self
-      - envelope
-      - initial_params
-      - optimized_params
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-      line: 127
-      name: _validate_ml_optimization
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - envelope
-      - params
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-      line: 178
-      name: _calculate_ml_performance
-      returns: float
-    - args:
-      - self
-      - params
-      - performance
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-      line: 218
-      name: _adjust_parameters
-      returns: Dict[str, float]
-    - args:
-      - self
-      - current_params
-      - initial_params
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-      line: 267
-      name: _check_convergence
-      returns: bool
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-      line: 295
+      line: 78
       name: optimize_classification_parameters
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-      line: 339
+      line: 98
       name: optimize_prediction_parameters
       returns: Dict[str, Any]
+    BeatingMLOptimizationCore:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 39
+      name: __init__
+      returns: null
     - args:
       - self
       - envelope
-      - initial_params
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-      line: 381
-      name: _optimize_classification_parameters
-      returns: Dict[str, float]
-    - args:
-      - self
-      - envelope
-      - initial_params
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-      line: 410
-      name: _optimize_prediction_parameters
-      returns: Dict[str, float]
-    - args:
-      - self
-      - envelope
-      - initial_params
-      - optimized_params
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-      line: 441
-      name: _validate_classification_optimization
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 58
+      name: optimize_ml_parameters
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
-      - initial_params
-      - optimized_params
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-      line: 469
-      name: _validate_prediction_optimization
+      - max_iterations
+      - tolerance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 97
+      name: _optimize_ml_parameters
       returns: Dict[str, Any]
     - args:
       - self
+      - optimization_results
       - envelope
-      - params
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-      line: 497
-      name: _calculate_classification_performance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 148
+      name: _validate_ml_optimization
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - optimization_results
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 189
+      name: _calculate_ml_performance
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - parameters
+      - performance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 226
+      name: _adjust_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - current_performance
+      - best_performance
+      - tolerance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 254
+      name: _check_convergence
+      returns: bool
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 274
+      name: _initialize_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - parameters
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 293
+      name: _validate_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - performance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 326
+      name: _validate_performance
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - parameter_validation
+      - performance_validation
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 346
+      name: _calculate_overall_validation
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - parameters
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 380
+      name: _calculate_accuracy
       returns: float
     - args:
       - self
+      - parameters
       - envelope
-      - params
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-      line: 509
-      name: _calculate_prediction_performance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 399
+      name: _calculate_precision
+      returns: float
+    - args:
+      - self
+      - parameters
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 418
+      name: _calculate_recall
+      returns: float
+    - args:
+      - self
+      - parameters
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+      line: 437
+      name: _calculate_f1_score
       returns: float
     BeatingMLPatterns:
     - args:
@@ -4579,6 +4786,123 @@ method_index:
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
       line: 439
       name: _calculate_coupling_efficiency
+      returns: float
+    BeatingMLPredictionOptimizer:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 39
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 58
+      name: optimize_prediction_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      - max_iterations
+      - tolerance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 97
+      name: _optimize_prediction_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - optimization_results
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 148
+      name: _validate_prediction_optimization
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - optimization_results
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 189
+      name: _calculate_prediction_performance
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 229
+      name: _initialize_prediction_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - parameters
+      - performance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 248
+      name: _adjust_prediction_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - current_performance
+      - best_performance
+      - tolerance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 279
+      name: _check_prediction_convergence
+      returns: bool
+    - args:
+      - self
+      - parameters
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 299
+      name: _validate_prediction_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - performance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 330
+      name: _validate_prediction_performance
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - parameter_validation
+      - performance_validation
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 350
+      name: _calculate_prediction_overall_validation
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - parameters
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 384
+      name: _calculate_prediction_accuracy
+      returns: float
+    - args:
+      - self
+      - parameters
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 403
+      name: _calculate_prediction_precision
+      returns: float
+    - args:
+      - self
+      - parameters
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 422
+      name: _calculate_prediction_recall
+      returns: float
+    - args:
+      - self
+      - parameters
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+      line: 441
+      name: _calculate_prediction_f1_score
       returns: float
     BeatingMethodOptimizer:
     - args:
@@ -6695,131 +7019,211 @@ method_index:
       - particles
       - system_params
       file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 42
+      line: 44
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 63
-      name: _initialize_collective_modes_analysis
-      returns: None
-    - args:
-      - self
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 77
-      name: _setup_dynamics_matrices
-      returns: None
-    - args:
-      - self
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 106
-      name: _setup_mode_analysis_methods
-      returns: None
-    - args:
-      - self
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 123
+      line: 66
       name: find_collective_modes
       returns: Dict[str, Any]
     - args:
       - self
+      - modes
       file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 162
+      line: 83
+      name: analyze_mode_spectrum
+      returns: Dict[str, Any]
+    CollectiveModesFinder:
+    - args:
+      - self
+      - domain
+      - particles
+      - system_params
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 42
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 63
+      name: find_collective_modes
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 100
+      name: _initialize_collective_modes_analysis
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 114
+      name: _setup_dynamics_matrices
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 131
+      name: _create_mass_matrix
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 151
+      name: _create_stiffness_matrix
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 179
+      name: _setup_mode_analysis_methods
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 193
       name: _compute_dynamics_matrix
       returns: np.ndarray
     - args:
       - self
       - eigenvalues
       - eigenvectors
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 180
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 209
       name: _analyze_collective_modes
       returns: Dict[str, Any]
     - args:
       - self
       - eigenvalues
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 212
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 244
       name: _analyze_mode_stability
       returns: Dict[str, Any]
     - args:
       - self
       - eigenvalues
       - eigenvectors
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 247
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 273
       name: _analyze_mode_interactions
       returns: Dict[str, Any]
     - args:
       - self
       - eigenvalues
       - eigenvectors
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 278
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 303
       name: _calculate_mode_coupling
       returns: float
     - args:
       - self
       - eigenvectors
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 308
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 329
       name: _calculate_mode_overlap
       returns: float
     - args:
       - self
       - eigenvectors
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 339
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 359
       name: _calculate_mode_correlation
       returns: float
     - args:
       - self
+      - distance
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 390
+      name: _calculate_interaction_strength
+      returns: float
+    CollectiveModesSpectrumAnalyzer:
+    - args:
+      - self
+      - domain
+      - particles
+      - system_params
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
+      line: 42
+      name: __init__
+      returns: null
+    - args:
+      - self
       - modes
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 371
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
+      line: 60
       name: analyze_mode_spectrum
       returns: Dict[str, Any]
     - args:
       - self
       - frequencies
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 405
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
+      line: 117
       name: _analyze_frequency_distribution
       returns: Dict[str, Any]
     - args:
       - self
       - frequencies
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 436
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
+      line: 149
       name: _analyze_spectral_features
       returns: Dict[str, Any]
     - args:
       - self
       - frequencies
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 468
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
+      line: 173
+      name: _calculate_spectral_density
+      returns: float
+    - args:
+      - self
+      - frequencies
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
+      line: 197
+      name: _calculate_spectral_entropy
+      returns: float
+    - args:
+      - self
+      - frequencies
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
+      line: 225
+      name: _calculate_spectral_skewness
+      returns: float
+    - args:
+      - self
+      - frequencies
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
+      line: 250
+      name: _calculate_spectral_kurtosis
+      returns: float
+    - args:
+      - self
+      - frequencies
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
+      line: 275
       name: _find_spectral_gaps
       returns: List[Dict[str, Any]]
     - args:
       - self
       - frequencies
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 498
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
+      line: 312
       name: _find_spectral_clusters
       returns: List[Dict[str, Any]]
     - args:
       - self
       - frequencies
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 543
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
+      line: 364
       name: _find_spectral_peaks
       returns: List[Dict[str, Any]]
     - args:
       - self
       - frequencies
-      file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-      line: 573
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
+      line: 401
       name: _analyze_mode_spacing
       returns: Dict[str, Any]
     ConcreteSolver:
@@ -17505,126 +17909,27 @@ method_index:
       - particles
       - system_params
       file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 42
+      line: 45
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 63
-      name: _initialize_potential_analysis
-      returns: None
-    - args:
-      - self
-      file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 77
-      name: _setup_interaction_matrices
-      returns: None
-    - args:
-      - self
-      file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 111
-      name: _setup_potential_functions
-      returns: None
-    - args:
-      - self
-      file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 128
+      line: 68
       name: compute_effective_potential
-      returns: np.ndarray
-    - args:
-      - self
-      - particle
-      file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 160
-      name: _compute_single_particle_potential
-      returns: np.ndarray
-    - args:
-      - self
-      - distances
-      - particle
-      file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 192
-      name: _create_single_particle_potential
-      returns: np.ndarray
-    - args:
-      - self
-      - particle_i
-      - particle_j
-      file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 213
-      name: _compute_pair_interaction
-      returns: np.ndarray
-    - args:
-      - self
-      - distances_i
-      - distances_j
-      - particle_i
-      - particle_j
-      file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 256
-      name: _create_pair_potential
-      returns: np.ndarray
-    - args:
-      - self
-      file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 284
-      name: _compute_higher_order_interactions
-      returns: np.ndarray
-    - args:
-      - self
-      - particle_i
-      - particle_j
-      - particle_k
-      file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 309
-      name: _compute_three_particle_interaction
-      returns: np.ndarray
-    - args:
-      - self
-      - distances_i
-      - distances_j
-      - distances_k
-      - particle_i
-      - particle_j
-      - particle_k
-      file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 361
-      name: _create_higher_order_potential
       returns: np.ndarray
     - args:
       - self
       - potential
       file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 388
+      line: 84
       name: analyze_potential_landscape
       returns: Dict[str, Any]
     - args:
       - self
       - potential
       file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 420
-      name: _find_potential_extrema
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - potential
-      file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 465
-      name: _analyze_potential_barriers
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - potential
-      file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 491
-      name: _analyze_potential_wells
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - potential
-      file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-      line: 517
+      line: 106
       name: optimize_potential
       returns: Dict[str, Any]
     PotentialComputationAnalyzer:
@@ -17743,6 +18048,200 @@ method_index:
       line: 64
       name: solve_poisson_equation
       returns: np.ndarray
+    PotentialLandscapeAnalyzer:
+    - args:
+      - self
+      - domain
+      - particles
+      - system_params
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+      line: 42
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+      line: 60
+      name: analyze_potential_landscape
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+      line: 101
+      name: _find_potential_extrema
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+      line: 142
+      name: _find_local_minima
+      returns: List[Tuple[int, int, int]]
+    - args:
+      - self
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+      line: 169
+      name: _find_local_maxima
+      returns: List[Tuple[int, int, int]]
+    - args:
+      - self
+      - potential
+      - i
+      - j
+      - k
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+      line: 196
+      name: _is_local_minimum
+      returns: bool
+    - args:
+      - self
+      - potential
+      - i
+      - j
+      - k
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+      line: 232
+      name: _is_local_maximum
+      returns: bool
+    - args:
+      - self
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+      line: 268
+      name: _analyze_potential_barriers
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+      line: 297
+      name: _find_potential_barriers
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - potential
+      - i
+      - j
+      - k
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+      line: 329
+      name: _is_potential_barrier
+      returns: bool
+    - args:
+      - self
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+      line: 370
+      name: _analyze_potential_wells
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+      line: 399
+      name: _find_potential_wells
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - potential
+      - i
+      - j
+      - k
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+      line: 431
+      name: _is_potential_well
+      returns: bool
+    PotentialOptimizationAnalyzer:
+    - args:
+      - self
+      - domain
+      - particles
+      - system_params
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
+      line: 42
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
+      line: 60
+      name: optimize_potential
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
+      line: 107
+      name: _optimize_particle_positions
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - particle
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
+      line: 137
+      name: _optimize_single_particle_position
+      returns: np.ndarray
+    - args:
+      - self
+      - potential
+      - position
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
+      line: 162
+      name: _calculate_potential_gradient
+      returns: np.ndarray
+    - args:
+      - self
+      - optimized_positions
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
+      line: 188
+      name: _calculate_position_improvement
+      returns: float
+    - args:
+      - self
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
+      line: 209
+      name: _optimize_interaction_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - optimized_parameters
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
+      line: 238
+      name: _calculate_parameter_improvement
+      returns: float
+    - args:
+      - self
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
+      line: 259
+      name: _optimize_system_configuration
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - optimized_configuration
+      - potential
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
+      line: 289
+      name: _calculate_configuration_improvement
+      returns: float
+    - args:
+      - self
+      - potential
+      - position_optimization
+      - parameter_optimization
+      - configuration_optimization
+      file: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
+      line: 310
+      name: _calculate_optimization_improvement
+      returns: Dict[str, Any]
     PowerBalancePostulate:
     - args:
       - self
@@ -18824,11 +19323,11 @@ method_index:
       line: 105
       name: _validate_quenches
       returns: bool
-    RadialAnalyzer:
+    RadialAnalysisCore:
     - args:
       - self
       - bvp_core
-      file: ./bhlff/models/level_c/boundary/radial_analysis.py
+      file: ./bhlff/models/level_c/boundary/radial_analysis_core.py
       line: 42
       name: __init__
       returns: null
@@ -18837,8 +19336,58 @@ method_index:
       - domain
       - boundary
       - field
+      file: ./bhlff/models/level_c/boundary/radial_analysis_core.py
+      line: 56
+      name: analyze_radial_profile
+      returns: RadialProfile
+    - args:
+      - self
+      - domain
+      - boundary
+      - field
+      file: ./bhlff/models/level_c/boundary/radial_analysis_core.py
+      line: 96
+      name: _compute_radial_profile
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - domain
+      - field
+      - radius
+      file: ./bhlff/models/level_c/boundary/radial_analysis_core.py
+      line: 138
+      name: _compute_amplitude_at_radius
+      returns: float
+    - args:
+      - self
+      - domain
+      - radius
+      file: ./bhlff/models/level_c/boundary/radial_analysis_core.py
+      line: 165
+      name: _create_spherical_shell_mask
+      returns: np.ndarray
+    - args:
+      - self
+      - radial_profile
+      file: ./bhlff/models/level_c/boundary/radial_analysis_core.py
+      line: 200
+      name: _find_local_maxima
+      returns: List[Dict[str, Any]]
+    RadialAnalyzer:
+    - args:
+      - self
+      - bvp_core
       file: ./bhlff/models/level_c/boundary/radial_analysis.py
-      line: 52
+      line: 44
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - domain
+      - boundary
+      - field
+      file: ./bhlff/models/level_c/boundary/radial_analysis.py
+      line: 62
       name: analyze_radial_profile
       returns: RadialProfile
     - args:
@@ -18847,67 +19396,83 @@ method_index:
       - boundary
       - field
       file: ./bhlff/models/level_c/boundary/radial_analysis.py
-      line: 95
-      name: _compute_radial_profile
-      returns: Tuple[np.ndarray, np.ndarray]
+      line: 85
+      name: analyze_field_concentration
+      returns: Dict[str, Any]
+    RadialConcentrationAnalyzer:
     - args:
       - self
-      - field
-      - distances
-      - radius
+      - bvp_core
+      file: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py
+      line: 42
+      name: __init__
+      returns: null
+    - args:
+      - self
       - domain
-      file: ./bhlff/models/level_c/boundary/radial_analysis.py
-      line: 154
-      name: _compute_amplitude_at_radius
-      returns: float
-    - args:
-      - self
-      - distances
-      - radius
-      - domain
-      file: ./bhlff/models/level_c/boundary/radial_analysis.py
-      line: 192
-      name: _create_spherical_shell_mask
-      returns: np.ndarray
-    - args:
-      - self
-      - radii
-      - amplitudes
-      file: ./bhlff/models/level_c/boundary/radial_analysis.py
-      line: 218
-      name: _find_local_maxima
-      returns: List[Tuple[float, float]]
-    - args:
-      - self
-      - profile
       - boundary
-      file: ./bhlff/models/level_c/boundary/radial_analysis.py
-      line: 244
+      - field
+      file: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py
+      line: 56
       name: analyze_field_concentration
       returns: Dict[str, Any]
     - args:
       - self
-      - profile
+      - domain
       - boundary
-      file: ./bhlff/models/level_c/boundary/radial_analysis.py
-      line: 281
+      - field
+      file: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py
+      line: 101
       name: _analyze_near_boundary_concentration
       returns: Dict[str, Any]
     - args:
       - self
-      - profile
+      - domain
       - boundary
-      file: ./bhlff/models/level_c/boundary/radial_analysis.py
-      line: 325
+      - field
+      file: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py
+      line: 140
       name: _analyze_far_boundary_concentration
       returns: Dict[str, Any]
     - args:
       - self
-      - profile
-      file: ./bhlff/models/level_c/boundary/radial_analysis.py
-      line: 369
+      - domain
+      - boundary
+      - field
+      file: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py
+      line: 179
       name: _analyze_overall_concentration_pattern
       returns: Dict[str, Any]
+    - args:
+      - self
+      - domain
+      - boundary_thickness
+      file: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py
+      line: 209
+      name: _create_near_boundary_mask
+      returns: np.ndarray
+    - args:
+      - self
+      - domain
+      - boundary_thickness
+      file: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py
+      line: 243
+      name: _create_far_boundary_mask
+      returns: np.ndarray
+    - args:
+      - self
+      - data
+      file: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py
+      line: 277
+      name: _calculate_skewness
+      returns: float
+    - args:
+      - self
+      - data
+      file: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py
+      line: 301
+      name: _calculate_kurtosis
+      returns: float
     RadiationCalculator:
     - args:
       - self
@@ -36558,6 +37123,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 5118
-    total_classes: 543
+    total_class_methods: 5190
+    total_classes: 554
     total_standalone_functions: 0

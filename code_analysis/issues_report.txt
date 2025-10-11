@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 694
+Total issues found: 706
 
 METHODS_WITHOUT_DOCSTRINGS: 91 issues
 ----------------------------------------
@@ -423,7 +423,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 4 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 533 issues
+IMPORTS_IN_MIDDLE: 544 issues
 ----------------------------------------
   ./setup.py
     Line 28
@@ -824,17 +824,29 @@ IMPORTS_IN_MIDDLE: 533 issues
   ./bhlff/models/level_c/abcd_model.py
     Line 35
 
+  ./bhlff/models/level_c/boundary/radial_analysis_core.py
+    Line 24
+
+  ./bhlff/models/level_c/boundary/radial_analysis_concentration.py
+    Line 24
+
   ./bhlff/models/level_c/boundary/data_structures.py
     Line 21
+
+  ./bhlff/models/level_c/boundary/admittance_analysis_core.py
+    Line 24
 
   ./bhlff/models/level_c/boundary/__init__.py
     Line 23
 
   ./bhlff/models/level_c/boundary/admittance_analysis.py
+    Line 26
+
+  ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py
     Line 24
 
   ./bhlff/models/level_c/boundary/radial_analysis.py
-    Line 24
+    Line 26
 
   ./bhlff/models/level_c/beating/pinned_analysis_evolution.py
     Line 23
@@ -865,6 +877,15 @@ IMPORTS_IN_MIDDLE: 533 issues
 
   ./bhlff/models/level_c/beating/pinned_analysis_suppression.py
     Line 21
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+    Line 23
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+    Line 23
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+    Line 23
 
   ./bhlff/models/level_c/beating/basic/comparison_patterns.py
     Line 22
@@ -1025,6 +1046,9 @@ IMPORTS_IN_MIDDLE: 533 issues
   ./bhlff/models/level_f/collective/excitation_analysis.py
     Line 325
 
+  ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+    Line 24
+
   ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py
     Line 24
 
@@ -1034,11 +1058,20 @@ IMPORTS_IN_MIDDLE: 533 issues
   ./bhlff/models/level_f/multi_particle/__init__.py
     Line 22
 
+  ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+    Line 25
+
+  ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
+    Line 24
+
+  ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
+    Line 24
+
   ./bhlff/models/level_f/multi_particle/potential_analysis.py
-    Line 536
+    Line 25
 
   ./bhlff/models/level_f/multi_particle/collective_modes.py
-    Line 23
+    Line 25
 
   ./bhlff/models/level_f/transitions/phase_transitions_core.py
     Line 24
@@ -2025,7 +2058,7 @@ IMPORTS_IN_MIDDLE: 533 issues
     Line 23
 
 
-FILES_TOO_LARGE: 62 issues
+FILES_TOO_LARGE: 63 issues
 ----------------------------------------
   ./tests/unit/automated_testing/test_integration.py
 
@@ -2047,19 +2080,19 @@ FILES_TOO_LARGE: 62 issues
 
   ./bhlff/models/level_c/abcd_model.py
 
-  ./bhlff/models/level_c/boundary/admittance_analysis.py
-
-  ./bhlff/models/level_c/boundary/radial_analysis.py
-
   ./bhlff/models/level_c/beating/theoretical_analysis.py
 
   ./bhlff/models/level_c/beating/beating_core_basic.py
 
   ./bhlff/models/level_c/beating/background_analysis.py
 
-  ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
+  ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
 
-  ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
+  ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
 
   ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
 
@@ -2081,11 +2114,13 @@ FILES_TOO_LARGE: 62 issues
 
   ./bhlff/models/level_f/collective/excitation_analysis.py
 
+  ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+
   ./bhlff/models/level_f/multi_particle/data_structures.py
 
-  ./bhlff/models/level_f/multi_particle/potential_analysis.py
+  ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
 
-  ./bhlff/models/level_f/multi_particle/collective_modes.py
+  ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
 
   ./bhlff/models/level_f/transitions/phase_transitions_core.py
 

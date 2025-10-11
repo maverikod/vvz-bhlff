@@ -53,14 +53,6 @@ issues:
     file: ./bhlff/models/level_c/abcd_model.py
     limit: 400
     lines: 466
-  - exceeds_limit: 80
-    file: ./bhlff/models/level_c/boundary/admittance_analysis.py
-    limit: 400
-    lines: 480
-  - exceeds_limit: 6
-    file: ./bhlff/models/level_c/boundary/radial_analysis.py
-    limit: 400
-    lines: 406
   - exceeds_limit: 44
     file: ./bhlff/models/level_c/beating/theoretical_analysis.py
     limit: 400
@@ -73,14 +65,22 @@ issues:
     file: ./bhlff/models/level_c/beating/background_analysis.py
     limit: 400
     lines: 452
+  - exceeds_limit: 56
+    file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+    limit: 400
+    lines: 456
+  - exceeds_limit: 54
+    file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+    limit: 400
+    lines: 454
+  - exceeds_limit: 58
+    file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+    limit: 400
+    lines: 458
   - exceeds_limit: 47
     file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
     limit: 400
     lines: 447
-  - exceeds_limit: 122
-    file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
-    limit: 400
-    lines: 522
   - exceeds_limit: 98
     file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
     limit: 400
@@ -121,18 +121,22 @@ issues:
     file: ./bhlff/models/level_f/collective/excitation_analysis.py
     limit: 400
     lines: 437
+  - exceeds_limit: 70
+    file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+    limit: 400
+    lines: 470
   - exceeds_limit: 71
     file: ./bhlff/models/level_f/multi_particle/data_structures.py
     limit: 400
     lines: 471
-  - exceeds_limit: 148
-    file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
+  - exceeds_limit: 9
+    file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
     limit: 400
-    lines: 548
-  - exceeds_limit: 209
-    file: ./bhlff/models/level_f/multi_particle/collective_modes.py
+    lines: 409
+  - exceeds_limit: 36
+    file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
     limit: 400
-    lines: 609
+    lines: 436
   - exceeds_limit: 144
     file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
     limit: 400
@@ -537,14 +541,22 @@ issues:
     line: 37
   - file: ./bhlff/models/level_c/abcd_model.py
     line: 35
+  - file: ./bhlff/models/level_c/boundary/radial_analysis_core.py
+    line: 24
+  - file: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py
+    line: 24
   - file: ./bhlff/models/level_c/boundary/data_structures.py
     line: 21
+  - file: ./bhlff/models/level_c/boundary/admittance_analysis_core.py
+    line: 24
   - file: ./bhlff/models/level_c/boundary/__init__.py
     line: 23
   - file: ./bhlff/models/level_c/boundary/admittance_analysis.py
+    line: 26
+  - file: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py
     line: 24
   - file: ./bhlff/models/level_c/boundary/radial_analysis.py
-    line: 24
+    line: 26
   - file: ./bhlff/models/level_c/beating/pinned_analysis_evolution.py
     line: 23
   - file: ./bhlff/models/level_c/beating/theoretical_analysis.py
@@ -565,6 +577,12 @@ issues:
     line: 297
   - file: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py
     line: 21
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
+    line: 23
   - file: ./bhlff/models/level_c/beating/basic/comparison_patterns.py
     line: 22
   - file: ./bhlff/models/level_c/beating/basic/core_analysis_frequency.py
@@ -671,16 +689,24 @@ issues:
     line: 22
   - file: ./bhlff/models/level_f/collective/excitation_analysis.py
     line: 325
+  - file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
+    line: 24
   - file: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py
     line: 24
   - file: ./bhlff/models/level_f/multi_particle/data_structures.py
     line: 21
   - file: ./bhlff/models/level_f/multi_particle/__init__.py
     line: 22
+  - file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+    line: 25
+  - file: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
+    line: 24
+  - file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
+    line: 24
   - file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
-    line: 536
+    line: 25
   - file: ./bhlff/models/level_f/multi_particle/collective_modes.py
-    line: 23
+    line: 25
   - file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
     line: 24
   - file: ./bhlff/models/level_d/level_d_models.py
@@ -1706,9 +1732,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 4
-  files_too_large: 62
+  files_too_large: 63
   files_without_docstrings: 4
-  imports_in_middle: 533
+  imports_in_middle: 544
   methods_with_pass: 0
   methods_without_docstrings: 91
   not_implemented_in_non_abstract: 0

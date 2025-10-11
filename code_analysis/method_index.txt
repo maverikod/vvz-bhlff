@@ -4410,6 +4410,40 @@ Class: ResonatorLayer
   _compute_coupling_strength(self, frequency, all_frequencies) -> float
     File: ./bhlff/models/level_c/abcd_model.py, Line: 442
 
+Class: RadialAnalysisCore
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 42
+  analyze_radial_profile(self, domain, boundary, field) -> RadialProfile
+    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 56
+  _compute_radial_profile(self, domain, boundary, field) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 96
+  _compute_amplitude_at_radius(self, domain, field, radius) -> float
+    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 138
+  _create_spherical_shell_mask(self, domain, radius) -> np.ndarray
+    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 165
+  _find_local_maxima(self, radial_profile) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 200
+
+Class: RadialConcentrationAnalyzer
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py, Line: 42
+  analyze_field_concentration(self, domain, boundary, field) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py, Line: 56
+  _analyze_near_boundary_concentration(self, domain, boundary, field) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py, Line: 101
+  _analyze_far_boundary_concentration(self, domain, boundary, field) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py, Line: 140
+  _analyze_overall_concentration_pattern(self, domain, boundary, field) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py, Line: 179
+  _create_near_boundary_mask(self, domain, boundary_thickness) -> np.ndarray
+    File: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py, Line: 209
+  _create_far_boundary_mask(self, domain, boundary_thickness) -> np.ndarray
+    File: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py, Line: 243
+  _calculate_skewness(self, data) -> float
+    File: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py, Line: 277
+  _calculate_kurtosis(self, data) -> float
+    File: ./bhlff/models/level_c/boundary/radial_analysis_concentration.py, Line: 301
+
 Class: BoundaryGeometry
   volume(self) -> float
     File: ./bhlff/models/level_c/boundary/data_structures.py, Line: 55
@@ -4436,55 +4470,61 @@ Class: BoundaryGeometry
   profile_energy(self) -> float
     File: ./bhlff/models/level_c/boundary/data_structures.py, Line: 287
 
+Class: AdmittanceAnalysisCore
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 42
+  analyze_admittance_spectrum(self, domain, boundary, frequency_range) -> AdmittanceSpectrum
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 56
+  _compute_admittance_at_frequency(self, domain, boundary, omega) -> complex
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 104
+  _create_source_field(self, domain, omega) -> np.ndarray
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 142
+  _solve_bvp_with_boundary(self, domain, boundary, source_field, omega) -> np.ndarray
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 173
+  _apply_boundary_conditions(self, source_field, boundary_mask) -> np.ndarray
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 202
+  _create_boundary_mask(self, domain, boundary) -> np.ndarray
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 222
+  _compute_current(self, solution_field, domain, boundary) -> complex
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 261
+  _compute_voltage(self, solution_field, domain) -> complex
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 283
+
 Class: AdmittanceAnalyzer
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 42
+    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 44
   analyze_admittance_spectrum(self, domain, boundary, frequency_range) -> AdmittanceSpectrum
-    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 52
-  _compute_admittance_at_frequency(self, domain, boundary, omega) -> complex
-    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 99
-  _create_source_field(self, domain, omega) -> np.ndarray
-    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 140
-  _solve_bvp_with_boundary(self, domain, boundary, source_field, omega) -> np.ndarray
-    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 181
-  _apply_boundary_conditions(self, domain, boundary, source_field) -> np.ndarray
-    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 214
-  _create_boundary_mask(self, X, Y, Z, boundary) -> np.ndarray
-    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 255
-  _compute_current(self, solution_field, source_field, domain) -> complex
-    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 288
-  _compute_voltage(self, solution_field, domain) -> complex
-    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 314
+    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 62
   detect_resonances(self, spectrum, threshold) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 337
+    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 87
+
+Class: AdmittanceResonanceAnalyzer
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py, Line: 41
+  detect_resonances(self, spectrum, threshold) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py, Line: 55
   _find_peaks(self, signal, height) -> List[int]
-    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 366
-  _analyze_resonance_peak(self, spectrum, peak_idx) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 393
-  _compute_quality_factor(self, spectrum, peak_idx) -> float
-    File: ./bhlff/models/level_c/boundary/admittance_analysis.py, Line: 426
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py, Line: 88
+  _analyze_resonance_peak(self, spectrum, peak_index) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py, Line: 116
+  _compute_quality_factor(self, spectrum, peak_index) -> float
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py, Line: 158
+  _find_left_boundary(self, spectrum, peak_index, half_maximum) -> int
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py, Line: 196
+  _find_right_boundary(self, spectrum, peak_index, half_maximum) -> int
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py, Line: 219
+  _calculate_resonance_width(self, spectrum, peak_index) -> float
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py, Line: 242
+  _calculate_resonance_strength(self, spectrum, peak_index) -> float
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_resonance.py, Line: 270
 
 Class: RadialAnalyzer
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 42
+    File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 44
   analyze_radial_profile(self, domain, boundary, field) -> RadialProfile
-    File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 52
-  _compute_radial_profile(self, domain, boundary, field) -> Tuple[np.ndarray, np.ndarray]
-    File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 95
-  _compute_amplitude_at_radius(self, field, distances, radius, domain) -> float
-    File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 154
-  _create_spherical_shell_mask(self, distances, radius, domain) -> np.ndarray
-    File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 192
-  _find_local_maxima(self, radii, amplitudes) -> List[Tuple[float, float]]
-    File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 218
-  analyze_field_concentration(self, profile, boundary) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 244
-  _analyze_near_boundary_concentration(self, profile, boundary) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 281
-  _analyze_far_boundary_concentration(self, profile, boundary) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 325
-  _analyze_overall_concentration_pattern(self, profile) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 369
+    File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 62
+  analyze_field_concentration(self, domain, boundary, field) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 85
 
 Class: PinnedFieldEvolution
   __init__(self)
@@ -4728,6 +4768,102 @@ Class: PinnedSuppressionAnalyzer
   _compute_suppression_factors(self, time_evolution, pinning_params) -> List[float]
     File: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py, Line: 159
 
+Class: BeatingMLClassificationOptimizer
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 39
+  optimize_classification_parameters(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 58
+  _optimize_classification_parameters(self, envelope, max_iterations, tolerance) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 97
+  _validate_classification_optimization(self, optimization_results, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 148
+  _calculate_classification_performance(self, optimization_results, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 189
+  _initialize_classification_parameters(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 229
+  _adjust_classification_parameters(self, parameters, performance) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 248
+  _check_classification_convergence(self, current_performance, best_performance, tolerance) -> bool
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 279
+  _validate_classification_parameters(self, parameters) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 299
+  _validate_classification_performance(self, performance) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 328
+  _calculate_classification_overall_validation(self, parameter_validation, performance_validation) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 348
+  _calculate_classification_accuracy(self, parameters, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 382
+  _calculate_classification_precision(self, parameters, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 401
+  _calculate_classification_recall(self, parameters, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 420
+  _calculate_classification_f1_score(self, parameters, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 439
+
+Class: BeatingMLOptimizationCore
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 39
+  optimize_ml_parameters(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 58
+  _optimize_ml_parameters(self, envelope, max_iterations, tolerance) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 97
+  _validate_ml_optimization(self, optimization_results, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 148
+  _calculate_ml_performance(self, optimization_results, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 189
+  _adjust_parameters(self, parameters, performance) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 226
+  _check_convergence(self, current_performance, best_performance, tolerance) -> bool
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 254
+  _initialize_parameters(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 274
+  _validate_parameters(self, parameters) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 293
+  _validate_performance(self, performance) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 326
+  _calculate_overall_validation(self, parameter_validation, performance_validation) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 346
+  _calculate_accuracy(self, parameters, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 380
+  _calculate_precision(self, parameters, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 399
+  _calculate_recall(self, parameters, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 418
+  _calculate_f1_score(self, parameters, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 437
+
+Class: BeatingMLPredictionOptimizer
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 39
+  optimize_prediction_parameters(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 58
+  _optimize_prediction_parameters(self, envelope, max_iterations, tolerance) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 97
+  _validate_prediction_optimization(self, optimization_results, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 148
+  _calculate_prediction_performance(self, optimization_results, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 189
+  _initialize_prediction_parameters(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 229
+  _adjust_prediction_parameters(self, parameters, performance) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 248
+  _check_prediction_convergence(self, current_performance, best_performance, tolerance) -> bool
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 279
+  _validate_prediction_parameters(self, parameters) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 299
+  _validate_prediction_performance(self, performance) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 330
+  _calculate_prediction_overall_validation(self, parameter_validation, performance_validation) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 350
+  _calculate_prediction_accuracy(self, parameters, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 384
+  _calculate_prediction_precision(self, parameters, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 403
+  _calculate_prediction_recall(self, parameters, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 422
+  _calculate_prediction_f1_score(self, parameters, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 441
+
 Class: BeatingMLCore
   __init__(self, bvp_core)
     File: ./bhlff/models/level_c/beating/ml/beating_ml_core.py, Line: 36
@@ -4802,35 +4938,13 @@ Class: BeatingMLPatterns
 
 Class: BeatingMLOptimization
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 31
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 34
   optimize_ml_parameters(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 46
-  _optimize_ml_parameters(self, envelope, initial_params) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 87
-  _validate_ml_optimization(self, envelope, initial_params, optimized_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 127
-  _calculate_ml_performance(self, envelope, params) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 178
-  _adjust_parameters(self, params, performance) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 218
-  _check_convergence(self, current_params, initial_params) -> bool
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 267
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 58
   optimize_classification_parameters(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 295
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 78
   optimize_prediction_parameters(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 339
-  _optimize_classification_parameters(self, envelope, initial_params) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 381
-  _optimize_prediction_parameters(self, envelope, initial_params) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 410
-  _validate_classification_optimization(self, envelope, initial_params, optimized_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 441
-  _validate_prediction_optimization(self, envelope, initial_params, optimized_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 469
-  _calculate_classification_performance(self, envelope, params) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 497
-  _calculate_prediction_performance(self, envelope, params) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 509
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 98
 
 Class: PatternComparator
   __init__(self)
@@ -5964,6 +6078,34 @@ Class: ExcitationAnalyzer
   _compute_quality_factors(self, peaks, transmission_analysis) -> np.ndarray
     File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 413
 
+Class: PotentialLandscapeAnalyzer
+  __init__(self, domain, particles, system_params)
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py, Line: 42
+  analyze_potential_landscape(self, potential) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py, Line: 60
+  _find_potential_extrema(self, potential) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py, Line: 101
+  _find_local_minima(self, potential) -> List[Tuple[int, int, int]]
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py, Line: 142
+  _find_local_maxima(self, potential) -> List[Tuple[int, int, int]]
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py, Line: 169
+  _is_local_minimum(self, potential, i, j, k) -> bool
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py, Line: 196
+  _is_local_maximum(self, potential, i, j, k) -> bool
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py, Line: 232
+  _analyze_potential_barriers(self, potential) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py, Line: 268
+  _find_potential_barriers(self, potential) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py, Line: 297
+  _is_potential_barrier(self, potential, i, j, k) -> bool
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py, Line: 329
+  _analyze_potential_wells(self, potential) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py, Line: 370
+  _find_potential_wells(self, potential) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py, Line: 399
+  _is_potential_well(self, potential, i, j, k) -> bool
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py, Line: 431
+
 Class: PotentialComputationAnalyzer
   __init__(self, domain, particles, system_params)
     File: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py, Line: 42
@@ -6032,81 +6174,105 @@ Class: Particle
   is_weakly_damped(self) -> bool
     File: ./bhlff/models/level_f/multi_particle/data_structures.py, Line: 393
 
+Class: CollectiveModesFinder
+  __init__(self, domain, particles, system_params)
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 42
+  find_collective_modes(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 63
+  _initialize_collective_modes_analysis(self) -> None
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 100
+  _setup_dynamics_matrices(self) -> None
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 114
+  _create_mass_matrix(self) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 131
+  _create_stiffness_matrix(self) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 151
+  _setup_mode_analysis_methods(self) -> None
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 179
+  _compute_dynamics_matrix(self) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 193
+  _analyze_collective_modes(self, eigenvalues, eigenvectors) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 209
+  _analyze_mode_stability(self, eigenvalues) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 244
+  _analyze_mode_interactions(self, eigenvalues, eigenvectors) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 273
+  _calculate_mode_coupling(self, eigenvalues, eigenvectors) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 303
+  _calculate_mode_overlap(self, eigenvectors) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 329
+  _calculate_mode_correlation(self, eigenvectors) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 359
+  _calculate_interaction_strength(self, distance) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 390
+
+Class: PotentialOptimizationAnalyzer
+  __init__(self, domain, particles, system_params)
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py, Line: 42
+  optimize_potential(self, potential) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py, Line: 60
+  _optimize_particle_positions(self, potential) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py, Line: 107
+  _optimize_single_particle_position(self, particle, potential) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py, Line: 137
+  _calculate_potential_gradient(self, potential, position) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py, Line: 162
+  _calculate_position_improvement(self, optimized_positions, potential) -> float
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py, Line: 188
+  _optimize_interaction_parameters(self, potential) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py, Line: 209
+  _calculate_parameter_improvement(self, optimized_parameters, potential) -> float
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py, Line: 238
+  _optimize_system_configuration(self, potential) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py, Line: 259
+  _calculate_configuration_improvement(self, optimized_configuration, potential) -> float
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py, Line: 289
+  _calculate_optimization_improvement(self, potential, position_optimization, parameter_optimization, configuration_optimization) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py, Line: 310
+
+Class: CollectiveModesSpectrumAnalyzer
+  __init__(self, domain, particles, system_params)
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py, Line: 42
+  analyze_mode_spectrum(self, modes) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py, Line: 60
+  _analyze_frequency_distribution(self, frequencies) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py, Line: 117
+  _analyze_spectral_features(self, frequencies) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py, Line: 149
+  _calculate_spectral_density(self, frequencies) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py, Line: 173
+  _calculate_spectral_entropy(self, frequencies) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py, Line: 197
+  _calculate_spectral_skewness(self, frequencies) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py, Line: 225
+  _calculate_spectral_kurtosis(self, frequencies) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py, Line: 250
+  _find_spectral_gaps(self, frequencies) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py, Line: 275
+  _find_spectral_clusters(self, frequencies) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py, Line: 312
+  _find_spectral_peaks(self, frequencies) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py, Line: 364
+  _analyze_mode_spacing(self, frequencies) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py, Line: 401
+
 Class: PotentialAnalyzer
   __init__(self, domain, particles, system_params)
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 42
-  _initialize_potential_analysis(self) -> None
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 63
-  _setup_interaction_matrices(self) -> None
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 77
-  _setup_potential_functions(self) -> None
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 111
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 45
   compute_effective_potential(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 128
-  _compute_single_particle_potential(self, particle) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 160
-  _create_single_particle_potential(self, distances, particle) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 192
-  _compute_pair_interaction(self, particle_i, particle_j) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 213
-  _create_pair_potential(self, distances_i, distances_j, particle_i, particle_j) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 256
-  _compute_higher_order_interactions(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 284
-  _compute_three_particle_interaction(self, particle_i, particle_j, particle_k) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 309
-  _create_higher_order_potential(self, distances_i, distances_j, distances_k, particle_i, particle_j, particle_k) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 361
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 68
   analyze_potential_landscape(self, potential) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 388
-  _find_potential_extrema(self, potential) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 420
-  _analyze_potential_barriers(self, potential) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 465
-  _analyze_potential_wells(self, potential) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 491
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 84
   optimize_potential(self, potential) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 517
+    File: ./bhlff/models/level_f/multi_particle/potential_analysis.py, Line: 106
 
 Class: CollectiveModesAnalyzer
   __init__(self, domain, particles, system_params)
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 42
-  _initialize_collective_modes_analysis(self) -> None
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 63
-  _setup_dynamics_matrices(self) -> None
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 77
-  _setup_mode_analysis_methods(self) -> None
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 106
+    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 44
   find_collective_modes(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 123
-  _compute_dynamics_matrix(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 162
-  _analyze_collective_modes(self, eigenvalues, eigenvectors) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 180
-  _analyze_mode_stability(self, eigenvalues) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 212
-  _analyze_mode_interactions(self, eigenvalues, eigenvectors) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 247
-  _calculate_mode_coupling(self, eigenvalues, eigenvectors) -> float
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 278
-  _calculate_mode_overlap(self, eigenvectors) -> float
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 308
-  _calculate_mode_correlation(self, eigenvectors) -> float
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 339
+    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 66
   analyze_mode_spectrum(self, modes) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 371
-  _analyze_frequency_distribution(self, frequencies) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 405
-  _analyze_spectral_features(self, frequencies) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 436
-  _find_spectral_gaps(self, frequencies) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 468
-  _find_spectral_clusters(self, frequencies) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 498
-  _find_spectral_peaks(self, frequencies) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 543
-  _analyze_mode_spacing(self, frequencies) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 573
+    File: ./bhlff/models/level_f/multi_particle/collective_modes.py, Line: 83
 
 Class: PhaseTransitions
   __init__(self, system)

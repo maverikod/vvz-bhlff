@@ -194,8 +194,8 @@ class PotentialComputationAnalyzer:
         Returns:
             np.ndarray: Single-particle potential field.
         """
-        # Create potential based on particle properties
-        potential = particle.charge * np.exp(-distances / self.system_params.interaction_range)
+        # Create potential based on particle properties using step resonator model
+        potential = particle.charge * self._step_interaction_potential(distances)
         
         return potential
     
@@ -258,7 +258,7 @@ class PotentialComputationAnalyzer:
         """
         # Create pair potential based on particle interactions
         interaction_strength = particle_i.charge * particle_j.charge
-        potential = interaction_strength * np.exp(-(distances_i + distances_j) / self.system_params.interaction_range)
+        potential = interaction_strength * self._step_three_body_interaction_potential(distances_i, distances_j)
         
         return potential
     
@@ -382,6 +382,62 @@ class PotentialComputationAnalyzer:
         # Simplified interaction strength calculation
         # In practice, this would involve proper interaction calculation
         if distance < self.system_params.interaction_range:
-            return np.exp(-distance / self.system_params.interaction_range)
+            return self._step_interaction_potential(distance)
+        else:
+            return 0.0
+    
+    def _step_interaction_potential(self, distance: float) -> float:
+        """
+        Step function interaction potential.
+        
+        Physical Meaning:
+            Implements step resonator model for particle interactions instead of
+            exponential decay. This follows 7D BVP theory principles where
+            interactions occur through semi-transparent boundaries.
+            
+        Mathematical Foundation:
+            V(r) = V₀ * Θ(r_cutoff - r) where Θ is the Heaviside step function
+            and r_cutoff is the interaction cutoff distance.
+            
+        Args:
+            distance: Distance between particles
+            
+        Returns:
+            Step function interaction potential
+        """
+        # Step resonator parameters
+        interaction_cutoff = self.system_params.interaction_range
+        interaction_strength = self.system_params.get("interaction_strength", 1.0)
+        
+        # Step function interaction: 1.0 below cutoff, 0.0 above
+        return interaction_strength if distance < interaction_cutoff else 0.0
+    
+    def _step_three_body_interaction_potential(self, distance_i: float, distance_j: float) -> float:
+        """
+        Step function three-body interaction potential.
+        
+        Physical Meaning:
+            Implements step resonator model for three-body interactions instead of
+            exponential decay. This follows 7D BVP theory principles where
+            multi-body interactions occur through semi-transparent boundaries.
+            
+        Mathematical Foundation:
+            V(r₁,r₂) = V₀ * Θ(r_cutoff - r₁) * Θ(r_cutoff - r₂) where Θ is the Heaviside step function
+            and r_cutoff is the interaction cutoff distance.
+            
+        Args:
+            distance_i: Distance to first particle
+            distance_j: Distance to second particle
+            
+        Returns:
+            Step function three-body interaction potential
+        """
+        # Step resonator parameters
+        interaction_cutoff = self.system_params.interaction_range
+        interaction_strength = self.system_params.get("interaction_strength", 1.0)
+        
+        # Step function three-body interaction: 1.0 if both distances below cutoff, 0.0 otherwise
+        if distance_i < interaction_cutoff and distance_j < interaction_cutoff:
+            return interaction_strength
         else:
             return 0.0

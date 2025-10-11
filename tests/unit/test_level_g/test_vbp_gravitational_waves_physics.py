@@ -48,10 +48,11 @@ class TestVBPGravitationalWavesPhysics:
         # Create a simple 7D envelope solution (smaller size)
         solution = np.zeros((8, 8, 8, 8, 8, 8, 8), dtype=complex)
 
-        # Add envelope oscillations
+        # Add envelope oscillations (test data generation)
         for i in range(8):
             for j in range(8):
                 for k in range(8):
+                    # Test data: complex exponential for phase field testing (for comparison with 7D BVP theory)
                     solution[i, j, k, :, :, :, :] = np.exp(
                         1j * 2 * np.pi * (i + j + k) / 8
                     )

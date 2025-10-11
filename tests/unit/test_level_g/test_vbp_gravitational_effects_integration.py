@@ -55,7 +55,7 @@ class TestVBPGravitationalEffectsIntegration:
                 # Create a simple 7D phase field (smaller size)
                 self.phase_field = np.zeros((8, 8, 8, 8, 8, 8, 8), dtype=complex)
 
-                # Add spatial variation
+                # Add spatial variation (test data generation for comparison with 7D BVP theory)
                 for i in range(8):
                     for j in range(8):
                         for k in range(8):

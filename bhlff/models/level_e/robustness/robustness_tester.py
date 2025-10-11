@@ -2,7 +2,7 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-Robustness testing facade for Level E experiments.
+Main robustness testing facade for Level E experiments.
 
 This module provides the main RobustnessTester class that coordinates
 comprehensive robustness testing for the 7D phase field theory.
@@ -24,13 +24,18 @@ Example:
     >>> results = tester.test_noise_robustness(noise_levels)
 """
 
+import numpy as np
 from typing import Dict, Any, List
-from .robustness import RobustnessTester as CoreRobustnessTester
+import json
+
+from .noise_testing import NoiseRobustnessTester
+from .parameter_testing import ParameterRobustnessTester
+from .geometry_testing import GeometryRobustnessTester
 
 
 class RobustnessTester:
     """
-    Robustness testing facade for system stability.
+    Main robustness testing facade for system stability.
 
     Physical Meaning:
         Investigates how the system responds to external perturbations,
@@ -46,7 +51,13 @@ class RobustnessTester:
             base_config: Base configuration for testing
         """
         self.base_config = base_config
-        self.core_tester = CoreRobustnessTester(base_config)
+        self._setup_testing_modules()
+
+    def _setup_testing_modules(self) -> None:
+        """Setup specialized testing modules."""
+        self.noise_tester = NoiseRobustnessTester(base_config)
+        self.parameter_tester = ParameterRobustnessTester(base_config)
+        self.geometry_tester = GeometryRobustnessTester(base_config)
 
     def test_noise_robustness(self, noise_levels: List[float]) -> Dict[str, Any]:
         """
@@ -67,7 +78,7 @@ class RobustnessTester:
         Returns:
             Analysis of degradation vs noise level
         """
-        return self.core_tester.test_noise_robustness(noise_levels)
+        return self.noise_tester.test_noise_robustness(noise_levels)
 
     def test_parameter_uncertainty(
         self, uncertainty_ranges: Dict[str, float]
@@ -85,7 +96,7 @@ class RobustnessTester:
         Returns:
             Analysis of parameter sensitivity and stability
         """
-        return self.core_tester.test_parameter_uncertainty(uncertainty_ranges)
+        return self.parameter_tester.test_parameter_uncertainty(uncertainty_ranges)
 
     def test_geometry_perturbations(
         self, perturbation_types: List[str]
@@ -103,7 +114,7 @@ class RobustnessTester:
         Returns:
             Analysis of geometry sensitivity
         """
-        return self.core_tester.test_geometry_perturbations(perturbation_types)
+        return self.geometry_tester.test_geometry_perturbations(perturbation_types)
 
     def save_results(self, results: Dict[str, Any], filename: str) -> None:
         """
@@ -113,4 +124,19 @@ class RobustnessTester:
             results: Test results dictionary
             filename: Output filename
         """
-        return self.core_tester.save_results(results, filename)
+        # Convert numpy arrays to lists for JSON serialization
+        serializable_results = self._make_serializable(results)
+
+        with open(filename, "w") as f:
+            json.dump(serializable_results, f, indent=2)
+
+    def _make_serializable(self, obj: Any) -> Any:
+        """Convert numpy arrays to lists for JSON serialization."""
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, dict):
+            return {key: self._make_serializable(value) for key, value in obj.items()}
+        elif isinstance(obj, list):
+            return [self._make_serializable(item) for item in obj]
+        else:
+            return obj

@@ -5659,26 +5659,93 @@ classes:
     - _analyze_efficiency
     - _analyze_scalability_limits
     name: ScalabilityAnalyzer
-  ./bhlff/models/level_e/performance/scaling_analysis.py::ScalingAnalyzer:
+  ./bhlff/models/level_e/performance/scaling/__init__.py::ScalingAnalyzer:
     bases: []
-    docstring: "Scaling analysis for computational efficiency.\n\nPhysical Meaning:\n\
-      \    Analyzes the relationship between computational cost and\n    problem size\
-      \ in the 7D phase field simulations, providing\n    optimization recommendations."
+    docstring: "Comprehensive scaling analysis for computational efficiency.\n\nPhysical\
+      \ Meaning:\n    Analyzes the relationship between computational cost and\n \
+      \   problem size in the 7D phase field simulations, providing\n    optimization\
+      \ recommendations.\n\nMathematical Foundation:\n    Implements comprehensive\
+      \ scaling analysis:\n    - Base scaling: fundamental scaling behavior analysis\n\
+      \    - Performance scaling: performance-resource relationships\n    - Optimization\
+      \ scaling: optimization opportunity identification"
     file: ''
     line: 0
     methods:
     - __init__
     - analyze_scaling_behavior
+    - _create_scaling_summary
+    name: ScalingAnalyzer
+  ./bhlff/models/level_e/performance/scaling/base_scaling.py::BaseScalingAnalyzer:
+    bases: []
+    docstring: "Base scaling analysis for computational efficiency.\n\nPhysical Meaning:\n\
+      \    Provides fundamental scaling analysis capabilities\n    for evaluating\
+      \ computational efficiency in 7D\n    phase field simulations."
+    file: ''
+    line: 0
+    methods:
+    - __init__
+    - analyze_base_scaling
     - _test_grid_scaling
     - _test_domain_scaling
     - _test_time_scaling
-    - _analyze_overall_scaling
-    - _compute_overall_assessment
-    - _run_simulation
-    - _compute_energy_functional
-    - _compute_topological_charge
-    - _compute_convergence_rate
-    - _compute_accuracy_metrics
+    - _compute_scaling_exponent
+    - _classify_scaling
+    name: BaseScalingAnalyzer
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::OptimizationScalingAnalyzer:
+    bases: []
+    docstring: "Optimization scaling analysis for computational efficiency.\n\nPhysical\
+      \ Meaning:\n    Identifies optimization opportunities and provides\n    strategies\
+      \ for improving computational efficiency\n    in 7D phase field simulations."
+    file: ''
+    line: 0
+    methods:
+    - __init__
+    - analyze_optimization_scaling
+    - _analyze_algorithm_optimization
+    - _analyze_memory_optimization
+    - _analyze_parallel_optimization
+    - _analyze_overall_optimization
+    - _identify_optimization_strategies
+    - _identify_memory_optimization_strategies
+    - _identify_parallel_optimization_strategies
+    - _compute_optimization_roi
+    - _create_optimization_roadmap
+    - _compute_scaling_exponent
+    - _compute_optimization_grade
+    name: OptimizationScalingAnalyzer
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::PerformanceScalingAnalyzer:
+    bases: []
+    docstring: "Performance scaling analysis for computational efficiency.\n\nPhysical\
+      \ Meaning:\n    Analyzes the relationship between computational\n    performance\
+      \ and problem complexity in 7D phase\n    field simulations."
+    file: ''
+    line: 0
+    methods:
+    - __init__
+    - analyze_performance_scaling
+    - _analyze_cpu_scaling
+    - _analyze_memory_scaling
+    - _analyze_complexity_scaling
+    - _analyze_overall_performance
+    - _compute_scaling_exponent
+    - _compute_cpu_efficiency
+    - _compute_efficiency_trend
+    - _classify_scaling
+    - _compute_performance_grade
+    name: PerformanceScalingAnalyzer
+  ./bhlff/models/level_e/performance/scaling_analysis.py::ScalingAnalyzer:
+    bases: []
+    docstring: "Scaling analysis facade for computational efficiency.\n\nPhysical\
+      \ Meaning:\n    Provides a unified interface for comprehensive scaling\n   \
+      \ analysis in 7D phase field simulations, including base\n    scaling, performance\
+      \ scaling, and optimization analysis.\n\nMathematical Foundation:\n    Implements\
+      \ comprehensive scaling analysis through\n    specialized modules for different\
+      \ aspects of scaling\n    behavior."
+    file: ''
+    line: 0
+    methods:
+    - __init__
+    - analyze_scaling_behavior
     name: ScalingAnalyzer
   ./bhlff/models/level_e/performance_analysis.py::PerformanceAnalyzer:
     bases: []
@@ -5691,6 +5758,12 @@ classes:
     - __init__
     - _setup_performance_modules
     - analyze_performance
+    - analyze_execution_time
+    - analyze_memory_usage
+    - analyze_cpu_usage
+    - analyze_gpu_usage
+    - analyze_performance_optimization
+    - generate_performance_report
     name: PerformanceAnalyzer
   ./bhlff/models/level_e/phase_mapping.py::PhaseMapper:
     bases: []
@@ -5711,7 +5784,7 @@ classes:
     - save_results
     - _make_serializable
     name: PhaseMapper
-  ./bhlff/models/level_e/phase_mapping/boundary_analysis.py::BoundaryAnalyzer:
+  ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py::BoundaryAnalyzer:
     bases: []
     docstring: "Boundary analysis for regime transitions.\n\nPhysical Meaning:\n \
       \   Analyzes boundaries between different system behavior\n    regimes in parameter\
@@ -5725,7 +5798,7 @@ classes:
     - _compute_regime_separation
     - _find_boundary_points
     name: BoundaryAnalyzer
-  ./bhlff/models/level_e/phase_mapping/regime_classification.py::RegimeClassifier:
+  ./bhlff/models/level_e/phase_mapping_components/regime_classification.py::RegimeClassifier:
     bases: []
     docstring: "Regime classification for system behavior classification.\n\nPhysical\
       \ Meaning:\n    Classifies system behavior regimes in parameter space,\n   \
@@ -5743,7 +5816,7 @@ classes:
     - _classify_frozen
     - _classify_leaky
     name: RegimeClassifier
-  ./bhlff/models/level_e/phase_mapping/resonance_analysis.py::ResonanceAnalyzer:
+  ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py::ResonanceAnalyzer:
     bases: []
     docstring: "Resonance analysis for classification.\n\nPhysical Meaning:\n    Analyzes\
       \ resonances to distinguish between emergent\n    and fundamental types based\
@@ -9517,7 +9590,7 @@ classes:
     name: LevelBFundamentalPropertiesTests
   ./tests/unit/test_level_b/test_simple_level_b.py::TestSimpleLevelB:
     bases:
-    - <ast.Attribute object at 0x702d6c689f90>
+    - <ast.Attribute object at 0x7adcbd3e61d0>
     docstring: "Simple Level B tests for fundamental properties.\n\nPhysical Meaning:\n\
       \    Tests the basic functionality of Level B analysis tools,\n    validating\
       \ that the power law analysis works correctly\n    with analytical test solutions."
@@ -13341,7 +13414,7 @@ files:
     docstring: ''
     functions_count: 0
     imports_count: 0
-    lines: 88
+    lines: 178
     path: ./bhlff/models/level_e/performance/benchmark_tests.py
     size: 0
   ./bhlff/models/level_e/performance/optimization.py:
@@ -13365,7 +13438,7 @@ files:
     docstring: ''
     functions_count: 0
     imports_count: 0
-    lines: 125
+    lines: 215
     path: ./bhlff/models/level_e/performance/performance_analyzer.py
     size: 0
   ./bhlff/models/level_e/performance/profiling.py:
@@ -13392,12 +13465,44 @@ files:
     lines: 124
     path: ./bhlff/models/level_e/performance/scalability_analysis.py
     size: 0
+  ./bhlff/models/level_e/performance/scaling/__init__.py:
+    classes_count: 0
+    docstring: ''
+    functions_count: 0
+    imports_count: 0
+    lines: 110
+    path: ./bhlff/models/level_e/performance/scaling/__init__.py
+    size: 0
+  ./bhlff/models/level_e/performance/scaling/base_scaling.py:
+    classes_count: 0
+    docstring: ''
+    functions_count: 0
+    imports_count: 0
+    lines: 186
+    path: ./bhlff/models/level_e/performance/scaling/base_scaling.py
+    size: 0
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py:
+    classes_count: 0
+    docstring: ''
+    functions_count: 0
+    imports_count: 0
+    lines: 329
+    path: ./bhlff/models/level_e/performance/scaling/optimization_scaling.py
+    size: 0
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py:
+    classes_count: 0
+    docstring: ''
+    functions_count: 0
+    imports_count: 0
+    lines: 274
+    path: ./bhlff/models/level_e/performance/scaling/performance_scaling.py
+    size: 0
   ./bhlff/models/level_e/performance/scaling_analysis.py:
     classes_count: 0
     docstring: ''
     functions_count: 0
     imports_count: 0
-    lines: 426
+    lines: 52
     path: ./bhlff/models/level_e/performance/scaling_analysis.py
     size: 0
   ./bhlff/models/level_e/performance_analysis.py:
@@ -13405,7 +13510,7 @@ files:
     docstring: ''
     functions_count: 0
     imports_count: 0
-    lines: 73
+    lines: 247
     path: ./bhlff/models/level_e/performance_analysis.py
     size: 0
   ./bhlff/models/level_e/phase_mapping.py:
@@ -13416,37 +13521,37 @@ files:
     lines: 280
     path: ./bhlff/models/level_e/phase_mapping.py
     size: 0
-  ./bhlff/models/level_e/phase_mapping/__init__.py:
+  ./bhlff/models/level_e/phase_mapping_components/__init__.py:
     classes_count: 0
     docstring: ''
     functions_count: 0
     imports_count: 0
     lines: 3
-    path: ./bhlff/models/level_e/phase_mapping/__init__.py
+    path: ./bhlff/models/level_e/phase_mapping_components/__init__.py
     size: 0
-  ./bhlff/models/level_e/phase_mapping/boundary_analysis.py:
+  ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py:
     classes_count: 0
     docstring: ''
     functions_count: 0
     imports_count: 0
     lines: 139
-    path: ./bhlff/models/level_e/phase_mapping/boundary_analysis.py
+    path: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py
     size: 0
-  ./bhlff/models/level_e/phase_mapping/regime_classification.py:
+  ./bhlff/models/level_e/phase_mapping_components/regime_classification.py:
     classes_count: 0
     docstring: ''
     functions_count: 0
     imports_count: 0
     lines: 262
-    path: ./bhlff/models/level_e/phase_mapping/regime_classification.py
+    path: ./bhlff/models/level_e/phase_mapping_components/regime_classification.py
     size: 0
-  ./bhlff/models/level_e/phase_mapping/resonance_analysis.py:
+  ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py:
     classes_count: 0
     docstring: ''
     functions_count: 0
     imports_count: 0
     lines: 166
-    path: ./bhlff/models/level_e/phase_mapping/resonance_analysis.py
+    path: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py
     size: 0
   ./bhlff/models/level_e/robustness_tests.py:
     classes_count: 0
@@ -17794,7 +17899,7 @@ functions:
     - self
     - source
     decorators:
-    - <ast.Call object at 0x702d6c0aadd0>
+    - <ast.Call object at 0x7adcbcd26150>
     docstring: "Solve 7D BVP envelope equation.\n\nPhysical Meaning:\n    Computes\
       \ the envelope a(x,φ,t) of the Base High-Frequency Field\n    in 7D space-time\
       \ M₇ = ℝ³ₓ × \U0001D54B³_φ × ℝₜ that modulates the high-frequency carrier.\n\
@@ -17816,7 +17921,7 @@ functions:
     - self
     - source
     decorators:
-    - <ast.Call object at 0x702d6c023b90>
+    - <ast.Call object at 0x7adcbcccfcd0>
     docstring: "Solve linearized 7D BVP envelope equation.\n\nPhysical Meaning:\n\
       \    Solves the linearized version of the envelope equation\n    ∇·(κ₀∇a) +\
       \ k₀²χ'a = s(x,φ,t) for initial guess generation.\n\nMathematical Foundation:\n\
@@ -20831,7 +20936,7 @@ functions:
     - self
     - source
     decorators:
-    - <ast.Call object at 0x702d6c1a4450>
+    - <ast.Call object at 0x7adcbce32f50>
     docstring: "Solve linearized 7D BVP envelope equation.\n\nPhysical Meaning:\n\
       \    Solves the linearized version of the envelope equation\n    ∇·(κ₀∇a) +\
       \ k₀²χ'a = s(x,φ,t) for initial guess generation.\n\nMathematical Foundation:\n\
@@ -20935,7 +21040,7 @@ functions:
     - self
     - envelope
     decorators:
-    - <ast.Call object at 0x702d6c0e4150>
+    - <ast.Call object at 0x7adcbcd65750>
     docstring: "Compute nonlinear coefficients as functions of field amplitude.\n\n\
       Physical Meaning:\n    Computes the nonlinear stiffness κ(|a|) and susceptibility\
       \ χ(|a|)\n    as functions of the local field amplitude, ensuring proper\n \
@@ -22396,7 +22501,7 @@ functions:
   ./bhlff/core/bvp/memory_decorator.py::wrapper:
     args: []
     decorators:
-    - <ast.Call object at 0x702d6c055d10>
+    - <ast.Call object at 0x7adcbcd46350>
     docstring: null
     file: ''
     is_async: false
@@ -23042,7 +23147,7 @@ functions:
   ./bhlff/core/bvp/physical_validation_decorator.py::wrapper:
     args: []
     decorators:
-    - <ast.Call object at 0x702d6c0edb90>
+    - <ast.Call object at 0x7adcbcba8890>
     docstring: null
     file: ''
     is_async: false
@@ -24543,7 +24648,7 @@ functions:
     - self
     - field
     decorators:
-    - <ast.Call object at 0x702d6c07a190>
+    - <ast.Call object at 0x7adcbcce6e10>
     docstring: "Analyze power law behavior in the field.\n\nPhysical Meaning:\n  \
       \  Computes power law exponents and scaling behavior\n    in the BVP field according\
       \ to the theoretical framework.\n\nMathematical Foundation:\n    Analyzes the\
@@ -26243,7 +26348,7 @@ functions:
     - self
     - phase
     decorators:
-    - <ast.Call object at 0x702d6c077cd0>
+    - <ast.Call object at 0x7adcbcd642d0>
     docstring: "Find topological defects in the phase field with CUDA optimization.\n\
       \nPhysical Meaning:\n    Identifies points where the phase field has singularities\n\
       \    or rapid changes, indicating topological defects.\n\nMathematical Foundation:\n\
@@ -47364,162 +47469,409 @@ functions:
     line: 0
     name: analyze_scalability
     returns: null
-  ./bhlff/models/level_e/performance/scaling_analysis.py::__init__:
+  ./bhlff/models/level_e/performance/scaling/__init__.py::__init__:
     args:
     - self
     - config
     decorators: []
-    docstring: "Initialize scaling analyzer.\n\nArgs:\n    config: Configuration dictionary"
+    docstring: "Initialize comprehensive scaling analyzer.\n\nArgs:\n    config: Configuration\
+      \ dictionary"
     file: ''
     is_async: false
     line: 0
     name: __init__
     returns: null
-  ./bhlff/models/level_e/performance/scaling_analysis.py::_analyze_overall_scaling:
+  ./bhlff/models/level_e/performance/scaling/__init__.py::_create_scaling_summary:
     args:
     - self
-    - scaling_results
+    - base_results
+    - performance_results
+    - optimization_results
     decorators: []
-    docstring: Analyze overall scaling behavior.
+    docstring: Create comprehensive scaling summary.
     file: ''
     is_async: false
     line: 0
-    name: _analyze_overall_scaling
+    name: _create_scaling_summary
     returns: null
-  ./bhlff/models/level_e/performance/scaling_analysis.py::_compute_accuracy_metrics:
-    args:
-    - self
-    - solution
-    - domain
-    - constants
-    decorators: []
-    docstring: Compute accuracy metrics for the solution.
-    file: ''
-    is_async: false
-    line: 0
-    name: _compute_accuracy_metrics
-    returns: float
-  ./bhlff/models/level_e/performance/scaling_analysis.py::_compute_convergence_rate:
-    args:
-    - self
-    - solution
-    - tolerance
-    decorators: []
-    docstring: Compute convergence rate for the solution.
-    file: ''
-    is_async: false
-    line: 0
-    name: _compute_convergence_rate
-    returns: float
-  ./bhlff/models/level_e/performance/scaling_analysis.py::_compute_energy_functional:
-    args:
-    - self
-    - solution
-    - domain
-    - constants
-    decorators: []
-    docstring: Compute energy functional for the solution.
-    file: ''
-    is_async: false
-    line: 0
-    name: _compute_energy_functional
-    returns: float
-  ./bhlff/models/level_e/performance/scaling_analysis.py::_compute_overall_assessment:
-    args:
-    - self
-    - assessments
-    decorators: []
-    docstring: Compute overall assessment from individual assessments.
-    file: ''
-    is_async: false
-    line: 0
-    name: _compute_overall_assessment
-    returns: str
-  ./bhlff/models/level_e/performance/scaling_analysis.py::_compute_topological_charge:
-    args:
-    - self
-    - solution
-    - domain
-    decorators: []
-    docstring: Compute topological charge for the solution.
-    file: ''
-    is_async: false
-    line: 0
-    name: _compute_topological_charge
-    returns: float
-  ./bhlff/models/level_e/performance/scaling_analysis.py::_run_simulation:
-    args:
-    - self
-    - config
-    decorators: []
-    docstring: "Run simulation with given configuration.\n\nPhysical Meaning:\n  \
-      \  Executes the 7D phase field simulation with specified\n    parameters and\
-      \ returns key observables using the complete\n    7D BVP framework with proper\
-      \ phase field dynamics.\n\nMathematical Foundation:\n    Implements full 7D\
-      \ BVP simulation:\n    - Domain7D: 7D space-time domain M₇ = ℝ³ₓ × \U0001D54B\
-      ³_φ × ℝₜ\n    - FFTSolver7D: Spectral solver for fractional Laplacian equation\n\
-      \    - PowerLawAnalyzer: Analysis of power law tails and scaling\n    - Phase\
-      \ field evolution: ∂a/∂t = L_β a + nonlinear_terms\n    - Energy functional:\
-      \ E = ∫ [μ|∇a|² + λ|a|² + nonlinear] d³x d³φ dt"
-    file: ''
-    is_async: false
-    line: 0
-    name: _run_simulation
-    returns: null
-  ./bhlff/models/level_e/performance/scaling_analysis.py::_test_domain_scaling:
-    args:
-    - self
-    - domain_sizes
-    decorators: []
-    docstring: Test scaling with domain size.
-    file: ''
-    is_async: false
-    line: 0
-    name: _test_domain_scaling
-    returns: null
-  ./bhlff/models/level_e/performance/scaling_analysis.py::_test_grid_scaling:
-    args:
-    - self
-    - grid_sizes
-    decorators: []
-    docstring: Test scaling with grid size.
-    file: ''
-    is_async: false
-    line: 0
-    name: _test_grid_scaling
-    returns: null
-  ./bhlff/models/level_e/performance/scaling_analysis.py::_test_time_scaling:
-    args:
-    - self
-    - time_ranges
-    decorators: []
-    docstring: Test scaling with time range.
-    file: ''
-    is_async: false
-    line: 0
-    name: _test_time_scaling
-    returns: null
-  ./bhlff/models/level_e/performance/scaling_analysis.py::analyze_scaling_behavior:
+  ./bhlff/models/level_e/performance/scaling/__init__.py::analyze_scaling_behavior:
     args:
     - self
     decorators: []
-    docstring: Analyze computational scaling behavior.
+    docstring: Analyze comprehensive scaling behavior.
     file: ''
     is_async: false
     line: 0
     name: analyze_scaling_behavior
     returns: null
-  ./bhlff/models/level_e/performance/scaling_analysis.py::power_law:
+  ./bhlff/models/level_e/performance/scaling/base_scaling.py::__init__:
     args:
-    - t
-    - a
-    - b
+    - self
+    - config
     decorators: []
-    docstring: null
+    docstring: "Initialize base scaling analyzer.\n\nArgs:\n    config: Configuration\
+      \ dictionary"
     file: ''
     is_async: false
     line: 0
-    name: power_law
+    name: __init__
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/base_scaling.py::_classify_scaling:
+    args:
+    - self
+    - exponent
+    decorators: []
+    docstring: Classify scaling behavior based on exponent.
+    file: ''
+    is_async: false
+    line: 0
+    name: _classify_scaling
+    returns: str
+  ./bhlff/models/level_e/performance/scaling/base_scaling.py::_compute_scaling_exponent:
+    args:
+    - self
+    - sizes
+    - times
+    decorators: []
+    docstring: Compute scaling exponent from size-time relationship.
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_scaling_exponent
+    returns: float
+  ./bhlff/models/level_e/performance/scaling/base_scaling.py::_test_domain_scaling:
+    args:
+    - self
+    - domain_sizes
+    decorators: []
+    docstring: Test scaling with respect to domain size.
+    file: ''
+    is_async: false
+    line: 0
+    name: _test_domain_scaling
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/base_scaling.py::_test_grid_scaling:
+    args:
+    - self
+    - grid_sizes
+    decorators: []
+    docstring: Test scaling with respect to grid size.
+    file: ''
+    is_async: false
+    line: 0
+    name: _test_grid_scaling
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/base_scaling.py::_test_time_scaling:
+    args:
+    - self
+    - time_ranges
+    decorators: []
+    docstring: Test scaling with respect to time range.
+    file: ''
+    is_async: false
+    line: 0
+    name: _test_time_scaling
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/base_scaling.py::analyze_base_scaling:
+    args:
+    - self
+    decorators: []
+    docstring: Analyze base scaling behavior.
+    file: ''
+    is_async: false
+    line: 0
+    name: analyze_base_scaling
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::__init__:
+    args:
+    - self
+    - config
+    decorators: []
+    docstring: "Initialize optimization scaling analyzer.\n\nArgs:\n    config: Configuration\
+      \ dictionary"
+    file: ''
+    is_async: false
+    line: 0
+    name: __init__
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::_analyze_algorithm_optimization:
+    args:
+    - self
+    - problem_sizes
+    decorators: []
+    docstring: Analyze algorithm optimization opportunities.
+    file: ''
+    is_async: false
+    line: 0
+    name: _analyze_algorithm_optimization
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::_analyze_memory_optimization:
+    args:
+    - self
+    - problem_sizes
+    decorators: []
+    docstring: Analyze memory optimization opportunities.
+    file: ''
+    is_async: false
+    line: 0
+    name: _analyze_memory_optimization
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::_analyze_overall_optimization:
+    args:
+    - self
+    - optimization_results
+    decorators: []
+    docstring: Analyze overall optimization opportunities.
+    file: ''
+    is_async: false
+    line: 0
+    name: _analyze_overall_optimization
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::_analyze_parallel_optimization:
+    args:
+    - self
+    - optimization_levels
+    decorators: []
+    docstring: Analyze parallel optimization opportunities.
+    file: ''
+    is_async: false
+    line: 0
+    name: _analyze_parallel_optimization
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::_compute_optimization_grade:
+    args:
+    - self
+    - efficiency
+    decorators: []
+    docstring: Compute optimization grade based on efficiency.
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_optimization_grade
+    returns: str
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::_compute_optimization_roi:
+    args:
+    - self
+    - optimization_results
+    decorators: []
+    docstring: Compute optimization return on investment.
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_optimization_roi
+    returns: float
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::_compute_scaling_exponent:
+    args:
+    - self
+    - sizes
+    - times
+    decorators: []
+    docstring: Compute scaling exponent from size-time relationship.
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_scaling_exponent
+    returns: float
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::_create_optimization_roadmap:
+    args:
+    - self
+    - priorities
+    decorators: []
+    docstring: Create optimization roadmap based on priorities.
+    file: ''
+    is_async: false
+    line: 0
+    name: _create_optimization_roadmap
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::_identify_memory_optimization_strategies:
+    args:
+    - self
+    - opportunities
+    decorators: []
+    docstring: Identify memory optimization strategies.
+    file: ''
+    is_async: false
+    line: 0
+    name: _identify_memory_optimization_strategies
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::_identify_optimization_strategies:
+    args:
+    - self
+    - sizes
+    - times
+    decorators: []
+    docstring: Identify optimization strategies based on performance data.
+    file: ''
+    is_async: false
+    line: 0
+    name: _identify_optimization_strategies
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::_identify_parallel_optimization_strategies:
+    args:
+    - self
+    - levels
+    - efficiency
+    decorators: []
+    docstring: Identify parallel optimization strategies.
+    file: ''
+    is_async: false
+    line: 0
+    name: _identify_parallel_optimization_strategies
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::analyze_optimization_scaling:
+    args:
+    - self
+    decorators: []
+    docstring: Analyze optimization scaling opportunities.
+    file: ''
+    is_async: false
+    line: 0
+    name: analyze_optimization_scaling
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::__init__:
+    args:
+    - self
+    - config
+    decorators: []
+    docstring: "Initialize performance scaling analyzer.\n\nArgs:\n    config: Configuration\
+      \ dictionary"
+    file: ''
+    is_async: false
+    line: 0
+    name: __init__
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::_analyze_complexity_scaling:
+    args:
+    - self
+    - complexity_levels
+    decorators: []
+    docstring: Analyze complexity scaling behavior.
+    file: ''
+    is_async: false
+    line: 0
+    name: _analyze_complexity_scaling
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::_analyze_cpu_scaling:
+    args:
+    - self
+    - problem_sizes
+    decorators: []
+    docstring: Analyze CPU scaling behavior.
+    file: ''
+    is_async: false
+    line: 0
+    name: _analyze_cpu_scaling
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::_analyze_memory_scaling:
+    args:
+    - self
+    - problem_sizes
+    decorators: []
+    docstring: Analyze memory scaling behavior.
+    file: ''
+    is_async: false
+    line: 0
+    name: _analyze_memory_scaling
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::_analyze_overall_performance:
+    args:
+    - self
+    - performance_results
+    decorators: []
+    docstring: Analyze overall performance characteristics.
+    file: ''
+    is_async: false
+    line: 0
+    name: _analyze_overall_performance
+    returns: null
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::_classify_scaling:
+    args:
+    - self
+    - exponent
+    decorators: []
+    docstring: Classify scaling behavior based on exponent.
+    file: ''
+    is_async: false
+    line: 0
+    name: _classify_scaling
+    returns: str
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::_compute_cpu_efficiency:
+    args:
+    - self
+    - cpu_usage
+    decorators: []
+    docstring: Compute CPU efficiency from usage data.
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_cpu_efficiency
+    returns: float
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::_compute_efficiency_trend:
+    args:
+    - self
+    - sizes
+    - efficiencies
+    decorators: []
+    docstring: Compute efficiency trend from size-efficiency data.
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_efficiency_trend
+    returns: str
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::_compute_performance_grade:
+    args:
+    - self
+    - efficiency
+    decorators: []
+    docstring: Compute performance grade based on efficiency.
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_performance_grade
+    returns: str
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::_compute_scaling_exponent:
+    args:
+    - self
+    - sizes
+    - times
+    decorators: []
+    docstring: Compute scaling exponent from size-time relationship.
+    file: ''
+    is_async: false
+    line: 0
+    name: _compute_scaling_exponent
+    returns: float
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::analyze_performance_scaling:
+    args:
+    - self
+    decorators: []
+    docstring: Analyze performance scaling behavior.
+    file: ''
+    is_async: false
+    line: 0
+    name: analyze_performance_scaling
+    returns: null
+  ./bhlff/models/level_e/performance/scaling_analysis.py::__init__:
+    args:
+    - self
+    - config
+    decorators: []
+    docstring: "Initialize scaling analyzer facade.\n\nArgs:\n    config: Configuration\
+      \ dictionary"
+    file: ''
+    is_async: false
+    line: 0
+    name: __init__
+    returns: null
+  ./bhlff/models/level_e/performance/scaling_analysis.py::analyze_scaling_behavior:
+    args:
+    - self
+    decorators: []
+    docstring: Analyze comprehensive scaling behavior.
+    file: ''
+    is_async: false
+    line: 0
+    name: analyze_scaling_behavior
     returns: null
   ./bhlff/models/level_e/performance_analysis.py::__init__:
     args:
@@ -47543,6 +47895,50 @@ functions:
     line: 0
     name: _setup_performance_modules
     returns: null
+  ./bhlff/models/level_e/performance_analysis.py::analyze_cpu_usage:
+    args:
+    - self
+    - test_data
+    decorators: []
+    docstring: Analyze CPU usage performance.
+    file: ''
+    is_async: false
+    line: 0
+    name: analyze_cpu_usage
+    returns: null
+  ./bhlff/models/level_e/performance_analysis.py::analyze_execution_time:
+    args:
+    - self
+    - test_data
+    decorators: []
+    docstring: Analyze execution time performance.
+    file: ''
+    is_async: false
+    line: 0
+    name: analyze_execution_time
+    returns: null
+  ./bhlff/models/level_e/performance_analysis.py::analyze_gpu_usage:
+    args:
+    - self
+    - test_data
+    decorators: []
+    docstring: Analyze GPU usage performance.
+    file: ''
+    is_async: false
+    line: 0
+    name: analyze_gpu_usage
+    returns: null
+  ./bhlff/models/level_e/performance_analysis.py::analyze_memory_usage:
+    args:
+    - self
+    - test_data
+    decorators: []
+    docstring: Analyze memory usage performance.
+    file: ''
+    is_async: false
+    line: 0
+    name: analyze_memory_usage
+    returns: null
   ./bhlff/models/level_e/performance_analysis.py::analyze_performance:
     args:
     - self
@@ -47555,6 +47951,28 @@ functions:
     is_async: false
     line: 0
     name: analyze_performance
+    returns: null
+  ./bhlff/models/level_e/performance_analysis.py::analyze_performance_optimization:
+    args:
+    - self
+    - test_data
+    decorators: []
+    docstring: Analyze performance optimization opportunities.
+    file: ''
+    is_async: false
+    line: 0
+    name: analyze_performance_optimization
+    returns: null
+  ./bhlff/models/level_e/performance_analysis.py::generate_performance_report:
+    args:
+    - self
+    - test_data
+    decorators: []
+    docstring: Generate comprehensive performance report.
+    file: ''
+    is_async: false
+    line: 0
+    name: generate_performance_report
     returns: null
   ./bhlff/models/level_e/phase_mapping.py::__init__:
     args:
@@ -47676,7 +48094,7 @@ functions:
     line: 0
     name: save_results
     returns: null
-  ./bhlff/models/level_e/phase_mapping/boundary_analysis.py::__init__:
+  ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py::__init__:
     args:
     - self
     decorators: []
@@ -47687,7 +48105,7 @@ functions:
     line: 0
     name: __init__
     returns: null
-  ./bhlff/models/level_e/phase_mapping/boundary_analysis.py::_compute_regime_separation:
+  ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py::_compute_regime_separation:
     args:
     - self
     - regime1_data
@@ -47699,7 +48117,7 @@ functions:
     line: 0
     name: _compute_regime_separation
     returns: float
-  ./bhlff/models/level_e/phase_mapping/boundary_analysis.py::_find_boundary_points:
+  ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py::_find_boundary_points:
     args:
     - self
     - regime1_data
@@ -47711,7 +48129,7 @@ functions:
     line: 0
     name: _find_boundary_points
     returns: null
-  ./bhlff/models/level_e/phase_mapping/boundary_analysis.py::_find_regime_boundary:
+  ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py::_find_regime_boundary:
     args:
     - self
     - regime_data
@@ -47724,7 +48142,7 @@ functions:
     line: 0
     name: _find_regime_boundary
     returns: null
-  ./bhlff/models/level_e/phase_mapping/boundary_analysis.py::analyze_regime_boundaries:
+  ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py::analyze_regime_boundaries:
     args:
     - self
     - parameter_grid
@@ -47736,7 +48154,7 @@ functions:
     line: 0
     name: analyze_regime_boundaries
     returns: null
-  ./bhlff/models/level_e/phase_mapping/regime_classification.py::__init__:
+  ./bhlff/models/level_e/phase_mapping_components/regime_classification.py::__init__:
     args:
     - self
     - config
@@ -47748,7 +48166,7 @@ functions:
     line: 0
     name: __init__
     returns: null
-  ./bhlff/models/level_e/phase_mapping/regime_classification.py::_classify_frozen:
+  ./bhlff/models/level_e/phase_mapping_components/regime_classification.py::_classify_frozen:
     args:
     - self
     - simulation_result
@@ -47759,7 +48177,7 @@ functions:
     line: 0
     name: _classify_frozen
     returns: float
-  ./bhlff/models/level_e/phase_mapping/regime_classification.py::_classify_leaky:
+  ./bhlff/models/level_e/phase_mapping_components/regime_classification.py::_classify_leaky:
     args:
     - self
     - simulation_result
@@ -47770,7 +48188,7 @@ functions:
     line: 0
     name: _classify_leaky
     returns: float
-  ./bhlff/models/level_e/phase_mapping/regime_classification.py::_classify_power_law:
+  ./bhlff/models/level_e/phase_mapping_components/regime_classification.py::_classify_power_law:
     args:
     - self
     - simulation_result
@@ -47781,7 +48199,7 @@ functions:
     line: 0
     name: _classify_power_law
     returns: float
-  ./bhlff/models/level_e/phase_mapping/regime_classification.py::_classify_resonator:
+  ./bhlff/models/level_e/phase_mapping_components/regime_classification.py::_classify_resonator:
     args:
     - self
     - simulation_result
@@ -47792,7 +48210,7 @@ functions:
     line: 0
     name: _classify_resonator
     returns: float
-  ./bhlff/models/level_e/phase_mapping/regime_classification.py::_setup_classification_metrics:
+  ./bhlff/models/level_e/phase_mapping_components/regime_classification.py::_setup_classification_metrics:
     args:
     - self
     decorators: []
@@ -47802,7 +48220,7 @@ functions:
     line: 0
     name: _setup_classification_metrics
     returns: null
-  ./bhlff/models/level_e/phase_mapping/regime_classification.py::_setup_regime_classifiers:
+  ./bhlff/models/level_e/phase_mapping_components/regime_classification.py::_setup_regime_classifiers:
     args:
     - self
     decorators: []
@@ -47812,7 +48230,7 @@ functions:
     line: 0
     name: _setup_regime_classifiers
     returns: null
-  ./bhlff/models/level_e/phase_mapping/regime_classification.py::_simulate_parameter_point:
+  ./bhlff/models/level_e/phase_mapping_components/regime_classification.py::_simulate_parameter_point:
     args:
     - self
     - params
@@ -47826,7 +48244,7 @@ functions:
     line: 0
     name: _simulate_parameter_point
     returns: null
-  ./bhlff/models/level_e/phase_mapping/regime_classification.py::classify_single_point:
+  ./bhlff/models/level_e/phase_mapping_components/regime_classification.py::classify_single_point:
     args:
     - self
     - params
@@ -47837,7 +48255,7 @@ functions:
     line: 0
     name: classify_single_point
     returns: null
-  ./bhlff/models/level_e/phase_mapping/resonance_analysis.py::__init__:
+  ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py::__init__:
     args:
     - self
     decorators: []
@@ -47848,7 +48266,7 @@ functions:
     line: 0
     name: __init__
     returns: null
-  ./bhlff/models/level_e/phase_mapping/resonance_analysis.py::_compute_ecology_score:
+  ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py::_compute_ecology_score:
     args:
     - self
     - resonance
@@ -47859,7 +48277,7 @@ functions:
     line: 0
     name: _compute_ecology_score
     returns: float
-  ./bhlff/models/level_e/phase_mapping/resonance_analysis.py::_compute_shape_quality:
+  ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py::_compute_shape_quality:
     args:
     - self
     - resonance
@@ -47870,7 +48288,7 @@ functions:
     line: 0
     name: _compute_shape_quality
     returns: float
-  ./bhlff/models/level_e/phase_mapping/resonance_analysis.py::_compute_universality:
+  ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py::_compute_universality:
     args:
     - self
     - resonance
@@ -47881,7 +48299,7 @@ functions:
     line: 0
     name: _compute_universality
     returns: float
-  ./bhlff/models/level_e/phase_mapping/resonance_analysis.py::_summarize_classifications:
+  ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py::_summarize_classifications:
     args:
     - self
     - classifications
@@ -47892,7 +48310,7 @@ functions:
     line: 0
     name: _summarize_classifications
     returns: null
-  ./bhlff/models/level_e/phase_mapping/resonance_analysis.py::classify_resonances:
+  ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py::classify_resonances:
     args:
     - self
     - resonance_data
@@ -58096,7 +58514,7 @@ functions:
   ./tests/conftest.py::cleanup_cuda_memory:
     args: []
     decorators:
-    - <ast.Call object at 0x702d6c658710>
+    - <ast.Call object at 0x7adcbd358150>
     docstring: "Cleanup CUDA memory after each test.\n\nPhysical Meaning:\n    Ensures\
       \ CUDA memory is properly freed after each test\n    to prevent memory accumulation\
       \ and out-of-memory errors."
@@ -58156,7 +58574,7 @@ functions:
   ./tests/conftest.py::setup_test_environment:
     args: []
     decorators:
-    - <ast.Call object at 0x702d6c65a990>
+    - <ast.Call object at 0x7adcbd3e4790>
     docstring: "Setup test environment.\n\nPhysical Meaning:\n    Configures the test\
       \ environment for reproducible\n    physical validation testing."
     file: ''
@@ -58167,7 +58585,7 @@ functions:
   ./tests/conftest.py::test_amplitudes:
     args: []
     decorators:
-    - <ast.Attribute object at 0x702d6c697950>
+    - <ast.Attribute object at 0x7adcbd3e6e50>
     docstring: "Create test amplitudes for nonlinear testing.\n\nPhysical Meaning:\n\
       \    Provides a range of amplitudes for testing nonlinear\n    material properties\
       \ and effects."
@@ -58179,7 +58597,7 @@ functions:
   ./tests/conftest.py::test_bvp_constants:
     args: []
     decorators:
-    - <ast.Call object at 0x702d6c6ea690>
+    - <ast.Call object at 0x7adcbd2f2010>
     docstring: "Create BVP constants for testing.\n\nPhysical Meaning:\n    Provides\
       \ physically meaningful BVP constants for testing\n    the 7D BVP theory implementation.\n\
       \nMathematical Foundation:\n    Constants satisfying physical constraints:\n\
@@ -58192,7 +58610,7 @@ functions:
   ./tests/conftest.py::test_bvp_constants_extreme:
     args: []
     decorators:
-    - <ast.Call object at 0x702d6c6ea3d0>
+    - <ast.Call object at 0x7adcbd33fc90>
     docstring: "Create extreme BVP constants for testing.\n\nPhysical Meaning:\n \
       \   Provides extreme but physically valid BVP constants for\n    testing robustness\
       \ and edge cases."
@@ -58204,7 +58622,7 @@ functions:
   ./tests/conftest.py::test_domain_7d:
     args: []
     decorators:
-    - <ast.Call object at 0x702d6c6ea390>
+    - <ast.Call object at 0x7adcbd2f30d0>
     docstring: "Create 7D domain for testing.\n\nPhysical Meaning:\n    Provides a\
       \ 7D computational domain M₇ = ℝ³ₓ × \U0001D54B³_φ × ℝₜ\n    for testing the\
       \ BVP theory implementation.\n\nMathematical Foundation:\n    Domain with periodic\
@@ -58218,7 +58636,7 @@ functions:
   ./tests/conftest.py::test_domain_7d_high_res:
     args: []
     decorators:
-    - <ast.Call object at 0x702d6c6eb4d0>
+    - <ast.Call object at 0x7adcbd2f2a90>
     docstring: "Create high-resolution 7D domain for testing.\n\nPhysical Meaning:\n\
       \    Provides a high-resolution 7D computational domain for\n    testing spectral\
       \ accuracy and convergence."
@@ -58231,7 +58649,7 @@ functions:
     args:
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c695290>
+    - <ast.Attribute object at 0x7adcbd295c50>
     docstring: "Create analytical envelope for testing.\n\nPhysical Meaning:\n   \
       \ Provides an envelope with known analytical properties\n    for testing postulate\
       \ validation."
@@ -58243,7 +58661,7 @@ functions:
   ./tests/conftest.py::test_frequencies:
     args: []
     decorators:
-    - <ast.Attribute object at 0x702d6c6940d0>
+    - <ast.Attribute object at 0x7adcbd3e7690>
     docstring: "Create test frequencies for frequency-dependent testing.\n\nPhysical\
       \ Meaning:\n    Provides a range of frequencies for testing frequency-dependent\n\
       \    material properties and spectral methods."
@@ -58255,7 +58673,7 @@ functions:
   ./tests/conftest.py::test_results_cache:
     args: []
     decorators:
-    - <ast.Call object at 0x702d6c653450>
+    - <ast.Call object at 0x7adcbd34c910>
     docstring: "Create test results cache.\n\nPhysical Meaning:\n    Provides a cache\
       \ for storing test results to avoid\n    recomputation in long-running physical\
       \ validation tests."
@@ -58267,7 +58685,7 @@ functions:
   ./tests/conftest.py::test_scales:
     args: []
     decorators:
-    - <ast.Attribute object at 0x702d6c65bb50>
+    - <ast.Attribute object at 0x7adcbd3e5b90>
     docstring: "Create test scales for renormalization testing.\n\nPhysical Meaning:\n\
       \    Provides a range of scales for testing renormalization\n    group flow\
       \ and scaling behavior."
@@ -58280,7 +58698,7 @@ functions:
     args:
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c589350>
+    - <ast.Attribute object at 0x7adcbd3ef350>
     docstring: "Create Gaussian source for testing.\n\nPhysical Meaning:\n    Provides\
       \ a Gaussian source with known analytical properties\n    for testing BVP equation\
       \ solution."
@@ -58293,7 +58711,7 @@ functions:
     args:
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c6e6890>
+    - <ast.Attribute object at 0x7adcbd288650>
     docstring: "Create localized source for testing.\n\nPhysical Meaning:\n    Provides\
       \ a localized source for testing boundary conditions\n    and field propagation."
     file: ''
@@ -58305,7 +58723,7 @@ functions:
     args:
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c594890>
+    - <ast.Attribute object at 0x7adcbd28a6d0>
     docstring: "Create sinusoidal source for testing.\n\nPhysical Meaning:\n    Provides\
       \ a sinusoidal source with known analytical derivatives\n    for testing spectral\
       \ methods."
@@ -59003,7 +59421,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c68ad10>
+    - <ast.Attribute object at 0x7adcbd391690>
     docstring: Create BVP constants for complete pipeline testing.
     file: ''
     is_async: false
@@ -59016,7 +59434,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x702d6c68a710>
+    - <ast.Attribute object at 0x7adcbd391850>
     docstring: Create BVP core for complete pipeline testing.
     file: ''
     is_async: false
@@ -59027,7 +59445,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c68b590>
+    - <ast.Attribute object at 0x7adcbd390a90>
     docstring: Create 7D domain for complete pipeline testing.
     file: ''
     is_async: false
@@ -59081,7 +59499,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c670350>
+    - <ast.Attribute object at 0x7adcbd371350>
     docstring: Create BVP constants for complete pipeline testing.
     file: ''
     is_async: false
@@ -59094,7 +59512,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x702d6c670a10>
+    - <ast.Attribute object at 0x7adcbd373ed0>
     docstring: Create BVP core for complete pipeline testing.
     file: ''
     is_async: false
@@ -59105,7 +59523,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c671350>
+    - <ast.Attribute object at 0x7adcbd371dd0>
     docstring: Create 7D domain for complete pipeline testing.
     file: ''
     is_async: false
@@ -59142,7 +59560,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c673f50>
+    - <ast.Attribute object at 0x7adcbd34e010>
     docstring: Create BVP constants for complete pipeline testing.
     file: ''
     is_async: false
@@ -59155,7 +59573,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x702d6c672d90>
+    - <ast.Attribute object at 0x7adcbd397810>
     docstring: Create BVP interface for complete pipeline testing.
     file: ''
     is_async: false
@@ -59166,7 +59584,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c673690>
+    - <ast.Attribute object at 0x7adcbd34f110>
     docstring: Create 7D domain for complete pipeline testing.
     file: ''
     is_async: false
@@ -59204,7 +59622,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c662290>
+    - <ast.Attribute object at 0x7adcbd3dbe50>
     docstring: Create BVP constants for complete pipeline testing.
     file: ''
     is_async: false
@@ -59217,7 +59635,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x702d6c661a10>
+    - <ast.Attribute object at 0x7adcbd3d8690>
     docstring: Create BVP core for complete pipeline testing.
     file: ''
     is_async: false
@@ -59228,7 +59646,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c64c750>
+    - <ast.Attribute object at 0x7adcbd351610>
     docstring: Create 7D domain for complete pipeline testing.
     file: ''
     is_async: false
@@ -59277,7 +59695,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c58ae50>
+    - <ast.Attribute object at 0x7adcbd3d41d0>
     docstring: Create BVP constants for complete pipeline testing.
     file: ''
     is_async: false
@@ -59290,7 +59708,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x702d6c58b4d0>
+    - <ast.Attribute object at 0x7adcbd3d54d0>
     docstring: Create BVP core for complete pipeline testing.
     file: ''
     is_async: false
@@ -59301,7 +59719,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c58a850>
+    - <ast.Attribute object at 0x7adcbd29cdd0>
     docstring: Create 7D domain for complete pipeline testing.
     file: ''
     is_async: false
@@ -59327,7 +59745,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c5f2250>
+    - <ast.Attribute object at 0x7adcbd3da250>
     docstring: Create BVP configuration for testing.
     file: ''
     is_async: false
@@ -59340,7 +59758,7 @@ functions:
     - domain_7d
     - bvp_config
     decorators:
-    - <ast.Attribute object at 0x702d6c63fb90>
+    - <ast.Attribute object at 0x7adcbd3d9b50>
     docstring: Create BVP core instance for testing.
     file: ''
     is_async: false
@@ -59351,7 +59769,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c5f3450>
+    - <ast.Attribute object at 0x7adcbd3db450>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -59527,7 +59945,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c673f50>
+    - <ast.Attribute object at 0x7adcbd351050>
     docstring: Create BVP configuration.
     file: ''
     is_async: false
@@ -59538,7 +59956,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c671550>
+    - <ast.Attribute object at 0x7adcbd350390>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -59585,7 +60003,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c694490>
+    - <ast.Attribute object at 0x7adcbd2f2d50>
     docstring: Create BVP configuration.
     file: ''
     is_async: false
@@ -59596,7 +60014,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c694ad0>
+    - <ast.Attribute object at 0x7adcbd2f1f10>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -59643,7 +60061,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c64ef10>
+    - <ast.Attribute object at 0x7adcbd34c3d0>
     docstring: Create BVP configuration.
     file: ''
     is_async: false
@@ -59654,7 +60072,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c64f910>
+    - <ast.Attribute object at 0x7adcbd34fb50>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -59701,7 +60119,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6e9cd0>
+    - <ast.Attribute object at 0x7adcbd288310>
     docstring: Create BVP configuration.
     file: ''
     is_async: false
@@ -59712,7 +60130,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6eaed0>
+    - <ast.Attribute object at 0x7adcbd28aa90>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -59759,7 +60177,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c589910>
+    - <ast.Attribute object at 0x7adcbd3edc50>
     docstring: Create BVP configuration.
     file: ''
     is_async: false
@@ -59770,7 +60188,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c588f90>
+    - <ast.Attribute object at 0x7adcbd3ecd50>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -59817,7 +60235,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c672510>
+    - <ast.Attribute object at 0x7adcbd394c50>
     docstring: Create BVP configuration.
     file: ''
     is_async: false
@@ -59828,7 +60246,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c671b50>
+    - <ast.Attribute object at 0x7adcbd395890>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -59875,7 +60293,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c661350>
+    - <ast.Attribute object at 0x7adcbd350650>
     docstring: Create BVP configuration.
     file: ''
     is_async: false
@@ -59886,7 +60304,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c661b50>
+    - <ast.Attribute object at 0x7adcbd353f50>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -60525,7 +60943,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c5f3410>
+    - <ast.Attribute object at 0x7adcbd3e6d50>
     docstring: Create 7D BVP domain for testing.
     file: ''
     is_async: false
@@ -60536,7 +60954,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6f46d0>
+    - <ast.Attribute object at 0x7adcbd3e4650>
     docstring: Create 7D BVP parameters for testing.
     file: ''
     is_async: false
@@ -60549,7 +60967,7 @@ functions:
     - domain_7d
     - parameters_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c6f6e90>
+    - <ast.Attribute object at 0x7adcbd3e5410>
     docstring: Create 7D BVP solver for testing.
     file: ''
     is_async: false
@@ -60651,7 +61069,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c5f3b50>
+    - <ast.Attribute object at 0x7adcbd350210>
     docstring: Create 3D domain for testing.
     file: ''
     is_async: false
@@ -60752,7 +61170,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c33b3d0>
+    - <ast.Attribute object at 0x7adcbd03c790>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -60763,7 +61181,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c33ab10>
+    - <ast.Attribute object at 0x7adcbd03c9d0>
     docstring: Basic parameters for testing.
     file: ''
     is_async: false
@@ -60776,7 +61194,7 @@ functions:
     - domain_7d
     - parameters_basic
     decorators:
-    - <ast.Attribute object at 0x702d6c33b290>
+    - <ast.Attribute object at 0x7adcbd03dcd0>
     docstring: Create FFT solver for testing.
     file: ''
     is_async: false
@@ -60857,7 +61275,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4dacd0>
+    - <ast.Attribute object at 0x7adcbd1a1290>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -60868,7 +61286,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4d8b10>
+    - <ast.Attribute object at 0x7adcbd13f790>
     docstring: Basic parameters for testing.
     file: ''
     is_async: false
@@ -60881,7 +61299,7 @@ functions:
     - domain_7d
     - parameters_basic
     decorators:
-    - <ast.Attribute object at 0x702d6c4cdc10>
+    - <ast.Attribute object at 0x7adcbd149f10>
     docstring: Create FFT solver for testing.
     file: ''
     is_async: false
@@ -61023,7 +61441,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4ecc50>
+    - <ast.Attribute object at 0x7adcbd1e9750>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -61034,7 +61452,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4ed6d0>
+    - <ast.Attribute object at 0x7adcbd1e81d0>
     docstring: Basic parameters for testing.
     file: ''
     is_async: false
@@ -61047,7 +61465,7 @@ functions:
     - domain_7d
     - parameters_basic
     decorators:
-    - <ast.Attribute object at 0x702d6c4ed310>
+    - <ast.Attribute object at 0x7adcbd1e9d10>
     docstring: Create FFT solver for testing.
     file: ''
     is_async: false
@@ -61126,7 +61544,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c36d0d0>
+    - <ast.Attribute object at 0x7adcbd01f4d0>
     docstring: Create BVP constants for testing.
     file: ''
     is_async: false
@@ -61137,7 +61555,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c36dfd0>
+    - <ast.Attribute object at 0x7adcbd01d410>
     docstring: Create 7D domain for constants testing.
     file: ''
     is_async: false
@@ -61150,7 +61568,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x702d6c36c6d0>
+    - <ast.Attribute object at 0x7adcbd01f810>
     docstring: Create frequency-dependent properties for testing.
     file: ''
     is_async: false
@@ -61260,7 +61678,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c30ef50>
+    - <ast.Attribute object at 0x7adcbd04a6d0>
     docstring: Create BVP constants for testing.
     file: ''
     is_async: false
@@ -61271,7 +61689,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4bcdd0>
+    - <ast.Attribute object at 0x7adcbd048090>
     docstring: Create 7D domain for constants testing.
     file: ''
     is_async: false
@@ -61284,7 +61702,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x702d6c30fc90>
+    - <ast.Attribute object at 0x7adcbd04a610>
     docstring: Create frequency-dependent properties for testing.
     file: ''
     is_async: false
@@ -61395,7 +61813,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c35a790>
+    - <ast.Attribute object at 0x7adcbd05a790>
     docstring: Create BVP constants for testing.
     file: ''
     is_async: false
@@ -61406,7 +61824,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c35b110>
+    - <ast.Attribute object at 0x7adcbd05b110>
     docstring: Create 7D domain for constants testing.
     file: ''
     is_async: false
@@ -61418,7 +61836,7 @@ functions:
     - self
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x702d6c35a210>
+    - <ast.Attribute object at 0x7adcbd05a210>
     docstring: Create nonlinear coefficients for testing.
     file: ''
     is_async: false
@@ -61529,7 +61947,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4efd10>
+    - <ast.Attribute object at 0x7adcbd01d950>
     docstring: Create BVP constants for testing.
     file: ''
     is_async: false
@@ -61540,7 +61958,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4ef590>
+    - <ast.Attribute object at 0x7adcbd01eb50>
     docstring: Create 7D domain for constants testing.
     file: ''
     is_async: false
@@ -61552,7 +61970,7 @@ functions:
     - self
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x702d6c4eec10>
+    - <ast.Attribute object at 0x7adcbd01ecd0>
     docstring: Create nonlinear coefficients for testing.
     file: ''
     is_async: false
@@ -61790,7 +62208,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c45d410>
+    - <ast.Attribute object at 0x7adcbd15d150>
     docstring: Create BVP constants for physical testing.
     file: ''
     is_async: false
@@ -61801,7 +62219,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c45c090>
+    - <ast.Attribute object at 0x7adcbd15c850>
     docstring: Create 7D domain for physical testing.
     file: ''
     is_async: false
@@ -61814,7 +62232,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x702d6c45d2d0>
+    - <ast.Attribute object at 0x7adcbd15d350>
     docstring: Create envelope solver for physical testing.
     file: ''
     is_async: false
@@ -61827,7 +62245,7 @@ functions:
     - domain_7d
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x702d6c45da50>
+    - <ast.Attribute object at 0x7adcbd15de10>
     docstring: Create quench detector for physical testing.
     file: ''
     is_async: false
@@ -62038,7 +62456,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6f75d0>
+    - <ast.Attribute object at 0x7adcbd13cf50>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -62049,7 +62467,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4087d0>
+    - <ast.Attribute object at 0x7adcbd13db10>
     docstring: Basic parameters for testing.
     file: ''
     is_async: false
@@ -62195,7 +62613,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4edfd0>
+    - <ast.Attribute object at 0x7adcbd1d8850>
     docstring: Create 7D domain for basic testing.
     file: ''
     is_async: false
@@ -62302,7 +62720,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4d99d0>
+    - <ast.Attribute object at 0x7adcbd027290>
     docstring: Create test configuration.
     file: ''
     is_async: false
@@ -62313,7 +62731,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4da4d0>
+    - <ast.Attribute object at 0x7adcbd027e10>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -62444,7 +62862,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c477a50>
+    - <ast.Attribute object at 0x7adcbd1ed1d0>
     docstring: Create test configuration.
     file: ''
     is_async: false
@@ -62456,7 +62874,7 @@ functions:
     - self
     - config
     decorators:
-    - <ast.Attribute object at 0x702d6c474150>
+    - <ast.Attribute object at 0x7adcbd19a850>
     docstring: Create BVPConstantsAdvanced instance.
     file: ''
     is_async: false
@@ -62468,7 +62886,7 @@ functions:
     - self
     - config
     decorators:
-    - <ast.Attribute object at 0x702d6c326950>
+    - <ast.Attribute object at 0x7adcbd026950>
     docstring: Create BVPConstantsBase instance.
     file: ''
     is_async: false
@@ -62480,7 +62898,7 @@ functions:
     - self
     - mock_constants
     decorators:
-    - <ast.Attribute object at 0x702d6c30b110>
+    - <ast.Attribute object at 0x7adcbd1e8790>
     docstring: Create FrequencyDependentProperties instance.
     file: ''
     is_async: false
@@ -62491,7 +62909,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c33ecd0>
+    - <ast.Attribute object at 0x7adcbd03ec90>
     docstring: Create mock constants.
     file: ''
     is_async: false
@@ -62503,7 +62921,7 @@ functions:
     - self
     - mock_constants
     decorators:
-    - <ast.Attribute object at 0x702d6c34b550>
+    - <ast.Attribute object at 0x7adcbd04b590>
     docstring: Create NonlinearCoefficients instance.
     file: ''
     is_async: false
@@ -62515,7 +62933,7 @@ functions:
     - self
     - mock_constants
     decorators:
-    - <ast.Attribute object at 0x702d6c33e450>
+    - <ast.Attribute object at 0x7adcbd03e410>
     docstring: Create RenormalizedCoefficients instance.
     file: ''
     is_async: false
@@ -63042,7 +63460,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c521d90>
+    - <ast.Attribute object at 0x7adcbd13f8d0>
     docstring: Create test configuration.
     file: ''
     is_async: false
@@ -63053,7 +63471,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6f41d0>
+    - <ast.Attribute object at 0x7adcbd13ccd0>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -63196,7 +63614,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4ead90>
+    - <ast.Attribute object at 0x7adcbd00aa10>
     docstring: Create BVP constants for testing.
     file: ''
     is_async: false
@@ -63207,7 +63625,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4ea490>
+    - <ast.Attribute object at 0x7adcbd0082d0>
     docstring: Create 7D domain for constants testing.
     file: ''
     is_async: false
@@ -63355,7 +63773,7 @@ functions:
     - self
     - config
     decorators:
-    - <ast.Attribute object at 0x702d6c45c790>
+    - <ast.Attribute object at 0x7adcbd1bcb90>
     docstring: Create BVP constants.
     file: ''
     is_async: false
@@ -63366,7 +63784,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c45d650>
+    - <ast.Attribute object at 0x7adcbd1bfb50>
     docstring: Create test configuration.
     file: ''
     is_async: false
@@ -63377,7 +63795,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c45d8d0>
+    - <ast.Attribute object at 0x7adcbd268410>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -63533,7 +63951,7 @@ functions:
     - self
     - config
     decorators:
-    - <ast.Attribute object at 0x702d6c49a850>
+    - <ast.Attribute object at 0x7adcbd3d6c10>
     docstring: Create BVP constants.
     file: ''
     is_async: false
@@ -63544,7 +63962,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c498710>
+    - <ast.Attribute object at 0x7adcbd3b0490>
     docstring: Create test configuration.
     file: ''
     is_async: false
@@ -63555,7 +63973,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c498b50>
+    - <ast.Attribute object at 0x7adcbd3b3ed0>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -63839,7 +64257,7 @@ functions:
     - self
     - config
     decorators:
-    - <ast.Attribute object at 0x702d6c696510>
+    - <ast.Attribute object at 0x7adcbd225390>
     docstring: Create BVP constants.
     file: ''
     is_async: false
@@ -63850,7 +64268,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c694b50>
+    - <ast.Attribute object at 0x7adcbd227950>
     docstring: Create test configuration.
     file: ''
     is_async: false
@@ -63861,7 +64279,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c406910>
+    - <ast.Attribute object at 0x7adcbd227350>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -64015,7 +64433,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c49d6d0>
+    - <ast.Attribute object at 0x7adcbd3b0890>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -64026,7 +64444,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c49d490>
+    - <ast.Attribute object at 0x7adcbd275c10>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -64055,7 +64473,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c414150>
+    - <ast.Attribute object at 0x7adcbd118cd0>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -64066,7 +64484,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4a2a90>
+    - <ast.Attribute object at 0x7adcbd19bb50>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -64077,7 +64495,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4a2b10>
+    - <ast.Attribute object at 0x7adcbd19a250>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -64106,7 +64524,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c4ce410>
+    - <ast.Attribute object at 0x7adcbd1ccf90>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -64117,7 +64535,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4ee610>
+    - <ast.Attribute object at 0x7adcbd1e9750>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -64128,7 +64546,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4edb50>
+    - <ast.Attribute object at 0x7adcbd1eac50>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -64158,7 +64576,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c4cca90>
+    - <ast.Attribute object at 0x7adcbd027a50>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -64169,7 +64587,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c5694d0>
+    - <ast.Attribute object at 0x7adcbd15cfd0>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -64180,7 +64598,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c449ed0>
+    - <ast.Attribute object at 0x7adcbd17f4d0>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -64208,7 +64626,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c577310>
+    - <ast.Attribute object at 0x7adcbd108bd0>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -64219,7 +64637,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c45dd50>
+    - <ast.Attribute object at 0x7adcbd1a3750>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -64232,7 +64650,7 @@ functions:
     - domain_7d
     - parameters_basic
     decorators:
-    - <ast.Attribute object at 0x702d6c45db50>
+    - <ast.Attribute object at 0x7adcbd1a2690>
     docstring: Create Crank-Nicolson integrator for testing.
     file: ''
     is_async: false
@@ -64243,7 +64661,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c45e890>
+    - <ast.Attribute object at 0x7adcbd1a1410>
     docstring: Basic parameters for testing.
     file: ''
     is_async: false
@@ -64385,7 +64803,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c45d890>
+    - <ast.Attribute object at 0x7adcbd101ed0>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -64396,7 +64814,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c417b50>
+    - <ast.Attribute object at 0x7adcbd181d10>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -64408,7 +64826,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x702d6c6f6c90>
+    - <ast.Attribute object at 0x7adcbd13ed50>
     docstring: Create field for testing.
     file: ''
     is_async: false
@@ -64419,7 +64837,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4be890>
+    - <ast.Attribute object at 0x7adcbd1be8d0>
     docstring: Create parameters for testing.
     file: ''
     is_async: false
@@ -65304,7 +65722,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4f5250>
+    - <ast.Attribute object at 0x7adcbd1e9550>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -65316,7 +65734,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x702d6c4f4f10>
+    - <ast.Attribute object at 0x7adcbd1e90d0>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -65461,7 +65879,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x702d6c480650>
+    - <ast.Attribute object at 0x7adcbd3b08d0>
     docstring: Create FFT butterfly computer for testing.
     file: ''
     is_async: false
@@ -65472,7 +65890,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c483a50>
+    - <ast.Attribute object at 0x7adcbd3b1dd0>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -65484,7 +65902,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x702d6c480490>
+    - <ast.Attribute object at 0x7adcbd3b2690>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -65694,7 +66112,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c33cf10>
+    - <ast.Attribute object at 0x7adcbd03c650>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -65925,7 +66343,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c498590>
+    - <ast.Attribute object at 0x7adcbd3b27d0>
     docstring: Create 7D domain for spectral testing.
     file: ''
     is_async: false
@@ -65937,7 +66355,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c499250>
+    - <ast.Attribute object at 0x7adcbd295a10>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -65949,7 +66367,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x702d6c498a10>
+    - <ast.Attribute object at 0x7adcbd295510>
     docstring: Create spectral operations for testing.
     file: ''
     is_async: false
@@ -66063,7 +66481,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4accd0>
+    - <ast.Attribute object at 0x7adcbd1ac990>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -66075,7 +66493,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x702d6c4ac910>
+    - <ast.Attribute object at 0x7adcbd1ac8d0>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -66087,7 +66505,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x702d6c4ac5d0>
+    - <ast.Attribute object at 0x7adcbd1ac450>
     docstring: Create FFT plan manager for testing.
     file: ''
     is_async: false
@@ -66330,7 +66748,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c34bed0>
+    - <ast.Attribute object at 0x7adcbd04b710>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -66342,7 +66760,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x702d6c34af10>
+    - <ast.Attribute object at 0x7adcbd04aed0>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -66619,7 +67037,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x702d6c34b210>
+    - <ast.Attribute object at 0x7adcbd04b210>
     docstring: Create FFT twiddle computer for testing.
     file: ''
     is_async: false
@@ -66716,7 +67134,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4bf910>
+    - <ast.Attribute object at 0x7adcbd1bd690>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -66728,7 +67146,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c4bfa50>
+    - <ast.Attribute object at 0x7adcbd1bdb50>
     docstring: Create memory kernel for testing.
     file: ''
     is_async: false
@@ -67338,7 +67756,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4eb190>
+    - <ast.Attribute object at 0x7adcbd1eb190>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -67613,7 +68031,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c34b090>
+    - <ast.Attribute object at 0x7adcbd0097d0>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -67624,7 +68042,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c477ad0>
+    - <ast.Attribute object at 0x7adcbd00a310>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -67636,7 +68054,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c327310>
+    - <ast.Attribute object at 0x7adcbd1bfe90>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -67663,7 +68081,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4ac9d0>
+    - <ast.Attribute object at 0x7adcbd1ac950>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -67675,7 +68093,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c4ad390>
+    - <ast.Attribute object at 0x7adcbd1ad310>
     docstring: Create quench detector for testing.
     file: ''
     is_async: false
@@ -67819,7 +68237,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c438410>
+    - <ast.Attribute object at 0x7adcbd35b510>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -67830,7 +68248,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c5c2ad0>
+    - <ast.Attribute object at 0x7adcbd393d90>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -67842,7 +68260,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c6e4f10>
+    - <ast.Attribute object at 0x7adcbd22c490>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -67870,7 +68288,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c30a890>
+    - <ast.Attribute object at 0x7adcbd0277d0>
     docstring: Create BVP constants for testing.
     file: ''
     is_async: false
@@ -67881,7 +68299,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c308f10>
+    - <ast.Attribute object at 0x7adcbd026010>
     docstring: Create 7D domain for constants testing.
     file: ''
     is_async: false
@@ -67893,7 +68311,7 @@ functions:
     - self
     - bvp_constants
     decorators:
-    - <ast.Attribute object at 0x702d6c30b150>
+    - <ast.Attribute object at 0x7adcbd027590>
     docstring: Create renormalized coefficients for testing.
     file: ''
     is_async: false
@@ -68158,7 +68576,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c405c90>
+    - <ast.Attribute object at 0x7adcbd15e350>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -68169,7 +68587,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c407f90>
+    - <ast.Attribute object at 0x7adcbd15ed50>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -68181,7 +68599,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c40a4d0>
+    - <ast.Attribute object at 0x7adcbd206950>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -68209,7 +68627,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c45cd10>
+    - <ast.Attribute object at 0x7adcbd1bced0>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -68220,7 +68638,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c45cdd0>
+    - <ast.Attribute object at 0x7adcbd1bc110>
     docstring: Create parameters for testing.
     file: ''
     is_async: false
@@ -68645,7 +69063,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c477150>
+    - <ast.Attribute object at 0x7adcbd177710>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -68953,7 +69371,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4bc110>
+    - <ast.Attribute object at 0x7adcbd1bff10>
     docstring: Create 7D domain for spectral testing.
     file: ''
     is_async: false
@@ -68965,7 +69383,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c4be950>
+    - <ast.Attribute object at 0x7adcbd1bce10>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -68977,7 +69395,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x702d6c4bf910>
+    - <ast.Attribute object at 0x7adcbd1bfe90>
     docstring: Create spectral operations for testing.
     file: ''
     is_async: false
@@ -69182,7 +69600,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4d9850>
+    - <ast.Attribute object at 0x7adcbd1d9850>
     docstring: Create 7D domain for spectral testing.
     file: ''
     is_async: false
@@ -69194,7 +69612,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c4d9dd0>
+    - <ast.Attribute object at 0x7adcbd1d9dd0>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -69206,7 +69624,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x702d6c4d9710>
+    - <ast.Attribute object at 0x7adcbd1d9710>
     docstring: Create spectral operations for testing.
     file: ''
     is_async: false
@@ -69364,7 +69782,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4cdc10>
+    - <ast.Attribute object at 0x7adcbd1ef310>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -69376,7 +69794,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x702d6c4cf750>
+    - <ast.Attribute object at 0x7adcbd1ee9d0>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -69388,7 +69806,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x702d6c4cd250>
+    - <ast.Attribute object at 0x7adcbd1efcd0>
     docstring: Create spectral derivatives for testing.
     file: ''
     is_async: false
@@ -69543,7 +69961,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c45c350>
+    - <ast.Attribute object at 0x7adcbd107210>
     docstring: Create 7D domain for spectral testing.
     file: ''
     is_async: false
@@ -69555,7 +69973,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c568950>
+    - <ast.Attribute object at 0x7adcbd1059d0>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -69567,7 +69985,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x702d6c568250>
+    - <ast.Attribute object at 0x7adcbd1057d0>
     docstring: Create spectral derivatives for testing.
     file: ''
     is_async: false
@@ -69746,7 +70164,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c477790>
+    - <ast.Attribute object at 0x7adcbd1428d0>
     docstring: Create 7D domain for spectral testing.
     file: ''
     is_async: false
@@ -69758,7 +70176,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c476ed0>
+    - <ast.Attribute object at 0x7adcbd1413d0>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -69770,7 +70188,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x702d6c481490>
+    - <ast.Attribute object at 0x7adcbd04afd0>
     docstring: Create spectral operations for testing.
     file: ''
     is_async: false
@@ -69931,7 +70349,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c506050>
+    - <ast.Attribute object at 0x7adcbd3b0a90>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -69943,7 +70361,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x702d6c552190>
+    - <ast.Attribute object at 0x7adcbd3b0490>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -69955,7 +70373,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x702d6c550f10>
+    - <ast.Attribute object at 0x7adcbd3b2390>
     docstring: Create spectral filtering for testing.
     file: ''
     is_async: false
@@ -70121,7 +70539,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4acd10>
+    - <ast.Attribute object at 0x7adcbd1acc90>
     docstring: Create 7D domain for spectral testing.
     file: ''
     is_async: false
@@ -70133,7 +70551,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c4ad090>
+    - <ast.Attribute object at 0x7adcbd1ad010>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -70145,7 +70563,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c4afed0>
+    - <ast.Attribute object at 0x7adcbd1afed0>
     docstring: Create fractional Laplacian for testing.
     file: ''
     is_async: false
@@ -70157,7 +70575,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x702d6c4ad390>
+    - <ast.Attribute object at 0x7adcbd1ad310>
     docstring: Create spectral operations for testing.
     file: ''
     is_async: false
@@ -70348,7 +70766,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c525910>
+    - <ast.Attribute object at 0x7adcbd3912d0>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -70360,7 +70778,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x702d6c527ed0>
+    - <ast.Attribute object at 0x7adcbd390690>
     docstring: Create FFT backend for testing.
     file: ''
     is_async: false
@@ -70372,7 +70790,7 @@ functions:
     - self
     - fft_backend
     decorators:
-    - <ast.Attribute object at 0x702d6c527150>
+    - <ast.Attribute object at 0x7adcbd3e4210>
     docstring: Create spectral operations for testing.
     file: ''
     is_async: false
@@ -70677,7 +71095,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c52af50>
+    - <ast.Attribute object at 0x7adcbd116390>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -70688,7 +71106,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c441cd0>
+    - <ast.Attribute object at 0x7adcbd115590>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -70700,7 +71118,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c4830d0>
+    - <ast.Attribute object at 0x7adcbd182190>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -70728,7 +71146,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c409dd0>
+    - <ast.Attribute object at 0x7adcbd13ce90>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -70739,7 +71157,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6e5d50>
+    - <ast.Attribute object at 0x7adcbd248490>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -70751,7 +71169,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c43b2d0>
+    - <ast.Attribute object at 0x7adcbd38d9d0>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -70778,7 +71196,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4f7210>
+    - <ast.Attribute object at 0x7adcbd1eb050>
     docstring: Create BVP constants for postulate testing.
     file: ''
     is_async: false
@@ -70789,7 +71207,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4f7e10>
+    - <ast.Attribute object at 0x7adcbd1eb150>
     docstring: Create 7D domain for postulate testing.
     file: ''
     is_async: false
@@ -70801,7 +71219,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c4e9f50>
+    - <ast.Attribute object at 0x7adcbd009e10>
     docstring: Create test envelope for postulate validation.
     file: ''
     is_async: false
@@ -70829,7 +71247,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c361a50>
+    - <ast.Attribute object at 0x7adcbd061a50>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -70840,7 +71258,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c3614d0>
+    - <ast.Attribute object at 0x7adcbd0614d0>
     docstring: Basic parameters for testing.
     file: ''
     is_async: false
@@ -70971,7 +71389,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c51df50>
+    - <ast.Attribute object at 0x7adcbd01d510>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -70982,7 +71400,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c577c90>
+    - <ast.Attribute object at 0x7adcbd01f7d0>
     docstring: Basic parameters for testing.
     file: ''
     is_async: false
@@ -72806,7 +73224,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c576c50>
+    - <ast.Attribute object at 0x7adcbd276ad0>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -72817,7 +73235,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c577650>
+    - <ast.Attribute object at 0x7adcbd2774d0>
     docstring: Create test parameters.
     file: ''
     is_async: false
@@ -72828,7 +73246,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6f54d0>
+    - <ast.Attribute object at 0x7adcbd3b38d0>
     docstring: Create projection parameters.
     file: ''
     is_async: false
@@ -72917,7 +73335,7 @@ functions:
     - self
     - domain
     decorators:
-    - <ast.Attribute object at 0x702d6c5646d0>
+    - <ast.Attribute object at 0x7adcbd264850>
     docstring: Create test field.
     file: ''
     is_async: false
@@ -73771,7 +74189,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c688c50>
+    - <ast.Attribute object at 0x7adcbd3e4f10>
     docstring: Create 3D domain for testing.
     file: ''
     is_async: false
@@ -73782,7 +74200,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c5c20d0>
+    - <ast.Attribute object at 0x7adcbd3e4c90>
     docstring: Physics parameters with β=0.5 (fractional case).
     file: ''
     is_async: false
@@ -73793,7 +74211,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c5c2290>
+    - <ast.Attribute object at 0x7adcbd3e7210>
     docstring: Physics parameters with β=1.0 (classical case).
     file: ''
     is_async: false
@@ -73899,7 +74317,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c50e750>
+    - <ast.Attribute object at 0x7adcbd358fd0>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -73910,7 +74328,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c50cf10>
+    - <ast.Attribute object at 0x7adcbd205390>
     docstring: Create realistic physics parameters.
     file: ''
     is_async: false
@@ -74271,7 +74689,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c417150>
+    - <ast.Attribute object at 0x7adcbd1170d0>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -74282,7 +74700,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c416390>
+    - <ast.Attribute object at 0x7adcbd116310>
     docstring: Create realistic physics parameters.
     file: ''
     is_async: false
@@ -74294,7 +74712,7 @@ functions:
     - self
     - domain_3d
     decorators:
-    - <ast.Attribute object at 0x702d6c400c50>
+    - <ast.Attribute object at 0x7adcbd100910>
     docstring: "Create simple U(1)^3 phase field for testing.\n\nPhysical Meaning:\n\
       \    Creates a simplified U(1)^3 phase field configuration that\n    is easier\
       \ to analyze and has known theoretical properties."
@@ -74426,7 +74844,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c5c32d0>
+    - <ast.Attribute object at 0x7adcbd2c32d0>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -74437,7 +74855,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c5c24d0>
+    - <ast.Attribute object at 0x7adcbd2c24d0>
     docstring: Create realistic physics parameters.
     file: ''
     is_async: false
@@ -74713,7 +75131,7 @@ functions:
     - self
     - domain_3d
     decorators:
-    - <ast.Attribute object at 0x702d6c581790>
+    - <ast.Attribute object at 0x7adcbd280a90>
     docstring: "Create U(1)^3 phase field configuration.\n\nPhysical Meaning:\n  \
       \  Creates a 7D phase field configuration Θ(x,φ) ∈ T^3_φ with\n    controlled\
       \ winding over φ-coordinates. This represents a B=1\n    soliton with U(1)^3\
@@ -74739,7 +75157,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6e9350>
+    - <ast.Attribute object at 0x7adcbd3ec850>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -74750,7 +75168,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6e8d50>
+    - <ast.Attribute object at 0x7adcbd22c690>
     docstring: Create realistic physics parameters.
     file: ''
     is_async: false
@@ -74892,7 +75310,7 @@ functions:
     - self
     - domain_3d
     decorators:
-    - <ast.Attribute object at 0x702d6c504390>
+    - <ast.Attribute object at 0x7adcbd3b7910>
     docstring: "Create trivial field configuration.\n\nPhysical Meaning:\n    Creates\
       \ a trivial field configuration U(x) = I everywhere,\n    which should have\
       \ topological charge B=0."
@@ -74906,7 +75324,7 @@ functions:
     - self
     - domain_3d
     decorators:
-    - <ast.Attribute object at 0x702d6c6b7210>
+    - <ast.Attribute object at 0x7adcbd21cc50>
     docstring: "Create B=1 U(1)^3 phase field configuration.\n\nPhysical Meaning:\n\
       \    Creates a U(1)^3 phase field configuration with topological\n    charge\
       \ B=1, representing a single baryon."
@@ -74919,7 +75337,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c51d790>
+    - <ast.Attribute object at 0x7adcbd141f10>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -74930,7 +75348,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c441f90>
+    - <ast.Attribute object at 0x7adcbd141690>
     docstring: Create test nonlinear parameters.
     file: ''
     is_async: false
@@ -74941,7 +75359,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c443fd0>
+    - <ast.Attribute object at 0x7adcbd140690>
     docstring: Create test particles.
     file: ''
     is_async: false
@@ -74954,7 +75372,7 @@ functions:
     - domain
     - particles
     decorators:
-    - <ast.Attribute object at 0x702d6c443550>
+    - <ast.Attribute object at 0x7adcbd141d50>
     docstring: Create test system.
     file: ''
     is_async: false
@@ -75088,7 +75506,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6eb450>
+    - <ast.Attribute object at 0x7adcbd10ab10>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -75099,7 +75517,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6b6690>
+    - <ast.Attribute object at 0x7adcbd141b10>
     docstring: Create test particles.
     file: ''
     is_async: false
@@ -75112,7 +75530,7 @@ functions:
     - domain
     - particles
     decorators:
-    - <ast.Attribute object at 0x702d6c5220d0>
+    - <ast.Attribute object at 0x7adcbd142350>
     docstring: Create test system.
     file: ''
     is_async: false
@@ -75197,7 +75615,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c40a950>
+    - <ast.Attribute object at 0x7adcbd13c710>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -75210,7 +75628,7 @@ functions:
     - system
     - nonlinear_params
     decorators:
-    - <ast.Attribute object at 0x702d6c443690>
+    - <ast.Attribute object at 0x7adcbd21e990>
     docstring: Create test nonlinear effects.
     file: ''
     is_async: false
@@ -75221,7 +75639,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4410d0>
+    - <ast.Attribute object at 0x7adcbd13d2d0>
     docstring: Create test nonlinear parameters.
     file: ''
     is_async: false
@@ -75232,7 +75650,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c40be50>
+    - <ast.Attribute object at 0x7adcbd13fd50>
     docstring: Create test particles.
     file: ''
     is_async: false
@@ -75245,7 +75663,7 @@ functions:
     - domain
     - particles
     decorators:
-    - <ast.Attribute object at 0x702d6c40b2d0>
+    - <ast.Attribute object at 0x7adcbd13dd50>
     docstring: Create test system.
     file: ''
     is_async: false
@@ -75354,7 +75772,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c404a90>
+    - <ast.Attribute object at 0x7adcbd104a90>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -75365,7 +75783,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c407190>
+    - <ast.Attribute object at 0x7adcbd107650>
     docstring: Create test excitation parameters.
     file: ''
     is_async: false
@@ -75378,7 +75796,7 @@ functions:
     - system
     - excitation_params
     decorators:
-    - <ast.Attribute object at 0x702d6c4064d0>
+    - <ast.Attribute object at 0x7adcbd1065d0>
     docstring: Create test excitations.
     file: ''
     is_async: false
@@ -75389,7 +75807,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c405490>
+    - <ast.Attribute object at 0x7adcbd105490>
     docstring: Create test particles.
     file: ''
     is_async: false
@@ -75402,7 +75820,7 @@ functions:
     - domain
     - particles
     decorators:
-    - <ast.Attribute object at 0x702d6c405c90>
+    - <ast.Attribute object at 0x7adcbd105c90>
     docstring: Create test system.
     file: ''
     is_async: false
@@ -75672,7 +76090,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c438a10>
+    - <ast.Attribute object at 0x7adcbd138a10>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -75683,7 +76101,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c4393d0>
+    - <ast.Attribute object at 0x7adcbd1393d0>
     docstring: Create test particles.
     file: ''
     is_async: false
@@ -75696,7 +76114,7 @@ functions:
     - domain
     - particles
     decorators:
-    - <ast.Attribute object at 0x702d6c439bd0>
+    - <ast.Attribute object at 0x7adcbd139bd0>
     docstring: Create test system.
     file: ''
     is_async: false
@@ -75992,7 +76410,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c5045d0>
+    - <ast.Attribute object at 0x7adcbd10b190>
     docstring: Create test domain.
     file: ''
     is_async: false
@@ -76003,7 +76421,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6bb690>
+    - <ast.Attribute object at 0x7adcbd109f10>
     docstring: Create test particles.
     file: ''
     is_async: false
@@ -76016,7 +76434,7 @@ functions:
     - domain
     - particles
     decorators:
-    - <ast.Attribute object at 0x702d6c414f90>
+    - <ast.Attribute object at 0x7adcbd3b01d0>
     docstring: Create test system.
     file: ''
     is_async: false
@@ -76292,7 +76710,7 @@ functions:
     - self
     - system
     decorators:
-    - <ast.Attribute object at 0x702d6c417e10>
+    - <ast.Attribute object at 0x7adcbd3b2190>
     docstring: Create test transitions.
     file: ''
     is_async: false
@@ -76440,7 +76858,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6d55d0>
+    - <ast.Attribute object at 0x7adcbd297d10>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -76451,7 +76869,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6d68d0>
+    - <ast.Attribute object at 0x7adcbd2940d0>
     docstring: Create realistic gravity parameters.
     file: ''
     is_async: false
@@ -76463,7 +76881,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c596190>
+    - <ast.Attribute object at 0x7adcbd3908d0>
     docstring: Create mock system for testing.
     file: ''
     is_async: false
@@ -76706,7 +77124,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c54bad0>
+    - <ast.Attribute object at 0x7adcbd22bd50>
     docstring: Create 7D domain for testing.
     file: ''
     is_async: false
@@ -76717,7 +77135,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c5f2ad0>
+    - <ast.Attribute object at 0x7adcbd3b1950>
     docstring: Create VBP envelope parameters.
     file: ''
     is_async: false
@@ -76729,7 +77147,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c691450>
+    - <ast.Attribute object at 0x7adcbd296810>
     docstring: Create 7D envelope solution for testing.
     file: ''
     is_async: false
@@ -76740,7 +77158,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c54ac50>
+    - <ast.Attribute object at 0x7adcbd22aed0>
     docstring: Create gravitational parameters.
     file: ''
     is_async: false
@@ -76752,7 +77170,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c52b810>
+    - <ast.Attribute object at 0x7adcbd227a90>
     docstring: Create mock system with phase field.
     file: ''
     is_async: false
@@ -76764,7 +77182,7 @@ functions:
     - self
     - domain_7d
     decorators:
-    - <ast.Attribute object at 0x702d6c6b8390>
+    - <ast.Attribute object at 0x7adcbd34e250>
     docstring: Create 7D phase field for testing.
     file: ''
     is_async: false
@@ -76955,7 +77373,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6b7c10>
+    - <ast.Attribute object at 0x7adcbd3b5550>
     docstring: Create gravitational wave parameters.
     file: ''
     is_async: false
@@ -77487,7 +77905,7 @@ functions:
     - self
     - domain_3d
     decorators:
-    - <ast.Attribute object at 0x702d6c59e250>
+    - <ast.Attribute object at 0x7adcbd33f790>
     docstring: Create BVP core for testing.
     file: ''
     is_async: false
@@ -77509,7 +77927,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c59dc90>
+    - <ast.Attribute object at 0x7adcbd2236d0>
     docstring: Create 3D domain for testing.
     file: ''
     is_async: false
@@ -77521,7 +77939,7 @@ functions:
     - self
     - bvp_core
     decorators:
-    - <ast.Attribute object at 0x702d6c59da90>
+    - <ast.Attribute object at 0x7adcbd3eda90>
     docstring: Create power law core for testing.
     file: ''
     is_async: false
@@ -77561,7 +77979,7 @@ functions:
     - self
     - domain_3d
     decorators:
-    - <ast.Attribute object at 0x702d6c525010>
+    - <ast.Attribute object at 0x7adcbd22f710>
     docstring: Create test 3D envelope field.
     file: ''
     is_async: false
@@ -77670,7 +78088,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6f5610>
+    - <ast.Attribute object at 0x7adcbd227d10>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -77681,7 +78099,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c6f7e10>
+    - <ast.Attribute object at 0x7adcbd2714d0>
     docstring: Create parameters for testing.
     file: ''
     is_async: false
@@ -77719,7 +78137,7 @@ functions:
     - domain
     - parameters
     decorators:
-    - <ast.Attribute object at 0x702d6c6d4bd0>
+    - <ast.Attribute object at 0x7adcbd271a90>
     docstring: Create concrete solver for testing.
     file: ''
     is_async: false
@@ -77964,7 +78382,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c51fd90>
+    - <ast.Attribute object at 0x7adcbd3b5d50>
     docstring: Create config for testing.
     file: ''
     is_async: false
@@ -77975,7 +78393,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c5f3590>
+    - <ast.Attribute object at 0x7adcbd269510>
     docstring: Create domain for testing.
     file: ''
     is_async: false
@@ -77998,7 +78416,7 @@ functions:
     - domain
     - config
     decorators:
-    - <ast.Attribute object at 0x702d6c51fed0>
+    - <ast.Attribute object at 0x7adcbd21fe10>
     docstring: Create time integrator for testing.
     file: ''
     is_async: false
@@ -78012,7 +78430,7 @@ functions:
     - config
     - mock_bvp_core
     decorators:
-    - <ast.Attribute object at 0x702d6c417c10>
+    - <ast.Attribute object at 0x7adcbd3d4850>
     docstring: Create time integrator with BVP core for testing.
     file: ''
     is_async: false
@@ -78023,7 +78441,7 @@ functions:
     args:
     - self
     decorators:
-    - <ast.Attribute object at 0x702d6c51c110>
+    - <ast.Attribute object at 0x7adcbd21ec10>
     docstring: Create mock BVP core.
     file: ''
     is_async: false
@@ -86401,56 +86819,101 @@ imports:
     line: 0
     module: ''
     type: import
-  ./bhlff/models/level_e/performance/scaling_analysis.py::BVPConstants:
+  ./bhlff/models/level_e/performance/scaling/__init__.py::BaseScalingAnalyzer:
     file: ''
     line: 0
-    module: bhlff.core.bvp.bvp_constants
+    module: base_scaling
     type: from_import
-  ./bhlff/models/level_e/performance/scaling_analysis.py::BVPSource:
+  ./bhlff/models/level_e/performance/scaling/__init__.py::Dict:
     file: ''
     line: 0
-    module: bhlff.core.sources.bvp_source
+    module: typing
     type: from_import
+  ./bhlff/models/level_e/performance/scaling/__init__.py::OptimizationScalingAnalyzer:
+    file: ''
+    line: 0
+    module: optimization_scaling
+    type: from_import
+  ./bhlff/models/level_e/performance/scaling/__init__.py::PerformanceScalingAnalyzer:
+    file: ''
+    line: 0
+    module: performance_scaling
+    type: from_import
+  ./bhlff/models/level_e/performance/scaling/__init__.py::numpy:
+    file: ''
+    line: 0
+    module: ''
+    type: import
+  ./bhlff/models/level_e/performance/scaling/base_scaling.py::Dict:
+    file: ''
+    line: 0
+    module: typing
+    type: from_import
+  ./bhlff/models/level_e/performance/scaling/base_scaling.py::numpy:
+    file: ''
+    line: 0
+    module: ''
+    type: import
+  ./bhlff/models/level_e/performance/scaling/base_scaling.py::time:
+    file: ''
+    line: 0
+    module: ''
+    type: import
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::Dict:
+    file: ''
+    line: 0
+    module: typing
+    type: from_import
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::minimize:
+    file: ''
+    line: 0
+    module: scipy.optimize
+    type: from_import
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::numpy:
+    file: ''
+    line: 0
+    module: ''
+    type: import
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py::time:
+    file: ''
+    line: 0
+    module: ''
+    type: import
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::Dict:
+    file: ''
+    line: 0
+    module: typing
+    type: from_import
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::curve_fit:
+    file: ''
+    line: 0
+    module: scipy.optimize
+    type: from_import
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::numpy:
+    file: ''
+    line: 0
+    module: ''
+    type: import
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::psutil:
+    file: ''
+    line: 0
+    module: ''
+    type: import
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py::time:
+    file: ''
+    line: 0
+    module: ''
+    type: import
   ./bhlff/models/level_e/performance/scaling_analysis.py::Dict:
     file: ''
     line: 0
     module: typing
     type: from_import
-  ./bhlff/models/level_e/performance/scaling_analysis.py::Domain7DBVP:
+  ./bhlff/models/level_e/performance/scaling_analysis.py::ScalingAnalyzer:
     file: ''
     line: 0
-    module: bhlff.core.domain.domain_7d_bvp
+    module: scaling
     type: from_import
-  ./bhlff/models/level_e/performance/scaling_analysis.py::FFTSolver7D:
-    file: ''
-    line: 0
-    module: bhlff.core.fft.fft_solver_7d
-    type: from_import
-  ./bhlff/models/level_e/performance/scaling_analysis.py::PowerLawAnalyzer:
-    file: ''
-    line: 0
-    module: bhlff.core.bvp.power_law.power_law_core
-    type: from_import
-  ./bhlff/models/level_e/performance/scaling_analysis.py::curve_fit:
-    file: ''
-    line: 0
-    module: scipy.optimize
-    type: from_import
-  ./bhlff/models/level_e/performance/scaling_analysis.py::numpy:
-    file: ''
-    line: 0
-    module: ''
-    type: import
-  ./bhlff/models/level_e/performance/scaling_analysis.py::psutil:
-    file: ''
-    line: 0
-    module: ''
-    type: import
-  ./bhlff/models/level_e/performance/scaling_analysis.py::time:
-    file: ''
-    line: 0
-    module: ''
-    type: import
   ./bhlff/models/level_e/performance_analysis.py::Dict:
     file: ''
     line: 0
@@ -86489,7 +86952,7 @@ imports:
   ./bhlff/models/level_e/phase_mapping.py::BoundaryAnalyzer:
     file: ''
     line: 0
-    module: phase_mapping.boundary_analysis
+    module: phase_mapping_components.boundary_analysis
     type: from_import
   ./bhlff/models/level_e/phase_mapping.py::Dict:
     file: ''
@@ -86499,12 +86962,12 @@ imports:
   ./bhlff/models/level_e/phase_mapping.py::RegimeClassifier:
     file: ''
     line: 0
-    module: phase_mapping.regime_classification
+    module: phase_mapping_components.regime_classification
     type: from_import
   ./bhlff/models/level_e/phase_mapping.py::ResonanceAnalyzer:
     file: ''
     line: 0
-    module: phase_mapping.resonance_analysis
+    module: phase_mapping_components.resonance_analysis
     type: from_import
   ./bhlff/models/level_e/phase_mapping.py::json:
     file: ''
@@ -86516,52 +86979,52 @@ imports:
     line: 0
     module: ''
     type: import
-  ./bhlff/models/level_e/phase_mapping/__init__.py::BoundaryAnalyzer:
+  ./bhlff/models/level_e/phase_mapping_components/__init__.py::BoundaryAnalyzer:
     file: ''
     line: 0
     module: boundary_analysis
     type: from_import
-  ./bhlff/models/level_e/phase_mapping/__init__.py::RegimeClassifier:
+  ./bhlff/models/level_e/phase_mapping_components/__init__.py::RegimeClassifier:
     file: ''
     line: 0
     module: regime_classification
     type: from_import
-  ./bhlff/models/level_e/phase_mapping/__init__.py::ResonanceAnalyzer:
+  ./bhlff/models/level_e/phase_mapping_components/__init__.py::ResonanceAnalyzer:
     file: ''
     line: 0
     module: resonance_analysis
     type: from_import
-  ./bhlff/models/level_e/phase_mapping/boundary_analysis.py::Dict:
+  ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py::Dict:
     file: ''
     line: 0
     module: typing
     type: from_import
-  ./bhlff/models/level_e/phase_mapping/boundary_analysis.py::numpy:
+  ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py::numpy:
     file: ''
     line: 0
     module: ''
     type: import
-  ./bhlff/models/level_e/phase_mapping/regime_classification.py::Dict:
+  ./bhlff/models/level_e/phase_mapping_components/regime_classification.py::Dict:
     file: ''
     line: 0
     module: typing
     type: from_import
-  ./bhlff/models/level_e/phase_mapping/regime_classification.py::apply_step_resonator:
+  ./bhlff/models/level_e/phase_mapping_components/regime_classification.py::apply_step_resonator:
     file: ''
     line: 0
     module: bhlff.core.bvp.boundary.step_resonator
     type: from_import
-  ./bhlff/models/level_e/phase_mapping/regime_classification.py::numpy:
+  ./bhlff/models/level_e/phase_mapping_components/regime_classification.py::numpy:
     file: ''
     line: 0
     module: ''
     type: import
-  ./bhlff/models/level_e/phase_mapping/resonance_analysis.py::Dict:
+  ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py::Dict:
     file: ''
     line: 0
     module: typing
     type: from_import
-  ./bhlff/models/level_e/phase_mapping/resonance_analysis.py::numpy:
+  ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py::numpy:
     file: ''
     line: 0
     module: ''
@@ -93497,7 +93960,7 @@ imports:
     module: ''
     type: import
 summary:
-  total_classes: 538
-  total_files: 639
-  total_functions: 4783
-  total_imports: 3033
+  total_classes: 542
+  total_files: 643
+  total_functions: 4812
+  total_imports: 3042

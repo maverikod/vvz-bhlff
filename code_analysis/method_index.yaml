@@ -2102,7 +2102,7 @@
       returns: None
     solve_envelope:
       decorators:
-      - <ast.Call object at 0x702d6c0aadd0>
+      - <ast.Call object at 0x7adcbcd26150>
       description: "Solve 7D BVP envelope equation.\n\nPhysical Meaning:\n    Computes\
         \ the envelope a(x,φ,t) of the Base High-Frequency Field\n    in 7D space-time\
         \ M₇ = ℝ³ₓ × \U0001D54B³_φ × ℝₜ that modulates the high-frequency carrier.\n\
@@ -2124,7 +2124,7 @@
       returns: None
     solve_envelope_linearized:
       decorators:
-      - <ast.Call object at 0x702d6c023b90>
+      - <ast.Call object at 0x7adcbcccfcd0>
       description: "Solve linearized 7D BVP envelope equation.\n\nPhysical Meaning:\n\
         \    Solves the linearized version of the envelope equation\n    ∇·(κ₀∇a)\
         \ + k₀²χ'a = s(x,φ,t) for initial guess generation.\n\nMathematical Foundation:\n\
@@ -5135,7 +5135,7 @@
       returns: None
     solve_linearized:
       decorators:
-      - <ast.Call object at 0x702d6c1a4450>
+      - <ast.Call object at 0x7adcbce32f50>
       description: "Solve linearized 7D BVP envelope equation.\n\nPhysical Meaning:\n\
         \    Solves the linearized version of the envelope equation\n    ∇·(κ₀∇a)\
         \ + k₀²χ'a = s(x,φ,t) for initial guess generation.\n\nMathematical Foundation:\n\
@@ -5243,7 +5243,7 @@
       returns: None
     compute_coefficients:
       decorators:
-      - <ast.Call object at 0x702d6c0e4150>
+      - <ast.Call object at 0x7adcbcd65750>
       description: "Compute nonlinear coefficients as functions of field amplitude.\n\
         \nPhysical Meaning:\n    Computes the nonlinear stiffness κ(|a|) and susceptibility\
         \ χ(|a|)\n    as functions of the local field amplitude, ensuring proper\n\
@@ -6705,7 +6705,7 @@
       returns: None
     wrapper:
       decorators:
-      - <ast.Call object at 0x702d6c055d10>
+      - <ast.Call object at 0x7adcbcd46350>
       description: Нет описания
       parameters: {}
       returns: None
@@ -7300,7 +7300,7 @@
       returns: None
     wrapper:
       decorators:
-      - <ast.Call object at 0x702d6c0edb90>
+      - <ast.Call object at 0x7adcbcba8890>
       description: Нет описания
       parameters: {}
       returns: None
@@ -8846,7 +8846,7 @@
       returns: None
     analyze_power_law:
       decorators:
-      - <ast.Call object at 0x702d6c07a190>
+      - <ast.Call object at 0x7adcbcce6e10>
       description: "Analyze power law behavior in the field.\n\nPhysical Meaning:\n\
         \    Computes power law exponents and scaling behavior\n    in the BVP field\
         \ according to the theoretical framework.\n\nMathematical Foundation:\n  \
@@ -10572,7 +10572,7 @@
       returns: None
     find_topological_defects:
       decorators:
-      - <ast.Call object at 0x702d6c077cd0>
+      - <ast.Call object at 0x7adcbcd642d0>
       description: "Find topological defects in the phase field with CUDA optimization.\n\
         \nPhysical Meaning:\n    Identifies points where the phase field has singularities\n\
         \    or rapid changes, indicating topological defects.\n\nMathematical Foundation:\n\
@@ -31379,10 +31379,46 @@
           description: Параметр 1
           type: Any
       returns: None
-./bhlff/models/level_e/performance/scaling_analysis.py:
+./bhlff/models/level_e/performance/scaling/__init__.py:
   ScalingAnalyzer:
     __init__:
-      description: "Initialize scaling analyzer.\n\nArgs:\n    config: Configuration\
+      description: "Initialize comprehensive scaling analyzer.\n\nArgs:\n    config:\
+        \ Configuration dictionary"
+      parameters:
+        config:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    _create_scaling_summary:
+      description: Create comprehensive scaling summary.
+      parameters:
+        base_results:
+          description: Параметр 2
+          type: Any
+        optimization_results:
+          description: Параметр 4
+          type: Any
+        performance_results:
+          description: Параметр 3
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    analyze_scaling_behavior:
+      description: Analyze comprehensive scaling behavior.
+      parameters:
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+./bhlff/models/level_e/performance/scaling/base_scaling.py:
+  BaseScalingAnalyzer:
+    __init__:
+      description: "Initialize base scaling analyzer.\n\nArgs:\n    config: Configuration\
         \ dictionary"
       parameters:
         config:
@@ -31392,104 +31428,31 @@
           description: Параметр 1
           type: Any
       returns: None
-    _analyze_overall_scaling:
-      description: Analyze overall scaling behavior.
+    _classify_scaling:
+      description: Classify scaling behavior based on exponent.
       parameters:
-        scaling_results:
-          description: Параметр 2
-          type: Any
-        self:
-          description: Параметр 1
-          type: Any
-      returns: None
-    _compute_accuracy_metrics:
-      description: Compute accuracy metrics for the solution.
-      parameters:
-        constants:
-          description: Параметр 4
-          type: Any
-        domain:
-          description: Параметр 3
-          type: Any
-        self:
-          description: Параметр 1
-          type: Any
-        solution:
-          description: Параметр 2
-          type: Any
-      returns: float
-    _compute_convergence_rate:
-      description: Compute convergence rate for the solution.
-      parameters:
-        self:
-          description: Параметр 1
-          type: Any
-        solution:
-          description: Параметр 2
-          type: Any
-        tolerance:
-          description: Параметр 3
-          type: Any
-      returns: float
-    _compute_energy_functional:
-      description: Compute energy functional for the solution.
-      parameters:
-        constants:
-          description: Параметр 4
-          type: Any
-        domain:
-          description: Параметр 3
-          type: Any
-        self:
-          description: Параметр 1
-          type: Any
-        solution:
-          description: Параметр 2
-          type: Any
-      returns: float
-    _compute_overall_assessment:
-      description: Compute overall assessment from individual assessments.
-      parameters:
-        assessments:
+        exponent:
           description: Параметр 2
           type: Any
         self:
           description: Параметр 1
           type: Any
       returns: str
-    _compute_topological_charge:
-      description: Compute topological charge for the solution.
+    _compute_scaling_exponent:
+      description: Compute scaling exponent from size-time relationship.
       parameters:
-        domain:
+        self:
+          description: Параметр 1
+          type: Any
+        sizes:
+          description: Параметр 2
+          type: Any
+        times:
           description: Параметр 3
           type: Any
-        self:
-          description: Параметр 1
-          type: Any
-        solution:
-          description: Параметр 2
-          type: Any
       returns: float
-    _run_simulation:
-      description: "Run simulation with given configuration.\n\nPhysical Meaning:\n\
-        \    Executes the 7D phase field simulation with specified\n    parameters\
-        \ and returns key observables using the complete\n    7D BVP framework with\
-        \ proper phase field dynamics.\n\nMathematical Foundation:\n    Implements\
-        \ full 7D BVP simulation:\n    - Domain7D: 7D space-time domain M₇ = ℝ³ₓ ×\
-        \ \U0001D54B³_φ × ℝₜ\n    - FFTSolver7D: Spectral solver for fractional Laplacian\
-        \ equation\n    - PowerLawAnalyzer: Analysis of power law tails and scaling\n\
-        \    - Phase field evolution: ∂a/∂t = L_β a + nonlinear_terms\n    - Energy\
-        \ functional: E = ∫ [μ|∇a|² + λ|a|² + nonlinear] d³x d³φ dt"
-      parameters:
-        config:
-          description: Параметр 2
-          type: Any
-        self:
-          description: Параметр 1
-          type: Any
-      returns: None
     _test_domain_scaling:
-      description: Test scaling with domain size.
+      description: Test scaling with respect to domain size.
       parameters:
         domain_sizes:
           description: Параметр 2
@@ -31499,7 +31462,7 @@
           type: Any
       returns: None
     _test_grid_scaling:
-      description: Test scaling with grid size.
+      description: Test scaling with respect to grid size.
       parameters:
         grid_sizes:
           description: Параметр 2
@@ -31509,7 +31472,7 @@
           type: Any
       returns: None
     _test_time_scaling:
-      description: Test scaling with time range.
+      description: Test scaling with respect to time range.
       parameters:
         self:
           description: Параметр 1
@@ -31518,24 +31481,285 @@
           description: Параметр 2
           type: Any
       returns: None
-    analyze_scaling_behavior:
-      description: Analyze computational scaling behavior.
+    analyze_base_scaling:
+      description: Analyze base scaling behavior.
       parameters:
         self:
           description: Параметр 1
           type: Any
       returns: None
-  functions:
-    power_law:
-      description: Нет описания
+./bhlff/models/level_e/performance/scaling/optimization_scaling.py:
+  OptimizationScalingAnalyzer:
+    __init__:
+      description: "Initialize optimization scaling analyzer.\n\nArgs:\n    config:\
+        \ Configuration dictionary"
       parameters:
-        a:
+        config:
           description: Параметр 2
           type: Any
-        b:
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    _analyze_algorithm_optimization:
+      description: Analyze algorithm optimization opportunities.
+      parameters:
+        problem_sizes:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    _analyze_memory_optimization:
+      description: Analyze memory optimization opportunities.
+      parameters:
+        problem_sizes:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    _analyze_overall_optimization:
+      description: Analyze overall optimization opportunities.
+      parameters:
+        optimization_results:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    _analyze_parallel_optimization:
+      description: Analyze parallel optimization opportunities.
+      parameters:
+        optimization_levels:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    _compute_optimization_grade:
+      description: Compute optimization grade based on efficiency.
+      parameters:
+        efficiency:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: str
+    _compute_optimization_roi:
+      description: Compute optimization return on investment.
+      parameters:
+        optimization_results:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: float
+    _compute_scaling_exponent:
+      description: Compute scaling exponent from size-time relationship.
+      parameters:
+        self:
+          description: Параметр 1
+          type: Any
+        sizes:
+          description: Параметр 2
+          type: Any
+        times:
           description: Параметр 3
           type: Any
-        t:
+      returns: float
+    _create_optimization_roadmap:
+      description: Create optimization roadmap based on priorities.
+      parameters:
+        priorities:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    _identify_memory_optimization_strategies:
+      description: Identify memory optimization strategies.
+      parameters:
+        opportunities:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    _identify_optimization_strategies:
+      description: Identify optimization strategies based on performance data.
+      parameters:
+        self:
+          description: Параметр 1
+          type: Any
+        sizes:
+          description: Параметр 2
+          type: Any
+        times:
+          description: Параметр 3
+          type: Any
+      returns: None
+    _identify_parallel_optimization_strategies:
+      description: Identify parallel optimization strategies.
+      parameters:
+        efficiency:
+          description: Параметр 3
+          type: Any
+        levels:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    analyze_optimization_scaling:
+      description: Analyze optimization scaling opportunities.
+      parameters:
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+./bhlff/models/level_e/performance/scaling/performance_scaling.py:
+  PerformanceScalingAnalyzer:
+    __init__:
+      description: "Initialize performance scaling analyzer.\n\nArgs:\n    config:\
+        \ Configuration dictionary"
+      parameters:
+        config:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    _analyze_complexity_scaling:
+      description: Analyze complexity scaling behavior.
+      parameters:
+        complexity_levels:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    _analyze_cpu_scaling:
+      description: Analyze CPU scaling behavior.
+      parameters:
+        problem_sizes:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    _analyze_memory_scaling:
+      description: Analyze memory scaling behavior.
+      parameters:
+        problem_sizes:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    _analyze_overall_performance:
+      description: Analyze overall performance characteristics.
+      parameters:
+        performance_results:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    _classify_scaling:
+      description: Classify scaling behavior based on exponent.
+      parameters:
+        exponent:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: str
+    _compute_cpu_efficiency:
+      description: Compute CPU efficiency from usage data.
+      parameters:
+        cpu_usage:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: float
+    _compute_efficiency_trend:
+      description: Compute efficiency trend from size-efficiency data.
+      parameters:
+        efficiencies:
+          description: Параметр 3
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+        sizes:
+          description: Параметр 2
+          type: Any
+      returns: str
+    _compute_performance_grade:
+      description: Compute performance grade based on efficiency.
+      parameters:
+        efficiency:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: str
+    _compute_scaling_exponent:
+      description: Compute scaling exponent from size-time relationship.
+      parameters:
+        self:
+          description: Параметр 1
+          type: Any
+        sizes:
+          description: Параметр 2
+          type: Any
+        times:
+          description: Параметр 3
+          type: Any
+      returns: float
+    analyze_performance_scaling:
+      description: Analyze performance scaling behavior.
+      parameters:
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+./bhlff/models/level_e/performance/scaling_analysis.py:
+  ScalingAnalyzer:
+    __init__:
+      description: "Initialize scaling analyzer facade.\n\nArgs:\n    config: Configuration\
+        \ dictionary"
+      parameters:
+        config:
+          description: Параметр 2
+          type: Any
+        self:
+          description: Параметр 1
+          type: Any
+      returns: None
+    analyze_scaling_behavior:
+      description: Analyze comprehensive scaling behavior.
+      parameters:
+        self:
           description: Параметр 1
           type: Any
       returns: None
@@ -31559,6 +31783,46 @@
           description: Параметр 1
           type: Any
       returns: None
+    analyze_cpu_usage:
+      description: Analyze CPU usage performance.
+      parameters:
+        self:
+          description: Параметр 1
+          type: Any
+        test_data:
+          description: Параметр 2
+          type: Any
+      returns: None
+    analyze_execution_time:
+      description: Analyze execution time performance.
+      parameters:
+        self:
+          description: Параметр 1
+          type: Any
+        test_data:
+          description: Параметр 2
+          type: Any
+      returns: None
+    analyze_gpu_usage:
+      description: Analyze GPU usage performance.
+      parameters:
+        self:
+          description: Параметр 1
+          type: Any
+        test_data:
+          description: Параметр 2
+          type: Any
+      returns: None
+    analyze_memory_usage:
+      description: Analyze memory usage performance.
+      parameters:
+        self:
+          description: Параметр 1
+          type: Any
+        test_data:
+          description: Параметр 2
+          type: Any
+      returns: None
     analyze_performance:
       description: "Perform comprehensive performance analysis.\n\nPhysical Meaning:\n\
         \    Analyzes computational performance across different\n    problem sizes\
@@ -31567,6 +31831,26 @@
       parameters:
         self:
           description: Параметр 1
+          type: Any
+      returns: None
+    analyze_performance_optimization:
+      description: Analyze performance optimization opportunities.
+      parameters:
+        self:
+          description: Параметр 1
+          type: Any
+        test_data:
+          description: Параметр 2
+          type: Any
+      returns: None
+    generate_performance_report:
+      description: Generate comprehensive performance report.
+      parameters:
+        self:
+          description: Параметр 1
+          type: Any
+        test_data:
+          description: Параметр 2
           type: Any
       returns: None
 ./bhlff/models/level_e/phase_mapping.py:
@@ -31687,7 +31971,7 @@
           description: Параметр 1
           type: Any
       returns: None
-./bhlff/models/level_e/phase_mapping/boundary_analysis.py:
+./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py:
   BoundaryAnalyzer:
     __init__:
       description: "Initialize boundary analyzer.\n\nPhysical Meaning:\n    Sets up\
@@ -31752,7 +32036,7 @@
           description: Параметр 1
           type: Any
       returns: None
-./bhlff/models/level_e/phase_mapping/regime_classification.py:
+./bhlff/models/level_e/phase_mapping_components/regime_classification.py:
   RegimeClassifier:
     __init__:
       description: "Initialize regime classifier.\n\nArgs:\n    config: Configuration\
@@ -31842,7 +32126,7 @@
           description: Параметр 1
           type: Any
       returns: None
-./bhlff/models/level_e/phase_mapping/resonance_analysis.py:
+./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py:
   ResonanceAnalyzer:
     __init__:
       description: "Initialize resonance analyzer.\n\nPhysical Meaning:\n    Sets\
@@ -41464,7 +41748,7 @@
   functions:
     cleanup_cuda_memory:
       decorators:
-      - <ast.Call object at 0x702d6c658710>
+      - <ast.Call object at 0x7adcbd358150>
       description: "Cleanup CUDA memory after each test.\n\nPhysical Meaning:\n  \
         \  Ensures CUDA memory is properly freed after each test\n    to prevent memory\
         \ accumulation and out-of-memory errors."
@@ -41510,14 +41794,14 @@
       returns: None
     setup_test_environment:
       decorators:
-      - <ast.Call object at 0x702d6c65a990>
+      - <ast.Call object at 0x7adcbd3e4790>
       description: "Setup test environment.\n\nPhysical Meaning:\n    Configures the\
         \ test environment for reproducible\n    physical validation testing."
       parameters: {}
       returns: None
     test_amplitudes:
       decorators:
-      - <ast.Attribute object at 0x702d6c697950>
+      - <ast.Attribute object at 0x7adcbd3e6e50>
       description: "Create test amplitudes for nonlinear testing.\n\nPhysical Meaning:\n\
         \    Provides a range of amplitudes for testing nonlinear\n    material properties\
         \ and effects."
@@ -41525,7 +41809,7 @@
       returns: None
     test_bvp_constants:
       decorators:
-      - <ast.Call object at 0x702d6c6ea690>
+      - <ast.Call object at 0x7adcbd2f2010>
       description: "Create BVP constants for testing.\n\nPhysical Meaning:\n    Provides\
         \ physically meaningful BVP constants for testing\n    the 7D BVP theory implementation.\n\
         \nMathematical Foundation:\n    Constants satisfying physical constraints:\n\
@@ -41534,7 +41818,7 @@
       returns: BVPConstantsAdvanced
     test_bvp_constants_extreme:
       decorators:
-      - <ast.Call object at 0x702d6c6ea3d0>
+      - <ast.Call object at 0x7adcbd33fc90>
       description: "Create extreme BVP constants for testing.\n\nPhysical Meaning:\n\
         \    Provides extreme but physically valid BVP constants for\n    testing\
         \ robustness and edge cases."
@@ -41542,7 +41826,7 @@
       returns: BVPConstantsAdvanced
     test_domain_7d:
       decorators:
-      - <ast.Call object at 0x702d6c6ea390>
+      - <ast.Call object at 0x7adcbd2f30d0>
       description: "Create 7D domain for testing.\n\nPhysical Meaning:\n    Provides\
         \ a 7D computational domain M₇ = ℝ³ₓ × \U0001D54B³_φ × ℝₜ\n    for testing\
         \ the BVP theory implementation.\n\nMathematical Foundation:\n    Domain with\
@@ -41552,7 +41836,7 @@
       returns: Domain
     test_domain_7d_high_res:
       decorators:
-      - <ast.Call object at 0x702d6c6eb4d0>
+      - <ast.Call object at 0x7adcbd2f2a90>
       description: "Create high-resolution 7D domain for testing.\n\nPhysical Meaning:\n\
         \    Provides a high-resolution 7D computational domain for\n    testing spectral\
         \ accuracy and convergence."
@@ -41560,7 +41844,7 @@
       returns: Domain
     test_envelope_analytical:
       decorators:
-      - <ast.Attribute object at 0x702d6c695290>
+      - <ast.Attribute object at 0x7adcbd295c50>
       description: "Create analytical envelope for testing.\n\nPhysical Meaning:\n\
         \    Provides an envelope with known analytical properties\n    for testing\
         \ postulate validation."
@@ -41571,7 +41855,7 @@
       returns: None
     test_frequencies:
       decorators:
-      - <ast.Attribute object at 0x702d6c6940d0>
+      - <ast.Attribute object at 0x7adcbd3e7690>
       description: "Create test frequencies for frequency-dependent testing.\n\nPhysical\
         \ Meaning:\n    Provides a range of frequencies for testing frequency-dependent\n\
         \    material properties and spectral methods."
@@ -41579,7 +41863,7 @@
       returns: None
     test_results_cache:
       decorators:
-      - <ast.Call object at 0x702d6c653450>
+      - <ast.Call object at 0x7adcbd34c910>
       description: "Create test results cache.\n\nPhysical Meaning:\n    Provides\
         \ a cache for storing test results to avoid\n    recomputation in long-running\
         \ physical validation tests."
@@ -41587,7 +41871,7 @@
       returns: None
     test_scales:
       decorators:
-      - <ast.Attribute object at 0x702d6c65bb50>
+      - <ast.Attribute object at 0x7adcbd3e5b90>
       description: "Create test scales for renormalization testing.\n\nPhysical Meaning:\n\
         \    Provides a range of scales for testing renormalization\n    group flow\
         \ and scaling behavior."
@@ -41595,7 +41879,7 @@
       returns: None
     test_source_gaussian:
       decorators:
-      - <ast.Attribute object at 0x702d6c589350>
+      - <ast.Attribute object at 0x7adcbd3ef350>
       description: "Create Gaussian source for testing.\n\nPhysical Meaning:\n   \
         \ Provides a Gaussian source with known analytical properties\n    for testing\
         \ BVP equation solution."
@@ -41606,7 +41890,7 @@
       returns: None
     test_source_localized:
       decorators:
-      - <ast.Attribute object at 0x702d6c6e6890>
+      - <ast.Attribute object at 0x7adcbd288650>
       description: "Create localized source for testing.\n\nPhysical Meaning:\n  \
         \  Provides a localized source for testing boundary conditions\n    and field\
         \ propagation."
@@ -41617,7 +41901,7 @@
       returns: None
     test_source_sinusoidal:
       decorators:
-      - <ast.Attribute object at 0x702d6c594890>
+      - <ast.Attribute object at 0x7adcbd28a6d0>
       description: "Create sinusoidal source for testing.\n\nPhysical Meaning:\n \
         \   Provides a sinusoidal source with known analytical derivatives\n    for\
         \ testing spectral methods."
@@ -42167,7 +42451,7 @@
       returns: None
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c68ad10>
+      - <ast.Attribute object at 0x7adcbd391690>
       description: Create BVP constants for complete pipeline testing.
       parameters:
         self:
@@ -42176,7 +42460,7 @@
       returns: None
     bvp_core:
       decorators:
-      - <ast.Attribute object at 0x702d6c68a710>
+      - <ast.Attribute object at 0x7adcbd391850>
       description: Create BVP core for complete pipeline testing.
       parameters:
         bvp_constants:
@@ -42191,7 +42475,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c68b590>
+      - <ast.Attribute object at 0x7adcbd390a90>
       description: Create 7D domain for complete pipeline testing.
       parameters:
         self:
@@ -42247,7 +42531,7 @@
       returns: None
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c670350>
+      - <ast.Attribute object at 0x7adcbd371350>
       description: Create BVP constants for complete pipeline testing.
       parameters:
         self:
@@ -42256,7 +42540,7 @@
       returns: None
     bvp_core:
       decorators:
-      - <ast.Attribute object at 0x702d6c670a10>
+      - <ast.Attribute object at 0x7adcbd373ed0>
       description: Create BVP core for complete pipeline testing.
       parameters:
         bvp_constants:
@@ -42271,7 +42555,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c671350>
+      - <ast.Attribute object at 0x7adcbd371dd0>
       description: Create 7D domain for complete pipeline testing.
       parameters:
         self:
@@ -42308,7 +42592,7 @@
       returns: None
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c673f50>
+      - <ast.Attribute object at 0x7adcbd34e010>
       description: Create BVP constants for complete pipeline testing.
       parameters:
         self:
@@ -42317,7 +42601,7 @@
       returns: None
     bvp_interface:
       decorators:
-      - <ast.Attribute object at 0x702d6c672d90>
+      - <ast.Attribute object at 0x7adcbd397810>
       description: Create BVP interface for complete pipeline testing.
       parameters:
         bvp_constants:
@@ -42332,7 +42616,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c673690>
+      - <ast.Attribute object at 0x7adcbd34f110>
       description: Create 7D domain for complete pipeline testing.
       parameters:
         self:
@@ -42370,7 +42654,7 @@
       returns: None
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c662290>
+      - <ast.Attribute object at 0x7adcbd3dbe50>
       description: Create BVP constants for complete pipeline testing.
       parameters:
         self:
@@ -42379,7 +42663,7 @@
       returns: None
     bvp_core:
       decorators:
-      - <ast.Attribute object at 0x702d6c661a10>
+      - <ast.Attribute object at 0x7adcbd3d8690>
       description: Create BVP core for complete pipeline testing.
       parameters:
         bvp_constants:
@@ -42394,7 +42678,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c64c750>
+      - <ast.Attribute object at 0x7adcbd351610>
       description: Create 7D domain for complete pipeline testing.
       parameters:
         self:
@@ -42444,7 +42728,7 @@
       returns: None
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c58ae50>
+      - <ast.Attribute object at 0x7adcbd3d41d0>
       description: Create BVP constants for complete pipeline testing.
       parameters:
         self:
@@ -42453,7 +42737,7 @@
       returns: None
     bvp_core:
       decorators:
-      - <ast.Attribute object at 0x702d6c58b4d0>
+      - <ast.Attribute object at 0x7adcbd3d54d0>
       description: Create BVP core for complete pipeline testing.
       parameters:
         bvp_constants:
@@ -42468,7 +42752,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c58a850>
+      - <ast.Attribute object at 0x7adcbd29cdd0>
       description: Create 7D domain for complete pipeline testing.
       parameters:
         self:
@@ -42495,7 +42779,7 @@
   TestBVPFramework:
     bvp_config:
       decorators:
-      - <ast.Attribute object at 0x702d6c5f2250>
+      - <ast.Attribute object at 0x7adcbd3da250>
       description: Create BVP configuration for testing.
       parameters:
         self:
@@ -42504,7 +42788,7 @@
       returns: None
     bvp_core:
       decorators:
-      - <ast.Attribute object at 0x702d6c63fb90>
+      - <ast.Attribute object at 0x7adcbd3d9b50>
       description: Create BVP core instance for testing.
       parameters:
         bvp_config:
@@ -42519,7 +42803,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c5f3450>
+      - <ast.Attribute object at 0x7adcbd3db450>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -42680,7 +42964,7 @@
   TestBVPLevelAIntegration:
     bvp_config:
       decorators:
-      - <ast.Attribute object at 0x702d6c673f50>
+      - <ast.Attribute object at 0x7adcbd351050>
       description: Create BVP configuration.
       parameters:
         self:
@@ -42689,7 +42973,7 @@
       returns: None
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c671550>
+      - <ast.Attribute object at 0x7adcbd350390>
       description: Create test domain.
       parameters:
         self:
@@ -42739,7 +43023,7 @@
   TestBVPLevelBIntegration:
     bvp_config:
       decorators:
-      - <ast.Attribute object at 0x702d6c694490>
+      - <ast.Attribute object at 0x7adcbd2f2d50>
       description: Create BVP configuration.
       parameters:
         self:
@@ -42748,7 +43032,7 @@
       returns: None
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c694ad0>
+      - <ast.Attribute object at 0x7adcbd2f1f10>
       description: Create test domain.
       parameters:
         self:
@@ -42798,7 +43082,7 @@
   TestBVPLevelCIntegration:
     bvp_config:
       decorators:
-      - <ast.Attribute object at 0x702d6c64ef10>
+      - <ast.Attribute object at 0x7adcbd34c3d0>
       description: Create BVP configuration.
       parameters:
         self:
@@ -42807,7 +43091,7 @@
       returns: None
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c64f910>
+      - <ast.Attribute object at 0x7adcbd34fb50>
       description: Create test domain.
       parameters:
         self:
@@ -42857,7 +43141,7 @@
   TestBVPLevelDIntegration:
     bvp_config:
       decorators:
-      - <ast.Attribute object at 0x702d6c6e9cd0>
+      - <ast.Attribute object at 0x7adcbd288310>
       description: Create BVP configuration.
       parameters:
         self:
@@ -42866,7 +43150,7 @@
       returns: None
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c6eaed0>
+      - <ast.Attribute object at 0x7adcbd28aa90>
       description: Create test domain.
       parameters:
         self:
@@ -42916,7 +43200,7 @@
   TestBVPLevelEIntegration:
     bvp_config:
       decorators:
-      - <ast.Attribute object at 0x702d6c589910>
+      - <ast.Attribute object at 0x7adcbd3edc50>
       description: Create BVP configuration.
       parameters:
         self:
@@ -42925,7 +43209,7 @@
       returns: None
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c588f90>
+      - <ast.Attribute object at 0x7adcbd3ecd50>
       description: Create test domain.
       parameters:
         self:
@@ -42975,7 +43259,7 @@
   TestBVPLevelFIntegration:
     bvp_config:
       decorators:
-      - <ast.Attribute object at 0x702d6c672510>
+      - <ast.Attribute object at 0x7adcbd394c50>
       description: Create BVP configuration.
       parameters:
         self:
@@ -42984,7 +43268,7 @@
       returns: None
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c671b50>
+      - <ast.Attribute object at 0x7adcbd395890>
       description: Create test domain.
       parameters:
         self:
@@ -43034,7 +43318,7 @@
   TestBVPLevelGIntegration:
     bvp_config:
       decorators:
-      - <ast.Attribute object at 0x702d6c661350>
+      - <ast.Attribute object at 0x7adcbd350650>
       description: Create BVP configuration.
       parameters:
         self:
@@ -43043,7 +43327,7 @@
       returns: None
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c661b50>
+      - <ast.Attribute object at 0x7adcbd353f50>
       description: Create test domain.
       parameters:
         self:
@@ -43539,7 +43823,7 @@
   Test7DBVPPhysics:
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c5f3410>
+      - <ast.Attribute object at 0x7adcbd3e6d50>
       description: Create 7D BVP domain for testing.
       parameters:
         self:
@@ -43548,7 +43832,7 @@
       returns: Domain7DBVP
     parameters_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c6f46d0>
+      - <ast.Attribute object at 0x7adcbd3e4650>
       description: Create 7D BVP parameters for testing.
       parameters:
         self:
@@ -43557,7 +43841,7 @@
       returns: Parameters7DBVP
     solver_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c6f6e90>
+      - <ast.Attribute object at 0x7adcbd3e5410>
       description: Create 7D BVP solver for testing.
       parameters:
         domain_7d:
@@ -43658,7 +43942,7 @@
   TestAcceptanceCriteria:
     domain_3d:
       decorators:
-      - <ast.Attribute object at 0x702d6c5f3b50>
+      - <ast.Attribute object at 0x7adcbd350210>
       description: Create 3D domain for testing.
       parameters:
         self:
@@ -43755,7 +44039,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c33b3d0>
+      - <ast.Attribute object at 0x7adcbd03c790>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -43764,7 +44048,7 @@
       returns: None
     parameters_basic:
       decorators:
-      - <ast.Attribute object at 0x702d6c33ab10>
+      - <ast.Attribute object at 0x7adcbd03c9d0>
       description: Basic parameters for testing.
       parameters:
         self:
@@ -43773,7 +44057,7 @@
       returns: None
     solver:
       decorators:
-      - <ast.Attribute object at 0x702d6c33b290>
+      - <ast.Attribute object at 0x7adcbd03dcd0>
       description: Create FFT solver for testing.
       parameters:
         domain_7d:
@@ -43865,7 +44149,7 @@
   TestBoundaryCases:
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c4dacd0>
+      - <ast.Attribute object at 0x7adcbd1a1290>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -43874,7 +44158,7 @@
       returns: None
     parameters_basic:
       decorators:
-      - <ast.Attribute object at 0x702d6c4d8b10>
+      - <ast.Attribute object at 0x7adcbd13f790>
       description: Basic parameters for testing.
       parameters:
         self:
@@ -43883,7 +44167,7 @@
       returns: None
     solver:
       decorators:
-      - <ast.Attribute object at 0x702d6c4cdc10>
+      - <ast.Attribute object at 0x7adcbd149f10>
       description: Create FFT solver for testing.
       parameters:
         domain_7d:
@@ -44042,7 +44326,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c4ecc50>
+      - <ast.Attribute object at 0x7adcbd1e9750>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -44051,7 +44335,7 @@
       returns: None
     parameters_basic:
       decorators:
-      - <ast.Attribute object at 0x702d6c4ed6d0>
+      - <ast.Attribute object at 0x7adcbd1e81d0>
       description: Basic parameters for testing.
       parameters:
         self:
@@ -44060,7 +44344,7 @@
       returns: None
     solver:
       decorators:
-      - <ast.Attribute object at 0x702d6c4ed310>
+      - <ast.Attribute object at 0x7adcbd1e9d10>
       description: Create FFT solver for testing.
       parameters:
         domain_7d:
@@ -44146,7 +44430,7 @@
   TestAdvancedProperties:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c36d0d0>
+      - <ast.Attribute object at 0x7adcbd01f4d0>
       description: Create BVP constants for testing.
       parameters:
         self:
@@ -44155,7 +44439,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c36dfd0>
+      - <ast.Attribute object at 0x7adcbd01d410>
       description: Create 7D domain for constants testing.
       parameters:
         self:
@@ -44164,7 +44448,7 @@
       returns: None
     freq_props:
       decorators:
-      - <ast.Attribute object at 0x702d6c36c6d0>
+      - <ast.Attribute object at 0x7adcbd01f810>
       description: Create frequency-dependent properties for testing.
       parameters:
         bvp_constants:
@@ -44271,7 +44555,7 @@
   TestBasicProperties:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c30ef50>
+      - <ast.Attribute object at 0x7adcbd04a6d0>
       description: Create BVP constants for testing.
       parameters:
         self:
@@ -44280,7 +44564,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c4bcdd0>
+      - <ast.Attribute object at 0x7adcbd048090>
       description: Create 7D domain for constants testing.
       parameters:
         self:
@@ -44289,7 +44573,7 @@
       returns: None
     freq_props:
       decorators:
-      - <ast.Attribute object at 0x702d6c30fc90>
+      - <ast.Attribute object at 0x7adcbd04a610>
       description: Create frequency-dependent properties for testing.
       parameters:
         bvp_constants:
@@ -44399,7 +44683,7 @@
   TestAdvancedCoefficients:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c35a790>
+      - <ast.Attribute object at 0x7adcbd05a790>
       description: Create BVP constants for testing.
       parameters:
         self:
@@ -44408,7 +44692,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c35b110>
+      - <ast.Attribute object at 0x7adcbd05b110>
       description: Create 7D domain for constants testing.
       parameters:
         self:
@@ -44417,7 +44701,7 @@
       returns: None
     nonlinear_coeffs:
       decorators:
-      - <ast.Attribute object at 0x702d6c35a210>
+      - <ast.Attribute object at 0x7adcbd05a210>
       description: Create nonlinear coefficients for testing.
       parameters:
         bvp_constants:
@@ -44524,7 +44808,7 @@
   TestBasicCoefficients:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c4efd10>
+      - <ast.Attribute object at 0x7adcbd01d950>
       description: Create BVP constants for testing.
       parameters:
         self:
@@ -44533,7 +44817,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c4ef590>
+      - <ast.Attribute object at 0x7adcbd01eb50>
       description: Create 7D domain for constants testing.
       parameters:
         self:
@@ -44542,7 +44826,7 @@
       returns: None
     nonlinear_coeffs:
       decorators:
-      - <ast.Attribute object at 0x702d6c4eec10>
+      - <ast.Attribute object at 0x7adcbd01ecd0>
       description: Create nonlinear coefficients for testing.
       parameters:
         bvp_constants:
@@ -44777,7 +45061,7 @@
       returns: None
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c45d410>
+      - <ast.Attribute object at 0x7adcbd15d150>
       description: Create BVP constants for physical testing.
       parameters:
         self:
@@ -44786,7 +45070,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c45c090>
+      - <ast.Attribute object at 0x7adcbd15c850>
       description: Create 7D domain for physical testing.
       parameters:
         self:
@@ -44795,7 +45079,7 @@
       returns: None
     envelope_solver:
       decorators:
-      - <ast.Attribute object at 0x702d6c45d2d0>
+      - <ast.Attribute object at 0x7adcbd15d350>
       description: Create envelope solver for physical testing.
       parameters:
         bvp_constants:
@@ -44810,7 +45094,7 @@
       returns: None
     quench_detector:
       decorators:
-      - <ast.Attribute object at 0x702d6c45da50>
+      - <ast.Attribute object at 0x7adcbd15de10>
       description: Create quench detector for physical testing.
       parameters:
         bvp_constants:
@@ -45007,7 +45291,7 @@
   TestBaseTimeIntegrator:
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c6f75d0>
+      - <ast.Attribute object at 0x7adcbd13cf50>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -45016,7 +45300,7 @@
       returns: None
     parameters_basic:
       decorators:
-      - <ast.Attribute object at 0x702d6c4087d0>
+      - <ast.Attribute object at 0x7adcbd13db10>
       description: Basic parameters for testing.
       parameters:
         self:
@@ -45163,7 +45447,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c4edfd0>
+      - <ast.Attribute object at 0x7adcbd1d8850>
       description: Create 7D domain for basic testing.
       parameters:
         self:
@@ -45263,7 +45547,7 @@
   TestBVPConstantsBaseCoverage:
     config:
       decorators:
-      - <ast.Attribute object at 0x702d6c4d99d0>
+      - <ast.Attribute object at 0x7adcbd027290>
       description: Create test configuration.
       parameters:
         self:
@@ -45272,7 +45556,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c4da4d0>
+      - <ast.Attribute object at 0x7adcbd027e10>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -45413,7 +45697,7 @@
   TestBVPConstantsAdvanced:
     constants_advanced:
       decorators:
-      - <ast.Attribute object at 0x702d6c474150>
+      - <ast.Attribute object at 0x7adcbd19a850>
       description: Create BVPConstantsAdvanced instance.
       parameters:
         config:
@@ -45486,7 +45770,7 @@
   TestBVPConstantsBase:
     config:
       decorators:
-      - <ast.Attribute object at 0x702d6c477a50>
+      - <ast.Attribute object at 0x7adcbd1ed1d0>
       description: Create test configuration.
       parameters:
         self:
@@ -45495,7 +45779,7 @@
       returns: None
     constants_base:
       decorators:
-      - <ast.Attribute object at 0x702d6c326950>
+      - <ast.Attribute object at 0x7adcbd026950>
       description: Create BVPConstantsBase instance.
       parameters:
         config:
@@ -45655,7 +45939,7 @@
   TestFrequencyDependentProperties:
     frequency_properties:
       decorators:
-      - <ast.Attribute object at 0x702d6c30b110>
+      - <ast.Attribute object at 0x7adcbd1e8790>
       description: Create FrequencyDependentProperties instance.
       parameters:
         mock_constants:
@@ -45667,7 +45951,7 @@
       returns: None
     mock_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c33ecd0>
+      - <ast.Attribute object at 0x7adcbd03ec90>
       description: Create mock constants.
       parameters:
         self:
@@ -45750,7 +46034,7 @@
   TestNonlinearCoefficients:
     nonlinear_coeffs:
       decorators:
-      - <ast.Attribute object at 0x702d6c34b550>
+      - <ast.Attribute object at 0x7adcbd04b590>
       description: Create NonlinearCoefficients instance.
       parameters:
         mock_constants:
@@ -45796,7 +46080,7 @@
   TestRenormalizedCoefficients:
     renormalized_coeffs:
       decorators:
-      - <ast.Attribute object at 0x702d6c33e450>
+      - <ast.Attribute object at 0x7adcbd03e410>
       description: Create RenormalizedCoefficients instance.
       parameters:
         mock_constants:
@@ -45943,7 +46227,7 @@
   TestBVPConstantsNumericalCoverage:
     config:
       decorators:
-      - <ast.Attribute object at 0x702d6c521d90>
+      - <ast.Attribute object at 0x7adcbd13f8d0>
       description: Create test configuration.
       parameters:
         self:
@@ -45952,7 +46236,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c6f41d0>
+      - <ast.Attribute object at 0x7adcbd13ccd0>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -46106,7 +46390,7 @@
   TestBVPConstantsPhysics:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c4ead90>
+      - <ast.Attribute object at 0x7adcbd00aa10>
       description: Create BVP constants for testing.
       parameters:
         self:
@@ -46115,7 +46399,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c4ea490>
+      - <ast.Attribute object at 0x7adcbd0082d0>
       description: Create 7D domain for constants testing.
       parameters:
         self:
@@ -46253,7 +46537,7 @@
   TestBVPCoreCoverage:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c45c790>
+      - <ast.Attribute object at 0x7adcbd1bcb90>
       description: Create BVP constants.
       parameters:
         config:
@@ -46265,7 +46549,7 @@
       returns: None
     config:
       decorators:
-      - <ast.Attribute object at 0x702d6c45d650>
+      - <ast.Attribute object at 0x7adcbd1bfb50>
       description: Create test configuration.
       parameters:
         self:
@@ -46274,7 +46558,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c45d8d0>
+      - <ast.Attribute object at 0x7adcbd268410>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -46441,7 +46725,7 @@
   TestBVPInterfaceCoverage:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c49a850>
+      - <ast.Attribute object at 0x7adcbd3d6c10>
       description: Create BVP constants.
       parameters:
         config:
@@ -46453,7 +46737,7 @@
       returns: None
     config:
       decorators:
-      - <ast.Attribute object at 0x702d6c498710>
+      - <ast.Attribute object at 0x7adcbd3b0490>
       description: Create test configuration.
       parameters:
         self:
@@ -46462,7 +46746,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c498b50>
+      - <ast.Attribute object at 0x7adcbd3b3ed0>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -46716,7 +47000,7 @@
   TestBVPPostulatesCoverage:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c696510>
+      - <ast.Attribute object at 0x7adcbd225390>
       description: Create BVP constants.
       parameters:
         config:
@@ -46728,7 +47012,7 @@
       returns: None
     config:
       decorators:
-      - <ast.Attribute object at 0x702d6c694b50>
+      - <ast.Attribute object at 0x7adcbd227950>
       description: Create test configuration.
       parameters:
         self:
@@ -46737,7 +47021,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c406910>
+      - <ast.Attribute object at 0x7adcbd227350>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -46901,7 +47185,7 @@
       returns: None
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c49d6d0>
+      - <ast.Attribute object at 0x7adcbd3b0890>
       description: Create BVP constants for postulate testing.
       parameters:
         self:
@@ -46910,7 +47194,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c49d490>
+      - <ast.Attribute object at 0x7adcbd275c10>
       description: Create 7D domain for postulate testing.
       parameters:
         self:
@@ -46939,7 +47223,7 @@
       returns: None
     test_envelope:
       decorators:
-      - <ast.Attribute object at 0x702d6c414150>
+      - <ast.Attribute object at 0x7adcbd118cd0>
       description: Create test envelope for postulate validation.
       parameters:
         domain_7d:
@@ -46953,7 +47237,7 @@
   TestBVPRigidityPostulatePhysics:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c4a2a90>
+      - <ast.Attribute object at 0x7adcbd19bb50>
       description: Create BVP constants for postulate testing.
       parameters:
         self:
@@ -46962,7 +47246,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c4a2b10>
+      - <ast.Attribute object at 0x7adcbd19a250>
       description: Create 7D domain for postulate testing.
       parameters:
         self:
@@ -46991,7 +47275,7 @@
       returns: None
     test_envelope:
       decorators:
-      - <ast.Attribute object at 0x702d6c4ce410>
+      - <ast.Attribute object at 0x7adcbd1ccf90>
       description: Create test envelope for postulate validation.
       parameters:
         domain_7d:
@@ -47005,7 +47289,7 @@
   TestCarrierPrimacyPostulatePhysics:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c4ee610>
+      - <ast.Attribute object at 0x7adcbd1e9750>
       description: Create BVP constants for postulate testing.
       parameters:
         self:
@@ -47014,7 +47298,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c4edb50>
+      - <ast.Attribute object at 0x7adcbd1eac50>
       description: Create 7D domain for postulate testing.
       parameters:
         self:
@@ -47044,7 +47328,7 @@
       returns: None
     test_envelope:
       decorators:
-      - <ast.Attribute object at 0x702d6c4cca90>
+      - <ast.Attribute object at 0x7adcbd027a50>
       description: Create test envelope for postulate validation.
       parameters:
         domain_7d:
@@ -47058,7 +47342,7 @@
   TestCoreRenormalizationPostulatePhysics:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c5694d0>
+      - <ast.Attribute object at 0x7adcbd15cfd0>
       description: Create BVP constants for postulate testing.
       parameters:
         self:
@@ -47067,7 +47351,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c449ed0>
+      - <ast.Attribute object at 0x7adcbd17f4d0>
       description: Create 7D domain for postulate testing.
       parameters:
         self:
@@ -47095,7 +47379,7 @@
       returns: None
     test_envelope:
       decorators:
-      - <ast.Attribute object at 0x702d6c577310>
+      - <ast.Attribute object at 0x7adcbd108bd0>
       description: Create test envelope for postulate validation.
       parameters:
         domain_7d:
@@ -47109,7 +47393,7 @@
   TestCrankNicolsonIntegrator:
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c45dd50>
+      - <ast.Attribute object at 0x7adcbd1a3750>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -47118,7 +47402,7 @@
       returns: None
     integrator:
       decorators:
-      - <ast.Attribute object at 0x702d6c45db50>
+      - <ast.Attribute object at 0x7adcbd1a2690>
       description: Create Crank-Nicolson integrator for testing.
       parameters:
         domain_7d:
@@ -47133,7 +47417,7 @@
       returns: None
     parameters_basic:
       decorators:
-      - <ast.Attribute object at 0x702d6c45e890>
+      - <ast.Attribute object at 0x7adcbd1a1410>
       description: Basic parameters for testing.
       parameters:
         self:
@@ -47285,7 +47569,7 @@
   TestDomain:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c45d890>
+      - <ast.Attribute object at 0x7adcbd101ed0>
       description: Create domain for testing.
       parameters:
         self:
@@ -47382,7 +47666,7 @@
   TestDomain7D:
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c417b50>
+      - <ast.Attribute object at 0x7adcbd181d10>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -47449,7 +47733,7 @@
   TestField:
     field:
       decorators:
-      - <ast.Attribute object at 0x702d6c6f6c90>
+      - <ast.Attribute object at 0x7adcbd13ed50>
       description: Create field for testing.
       parameters:
         domain:
@@ -47555,7 +47839,7 @@
   TestParameters:
     parameters:
       decorators:
-      - <ast.Attribute object at 0x702d6c4be890>
+      - <ast.Attribute object at 0x7adcbd1be8d0>
       description: Create parameters for testing.
       parameters:
         self:
@@ -48026,7 +48310,7 @@
   TestFFTBackend:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c4f5250>
+      - <ast.Attribute object at 0x7adcbd1e9550>
       description: Create domain for testing.
       parameters:
         self:
@@ -48035,7 +48319,7 @@
       returns: None
     fft_backend:
       decorators:
-      - <ast.Attribute object at 0x702d6c4f4f10>
+      - <ast.Attribute object at 0x7adcbd1e90d0>
       description: Create FFT backend for testing.
       parameters:
         domain:
@@ -48172,7 +48456,7 @@
   TestFFTButterflyComputer:
     butterfly_computer:
       decorators:
-      - <ast.Attribute object at 0x702d6c480650>
+      - <ast.Attribute object at 0x7adcbd3b08d0>
       description: Create FFT butterfly computer for testing.
       parameters:
         fft_backend:
@@ -48184,7 +48468,7 @@
       returns: None
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c483a50>
+      - <ast.Attribute object at 0x7adcbd3b1dd0>
       description: Create domain for testing.
       parameters:
         self:
@@ -48193,7 +48477,7 @@
       returns: None
     fft_backend:
       decorators:
-      - <ast.Attribute object at 0x702d6c480490>
+      - <ast.Attribute object at 0x7adcbd3b2690>
       description: Create FFT backend for testing.
       parameters:
         domain:
@@ -48390,7 +48674,7 @@
   TestFFTCoverage:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c33cf10>
+      - <ast.Attribute object at 0x7adcbd03c650>
       description: Create domain for testing.
       parameters:
         self:
@@ -48601,7 +48885,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c498590>
+      - <ast.Attribute object at 0x7adcbd3b27d0>
       description: Create 7D domain for spectral testing.
       parameters:
         self:
@@ -48610,7 +48894,7 @@
       returns: None
     fft_backend:
       decorators:
-      - <ast.Attribute object at 0x702d6c499250>
+      - <ast.Attribute object at 0x7adcbd295a10>
       description: Create FFT backend for testing.
       parameters:
         domain_7d:
@@ -48622,7 +48906,7 @@
       returns: None
     spectral_ops:
       decorators:
-      - <ast.Attribute object at 0x702d6c498a10>
+      - <ast.Attribute object at 0x7adcbd295510>
       description: Create spectral operations for testing.
       parameters:
         fft_backend:
@@ -48747,7 +49031,7 @@
   TestFFTPlanManager:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c4accd0>
+      - <ast.Attribute object at 0x7adcbd1ac990>
       description: Create domain for testing.
       parameters:
         self:
@@ -48756,7 +49040,7 @@
       returns: None
     fft_backend:
       decorators:
-      - <ast.Attribute object at 0x702d6c4ac910>
+      - <ast.Attribute object at 0x7adcbd1ac8d0>
       description: Create FFT backend for testing.
       parameters:
         domain:
@@ -48768,7 +49052,7 @@
       returns: None
     plan_manager:
       decorators:
-      - <ast.Attribute object at 0x702d6c4ac5d0>
+      - <ast.Attribute object at 0x7adcbd1ac450>
       description: Create FFT plan manager for testing.
       parameters:
         fft_backend:
@@ -48995,7 +49279,7 @@
   TestFFTTwiddleComputer:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c34bed0>
+      - <ast.Attribute object at 0x7adcbd04b710>
       description: Create domain for testing.
       parameters:
         self:
@@ -49004,7 +49288,7 @@
       returns: None
     fft_backend:
       decorators:
-      - <ast.Attribute object at 0x702d6c34af10>
+      - <ast.Attribute object at 0x7adcbd04aed0>
       description: Create FFT backend for testing.
       parameters:
         domain:
@@ -49259,7 +49543,7 @@
       returns: None
     twiddle_computer:
       decorators:
-      - <ast.Attribute object at 0x702d6c34b210>
+      - <ast.Attribute object at 0x7adcbd04b210>
       description: Create FFT twiddle computer for testing.
       parameters:
         fft_backend:
@@ -49331,7 +49615,7 @@
   TestMemoryKernel:
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c4bf910>
+      - <ast.Attribute object at 0x7adcbd1bd690>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -49340,7 +49624,7 @@
       returns: None
     memory_kernel:
       decorators:
-      - <ast.Attribute object at 0x702d6c4bfa50>
+      - <ast.Attribute object at 0x7adcbd1bdb50>
       description: Create memory kernel for testing.
       parameters:
         domain_7d:
@@ -49856,7 +50140,7 @@
   TestOperatorsCoverage:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c4eb190>
+      - <ast.Attribute object at 0x7adcbd1eb190>
       description: Create domain for testing.
       parameters:
         self:
@@ -50107,7 +50391,7 @@
   TestPowerBalancePostulatePhysics:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c34b090>
+      - <ast.Attribute object at 0x7adcbd0097d0>
       description: Create BVP constants for postulate testing.
       parameters:
         self:
@@ -50116,7 +50400,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c477ad0>
+      - <ast.Attribute object at 0x7adcbd00a310>
       description: Create 7D domain for postulate testing.
       parameters:
         self:
@@ -50125,7 +50409,7 @@
       returns: None
     test_envelope:
       decorators:
-      - <ast.Attribute object at 0x702d6c327310>
+      - <ast.Attribute object at 0x7adcbd1bfe90>
       description: Create test envelope for postulate validation.
       parameters:
         domain_7d:
@@ -50159,7 +50443,7 @@
   TestQuenchDetector:
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c4ac9d0>
+      - <ast.Attribute object at 0x7adcbd1ac950>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -50168,7 +50452,7 @@
       returns: None
     quench_detector:
       decorators:
-      - <ast.Attribute object at 0x702d6c4ad390>
+      - <ast.Attribute object at 0x7adcbd1ad310>
       description: Create quench detector for testing.
       parameters:
         domain_7d:
@@ -50326,7 +50610,7 @@
   TestQuenchesPostulatePhysics:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c438410>
+      - <ast.Attribute object at 0x7adcbd35b510>
       description: Create BVP constants for postulate testing.
       parameters:
         self:
@@ -50335,7 +50619,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c5c2ad0>
+      - <ast.Attribute object at 0x7adcbd393d90>
       description: Create 7D domain for postulate testing.
       parameters:
         self:
@@ -50344,7 +50628,7 @@
       returns: None
     test_envelope:
       decorators:
-      - <ast.Attribute object at 0x702d6c6e4f10>
+      - <ast.Attribute object at 0x7adcbd22c490>
       description: Create test envelope for postulate validation.
       parameters:
         domain_7d:
@@ -50378,7 +50662,7 @@
   TestRenormalizedCoefficientsPhysics:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c30a890>
+      - <ast.Attribute object at 0x7adcbd0277d0>
       description: Create BVP constants for testing.
       parameters:
         self:
@@ -50387,7 +50671,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c308f10>
+      - <ast.Attribute object at 0x7adcbd026010>
       description: Create 7D domain for constants testing.
       parameters:
         self:
@@ -50396,7 +50680,7 @@
       returns: None
     renormalized_coeffs:
       decorators:
-      - <ast.Attribute object at 0x702d6c30b150>
+      - <ast.Attribute object at 0x7adcbd027590>
       description: Create renormalized coefficients for testing.
       parameters:
         bvp_constants:
@@ -50635,7 +50919,7 @@
   TestScaleSeparationPostulatePhysics:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c405c90>
+      - <ast.Attribute object at 0x7adcbd15e350>
       description: Create BVP constants for postulate testing.
       parameters:
         self:
@@ -50644,7 +50928,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c407f90>
+      - <ast.Attribute object at 0x7adcbd15ed50>
       description: Create 7D domain for postulate testing.
       parameters:
         self:
@@ -50653,7 +50937,7 @@
       returns: None
     test_envelope:
       decorators:
-      - <ast.Attribute object at 0x702d6c40a4d0>
+      - <ast.Attribute object at 0x7adcbd206950>
       description: Create test envelope for postulate validation.
       parameters:
         domain_7d:
@@ -50688,7 +50972,7 @@
   TestSolversCoverage:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c45cd10>
+      - <ast.Attribute object at 0x7adcbd1bced0>
       description: Create domain for testing.
       parameters:
         self:
@@ -50697,7 +50981,7 @@
       returns: None
     parameters:
       decorators:
-      - <ast.Attribute object at 0x702d6c45cdd0>
+      - <ast.Attribute object at 0x7adcbd1bc110>
       description: Create parameters for testing.
       parameters:
         self:
@@ -51122,7 +51406,7 @@
   TestSourcesCoverage:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c477150>
+      - <ast.Attribute object at 0x7adcbd177710>
       description: Create domain for testing.
       parameters:
         self:
@@ -51403,7 +51687,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c4bc110>
+      - <ast.Attribute object at 0x7adcbd1bff10>
       description: Create 7D domain for spectral testing.
       parameters:
         self:
@@ -51412,7 +51696,7 @@
       returns: None
     fft_backend:
       decorators:
-      - <ast.Attribute object at 0x702d6c4be950>
+      - <ast.Attribute object at 0x7adcbd1bce10>
       description: Create FFT backend for testing.
       parameters:
         domain_7d:
@@ -51424,7 +51708,7 @@
       returns: None
     spectral_ops:
       decorators:
-      - <ast.Attribute object at 0x702d6c4bf910>
+      - <ast.Attribute object at 0x7adcbd1bfe90>
       description: Create spectral operations for testing.
       parameters:
         fft_backend:
@@ -51639,7 +51923,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c4d9850>
+      - <ast.Attribute object at 0x7adcbd1d9850>
       description: Create 7D domain for spectral testing.
       parameters:
         self:
@@ -51648,7 +51932,7 @@
       returns: None
     fft_backend:
       decorators:
-      - <ast.Attribute object at 0x702d6c4d9dd0>
+      - <ast.Attribute object at 0x7adcbd1d9dd0>
       description: Create FFT backend for testing.
       parameters:
         domain_7d:
@@ -51660,7 +51944,7 @@
       returns: None
     spectral_ops:
       decorators:
-      - <ast.Attribute object at 0x702d6c4d9710>
+      - <ast.Attribute object at 0x7adcbd1d9710>
       description: Create spectral operations for testing.
       parameters:
         fft_backend:
@@ -51833,7 +52117,7 @@
   TestSpectralDerivatives:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c4cdc10>
+      - <ast.Attribute object at 0x7adcbd1ef310>
       description: Create domain for testing.
       parameters:
         self:
@@ -51842,7 +52126,7 @@
       returns: None
     fft_backend:
       decorators:
-      - <ast.Attribute object at 0x702d6c4cf750>
+      - <ast.Attribute object at 0x7adcbd1ee9d0>
       description: Create FFT backend for testing.
       parameters:
         domain:
@@ -51854,7 +52138,7 @@
       returns: None
     spectral_derivs:
       decorators:
-      - <ast.Attribute object at 0x702d6c4cd250>
+      - <ast.Attribute object at 0x7adcbd1efcd0>
       description: Create spectral derivatives for testing.
       parameters:
         fft_backend:
@@ -52001,7 +52285,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c45c350>
+      - <ast.Attribute object at 0x7adcbd107210>
       description: Create 7D domain for spectral testing.
       parameters:
         self:
@@ -52010,7 +52294,7 @@
       returns: None
     fft_backend:
       decorators:
-      - <ast.Attribute object at 0x702d6c568950>
+      - <ast.Attribute object at 0x7adcbd1059d0>
       description: Create FFT backend for testing.
       parameters:
         domain_7d:
@@ -52022,7 +52306,7 @@
       returns: None
     spectral_derivs:
       decorators:
-      - <ast.Attribute object at 0x702d6c568250>
+      - <ast.Attribute object at 0x7adcbd1057d0>
       description: Create spectral derivatives for testing.
       parameters:
         fft_backend:
@@ -52213,7 +52497,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c477790>
+      - <ast.Attribute object at 0x7adcbd1428d0>
       description: Create 7D domain for spectral testing.
       parameters:
         self:
@@ -52222,7 +52506,7 @@
       returns: None
     fft_backend:
       decorators:
-      - <ast.Attribute object at 0x702d6c476ed0>
+      - <ast.Attribute object at 0x7adcbd1413d0>
       description: Create FFT backend for testing.
       parameters:
         domain_7d:
@@ -52234,7 +52518,7 @@
       returns: None
     spectral_ops:
       decorators:
-      - <ast.Attribute object at 0x702d6c481490>
+      - <ast.Attribute object at 0x7adcbd04afd0>
       description: Create spectral operations for testing.
       parameters:
         fft_backend:
@@ -52409,7 +52693,7 @@
   TestSpectralFiltering:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c506050>
+      - <ast.Attribute object at 0x7adcbd3b0a90>
       description: Create domain for testing.
       parameters:
         self:
@@ -52418,7 +52702,7 @@
       returns: None
     fft_backend:
       decorators:
-      - <ast.Attribute object at 0x702d6c552190>
+      - <ast.Attribute object at 0x7adcbd3b0490>
       description: Create FFT backend for testing.
       parameters:
         domain:
@@ -52430,7 +52714,7 @@
       returns: None
     spectral_filtering:
       decorators:
-      - <ast.Attribute object at 0x702d6c550f10>
+      - <ast.Attribute object at 0x7adcbd3b2390>
       description: Create spectral filtering for testing.
       parameters:
         fft_backend:
@@ -52587,7 +52871,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c4acd10>
+      - <ast.Attribute object at 0x7adcbd1acc90>
       description: Create 7D domain for spectral testing.
       parameters:
         self:
@@ -52596,7 +52880,7 @@
       returns: None
     fft_backend:
       decorators:
-      - <ast.Attribute object at 0x702d6c4ad090>
+      - <ast.Attribute object at 0x7adcbd1ad010>
       description: Create FFT backend for testing.
       parameters:
         domain_7d:
@@ -52608,7 +52892,7 @@
       returns: None
     fractional_laplacian:
       decorators:
-      - <ast.Attribute object at 0x702d6c4afed0>
+      - <ast.Attribute object at 0x7adcbd1afed0>
       description: Create fractional Laplacian for testing.
       parameters:
         domain_7d:
@@ -52620,7 +52904,7 @@
       returns: None
     spectral_ops:
       decorators:
-      - <ast.Attribute object at 0x702d6c4ad390>
+      - <ast.Attribute object at 0x7adcbd1ad310>
       description: Create spectral operations for testing.
       parameters:
         fft_backend:
@@ -52826,7 +53110,7 @@
   TestSpectralOperations:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c525910>
+      - <ast.Attribute object at 0x7adcbd3912d0>
       description: Create domain for testing.
       parameters:
         self:
@@ -52835,7 +53119,7 @@
       returns: None
     fft_backend:
       decorators:
-      - <ast.Attribute object at 0x702d6c527ed0>
+      - <ast.Attribute object at 0x7adcbd390690>
       description: Create FFT backend for testing.
       parameters:
         domain:
@@ -52847,7 +53131,7 @@
       returns: None
     spectral_ops:
       decorators:
-      - <ast.Attribute object at 0x702d6c527150>
+      - <ast.Attribute object at 0x7adcbd3e4210>
       description: Create spectral operations for testing.
       parameters:
         fft_backend:
@@ -53101,7 +53385,7 @@
   TestTailResonatornessPostulatePhysics:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c52af50>
+      - <ast.Attribute object at 0x7adcbd116390>
       description: Create BVP constants for postulate testing.
       parameters:
         self:
@@ -53110,7 +53394,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c441cd0>
+      - <ast.Attribute object at 0x7adcbd115590>
       description: Create 7D domain for postulate testing.
       parameters:
         self:
@@ -53119,7 +53403,7 @@
       returns: None
     test_envelope:
       decorators:
-      - <ast.Attribute object at 0x702d6c4830d0>
+      - <ast.Attribute object at 0x7adcbd182190>
       description: Create test envelope for postulate validation.
       parameters:
         domain_7d:
@@ -53153,7 +53437,7 @@
   TestTransitionZonePostulatePhysics:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c409dd0>
+      - <ast.Attribute object at 0x7adcbd13ce90>
       description: Create BVP constants for postulate testing.
       parameters:
         self:
@@ -53162,7 +53446,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c6e5d50>
+      - <ast.Attribute object at 0x7adcbd248490>
       description: Create 7D domain for postulate testing.
       parameters:
         self:
@@ -53171,7 +53455,7 @@
       returns: None
     test_envelope:
       decorators:
-      - <ast.Attribute object at 0x702d6c43b2d0>
+      - <ast.Attribute object at 0x7adcbd38d9d0>
       description: Create test envelope for postulate validation.
       parameters:
         domain_7d:
@@ -53205,7 +53489,7 @@
   TestU1PhaseStructurePostulatePhysics:
     bvp_constants:
       decorators:
-      - <ast.Attribute object at 0x702d6c4f7210>
+      - <ast.Attribute object at 0x7adcbd1eb050>
       description: Create BVP constants for postulate testing.
       parameters:
         self:
@@ -53214,7 +53498,7 @@
       returns: None
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c4f7e10>
+      - <ast.Attribute object at 0x7adcbd1eb150>
       description: Create 7D domain for postulate testing.
       parameters:
         self:
@@ -53223,7 +53507,7 @@
       returns: None
     test_envelope:
       decorators:
-      - <ast.Attribute object at 0x702d6c4e9f50>
+      - <ast.Attribute object at 0x7adcbd009e10>
       description: Create test envelope for postulate validation.
       parameters:
         domain_7d:
@@ -53257,7 +53541,7 @@
   TestAdvancedIntegrators:
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c361a50>
+      - <ast.Attribute object at 0x7adcbd061a50>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -53266,7 +53550,7 @@
       returns: None
     parameters_basic:
       decorators:
-      - <ast.Attribute object at 0x702d6c3614d0>
+      - <ast.Attribute object at 0x7adcbd0614d0>
       description: Basic parameters for testing.
       parameters:
         self:
@@ -53407,7 +53691,7 @@
   TestBasicIntegrators:
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c51df50>
+      - <ast.Attribute object at 0x7adcbd01d510>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -53416,7 +53700,7 @@
       returns: None
     parameters_basic:
       decorators:
-      - <ast.Attribute object at 0x702d6c577c90>
+      - <ast.Attribute object at 0x7adcbd01f7d0>
       description: Basic parameters for testing.
       parameters:
         self:
@@ -54935,7 +55219,7 @@
   TestFieldProjection:
     projection_params:
       decorators:
-      - <ast.Attribute object at 0x702d6c6f54d0>
+      - <ast.Attribute object at 0x7adcbd3b38d0>
       description: Create projection parameters.
       parameters:
         self:
@@ -55011,7 +55295,7 @@
   TestLevelDModels:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c576c50>
+      - <ast.Attribute object at 0x7adcbd276ad0>
       description: Create test domain.
       parameters:
         self:
@@ -55020,7 +55304,7 @@
       returns: None
     parameters:
       decorators:
-      - <ast.Attribute object at 0x702d6c577650>
+      - <ast.Attribute object at 0x7adcbd2774d0>
       description: Create test parameters.
       parameters:
         self:
@@ -55077,7 +55361,7 @@
       returns: None
     test_field:
       decorators:
-      - <ast.Attribute object at 0x702d6c5646d0>
+      - <ast.Attribute object at 0x7adcbd264850>
       description: Create test field.
       parameters:
         domain:
@@ -55736,7 +56020,7 @@
   TestDefectFractionalGreenFunction:
     domain_3d:
       decorators:
-      - <ast.Attribute object at 0x702d6c688c50>
+      - <ast.Attribute object at 0x7adcbd3e4f10>
       description: Create 3D domain for testing.
       parameters:
         self:
@@ -55745,7 +56029,7 @@
       returns: None
     physics_params_beta_05:
       decorators:
-      - <ast.Attribute object at 0x702d6c5c20d0>
+      - <ast.Attribute object at 0x7adcbd3e4c90>
       description: Physics parameters with β=0.5 (fractional case).
       parameters:
         self:
@@ -55754,7 +56038,7 @@
       returns: None
     physics_params_beta_1:
       decorators:
-      - <ast.Attribute object at 0x702d6c5c2290>
+      - <ast.Attribute object at 0x7adcbd3e7210>
       description: Physics parameters with β=1.0 (classical case).
       parameters:
         self:
@@ -55867,7 +56151,7 @@
   TestDefectPhysics:
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c50e750>
+      - <ast.Attribute object at 0x7adcbd358fd0>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -55876,7 +56160,7 @@
       returns: None
     physics_params:
       decorators:
-      - <ast.Attribute object at 0x702d6c50cf10>
+      - <ast.Attribute object at 0x7adcbd205390>
       description: Create realistic physics parameters.
       parameters:
         self:
@@ -56191,7 +56475,7 @@
   TestSolitonEnergyPhysics:
     domain_3d:
       decorators:
-      - <ast.Attribute object at 0x702d6c417150>
+      - <ast.Attribute object at 0x7adcbd1170d0>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -56200,7 +56484,7 @@
       returns: None
     physics_params:
       decorators:
-      - <ast.Attribute object at 0x702d6c416390>
+      - <ast.Attribute object at 0x7adcbd116310>
       description: Create realistic physics parameters.
       parameters:
         self:
@@ -56209,7 +56493,7 @@
       returns: None
     simple_u1_phase_field:
       decorators:
-      - <ast.Attribute object at 0x702d6c400c50>
+      - <ast.Attribute object at 0x7adcbd100910>
       description: "Create simple U(1)^3 phase field for testing.\n\nPhysical Meaning:\n\
         \    Creates a simplified U(1)^3 phase field configuration that\n    is easier\
         \ to analyze and has known theoretical properties."
@@ -56371,7 +56655,7 @@
   TestSolitonPhysics:
     domain_3d:
       decorators:
-      - <ast.Attribute object at 0x702d6c5c32d0>
+      - <ast.Attribute object at 0x7adcbd2c32d0>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -56380,7 +56664,7 @@
       returns: None
     physics_params:
       decorators:
-      - <ast.Attribute object at 0x702d6c5c24d0>
+      - <ast.Attribute object at 0x7adcbd2c24d0>
       description: Create realistic physics parameters.
       parameters:
         self:
@@ -56687,7 +56971,7 @@
       returns: None
     u1_phase_field:
       decorators:
-      - <ast.Attribute object at 0x702d6c581790>
+      - <ast.Attribute object at 0x7adcbd280a90>
       description: "Create U(1)^3 phase field configuration.\n\nPhysical Meaning:\n\
         \    Creates a 7D phase field configuration Θ(x,φ) ∈ T^3_φ with\n    controlled\
         \ winding over φ-coordinates. This represents a B=1\n    soliton with U(1)^3\
@@ -56707,7 +56991,7 @@
   TestSolitonTopologyPhysics:
     domain_3d:
       decorators:
-      - <ast.Attribute object at 0x702d6c6e9350>
+      - <ast.Attribute object at 0x7adcbd3ec850>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -56716,7 +57000,7 @@
       returns: None
     physics_params:
       decorators:
-      - <ast.Attribute object at 0x702d6c6e8d50>
+      - <ast.Attribute object at 0x7adcbd22c690>
       description: Create realistic physics parameters.
       parameters:
         self:
@@ -56872,7 +57156,7 @@
       returns: None
     trivial_field:
       decorators:
-      - <ast.Attribute object at 0x702d6c504390>
+      - <ast.Attribute object at 0x7adcbd3b7910>
       description: "Create trivial field configuration.\n\nPhysical Meaning:\n   \
         \ Creates a trivial field configuration U(x) = I everywhere,\n    which should\
         \ have topological charge B=0."
@@ -56886,7 +57170,7 @@
       returns: None
     u1_phase_field_b1:
       decorators:
-      - <ast.Attribute object at 0x702d6c6b7210>
+      - <ast.Attribute object at 0x7adcbd21cc50>
       description: "Create B=1 U(1)^3 phase field configuration.\n\nPhysical Meaning:\n\
         \    Creates a U(1)^3 phase field configuration with topological\n    charge\
         \ B=1, representing a single baryon."
@@ -56910,7 +57194,7 @@
   TestNonlinearInitialization:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c51d790>
+      - <ast.Attribute object at 0x7adcbd141f10>
       description: Create test domain.
       parameters:
         self:
@@ -56919,7 +57203,7 @@
       returns: None
     nonlinear_params:
       decorators:
-      - <ast.Attribute object at 0x702d6c441f90>
+      - <ast.Attribute object at 0x7adcbd141690>
       description: Create test nonlinear parameters.
       parameters:
         self:
@@ -56928,7 +57212,7 @@
       returns: None
     particles:
       decorators:
-      - <ast.Attribute object at 0x702d6c443fd0>
+      - <ast.Attribute object at 0x7adcbd140690>
       description: Create test particles.
       parameters:
         self:
@@ -56937,7 +57221,7 @@
       returns: None
     system:
       decorators:
-      - <ast.Attribute object at 0x702d6c443550>
+      - <ast.Attribute object at 0x7adcbd141d50>
       description: Create test system.
       parameters:
         domain:
@@ -57071,7 +57355,7 @@
   TestNonlinearTypes:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c6eb450>
+      - <ast.Attribute object at 0x7adcbd10ab10>
       description: Create test domain.
       parameters:
         self:
@@ -57080,7 +57364,7 @@
       returns: None
     particles:
       decorators:
-      - <ast.Attribute object at 0x702d6c6b6690>
+      - <ast.Attribute object at 0x7adcbd141b10>
       description: Create test particles.
       parameters:
         self:
@@ -57089,7 +57373,7 @@
       returns: None
     system:
       decorators:
-      - <ast.Attribute object at 0x702d6c5220d0>
+      - <ast.Attribute object at 0x7adcbd142350>
       description: Create test system.
       parameters:
         domain:
@@ -57176,7 +57460,7 @@
   TestSolitonAnalysis:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c40a950>
+      - <ast.Attribute object at 0x7adcbd13c710>
       description: Create test domain.
       parameters:
         self:
@@ -57185,7 +57469,7 @@
       returns: None
     nonlinear:
       decorators:
-      - <ast.Attribute object at 0x702d6c443690>
+      - <ast.Attribute object at 0x7adcbd21e990>
       description: Create test nonlinear effects.
       parameters:
         nonlinear_params:
@@ -57200,7 +57484,7 @@
       returns: None
     nonlinear_params:
       decorators:
-      - <ast.Attribute object at 0x702d6c4410d0>
+      - <ast.Attribute object at 0x7adcbd13d2d0>
       description: Create test nonlinear parameters.
       parameters:
         self:
@@ -57209,7 +57493,7 @@
       returns: None
     particles:
       decorators:
-      - <ast.Attribute object at 0x702d6c40be50>
+      - <ast.Attribute object at 0x7adcbd13fd50>
       description: Create test particles.
       parameters:
         self:
@@ -57218,7 +57502,7 @@
       returns: None
     system:
       decorators:
-      - <ast.Attribute object at 0x702d6c40b2d0>
+      - <ast.Attribute object at 0x7adcbd13dd50>
       description: Create test system.
       parameters:
         domain:
@@ -57326,7 +57610,7 @@
   TestCollectiveExcitations:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c404a90>
+      - <ast.Attribute object at 0x7adcbd104a90>
       description: Create test domain.
       parameters:
         self:
@@ -57335,7 +57619,7 @@
       returns: None
     excitation_params:
       decorators:
-      - <ast.Attribute object at 0x702d6c407190>
+      - <ast.Attribute object at 0x7adcbd107650>
       description: Create test excitation parameters.
       parameters:
         self:
@@ -57344,7 +57628,7 @@
       returns: None
     excitations:
       decorators:
-      - <ast.Attribute object at 0x702d6c4064d0>
+      - <ast.Attribute object at 0x7adcbd1065d0>
       description: Create test excitations.
       parameters:
         excitation_params:
@@ -57359,7 +57643,7 @@
       returns: None
     particles:
       decorators:
-      - <ast.Attribute object at 0x702d6c405490>
+      - <ast.Attribute object at 0x7adcbd105490>
       description: Create test particles.
       parameters:
         self:
@@ -57368,7 +57652,7 @@
       returns: None
     system:
       decorators:
-      - <ast.Attribute object at 0x702d6c405c90>
+      - <ast.Attribute object at 0x7adcbd105c90>
       description: Create test system.
       parameters:
         domain:
@@ -57628,7 +57912,7 @@
   TestMultiParticleSystem:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c438a10>
+      - <ast.Attribute object at 0x7adcbd138a10>
       description: Create test domain.
       parameters:
         self:
@@ -57637,7 +57921,7 @@
       returns: None
     particles:
       decorators:
-      - <ast.Attribute object at 0x702d6c4393d0>
+      - <ast.Attribute object at 0x7adcbd1393d0>
       description: Create test particles.
       parameters:
         self:
@@ -57646,7 +57930,7 @@
       returns: None
     system:
       decorators:
-      - <ast.Attribute object at 0x702d6c439bd0>
+      - <ast.Attribute object at 0x7adcbd139bd0>
       description: Create test system.
       parameters:
         domain:
@@ -57937,7 +58221,7 @@
   TestPhaseTransitions:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c5045d0>
+      - <ast.Attribute object at 0x7adcbd10b190>
       description: Create test domain.
       parameters:
         self:
@@ -57946,7 +58230,7 @@
       returns: None
     particles:
       decorators:
-      - <ast.Attribute object at 0x702d6c6bb690>
+      - <ast.Attribute object at 0x7adcbd109f10>
       description: Create test particles.
       parameters:
         self:
@@ -57955,7 +58239,7 @@
       returns: None
     system:
       decorators:
-      - <ast.Attribute object at 0x702d6c414f90>
+      - <ast.Attribute object at 0x7adcbd3b01d0>
       description: Create test system.
       parameters:
         domain:
@@ -58215,7 +58499,7 @@
       returns: None
     transitions:
       decorators:
-      - <ast.Attribute object at 0x702d6c417e10>
+      - <ast.Attribute object at 0x7adcbd3b2190>
       description: Create test transitions.
       parameters:
         self:
@@ -58333,7 +58617,7 @@
   TestEnvelopeEffectiveMetricGravity:
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c6d55d0>
+      - <ast.Attribute object at 0x7adcbd297d10>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -58342,7 +58626,7 @@
       returns: None
     gravity_params:
       decorators:
-      - <ast.Attribute object at 0x702d6c6d68d0>
+      - <ast.Attribute object at 0x7adcbd2940d0>
       description: Create realistic gravity parameters.
       parameters:
         self:
@@ -58351,7 +58635,7 @@
       returns: None
     mock_system:
       decorators:
-      - <ast.Attribute object at 0x702d6c596190>
+      - <ast.Attribute object at 0x7adcbd3908d0>
       description: Create mock system for testing.
       parameters:
         domain_7d:
@@ -58590,7 +58874,7 @@
   TestVBPEnvelopeCurvaturePhysics:
     domain_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c54bad0>
+      - <ast.Attribute object at 0x7adcbd22bd50>
       description: Create 7D domain for testing.
       parameters:
         self:
@@ -58599,7 +58883,7 @@
       returns: None
     envelope_params:
       decorators:
-      - <ast.Attribute object at 0x702d6c5f2ad0>
+      - <ast.Attribute object at 0x7adcbd3b1950>
       description: Create VBP envelope parameters.
       parameters:
         self:
@@ -58608,7 +58892,7 @@
       returns: None
     phase_field_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c6b8390>
+      - <ast.Attribute object at 0x7adcbd34e250>
       description: Create 7D phase field for testing.
       parameters:
         domain_7d:
@@ -58701,7 +58985,7 @@
   TestVBPGravitationalEffectsIntegration:
     gravity_params:
       decorators:
-      - <ast.Attribute object at 0x702d6c54ac50>
+      - <ast.Attribute object at 0x7adcbd22aed0>
       description: Create gravitational parameters.
       parameters:
         self:
@@ -58710,7 +58994,7 @@
       returns: None
     mock_system:
       decorators:
-      - <ast.Attribute object at 0x702d6c52b810>
+      - <ast.Attribute object at 0x7adcbd227a90>
       description: Create mock system with phase field.
       parameters:
         domain_7d:
@@ -58749,7 +59033,7 @@
   TestVBPGravitationalWavesPhysics:
     envelope_solution_7d:
       decorators:
-      - <ast.Attribute object at 0x702d6c691450>
+      - <ast.Attribute object at 0x7adcbd296810>
       description: Create 7D envelope solution for testing.
       parameters:
         domain_7d:
@@ -58825,7 +59109,7 @@
       returns: None
     wave_params:
       decorators:
-      - <ast.Attribute object at 0x702d6c6b7c10>
+      - <ast.Attribute object at 0x7adcbd3b5550>
       description: Create gravitational wave parameters.
       parameters:
         self:
@@ -59208,7 +59492,7 @@
   TestPowerLawCoreFixes:
     bvp_core:
       decorators:
-      - <ast.Attribute object at 0x702d6c59e250>
+      - <ast.Attribute object at 0x7adcbd33f790>
       description: Create BVP core for testing.
       parameters:
         domain_3d:
@@ -59220,7 +59504,7 @@
       returns: None
     domain_3d:
       decorators:
-      - <ast.Attribute object at 0x702d6c59dc90>
+      - <ast.Attribute object at 0x7adcbd2236d0>
       description: Create 3D domain for testing.
       parameters:
         self:
@@ -59229,7 +59513,7 @@
       returns: None
     power_law_core:
       decorators:
-      - <ast.Attribute object at 0x702d6c59da90>
+      - <ast.Attribute object at 0x7adcbd3eda90>
       description: Create power law core for testing.
       parameters:
         bvp_core:
@@ -59271,7 +59555,7 @@
       returns: None
     test_envelope_3d:
       decorators:
-      - <ast.Attribute object at 0x702d6c525010>
+      - <ast.Attribute object at 0x7adcbd22f710>
       description: Create test 3D envelope field.
       parameters:
         domain_3d:
@@ -59431,7 +59715,7 @@
   TestAbstractSolver:
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c6f5610>
+      - <ast.Attribute object at 0x7adcbd227d10>
       description: Create domain for testing.
       parameters:
         self:
@@ -59440,7 +59724,7 @@
       returns: None
     parameters:
       decorators:
-      - <ast.Attribute object at 0x702d6c6f7e10>
+      - <ast.Attribute object at 0x7adcbd2714d0>
       description: Create parameters for testing.
       parameters:
         self:
@@ -59449,7 +59733,7 @@
       returns: None
     solver:
       decorators:
-      - <ast.Attribute object at 0x702d6c6d4bd0>
+      - <ast.Attribute object at 0x7adcbd271a90>
       description: Create concrete solver for testing.
       parameters:
         domain:
@@ -59706,7 +59990,7 @@
   TestTimeIntegrator:
     config:
       decorators:
-      - <ast.Attribute object at 0x702d6c51fd90>
+      - <ast.Attribute object at 0x7adcbd3b5d50>
       description: Create config for testing.
       parameters:
         self:
@@ -59715,7 +59999,7 @@
       returns: None
     domain:
       decorators:
-      - <ast.Attribute object at 0x702d6c5f3590>
+      - <ast.Attribute object at 0x7adcbd269510>
       description: Create domain for testing.
       parameters:
         self:
@@ -59724,7 +60008,7 @@
       returns: None
     integrator:
       decorators:
-      - <ast.Attribute object at 0x702d6c51fed0>
+      - <ast.Attribute object at 0x7adcbd21fe10>
       description: Create time integrator for testing.
       parameters:
         config:
@@ -59739,7 +60023,7 @@
       returns: None
     integrator_with_bvp:
       decorators:
-      - <ast.Attribute object at 0x702d6c417c10>
+      - <ast.Attribute object at 0x7adcbd3d4850>
       description: Create time integrator with BVP core for testing.
       parameters:
         config:
@@ -59757,7 +60041,7 @@
       returns: None
     mock_bvp_core:
       decorators:
-      - <ast.Attribute object at 0x702d6c51c110>
+      - <ast.Attribute object at 0x7adcbd21ec10>
       description: Create mock BVP core.
       parameters:
         self:

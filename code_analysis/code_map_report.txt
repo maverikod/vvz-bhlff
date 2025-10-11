@@ -1,0 +1,166 @@
+================================================================================
+BHLFF CODE MAP REPORT
+================================================================================
+
+FILES SUMMARY:
+----------------------------------------
+Total files analyzed: 733
+
+CLASSES SUMMARY:
+----------------------------------------
+Total classes: 603
+
+FUNCTIONS SUMMARY:
+----------------------------------------
+Total functions: 5123
+
+ISSUES SUMMARY:
+----------------------------------------
+methods_with_pass: 0
+not_implemented_in_non_abstract: 0
+methods_without_docstrings: 92
+files_without_docstrings: 4
+classes_without_docstrings: 4
+imports_in_middle: 508
+files_too_large: 67
+
+METHODS_WITHOUT_DOCSTRINGS:
+----------------------------------------
+  File: ./tests/unit/test_level_g/test_gravity_physics.py
+  Line: 67
+  Method: test_effective_metric_basic_properties
+
+  File: ./tests/unit/test_level_g/test_gravity_physics.py
+  Line: 67
+  Class: TestEnvelopeEffectiveMetricGravity
+  Method: test_effective_metric_basic_properties
+
+  File: ./tests/unit/test_level_g/test_gravity_physics.py
+  Line: 77
+  Method: test_metric_sensitivity_to_invariants
+
+  File: ./tests/unit/test_level_g/test_gravity_physics.py
+  Line: 77
+  Class: TestEnvelopeEffectiveMetricGravity
+  Method: test_metric_sensitivity_to_invariants
+
+  File: ./tests/unit/test_level_g/test_gravity_physics.py
+  Line: 83
+  Method: test_metric_is_real_and_finite
+
+  File: ./tests/unit/test_level_g/test_gravity_physics.py
+  Line: 83
+  Class: TestEnvelopeEffectiveMetricGravity
+  Method: test_metric_is_real_and_finite
+
+  File: ./tests/unit/test_level_g/test_gravity_physics.py
+  Line: 88
+  Method: test_time_component_negative
+
+  File: ./tests/unit/test_level_g/test_gravity_physics.py
+  Line: 88
+  Class: TestEnvelopeEffectiveMetricGravity
+  Method: test_time_component_negative
+
+  File: ./tests/unit/test_level_g/test_gravity_physics.py
+  Line: 93
+  Method: test_phase_block_is_identity
+
+  File: ./tests/unit/test_level_g/test_gravity_physics.py
+  Line: 93
+  Class: TestEnvelopeEffectiveMetricGravity
+  Method: test_phase_block_is_identity
+
+  ... and 82 more
+
+FILES_WITHOUT_DOCSTRINGS:
+----------------------------------------
+  File: ./bhlff/models/level_f/collective/__init__.py
+  Line: 1
+
+  File: ./bhlff/models/level_e/phase_mapping_components/__init__.py
+  Line: 1
+
+  File: ./bhlff/models/level_e/sensitivity/__init__.py
+  Line: 1
+
+  File: ./bhlff/models/level_e/experiments/__init__.py
+  Line: 1
+
+
+CLASSES_WITHOUT_DOCSTRINGS:
+----------------------------------------
+  File: ./tests/unit/test_level_g/test_gravity_physics.py
+  Line: 60
+  Class: MockSystem
+
+  File: ./tests/unit/test_level_g/test_vbp_gravitational_effects_integration.py
+  Line: 52
+  Class: MockSystem
+
+  File: ./tests/unit/test_core/test_cuda_fft_backend_parity.py
+  Line: 13
+  Class: DummyDomain
+
+  File: ./examples/level_g_example.py
+  Line: 174
+  Class: MockSystem
+
+
+IMPORTS_IN_MIDDLE:
+----------------------------------------
+  File: ./setup.py
+  Line: 28
+
+  File: ./tests/test_bvp_level_c_integration.py
+  Line: 30
+
+  File: ./tests/test_bvp_level_a_integration.py
+  Line: 30
+
+  File: ./tests/conftest.py
+  Line: 37
+
+  File: ./tests/test_bvp_levels_integration.py
+  Line: 33
+
+  File: ./tests/test_bvp_level_e_integration.py
+  Line: 30
+
+  File: ./tests/test_bvp_level_d_integration.py
+  Line: 30
+
+  File: ./tests/test_bvp_level_b_integration.py
+  Line: 30
+
+  File: ./tests/test_bvp_framework.py
+  Line: 25
+
+  File: ./tests/test_bvp_level_f_integration.py
+  Line: 30
+
+  ... and 498 more
+
+FILES_TOO_LARGE:
+----------------------------------------
+  File: ./tests/unit/automated_testing/test_integration.py
+
+  File: ./tests/unit/automated_testing/test_quality_monitor.py
+
+  File: ./tests/unit/test_core/test_7d_physics.py
+
+  File: ./tests/unit/test_core/test_bvp_constants_comprehensive.py
+
+  File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
+
+  File: ./tests/unit/test_level_a/test_reporting_advanced.py
+
+  File: ./tests/unit/test_level_a/test_A03_zero_mode.py
+
+  File: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
+
+  File: ./bhlff/models/level_c/boundaries.py
+
+  File: ./bhlff/models/level_c/level_c_integration.py
+
+  ... and 57 more

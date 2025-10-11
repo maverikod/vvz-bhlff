@@ -27,8 +27,8 @@ Example:
 import numpy as np
 from typing import Dict, Any, Optional
 from ...base.model_base import ModelBase
-from .stellar_models import StarModel
-from .galactic_models import GalaxyModel
+from .stellar_models import StellarModel
+from .galactic_models import GalacticModel
 from .black_hole_models import BlackHoleModel
 from .phase_analysis import PhaseAnalyzer
 from .observable_properties import ObservablePropertiesCalculator
@@ -96,9 +96,9 @@ class AstrophysicalObjectModel(ModelBase):
             ValueError: If object type is not supported
         """
         if self.object_type == "star":
-            self.specialized_model = StarModel(self.object_params)
+            self.specialized_model = StellarModel(self.object_params)
         elif self.object_type == "galaxy":
-            self.specialized_model = GalaxyModel(self.object_params)
+            self.specialized_model = GalacticModel(self.object_params)
         elif self.object_type == "black_hole":
             self.specialized_model = BlackHoleModel(self.object_params)
         else:

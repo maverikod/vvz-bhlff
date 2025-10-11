@@ -14,12 +14,12 @@ Theoretical Background:
     observable characteristics through phase coherence and defects.
 
 Example:
-    >>> from .astrophysical_objects import AstrophysicalObjectModel
+    >>> from .astrophysical_object_model import AstrophysicalObjectModel
     >>> star = AstrophysicalObjectModel('star', stellar_params)
     >>> galaxy = AstrophysicalObjectModel('galaxy', galactic_params)
 """
 
-from .astrophysical_objects import AstrophysicalObjectModel
+from .astrophysical_object_model import AstrophysicalObjectModel
 from .stellar_models import StellarModel
 from .galactic_models import GalacticModel
 from .black_hole_models import BlackHoleModel

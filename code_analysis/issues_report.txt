@@ -1,0 +1,2092 @@
+================================================================================
+BHLFF CODE ISSUES REPORT
+================================================================================
+
+Total issues found: 675
+
+METHODS_WITHOUT_DOCSTRINGS: 92 issues
+----------------------------------------
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 67
+    Method: test_effective_metric_basic_properties
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 67
+    Class: TestEnvelopeEffectiveMetricGravity
+    Method: test_effective_metric_basic_properties
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 77
+    Method: test_metric_sensitivity_to_invariants
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 77
+    Class: TestEnvelopeEffectiveMetricGravity
+    Method: test_metric_sensitivity_to_invariants
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 83
+    Method: test_metric_is_real_and_finite
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 83
+    Class: TestEnvelopeEffectiveMetricGravity
+    Method: test_metric_is_real_and_finite
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 88
+    Method: test_time_component_negative
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 88
+    Class: TestEnvelopeEffectiveMetricGravity
+    Method: test_time_component_negative
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 93
+    Method: test_phase_block_is_identity
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 93
+    Class: TestEnvelopeEffectiveMetricGravity
+    Method: test_phase_block_is_identity
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 98
+    Method: test_metric_stability_under_small_param_change
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 98
+    Class: TestEnvelopeEffectiveMetricGravity
+    Method: test_metric_stability_under_small_param_change
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 105
+    Method: test_diagonal_dominance
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 105
+    Class: TestEnvelopeEffectiveMetricGravity
+    Method: test_diagonal_dominance
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 110
+    Method: test_metric_output_consistency
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 110
+    Class: TestEnvelopeEffectiveMetricGravity
+    Method: test_metric_output_consistency
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 125
+    Method: test_metric_scaling_changes_with_params
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 125
+    Class: TestEnvelopeEffectiveMetricGravity
+    Method: test_metric_scaling_changes_with_params
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 132
+    Method: test_metric_diagonal_structure
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 132
+    Class: TestEnvelopeEffectiveMetricGravity
+    Method: test_metric_diagonal_structure
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 67
+    Method: test_effective_metric_basic_properties
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 77
+    Method: test_metric_sensitivity_to_invariants
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 83
+    Method: test_metric_is_real_and_finite
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 88
+    Method: test_time_component_negative
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 93
+    Method: test_phase_block_is_identity
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 98
+    Method: test_metric_stability_under_small_param_change
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 105
+    Method: test_diagonal_dominance
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 110
+    Method: test_metric_output_consistency
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 125
+    Method: test_metric_scaling_changes_with_params
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 132
+    Method: test_metric_diagonal_structure
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 61
+    Method: __init__
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 61
+    Class: MockSystem
+    Method: __init__
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 61
+    Method: __init__
+
+  ./tests/unit/test_level_g/test_vbp_gravitational_effects_integration.py
+    Line 53
+    Method: __init__
+
+  ./tests/unit/test_level_g/test_vbp_gravitational_effects_integration.py
+    Line 53
+    Class: MockSystem
+    Method: __init__
+
+  ./tests/unit/test_level_g/test_vbp_gravitational_effects_integration.py
+    Line 53
+    Method: __init__
+
+  ./tests/unit/test_level_g/test_envelope_effective_metric.py
+    Line 16
+    Method: test_effective_metric_basic_isotropic
+
+  ./tests/unit/test_level_g/test_envelope_effective_metric.py
+    Line 39
+    Method: test_effective_metric_fallback_params
+
+  ./tests/unit/test_level_b/test_zone_analyzer_7d.py
+    Line 12
+    Method: test_zone_indicators_7d_axes
+
+  ./tests/unit/automated_testing/test_automated_testing_system_advanced.py
+    Line 151
+    Method: long_running_test
+
+  ./tests/unit/test_core/test_cuda_fft_backend_parity.py
+    Line 14
+    Method: __init__
+
+  ./tests/unit/test_core/test_cuda_fft_backend_parity.py
+    Line 14
+    Class: DummyDomain
+    Method: __init__
+
+  ./tests/unit/test_core/test_cuda_fft_backend_parity.py
+    Line 18
+    Method: test_forward_inverse_fft_parity_small_grid
+
+  ./tests/unit/test_core/test_cuda_fft_backend_parity.py
+    Line 14
+    Method: __init__
+
+  ./tests/unit/test_core/test_step_resonator_boundary.py
+    Line 12
+    Method: test_step_resonator_basic_1d
+
+  ./tests/unit/test_core/test_step_resonator_boundary.py
+    Line 23
+    Method: test_step_resonator_7d_axes_subset
+
+  ./tests/unit/test_core/test_step_resonator_boundary.py
+    Line 33
+    Method: test_step_resonator_frequency_dependent_rt
+
+  ./tests/unit/test_core/test_legacy_method_absence.py
+    Line 11
+    Method: test_no_basic_method_name_remaining
+
+  ./tests/unit/test_core/test_frequency_dependence_models.py
+    Line 13
+    Method: test_drude_conductivity_monotonicity
+
+  ./tests/unit/test_core/test_frequency_dependence_models.py
+    Line 32
+    Method: test_debye_conductivity_decreases_with_frequency
+
+  ./tests/unit/test_core/test_frequency_dependence_models.py
+    Line 47
+    Method: test_admittance_scales_with_conductivity
+
+  ./bhlff/models/level_c/beating/basic/optimization.py
+    Line 177
+    Method: objective
+
+  ./bhlff/models/level_c/beating/basic/optimization.py
+    Line 428
+    Method: threshold_objective
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis.py
+    Line 187
+    Method: objective
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis.py
+    Line 262
+    Method: objective
+
+  ./bhlff/core/bvp/memory_decorator.py
+    Line 58
+    Method: decorator
+
+  ./bhlff/core/bvp/memory_decorator.py
+    Line 127
+    Method: decorator
+
+  ./bhlff/core/bvp/memory_decorator.py
+    Line 197
+    Method: decorator
+
+  ./bhlff/core/bvp/memory_decorator.py
+    Line 269
+    Method: decorator
+
+  ./bhlff/core/bvp/memory_decorator.py
+    Line 60
+    Method: wrapper
+
+  ./bhlff/core/bvp/memory_decorator.py
+    Line 129
+    Method: wrapper
+
+  ./bhlff/core/bvp/memory_decorator.py
+    Line 199
+    Method: wrapper
+
+  ./bhlff/core/bvp/memory_decorator.py
+    Line 271
+    Method: wrapper
+
+  ./bhlff/core/bvp/bvp_level_interfaces_g.py
+    Line 39
+    Method: __init__
+
+  ./bhlff/core/bvp/bvp_level_interfaces_g.py
+    Line 39
+    Class: LevelGInterface
+    Method: __init__
+
+  ./bhlff/core/bvp/bvp_level_interfaces_g.py
+    Line 39
+    Method: __init__
+
+  ./bhlff/core/bvp/physical_validation_decorator.py
+    Line 46
+    Method: decorator
+
+  ./bhlff/core/bvp/physical_validation_decorator.py
+    Line 115
+    Method: decorator
+
+  ./bhlff/core/bvp/physical_validation_decorator.py
+    Line 166
+    Method: decorator
+
+  ./bhlff/core/bvp/physical_validation_decorator.py
+    Line 219
+    Method: decorator
+
+  ./bhlff/core/bvp/physical_validation_decorator.py
+    Line 272
+    Method: decorator
+
+  ./bhlff/core/bvp/physical_validation_decorator.py
+    Line 323
+    Method: decorator
+
+  ./bhlff/core/bvp/physical_validation_decorator.py
+    Line 48
+    Method: wrapper
+
+  ./bhlff/core/bvp/physical_validation_decorator.py
+    Line 117
+    Method: wrapper
+
+  ./bhlff/core/bvp/physical_validation_decorator.py
+    Line 168
+    Method: wrapper
+
+  ./bhlff/core/bvp/physical_validation_decorator.py
+    Line 221
+    Method: wrapper
+
+  ./bhlff/core/bvp/physical_validation_decorator.py
+    Line 274
+    Method: wrapper
+
+  ./bhlff/core/bvp/physical_validation_decorator.py
+    Line 325
+    Method: wrapper
+
+  ./bhlff/core/bvp/level_a_interface.py
+    Line 39
+    Method: __init__
+
+  ./bhlff/core/bvp/level_a_interface.py
+    Line 39
+    Class: LevelAInterface
+    Method: __init__
+
+  ./bhlff/core/bvp/level_a_interface.py
+    Line 39
+    Method: __init__
+
+  ./bhlff/core/bvp/level_c_interface.py
+    Line 38
+    Method: __init__
+
+  ./bhlff/core/bvp/level_c_interface.py
+    Line 38
+    Class: LevelCInterface
+    Method: __init__
+
+  ./bhlff/core/bvp/level_c_interface.py
+    Line 38
+    Method: __init__
+
+  ./bhlff/core/bvp/envelope_equation/bvp_envelope_equation_7d_facade.py
+    Line 119
+    Method: residual_func
+
+  ./bhlff/core/bvp/envelope_equation/bvp_envelope_equation_7d_facade.py
+    Line 125
+    Method: jacobian_func
+
+  ./bhlff/core/fft/spectral_derivatives_impl.py
+    Line 135
+    Method: compute_mixed_derivative
+
+  ./bhlff/core/fft/spectral_derivatives_impl.py
+    Line 135
+    Class: SpectralDerivatives
+    Method: compute_mixed_derivative
+
+  ./bhlff/core/fft/spectral_derivatives_impl.py
+    Line 135
+    Method: compute_mixed_derivative
+
+  ./examples/level_g_example.py
+    Line 175
+    Method: __init__
+
+  ./examples/level_g_example.py
+    Line 175
+    Class: MockSystem
+    Method: __init__
+
+  ./examples/level_g_example.py
+    Line 175
+    Method: __init__
+
+
+FILES_WITHOUT_DOCSTRINGS: 4 issues
+----------------------------------------
+  ./bhlff/models/level_f/collective/__init__.py
+    Line 1
+
+  ./bhlff/models/level_e/phase_mapping_components/__init__.py
+    Line 1
+
+  ./bhlff/models/level_e/sensitivity/__init__.py
+    Line 1
+
+  ./bhlff/models/level_e/experiments/__init__.py
+    Line 1
+
+
+CLASSES_WITHOUT_DOCSTRINGS: 4 issues
+----------------------------------------
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 60
+    Class: MockSystem
+
+  ./tests/unit/test_level_g/test_vbp_gravitational_effects_integration.py
+    Line 52
+    Class: MockSystem
+
+  ./tests/unit/test_core/test_cuda_fft_backend_parity.py
+    Line 13
+    Class: DummyDomain
+
+  ./examples/level_g_example.py
+    Line 174
+    Class: MockSystem
+
+
+IMPORTS_IN_MIDDLE: 508 issues
+----------------------------------------
+  ./setup.py
+    Line 28
+
+  ./tests/test_bvp_level_c_integration.py
+    Line 30
+
+  ./tests/test_bvp_level_a_integration.py
+    Line 30
+
+  ./tests/conftest.py
+    Line 37
+
+  ./tests/test_bvp_levels_integration.py
+    Line 33
+
+  ./tests/test_bvp_level_e_integration.py
+    Line 30
+
+  ./tests/test_bvp_level_d_integration.py
+    Line 30
+
+  ./tests/test_bvp_level_b_integration.py
+    Line 30
+
+  ./tests/test_bvp_framework.py
+    Line 25
+
+  ./tests/test_bvp_level_f_integration.py
+    Line 30
+
+  ./tests/test_bvp_level_g_integration.py
+    Line 30
+
+  ./tests/integration/test_bvp_impedance_calculation_physics.py
+    Line 32
+
+  ./tests/integration/test_bvp_complete_pipeline_physics.py
+    Line 36
+
+  ./tests/integration/test_bvp_phase_vector_physics.py
+    Line 32
+
+  ./tests/integration/test_automated_testing_integration.py
+    Line 26
+
+  ./tests/integration/test_bvp_interface_pipeline_physics.py
+    Line 34
+
+  ./tests/integration/test_bvp_core_pipeline_physics.py
+    Line 33
+
+  ./tests/integration/test_bvp_quench_dynamics_physics.py
+    Line 32
+
+  ./tests/integration/automated_testing/test_quality_monitoring_integration.py
+    Line 36
+
+  ./tests/integration/automated_testing/test_physics_validation_integration.py
+    Line 36
+
+  ./tests/integration/automated_testing/test_error_handling_integration.py
+    Line 36
+
+  ./tests/integration/automated_testing/test_automated_reporting_integration.py
+    Line 45
+
+  ./tests/integration/automated_testing/test_basic_integration.py
+    Line 45
+
+  ./tests/integration/automated_testing/test_performance_integration.py
+    Line 217
+
+  ./tests/unit/test_acceptance_criteria.py
+    Line 23
+
+  ./tests/unit/test_7d_bvp_physics.py
+    Line 33
+
+  ./tests/unit/test_automated_testing.py
+    Line 24
+
+  ./tests/unit/test_level_g/test_gravity_physics.py
+    Line 23
+
+  ./tests/unit/test_level_g/test_vbp_envelope_curvature_physics.py
+    Line 26
+
+  ./tests/unit/test_level_g/test_vbp_gravitational_effects_integration.py
+    Line 24
+
+  ./tests/unit/test_level_g/test_vbp_gravitational_waves_physics.py
+    Line 24
+
+  ./tests/unit/test_level_g/test_phase_envelope_balance_physics.py
+    Line 25
+
+  ./tests/unit/test_level_b/test_fundamental_properties_basic.py
+    Line 35
+
+  ./tests/unit/test_level_b/test_fundamental_properties_advanced.py
+    Line 35
+
+  ./tests/unit/test_level_c/test_level_c_advanced_models.py
+    Line 31
+
+  ./tests/unit/test_level_c/test_level_c_basic_models.py
+    Line 31
+
+  ./tests/unit/test_level_d/test_level_d_advanced_models.py
+    Line 33
+
+  ./tests/unit/test_level_d/test_level_d_models_basic.py
+    Line 31
+
+  ./tests/unit/test_level_d/test_level_d_field_projection.py
+    Line 29
+
+  ./tests/unit/test_models/test_level_b_power_law_core_fixes_advanced.py
+    Line 30
+
+  ./tests/unit/test_models/test_level_b_power_law_core_fixes_basic.py
+    Line 30
+
+  ./tests/unit/test_level_e/test_soliton_physics_advanced.py
+    Line 30
+
+  ./tests/unit/test_level_e/test_defect_physics.py
+    Line 23
+
+  ./tests/unit/test_level_e/test_level_e_simple.py
+    Line 30
+
+  ./tests/unit/test_level_e/test_soliton_physics_basic.py
+    Line 29
+
+  ./tests/unit/test_level_e/test_soliton_topology_physics_basic.py
+    Line 29
+
+  ./tests/unit/test_level_e/test_soliton_energy_physics_basic.py
+    Line 28
+
+  ./tests/unit/test_level_e/test_defect_fractional_physics.py
+    Line 26
+
+  ./tests/unit/test_level_e/test_soliton_energy_physics_advanced.py
+    Line 28
+
+  ./tests/unit/test_level_e/test_soliton_topology_physics_advanced.py
+    Line 30
+
+  ./tests/unit/test_level_e/solitons/test_soliton_models.py
+    Line 25
+
+  ./tests/unit/test_level_e/performance/test_performance_analyzer.py
+    Line 25
+
+  ./tests/unit/test_level_e/defects/test_defect_models.py
+    Line 25
+
+  ./tests/unit/test_level_e/sensitivity/test_sensitivity_analyzer.py
+    Line 25
+
+  ./tests/unit/test_level_e/robustness/test_robustness_tester.py
+    Line 25
+
+  ./tests/unit/test_level_e/discretization/test_discretization_analyzer.py
+    Line 25
+
+  ./tests/unit/test_level_e/integration/test_integration.py
+    Line 25
+
+  ./tests/unit/test_level_e/failure/test_failure_detector.py
+    Line 25
+
+  ./tests/unit/test_level_e/experiments/test_level_e_experiments.py
+    Line 25
+
+  ./tests/unit/test_level_e/phase_mapping/test_phase_mapper.py
+    Line 25
+
+  ./tests/unit/test_level_f/test_nonlinear.py
+    Line 23
+
+  ./tests/unit/test_level_f/test_multi_particle_basic.py
+    Line 21
+
+  ./tests/unit/test_level_f/test_collective_basic.py
+    Line 22
+
+  ./tests/unit/test_level_f/test_transitions_advanced.py
+    Line 22
+
+  ./tests/unit/test_level_f/test_multi_particle_advanced.py
+    Line 21
+
+  ./tests/unit/test_level_f/test_transitions_basic.py
+    Line 22
+
+  ./tests/unit/test_level_f/test_collective_advanced.py
+    Line 22
+
+  ./tests/unit/test_level_f/nonlinear/test_nonlinear_initialization.py
+    Line 23
+
+  ./tests/unit/test_level_f/nonlinear/test_nonlinear_types.py
+    Line 23
+
+  ./tests/unit/test_level_f/nonlinear/test_soliton_analysis.py
+    Line 23
+
+  ./tests/unit/automated_testing/test_automated_testing_system_basic.py
+    Line 28
+
+  ./tests/unit/automated_testing/test_integration.py
+    Line 46
+
+  ./tests/unit/automated_testing/test_automated_reporting.py
+    Line 37
+
+  ./tests/unit/automated_testing/test_quality_monitor.py
+    Line 34
+
+  ./tests/unit/automated_testing/test_automated_testing_system_advanced.py
+    Line 152
+
+  ./tests/unit/test_core/test_7d_physics.py
+    Line 39
+
+  ./tests/unit/test_core/test_quenches_postulate_physics.py
+    Line 29
+
+  ./tests/unit/test_core/test_base_time_integrator.py
+    Line 27
+
+  ./tests/unit/test_core/test_legacy_code_absence.py
+    Line 84
+
+  ./tests/unit/test_core/test_scale_separation_postulate_physics.py
+    Line 30
+
+  ./tests/unit/test_core/test_tail_resonatorness_postulate_physics.py
+    Line 29
+
+  ./tests/unit/test_core/test_sources_coverage.py
+    Line 301
+
+  ./tests/unit/test_core/test_bvp_constants_coverage.py
+    Line 21
+
+  ./tests/unit/test_core/test_step_resonator_no_exponential.py
+    Line 132
+
+  ./tests/unit/test_core/test_transition_zone_postulate_physics.py
+    Line 29
+
+  ./tests/unit/test_core/test_core_renormalization_postulate_physics.py
+    Line 29
+
+  ./tests/unit/test_core/test_crank_nicolson_integrator.py
+    Line 26
+
+  ./tests/unit/test_core/test_spectral_laplacian_physics.py
+    Line 38
+
+  ./tests/unit/test_core/test_quench_detector.py
+    Line 28
+
+  ./tests/unit/test_core/test_bvp_postulate_coverage.py
+    Line 122
+
+  ./tests/unit/test_core/test_bvp_rigidity_postulate_physics.py
+    Line 29
+
+  ./tests/unit/test_core/test_spectral_convergence_physics.py
+    Line 325
+
+  ./tests/unit/test_core/test_fft_physics.py
+    Line 37
+
+  ./tests/unit/test_core/test_u1_phase_structure_postulate_physics.py
+    Line 29
+
+  ./tests/unit/test_core/test_bvp_postulates_integration_physics.py
+    Line 49
+
+  ./tests/unit/test_core/test_basic_physics_validation.py
+    Line 33
+
+  ./tests/unit/test_core/test_spectral_derivatives_physics.py
+    Line 37
+
+  ./tests/unit/test_core/test_bvp_postulates_physics.py
+    Line 48
+
+  ./tests/unit/test_core/test_spectral_boundary_conditions_physics.py
+    Line 37
+
+  ./tests/unit/test_core/test_bvp_constants_comprehensive.py
+    Line 21
+
+  ./tests/unit/test_core/test_memory_kernel.py
+    Line 27
+
+  ./tests/unit/test_core/test_carrier_primacy_postulate_physics.py
+    Line 30
+
+  ./tests/unit/test_core/test_power_balance_postulate_physics.py
+    Line 29
+
+  ./tests/unit/test_core/test_fft_coverage.py
+    Line 22
+
+  ./tests/unit/test_core/test_spectral_energy_spectrum_physics.py
+    Line 262
+
+  ./tests/unit/test_core/fft_solver_7d_validation/test_boundary_cases.py
+    Line 262
+
+  ./tests/unit/test_core/time_integrators/test_basic_integrators.py
+    Line 209
+
+  ./tests/unit/test_core/time_integrators/test_advanced_integrators.py
+    Line 266
+
+  ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py
+    Line 28
+
+  ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
+    Line 28
+
+  ./tests/unit/test_level_a/test_reporting_advanced.py
+    Line 25
+
+  ./tests/unit/test_level_a/test_A02_multi_plane_basic.py
+    Line 28
+
+  ./tests/unit/test_level_a/test_A01_plane_wave_basic.py
+    Line 28
+
+  ./tests/unit/test_level_a/test_simple_basic.py
+    Line 129
+
+  ./tests/unit/test_level_a/test_reporting_basic.py
+    Line 25
+
+  ./tests/unit/test_level_a/test_A05_residual_energy_basic.py
+    Line 29
+
+  ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
+    Line 27
+
+  ./bhlff/__init__.py
+    Line 47
+
+  ./bhlff/utils/cuda_utils.py
+    Line 173
+
+  ./bhlff/models/base/abstract_models.py
+    Line 28
+
+  ./bhlff/models/base/model_base.py
+    Line 32
+
+  ./bhlff/models/base/__init__.py
+    Line 21
+
+  ./bhlff/models/base/abstract_model.py
+    Line 31
+
+  ./bhlff/models/level_c/mode_beating_analysis.py
+    Line 39
+
+  ./bhlff/models/level_c/boundaries.py
+    Line 265
+
+  ./bhlff/models/level_c/quench_memory_analysis.py
+    Line 39
+
+  ./bhlff/models/level_c/boundary_analysis.py
+    Line 38
+
+  ./bhlff/models/level_c/level_c_integration.py
+    Line 39
+
+  ./bhlff/models/level_c/__init__.py
+    Line 37
+
+  ./bhlff/models/level_c/abcd_model.py
+    Line 35
+
+  ./bhlff/models/level_c/boundary/data_structures.py
+    Line 21
+
+  ./bhlff/models/level_c/boundary/__init__.py
+    Line 23
+
+  ./bhlff/models/level_c/boundary/admittance_analysis.py
+    Line 24
+
+  ./bhlff/models/level_c/boundary/radial_analysis.py
+    Line 24
+
+  ./bhlff/models/level_c/beating/theoretical_analysis.py
+    Line 23
+
+  ./bhlff/models/level_c/beating/data_structures.py
+    Line 21
+
+  ./bhlff/models/level_c/beating/__init__.py
+    Line 24
+
+  ./bhlff/models/level_c/beating/background_analysis.py
+    Line 24
+
+  ./bhlff/models/level_c/beating/pinned_analysis.py
+    Line 24
+
+  ./bhlff/models/level_c/beating/beating_patterns.py
+    Line 297
+
+  ./bhlff/models/level_c/beating/basic/comparison_patterns.py
+    Line 22
+
+  ./bhlff/models/level_c/beating/basic/core_analysis_frequency.py
+    Line 22
+
+  ./bhlff/models/level_c/beating/basic/beating_basic_core.py
+    Line 30
+
+  ./bhlff/models/level_c/beating/basic/core_analysis_interference.py
+    Line 22
+
+  ./bhlff/models/level_c/beating/basic/comparison_metrics.py
+    Line 22
+
+  ./bhlff/models/level_c/beating/basic/core_analysis_phase.py
+    Line 22
+
+  ./bhlff/models/level_c/beating/basic/statistical_analysis.py
+    Line 26
+
+  ./bhlff/models/level_c/beating/basic/core_analysis_coupling.py
+    Line 22
+
+  ./bhlff/models/level_c/beating/basic/__init__.py
+    Line 23
+
+  ./bhlff/models/level_c/beating/basic/optimization.py
+    Line 25
+
+  ./bhlff/models/level_c/beating/basic/comparison.py
+    Line 27
+
+  ./bhlff/models/level_c/beating/basic/comparison_overall.py
+    Line 22
+
+  ./bhlff/models/level_c/beating/basic/core_analysis.py
+    Line 32
+
+  ./bhlff/models/level_c/beating/basic/core_analysis_basic.py
+    Line 22
+
+  ./bhlff/models/level_c/beating/optimization/beating_validation_optimization_core.py
+    Line 22
+
+  ./bhlff/models/level_c/memory/correlation_analysis.py
+    Line 28
+
+  ./bhlff/models/level_c/memory/pinning_analysis.py
+    Line 24
+
+  ./bhlff/models/level_c/memory/correlation_analysis_core.py
+    Line 24
+
+  ./bhlff/models/level_c/memory/correlation_analysis_coherence.py
+    Line 21
+
+  ./bhlff/models/level_c/memory/correlation_analysis_stability.py
+    Line 21
+
+  ./bhlff/models/level_c/memory/correlation_analysis_cross.py
+    Line 21
+
+  ./bhlff/models/level_c/memory/data_structures.py
+    Line 21
+
+  ./bhlff/models/level_c/memory/memory_evolution.py
+    Line 24
+
+  ./bhlff/models/level_c/memory/__init__.py
+    Line 24
+
+  ./bhlff/models/level_f/transitions.py
+    Line 23
+
+  ./bhlff/models/level_f/bvp_integration.py
+    Line 35
+
+  ./bhlff/models/level_f/nonlinear.py
+    Line 33
+
+  ./bhlff/models/level_f/__init__.py
+    Line 28
+
+  ./bhlff/models/level_f/multi_particle.py
+    Line 34
+
+  ./bhlff/models/level_f/collective.py
+    Line 30
+
+  ./bhlff/models/level_f/nonlinear/basic_effects.py
+    Line 21
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis.py
+    Line 22
+
+  ./bhlff/models/level_f/nonlinear/__init__.py
+    Line 22
+
+  ./bhlff/models/level_f/nonlinear/mode_analysis.py
+    Line 22
+
+  ./bhlff/models/level_f/collective/dispersion_analysis.py
+    Line 22
+
+  ./bhlff/models/level_f/collective/excitation_analysis.py
+    Line 325
+
+  ./bhlff/models/level_f/multi_particle/data_structures.py
+    Line 21
+
+  ./bhlff/models/level_f/multi_particle/__init__.py
+    Line 22
+
+  ./bhlff/models/level_f/multi_particle/potential_analysis.py
+    Line 536
+
+  ./bhlff/models/level_f/multi_particle/collective_modes.py
+    Line 23
+
+  ./bhlff/models/level_f/transitions/phase_transitions_core.py
+    Line 24
+
+  ./bhlff/models/level_d/level_d_models.py
+    Line 37
+
+  ./bhlff/models/level_d/projections.py
+    Line 34
+
+  ./bhlff/models/level_d/bvp_integration.py
+    Line 33
+
+  ./bhlff/models/level_d/streamlines.py
+    Line 34
+
+  ./bhlff/models/level_d/__init__.py
+    Line 33
+
+  ./bhlff/models/level_d/superposition.py
+    Line 32
+
+  ./bhlff/models/level_b/visualization.py
+    Line 25
+
+  ./bhlff/models/level_b/power_law_analyzer.py
+    Line 25
+
+  ./bhlff/models/level_b/zone_analyzer_utils.py
+    Line 31
+
+  ./bhlff/models/level_b/__init__.py
+    Line 30
+
+  ./bhlff/models/level_b/node_analyzer.py
+    Line 23
+
+  ./bhlff/models/level_b/power_law_core.py
+    Line 27
+
+  ./bhlff/models/level_b/zone_analyzer.py
+    Line 26
+
+  ./bhlff/models/level_b/power_law/scaling_regions.py
+    Line 117
+
+  ./bhlff/models/level_b/power_law/correlation_analysis.py
+    Line 24
+
+  ./bhlff/models/level_b/power_law/power_law_core.py
+    Line 34
+
+  ./bhlff/models/level_b/power_law/critical_exponents.py
+    Line 390
+
+  ./bhlff/models/level_b/node_analysis/node_analysis.py
+    Line 33
+
+  ./bhlff/models/level_b/node_analysis/topological_analysis.py
+    Line 26
+
+  ./bhlff/models/level_b/node_analysis/charge_computation.py
+    Line 24
+
+  ./bhlff/models/level_b/zone_analysis/boundary_detection.py
+    Line 192
+
+  ./bhlff/models/level_b/zone_analysis/zone_analysis.py
+    Line 282
+
+  ./bhlff/models/level_b/zone_analysis/transition_analysis.py
+    Line 27
+
+  ./bhlff/models/level_b/zone_analysis/zone_properties.py
+    Line 23
+
+  ./bhlff/models/level_e/defect_models.py
+    Line 31
+
+  ./bhlff/models/level_e/defect_dynamics.py
+    Line 330
+
+  ./bhlff/models/level_e/defect_implementations.py
+    Line 30
+
+  ./bhlff/models/level_e/sensitivity_analysis.py
+    Line 34
+
+  ./bhlff/models/level_e/soliton_implementations.py
+    Line 23
+
+  ./bhlff/models/level_e/phase_mapping.py
+    Line 35
+
+  ./bhlff/models/level_e/defect_core.py
+    Line 29
+
+  ./bhlff/models/level_e/bvp_integration.py
+    Line 34
+
+  ./bhlff/models/level_e/level_e_experiments.py
+    Line 33
+
+  ./bhlff/models/level_e/performance_analysis.py
+    Line 25
+
+  ./bhlff/models/level_e/defect_interactions.py
+    Line 26
+
+  ./bhlff/models/level_e/__init__.py
+    Line 38
+
+  ./bhlff/models/level_e/soliton_models.py
+    Line 38
+
+  ./bhlff/models/level_e/soliton_core.py
+    Line 27
+
+  ./bhlff/models/level_e/failure_detection.py
+    Line 31
+
+  ./bhlff/models/level_e/robustness_tests.py
+    Line 28
+
+  ./bhlff/models/level_e/discretization_effects.py
+    Line 27
+
+  ./bhlff/models/level_e/performance/accuracy_cost_analysis.py
+    Line 187
+
+  ./bhlff/models/level_e/performance/performance_analyzer.py
+    Line 31
+
+  ./bhlff/models/level_e/performance/profiling.py
+    Line 24
+
+  ./bhlff/models/level_e/performance/performance_analysis.py
+    Line 31
+
+  ./bhlff/models/level_e/performance/scalability_analysis.py
+    Line 24
+
+  ./bhlff/models/level_e/performance/__init__.py
+    Line 27
+
+  ./bhlff/models/level_e/performance/optimization.py
+    Line 25
+
+  ./bhlff/models/level_e/performance/scaling_analysis.py
+    Line 22
+
+  ./bhlff/models/level_e/performance/benchmark_tests.py
+    Line 146
+
+  ./bhlff/models/level_e/performance/resource_analysis.py
+    Line 24
+
+  ./bhlff/models/level_e/performance/scaling/optimization_scaling.py
+    Line 24
+
+  ./bhlff/models/level_e/performance/scaling/base_scaling.py
+    Line 23
+
+  ./bhlff/models/level_e/performance/scaling/performance_scaling.py
+    Line 25
+
+  ./bhlff/models/level_e/performance/scaling/__init__.py
+    Line 26
+
+  ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py
+    Line 22
+
+  ./bhlff/models/level_e/phase_mapping_components/regime_classification.py
+    Line 164
+
+  ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py
+    Line 22
+
+  ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
+    Line 105
+
+  ./bhlff/models/level_e/sensitivity/sobol_analysis.py
+    Line 244
+
+  ./bhlff/models/level_e/robustness/geometry_testing.py
+    Line 27
+
+  ./bhlff/models/level_e/robustness/noise_testing.py
+    Line 25
+
+  ./bhlff/models/level_e/robustness/robustness_tester.py
+    Line 33
+
+  ./bhlff/models/level_e/robustness/parameter_testing.py
+    Line 25
+
+  ./bhlff/models/level_e/robustness/__init__.py
+    Line 32
+
+  ./bhlff/models/level_e/discretization/grid_convergence.py
+    Line 24
+
+  ./bhlff/models/level_e/discretization/domain_effects.py
+    Line 24
+
+  ./bhlff/models/level_e/discretization/discretization_analyzer.py
+    Line 32
+
+  ./bhlff/models/level_e/discretization/__init__.py
+    Line 32
+
+  ./bhlff/models/level_e/discretization/time_stability.py
+    Line 24
+
+  ./bhlff/models/level_e/experiments/specialized_experiments.py
+    Line 26
+
+  ./bhlff/models/level_e/experiments/experiment_runner.py
+    Line 30
+
+  ./bhlff/models/level_g/gravity_curvature.py
+    Line 27
+
+  ./bhlff/models/level_g/astrophysics.py
+    Line 22
+
+  ./bhlff/models/level_g/evolution.py
+    Line 22
+
+  ./bhlff/models/level_g/cosmology.py
+    Line 24
+
+  ./bhlff/models/level_g/particle_validation.py
+    Line 22
+
+  ./bhlff/models/level_g/structure.py
+    Line 23
+
+  ./bhlff/models/level_g/bvp_integration.py
+    Line 35
+
+  ./bhlff/models/level_g/gravity_waves.py
+    Line 26
+
+  ./bhlff/models/level_g/particle_inversion_computations.py
+    Line 22
+
+  ./bhlff/models/level_g/gravity.py
+    Line 33
+
+  ./bhlff/models/level_g/__init__.py
+    Line 29
+
+  ./bhlff/models/level_g/analysis.py
+    Line 22
+
+  ./bhlff/models/level_g/particle_inversion.py
+    Line 23
+
+  ./bhlff/models/level_g/validation.py
+    Line 24
+
+  ./bhlff/models/level_g/gravity_einstein.py
+    Line 29
+
+  ./bhlff/models/level_g/astrophysics/observable_properties.py
+    Line 27
+
+  ./bhlff/models/level_g/astrophysics/astrophysical_object_model.py
+    Line 34
+
+  ./bhlff/models/level_g/astrophysics/galactic_models.py
+    Line 25
+
+  ./bhlff/models/level_g/astrophysics/black_hole_models.py
+    Line 25
+
+  ./bhlff/models/level_g/astrophysics/phase_analysis.py
+    Line 27
+
+  ./bhlff/models/level_g/astrophysics/stellar_models.py
+    Line 25
+
+  ./bhlff/models/level_g/astrophysics/__init__.py
+    Line 25
+
+  ./bhlff/models/level_g/analysis/observational_comparison.py
+    Line 29
+
+  ./bhlff/models/level_g/analysis/cosmological_analysis.py
+    Line 32
+
+  ./bhlff/models/level_g/analysis/statistical_analysis.py
+    Line 28
+
+  ./bhlff/models/level_g/analysis/__init__.py
+    Line 26
+
+  ./bhlff/models/level_g/analysis/structure_analysis.py
+    Line 28
+
+  ./bhlff/models/level_g/analysis/parameter_analysis.py
+    Line 28
+
+  ./bhlff/models/level_g/evolution/cosmological_evolution.py
+    Line 30
+
+  ./bhlff/models/level_g/evolution/cosmological_parameters.py
+    Line 29
+
+  ./bhlff/models/level_g/evolution/phase_field_evolution.py
+    Line 26
+
+  ./bhlff/models/level_g/evolution/evolution_analysis.py
+    Line 28
+
+  ./bhlff/models/level_g/evolution/structure_formation.py
+    Line 28
+
+  ./bhlff/models/level_g/evolution/__init__.py
+    Line 26
+
+  ./bhlff/models/level_g/cosmology/cosmological_parameters.py
+    Line 29
+
+  ./bhlff/models/level_g/cosmology/phase_field_evolution.py
+    Line 26
+
+  ./bhlff/models/level_g/cosmology/envelope_effective_metric.py
+    Line 26
+
+  ./bhlff/models/level_g/cosmology/structure_formation.py
+    Line 28
+
+  ./bhlff/models/level_g/cosmology/__init__.py
+    Line 27
+
+  ./bhlff/models/level_g/cosmology/cosmological_model.py
+    Line 30
+
+  ./bhlff/models/level_g/structure/galaxy_formation.py
+    Line 30
+
+  ./bhlff/models/level_g/structure/velocity_evolution.py
+    Line 26
+
+  ./bhlff/models/level_g/structure/potential_evolution.py
+    Line 26
+
+  ./bhlff/models/level_g/structure/density_evolution.py
+    Line 26
+
+  ./bhlff/models/level_g/structure/large_scale_structure_model.py
+    Line 35
+
+  ./bhlff/models/level_g/structure/__init__.py
+    Line 28
+
+  ./bhlff/models/level_g/structure/structure_analysis.py
+    Line 29
+
+  ./bhlff/models/level_a/__init__.py
+    Line 27
+
+  ./bhlff/models/level_a/validation.py
+    Line 27
+
+  ./bhlff/models/levels/bvp_integration.py
+    Line 28
+
+  ./bhlff/models/levels/__init__.py
+    Line 27
+
+  ./bhlff/models/levels/bvp_integration_base.py
+    Line 32
+
+  ./bhlff/geometry/layers/spherical_layer.py
+    Line 25
+
+  ./bhlff/geometry/layers/layer_stack.py
+    Line 28
+
+  ./bhlff/testing/automated_testing.py
+    Line 29
+
+  ./bhlff/testing/automated_reporting.py
+    Line 32
+
+  ./bhlff/testing/reporting/template_engine.py
+    Line 29
+
+  ./bhlff/testing/reporting/__init__.py
+    Line 24
+
+  ./bhlff/testing/reporting/distribution_manager.py
+    Line 26
+
+  ./bhlff/testing/reporting/physics_interpreter.py
+    Line 24
+
+  ./bhlff/testing/reporting/base.py
+    Line 26
+
+  ./bhlff/testing/reporting/data_aggregator.py
+    Line 23
+
+  ./bhlff/testing/quality/physics_constraints.py
+    Line 23
+
+  ./bhlff/testing/quality/trend_analyzer.py
+    Line 22
+
+  ./bhlff/testing/quality/__init__.py
+    Line 22
+
+  ./bhlff/testing/quality/base.py
+    Line 26
+
+  ./bhlff/testing/quality/metric_history.py
+    Line 26
+
+  ./bhlff/testing/automated_testing/results_database.py
+    Line 28
+
+  ./bhlff/testing/automated_testing/physics_validator.py
+    Line 30
+
+  ./bhlff/testing/automated_testing/__init__.py
+    Line 30
+
+  ./bhlff/testing/automated_testing/test_results.py
+    Line 31
+
+  ./bhlff/testing/automated_testing/automated_testing_system.py
+    Line 42
+
+  ./bhlff/testing/automated_testing/test_scheduler.py
+    Line 33
+
+  ./bhlff/testing/automated_testing/resource_manager.py
+    Line 32
+
+  ./bhlff/solvers/__init__.py
+    Line 22
+
+  ./bhlff/solvers/base/abstract_solver.py
+    Line 239
+
+  ./bhlff/solvers/integrators/bvp_integration_schemes.py
+    Line 27
+
+  ./bhlff/solvers/integrators/time_integrator.py
+    Line 31
+
+  ./bhlff/solvers/integrators/bvp_evolution_computer.py
+    Line 27
+
+  ./bhlff/solvers/integrators/bvp_modulation_integrator_core.py
+    Line 31
+
+  ./bhlff/solvers/integrators/bvp_modulation_integrator.py
+    Line 25
+
+  ./bhlff/core/__init__.py
+    Line 35
+
+  ./bhlff/core/time/bvp_envelope_integrator.py
+    Line 31
+
+  ./bhlff/core/time/memory_kernel.py
+    Line 26
+
+  ./bhlff/core/time/quench_detector.py
+    Line 24
+
+  ./bhlff/core/time/crank_nicolson_integrator.py
+    Line 80
+
+  ./bhlff/core/time/__init__.py
+    Line 31
+
+  ./bhlff/core/time/base_integrator.py
+    Line 28
+
+  ./bhlff/core/time/adaptive/error_estimation.py
+    Line 24
+
+  ./bhlff/core/time/adaptive/runge_kutta.py
+    Line 27
+
+  ./bhlff/core/time/adaptive/adaptive_integrator.py
+    Line 99
+
+  ./bhlff/core/base/__init__.py
+    Line 22
+
+  ./bhlff/core/bvp/level_b_interface_facade.py
+    Line 34
+
+  ./bhlff/core/bvp/bvp_rigidity_postulate.py
+    Line 25
+
+  ./bhlff/core/bvp/residual_computer_base.py
+    Line 38
+
+  ./bhlff/core/bvp/level_e_interface.py
+    Line 30
+
+  ./bhlff/core/bvp/quenches_postulate_core.py
+    Line 28
+
+  ./bhlff/core/bvp/quench_morphology.py
+    Line 32
+
+  ./bhlff/core/bvp/transition_zone_postulate.py
+    Line 25
+
+  ./bhlff/core/bvp/resonance_detector.py
+    Line 30
+
+  ./bhlff/core/bvp/bvp_postulate_base.py
+    Line 24
+
+  ./bhlff/core/bvp/quench_detector.py
+    Line 30
+
+  ./bhlff/core/bvp/bvp_impedance_calculator.py
+    Line 34
+
+  ./bhlff/core/bvp/envelope_linear_solver.py
+    Line 30
+
+  ./bhlff/core/bvp/quenches_analyzer.py
+    Line 27
+
+  ./bhlff/core/bvp/bvp_constants_numerical.py
+    Line 31
+
+  ./bhlff/core/bvp/bvp_postulates.py
+    Line 34
+
+  ./bhlff/core/bvp/bvp_constants.py
+    Line 32
+
+  ./bhlff/core/bvp/abstract_solver_core.py
+    Line 136
+
+  ./bhlff/core/bvp/topological_defect_analyzer.py
+    Line 41
+
+  ./bhlff/core/bvp/impedance_core.py
+    Line 29
+
+  ./bhlff/core/bvp/memory_decorator.py
+    Line 30
+
+  ./bhlff/core/bvp/bvp_level_interfaces_abc.py
+    Line 28
+
+  ./bhlff/core/bvp/bvp_level_interfaces_g.py
+    Line 27
+
+  ./bhlff/core/bvp/power_law_analysis.py
+    Line 356
+
+  ./bhlff/core/bvp/carrier_primacy_postulate.py
+    Line 25
+
+  ./bhlff/core/bvp/bvp_postulates_7d.py
+    Line 29
+
+  ./bhlff/core/bvp/bvp_constants_base.py
+    Line 27
+
+  ./bhlff/core/bvp/envelope_solver_line_search.py
+    Line 26
+
+  ./bhlff/core/bvp/level_b_interface.py
+    Line 22
+
+  ./bhlff/core/bvp/quenches_detector.py
+    Line 28
+
+  ./bhlff/core/bvp/bvp_phase_operations.py
+    Line 31
+
+  ./bhlff/core/bvp/core_renormalization_analyzer.py
+    Line 28
+
+  ./bhlff/core/bvp/__init__.py
+    Line 35
+
+  ./bhlff/core/bvp/bvp_envelope_solver.py
+    Line 37
+
+  ./bhlff/core/bvp/abstract_bvp_facade.py
+    Line 37
+
+  ./bhlff/core/bvp/scale_separation_postulate.py
+    Line 25
+
+  ./bhlff/core/bvp/level_f_interface.py
+    Line 29
+
+  ./bhlff/core/bvp/bvp_level_interface_base.py
+    Line 30
+
+  ./bhlff/core/bvp/quench_thresholds.py
+    Line 34
+
+  ./bhlff/core/bvp/core_region_analyzer.py
+    Line 27
+
+  ./bhlff/core/bvp/level_d_interface.py
+    Line 29
+
+  ./bhlff/core/bvp/memory_protection.py
+    Line 28
+
+  ./bhlff/core/bvp/core_renormalization_postulate.py
+    Line 28
+
+  ./bhlff/core/bvp/level_a_interface.py
+    Line 27
+
+  ./bhlff/core/bvp/envelope_nonlinear_coefficients.py
+    Line 32
+
+  ./bhlff/core/bvp/quenches_postulate.py
+    Line 28
+
+  ./bhlff/core/bvp/level_c_interface.py
+    Line 26
+
+  ./bhlff/core/bvp/quench_characteristics.py
+    Line 31
+
+  ./bhlff/core/bvp/bvp_envelope_equation_7d.py
+    Line 29
+
+  ./bhlff/core/bvp/tail_resonatorness_postulate.py
+    Line 25
+
+  ./bhlff/core/bvp/bvp_level_integration.py
+    Line 35
+
+  ./bhlff/core/bvp/bvp_parameter_access.py
+    Line 32
+
+  ./bhlff/core/bvp/resonance_peak_detector.py
+    Line 28
+
+  ./bhlff/core/bvp/analysis/topological_charge_analyzer.py
+    Line 29
+
+  ./bhlff/core/bvp/analysis/charge_computation.py
+    Line 23
+
+  ./bhlff/core/bvp/u1_phase_structure/coherence_analysis.py
+    Line 27
+
+  ./bhlff/core/bvp/u1_phase_structure/phase_analysis.py
+    Line 26
+
+  ./bhlff/core/bvp/u1_phase_structure/__init__.py
+    Line 24
+
+  ./bhlff/core/bvp/u1_phase_structure/u1_phase_structure_postulate.py
+    Line 28
+
+  ./bhlff/core/bvp/phase_vector/phase_components.py
+    Line 29
+
+  ./bhlff/core/bvp/phase_vector/__init__.py
+    Line 32
+
+  ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
+    Line 29
+
+  ./bhlff/core/bvp/phase_vector/phase_vector.py
+    Line 35
+
+  ./bhlff/core/bvp/level_integration/__init__.py
+    Line 35
+
+  ./bhlff/core/bvp/boundary/step_resonator.py
+    Line 24
+
+  ./bhlff/core/bvp/constants/frequency_dependent_properties.py
+    Line 28
+
+  ./bhlff/core/bvp/constants/renormalized_coefficients.py
+    Line 26
+
+  ./bhlff/core/bvp/constants/__init__.py
+    Line 30
+
+  ./bhlff/core/bvp/constants/bvp_constants_advanced.py
+    Line 33
+
+  ./bhlff/core/bvp/constants/nonlinear_coefficients.py
+    Line 26
+
+  ./bhlff/core/bvp/envelope_equation/solver_core_basic.py
+    Line 251
+
+  ./bhlff/core/bvp/envelope_equation/__init__.py
+    Line 32
+
+  ./bhlff/core/bvp/envelope_equation/bvp_envelope_equation_7d.py
+    Line 25
+
+  ./bhlff/core/bvp/envelope_equation/nonlinear_terms.py
+    Line 32
+
+  ./bhlff/core/bvp/envelope_equation/bvp_envelope_equation_7d_facade.py
+    Line 34
+
+  ./bhlff/core/bvp/envelope_equation/derivative_operators_facade.py
+    Line 34
+
+  ./bhlff/core/bvp/envelope_equation/derivative_operators/__init__.py
+    Line 33
+
+  ./bhlff/core/bvp/envelope_equation/derivative_operators/phase_operators.py
+    Line 31
+
+  ./bhlff/core/bvp/envelope_equation/derivative_operators/spatial_operators.py
+    Line 31
+
+  ./bhlff/core/bvp/envelope_equation/derivative_operators/temporal_operators.py
+    Line 29
+
+  ./bhlff/core/bvp/interface/core_interface.py
+    Line 25
+
+  ./bhlff/core/bvp/interface/tail_interface.py
+    Line 25
+
+  ./bhlff/core/bvp/interface/transition_interface.py
+    Line 25
+
+  ./bhlff/core/bvp/interface/__init__.py
+    Line 25
+
+  ./bhlff/core/bvp/interface/interface_facade.py
+    Line 30
+
+  ./bhlff/core/bvp/envelope_solver/gradient_computer.py
+    Line 27
+
+  ./bhlff/core/bvp/envelope_solver/newton_solver.py
+    Line 27
+
+  ./bhlff/core/bvp/envelope_solver/__init__.py
+    Line 32
+
+  ./bhlff/core/bvp/envelope_solver/envelope_solver_core.py
+    Line 31
+
+  ./bhlff/core/bvp/level_b_analysis/topological_charge_analyzer.py
+    Line 27
+
+  ./bhlff/core/bvp/level_b_analysis/zone_separation_analyzer.py
+    Line 28
+
+  ./bhlff/core/bvp/level_b_analysis/power_law_analyzer.py
+    Line 27
+
+  ./bhlff/core/bvp/level_b_analysis/__init__.py
+    Line 34
+
+  ./bhlff/core/bvp/level_b_analysis/nodes_analyzer.py
+    Line 28
+
+  ./bhlff/core/bvp/postulates/bvp_rigidity_postulate.py
+    Line 31
+
+  ./bhlff/core/bvp/postulates/transition_zone_postulate.py
+    Line 32
+
+  ./bhlff/core/bvp/postulates/carrier_primacy_postulate.py
+    Line 34
+
+  ./bhlff/core/bvp/postulates/bvp_postulates_7d.py
+    Line 91
+
+  ./bhlff/core/bvp/postulates/__init__.py
+    Line 45
+
+  ./bhlff/core/bvp/postulates/u1_phase_structure_postulate.py
+    Line 32
+
+  ./bhlff/core/bvp/postulates/scale_separation_postulate.py
+    Line 32
+
+  ./bhlff/core/bvp/postulates/core_renormalization_postulate.py
+    Line 31
+
+  ./bhlff/core/bvp/postulates/quenches_postulate.py
+    Line 32
+
+  ./bhlff/core/bvp/postulates/tail_resonatorness_postulate.py
+    Line 162
+
+  ./bhlff/core/bvp/postulates/power_balance/radiation_calculator.py
+    Line 25
+
+  ./bhlff/core/bvp/postulates/power_balance/flux_computer.py
+    Line 24
+
+  ./bhlff/core/bvp/postulates/power_balance/energy_computer.py
+    Line 27
+
+  ./bhlff/core/bvp/postulates/power_balance/energy_analyzer.py
+    Line 23
+
+  ./bhlff/core/bvp/postulates/power_balance/boundary_analyzer.py
+    Line 30
+
+  ./bhlff/core/bvp/postulates/power_balance/__init__.py
+    Line 24
+
+  ./bhlff/core/bvp/postulates/power_balance/power_balance_postulate.py
+    Line 29
+
+  ./bhlff/core/bvp/bvp_core/bvp_operations.py
+    Line 105
+
+  ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py
+    Line 38
+
+  ./bhlff/core/bvp/bvp_core/__init__.py
+    Line 30
+
+  ./bhlff/core/bvp/bvp_core/bvp_core_facade.py
+    Line 30
+
+  ./bhlff/core/bvp/bvp_core/bvp_7d_interface.py
+    Line 32
+
+  ./bhlff/core/domain/domain_7d.py
+    Line 31
+
+  ./bhlff/core/domain/field.py
+    Line 26
+
+  ./bhlff/core/domain/config.py
+    Line 28
+
+  ./bhlff/core/domain/__init__.py
+    Line 24
+
+  ./bhlff/core/domain/parameters.py
+    Line 24
+
+  ./bhlff/core/domain/domain_7d_bvp.py
+    Line 31
+
+  ./bhlff/core/domain/domain.py
+    Line 103
+
+  ./bhlff/core/domain/parameters_7d_bvp.py
+    Line 30
+
+  ./bhlff/core/phase/u1_phase_field.py
+    Line 36
+
+  ./bhlff/core/phase/__init__.py
+    Line 27
+
+  ./bhlff/core/operators/memory_kernel.py
+    Line 29
+
+  ./bhlff/core/operators/fractional_laplacian.py
+    Line 32
+
+  ./bhlff/core/operators/__init__.py
+    Line 22
+
+  ./bhlff/core/operators/operator_riesz.py
+    Line 30
+
+  ./bhlff/core/sources/source.py
+    Line 28
+
+  ./bhlff/core/sources/bvp_source_envelope.py
+    Line 28
+
+  ./bhlff/core/sources/bvp_source_generators.py
+    Line 29
+
+  ./bhlff/core/sources/bvp_source_core.py
+    Line 32
+
+  ./bhlff/core/sources/bvp_source.py
+    Line 26
+
+  ./bhlff/core/fft/fft_plan_manager.py
+    Line 28
+
+  ./bhlff/core/fft/fft_twiddle_computer.py
+    Line 26
+
+  ./bhlff/core/fft/spectral_derivatives_impl.py
+    Line 427
+
+  ./bhlff/core/fft/spectral_operations.py
+    Line 40
+
+  ./bhlff/core/fft/unified_spectral_operations.py
+    Line 37
+
+  ./bhlff/core/fft/memory_manager_7d.py
+    Line 27
+
+  ./bhlff/core/fft/bvp_solver_validation.py
+    Line 32
+
+  ./bhlff/core/fft/spectral_derivatives_base.py
+    Line 38
+
+  ./bhlff/core/fft/fft_backend.py
+    Line 25
+
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 120
+
+  ./bhlff/core/fft/fft_solver_time.py
+    Line 236
+
+  ./bhlff/core/fft/spectral_derivatives.py
+    Line 31
+
+  ./bhlff/core/fft/fft_backend_core.py
+    Line 32
+
+  ./bhlff/core/fft/fft_solver_validation.py
+    Line 32
+
+  ./bhlff/core/fft/spectral_filtering.py
+    Line 36
+
+  ./bhlff/core/fft/__init__.py
+    Line 33
+
+  ./bhlff/core/fft/fft_plan_7d.py
+    Line 23
+
+  ./bhlff/core/fft/spectral_coefficient_cache.py
+    Line 25
+
+  ./bhlff/core/fft/bvp_solver_newton.py
+    Line 178
+
+  ./bhlff/core/fft/fft_butterfly_computer.py
+    Line 26
+
+  ./bhlff/core/fft/bvp_advanced/bvp_advanced_core.py
+    Line 27
+
+  ./bhlff/core/fft/bvp_basic/bvp_basic_core.py
+    Line 27
+
+  ./bhlff/core/fft/advanced/fft_advanced_core.py
+    Line 30
+
+  ./examples/level_c_example.py
+    Line 30
+
+  ./examples/level_b_example.py
+    Line 39
+
+  ./examples/level_f_example.py
+    Line 31
+
+  ./examples/level_d_example.py
+    Line 34
+
+  ./examples/bvp_7d_example.py
+    Line 37
+
+  ./examples/level_g_example.py
+    Line 23
+
+
+FILES_TOO_LARGE: 67 issues
+----------------------------------------
+  ./tests/unit/automated_testing/test_integration.py
+
+  ./tests/unit/automated_testing/test_quality_monitor.py
+
+  ./tests/unit/test_core/test_7d_physics.py
+
+  ./tests/unit/test_core/test_bvp_constants_comprehensive.py
+
+  ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
+
+  ./tests/unit/test_level_a/test_reporting_advanced.py
+
+  ./tests/unit/test_level_a/test_A03_zero_mode.py
+
+  ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
+
+  ./bhlff/models/level_c/boundaries.py
+
+  ./bhlff/models/level_c/level_c_integration.py
+
+  ./bhlff/models/level_c/abcd_model.py
+
+  ./bhlff/models/level_c/boundary/admittance_analysis.py
+
+  ./bhlff/models/level_c/boundary/radial_analysis.py
+
+  ./bhlff/models/level_c/beating/theoretical_analysis.py
+
+  ./bhlff/models/level_c/beating/beating_core_basic.py
+
+  ./bhlff/models/level_c/beating/background_analysis.py
+
+  ./bhlff/models/level_c/beating/pinned_analysis.py
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
+
+  ./bhlff/models/level_c/beating/basic/beating_basic_core.py
+
+  ./bhlff/models/level_c/beating/basic/statistical_analysis.py
+
+  ./bhlff/models/level_c/beating/basic/optimization.py
+
+  ./bhlff/models/level_c/memory/pinning_analysis.py
+
+  ./bhlff/models/level_c/memory/memory_analyzer.py
+
+  ./bhlff/models/level_c/memory/memory_evolution.py
+
+  ./bhlff/models/level_c/resonators/resonator_analysis.py
+
+  ./bhlff/models/level_f/bvp_integration.py
+
+  ./bhlff/models/level_f/nonlinear.py
+
+  ./bhlff/models/level_f/multi_particle.py
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis.py
+
+  ./bhlff/models/level_f/nonlinear/mode_analysis.py
+
+  ./bhlff/models/level_f/collective/excitation_analysis.py
+
+  ./bhlff/models/level_f/multi_particle/data_structures.py
+
+  ./bhlff/models/level_f/multi_particle/potential_analysis.py
+
+  ./bhlff/models/level_f/multi_particle/collective_modes.py
+
+  ./bhlff/models/level_f/transitions/phase_transitions_core.py
+
+  ./bhlff/models/level_d/projections.py
+
+  ./bhlff/models/level_d/streamlines.py
+
+  ./bhlff/models/level_d/superposition.py
+
+  ./bhlff/models/level_b/visualization.py
+
+  ./bhlff/models/level_b/node_analyzer.py
+
+  ./bhlff/models/level_b/power_law/critical_exponents.py
+
+  ./bhlff/models/level_b/node_analysis/topological_analysis.py
+
+  ./bhlff/models/level_e/defect_dynamics.py
+
+  ./bhlff/models/level_e/defect_implementations.py
+
+  ./bhlff/models/level_e/bvp_integration.py
+
+  ./bhlff/models/level_e/defect_interactions.py
+
+  ./bhlff/models/level_e/failure_detection.py
+
+  ./bhlff/models/level_e/experiments/experiment_runner.py
+
+  ./bhlff/models/level_g/gravity_curvature.py
+
+  ./bhlff/models/level_g/particle_validation.py
+
+  ./bhlff/models/level_g/bvp_integration.py
+
+  ./bhlff/models/level_g/gravity_waves.py
+
+  ./bhlff/models/level_g/particle_inversion_computations.py
+
+  ./bhlff/models/level_g/gravity_einstein.py
+
+  ./bhlff/models/level_g/astrophysics/galactic_models.py
+
+  ./bhlff/testing/reporting/physics_interpreter.py
+
+  ./bhlff/testing/quality/quality_monitor.py
+
+  ./bhlff/core/time/bvp_envelope_integrator.py
+
+  ./bhlff/core/bvp/physical_validation_decorator.py
+
+  ./bhlff/core/bvp/validation/physical_constraints.py
+
+  ./bhlff/core/bvp/envelope_equation/solver_core_basic.py
+
+  ./bhlff/core/bvp/envelope_equation/advanced/solver_advanced_core.py
+
+  ./bhlff/core/fft/spectral_derivatives_impl.py
+
+  ./bhlff/core/fft/unified_spectral_operations.py
+
+  ./bhlff/core/fft/fft_plan_7d.py
+
+  ./examples/level_g_example.py
+

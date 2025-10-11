@@ -12,6 +12,7 @@ code map with method signatures, class hierarchies, and dependencies.
 import os
 import ast
 import json
+import argparse
 from typing import Dict, List, Any, Set
 from pathlib import Path
 import logging
@@ -24,10 +25,11 @@ logger = logging.getLogger(__name__)
 class CodeMapper:
     """Code mapper for analyzing Python codebase."""
 
-    def __init__(self, root_dir: str = ".", output_dir: str = "code_analysis"):
+    def __init__(self, root_dir: str = ".", output_dir: str = "code_analysis", max_lines: int = 400):
         """Initialize code mapper."""
         self.root_dir = Path(root_dir)
         self.output_dir = Path(output_dir)
+        self.max_lines = max_lines
         
         # Create output directory if it doesn't exist
         self.output_dir.mkdir(exist_ok=True)
@@ -47,6 +49,7 @@ class CodeMapper:
             "files_without_docstrings": [],
             "classes_without_docstrings": [],
             "imports_in_middle": [],
+            "files_too_large": [],
         }
 
     def scan_directory(self, directory: str = ".") -> None:
@@ -87,6 +90,15 @@ class CodeMapper:
                 self.issues["files_without_docstrings"].append({
                     "file": file_path,
                     "line": 1
+                })
+
+            # Check file size limit
+            if file_info["lines"] > self.max_lines:
+                self.issues["files_too_large"].append({
+                    "file": file_path,
+                    "lines": file_info["lines"],
+                    "exceeds_limit": file_info["lines"] - self.max_lines,
+                    "limit": self.max_lines
                 })
 
             # Track import positions and check for imports in middle of file
@@ -352,6 +364,16 @@ class CodeMapper:
                 report.append(f"- {issue['file']}:{issue['line']}")
             report.append("")
 
+        # Files too large
+        if self.issues["files_too_large"]:
+            report.append("## 7. Файлы, превышающие лимит строк")
+            report.append(f"Найдено: {len(self.issues['files_too_large'])} случаев")
+            report.append(f"Лимит: {self.max_lines} строк")
+            report.append("")
+            for issue in self.issues["files_too_large"]:
+                report.append(f"- {issue['file']}: {issue['lines']} строк (превышение на {issue['exceeds_limit']})")
+            report.append("")
+
         # Summary
         total_issues = sum(len(issues) for issues in self.issues.values())
         report.append("## Сводка")
@@ -362,6 +384,7 @@ class CodeMapper:
         report.append(f"- Файлы без докстрингов: {len(self.issues['files_without_docstrings'])}")
         report.append(f"- Классы без докстрингов: {len(self.issues['classes_without_docstrings'])}")
         report.append(f"- Импорты в середине файла: {len(self.issues['imports_in_middle'])}")
+        report.append(f"- Файлы, превышающие лимит: {len(self.issues['files_too_large'])}")
 
         return "\n".join(report)
 
@@ -465,7 +488,9 @@ class CodeMapper:
                 "methods_without_docstrings": len(self.issues["methods_without_docstrings"]),
                 "files_without_docstrings": len(self.issues["files_without_docstrings"]),
                 "classes_without_docstrings": len(self.issues["classes_without_docstrings"]),
-                "imports_in_middle": len(self.issues["imports_in_middle"])
+                "imports_in_middle": len(self.issues["imports_in_middle"]),
+                "files_too_large": len(self.issues["files_too_large"]),
+                "max_lines_limit": self.max_lines
             },
             "issues": {
                 "methods_with_pass": self.issues["methods_with_pass"],
@@ -473,7 +498,8 @@ class CodeMapper:
                 "methods_without_docstrings": self.issues["methods_without_docstrings"],
                 "files_without_docstrings": self.issues["files_without_docstrings"],
                 "classes_without_docstrings": self.issues["classes_without_docstrings"],
-                "imports_in_middle": self.issues["imports_in_middle"]
+                "imports_in_middle": self.issues["imports_in_middle"],
+                "files_too_large": self.issues["files_too_large"]
             }
         }
         
@@ -634,15 +660,14 @@ class CodeMapper:
 
 def main():
     """Main function."""
-    import argparse
-    
     parser = argparse.ArgumentParser(description="Code mapper for BHLFF project")
     parser.add_argument("--root-dir", default=".", help="Root directory to scan")
     parser.add_argument("--output-dir", default="code_analysis", help="Output directory for reports")
+    parser.add_argument("--max-lines", type=int, default=400, help="Maximum lines per file (default: 400)")
     
     args = parser.parse_args()
     
-    mapper = CodeMapper(root_dir=args.root_dir, output_dir=args.output_dir)
+    mapper = CodeMapper(root_dir=args.root_dir, output_dir=args.output_dir, max_lines=args.max_lines)
     mapper.scan_directory(args.root_dir)
     
     # Save all reports in YAML format
@@ -655,6 +680,15 @@ def main():
     print("- code_map.yaml - карта кода")
     print("- code_issues.yaml - проблемы в коде")
     print("- method_index.yaml - индекс методов")
+    print(f"Лимит строк на файл: {mapper.max_lines}")
+    
+    # Show summary of issues
+    total_issues = sum(len(issues) for issues in mapper.issues.values())
+    print(f"Всего найдено проблем: {total_issues}")
+    if mapper.issues["files_too_large"]:
+        print(f"Файлов, превышающих лимит: {len(mapper.issues['files_too_large'])}")
+        for issue in mapper.issues["files_too_large"]:
+            print(f"  - {issue['file']}: {issue['lines']} строк (превышение на {issue['exceeds_limit']})")
 
 
 if __name__ == "__main__":

@@ -2,14 +2,14 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-BVP analysis package.
+Analysis package for BVP framework.
 
-This package provides comprehensive analysis tools for the Base High-Frequency Field (BVP),
-including resonance analysis, quality factor optimization, and quench detection.
+This package implements comprehensive analysis tools for BVP methods
+including topological charge analysis, defect identification, and
+phase structure characterization.
 """
 
-from .resonance_quality_analysis import ResonanceQualityAnalysis
-from .resonance_optimization import ResonanceOptimization
-from .resonance_statistics import ResonanceStatistics
-
-__all__ = ["ResonanceQualityAnalysis", "ResonanceOptimization", "ResonanceStatistics"]
+from .topological_charge_analyzer import TopologicalChargeAnalyzer
+from .charge_computation import ChargeComputation
+from .phase_analysis import PhaseAnalysis
+from .defect_analyzer import TopologicalDefectAnalyzer

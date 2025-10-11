@@ -4,9 +4,9 @@ email: vasilyvz@gmail.com
 
 Comprehensive beating analysis for Level C.
 
-This module implements comprehensive beating analysis functionality
+This module provides a facade for comprehensive beating analysis functionality
 for analyzing mode beating in the 7D phase field according to the
-theoretical framework.
+theoretical framework, ensuring proper functionality of all analysis components.
 
 Theoretical Background:
     Mode beating in 7D phase field theory represents the interference
@@ -22,51 +22,12 @@ Example:
 import numpy as np
 from typing import Dict, Any, List, Tuple
 import logging
-from scipy.fft import fftn, ifftn, fftfreq
-from scipy.signal import find_peaks, welch
-from scipy.optimize import minimize
 
 from bhlff.core.bvp import BVPCore
-
-# Note: These modules need to be created or existing modules need to be renamed
-# For now, we'll create mock implementations
-try:
-    from .beating_optimization import BeatingOptimization
-except ImportError:
-
-    class BeatingOptimization:
-        def __init__(self, bvp_core):
-            self.bvp_core = bvp_core
-
-        def optimize_analysis(self, envelope, results):
-            return {}
-
-        def optimize_parameters(self, envelope, params):
-            return params
-
-
-try:
-    from .beating_statistics import BeatingStatistics
-except ImportError:
-
-    class BeatingStatistics:
-        def __init__(self, bvp_core):
-            self.bvp_core = bvp_core
-
-        def perform_statistical_analysis(self, envelope, results):
-            return {}
-
-
-try:
-    from .beating_comparison import BeatingComparison
-except ImportError:
-
-    class BeatingComparison:
-        def __init__(self, bvp_core):
-            self.bvp_core = bvp_core
-
-        def compare_analyses(self, results1, results2):
-            return {}
+from .core_analysis import CoreBeatingAnalyzer
+from .statistical_analysis import StatisticalBeatingAnalyzer
+from .optimization import BeatingOptimizer
+from .comparison import BeatingComparator
 
 
 class BeatingAnalysisCore:
@@ -74,28 +35,18 @@ class BeatingAnalysisCore:
     Comprehensive beating analysis for Level C.
 
     Physical Meaning:
-        Provides comprehensive beating analysis functions for analyzing
-        mode beating in the 7D phase field according to the theoretical framework.
-        Implements full theoretical analysis of mode interference, coupling,
-        and beating phenomena in the 7D phase field theory.
+        Performs comprehensive analysis of mode beating according to the 7D phase field
+        theory, including interference patterns, mode coupling, and phase coherence.
 
     Mathematical Foundation:
-        Analyzes beating phenomena through:
-        - Mode interference: I(t) = |A₁e^(iω₁t) + A₂e^(iω₂t)|²
-        - Beating frequency: ω_beat = |ω₁ - ω₂|
-        - Coupling strength: C = |⟨ψ₁|H_coupling|ψ₂⟩|
-        - Phase coherence: γ = |⟨e^(iφ₁)e^(-iφ₂)⟩|
-
-    Attributes:
-        bvp_core (BVPCore): BVP core instance for field access.
-        optimization (BeatingOptimization): Optimization module.
-        statistics (BeatingStatistics): Statistical analysis module.
-        comparison (BeatingComparison): Comparison analysis module.
+        Analyzes beating through mode interference:
+        I(t) = |A₁e^(iω₁t) + A₂e^(iω₂t)|²
+        where A₁, A₂ are mode amplitudes and ω₁, ω₂ are frequencies.
     """
 
     def __init__(self, bvp_core: BVPCore):
         """
-        Initialize comprehensive beating analysis core.
+        Initialize comprehensive beating analysis.
 
         Physical Meaning:
             Sets up the comprehensive beating analysis system with
@@ -120,9 +71,10 @@ class BeatingAnalysisCore:
         self.optimization_tolerance = 1e-8
 
         # Initialize specialized modules
-        self.optimization = BeatingOptimization(bvp_core)
-        self.statistics = BeatingStatistics(bvp_core)
-        self.comparison = BeatingComparison(bvp_core)
+        self.core_analyzer = CoreBeatingAnalyzer(bvp_core)
+        self.statistical_analyzer = StatisticalBeatingAnalyzer(bvp_core)
+        self.optimizer = BeatingOptimizer(bvp_core)
+        self.comparator = BeatingComparator(bvp_core)
 
     def analyze_beating_comprehensive(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
@@ -147,56 +99,40 @@ class BeatingAnalysisCore:
                 - mode_coupling: Mode coupling analysis
                 - phase_coherence: Phase coherence analysis
                 - beating_frequencies: Theoretical beating frequencies
-                - theoretical_validation: Validation against theory
         """
         self.logger.info("Starting comprehensive beating analysis")
 
-        # Theoretical analysis components
-        interference_analysis = self._analyze_interference_theoretical(envelope)
-        mode_coupling_analysis = self._analyze_mode_coupling_theoretical(envelope)
-        phase_coherence_analysis = self._analyze_phase_coherence_theoretical(envelope)
-        beating_frequency_analysis = self._calculate_beating_frequencies_theoretical(
-            envelope
-        )
-        theoretical_validation = self._validate_theoretical_consistency(
-            envelope,
-            {
-                "interference_patterns": interference_analysis,
-                "mode_coupling": mode_coupling_analysis,
-                "phase_coherence": phase_coherence_analysis,
-                "beating_frequencies": beating_frequency_analysis,
-            },
-        )
+        # Core analysis
+        core_results = self.core_analyzer.analyze_beating_comprehensive(envelope)
 
-        # Apply optimization if enabled
-        if self.optimization_enabled:
-            optimized_results = self.optimization.optimize_analysis(
-                envelope,
-                {
-                    "interference_patterns": interference_analysis,
-                    "mode_coupling": mode_coupling_analysis,
-                    "phase_coherence": phase_coherence_analysis,
-                    "beating_frequencies": beating_frequency_analysis,
-                },
+        # Statistical analysis
+        if self.statistical_analysis_enabled:
+            statistical_results = self.statistical_analyzer.perform_statistical_analysis(
+                envelope, core_results.get("basic_analysis", {})
             )
         else:
-            optimized_results = {}
+            statistical_results = {}
 
-        results = {
-            "interference_patterns": interference_analysis,
-            "mode_coupling": mode_coupling_analysis,
-            "phase_coherence": phase_coherence_analysis,
-            "beating_frequencies": beating_frequency_analysis,
-            "theoretical_validation": theoretical_validation,
-            "optimization_results": optimized_results,
+        # Optimization
+        if self.optimization_enabled:
+            optimization_results = self.optimizer.optimize_analysis(envelope, core_results)
+        else:
+            optimization_results = {}
+
+        # Combine all results
+        comprehensive_results = {
+            "core_analysis": core_results,
+            "statistical_analysis": statistical_results,
+            "optimization_results": optimization_results,
+            "analysis_complete": True,
         }
 
         self.logger.info("Comprehensive beating analysis completed")
-        return results
+        return comprehensive_results
 
     def analyze_beating_statistical(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
-        Analyze mode beating with statistical analysis.
+        Statistical beating analysis.
 
         Physical Meaning:
             Analyzes mode beating using statistical methods
@@ -211,11 +147,11 @@ class BeatingAnalysisCore:
         self.logger.info("Starting statistical beating analysis")
 
         # Basic analysis
-        basic_results = self._analyze_beating_basic(envelope)
+        basic_results = self.core_analyzer._analyze_beating_basic(envelope)
 
         # Statistical analysis
         if self.statistical_analysis_enabled:
-            statistical_results = self.statistics.perform_statistical_analysis(
+            statistical_results = self.statistical_analyzer.perform_statistical_analysis(
                 envelope, basic_results
             )
         else:
@@ -247,508 +183,463 @@ class BeatingAnalysisCore:
         Returns:
             Dict[str, Any]: Comparison results.
         """
-        self.logger.info("Comparing beating analysis results")
+        self.logger.info("Starting beating analysis comparison")
 
-        comparison_results = self.comparison.compare_analyses(results1, results2)
+        # Compare analyses
+        comparison_results = self.comparator.compare_analyses(results1, results2)
 
         self.logger.info("Beating analysis comparison completed")
         return comparison_results
 
-    def optimize_beating_parameters(self, envelope: np.ndarray) -> Dict[str, Any]:
+    def optimize_analysis_parameters(self, envelope: np.ndarray, results: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Optimize beating analysis parameters.
+        Optimize analysis parameters.
 
         Physical Meaning:
-            Optimizes parameters used in beating analysis
+            Optimizes the parameters used in beating analysis
             to improve accuracy and reliability.
 
         Args:
             envelope (np.ndarray): 7D envelope field data.
+            results (Dict[str, Any]): Current analysis results.
 
         Returns:
-            Dict[str, Any]: Parameter optimization results.
+            Dict[str, Any]: Optimization results.
         """
-        self.logger.info("Starting beating parameter optimization")
-
-        # Initial parameters
-        initial_params = {
-            "advanced_threshold": self.advanced_threshold,
-            "statistical_significance": self.statistical_significance,
-            "optimization_tolerance": self.optimization_tolerance,
-        }
+        self.logger.info("Starting analysis parameter optimization")
 
         # Optimize parameters
-        optimized_params = self.optimization.optimize_parameters(
-            envelope, initial_params
+        optimization_results = self.optimizer.optimize_analysis(envelope, results)
+
+        self.logger.info("Analysis parameter optimization completed")
+        return optimization_results
+
+    def validate_analysis_results(self, results: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Validate analysis results.
+
+        Physical Meaning:
+            Validates the analysis results to ensure
+            they meet quality and consistency criteria.
+
+        Args:
+            results (Dict[str, Any]): Analysis results to validate.
+
+        Returns:
+            Dict[str, Any]: Validation results.
+        """
+        self.logger.info("Starting analysis results validation")
+
+        # Validate core analysis
+        core_validation = self._validate_core_analysis(results.get("core_analysis", {}))
+
+        # Validate statistical analysis
+        statistical_validation = self._validate_statistical_analysis(results.get("statistical_analysis", {}))
+
+        # Validate optimization results
+        optimization_validation = self._validate_optimization_results(results.get("optimization_results", {}))
+
+        # Calculate overall validation
+        overall_validation = self._calculate_overall_validation(
+            core_validation, statistical_validation, optimization_validation
         )
 
-        # Validate optimization
-        optimization_validation = self.optimization.validate_optimization(
-            envelope, initial_params, optimized_params
-        )
-
-        results = {
-            "initial_parameters": initial_params,
-            "optimized_parameters": optimized_params,
+        validation_results = {
+            "core_validation": core_validation,
+            "statistical_validation": statistical_validation,
             "optimization_validation": optimization_validation,
+            "overall_validation": overall_validation,
+            "validation_complete": True,
         }
 
-        self.logger.info("Beating parameter optimization completed")
-        return results
+        self.logger.info("Analysis results validation completed")
+        return validation_results
 
-    def _analyze_interference_theoretical(self, envelope: np.ndarray) -> Dict[str, Any]:
+    def _validate_core_analysis(self, core_results: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Analyze interference patterns using theoretical framework.
+        Validate core analysis results.
 
         Physical Meaning:
-            Analyzes mode interference patterns according to the
-            7D phase field theory, detecting characteristic
-            interference signatures.
-
-        Mathematical Foundation:
-            Interference intensity: I(t) = |A₁e^(iω₁t) + A₂e^(iω₂t)|²
-            where A₁, A₂ are complex mode amplitudes.
+            Validates the core analysis results to ensure
+            they meet quality criteria.
 
         Args:
-            envelope (np.ndarray): 7D envelope field data.
+            core_results (Dict[str, Any]): Core analysis results.
 
         Returns:
-            Dict[str, Any]: Theoretical interference analysis results.
+            Dict[str, Any]: Core validation results.
         """
-        # Complex envelope analysis
-        envelope_complex = envelope.astype(complex)
+        # Check if core analysis is complete
+        is_complete = core_results.get("analysis_complete", False)
 
-        # Spectral analysis using FFT
-        envelope_fft = fftn(envelope_complex)
-        power_spectrum = np.abs(envelope_fft) ** 2
+        # Check basic analysis quality
+        basic_analysis = core_results.get("basic_analysis", {})
+        basic_quality = self._assess_basic_analysis_quality(basic_analysis)
 
-        # Find dominant frequency components
-        frequency_indices = np.unravel_index(
-            np.argsort(power_spectrum.ravel())[-10:], power_spectrum.shape
-        )
-        dominant_frequencies = [freq for freq in frequency_indices]
+        # Check interference analysis quality
+        interference_analysis = core_results.get("interference_patterns", {})
+        interference_quality = self._assess_interference_analysis_quality(interference_analysis)
 
-        # Calculate interference patterns
-        interference_strength = np.max(power_spectrum) / np.mean(power_spectrum)
-        interference_coherence = np.std(np.angle(envelope_complex)) / np.pi
+        # Check mode coupling analysis quality
+        coupling_analysis = core_results.get("mode_coupling", {})
+        coupling_quality = self._assess_coupling_analysis_quality(coupling_analysis)
 
-        # Detect spatial interference patterns
-        spatial_interference = self._detect_spatial_interference_patterns(
-            envelope_complex
-        )
+        # Check phase coherence analysis quality
+        phase_analysis = core_results.get("phase_coherence", {})
+        phase_quality = self._assess_phase_analysis_quality(phase_analysis)
+
+        # Calculate overall quality
+        overall_quality = np.mean([basic_quality, interference_quality, coupling_quality, phase_quality])
 
         return {
-            "interference_strength": float(np.real(interference_strength)),
-            "interference_coherence": float(np.real(interference_coherence)),
-            "dominant_frequencies": dominant_frequencies,
-            "spatial_patterns": spatial_interference,
-            "power_spectrum": power_spectrum,
+            "is_complete": is_complete,
+            "basic_quality": basic_quality,
+            "interference_quality": interference_quality,
+            "coupling_quality": coupling_quality,
+            "phase_quality": phase_quality,
+            "overall_quality": overall_quality,
+            "validation_passed": overall_quality > 0.7,
         }
 
-    def _analyze_mode_coupling_theoretical(
-        self, envelope: np.ndarray
-    ) -> Dict[str, Any]:
+    def _assess_basic_analysis_quality(self, basic_analysis: Dict[str, Any]) -> float:
         """
-        Analyze mode coupling using theoretical framework.
+        Assess basic analysis quality.
 
         Physical Meaning:
-            Analyzes mode coupling strength and mechanisms
-            according to the 7D phase field theory.
-
-        Mathematical Foundation:
-            Coupling strength: C = |⟨ψ₁|H_coupling|ψ₂⟩|
-            where ψ₁, ψ₂ are mode wavefunctions and H_coupling is coupling Hamiltonian.
+            Assesses the quality of basic analysis results.
 
         Args:
-            envelope (np.ndarray): 7D envelope field data.
+            basic_analysis (Dict[str, Any]): Basic analysis results.
 
         Returns:
-            Dict[str, Any]: Theoretical mode coupling analysis results.
+            float: Basic analysis quality.
         """
-        # Extract mode components using theoretical decomposition
-        mode_components = self._decompose_mode_components(envelope)
+        # Check if required metrics are present
+        required_metrics = ["mean_amplitude", "max_amplitude", "field_energy", "spatial_variance"]
+        present_metrics = sum(1 for metric in required_metrics if metric in basic_analysis)
 
-        # Calculate coupling matrix elements
-        coupling_matrix = self._calculate_coupling_matrix(mode_components)
+        # Calculate quality based on metric presence
+        quality = present_metrics / len(required_metrics)
 
-        # Analyze coupling strength
-        coupling_strength = np.linalg.norm(coupling_matrix)
-        coupling_eigenvalues = np.linalg.eigvals(coupling_matrix)
+        return float(quality)
 
-        # Determine coupling type
-        if coupling_strength > self.coupling_threshold:
-            coupling_type = "strong"
-        elif coupling_strength > self.coupling_threshold / 10:
-            coupling_type = "moderate"
-        else:
-            coupling_type = "weak"
-
-        # Calculate coupling efficiency using magnitude of complex values
-        coupling_efficiency = np.max(np.abs(coupling_eigenvalues)) / np.sum(
-            np.abs(coupling_eigenvalues)
-        )
-
-        return {
-            "coupling_strength": float(np.real(coupling_strength)),
-            "coupling_type": coupling_type,
-            "coupling_efficiency": float(np.real(coupling_efficiency)),
-            "coupling_matrix": coupling_matrix,
-            "coupling_eigenvalues": coupling_eigenvalues,
-            "mode_components": mode_components,
-        }
-
-    def _analyze_phase_coherence_theoretical(
-        self, envelope: np.ndarray
-    ) -> Dict[str, Any]:
+    def _assess_interference_analysis_quality(self, interference_analysis: Dict[str, Any]) -> float:
         """
-        Analyze phase coherence using theoretical framework.
+        Assess interference analysis quality.
 
         Physical Meaning:
-            Analyzes phase coherence between different mode
-            components according to the 7D phase field theory.
-
-        Mathematical Foundation:
-            Phase coherence: γ = |⟨e^(iφ₁)e^(-iφ₂)⟩|
-            where φ₁, φ₂ are mode phases.
+            Assesses the quality of interference analysis results.
 
         Args:
-            envelope (np.ndarray): 7D envelope field data.
+            interference_analysis (Dict[str, Any]): Interference analysis results.
 
         Returns:
-            Dict[str, Any]: Theoretical phase coherence analysis results.
+            float: Interference analysis quality.
         """
-        # Extract phase information
-        phase_field = np.angle(envelope.astype(complex))
+        # Check if required metrics are present
+        required_metrics = ["interference_strength", "interference_regions", "interference_coherence"]
+        present_metrics = sum(1 for metric in required_metrics if metric in interference_analysis)
 
-        # Calculate phase coherence
-        phase_coherence = self._calculate_phase_coherence(phase_field)
+        # Calculate quality based on metric presence
+        quality = present_metrics / len(required_metrics)
 
-        # Analyze phase stability
-        phase_stability = self._analyze_phase_stability(phase_field)
+        return float(quality)
 
-        # Calculate phase correlation
-        phase_correlation = self._calculate_phase_correlation(phase_field)
-
-        # Determine coherence level
-        if phase_coherence > self.phase_coherence_threshold:
-            coherence_level = "high"
-        elif phase_coherence > self.phase_coherence_threshold / 2:
-            coherence_level = "moderate"
-        else:
-            coherence_level = "low"
-
-        return {
-            "phase_coherence": float(np.real(phase_coherence)),
-            "phase_stability": float(np.real(phase_stability)),
-            "phase_correlation": float(np.real(phase_correlation)),
-            "coherence_level": coherence_level,
-            "phase_field": phase_field,
-        }
-
-    # Public wrappers to expose theoretical methods for tests and external use
-    def analyze_interference_theoretical(self, envelope: np.ndarray) -> Dict[str, Any]:
-        return self._analyze_interference_theoretical(envelope)
-
-    def analyze_mode_coupling_theoretical(self, envelope: np.ndarray) -> Dict[str, Any]:
-        return self._analyze_mode_coupling_theoretical(envelope)
-
-    def analyze_phase_coherence_theoretical(
-        self, envelope: np.ndarray
-    ) -> Dict[str, Any]:
-        return self._analyze_phase_coherence_theoretical(envelope)
-
-    def calculate_beating_frequencies_theoretical(
-        self, envelope: np.ndarray
-    ) -> Dict[str, Any]:
-        return self._calculate_beating_frequencies_theoretical(envelope)
-
-    def _calculate_beating_frequencies_theoretical(
-        self, envelope: np.ndarray
-    ) -> Dict[str, Any]:
+    def _assess_coupling_analysis_quality(self, coupling_analysis: Dict[str, Any]) -> float:
         """
-        Calculate beating frequencies using theoretical framework.
+        Assess coupling analysis quality.
 
         Physical Meaning:
-            Calculates theoretical beating frequencies based on
-            mode frequency differences according to the 7D phase field theory.
-
-        Mathematical Foundation:
-            Beating frequency: ω_beat = |ω₁ - ω₂|
-            where ω₁, ω₂ are mode frequencies.
+            Assesses the quality of coupling analysis results.
 
         Args:
-            envelope (np.ndarray): 7D envelope field data.
+            coupling_analysis (Dict[str, Any]): Coupling analysis results.
 
         Returns:
-            Dict[str, Any]: Theoretical beating frequency analysis results.
+            float: Coupling analysis quality.
         """
-        # Spectral analysis along temporal axis only (robust for beating)
-        envelope_complex = envelope.astype(complex)
-        time_axis = envelope_complex.ndim - 1
-        spectrum_time = np.fft.fft(envelope_complex, axis=time_axis)
-        power_spectrum = np.abs(spectrum_time) ** 2
+        # Check if required metrics are present
+        required_metrics = ["coupling_strength", "coupling_modes", "coupling_efficiency"]
+        present_metrics = sum(1 for metric in required_metrics if metric in coupling_analysis)
 
-        # Average power spectrum over all spatial/phase dims to 1D
-        while power_spectrum.ndim > 1:
-            power_spectrum = power_spectrum.mean(axis=0)
+        # Calculate quality based on metric presence
+        quality = present_metrics / len(required_metrics)
 
-        # Find frequency peaks with adaptive threshold; fallback if none
-        height_thresh = float(np.max(power_spectrum)) * 0.02
-        peaks, properties = find_peaks(power_spectrum, height=height_thresh)
-        if len(peaks) == 0:
-            height_thresh = float(np.max(power_spectrum)) * 0.005
-            peaks, properties = find_peaks(power_spectrum, height=height_thresh)
+        return float(quality)
 
-        # Calculate beating frequencies
-        beating_frequencies = []
-        for i in range(len(peaks)):
-            for j in range(i + 1, len(peaks)):
-                beat_freq = abs(peaks[i] - peaks[j])
-                if beat_freq > 0:
-                    beating_frequencies.append(beat_freq)
-
-        # Calculate theoretical beating strength
-        beating_strength = (
-            len(beating_frequencies) / len(peaks) if len(peaks) > 0 else 0
-        )
-
-        # Analyze beating patterns
-        beating_patterns = self._analyze_beating_patterns(envelope, beating_frequencies)
-
-        return {
-            "beating_frequencies": beating_frequencies,
-            "beating_strength": float(np.real(beating_strength)),
-            "beating_patterns": beating_patterns,
-            "frequency_peaks": peaks,
-            "peak_properties": properties,
-        }
-
-    def _validate_theoretical_consistency(
-        self, envelope: np.ndarray, analysis_results: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _assess_phase_analysis_quality(self, phase_analysis: Dict[str, Any]) -> float:
         """
-        Validate theoretical consistency of analysis results.
+        Assess phase analysis quality.
 
         Physical Meaning:
-            Validates that analysis results are consistent with
-            the 7D phase field theory predictions.
+            Assesses the quality of phase analysis results.
 
         Args:
-            envelope (np.ndarray): 7D envelope field data.
-            analysis_results (Dict[str, Any]): Analysis results to validate.
+            phase_analysis (Dict[str, Any]): Phase analysis results.
 
         Returns:
-            Dict[str, Any]: Theoretical consistency validation results.
+            float: Phase analysis quality.
         """
-        # Check theoretical constraints
-        # Align keys with analysis results structure
-        interference = analysis_results["interference_patterns"]
-        mode_coupling = analysis_results["mode_coupling"]
-        phase_coherence = analysis_results["phase_coherence"]
+        # Check if required metrics are present
+        required_metrics = ["phase_coherence", "phase_stability", "phase_correlation"]
+        present_metrics = sum(1 for metric in required_metrics if metric in phase_analysis)
 
-        # Validate interference patterns
-        interference_valid = (
-            interference["interference_strength"] > self.interference_threshold
-        )
+        # Calculate quality based on metric presence
+        quality = present_metrics / len(required_metrics)
 
-        # Validate mode coupling
-        coupling_valid = mode_coupling["coupling_strength"] > self.coupling_threshold
+        return float(quality)
 
-        # Validate phase coherence
-        coherence_valid = (
-            phase_coherence["phase_coherence"] > self.phase_coherence_threshold
-        )
+    def _validate_statistical_analysis(self, statistical_results: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Validate statistical analysis results.
 
-        # Incorporate beating frequency detection as a success criterion
-        beating_info = analysis_results.get("beating_frequencies", {})
-        beating_list = (
-            beating_info.get("beating_frequencies", [])
-            if isinstance(beating_info, dict)
-            else []
-        )
-        beating_detected = len(beating_list) > 0
+        Physical Meaning:
+            Validates the statistical analysis results to ensure
+            they meet statistical quality criteria.
 
-        # Overall theoretical consistency: require interference and coherence, and either coupling or beating detection
-        theoretical_consistency = (
-            interference_valid
-            and coherence_valid
-            and (coupling_valid or beating_detected)
-        )
+        Args:
+            statistical_results (Dict[str, Any]): Statistical analysis results.
+
+        Returns:
+            Dict[str, Any]: Statistical validation results.
+        """
+        # Check if statistical analysis is complete
+        is_complete = statistical_results.get("statistical_analysis_complete", False)
+
+        # Check significance testing quality
+        significance_testing = statistical_results.get("significance_testing", {})
+        significance_quality = self._assess_significance_testing_quality(significance_testing)
+
+        # Check pattern recognition quality
+        pattern_recognition = statistical_results.get("pattern_recognition", {})
+        pattern_quality = self._assess_pattern_recognition_quality(pattern_recognition)
+
+        # Check confidence analysis quality
+        confidence_analysis = statistical_results.get("confidence_analysis", {})
+        confidence_quality = self._assess_confidence_analysis_quality(confidence_analysis)
+
+        # Calculate overall quality
+        overall_quality = np.mean([significance_quality, pattern_quality, confidence_quality])
 
         return {
-            "theoretical_consistency": theoretical_consistency,
-            "interference_valid": interference_valid,
-            "coupling_valid": coupling_valid,
-            "coherence_valid": coherence_valid,
-            "beating_detected": beating_detected,
-            "validation_score": sum(
-                [
-                    interference_valid,
-                    coupling_valid or beating_detected,
-                    coherence_valid,
-                ]
-            )
-            / 3,
+            "is_complete": is_complete,
+            "significance_quality": significance_quality,
+            "pattern_quality": pattern_quality,
+            "confidence_quality": confidence_quality,
+            "overall_quality": overall_quality,
+            "validation_passed": overall_quality > 0.7,
         }
 
-    def _detect_spatial_interference_patterns(
-        self, envelope_complex: np.ndarray
-    ) -> List[Dict[str, Any]]:
+    def _assess_significance_testing_quality(self, significance_testing: Dict[str, Any]) -> float:
         """
-        Detect spatial interference patterns.
+        Assess significance testing quality.
 
         Physical Meaning:
-            Detects spatial interference patterns in the complex
-            envelope field using theoretical criteria.
+            Assesses the quality of significance testing results.
+
+        Args:
+            significance_testing (Dict[str, Any]): Significance testing results.
+
+        Returns:
+            float: Significance testing quality.
         """
-        patterns = []
+        # Check if required metrics are present
+        required_metrics = ["amplitude_significance", "pattern_significance", "mode_significance"]
+        present_metrics = sum(1 for metric in required_metrics if metric in significance_testing)
 
-        # Calculate interference intensity
-        interference_intensity = np.abs(envelope_complex) ** 2
+        # Calculate quality based on metric presence
+        quality = present_metrics / len(required_metrics)
 
-        # Find interference peaks
-        peaks, properties = find_peaks(
-            interference_intensity.flatten(),
-            height=np.max(interference_intensity) * 0.1,
-        )
+        return float(quality)
 
-        for peak in peaks:
-            peak_coords = np.unravel_index(peak, interference_intensity.shape)
-            pattern = {
-                "pattern_type": "spatial_interference",
-                "strength": interference_intensity.flat[peak],
-                "position": peak_coords,
-                "spatial_extent": (
-                    properties.get("widths", [1])[0]
-                    if len(properties.get("widths", [])) > 0
-                    else 1
-                ),
-            }
-            patterns.append(pattern)
-
-        return patterns
-
-    def _decompose_mode_components(self, envelope: np.ndarray) -> List[np.ndarray]:
+    def _assess_pattern_recognition_quality(self, pattern_recognition: Dict[str, Any]) -> float:
         """
-        Decompose envelope into mode components.
+        Assess pattern recognition quality.
 
         Physical Meaning:
-            Decomposes the envelope field into individual
-            mode components using theoretical decomposition.
+            Assesses the quality of pattern recognition results.
+
+        Args:
+            pattern_recognition (Dict[str, Any]): Pattern recognition results.
+
+        Returns:
+            float: Pattern recognition quality.
         """
-        # Use SVD for mode decomposition
-        envelope_2d = envelope.reshape(envelope.shape[0], -1)
-        U, s, Vt = np.linalg.svd(envelope_2d, full_matrices=False)
+        # Check if required metrics are present
+        required_metrics = ["pattern_characteristics", "pattern_classification", "pattern_confidence"]
+        present_metrics = sum(1 for metric in required_metrics if metric in pattern_recognition)
 
-        # Extract mode components
-        mode_components = []
-        for i in range(min(5, len(s))):  # Top 5 modes
-            mode_component = U[:, i : i + 1] @ np.diag(s[i : i + 1]) @ Vt[i : i + 1, :]
-            mode_components.append(mode_component.reshape(envelope.shape))
+        # Calculate quality based on metric presence
+        quality = present_metrics / len(required_metrics)
 
-        return mode_components
+        return float(quality)
 
-    def _calculate_coupling_matrix(
-        self, mode_components: List[np.ndarray]
-    ) -> np.ndarray:
+    def _assess_confidence_analysis_quality(self, confidence_analysis: Dict[str, Any]) -> float:
         """
-        Calculate coupling matrix between mode components.
+        Assess confidence analysis quality.
 
         Physical Meaning:
-            Calculates the coupling matrix elements between
-            different mode components according to the theory.
+            Assesses the quality of confidence analysis results.
+
+        Args:
+            confidence_analysis (Dict[str, Any]): Confidence analysis results.
+
+        Returns:
+            float: Confidence analysis quality.
         """
-        n_modes = len(mode_components)
-        coupling_matrix = np.zeros((n_modes, n_modes))
+        # Check if required metrics are present
+        required_metrics = ["mean_amplitude", "std_amplitude", "confidence_interval"]
+        present_metrics = sum(1 for metric in required_metrics if metric in confidence_analysis)
 
-        for i in range(n_modes):
-            for j in range(n_modes):
-                if i != j:
-                    # Calculate coupling strength
-                    coupling_strength = np.abs(
-                        np.sum(mode_components[i] * np.conj(mode_components[j]))
-                    )
-                    coupling_matrix[i, j] = coupling_strength
+        # Calculate quality based on metric presence
+        quality = present_metrics / len(required_metrics)
 
-        return coupling_matrix
+        return float(quality)
 
-    def _calculate_phase_coherence(self, phase_field: np.ndarray) -> float:
+    def _validate_optimization_results(self, optimization_results: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Calculate phase coherence.
+        Validate optimization results.
 
         Physical Meaning:
-            Calculates the phase coherence measure according
-            to the theoretical definition.
+            Validates the optimization results to ensure
+            they meet optimization quality criteria.
+
+        Args:
+            optimization_results (Dict[str, Any]): Optimization results.
+
+        Returns:
+            Dict[str, Any]: Optimization validation results.
         """
-        # Calculate phase differences
-        phase_diffs = np.diff(phase_field.flatten())
+        # Check if optimization is complete
+        is_complete = optimization_results.get("optimization_complete", False)
 
-        # Calculate coherence
-        coherence = np.abs(np.mean(np.exp(1j * phase_diffs)))
+        # Check parameter optimization quality
+        parameter_optimization = optimization_results.get("optimized_parameters", {})
+        parameter_quality = self._assess_parameter_optimization_quality(parameter_optimization)
 
-        return float(np.real(coherence))
+        # Check threshold optimization quality
+        threshold_optimization = optimization_results.get("optimized_thresholds", {})
+        threshold_quality = self._assess_threshold_optimization_quality(threshold_optimization)
 
-    def _analyze_phase_stability(self, phase_field: np.ndarray) -> float:
-        """
-        Analyze phase stability.
+        # Check method optimization quality
+        method_optimization = optimization_results.get("optimized_methods", {})
+        method_quality = self._assess_method_optimization_quality(method_optimization)
 
-        Physical Meaning:
-            Analyzes the stability of phase variations
-            in the field.
-        """
-        # Calculate phase variance
-        phase_variance = np.var(phase_field)
-
-        # Calculate stability measure
-        stability = 1.0 / (1.0 + phase_variance)
-
-        return float(np.real(stability))
-
-    def _calculate_phase_correlation(self, phase_field: np.ndarray) -> float:
-        """
-        Calculate phase correlation.
-
-        Physical Meaning:
-            Calculates the correlation between phase
-            variations in different spatial regions.
-        """
-        # Calculate phase correlation
-        phase_flat = phase_field.flatten()
-        if len(phase_flat) > 1:
-            correlation = np.corrcoef(phase_flat[:-1], phase_flat[1:])[0, 1]
-            return float(np.real(correlation)) if not np.isnan(correlation) else 0.0
-        else:
-            return 0.0
-
-    def _analyze_beating_patterns(
-        self, envelope: np.ndarray, beating_frequencies: List[float]
-    ) -> Dict[str, Any]:
-        """
-        Analyze beating patterns.
-
-        Physical Meaning:
-            Analyzes the characteristic beating patterns
-            in the envelope field.
-        """
-        if not beating_frequencies:
-            return {"pattern_type": "no_beating", "strength": 0.0}
-
-        # Calculate beating pattern strength
-        beating_strength = len(beating_frequencies) / 10.0  # Normalized
-
-        # Determine pattern type
-        if beating_strength > 0.7:
-            pattern_type = "strong_beating"
-        elif beating_strength > 0.3:
-            pattern_type = "moderate_beating"
-        else:
-            pattern_type = "weak_beating"
+        # Calculate overall quality
+        overall_quality = np.mean([parameter_quality, threshold_quality, method_quality])
 
         return {
-            "pattern_type": pattern_type,
-            "strength": float(np.real(beating_strength)),
-            "frequency_count": len(beating_frequencies),
-            "dominant_frequency": (
-                max(beating_frequencies) if beating_frequencies else 0.0
-            ),
+            "is_complete": is_complete,
+            "parameter_quality": parameter_quality,
+            "threshold_quality": threshold_quality,
+            "method_quality": method_quality,
+            "overall_quality": overall_quality,
+            "validation_passed": overall_quality > 0.7,
+        }
+
+    def _assess_parameter_optimization_quality(self, parameter_optimization: Dict[str, Any]) -> float:
+        """
+        Assess parameter optimization quality.
+
+        Physical Meaning:
+            Assesses the quality of parameter optimization results.
+
+        Args:
+            parameter_optimization (Dict[str, Any]): Parameter optimization results.
+
+        Returns:
+            float: Parameter optimization quality.
+        """
+        # Check if required metrics are present
+        required_metrics = ["interference_threshold", "coupling_threshold", "phase_coherence_threshold"]
+        present_metrics = sum(1 for metric in required_metrics if metric in parameter_optimization)
+
+        # Calculate quality based on metric presence
+        quality = present_metrics / len(required_metrics)
+
+        return float(quality)
+
+    def _assess_threshold_optimization_quality(self, threshold_optimization: Dict[str, Any]) -> float:
+        """
+        Assess threshold optimization quality.
+
+        Physical Meaning:
+            Assesses the quality of threshold optimization results.
+
+        Args:
+            threshold_optimization (Dict[str, Any]): Threshold optimization results.
+
+        Returns:
+            float: Threshold optimization quality.
+        """
+        # Check if required metrics are present
+        required_metrics = ["interference_threshold", "coupling_threshold", "phase_coherence_threshold"]
+        present_metrics = sum(1 for metric in required_metrics if metric in threshold_optimization)
+
+        # Calculate quality based on metric presence
+        quality = present_metrics / len(required_metrics)
+
+        return float(quality)
+
+    def _assess_method_optimization_quality(self, method_optimization: Dict[str, Any]) -> float:
+        """
+        Assess method optimization quality.
+
+        Physical Meaning:
+            Assesses the quality of method optimization results.
+
+        Args:
+            method_optimization (Dict[str, Any]): Method optimization results.
+
+        Returns:
+            float: Method optimization quality.
+        """
+        # Check if required metrics are present
+        required_metrics = ["interference_analysis_method", "coupling_analysis_method", "phase_coherence_analysis_method"]
+        present_metrics = sum(1 for metric in required_metrics if metric in method_optimization)
+
+        # Calculate quality based on metric presence
+        quality = present_metrics / len(required_metrics)
+
+        return float(quality)
+
+    def _calculate_overall_validation(
+        self, core_validation: Dict[str, Any], statistical_validation: Dict[str, Any], optimization_validation: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Calculate overall validation.
+
+        Physical Meaning:
+            Calculates the overall validation of all analysis components.
+
+        Args:
+            core_validation (Dict[str, Any]): Core validation results.
+            statistical_validation (Dict[str, Any]): Statistical validation results.
+            optimization_validation (Dict[str, Any]): Optimization validation results.
+
+        Returns:
+            Dict[str, Any]: Overall validation results.
+        """
+        # Calculate overall quality
+        overall_quality = np.mean([
+            core_validation["overall_quality"],
+            statistical_validation["overall_quality"],
+            optimization_validation["overall_quality"],
+        ])
+
+        # Calculate overall validation status
+        overall_passed = all([
+            core_validation["validation_passed"],
+            statistical_validation["validation_passed"],
+            optimization_validation["validation_passed"],
+        ])
+
+        return {
+            "overall_quality": overall_quality,
+            "overall_passed": overall_passed,
+            "validation_summary": {
+                "core_validation": core_validation["validation_passed"],
+                "statistical_validation": statistical_validation["validation_passed"],
+                "optimization_validation": optimization_validation["validation_passed"],
+            },
         }

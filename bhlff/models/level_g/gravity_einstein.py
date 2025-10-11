@@ -176,16 +176,36 @@ class PhaseEnvelopeBalanceSolver:
         Returns:
             Dictionary containing memory kernels
         """
-        # Simplified memory kernel construction
-        # In practice, these would be computed from dispersion relations
-
-        # Gamma kernel (time response)
-        gamma_kernel = np.ones_like(phase_field) * 0.1
-
-        # K kernel (memory decay)
-        k_kernel = np.ones_like(phase_field) * 0.05
-
-        return {"gamma": gamma_kernel, "k": k_kernel}
+        # 7D phase field memory kernel construction
+        # Based on 7D phase field theory, not Einstein equations
+        # Memory kernels describe phase field evolution in 7D space-time
+        
+        # 7D wave vectors for phase field
+        kx = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+        ky = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+        kz = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+        
+        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing='ij')
+        k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
+        
+        # 7D phase field parameters
+        mu = self.mu  # Phase field diffusion coefficient
+        beta = self.beta  # Fractional order for Riesz operator
+        lambda_param = self.lambda_param  # Phase field damping
+        
+        # Gamma kernel: 7D phase field temporal response
+        # Based on fractional Laplacian operator (-Δ)^β in 7D
+        gamma_kernel = mu * (k_magnitude ** (2 * beta)) + lambda_param
+        
+        # K kernel: 7D phase field memory decay
+        # Describes phase coherence decay in 7D space-time
+        k_kernel = 0.1 * k_magnitude * np.exp(-k_magnitude / 10.0)
+        
+        # Transform to real space for 7D phase field operations
+        gamma_kernel_real = np.fft.ifftn(gamma_kernel).real
+        k_kernel_real = np.fft.ifftn(k_kernel).real
+        
+        return {"gamma": gamma_kernel_real, "k": k_kernel_real}
 
     def _build_spatial_operator(self, phase_field: np.ndarray) -> Dict[str, Any]:
         """
@@ -326,21 +346,43 @@ class PhaseEnvelopeBalanceSolver:
         Returns:
             Residual from applying balance operator
         """
-        # Simplified application of balance operator
-        # In practice, this would involve FFT operations and memory kernel convolutions
-
-        # Apply spatial operator
-        spatial_residual = self.mu * solution
-
-        # Apply memory kernels
-        memory_residual = 0.1 * solution
-
-        # Apply bridge terms
-        bridge_residual = 0.05 * solution
-
-        # Total residual
-        total_residual = spatial_residual + memory_residual + bridge_residual
-
+        # Full application of balance operator with FFT operations
+        # Transform solution to spectral space for efficient computation
+        solution_spectral = np.fft.fftn(solution)
+        
+        # Apply spatial fractional Laplacian operator in spectral space
+        kx = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+        ky = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+        kz = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+        
+        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing='ij')
+        k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
+        
+        # Spatial operator: μ(-Δ)^β in spectral space
+        spatial_operator = self.mu * (k_magnitude ** (2 * self.beta))
+        spatial_residual_spectral = spatial_operator * solution_spectral
+        
+        # Apply memory kernel convolution in spectral space
+        memory_kernels = self._construct_memory_kernels(solution)
+        gamma_spectral = np.fft.fftn(memory_kernels["gamma"])
+        k_spectral = np.fft.fftn(memory_kernels["k"])
+        
+        # Memory response: Γ * solution
+        memory_residual_spectral = gamma_spectral * solution_spectral
+        
+        # Bridge terms: K * solution (memory decay)
+        bridge_residual_spectral = k_spectral * solution_spectral
+        
+        # Total residual in spectral space
+        total_residual_spectral = (
+            spatial_residual_spectral + 
+            memory_residual_spectral + 
+            bridge_residual_spectral
+        )
+        
+        # Transform back to real space
+        total_residual = np.fft.ifftn(total_residual_spectral).real
+        
         return total_residual
 
     def _compute_effective_metric_from_solution(

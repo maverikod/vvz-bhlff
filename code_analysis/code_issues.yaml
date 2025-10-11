@@ -6,49 +6,101 @@ issues:
   - class: MockSystem
     file: ./tests/unit/test_level_g/test_vbp_envelope_physics.py
     line: 421
-  - class: MockDomain
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 417
-  - class: MockDomain
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 434
-  - class: MockDomain
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 451
-  - class: MockDomain
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 473
-  - class: MockDomain
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 490
-  - class: MockDomain
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 507
   - class: DummyDomain
     file: ./tests/unit/test_core/test_cuda_fft_backend_parity.py
     line: 13
-  - class: BeatingOptimization
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 37
-  - class: BeatingStatistics
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 52
-  - class: BeatingComparison
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 64
   - class: MockSystem
     file: ./examples/level_g_example.py
     line: 174
-  files_without_docstrings: []
+  files_too_large:
+  - exceeds_limit: 96
+    file: ./code_mapper.py
+    limit: 600
+    lines: 696
+  - exceeds_limit: 82
+    file: ./tests/unit/test_level_g_validation.py
+    limit: 600
+    lines: 682
+  - exceeds_limit: 12
+    file: ./bhlff/models/level_c/beating/pinned_analysis.py
+    limit: 600
+    lines: 612
+  - exceeds_limit: 45
+    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
+    limit: 600
+    lines: 645
+  - exceeds_limit: 50
+    file: ./bhlff/models/level_c/beating/basic/comparison.py
+    limit: 600
+    lines: 650
+  - exceeds_limit: 16
+    file: ./bhlff/models/level_c/beating/basic/core_analysis.py
+    limit: 600
+    lines: 616
+  - exceeds_limit: 60
+    file: ./bhlff/models/level_c/memory/correlation_analysis.py
+    limit: 600
+    lines: 660
+  - exceeds_limit: 44
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
+    limit: 600
+    lines: 644
+  - exceeds_limit: 9
+    file: ./bhlff/models/level_f/multi_particle/collective_modes.py
+    limit: 600
+    lines: 609
+  - exceeds_limit: 29
+    file: ./bhlff/models/level_e/robustness_tests.py
+    limit: 600
+    lines: 629
+  - exceeds_limit: 27
+    file: ./bhlff/models/level_e/discretization_effects.py
+    limit: 600
+    lines: 627
+  - exceeds_limit: 1
+    file: ./bhlff/models/level_g/astrophysics.py
+    limit: 600
+    lines: 601
+  - exceeds_limit: 72
+    file: ./bhlff/models/level_g/evolution.py
+    limit: 600
+    lines: 672
+  - exceeds_limit: 88
+    file: ./bhlff/models/level_g/cosmology.py
+    limit: 600
+    lines: 688
+  - exceeds_limit: 207
+    file: ./bhlff/models/level_g/structure.py
+    limit: 600
+    lines: 807
+  - exceeds_limit: 13
+    file: ./bhlff/models/level_g/analysis.py
+    limit: 600
+    lines: 613
+  - exceeds_limit: 302
+    file: ./bhlff/models/level_g/particle_inversion.py
+    limit: 600
+    lines: 902
+  - exceeds_limit: 251
+    file: ./bhlff/testing/automated_testing.py
+    limit: 600
+    lines: 851
+  files_without_docstrings:
+  - file: ./bhlff/models/level_f/collective/__init__.py
+    line: 1
+  - file: ./bhlff/models/level_e/sensitivity/__init__.py
+    line: 1
+  - file: ./bhlff/models/level_e/experiments/__init__.py
+    line: 1
+  - file: ./bhlff/models/level_e/phase_mapping/__init__.py
+    line: 1
   imports_in_middle:
   - file: ./code_mapper.py
-    line: 637
+    line: 401
   - file: ./code_mapper.py
-    line: 378
+    line: 481
   - file: ./code_mapper.py
-    line: 458
-  - file: ./code_mapper.py
-    line: 565
+    line: 591
   - file: ./setup.py
     line: 24
   - file: ./setup.py
@@ -239,16 +291,6 @@ issues:
     line: 25
   - file: ./tests/integration/test_automated_testing_integration.py
     line: 26
-  - file: ./tests/integration/test_automated_testing_integration.py
-    line: 27
-  - file: ./tests/integration/test_automated_testing_integration.py
-    line: 28
-  - file: ./tests/integration/test_automated_testing_integration.py
-    line: 34
-  - file: ./tests/integration/test_automated_testing_integration.py
-    line: 45
-  - file: ./tests/integration/test_automated_testing_integration.py
-    line: 54
   - file: ./tests/integration/test_bvp_interface_pipeline_physics.py
     line: 28
   - file: ./tests/integration/test_bvp_interface_pipeline_physics.py
@@ -287,6 +329,38 @@ issues:
     line: 31
   - file: ./tests/integration/test_bvp_quench_dynamics_physics.py
     line: 32
+  - file: ./tests/integration/automated_testing/test_quality_monitoring_integration.py
+    line: 25
+  - file: ./tests/integration/automated_testing/test_quality_monitoring_integration.py
+    line: 36
+  - file: ./tests/integration/automated_testing/test_physics_validation_integration.py
+    line: 25
+  - file: ./tests/integration/automated_testing/test_physics_validation_integration.py
+    line: 36
+  - file: ./tests/integration/automated_testing/test_error_handling_integration.py
+    line: 25
+  - file: ./tests/integration/automated_testing/test_error_handling_integration.py
+    line: 36
+  - file: ./tests/integration/automated_testing/test_automated_reporting_integration.py
+    line: 25
+  - file: ./tests/integration/automated_testing/test_automated_reporting_integration.py
+    line: 36
+  - file: ./tests/integration/automated_testing/test_automated_reporting_integration.py
+    line: 45
+  - file: ./tests/integration/automated_testing/test_basic_integration.py
+    line: 25
+  - file: ./tests/integration/automated_testing/test_basic_integration.py
+    line: 36
+  - file: ./tests/integration/automated_testing/test_basic_integration.py
+    line: 45
+  - file: ./tests/integration/automated_testing/test_performance_integration.py
+    line: 26
+  - file: ./tests/integration/automated_testing/test_performance_integration.py
+    line: 37
+  - file: ./tests/integration/automated_testing/test_performance_integration.py
+    line: 187
+  - file: ./tests/integration/automated_testing/test_performance_integration.py
+    line: 217
   - file: ./tests/unit/test_acceptance_criteria.py
     line: 21
   - file: ./tests/unit/test_acceptance_criteria.py
@@ -313,16 +387,6 @@ issues:
     line: 23
   - file: ./tests/unit/test_automated_testing.py
     line: 24
-  - file: ./tests/unit/test_automated_testing.py
-    line: 25
-  - file: ./tests/unit/test_automated_testing.py
-    line: 26
-  - file: ./tests/unit/test_automated_testing.py
-    line: 28
-  - file: ./tests/unit/test_automated_testing.py
-    line: 39
-  - file: ./tests/unit/test_automated_testing.py
-    line: 48
   - file: ./tests/unit/test_level_g/test_gravity_physics.py
     line: 21
   - file: ./tests/unit/test_level_g/test_gravity_physics.py
@@ -440,7 +504,17 @@ issues:
   - file: ./tests/unit/test_level_e/test_level_e_simple.py
     line: 24
   - file: ./tests/unit/test_level_e/test_level_e_simple.py
+    line: 25
+  - file: ./tests/unit/test_level_e/test_level_e_simple.py
     line: 26
+  - file: ./tests/unit/test_level_e/test_level_e_simple.py
+    line: 27
+  - file: ./tests/unit/test_level_e/test_level_e_simple.py
+    line: 28
+  - file: ./tests/unit/test_level_e/test_level_e_simple.py
+    line: 29
+  - file: ./tests/unit/test_level_e/test_level_e_simple.py
+    line: 30
   - file: ./tests/unit/test_level_e/test_soliton_topology_physics.py
     line: 21
   - file: ./tests/unit/test_level_e/test_soliton_topology_physics.py
@@ -469,6 +543,86 @@ issues:
     line: 27
   - file: ./tests/unit/test_level_e/test_soliton_energy_physics.py
     line: 28
+  - file: ./tests/unit/test_level_e/solitons/test_soliton_models.py
+    line: 21
+  - file: ./tests/unit/test_level_e/solitons/test_soliton_models.py
+    line: 22
+  - file: ./tests/unit/test_level_e/solitons/test_soliton_models.py
+    line: 23
+  - file: ./tests/unit/test_level_e/solitons/test_soliton_models.py
+    line: 25
+  - file: ./tests/unit/test_level_e/performance/test_performance_analyzer.py
+    line: 21
+  - file: ./tests/unit/test_level_e/performance/test_performance_analyzer.py
+    line: 22
+  - file: ./tests/unit/test_level_e/performance/test_performance_analyzer.py
+    line: 23
+  - file: ./tests/unit/test_level_e/performance/test_performance_analyzer.py
+    line: 25
+  - file: ./tests/unit/test_level_e/defects/test_defect_models.py
+    line: 21
+  - file: ./tests/unit/test_level_e/defects/test_defect_models.py
+    line: 22
+  - file: ./tests/unit/test_level_e/defects/test_defect_models.py
+    line: 23
+  - file: ./tests/unit/test_level_e/defects/test_defect_models.py
+    line: 25
+  - file: ./tests/unit/test_level_e/sensitivity/test_sensitivity_analyzer.py
+    line: 21
+  - file: ./tests/unit/test_level_e/sensitivity/test_sensitivity_analyzer.py
+    line: 22
+  - file: ./tests/unit/test_level_e/sensitivity/test_sensitivity_analyzer.py
+    line: 23
+  - file: ./tests/unit/test_level_e/sensitivity/test_sensitivity_analyzer.py
+    line: 25
+  - file: ./tests/unit/test_level_e/robustness/test_robustness_tester.py
+    line: 21
+  - file: ./tests/unit/test_level_e/robustness/test_robustness_tester.py
+    line: 22
+  - file: ./tests/unit/test_level_e/robustness/test_robustness_tester.py
+    line: 23
+  - file: ./tests/unit/test_level_e/robustness/test_robustness_tester.py
+    line: 25
+  - file: ./tests/unit/test_level_e/discretization/test_discretization_analyzer.py
+    line: 21
+  - file: ./tests/unit/test_level_e/discretization/test_discretization_analyzer.py
+    line: 22
+  - file: ./tests/unit/test_level_e/discretization/test_discretization_analyzer.py
+    line: 23
+  - file: ./tests/unit/test_level_e/discretization/test_discretization_analyzer.py
+    line: 25
+  - file: ./tests/unit/test_level_e/integration/test_integration.py
+    line: 21
+  - file: ./tests/unit/test_level_e/integration/test_integration.py
+    line: 22
+  - file: ./tests/unit/test_level_e/integration/test_integration.py
+    line: 23
+  - file: ./tests/unit/test_level_e/integration/test_integration.py
+    line: 25
+  - file: ./tests/unit/test_level_e/failure/test_failure_detector.py
+    line: 21
+  - file: ./tests/unit/test_level_e/failure/test_failure_detector.py
+    line: 22
+  - file: ./tests/unit/test_level_e/failure/test_failure_detector.py
+    line: 23
+  - file: ./tests/unit/test_level_e/failure/test_failure_detector.py
+    line: 25
+  - file: ./tests/unit/test_level_e/experiments/test_level_e_experiments.py
+    line: 21
+  - file: ./tests/unit/test_level_e/experiments/test_level_e_experiments.py
+    line: 22
+  - file: ./tests/unit/test_level_e/experiments/test_level_e_experiments.py
+    line: 23
+  - file: ./tests/unit/test_level_e/experiments/test_level_e_experiments.py
+    line: 25
+  - file: ./tests/unit/test_level_e/phase_mapping/test_phase_mapper.py
+    line: 21
+  - file: ./tests/unit/test_level_e/phase_mapping/test_phase_mapper.py
+    line: 22
+  - file: ./tests/unit/test_level_e/phase_mapping/test_phase_mapper.py
+    line: 23
+  - file: ./tests/unit/test_level_e/phase_mapping/test_phase_mapper.py
+    line: 25
   - file: ./tests/unit/test_level_f/test_collective.py
     line: 21
   - file: ./tests/unit/test_level_f/test_collective.py
@@ -477,12 +631,92 @@ issues:
     line: 21
   - file: ./tests/unit/test_level_f/test_nonlinear.py
     line: 22
+  - file: ./tests/unit/test_level_f/test_nonlinear.py
+    line: 23
   - file: ./tests/unit/test_level_f/test_transitions.py
     line: 21
   - file: ./tests/unit/test_level_f/test_transitions.py
     line: 22
   - file: ./tests/unit/test_level_f/test_multi_particle.py
     line: 21
+  - file: ./tests/unit/test_level_f/nonlinear/test_nonlinear_initialization.py
+    line: 21
+  - file: ./tests/unit/test_level_f/nonlinear/test_nonlinear_initialization.py
+    line: 22
+  - file: ./tests/unit/test_level_f/nonlinear/test_nonlinear_initialization.py
+    line: 23
+  - file: ./tests/unit/test_level_f/nonlinear/test_nonlinear_types.py
+    line: 21
+  - file: ./tests/unit/test_level_f/nonlinear/test_nonlinear_types.py
+    line: 22
+  - file: ./tests/unit/test_level_f/nonlinear/test_nonlinear_types.py
+    line: 23
+  - file: ./tests/unit/test_level_f/nonlinear/test_soliton_analysis.py
+    line: 21
+  - file: ./tests/unit/test_level_f/nonlinear/test_soliton_analysis.py
+    line: 22
+  - file: ./tests/unit/test_level_f/nonlinear/test_soliton_analysis.py
+    line: 23
+  - file: ./tests/unit/automated_testing/test_automated_testing_system.py
+    line: 21
+  - file: ./tests/unit/automated_testing/test_automated_testing_system.py
+    line: 22
+  - file: ./tests/unit/automated_testing/test_automated_testing_system.py
+    line: 23
+  - file: ./tests/unit/automated_testing/test_automated_testing_system.py
+    line: 24
+  - file: ./tests/unit/automated_testing/test_automated_testing_system.py
+    line: 25
+  - file: ./tests/unit/automated_testing/test_automated_testing_system.py
+    line: 26
+  - file: ./tests/unit/automated_testing/test_automated_testing_system.py
+    line: 28
+  - file: ./tests/unit/automated_testing/test_integration.py
+    line: 21
+  - file: ./tests/unit/automated_testing/test_integration.py
+    line: 22
+  - file: ./tests/unit/automated_testing/test_integration.py
+    line: 23
+  - file: ./tests/unit/automated_testing/test_integration.py
+    line: 24
+  - file: ./tests/unit/automated_testing/test_integration.py
+    line: 26
+  - file: ./tests/unit/automated_testing/test_integration.py
+    line: 37
+  - file: ./tests/unit/automated_testing/test_integration.py
+    line: 46
+  - file: ./tests/unit/automated_testing/test_automated_reporting.py
+    line: 21
+  - file: ./tests/unit/automated_testing/test_automated_reporting.py
+    line: 22
+  - file: ./tests/unit/automated_testing/test_automated_reporting.py
+    line: 23
+  - file: ./tests/unit/automated_testing/test_automated_reporting.py
+    line: 24
+  - file: ./tests/unit/automated_testing/test_automated_reporting.py
+    line: 25
+  - file: ./tests/unit/automated_testing/test_automated_reporting.py
+    line: 27
+  - file: ./tests/unit/automated_testing/test_automated_reporting.py
+    line: 33
+  - file: ./tests/unit/automated_testing/test_automated_reporting.py
+    line: 37
+  - file: ./tests/unit/automated_testing/test_quality_monitor.py
+    line: 21
+  - file: ./tests/unit/automated_testing/test_quality_monitor.py
+    line: 22
+  - file: ./tests/unit/automated_testing/test_quality_monitor.py
+    line: 23
+  - file: ./tests/unit/automated_testing/test_quality_monitor.py
+    line: 24
+  - file: ./tests/unit/automated_testing/test_quality_monitor.py
+    line: 25
+  - file: ./tests/unit/automated_testing/test_quality_monitor.py
+    line: 26
+  - file: ./tests/unit/automated_testing/test_quality_monitor.py
+    line: 28
+  - file: ./tests/unit/automated_testing/test_quality_monitor.py
+    line: 34
   - file: ./tests/unit/test_core/test_7d_physics.py
     line: 31
   - file: ./tests/unit/test_core/test_7d_physics.py
@@ -835,6 +1069,14 @@ issues:
     line: 33
   - file: ./bhlff/models/level_c/mode_beating_analysis.py
     line: 35
+  - file: ./bhlff/models/level_c/mode_beating_analysis.py
+    line: 36
+  - file: ./bhlff/models/level_c/mode_beating_analysis.py
+    line: 37
+  - file: ./bhlff/models/level_c/mode_beating_analysis.py
+    line: 38
+  - file: ./bhlff/models/level_c/mode_beating_analysis.py
+    line: 39
   - file: ./bhlff/models/level_c/boundaries.py
     line: 30
   - file: ./bhlff/models/level_c/boundaries.py
@@ -857,6 +1099,14 @@ issues:
     line: 33
   - file: ./bhlff/models/level_c/quench_memory_analysis.py
     line: 35
+  - file: ./bhlff/models/level_c/quench_memory_analysis.py
+    line: 36
+  - file: ./bhlff/models/level_c/quench_memory_analysis.py
+    line: 37
+  - file: ./bhlff/models/level_c/quench_memory_analysis.py
+    line: 38
+  - file: ./bhlff/models/level_c/quench_memory_analysis.py
+    line: 39
   - file: ./bhlff/models/level_c/boundary_analysis.py
     line: 30
   - file: ./bhlff/models/level_c/boundary_analysis.py
@@ -867,6 +1117,12 @@ issues:
     line: 33
   - file: ./bhlff/models/level_c/boundary_analysis.py
     line: 35
+  - file: ./bhlff/models/level_c/boundary_analysis.py
+    line: 36
+  - file: ./bhlff/models/level_c/boundary_analysis.py
+    line: 37
+  - file: ./bhlff/models/level_c/boundary_analysis.py
+    line: 38
   - file: ./bhlff/models/level_c/level_c_integration.py
     line: 30
   - file: ./bhlff/models/level_c/level_c_integration.py
@@ -907,6 +1163,52 @@ issues:
     line: 33
   - file: ./bhlff/models/level_c/abcd_model.py
     line: 35
+  - file: ./bhlff/models/level_c/boundary/data_structures.py
+    line: 21
+  - file: ./bhlff/models/level_c/boundary/__init__.py
+    line: 21
+  - file: ./bhlff/models/level_c/boundary/__init__.py
+    line: 22
+  - file: ./bhlff/models/level_c/boundary/__init__.py
+    line: 23
+  - file: ./bhlff/models/level_c/boundary/admittance_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_c/boundary/admittance_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_c/boundary/admittance_analysis.py
+    line: 24
+  - file: ./bhlff/models/level_c/boundary/radial_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_c/boundary/radial_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_c/boundary/radial_analysis.py
+    line: 24
+  - file: ./bhlff/models/level_c/beating/theoretical_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_c/beating/theoretical_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/data_structures.py
+    line: 21
+  - file: ./bhlff/models/level_c/beating/__init__.py
+    line: 21
+  - file: ./bhlff/models/level_c/beating/__init__.py
+    line: 22
+  - file: ./bhlff/models/level_c/beating/__init__.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/__init__.py
+    line: 24
+  - file: ./bhlff/models/level_c/beating/background_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_c/beating/background_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/background_analysis.py
+    line: 24
+  - file: ./bhlff/models/level_c/beating/pinned_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_c/beating/pinned_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/pinned_analysis.py
+    line: 24
   - file: ./bhlff/models/level_c/beating/beating_patterns.py
     line: 297
   - file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
@@ -916,21 +1218,87 @@ issues:
   - file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
     line: 24
   - file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 25
-  - file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
     line: 26
   - file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
     line: 27
   - file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
+    line: 28
+  - file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
     line: 29
   - file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 34
-  - file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 49
-  - file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 61
+    line: 30
+  - file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
+    line: 22
+  - file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
+    line: 24
+  - file: ./bhlff/models/level_c/beating/basic/statistical_analysis.py
+    line: 26
+  - file: ./bhlff/models/level_c/beating/basic/__init__.py
+    line: 21
+  - file: ./bhlff/models/level_c/beating/basic/__init__.py
+    line: 22
+  - file: ./bhlff/models/level_c/beating/basic/__init__.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/basic/optimization.py
+    line: 21
+  - file: ./bhlff/models/level_c/beating/basic/optimization.py
+    line: 22
+  - file: ./bhlff/models/level_c/beating/basic/optimization.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/basic/optimization.py
+    line: 25
+  - file: ./bhlff/models/level_c/beating/basic/comparison.py
+    line: 21
+  - file: ./bhlff/models/level_c/beating/basic/comparison.py
+    line: 22
+  - file: ./bhlff/models/level_c/beating/basic/comparison.py
+    line: 24
+  - file: ./bhlff/models/level_c/beating/basic/core_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_c/beating/basic/core_analysis.py
+    line: 22
+  - file: ./bhlff/models/level_c/beating/basic/core_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/basic/core_analysis.py
+    line: 24
+  - file: ./bhlff/models/level_c/beating/basic/core_analysis.py
+    line: 25
+  - file: ./bhlff/models/level_c/beating/basic/core_analysis.py
+    line: 27
   - file: ./bhlff/models/level_c/beating/optimization/beating_validation_optimization_core.py
     line: 22
+  - file: ./bhlff/models/level_c/memory/correlation_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_c/memory/correlation_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_c/memory/correlation_analysis.py
+    line: 24
+  - file: ./bhlff/models/level_c/memory/pinning_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_c/memory/pinning_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_c/memory/pinning_analysis.py
+    line: 24
+  - file: ./bhlff/models/level_c/memory/data_structures.py
+    line: 21
+  - file: ./bhlff/models/level_c/memory/memory_evolution.py
+    line: 21
+  - file: ./bhlff/models/level_c/memory/memory_evolution.py
+    line: 23
+  - file: ./bhlff/models/level_c/memory/memory_evolution.py
+    line: 24
+  - file: ./bhlff/models/level_c/memory/__init__.py
+    line: 21
+  - file: ./bhlff/models/level_c/memory/__init__.py
+    line: 22
+  - file: ./bhlff/models/level_c/memory/__init__.py
+    line: 23
+  - file: ./bhlff/models/level_c/memory/__init__.py
+    line: 24
   - file: ./bhlff/models/level_f/transitions.py
     line: 29
   - file: ./bhlff/models/level_f/transitions.py
@@ -954,13 +1322,17 @@ issues:
   - file: ./bhlff/models/level_f/bvp_integration.py
     line: 35
   - file: ./bhlff/models/level_f/nonlinear.py
+    line: 28
+  - file: ./bhlff/models/level_f/nonlinear.py
     line: 29
   - file: ./bhlff/models/level_f/nonlinear.py
     line: 30
   - file: ./bhlff/models/level_f/nonlinear.py
     line: 31
   - file: ./bhlff/models/level_f/nonlinear.py
-    line: 668
+    line: 32
+  - file: ./bhlff/models/level_f/nonlinear.py
+    line: 33
   - file: ./bhlff/models/level_f/__init__.py
     line: 25
   - file: ./bhlff/models/level_f/__init__.py
@@ -968,6 +1340,8 @@ issues:
   - file: ./bhlff/models/level_f/__init__.py
     line: 27
   - file: ./bhlff/models/level_f/__init__.py
+    line: 28
+  - file: ./bhlff/models/level_f/multi_particle.py
     line: 28
   - file: ./bhlff/models/level_f/multi_particle.py
     line: 29
@@ -978,9 +1352,11 @@ issues:
   - file: ./bhlff/models/level_f/multi_particle.py
     line: 32
   - file: ./bhlff/models/level_f/multi_particle.py
-    line: 427
+    line: 33
   - file: ./bhlff/models/level_f/multi_particle.py
-    line: 698
+    line: 34
+  - file: ./bhlff/models/level_f/collective.py
+    line: 26
   - file: ./bhlff/models/level_f/collective.py
     line: 27
   - file: ./bhlff/models/level_f/collective.py
@@ -989,6 +1365,50 @@ issues:
     line: 29
   - file: ./bhlff/models/level_f/collective.py
     line: 30
+  - file: ./bhlff/models/level_f/nonlinear/basic_effects.py
+    line: 21
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
+    line: 22
+  - file: ./bhlff/models/level_f/nonlinear/__init__.py
+    line: 21
+  - file: ./bhlff/models/level_f/nonlinear/__init__.py
+    line: 22
+  - file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
+    line: 22
+  - file: ./bhlff/models/level_f/collective/dispersion_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_f/collective/dispersion_analysis.py
+    line: 22
+  - file: ./bhlff/models/level_f/collective/excitation_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_f/collective/excitation_analysis.py
+    line: 22
+  - file: ./bhlff/models/level_f/collective/excitation_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_f/collective/excitation_analysis.py
+    line: 325
+  - file: ./bhlff/models/level_f/multi_particle/data_structures.py
+    line: 21
+  - file: ./bhlff/models/level_f/multi_particle/__init__.py
+    line: 21
+  - file: ./bhlff/models/level_f/multi_particle/__init__.py
+    line: 22
+  - file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
+    line: 22
+  - file: ./bhlff/models/level_f/multi_particle/potential_analysis.py
+    line: 536
+  - file: ./bhlff/models/level_f/multi_particle/collective_modes.py
+    line: 21
+  - file: ./bhlff/models/level_f/multi_particle/collective_modes.py
+    line: 22
+  - file: ./bhlff/models/level_f/multi_particle/collective_modes.py
+    line: 23
   - file: ./bhlff/models/level_d/level_d_models.py
     line: 30
   - file: ./bhlff/models/level_d/level_d_models.py
@@ -1252,13 +1672,9 @@ issues:
   - file: ./bhlff/models/level_e/sensitivity_analysis.py
     line: 31
   - file: ./bhlff/models/level_e/sensitivity_analysis.py
-    line: 290
+    line: 33
   - file: ./bhlff/models/level_e/sensitivity_analysis.py
-    line: 291
-  - file: ./bhlff/models/level_e/sensitivity_analysis.py
-    line: 292
-  - file: ./bhlff/models/level_e/sensitivity_analysis.py
-    line: 498
+    line: 34
   - file: ./bhlff/models/level_e/soliton_implementations.py
     line: 21
   - file: ./bhlff/models/level_e/soliton_implementations.py
@@ -1272,7 +1688,11 @@ issues:
   - file: ./bhlff/models/level_e/phase_mapping.py
     line: 31
   - file: ./bhlff/models/level_e/phase_mapping.py
-    line: 258
+    line: 33
+  - file: ./bhlff/models/level_e/phase_mapping.py
+    line: 34
+  - file: ./bhlff/models/level_e/phase_mapping.py
+    line: 35
   - file: ./bhlff/models/level_e/defect_core.py
     line: 26
   - file: ./bhlff/models/level_e/defect_core.py
@@ -1309,18 +1729,6 @@ issues:
     line: 32
   - file: ./bhlff/models/level_e/level_e_experiments.py
     line: 33
-  - file: ./bhlff/models/level_e/level_e_experiments.py
-    line: 34
-  - file: ./bhlff/models/level_e/level_e_experiments.py
-    line: 35
-  - file: ./bhlff/models/level_e/level_e_experiments.py
-    line: 36
-  - file: ./bhlff/models/level_e/level_e_experiments.py
-    line: 37
-  - file: ./bhlff/models/level_e/level_e_experiments.py
-    line: 38
-  - file: ./bhlff/models/level_e/level_e_experiments.py
-    line: 39
   - file: ./bhlff/models/level_e/performance_analysis.py
     line: 25
   - file: ./bhlff/models/level_e/performance_analysis.py
@@ -1333,6 +1741,8 @@ issues:
     line: 29
   - file: ./bhlff/models/level_e/performance_analysis.py
     line: 30
+  - file: ./bhlff/models/level_e/performance_analysis.py
+    line: 32
   - file: ./bhlff/models/level_e/defect_interactions.py
     line: 24
   - file: ./bhlff/models/level_e/defect_interactions.py
@@ -1401,6 +1811,186 @@ issues:
     line: 29
   - file: ./bhlff/models/level_e/discretization_effects.py
     line: 30
+  - file: ./bhlff/models/level_e/performance/accuracy_cost_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_e/performance/accuracy_cost_analysis.py
+    line: 22
+  - file: ./bhlff/models/level_e/performance/accuracy_cost_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_e/performance/accuracy_cost_analysis.py
+    line: 24
+  - file: ./bhlff/models/level_e/performance/accuracy_cost_analysis.py
+    line: 183
+  - file: ./bhlff/models/level_e/performance/accuracy_cost_analysis.py
+    line: 184
+  - file: ./bhlff/models/level_e/performance/accuracy_cost_analysis.py
+    line: 185
+  - file: ./bhlff/models/level_e/performance/accuracy_cost_analysis.py
+    line: 186
+  - file: ./bhlff/models/level_e/performance/accuracy_cost_analysis.py
+    line: 187
+  - file: ./bhlff/models/level_e/performance/performance_analyzer.py
+    line: 21
+  - file: ./bhlff/models/level_e/performance/performance_analyzer.py
+    line: 22
+  - file: ./bhlff/models/level_e/performance/performance_analyzer.py
+    line: 23
+  - file: ./bhlff/models/level_e/performance/performance_analyzer.py
+    line: 24
+  - file: ./bhlff/models/level_e/performance/profiling.py
+    line: 21
+  - file: ./bhlff/models/level_e/performance/profiling.py
+    line: 22
+  - file: ./bhlff/models/level_e/performance/profiling.py
+    line: 23
+  - file: ./bhlff/models/level_e/performance/profiling.py
+    line: 24
+  - file: ./bhlff/models/level_e/performance/performance_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_e/performance/performance_analysis.py
+    line: 22
+  - file: ./bhlff/models/level_e/performance/performance_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_e/performance/performance_analysis.py
+    line: 24
+  - file: ./bhlff/models/level_e/performance/performance_analysis.py
+    line: 26
+  - file: ./bhlff/models/level_e/performance/performance_analysis.py
+    line: 27
+  - file: ./bhlff/models/level_e/performance/performance_analysis.py
+    line: 28
+  - file: ./bhlff/models/level_e/performance/performance_analysis.py
+    line: 29
+  - file: ./bhlff/models/level_e/performance/performance_analysis.py
+    line: 30
+  - file: ./bhlff/models/level_e/performance/performance_analysis.py
+    line: 31
+  - file: ./bhlff/models/level_e/performance/scalability_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_e/performance/scalability_analysis.py
+    line: 22
+  - file: ./bhlff/models/level_e/performance/scalability_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_e/performance/scalability_analysis.py
+    line: 24
+  - file: ./bhlff/models/level_e/performance/__init__.py
+    line: 21
+  - file: ./bhlff/models/level_e/performance/__init__.py
+    line: 22
+  - file: ./bhlff/models/level_e/performance/__init__.py
+    line: 23
+  - file: ./bhlff/models/level_e/performance/__init__.py
+    line: 24
+  - file: ./bhlff/models/level_e/performance/__init__.py
+    line: 25
+  - file: ./bhlff/models/level_e/performance/__init__.py
+    line: 26
+  - file: ./bhlff/models/level_e/performance/__init__.py
+    line: 27
+  - file: ./bhlff/models/level_e/performance/optimization.py
+    line: 22
+  - file: ./bhlff/models/level_e/performance/optimization.py
+    line: 23
+  - file: ./bhlff/models/level_e/performance/optimization.py
+    line: 24
+  - file: ./bhlff/models/level_e/performance/optimization.py
+    line: 25
+  - file: ./bhlff/models/level_e/performance/scaling_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_e/performance/scaling_analysis.py
+    line: 22
+  - file: ./bhlff/models/level_e/performance/scaling_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_e/performance/scaling_analysis.py
+    line: 24
+  - file: ./bhlff/models/level_e/performance/scaling_analysis.py
+    line: 25
+  - file: ./bhlff/models/level_e/performance/scaling_analysis.py
+    line: 326
+  - file: ./bhlff/models/level_e/performance/scaling_analysis.py
+    line: 327
+  - file: ./bhlff/models/level_e/performance/scaling_analysis.py
+    line: 328
+  - file: ./bhlff/models/level_e/performance/scaling_analysis.py
+    line: 329
+  - file: ./bhlff/models/level_e/performance/scaling_analysis.py
+    line: 330
+  - file: ./bhlff/models/level_e/performance/benchmark_tests.py
+    line: 21
+  - file: ./bhlff/models/level_e/performance/benchmark_tests.py
+    line: 22
+  - file: ./bhlff/models/level_e/performance/benchmark_tests.py
+    line: 23
+  - file: ./bhlff/models/level_e/performance/benchmark_tests.py
+    line: 24
+  - file: ./bhlff/models/level_e/performance/resource_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_e/performance/resource_analysis.py
+    line: 22
+  - file: ./bhlff/models/level_e/performance/resource_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_e/performance/resource_analysis.py
+    line: 24
+  - file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
+    line: 22
+  - file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
+    line: 105
+  - file: ./bhlff/models/level_e/sensitivity/sobol_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_e/sensitivity/sobol_analysis.py
+    line: 22
+  - file: ./bhlff/models/level_e/sensitivity/sobol_analysis.py
+    line: 242
+  - file: ./bhlff/models/level_e/sensitivity/sobol_analysis.py
+    line: 243
+  - file: ./bhlff/models/level_e/sensitivity/sobol_analysis.py
+    line: 244
+  - file: ./bhlff/models/level_e/experiments/specialized_experiments.py
+    line: 21
+  - file: ./bhlff/models/level_e/experiments/specialized_experiments.py
+    line: 22
+  - file: ./bhlff/models/level_e/experiments/specialized_experiments.py
+    line: 23
+  - file: ./bhlff/models/level_e/experiments/specialized_experiments.py
+    line: 25
+  - file: ./bhlff/models/level_e/experiments/specialized_experiments.py
+    line: 26
+  - file: ./bhlff/models/level_e/experiments/experiment_runner.py
+    line: 21
+  - file: ./bhlff/models/level_e/experiments/experiment_runner.py
+    line: 22
+  - file: ./bhlff/models/level_e/experiments/experiment_runner.py
+    line: 23
+  - file: ./bhlff/models/level_e/experiments/experiment_runner.py
+    line: 25
+  - file: ./bhlff/models/level_e/experiments/experiment_runner.py
+    line: 26
+  - file: ./bhlff/models/level_e/experiments/experiment_runner.py
+    line: 27
+  - file: ./bhlff/models/level_e/experiments/experiment_runner.py
+    line: 28
+  - file: ./bhlff/models/level_e/experiments/experiment_runner.py
+    line: 29
+  - file: ./bhlff/models/level_e/experiments/experiment_runner.py
+    line: 30
+  - file: ./bhlff/models/level_e/phase_mapping/boundary_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_e/phase_mapping/boundary_analysis.py
+    line: 22
+  - file: ./bhlff/models/level_e/phase_mapping/regime_classification.py
+    line: 21
+  - file: ./bhlff/models/level_e/phase_mapping/regime_classification.py
+    line: 22
+  - file: ./bhlff/models/level_e/phase_mapping/regime_classification.py
+    line: 164
+  - file: ./bhlff/models/level_e/phase_mapping/resonance_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_e/phase_mapping/resonance_analysis.py
+    line: 22
   - file: ./bhlff/models/level_g/gravity_curvature.py
     line: 25
   - file: ./bhlff/models/level_g/gravity_curvature.py
@@ -1425,12 +2015,20 @@ issues:
     line: 23
   - file: ./bhlff/models/level_g/cosmology.py
     line: 24
+  - file: ./bhlff/models/level_g/particle_validation.py
+    line: 21
+  - file: ./bhlff/models/level_g/particle_validation.py
+    line: 22
   - file: ./bhlff/models/level_g/structure.py
     line: 22
   - file: ./bhlff/models/level_g/structure.py
     line: 23
   - file: ./bhlff/models/level_g/structure.py
     line: 24
+  - file: ./bhlff/models/level_g/structure.py
+    line: 512
+  - file: ./bhlff/models/level_g/structure.py
+    line: 777
   - file: ./bhlff/models/level_g/bvp_integration.py
     line: 27
   - file: ./bhlff/models/level_g/bvp_integration.py
@@ -1483,12 +2081,14 @@ issues:
     line: 22
   - file: ./bhlff/models/level_g/analysis.py
     line: 23
-  - file: ./bhlff/models/level_g/validation.py
+  - file: ./bhlff/models/level_g/particle_inversion.py
     line: 21
-  - file: ./bhlff/models/level_g/validation.py
+  - file: ./bhlff/models/level_g/particle_inversion.py
     line: 22
   - file: ./bhlff/models/level_g/validation.py
     line: 23
+  - file: ./bhlff/models/level_g/validation.py
+    line: 24
   - file: ./bhlff/models/level_g/gravity_einstein.py
     line: 26
   - file: ./bhlff/models/level_g/gravity_einstein.py
@@ -1554,8 +2154,6 @@ issues:
   - file: ./bhlff/testing/automated_reporting.py
     line: 25
   - file: ./bhlff/testing/automated_reporting.py
-    line: 26
-  - file: ./bhlff/testing/automated_reporting.py
     line: 27
   - file: ./bhlff/testing/automated_reporting.py
     line: 28
@@ -1567,38 +2165,86 @@ issues:
     line: 31
   - file: ./bhlff/testing/automated_reporting.py
     line: 32
-  - file: ./bhlff/testing/automated_reporting.py
-    line: 33
-  - file: ./bhlff/testing/automated_reporting.py
-    line: 34
-  - file: ./bhlff/testing/automated_reporting.py
-    line: 40
-  - file: ./bhlff/testing/automated_reporting.py
-    line: 42
-  - file: ./bhlff/testing/automated_reporting.py
-    line: 43
-  - file: ./bhlff/testing/automated_reporting.py
-    line: 37
-  - file: ./bhlff/testing/quality_monitor.py
-    line: 24
-  - file: ./bhlff/testing/quality_monitor.py
+  - file: ./bhlff/testing/reporting/template_engine.py
+    line: 21
+  - file: ./bhlff/testing/reporting/template_engine.py
+    line: 22
+  - file: ./bhlff/testing/reporting/template_engine.py
+    line: 29
+  - file: ./bhlff/testing/reporting/template_engine.py
     line: 25
-  - file: ./bhlff/testing/quality_monitor.py
+  - file: ./bhlff/testing/reporting/__init__.py
+    line: 21
+  - file: ./bhlff/testing/reporting/__init__.py
+    line: 22
+  - file: ./bhlff/testing/reporting/__init__.py
+    line: 23
+  - file: ./bhlff/testing/reporting/__init__.py
+    line: 24
+  - file: ./bhlff/testing/reporting/distribution_manager.py
+    line: 21
+  - file: ./bhlff/testing/reporting/distribution_manager.py
+    line: 22
+  - file: ./bhlff/testing/reporting/distribution_manager.py
+    line: 23
+  - file: ./bhlff/testing/reporting/distribution_manager.py
+    line: 24
+  - file: ./bhlff/testing/reporting/distribution_manager.py
+    line: 25
+  - file: ./bhlff/testing/reporting/distribution_manager.py
     line: 26
-  - file: ./bhlff/testing/quality_monitor.py
-    line: 27
-  - file: ./bhlff/testing/quality_monitor.py
-    line: 28
-  - file: ./bhlff/testing/quality_monitor.py
-    line: 29
-  - file: ./bhlff/testing/quality_monitor.py
-    line: 30
-  - file: ./bhlff/testing/quality_monitor.py
-    line: 31
-  - file: ./bhlff/testing/quality_monitor.py
-    line: 32
-  - file: ./bhlff/testing/quality_monitor.py
-    line: 34
+  - file: ./bhlff/testing/reporting/physics_interpreter.py
+    line: 21
+  - file: ./bhlff/testing/reporting/physics_interpreter.py
+    line: 22
+  - file: ./bhlff/testing/reporting/physics_interpreter.py
+    line: 24
+  - file: ./bhlff/testing/reporting/base.py
+    line: 21
+  - file: ./bhlff/testing/reporting/base.py
+    line: 22
+  - file: ./bhlff/testing/reporting/base.py
+    line: 23
+  - file: ./bhlff/testing/reporting/base.py
+    line: 24
+  - file: ./bhlff/testing/reporting/base.py
+    line: 26
+  - file: ./bhlff/testing/reporting/data_aggregator.py
+    line: 21
+  - file: ./bhlff/testing/reporting/data_aggregator.py
+    line: 23
+  - file: ./bhlff/testing/quality/physics_constraints.py
+    line: 22
+  - file: ./bhlff/testing/quality/physics_constraints.py
+    line: 23
+  - file: ./bhlff/testing/quality/trend_analyzer.py
+    line: 21
+  - file: ./bhlff/testing/quality/trend_analyzer.py
+    line: 22
+  - file: ./bhlff/testing/quality/__init__.py
+    line: 21
+  - file: ./bhlff/testing/quality/__init__.py
+    line: 22
+  - file: ./bhlff/testing/quality/base.py
+    line: 22
+  - file: ./bhlff/testing/quality/base.py
+    line: 23
+  - file: ./bhlff/testing/quality/base.py
+    line: 24
+  - file: ./bhlff/testing/quality/base.py
+    line: 25
+  - file: ./bhlff/testing/quality/base.py
+    line: 26
+  - file: ./bhlff/testing/quality/metric_history.py
+    line: 21
+  - file: ./bhlff/testing/quality/metric_history.py
+    line: 22
+  - file: ./bhlff/testing/quality/metric_history.py
+    line: 23
+  - file: ./bhlff/testing/quality/metric_history.py
+    line: 24
+  - file: ./bhlff/testing/quality/metric_history.py
+    line: 26
   - file: ./bhlff/solvers/__init__.py
     line: 21
   - file: ./bhlff/solvers/__init__.py
@@ -1949,26 +2595,6 @@ issues:
     line: 31
   - file: ./bhlff/core/bvp/bvp_constants.py
     line: 32
-  - file: ./bhlff/core/bvp/topological_charge_analyzer.py
-    line: 26
-  - file: ./bhlff/core/bvp/topological_charge_analyzer.py
-    line: 27
-  - file: ./bhlff/core/bvp/topological_charge_analyzer.py
-    line: 28
-  - file: ./bhlff/core/bvp/topological_charge_analyzer.py
-    line: 39
-  - file: ./bhlff/core/bvp/topological_charge_analyzer.py
-    line: 40
-  - file: ./bhlff/core/bvp/topological_charge_analyzer.py
-    line: 41
-  - file: ./bhlff/core/bvp/topological_charge_analyzer.py
-    line: 42
-  - file: ./bhlff/core/bvp/topological_charge_analyzer.py
-    line: 32
-  - file: ./bhlff/core/bvp/topological_charge_analyzer.py
-    line: 561
-  - file: ./bhlff/core/bvp/topological_charge_analyzer.py
-    line: 576
   - file: ./bhlff/core/bvp/abstract_solver_core.py
     line: 29
   - file: ./bhlff/core/bvp/abstract_solver_core.py
@@ -2307,6 +2933,22 @@ issues:
     line: 26
   - file: ./bhlff/core/bvp/resonance_peak_detector.py
     line: 28
+  - file: ./bhlff/core/bvp/analysis/topological_charge_analyzer.py
+    line: 24
+  - file: ./bhlff/core/bvp/analysis/topological_charge_analyzer.py
+    line: 25
+  - file: ./bhlff/core/bvp/analysis/topological_charge_analyzer.py
+    line: 26
+  - file: ./bhlff/core/bvp/analysis/topological_charge_analyzer.py
+    line: 27
+  - file: ./bhlff/core/bvp/analysis/topological_charge_analyzer.py
+    line: 28
+  - file: ./bhlff/core/bvp/analysis/topological_charge_analyzer.py
+    line: 29
+  - file: ./bhlff/core/bvp/analysis/charge_computation.py
+    line: 22
+  - file: ./bhlff/core/bvp/analysis/charge_computation.py
+    line: 23
   - file: ./bhlff/core/bvp/u1_phase_structure/coherence_analysis.py
     line: 24
   - file: ./bhlff/core/bvp/u1_phase_structure/coherence_analysis.py
@@ -3415,54 +4057,6 @@ issues:
     file: ./tests/unit/test_models/test_level_b_power_law_core_fixes.py
     line: 421
     method: check_finite_recursive
-  - class: MockDomain
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 418
-    method: __init__
-  - class: MockDomain
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 435
-    method: __init__
-  - class: MockDomain
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 452
-    method: __init__
-  - class: MockDomain
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 474
-    method: __init__
-  - class: MockDomain
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 491
-    method: __init__
-  - class: MockDomain
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 508
-    method: __init__
-  - class: null
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 418
-    method: __init__
-  - class: null
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 435
-    method: __init__
-  - class: null
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 452
-    method: __init__
-  - class: null
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 474
-    method: __init__
-  - class: null
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 491
-    method: __init__
-  - class: null
-    file: ./tests/unit/test_level_e/test_level_e_simple.py
-    line: 508
-    method: __init__
   - class: null
     file: ./tests/unit/test_level_e/test_soliton_topology_physics.py
     line: 242
@@ -3519,118 +4113,34 @@ issues:
     file: ./tests/unit/test_core/test_frequency_dependence_models.py
     line: 47
     method: test_admittance_scales_with_conductivity
-  - class: BeatingAnalysisCore
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 449
-    method: analyze_interference_theoretical
-  - class: BeatingAnalysisCore
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 452
-    method: analyze_mode_coupling_theoretical
-  - class: BeatingAnalysisCore
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 455
-    method: analyze_phase_coherence_theoretical
-  - class: BeatingAnalysisCore
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 460
-    method: calculate_beating_frequencies_theoretical
   - class: null
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 449
-    method: analyze_interference_theoretical
+    file: ./bhlff/models/level_c/beating/basic/optimization.py
+    line: 177
+    method: objective
   - class: null
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 452
-    method: analyze_mode_coupling_theoretical
+    file: ./bhlff/models/level_c/beating/basic/optimization.py
+    line: 428
+    method: threshold_objective
   - class: null
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 455
-    method: analyze_phase_coherence_theoretical
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
+    line: 187
+    method: objective
   - class: null
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 460
-    method: calculate_beating_frequencies_theoretical
-  - class: BeatingOptimization
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 38
-    method: __init__
-  - class: BeatingOptimization
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 41
-    method: optimize_analysis
-  - class: BeatingOptimization
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 44
-    method: optimize_parameters
-  - class: BeatingStatistics
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 53
-    method: __init__
-  - class: BeatingStatistics
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 56
-    method: perform_statistical_analysis
-  - class: BeatingComparison
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 65
-    method: __init__
-  - class: BeatingComparison
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 68
-    method: compare_analyses
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
+    line: 262
+    method: objective
   - class: null
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 38
-    method: __init__
-  - class: null
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 41
-    method: optimize_analysis
-  - class: null
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 44
-    method: optimize_parameters
-  - class: null
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 53
-    method: __init__
-  - class: null
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 56
-    method: perform_statistical_analysis
-  - class: null
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 65
-    method: __init__
-  - class: null
-    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 68
-    method: compare_analyses
-  - class: null
-    file: ./bhlff/models/level_f/nonlinear.py
-    line: 636
-    method: potential
-  - class: null
-    file: ./bhlff/models/level_f/nonlinear.py
-    line: 685
-    method: equations
-  - class: null
-    file: ./bhlff/models/level_e/performance_analysis.py
-    line: 172
+    file: ./bhlff/models/level_e/performance/scaling_analysis.py
+    line: 112
     method: power_law
   - class: null
-    file: ./bhlff/models/level_e/performance_analysis.py
-    line: 230
+    file: ./bhlff/models/level_e/performance/scaling_analysis.py
+    line: 170
     method: power_law
   - class: null
-    file: ./bhlff/models/level_e/performance_analysis.py
-    line: 288
+    file: ./bhlff/models/level_e/performance/scaling_analysis.py
+    line: 228
     method: power_law
-  - class: null
-    file: ./bhlff/models/level_e/performance_analysis.py
-    line: 554
-    method: memory_law
   - class: EnvelopeEffectiveMetric
     file: ./bhlff/models/level_g/cosmology.py
     line: 41
@@ -3769,10 +4279,12 @@ issues:
     method: __init__
   not_implemented_in_non_abstract: []
 summary:
-  classes_without_docstrings: 13
-  files_without_docstrings: 0
-  imports_in_middle: 1630
+  classes_without_docstrings: 4
+  files_too_large: 18
+  files_without_docstrings: 4
+  imports_in_middle: 1924
+  max_lines_limit: 600
   methods_with_pass: 0
-  methods_without_docstrings: 116
+  methods_without_docstrings: 83
   not_implemented_in_non_abstract: 0
-  total_issues: 1759
+  total_issues: 2033

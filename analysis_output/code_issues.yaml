@@ -39,16 +39,351 @@ issues:
   - class: MockSystem
     file: ./examples/level_g_example.py
     line: 174
+  files_too_large:
+  - exceeds_limit: 296
+    file: ./code_mapper.py
+    limit: 400
+    lines: 696
+  - exceeds_limit: 411
+    file: ./tests/integration/test_automated_testing_integration.py
+    limit: 400
+    lines: 811
+  - exceeds_limit: 282
+    file: ./tests/unit/test_level_g_validation.py
+    limit: 400
+    lines: 682
+  - exceeds_limit: 25
+    file: ./tests/unit/test_level_g_cosmology.py
+    limit: 400
+    lines: 425
+  - exceeds_limit: 46
+    file: ./tests/unit/test_level_g_astrophysics.py
+    limit: 400
+    lines: 446
+  - exceeds_limit: 576
+    file: ./tests/unit/test_automated_testing.py
+    limit: 400
+    lines: 976
+  - exceeds_limit: 111
+    file: ./tests/unit/test_level_g/test_vbp_envelope_physics.py
+    limit: 400
+    lines: 511
+  - exceeds_limit: 72
+    file: ./tests/unit/test_level_b/test_fundamental_properties.py
+    limit: 400
+    lines: 472
+  - exceeds_limit: 127
+    file: ./tests/unit/test_level_c/test_level_c_simple.py
+    limit: 400
+    lines: 527
+  - exceeds_limit: 147
+    file: ./tests/unit/test_level_d/test_level_d_models.py
+    limit: 400
+    lines: 547
+  - exceeds_limit: 73
+    file: ./tests/unit/test_models/test_level_b_power_law_core_fixes.py
+    limit: 400
+    lines: 473
+  - exceeds_limit: 180
+    file: ./tests/unit/test_level_e/test_soliton_physics.py
+    limit: 400
+    lines: 580
+  - exceeds_limit: 266
+    file: ./tests/unit/test_level_e/test_level_e_simple.py
+    limit: 400
+    lines: 666
+  - exceeds_limit: 129
+    file: ./tests/unit/test_level_e/test_soliton_topology_physics.py
+    limit: 400
+    lines: 529
+  - exceeds_limit: 109
+    file: ./tests/unit/test_level_e/test_soliton_energy_physics.py
+    limit: 400
+    lines: 509
+  - exceeds_limit: 185
+    file: ./tests/unit/test_level_f/test_collective.py
+    limit: 400
+    lines: 585
+  - exceeds_limit: 204
+    file: ./tests/unit/test_level_f/test_nonlinear.py
+    limit: 400
+    lines: 604
+  - exceeds_limit: 154
+    file: ./tests/unit/test_level_f/test_transitions.py
+    limit: 400
+    lines: 554
+  - exceeds_limit: 172
+    file: ./tests/unit/test_level_f/test_multi_particle.py
+    limit: 400
+    lines: 572
+  - exceeds_limit: 41
+    file: ./tests/unit/test_core/test_7d_physics.py
+    limit: 400
+    lines: 441
+  - exceeds_limit: 37
+    file: ./tests/unit/test_core/test_bvp_constants_comprehensive.py
+    limit: 400
+    lines: 437
+  - exceeds_limit: 91
+    file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+    limit: 400
+    lines: 491
+  - exceeds_limit: 77
+    file: ./tests/unit/test_level_a/test_reporting.py
+    limit: 400
+    lines: 477
+  - exceeds_limit: 27
+    file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+    limit: 400
+    lines: 427
+  - exceeds_limit: 97
+    file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+    limit: 400
+    lines: 497
+  - exceeds_limit: 128
+    file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+    limit: 400
+    lines: 528
+  - exceeds_limit: 333
+    file: ./bhlff/models/level_c/mode_beating_analysis.py
+    limit: 400
+    lines: 733
+  - exceeds_limit: 9
+    file: ./bhlff/models/level_c/boundaries.py
+    limit: 400
+    lines: 409
+  - exceeds_limit: 286
+    file: ./bhlff/models/level_c/quench_memory_analysis.py
+    limit: 400
+    lines: 686
+  - exceeds_limit: 204
+    file: ./bhlff/models/level_c/boundary_analysis.py
+    limit: 400
+    lines: 604
+  - exceeds_limit: 182
+    file: ./bhlff/models/level_c/level_c_integration.py
+    limit: 400
+    lines: 582
+  - exceeds_limit: 66
+    file: ./bhlff/models/level_c/abcd_model.py
+    limit: 400
+    lines: 466
+  - exceeds_limit: 59
+    file: ./bhlff/models/level_c/beating/beating_core_basic.py
+    limit: 400
+    lines: 459
+  - exceeds_limit: 47
+    file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py
+    limit: 400
+    lines: 447
+  - exceeds_limit: 122
+    file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py
+    limit: 400
+    lines: 522
+  - exceeds_limit: 354
+    file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
+    limit: 400
+    lines: 754
+  - exceeds_limit: 9
+    file: ./bhlff/models/level_c/memory/memory_analyzer.py
+    limit: 400
+    lines: 409
+  - exceeds_limit: 39
+    file: ./bhlff/models/level_c/resonators/resonator_analysis.py
+    limit: 400
+    lines: 439
+  - exceeds_limit: 136
+    file: ./bhlff/models/level_f/transitions.py
+    limit: 400
+    lines: 536
+  - exceeds_limit: 11
+    file: ./bhlff/models/level_f/bvp_integration.py
+    limit: 400
+    lines: 411
+  - exceeds_limit: 296
+    file: ./bhlff/models/level_f/nonlinear.py
+    limit: 400
+    lines: 696
+  - exceeds_limit: 462
+    file: ./bhlff/models/level_f/multi_particle.py
+    limit: 400
+    lines: 862
+  - exceeds_limit: 310
+    file: ./bhlff/models/level_f/collective.py
+    limit: 400
+    lines: 710
+  - exceeds_limit: 184
+    file: ./bhlff/models/level_d/projections.py
+    limit: 400
+    lines: 584
+  - exceeds_limit: 177
+    file: ./bhlff/models/level_d/streamlines.py
+    limit: 400
+    lines: 577
+  - exceeds_limit: 64
+    file: ./bhlff/models/level_d/superposition.py
+    limit: 400
+    lines: 464
+  - exceeds_limit: 129
+    file: ./bhlff/models/level_b/visualization.py
+    limit: 400
+    lines: 529
+  - exceeds_limit: 7
+    file: ./bhlff/models/level_b/node_analyzer.py
+    limit: 400
+    lines: 407
+  - exceeds_limit: 35
+    file: ./bhlff/models/level_b/power_law/critical_exponents.py
+    limit: 400
+    lines: 435
+  - exceeds_limit: 7
+    file: ./bhlff/models/level_b/node_analysis/topological_analysis.py
+    limit: 400
+    lines: 407
+  - exceeds_limit: 57
+    file: ./bhlff/models/level_e/defect_dynamics.py
+    limit: 400
+    lines: 457
+  - exceeds_limit: 4
+    file: ./bhlff/models/level_e/defect_implementations.py
+    limit: 400
+    lines: 404
+  - exceeds_limit: 213
+    file: ./bhlff/models/level_e/sensitivity_analysis.py
+    limit: 400
+    lines: 613
+  - exceeds_limit: 297
+    file: ./bhlff/models/level_e/phase_mapping.py
+    limit: 400
+    lines: 697
+  - exceeds_limit: 25
+    file: ./bhlff/models/level_e/bvp_integration.py
+    limit: 400
+    lines: 425
+  - exceeds_limit: 203
+    file: ./bhlff/models/level_e/level_e_experiments.py
+    limit: 400
+    lines: 603
+  - exceeds_limit: 404
+    file: ./bhlff/models/level_e/performance_analysis.py
+    limit: 400
+    lines: 804
+  - exceeds_limit: 15
+    file: ./bhlff/models/level_e/defect_interactions.py
+    limit: 400
+    lines: 415
+  - exceeds_limit: 182
+    file: ./bhlff/models/level_e/failure_detection.py
+    limit: 400
+    lines: 582
+  - exceeds_limit: 229
+    file: ./bhlff/models/level_e/robustness_tests.py
+    limit: 400
+    lines: 629
+  - exceeds_limit: 227
+    file: ./bhlff/models/level_e/discretization_effects.py
+    limit: 400
+    lines: 627
+  - exceeds_limit: 100
+    file: ./bhlff/models/level_g/gravity_curvature.py
+    limit: 400
+    lines: 500
+  - exceeds_limit: 201
+    file: ./bhlff/models/level_g/astrophysics.py
+    limit: 400
+    lines: 601
+  - exceeds_limit: 272
+    file: ./bhlff/models/level_g/evolution.py
+    limit: 400
+    lines: 672
+  - exceeds_limit: 288
+    file: ./bhlff/models/level_g/cosmology.py
+    limit: 400
+    lines: 688
+  - exceeds_limit: 407
+    file: ./bhlff/models/level_g/structure.py
+    limit: 400
+    lines: 807
+  - exceeds_limit: 22
+    file: ./bhlff/models/level_g/bvp_integration.py
+    limit: 400
+    lines: 422
+  - exceeds_limit: 57
+    file: ./bhlff/models/level_g/gravity_waves.py
+    limit: 400
+    lines: 457
+  - exceeds_limit: 213
+    file: ./bhlff/models/level_g/analysis.py
+    limit: 400
+    lines: 613
+  - exceeds_limit: 1070
+    file: ./bhlff/models/level_g/validation.py
+    limit: 400
+    lines: 1470
+  - exceeds_limit: 167
+    file: ./bhlff/models/level_g/gravity_einstein.py
+    limit: 400
+    lines: 567
+  - exceeds_limit: 451
+    file: ./bhlff/testing/automated_testing.py
+    limit: 400
+    lines: 851
+  - exceeds_limit: 923
+    file: ./bhlff/testing/automated_reporting.py
+    limit: 400
+    lines: 1323
+  - exceeds_limit: 791
+    file: ./bhlff/testing/quality_monitor.py
+    limit: 400
+    lines: 1191
+  - exceeds_limit: 4
+    file: ./bhlff/core/time/bvp_envelope_integrator.py
+    limit: 400
+    lines: 404
+  - exceeds_limit: 503
+    file: ./bhlff/core/bvp/physical_validator.py
+    limit: 400
+    lines: 903
+  - exceeds_limit: 485
+    file: ./bhlff/core/bvp/topological_charge_analyzer.py
+    limit: 400
+    lines: 885
+  - exceeds_limit: 50
+    file: ./bhlff/core/bvp/physical_validation_decorator.py
+    limit: 400
+    lines: 450
+  - exceeds_limit: 41
+    file: ./bhlff/core/bvp/envelope_equation/solver_core_basic.py
+    limit: 400
+    lines: 441
+  - exceeds_limit: 1
+    file: ./bhlff/core/bvp/envelope_equation/advanced/solver_advanced_core.py
+    limit: 400
+    lines: 401
+  - exceeds_limit: 135
+    file: ./bhlff/core/fft/spectral_derivatives_impl.py
+    limit: 400
+    lines: 535
+  - exceeds_limit: 33
+    file: ./bhlff/core/fft/unified_spectral_operations.py
+    limit: 400
+    lines: 433
+  - exceeds_limit: 19
+    file: ./bhlff/core/fft/fft_plan_7d.py
+    limit: 400
+    lines: 419
+  - exceeds_limit: 27
+    file: ./examples/level_g_example.py
+    limit: 400
+    lines: 427
   files_without_docstrings: []
   imports_in_middle:
   - file: ./code_mapper.py
-    line: 637
+    line: 401
   - file: ./code_mapper.py
-    line: 378
+    line: 481
   - file: ./code_mapper.py
-    line: 458
-  - file: ./code_mapper.py
-    line: 565
+    line: 591
   - file: ./setup.py
     line: 24
   - file: ./setup.py
@@ -978,9 +1313,9 @@ issues:
   - file: ./bhlff/models/level_f/multi_particle.py
     line: 32
   - file: ./bhlff/models/level_f/multi_particle.py
-    line: 427
+    line: 447
   - file: ./bhlff/models/level_f/multi_particle.py
-    line: 698
+    line: 778
   - file: ./bhlff/models/level_f/collective.py
     line: 27
   - file: ./bhlff/models/level_f/collective.py
@@ -1333,6 +1668,16 @@ issues:
     line: 29
   - file: ./bhlff/models/level_e/performance_analysis.py
     line: 30
+  - file: ./bhlff/models/level_e/performance_analysis.py
+    line: 699
+  - file: ./bhlff/models/level_e/performance_analysis.py
+    line: 700
+  - file: ./bhlff/models/level_e/performance_analysis.py
+    line: 701
+  - file: ./bhlff/models/level_e/performance_analysis.py
+    line: 702
+  - file: ./bhlff/models/level_e/performance_analysis.py
+    line: 703
   - file: ./bhlff/models/level_e/defect_interactions.py
     line: 24
   - file: ./bhlff/models/level_e/defect_interactions.py
@@ -1431,6 +1776,10 @@ issues:
     line: 23
   - file: ./bhlff/models/level_g/structure.py
     line: 24
+  - file: ./bhlff/models/level_g/structure.py
+    line: 512
+  - file: ./bhlff/models/level_g/structure.py
+    line: 777
   - file: ./bhlff/models/level_g/bvp_integration.py
     line: 27
   - file: ./bhlff/models/level_g/bvp_integration.py
@@ -3770,9 +4119,11 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 13
+  files_too_large: 84
   files_without_docstrings: 0
-  imports_in_middle: 1630
+  imports_in_middle: 1636
+  max_lines_limit: 400
   methods_with_pass: 0
   methods_without_docstrings: 116
   not_implemented_in_non_abstract: 0
-  total_issues: 1759
+  total_issues: 1849

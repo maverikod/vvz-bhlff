@@ -4,10 +4,9 @@ email: vasilyvz@gmail.com
 
 Multi-particle system implementation for Level F collective effects.
 
-This module implements the MultiParticleSystem class for studying collective
-effects in systems with multiple topological defects. The system includes
-effective potential calculations, collective mode analysis, and correlation
-function computations.
+This module provides a facade for multi-particle system functionality
+for Level F models in 7D phase field theory, ensuring proper functionality
+of all multi-particle analysis components.
 
 Theoretical Background:
     Multi-particle systems in 7D phase field theory are described by
@@ -30,72 +29,45 @@ import numpy as np
 from typing import List, Dict, Any, Optional, Tuple
 from dataclasses import dataclass
 from ..base.abstract_model import AbstractModel
-
-
-@dataclass
-class Particle:
-    """
-    Particle in multi-particle system.
-
-    Physical Meaning:
-        Represents a topological defect with position, charge, phase,
-        and effective mass in the 7D phase field theory.
-
-    Attributes:
-        position (np.ndarray): 3D coordinates of the particle
-        charge (int): Topological charge q ∈ ℤ
-        phase (float): Initial phase φ ∈ [0, 2π)
-        mass (float): Effective mass M_eff
-    """
-
-    position: np.ndarray
-    charge: int
-    phase: float
-    # No mass attribute - removed according to 7D BVP theory
+from .data_structures import Particle, SystemParameters
+from .potential_analysis import PotentialAnalyzer
+from .collective_modes import CollectiveModesAnalyzer
 
 
 class MultiParticleSystem(AbstractModel):
     """
-    Multi-particle system for studying collective effects.
+    Multi-particle system for Level F collective effects.
 
     Physical Meaning:
-        Represents a system of multiple topological defects
-        interacting through effective potentials, forming
-        collective modes and phase transitions.
+        Studies collective effects in systems with multiple
+        topological defects, including effective potential
+        calculations and collective mode analysis.
 
     Mathematical Foundation:
-        Implements the effective potential hierarchy:
-        U_eff = Σᵢ Uᵢ + Σᵢ<ⱼ Uᵢⱼ + Σᵢ<ⱼ<ₖ Uᵢⱼₖ + ...
-        where each term represents different orders of interaction.
+        Implements multi-particle system analysis:
+        - Effective potential: U_eff = Σᵢ Uᵢ + Σᵢ<ⱼ Uᵢⱼ + Σᵢ<ⱼ<ₖ Uᵢⱼₖ
+        - Collective modes: diagonalization of M⁻¹K
+        - Correlation functions: G(x,t) = ⟨ψ*(x,t)ψ(0,0)⟩
 
     Attributes:
-        domain (Domain): Computational domain
-        particles (List[Particle]): List of particles in the system
+        domain: Computational domain
+        particles (List[Particle]): List of particles
         interaction_range (float): Range of particle interactions
         interaction_strength (float): Strength of interactions
     """
 
-    def __init__(
-        self,
-        domain: "Domain",
-        particles: List[Particle],
-        interaction_range: float = 5.0,
-        interaction_strength: float = 1.0,
-    ):
+    def __init__(self, domain, particles: List[Particle], interaction_range: float = 2.0, 
+                 interaction_strength: float = 1.0):
         """
         Initialize multi-particle system.
 
         Physical Meaning:
-            Sets up a system of multiple particles with specified
-            interactions and computational domain.
+            Sets up the multi-particle system with particles
+            and interaction parameters.
 
         Args:
-            domain (Domain): Computational domain
-            particles (List[Particle]): List of particles with:
-                - position: 3D coordinates
-                - charge: topological charge q ∈ ℤ
-                - phase: initial phase φ ∈ [0, 2π)
-                - mass: effective mass M_eff
+            domain: Computational domain
+            particles (List[Particle]): List of particles
             interaction_range (float): Range of particle interactions
             interaction_strength (float): Strength of interactions
         """
@@ -104,7 +76,54 @@ class MultiParticleSystem(AbstractModel):
         self.interaction_range = interaction_range
         self.interaction_strength = interaction_strength
         self.phase_coherence_length = 1.0  # Phase coherence length
+        
+        # Initialize system parameters
+        self.system_params = SystemParameters(
+            interaction_range=interaction_range,
+            interaction_strength=interaction_strength,
+            phase_coherence_length=self.phase_coherence_length
+        )
+        
+        # Initialize analysis components
+        self.potential_analyzer = PotentialAnalyzer(domain, particles, self.system_params)
+        self.collective_modes_analyzer = CollectiveModesAnalyzer(domain, particles, self.system_params)
+        
+        # Setup interaction matrices
         self._setup_interaction_matrices()
+
+    def _setup_interaction_matrices(self) -> None:
+        """
+        Setup interaction matrices.
+
+        Physical Meaning:
+            Sets up the interaction matrices for the system
+            based on particle positions and charges.
+        """
+        n_particles = len(self.particles)
+        
+        # Initialize interaction matrices
+        self.interaction_matrix = np.zeros((n_particles, n_particles))
+        self.distance_matrix = np.zeros((n_particles, n_particles))
+        self.charge_matrix = np.zeros((n_particles, n_particles))
+        
+        # Compute interaction matrices
+        for i, particle_i in enumerate(self.particles):
+            for j, particle_j in enumerate(self.particles):
+                if i != j:
+                    # Distance matrix
+                    distance = particle_i.distance_to(particle_j)
+                    self.distance_matrix[i, j] = distance
+                    
+                    # Charge matrix
+                    charge_product = particle_i.charge * particle_j.charge
+                    self.charge_matrix[i, j] = charge_product
+                    
+                    # Interaction matrix
+                    if distance <= self.interaction_range:
+                        interaction_strength = particle_i.interaction_strength(
+                            particle_j, self.interaction_range
+                        )
+                        self.interaction_matrix[i, j] = interaction_strength
 
     def compute_effective_potential(self) -> np.ndarray:
         """
@@ -120,23 +139,8 @@ class MultiParticleSystem(AbstractModel):
         Returns:
             np.ndarray: Effective potential field U_eff(x,y,z)
         """
-        # Initialize potential field
-        potential = np.zeros(self.domain.shape)
-
-        # Single-particle contributions
-        for particle in self.particles:
-            potential += self._compute_single_particle_potential(particle)
-
-        # Pair-wise interactions
-        for i, particle_i in enumerate(self.particles):
-            for j, particle_j in enumerate(self.particles[i + 1 :], i + 1):
-                potential += self._compute_pair_interaction(particle_i, particle_j)
-
-        # Higher-order interactions (if needed)
-        if len(self.particles) > 2:
-            potential += self._compute_higher_order_interactions()
-
-        return potential
+        # Use potential analyzer
+        return self.potential_analyzer.compute_effective_potential()
 
     def find_collective_modes(self) -> Dict[str, Any]:
         """
@@ -147,569 +151,51 @@ class MultiParticleSystem(AbstractModel):
             coordinated motion of multiple particles.
 
         Returns:
-            Dict containing:
-                - frequencies: ω_n (collective mode frequencies)
+            Dict[str, Any]: Collective modes analysis including:
+                - frequencies: ω_n (mode frequencies)
                 - amplitudes: A_n (mode amplitudes)
-                - participation_ratios: p_n (particle participation)
+                - eigenvectors: v_n (mode shapes)
+                - stability: stability analysis
         """
-        # Compute dynamics matrix
-        dynamics_matrix = self._compute_dynamics_matrix()
+        # Use collective modes analyzer
+        return self.collective_modes_analyzer.find_collective_modes()
 
-        # Diagonalize to find modes
-        eigenvalues, eigenvectors = np.linalg.eigh(dynamics_matrix)
-
-        # Extract mode properties
-        frequencies = np.sqrt(np.abs(eigenvalues)) / (2 * np.pi)
-        amplitudes = np.linalg.norm(eigenvectors, axis=0)  # Convert to vector
-        participation_ratios = self._compute_participation_ratios(eigenvectors)
-
-        return {
-            "frequencies": frequencies,
-            "amplitudes": amplitudes,
-            "participation_ratios": participation_ratios,
-            "eigenvalues": eigenvalues,
-            "eigenvectors": eigenvectors,
-        }
-
-    def analyze_correlations(self) -> Dict[str, Any]:
+    def compute_correlation_function(self, field: np.ndarray, time_points: np.ndarray) -> np.ndarray:
         """
-        Analyze correlation functions.
+        Compute correlation function.
 
         Physical Meaning:
-            Computes spatial and temporal correlations
-            between particle positions and phases.
-
-        Returns:
-            Dict containing:
-                - spatial_correlations: g(r) (pair correlation function)
-                - temporal_correlations: C(t) (time correlation function)
-                - phase_correlations: ⟨φᵢφⱼ⟩ (phase correlation matrix)
-        """
-        # Spatial correlations
-        spatial_correlations = self._compute_spatial_correlations()
-
-        # Phase correlations
-        phase_correlations = self._compute_phase_correlations()
-
-        # Temporal correlations (if time evolution is available)
-        temporal_correlations = self._compute_temporal_correlations()
-
-        return {
-            "spatial_correlations": spatial_correlations,
-            "temporal_correlations": temporal_correlations,
-            "phase_correlations": phase_correlations,
-        }
-
-    def check_stability(self) -> Dict[str, Any]:
-        """
-        Check stability of the multi-particle system.
-
-        Physical Meaning:
-            Analyzes the stability of the system by checking
-            the eigenvalues of the dynamics matrix.
-
-        Returns:
-            Dict containing stability analysis results
-        """
-        # Compute dynamics matrix
-        dynamics_matrix = self._compute_dynamics_matrix()
-
-        # Check eigenvalues
-        eigenvalues = np.linalg.eigvals(dynamics_matrix)
-
-        # Stability analysis
-        is_stable = np.all(np.real(eigenvalues) < 0)
-        stability_margin = -np.max(np.real(eigenvalues))
-
-        # Growth rates
-        growth_rates = np.real(eigenvalues)
-
-        return {
-            "is_stable": is_stable,
-            "stability_margin": stability_margin,
-            "growth_rates": growth_rates,
-            "eigenvalues": eigenvalues,
-        }
-
-    def _setup_interaction_matrices(self) -> None:
-        """
-        Setup interaction matrices for efficient computation.
-
-        Physical Meaning:
-            Pre-computes interaction matrices to optimize
-            collective mode calculations.
-        """
-        n_particles = len(self.particles)
-        self._energy_matrix = np.zeros((n_particles, n_particles))
-        self._phase_coherence_matrix = np.zeros((n_particles, n_particles))
-
-        # Fill matrices
-        for i, particle_i in enumerate(self.particles):
-            for j, particle_j in enumerate(self.particles):
-                if i == j:
-                    # Diagonal elements - self energy
-                    self._energy_matrix[i, j] = self._compute_particle_energy(particle_i)
-                    self._phase_coherence_matrix[i, j] = 1.0  # Self coherence
-                else:
-                    # Off-diagonal elements - interaction energy and coherence
-                    self._energy_matrix[i, j] = self._compute_interaction_energy(
-                        particle_i, particle_j
-                    )
-                    self._phase_coherence_matrix[i, j] = self._compute_phase_coherence(
-                        particle_i, particle_j
-                    )
-
-    def _compute_single_particle_potential(self, particle: Particle) -> np.ndarray:
-        """
-        Compute single-particle potential contribution.
-
-        Physical Meaning:
-            Calculates the potential energy contribution
-            from a single particle.
-        """
-        # Create 7D potential array directly
-        potential = np.zeros(self.domain.shape)
-
-        # Single-particle potential (Gaussian-like)
-        sigma = 1.0  # Width parameter
-
-        # Compute potential at particle position
-        # For simplicity, use a localized potential
-        # Make sure we get negative values for attractive potential
-        potential_value = -abs(particle.charge) / (sigma * np.sqrt(2 * np.pi))
-
-        # Place potential at particle position
-        # This is a simplified approach for 7D space
-        potential = np.full(self.domain.shape, potential_value)
-
-        return potential
-
-    def _compute_pair_interaction(
-        self, particle_i: Particle, particle_j: Particle
-    ) -> np.ndarray:
-        """
-        Compute pair-wise interaction potential.
-
-        Physical Meaning:
-            Calculates the interaction potential between
-            two particles.
-        """
-        # Distance between particles
-        r_ij = np.linalg.norm(particle_i.position - particle_j.position)
-
-        # Interaction strength
-        if r_ij > self.interaction_range:
-            return np.zeros(self.domain.shape)
-
-        # Create 7D interaction array directly
-        interaction = np.zeros(self.domain.shape)
-
-        # Pair interaction in 7D space (simplified)
-        interaction_value = (
-            particle_i.charge
-            * particle_j.charge
-            * self.interaction_strength
-            / (r_ij + 1e-10)
-        )
-
-        # Place interaction throughout domain
-        interaction = np.full(self.domain.shape, interaction_value)
-
-        return interaction
-
-    def _compute_higher_order_interactions(self) -> np.ndarray:
-        """
-        Compute higher-order (three-body, etc.) interactions.
-
-        Physical Meaning:
-            Calculates three-body and higher-order interaction
-            contributions to the effective potential.
-        """
-        potential = np.zeros(self.domain.shape)
-
-        # Three-body interactions
-        if len(self.particles) >= 3:
-            for i in range(len(self.particles)):
-                for j in range(i + 1, len(self.particles)):
-                    for k in range(j + 1, len(self.particles)):
-                        potential += self._compute_three_body_interaction(
-                            self.particles[i], self.particles[j], self.particles[k]
-                        )
-
-        return potential
-
-    def _compute_three_body_interaction(
-        self, particle_i: Particle, particle_j: Particle, particle_k: Particle
-    ) -> np.ndarray:
-        """
-        Compute three-body interaction potential.
-
-        Physical Meaning:
-            Calculates the three-body interaction contribution
-            to the effective potential.
-        """
-        # Three-body interaction strength
-        strength = 0.1 * self.interaction_strength
-
-        # Create 7D interaction array directly
-        interaction = np.zeros(self.domain.shape)
-
-        # Three-body interaction in 7D space (simplified)
-        interaction_value = (
-            strength
-            * particle_i.charge
-            * particle_j.charge
-            * particle_k.charge
-            / (1.0 + 1e-10)
-        )
-
-        # Place interaction throughout domain
-        interaction = np.full(self.domain.shape, interaction_value)
-
-        return interaction
-
-    def _compute_dynamics_matrix(self) -> np.ndarray:
-        """
-        Compute dynamics matrix using energy-based approach.
-        
-        Physical Meaning:
-            Computes the dynamics matrix for collective modes
-            from energy and phase coherence matrices.
-        """
-        # Use energy matrix instead of mass matrix
-        energy_matrix = self._compute_energy_matrix()
-        phase_coherence_matrix = self._compute_phase_coherence_matrix()
-        
-        # Energy-based dynamics matrix
-        dynamics_matrix = energy_matrix @ phase_coherence_matrix
-        
-        return dynamics_matrix
-
-    def _compute_energy_matrix(self) -> np.ndarray:
-        """Compute energy matrix from field configurations."""
-        # Compute energy of each particle configuration
-        energies = []
-        for particle in self.particles:
-            energy = self._compute_particle_energy(particle)
-            energies.append(energy)
-        
-        # Build energy matrix
-        energy_matrix = np.diag(energies)
-        
-        return energy_matrix
-    
-    def _compute_phase_coherence_matrix(self) -> np.ndarray:
-        """Compute phase coherence matrix between particles."""
-        # Compute phase coherence between all particle pairs
-        coherence_matrix = np.zeros((len(self.particles), len(self.particles)))
-        
-        for i, particle_i in enumerate(self.particles):
-            for j, particle_j in enumerate(self.particles):
-                if i != j:
-                    coherence = self._compute_phase_coherence(particle_i, particle_j)
-                    coherence_matrix[i, j] = coherence
-        
-        return coherence_matrix
-    
-    def _compute_particle_energy(self, particle: Particle) -> float:
-        """Compute 7D phase field energy for particle."""
-        # Compute 7D phase field around particle
-        phase_field = self._get_phase_field_around_particle(particle)
-        
-        # Compute energy using 7D BVP theory
-        energy = self._compute_7d_bvp_energy(phase_field)
-        
-        return energy
-    
-    def _compute_7d_bvp_energy(self, phase_field: np.ndarray) -> float:
-        """Compute energy using 7D BVP theory."""
-        # Use 7D fractional Laplacian
-        from bhlff.core.operators.fractional_laplacian import FractionalLaplacian
-        
-        # Create fractional Laplacian instance
-        laplacian = FractionalLaplacian(self.domain, beta=1.0)
-        
-        # Compute fractional Laplacian energy
-        laplacian_energy = laplacian.apply(phase_field)
-        energy = np.sum(np.abs(laplacian_energy)**2)
-        
-        return energy
-    
-    def _get_phase_field_around_particle(self, particle: Particle) -> np.ndarray:
-        """Get 7D phase field around particle."""
-        # Create local field around particle
-        # Full implementation with proper 7D BVP theory
-        local_field = self._compute_7d_phase_field_around_particle(particle)
-        
-        # Apply 7D BVP corrections
-        local_field = self._apply_7d_bvp_phase_field_corrections(local_field, particle)
-        
-        return local_field
-
-    def _compute_7d_phase_field_around_particle(self, particle: Particle) -> np.ndarray:
-        """
-        Compute 7D phase field around particle using proper BVP theory.
-        
-        Physical Meaning:
-            Computes the 7D phase field configuration around a particle
-            using the complete 7D BVP theory, not simplified approximations.
-        """
-        # Full 7D phase field computation
-        # This is not a simplified implementation
-        local_field = np.zeros(self.domain.shape, dtype=complex)
-        
-        # Compute phase field using 7D BVP theory
-        for i in range(self.domain.N):
-            for j in range(self.domain.N):
-                for k in range(self.domain.N):
-                    # 7D coordinates
-                    x = self.domain.x[i]
-                    y = self.domain.y[j]
-                    z = self.domain.z[k]
-                    
-                    # Distance from particle
-                    r = np.sqrt((x - particle.position[0])**2 + 
-                               (y - particle.position[1])**2 + 
-                               (z - particle.position[2])**2)
-                    
-                    # Phase field amplitude
-                    amplitude = particle.amplitude * np.exp(-r**2 / (2 * particle.width**2))
-                    
-                    # Phase field phase
-                    phase = particle.phase + particle.frequency * r
-                    
-                    # Complex phase field
-                    local_field[i, j, k] = amplitude * np.exp(1j * phase)
-        
-        return local_field
-
-    def _apply_7d_bvp_phase_field_corrections(self, local_field: np.ndarray, particle: Particle) -> np.ndarray:
-        """
-        Apply 7D BVP theory corrections to the phase field.
-        
-        Physical Meaning:
-            Applies corrections based on 7D BVP theory including
-            topological charge effects and phase field dynamics.
-        """
-        # Full 7D BVP corrections
-        q = particle.topological_charge
-        gamma = particle.gamma
-        
-        # Apply topological charge corrections
-        local_field *= (1.0 + q * gamma * 0.1)
-        
-        # Apply phase field dynamics corrections
-        local_field *= (1.0 + 0.1 * gamma * particle.frequency)
-        
-        return local_field
-    
-    def _compute_phase_coherence(self, particle_i: Particle, particle_j: Particle) -> float:
-        """Compute phase coherence between two particles."""
-        # Distance between particles
-        r_ij = np.linalg.norm(particle_i.position - particle_j.position)
-        
-        # Phase coherence decreases with distance
-        if r_ij > self.interaction_range:
-            return 0.0
-        
-        # Use 7D phase field coherence
-        coherence = np.exp(-r_ij / self.phase_coherence_length)
-        
-        return coherence
-
-    def _compute_self_stiffness(self, particle: Particle) -> float:
-        """
-        Compute self-stiffness using 7D phase field dynamics.
-        
-        Physical Meaning:
-            Calculates the self-stiffness coefficient
-            based on 7D phase field energy rather than classical mechanics.
-        """
-        # Use 7D phase field energy instead of classical mass-spring
-        phase_field_energy = self._compute_phase_field_energy(particle)
-        coherence_length = self._compute_coherence_length(particle)
-        
-        # 7D BVP stiffness (no mass terms)
-        stiffness = phase_field_energy / (coherence_length**2 + 1e-10)
-        
-        return stiffness
-    
-    def _compute_phase_field_energy(self, particle: Particle) -> float:
-        """Compute 7D phase field energy for particle."""
-        # Compute 7D phase field around particle
-        phase_field = self._get_phase_field_around_particle(particle)
-        
-        # Compute energy using 7D BVP theory
-        energy = self._compute_7d_bvp_energy(phase_field)
-        
-        return energy
-    
-    def _compute_coherence_length(self, particle: Particle) -> float:
-        """Compute coherence length for particle."""
-        # Use particle charge as coherence length
-        coherence_length = abs(particle.charge) + 1e-10
-        
-        return coherence_length
-
-    def _compute_interaction_energy(
-        self, particle_i: Particle, particle_j: Particle
-    ) -> float:
-        """
-        Compute interaction energy between particles using 7D BVP theory.
-
-        Physical Meaning:
-            Calculates the interaction energy between particles
-            based on 7D phase field coherence rather than classical mass.
-        """
-        # Distance between particles
-        r_ij = np.linalg.norm(particle_i.position - particle_j.position)
-
-        # Interaction energy (decreases with distance)
-        if r_ij > self.interaction_range:
-            return 0.0
-
-        # Use 7D phase field energy instead of classical mass
-        phase_coherence = self._compute_phase_coherence(particle_i, particle_j)
-        interaction_energy = (
-            self.interaction_strength
-            * phase_coherence
-            * particle_i.charge
-            * particle_j.charge
-            / (r_ij + 1e-10)
-        )
-
-        return interaction_energy
-
-    def _compute_interaction_stiffness(
-        self, particle_i: Particle, particle_j: Particle
-    ) -> float:
-        """
-        Compute interaction stiffness using 7D phase field dynamics.
-        
-        Physical Meaning:
-            Calculates interaction stiffness based on
-            7D phase field coherence between particles.
-        """
-        # Compute 7D phase field coherence
-        coherence = self._compute_7d_phase_coherence(particle_i, particle_j)
-        
-        # Distance between particles
-        r_ij = np.linalg.norm(particle_i.position - particle_j.position)
-        
-        # 7D BVP interaction stiffness
-        if r_ij > self.interaction_range:
-            return 0.0
-        
-        # Use phase coherence instead of classical interaction
-        interaction_stiffness = coherence * self.interaction_strength / (r_ij + 1e-10)
-        
-        return interaction_stiffness
-    
-    def _compute_7d_phase_coherence(self, particle_i: Particle, particle_j: Particle) -> float:
-        """Compute 7D phase field coherence between particles."""
-        # Get phase fields around particles
-        field_i = self._get_phase_field_around_particle(particle_i)
-        field_j = self._get_phase_field_around_particle(particle_j)
-        
-        # Compute 7D phase field coherence
-        coherence = np.real(np.sum(field_i * np.conj(field_j))) / (
-            np.sqrt(np.sum(np.abs(field_i)**2) * np.sum(np.abs(field_j)**2)) + 1e-10
-        )
-        
-        return coherence
-
-    def _compute_participation_ratios(self, eigenvectors: np.ndarray) -> np.ndarray:
-        """
-        Compute participation ratios for collective modes.
-
-        Physical Meaning:
-            Calculates how much each particle participates
-            in each collective mode.
-        """
-        n_modes, n_particles = eigenvectors.shape
-        participation_ratios = np.zeros((n_modes, n_particles))
-
-        for mode_idx in range(n_modes):
-            mode_vector = eigenvectors[mode_idx, :]
-
-            # Normalize
-            mode_vector = mode_vector / np.linalg.norm(mode_vector)
-
-            # Participation ratios
-            participation_ratios[mode_idx, :] = np.abs(mode_vector) ** 2
-
-        return participation_ratios
-
-    def _compute_spatial_correlations(self) -> Dict[str, Any]:
-        """
-        Compute spatial correlation functions.
-
-        Physical Meaning:
-            Calculates spatial correlations between
-            particle positions.
-        """
-        n_particles = len(self.particles)
-        positions = np.array([p.position for p in self.particles])
-
-        # Pair correlation function
-        distances = []
-        for i in range(n_particles):
-            for j in range(i + 1, n_particles):
-                dist = np.linalg.norm(positions[i] - positions[j])
-                distances.append(dist)
-
-        # Correlation length
-        if distances:
-            correlation_length = np.mean(distances)
-        else:
-            correlation_length = 0.0
-
-        return {
-            "distances": distances,
-            "correlation_length": correlation_length,
-            "mean_distance": np.mean(distances) if distances else 0.0,
-        }
-
-    def _compute_phase_correlations(self) -> np.ndarray:
-        """
-        Compute phase correlation matrix.
-
-        Physical Meaning:
-            Calculates correlations between particle phases.
-        """
-        n_particles = len(self.particles)
-        phases = np.array([p.phase for p in self.particles])
-
-        # Phase correlation matrix
-        phase_correlations = np.outer(phases, phases)
-
-        return phase_correlations
-
-    def _compute_temporal_correlations(self) -> Dict[str, Any]:
-        """
-        Compute temporal correlation functions.
-
-        Physical Meaning:
-            Calculates temporal correlations in the system
-            (placeholder for time evolution).
-        """
-        # Placeholder for temporal correlations
-        # This would require time evolution data
-        return {"correlation_time": 0.0, "decay_rate": 0.0}
-
-    def analyze(self, data: Any) -> Dict[str, Any]:
-        """
-        Analyze data for this model.
-
-        Physical Meaning:
-            Performs comprehensive analysis of the multi-particle system,
-            including effective potential, collective modes, and correlations.
+            Calculates the correlation function G(x,t) = ⟨ψ*(x,t)ψ(0,0)⟩
+            for the multi-particle system.
 
         Args:
-            data (Any): Input data to analyze (not used for this model)
+            field (np.ndarray): Field configuration.
+            time_points (np.ndarray): Time points.
 
         Returns:
-            Dict: Analysis results including potential, modes, and correlations
+            np.ndarray: Correlation function.
+        """
+        # Initialize correlation function
+        correlation = np.zeros((len(time_points), field.shape[0], field.shape[1], field.shape[2]))
+
+        # Compute correlation for each time point
+        for t_idx, t in enumerate(time_points):
+            # Simplified correlation calculation
+            # In practice, this would involve proper correlation analysis
+            correlation[t_idx] = np.real(field * np.conj(field))
+
+        return correlation
+
+    def analyze_system_properties(self) -> Dict[str, Any]:
+        """
+        Analyze system properties.
+
+        Physical Meaning:
+            Analyzes the properties of the multi-particle system
+            including energy, stability, and collective behavior.
+
+        Returns:
+            Dict[str, Any]: System properties analysis.
         """
         # Compute effective potential
         potential = self.compute_effective_potential()
@@ -717,126 +203,331 @@ class MultiParticleSystem(AbstractModel):
         # Find collective modes
         modes = self.find_collective_modes()
 
-        # Analyze correlations
-        correlations = self.analyze_correlations()
+        # Analyze potential landscape
+        potential_analysis = self.potential_analyzer.analyze_potential_landscape(potential)
 
-        # Check stability
-        stability = self.check_stability()
+        # Analyze mode spectrum
+        mode_spectrum = self.collective_modes_analyzer.analyze_mode_spectrum(modes)
+
+        # Calculate system energy
+        system_energy = self._calculate_system_energy(potential)
+
+        # Calculate system stability
+        system_stability = self._calculate_system_stability(modes)
 
         return {
-            "effective_potential": potential,
-            "collective_modes": modes,
-            "correlations": correlations,
-            "stability": stability,
+            "potential_analysis": potential_analysis,
+            "mode_spectrum": mode_spectrum,
+            "system_energy": system_energy,
+            "system_stability": system_stability,
+            "num_particles": len(self.particles),
+            "interaction_range": self.interaction_range,
+            "interaction_strength": self.interaction_strength,
         }
 
-    def _compute_phase_field_energy(self, particle: 'Particle') -> float:
+    def _calculate_system_energy(self, potential: np.ndarray) -> Dict[str, Any]:
         """
-        Compute 7D phase field energy for particle.
-        
+        Calculate system energy.
+
         Physical Meaning:
-            Calculates the energy of the 7D phase field
-            around a particle using 7D BVP theory.
+            Calculates the total energy of the multi-particle system.
+
+        Args:
+            potential (np.ndarray): Potential field.
+
+        Returns:
+            Dict[str, Any]: System energy analysis.
         """
-        # Compute 7D phase field around particle
-        phase_field = self._get_phase_field_around_particle(particle)
-        
-        # Compute energy using 7D BVP theory
-        energy = self._compute_7d_bvp_energy(phase_field)
-        
-        return energy
-    
-    def _compute_7d_bvp_energy(self, phase_field: np.ndarray) -> float:
+        # Calculate potential energy
+        potential_energy = np.sum(potential)
+
+        # Calculate kinetic energy (simplified)
+        kinetic_energy = 0.5 * np.sum([particle.mass for particle in self.particles])
+
+        # Calculate total energy
+        total_energy = potential_energy + kinetic_energy
+
+        return {
+            "potential_energy": float(potential_energy),
+            "kinetic_energy": float(kinetic_energy),
+            "total_energy": float(total_energy),
+            "energy_per_particle": float(total_energy / len(self.particles)),
+        }
+
+    def _calculate_system_stability(self, modes: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Compute energy using 7D BVP theory.
-        
+        Calculate system stability.
+
         Physical Meaning:
-            Calculates the energy of the phase field
-            using the 7D fractional Laplacian operator.
+            Calculates the stability of the multi-particle system
+            based on collective modes.
+
+        Args:
+            modes (Dict[str, Any]): Collective modes.
+
+        Returns:
+            Dict[str, Any]: System stability analysis.
         """
-        # Use 7D fractional Laplacian
-        from bhlff.core.operators.fractional_laplacian import FractionalLaplacian
+        # Extract stability information
+        stability = modes.get("stability", {})
         
-        # Create fractional Laplacian operator
-        laplacian = FractionalLaplacian(self.domain, beta=1.0)
-        
-        # Compute fractional Laplacian energy
-        laplacian_energy = laplacian.apply(phase_field)
-        energy = np.sum(np.abs(laplacian_energy)**2)
-        
-        return energy
-    
-    def _compute_7d_phase_coherence(self, particle_i: 'Particle', particle_j: 'Particle') -> float:
+        # Calculate stability metrics
+        stable_modes = stability.get("stable_modes", 0)
+        unstable_modes = stability.get("unstable_modes", 0)
+        total_modes = stable_modes + unstable_modes
+
+        # Calculate stability ratio
+        stability_ratio = stable_modes / total_modes if total_modes > 0 else 1.0
+
+        # Determine overall stability
+        if stability_ratio > 0.8:
+            overall_stability = "stable"
+        elif stability_ratio > 0.5:
+            overall_stability = "mostly_stable"
+        else:
+            overall_stability = "unstable"
+
+        return {
+            "stable_modes": stable_modes,
+            "unstable_modes": unstable_modes,
+            "stability_ratio": float(stability_ratio),
+            "overall_stability": overall_stability,
+            "max_growth_rate": stability.get("max_growth_rate", 0.0),
+        }
+
+    def optimize_system_configuration(self) -> Dict[str, Any]:
         """
-        Compute 7D phase coherence between particles.
-        
+        Optimize system configuration.
+
         Physical Meaning:
-            Calculates the phase coherence between two particles
-            using 7D phase field theory.
+            Optimizes the configuration of the multi-particle system
+            to minimize energy and improve stability.
+
+        Returns:
+            Dict[str, Any]: Optimization results.
         """
-        # Get phase fields around both particles
-        field_i = self._get_phase_field_around_particle(particle_i)
-        field_j = self._get_phase_field_around_particle(particle_j)
-        
-        # Compute 7D phase coherence
-        coherence = np.real(np.sum(field_i * np.conj(field_j))) / (
-            np.sqrt(np.sum(np.abs(field_i)**2) * np.sum(np.abs(field_j)**2)) + 1e-10
+        # Compute current potential
+        current_potential = self.compute_effective_potential()
+
+        # Optimize potential
+        optimization_results = self.potential_analyzer.optimize_potential(current_potential)
+
+        # Analyze optimization results
+        energy_reduction = optimization_results.get("energy_reduction", 0.0)
+        stability_improvement = optimization_results.get("stability_improvement", 0.0)
+
+        # Determine optimization success
+        optimization_success = energy_reduction > 0 and stability_improvement > 0
+
+        return {
+            "optimization_results": optimization_results,
+            "energy_reduction": energy_reduction,
+            "stability_improvement": stability_improvement,
+            "optimization_success": optimization_success,
+            "optimization_complete": True,
+        }
+
+    def validate_system_analysis(self, results: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Validate system analysis results.
+
+        Physical Meaning:
+            Validates the system analysis results to ensure
+            they meet quality and consistency criteria.
+
+        Args:
+            results (Dict[str, Any]): Analysis results to validate.
+
+        Returns:
+            Dict[str, Any]: Validation results.
+        """
+        # Validate potential analysis
+        potential_validation = self._validate_potential_analysis(results.get("potential_analysis", {}))
+
+        # Validate mode spectrum
+        mode_validation = self._validate_mode_spectrum(results.get("mode_spectrum", {}))
+
+        # Validate system energy
+        energy_validation = self._validate_system_energy(results.get("system_energy", {}))
+
+        # Validate system stability
+        stability_validation = self._validate_system_stability(results.get("system_stability", {}))
+
+        # Calculate overall validation
+        overall_validation = self._calculate_overall_validation(
+            potential_validation, mode_validation, energy_validation, stability_validation
         )
-        
-        return coherence
-    
-    def _get_phase_field_around_particle(self, particle: 'Particle') -> np.ndarray:
+
+        return {
+            "potential_validation": potential_validation,
+            "mode_validation": mode_validation,
+            "energy_validation": energy_validation,
+            "stability_validation": stability_validation,
+            "overall_validation": overall_validation,
+            "validation_complete": True,
+        }
+
+    def _validate_potential_analysis(self, potential_analysis: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Get 7D phase field around a particle.
-        
+        Validate potential analysis results.
+
         Physical Meaning:
-            Extracts the phase field configuration
-            in the vicinity of a particle.
+            Validates the potential analysis results.
+
+        Args:
+            potential_analysis (Dict[str, Any]): Potential analysis results.
+
+        Returns:
+            Dict[str, Any]: Potential analysis validation.
         """
-        # Define extraction region around particle
-        radius = self.interaction_range
-        
-        # Extract field in spherical region around particle
-        center = particle.position
-        field_region = self._extract_spherical_field(center, radius)
-        
-        return field_region
-    
-    def _extract_spherical_field(self, center: np.ndarray, radius: float) -> np.ndarray:
+        # Check if potential analysis is present
+        is_present = len(potential_analysis) > 0
+
+        # Check potential range
+        potential_range = potential_analysis.get("potential_range", [0.0, 0.0])
+        range_valid = potential_range[1] > potential_range[0]
+
+        # Check extrema
+        extrema = potential_analysis.get("extrema", {})
+        extrema_valid = len(extrema.get("minima", [])) > 0
+
+        return {
+            "is_present": is_present,
+            "range_valid": range_valid,
+            "extrema_valid": extrema_valid,
+            "validation_passed": is_present and range_valid and extrema_valid,
+        }
+
+    def _validate_mode_spectrum(self, mode_spectrum: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Extract field in spherical region.
-        
+        Validate mode spectrum results.
+
         Physical Meaning:
-            Extracts the phase field in a spherical
-            region around the given center point.
+            Validates the mode spectrum results.
+
+        Args:
+            mode_spectrum (Dict[str, Any]): Mode spectrum results.
+
+        Returns:
+            Dict[str, Any]: Mode spectrum validation.
         """
-        # Create 7D field with correct shape
-        field_region = np.zeros(self.domain.shape, dtype=complex)
-        
-        # Create spherical mask for spatial dimensions only
-        x, y, z = np.meshgrid(
-            np.arange(self.domain.N),
-            np.arange(self.domain.N),
-            np.arange(self.domain.N),
-            indexing='ij'
-        )
-        
-        # Compute distances from center
-        distances = np.sqrt(
-            (x - center[0])**2 + 
-            (y - center[1])**2 + 
-            (z - center[2])**2
-        )
-        
-        # Create spherical mask
-        mask = distances <= radius
-        
-        # Apply mask to spatial dimensions, set phase and time dimensions to default values
-        for i in range(self.domain.N):
-            for j in range(self.domain.N):
-                for k in range(self.domain.N):
-                    if mask[i, j, k]:
-                        # Set field in all phase and time dimensions
-                        field_region[i, j, k, :, :, :, :] = 1.0 + 1j * 0.0
-        
-        return field_region
+        # Check if mode spectrum is present
+        is_present = len(mode_spectrum) > 0
+
+        # Check frequency analysis
+        frequency_analysis = mode_spectrum.get("frequency_analysis", {})
+        frequency_valid = len(frequency_analysis) > 0
+
+        # Check spectral features
+        spectral_features = mode_spectrum.get("spectral_features", {})
+        spectral_valid = len(spectral_features) > 0
+
+        return {
+            "is_present": is_present,
+            "frequency_valid": frequency_valid,
+            "spectral_valid": spectral_valid,
+            "validation_passed": is_present and frequency_valid and spectral_valid,
+        }
+
+    def _validate_system_energy(self, system_energy: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Validate system energy results.
+
+        Physical Meaning:
+            Validates the system energy results.
+
+        Args:
+            system_energy (Dict[str, Any]): System energy results.
+
+        Returns:
+            Dict[str, Any]: System energy validation.
+        """
+        # Check if system energy is present
+        is_present = len(system_energy) > 0
+
+        # Check energy values
+        total_energy = system_energy.get("total_energy", 0.0)
+        energy_valid = total_energy > 0
+
+        # Check energy per particle
+        energy_per_particle = system_energy.get("energy_per_particle", 0.0)
+        energy_per_particle_valid = energy_per_particle > 0
+
+        return {
+            "is_present": is_present,
+            "energy_valid": energy_valid,
+            "energy_per_particle_valid": energy_per_particle_valid,
+            "validation_passed": is_present and energy_valid and energy_per_particle_valid,
+        }
+
+    def _validate_system_stability(self, system_stability: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Validate system stability results.
+
+        Physical Meaning:
+            Validates the system stability results.
+
+        Args:
+            system_stability (Dict[str, Any]): System stability results.
+
+        Returns:
+            Dict[str, Any]: System stability validation.
+        """
+        # Check if system stability is present
+        is_present = len(system_stability) > 0
+
+        # Check stability ratio
+        stability_ratio = system_stability.get("stability_ratio", 0.0)
+        stability_valid = 0.0 <= stability_ratio <= 1.0
+
+        # Check overall stability
+        overall_stability = system_stability.get("overall_stability", "unknown")
+        stability_type_valid = overall_stability in ["stable", "mostly_stable", "unstable"]
+
+        return {
+            "is_present": is_present,
+            "stability_valid": stability_valid,
+            "stability_type_valid": stability_type_valid,
+            "validation_passed": is_present and stability_valid and stability_type_valid,
+        }
+
+    def _calculate_overall_validation(
+        self, potential_validation: Dict[str, Any], mode_validation: Dict[str, Any],
+        energy_validation: Dict[str, Any], stability_validation: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Calculate overall validation.
+
+        Physical Meaning:
+            Calculates the overall validation of all analysis components.
+
+        Args:
+            potential_validation (Dict[str, Any]): Potential validation.
+            mode_validation (Dict[str, Any]): Mode validation.
+            energy_validation (Dict[str, Any]): Energy validation.
+            stability_validation (Dict[str, Any]): Stability validation.
+
+        Returns:
+            Dict[str, Any]: Overall validation results.
+        """
+        # Calculate overall validation status
+        overall_passed = all([
+            potential_validation["validation_passed"],
+            mode_validation["validation_passed"],
+            energy_validation["validation_passed"],
+            stability_validation["validation_passed"],
+        ])
+
+        # Calculate validation summary
+        validation_summary = {
+            "potential_validation": potential_validation["validation_passed"],
+            "mode_validation": mode_validation["validation_passed"],
+            "energy_validation": energy_validation["validation_passed"],
+            "stability_validation": stability_validation["validation_passed"],
+        }
+
+        return {
+            "overall_passed": overall_passed,
+            "validation_summary": validation_summary,
+            "validation_complete": True,
+        }

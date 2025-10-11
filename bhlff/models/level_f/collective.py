@@ -4,10 +4,9 @@ email: vasilyvz@gmail.com
 
 Collective excitations implementation for Level F models.
 
-This module implements the CollectiveExcitations class for studying
-collective excitations in multi-particle systems. It includes methods
-for exciting the system with external fields, analyzing responses,
-and computing dispersion relations.
+This module provides a facade for collective excitations functionality
+for Level F models in 7D phase field theory, ensuring proper functionality
+of all collective excitation analysis components.
 
 Theoretical Background:
     Collective excitations in multi-particle systems are described by
@@ -27,7 +26,8 @@ Example:
 import numpy as np
 from typing import Dict, Any, Optional, Tuple
 from ..base.abstract_model import AbstractModel
-from ...core.bvp.boundary.step_resonator import FrequencyDependentResonator, CascadeResonatorFilter
+from .collective.excitation_analysis import ExcitationAnalyzer
+from .collective.dispersion_analysis import DispersionAnalyzer
 
 
 class CollectiveExcitations(AbstractModel):
@@ -78,6 +78,10 @@ class CollectiveExcitations(AbstractModel):
         self.excitation_type = excitation_params.get("type", "harmonic")
         self.duration = excitation_params.get("duration", 100.0)
 
+        # Initialize analysis components
+        self.excitation_analyzer = ExcitationAnalyzer(system, excitation_params)
+        self.dispersion_analyzer = DispersionAnalyzer(system)
+
         # Setup analysis parameters
         self._setup_analysis_parameters()
 
@@ -95,14 +99,7 @@ class CollectiveExcitations(AbstractModel):
         Returns:
             np.ndarray: System response R(x,t)
         """
-        if self.excitation_type == "harmonic":
-            return self._harmonic_excitation(external_field)
-        elif self.excitation_type == "impulse":
-            return self._impulse_excitation(external_field)
-        elif self.excitation_type == "sweep":
-            return self._frequency_sweep_excitation(external_field)
-        else:
-            raise ValueError(f"Unknown excitation type: {self.excitation_type}")
+        return self.excitation_analyzer.excite_system(external_field)
 
     def analyze_response(self, response: np.ndarray) -> Dict[str, Any]:
         """
@@ -122,30 +119,7 @@ class CollectiveExcitations(AbstractModel):
                 - damping: γ_n (damping rates)
                 - participation: p_n (particle participation)
         """
-        # FFT analysis
-        response_fft = np.fft.fft(response, axis=-1)
-        frequencies = np.fft.fftfreq(response.shape[-1], self.dt)
-
-        # Find spectral peaks
-        peaks = self._find_spectral_peaks(np.abs(response_fft), frequencies)
-
-        # Analyze step resonator transmission
-        transmission_analysis = self._analyze_step_resonator_transmission(response)
-
-        # Compute participation ratios
-        participation = self._compute_participation_ratios(response)
-
-        # Quality factors
-        quality_factors = self._compute_quality_factors(peaks, transmission_analysis)
-
-        return {
-            "frequencies": frequencies,
-            "peaks": peaks,
-            "transmission_analysis": transmission_analysis,
-            "participation": participation,
-            "quality_factors": quality_factors,
-            "spectrum": response_fft,
-        }
+        return self.excitation_analyzer.analyze_response(response)
 
     def compute_dispersion_relations(self) -> Dict[str, Any]:
         """
@@ -162,38 +136,7 @@ class CollectiveExcitations(AbstractModel):
                 - group_velocities: v_g = dω/dk
                 - phase_velocities: v_φ = ω/k
         """
-        # Create wave vector grid
-        k_values = np.linspace(0, self.k_max, self.n_k_points)
-
-        # Compute frequencies for each k
-        frequencies = []
-        group_velocities = []
-        phase_velocities = []
-
-        for k in k_values:
-            # Solve dispersion equation
-            omega = self._solve_dispersion_equation(k)
-            frequencies.append(omega)
-
-            # Compute group velocity
-            v_g = self._compute_group_velocity(k, omega)
-            group_velocities.append(v_g)
-
-            # Compute phase velocity
-            v_phi = omega / k if k > 0 else 0
-            phase_velocities.append(v_phi)
-
-        # Fit dispersion relation
-        frequencies_array = np.array(frequencies)
-        dispersion_fit = self._fit_dispersion_relation(k_values, frequencies_array)
-
-        return {
-            "k_values": k_values,
-            "frequencies": np.array(frequencies),
-            "group_velocities": np.array(group_velocities),
-            "phase_velocities": np.array(phase_velocities),
-            "dispersion_fit": dispersion_fit,
-        }
+        return self.dispersion_analyzer.compute_dispersion_relations()
 
     def compute_susceptibility(self, frequencies: np.ndarray) -> np.ndarray:
         """
@@ -209,19 +152,7 @@ class CollectiveExcitations(AbstractModel):
         Returns:
             np.ndarray: Susceptibility χ(ω)
         """
-        # Get collective modes
-        modes = self.system.find_collective_modes()
-        mode_frequencies = modes["frequencies"]
-        mode_amplitudes = modes["amplitudes"]
-
-        # Compute susceptibility
-        susceptibility = np.zeros_like(frequencies, dtype=complex)
-
-        for i, (omega_n, A_n) in enumerate(zip(mode_frequencies, mode_amplitudes)):
-            # 7D BVP response without damping
-            susceptibility += A_n / (omega_n**2 - frequencies**2)
-
-        return susceptibility
+        return self.dispersion_analyzer.compute_susceptibility(frequencies)
 
     def _setup_analysis_parameters(self) -> None:
         """
@@ -236,359 +167,6 @@ class CollectiveExcitations(AbstractModel):
         self.n_k_points = 100  # Number of k points
         self.peak_threshold = 0.1  # Peak detection threshold
         self.damping_threshold = 0.01  # Damping analysis threshold
-
-    def _harmonic_excitation(self, external_field: np.ndarray) -> np.ndarray:
-        """
-        Apply harmonic excitation to the system.
-
-        Physical Meaning:
-            Applies harmonic external field and computes
-            the steady-state response.
-        """
-        # Time array
-        t = np.arange(0, self.duration, self.dt)
-
-        # Harmonic excitation
-        omega = np.mean(self.frequency_range)
-        excitation = self.amplitude * np.sin(2 * np.pi * omega * t)
-
-        # Apply to system
-        response = self._apply_excitation(external_field, excitation)
-
-        return response
-
-    def _impulse_excitation(self, external_field: np.ndarray) -> np.ndarray:
-        """
-        Apply impulse excitation to the system.
-
-        Physical Meaning:
-            Applies impulse external field and computes
-            the transient response.
-        """
-        # Time array
-        t = np.arange(0, self.duration, self.dt)
-
-        # Impulse excitation
-        impulse_duration = 0.1
-        excitation = np.zeros_like(t)
-        mask = t < impulse_duration
-        excitation[mask] = self.amplitude
-
-        # Apply to system
-        response = self._apply_excitation(external_field, excitation)
-
-        return response
-
-    def _frequency_sweep_excitation(self, external_field: np.ndarray) -> np.ndarray:
-        """
-        Apply frequency sweep excitation to the system.
-
-        Physical Meaning:
-            Applies frequency sweep external field and
-            computes the response across frequency range.
-        """
-        # Time array
-        t = np.arange(0, self.duration, self.dt)
-
-        # Frequency sweep
-        omega_start, omega_end = self.frequency_range
-        omega_t = omega_start + (omega_end - omega_start) * t / self.duration
-
-        # Sweep excitation
-        excitation = self.amplitude * np.sin(2 * np.pi * omega_t * t)
-
-        # Apply to system
-        response = self._apply_excitation(external_field, excitation)
-
-        return response
-
-    def _apply_excitation(
-        self, external_field: np.ndarray, excitation: np.ndarray
-    ) -> np.ndarray:
-        """
-        Apply excitation to the system and compute response.
-
-        Physical Meaning:
-            Applies the external excitation to the system
-            and computes the resulting response.
-        """
-        # Get system dynamics
-        dynamics_matrix = self.system._compute_dynamics_matrix()
-
-        # Initialize response
-        n_particles = len(self.system.particles)
-        response = np.zeros((n_particles, len(excitation)))
-
-        # Time integration
-        for i, t in enumerate(np.arange(0, self.duration, self.dt)):
-            if i == 0:
-                continue
-
-            # External force
-            F = self._compute_external_force(external_field, excitation[i])
-
-            # Solve dynamics equation
-            # M ẍ + K x = F
-            # This is simplified - in practice would use proper time integration
-            try:
-                response[:, i] = np.linalg.solve(dynamics_matrix, F)
-            except np.linalg.LinAlgError:
-                # Use pseudo-inverse if matrix is singular
-                response[:, i] = np.linalg.pinv(dynamics_matrix) @ F
-
-        return response
-
-    def _compute_external_force(
-        self, external_field: np.ndarray, excitation_amplitude: float
-    ) -> np.ndarray:
-        """
-        Compute external force on particles.
-
-        Physical Meaning:
-            Calculates the external force acting
-            on each particle due to the external field.
-        """
-        n_particles = len(self.system.particles)
-        forces = np.zeros(n_particles)
-
-        for i, particle in enumerate(self.system.particles):
-            # Force from external field at particle position
-            # This is simplified - in practice would interpolate field
-            # Handle different field dimensions
-            if external_field.ndim == 3:
-                force = external_field[0, 0, 0] * excitation_amplitude * particle.charge
-            elif external_field.ndim == 7:
-                force = (
-                    external_field[0, 0, 0, 0, 0, 0, 0]
-                    * excitation_amplitude
-                    * particle.charge
-                )
-            else:
-                # Use mean value for other dimensions
-                force = np.mean(external_field) * excitation_amplitude * particle.charge
-            forces[i] = force
-
-        return forces
-
-    def _find_spectral_peaks(
-        self, spectrum: np.ndarray, frequencies: np.ndarray
-    ) -> Dict[str, Any]:
-        """
-        Find spectral peaks in the response.
-
-        Physical Meaning:
-            Identifies resonant frequencies in the
-            system response spectrum.
-        """
-        # Find peaks above threshold
-        peak_indices = []
-        peak_frequencies = []
-        peak_amplitudes = []
-
-        for i in range(1, len(spectrum) - 1):
-            if (
-                spectrum[i] > spectrum[i - 1]
-                and spectrum[i] > spectrum[i + 1]
-                and spectrum[i] > self.peak_threshold
-            ):
-                peak_indices.append(i)
-                peak_frequencies.append(frequencies[i])
-                peak_amplitudes.append(spectrum[i])
-
-        return {
-            "indices": peak_indices,
-            "frequencies": peak_frequencies,
-            "amplitudes": peak_amplitudes,
-        }
-
-    def _analyze_step_resonator_transmission(self, response: np.ndarray) -> Dict[str, Any]:
-        """
-        Analyze energy exchange through step resonator boundaries.
-        
-        Physical Meaning:
-            Computes transmission/reflection coefficients for collective modes
-            through semi-transparent step resonator boundaries using frequency-dependent
-            step resonator model.
-        """
-        # Initialize frequency-dependent resonator if not exists
-        if not hasattr(self, '_resonator'):
-            self._resonator = FrequencyDependentResonator(R0=0.1, T0=0.9, omega0=1.0)
-        
-        # Analyze boundary transmission/reflection using step resonator model
-        transmission_coeffs = []
-        reflection_coeffs = []
-        
-        for i in range(response.shape[0]):
-            # Compute frequency content of the response
-            field_frequencies = np.abs(response[i, :])
-            
-            # Apply step resonator model
-            R, T = self._resonator.compute_coefficients(field_frequencies)
-            
-            # Compute boundary energy flux using resonator coefficients
-            boundary_flux = self._compute_boundary_energy_flux(response[i, :])
-            
-            # Apply resonator filtering
-            transmission_coeffs.append(np.mean(T) * boundary_flux['transmission'])
-            reflection_coeffs.append(np.mean(R) * boundary_flux['reflection'])
-        
-        return {
-            "transmission_coefficients": transmission_coeffs,
-            "reflection_coefficients": reflection_coeffs,
-            "mean_transmission": np.mean(transmission_coeffs),
-            "mean_reflection": np.mean(reflection_coeffs),
-            "resonator_model": "step_resonator",
-            "frequency_dependent": True,
-        }
-
-    def _compute_boundary_energy_flux(self, field: np.ndarray) -> Dict[str, float]:
-        """
-        Compute energy flux through step resonator boundaries.
-        
-        Physical Meaning:
-            Calculates energy exchange through semi-transparent
-            step resonator boundaries using 7D BVP theory.
-        """
-        # For 1D time series, simulate step resonator behavior
-        # by applying simple transmission/reflection coefficients
-        
-        # Simple step resonator simulation for 1D field
-        R = 0.1  # Reflection coefficient
-        T = 0.9  # Transmission coefficient
-        
-        # Apply boundary conditions to first and last points
-        if len(field) > 1:
-            # Simulate boundary effects
-            transmitted_field = field.copy()
-            transmitted_field[0] = R * field[0] + T * field[1] if len(field) > 1 else field[0]
-            transmitted_field[-1] = R * field[-1] + T * field[-2] if len(field) > 1 else field[-1]
-        else:
-            transmitted_field = field.copy()
-        
-        # Compute transmission/reflection coefficients
-        incident_energy = np.sum(np.abs(field)**2)
-        transmitted_energy = np.sum(np.abs(transmitted_field)**2)
-        
-        transmission = transmitted_energy / (incident_energy + 1e-10)
-        reflection = 1.0 - transmission
-        
-        return {
-            "transmission": transmission,
-            "reflection": reflection
-        }
-
-    def _compute_participation_ratios(self, response: np.ndarray) -> np.ndarray:
-        """
-        Compute participation ratios for collective modes.
-
-        Physical Meaning:
-            Calculates how much each particle participates
-            in the collective response.
-        """
-        # Compute participation from response amplitudes
-        participation = np.zeros(response.shape[0])
-
-        for i in range(response.shape[0]):
-            # Participation based on response amplitude
-            response_amplitude = np.max(np.abs(response[i, :]))
-            participation[i] = response_amplitude
-
-        # Normalize
-        if np.sum(participation) > 0:
-            participation = participation / np.sum(participation)
-
-        return participation
-
-    def _compute_quality_factors(
-        self, peaks: Dict[str, Any], transmission_analysis: Dict[str, Any]
-    ) -> np.ndarray:
-        """
-        Compute quality factors for collective modes.
-
-        Physical Meaning:
-            Calculates quality factors based on transmission
-            coefficients through step resonator boundaries.
-        """
-        peak_frequencies = peaks["frequencies"]
-        transmission_coeffs = transmission_analysis["transmission_coefficients"]
-
-        quality_factors = []
-        for freq in peak_frequencies:
-            # Use transmission coefficient as quality measure
-            if transmission_coeffs:
-                transmission = np.mean(transmission_coeffs)
-                # Higher transmission = higher quality
-                Q = transmission * freq if transmission > 0 else 0
-            else:
-                Q = 0
-            quality_factors.append(Q)
-
-        return np.array(quality_factors)
-
-    def _solve_dispersion_equation(self, k: float) -> float:
-        """
-        Solve dispersion equation for given wave vector.
-
-        Physical Meaning:
-            Solves the dispersion equation ω²(k) = ω₀² + c²k²
-            for the given wave vector k.
-        """
-        # Get system parameters
-        modes = self.system.find_collective_modes()
-        base_frequency = np.mean(modes["frequencies"])
-
-        # Dispersion relation: ω² = ω₀² + c²k²
-        c = 1.0  # Sound speed
-        omega_squared = (2 * np.pi * base_frequency) ** 2 + c**2 * k**2
-
-        return np.sqrt(omega_squared) / (2 * np.pi)
-
-    def _compute_group_velocity(self, k: float, omega: float) -> float:
-        """
-        Compute group velocity v_g = dω/dk.
-
-        Physical Meaning:
-            Calculates the group velocity for the
-            given wave vector and frequency.
-        """
-        # Numerical derivative
-        dk = 0.01
-        omega_plus = self._solve_dispersion_equation(k + dk)
-        omega_minus = self._solve_dispersion_equation(k - dk)
-
-        v_g = (omega_plus - omega_minus) / (2 * dk)
-
-        return v_g
-
-    def _fit_dispersion_relation(
-        self, k_values: np.ndarray, frequencies: np.ndarray
-    ) -> Dict[str, Any]:
-        """
-        Fit dispersion relation to computed data.
-
-        Physical Meaning:
-            Fits the dispersion relation ω²(k) = ω₀² + c²k²
-            to the computed frequency data.
-        """
-        # Fit quadratic relation
-        frequencies = np.array(frequencies)
-        omega_squared = (2 * np.pi * frequencies) ** 2
-        p = np.polyfit(k_values, omega_squared, 1)
-
-        # Extract parameters
-        omega_0_squared = p[1]  # Intercept
-        c_squared = p[0]  # Slope
-
-        omega_0 = np.sqrt(omega_0_squared) / (2 * np.pi)
-        c = np.sqrt(c_squared)
-
-        # Compute R²
-        omega_fit = np.sqrt(omega_0_squared + c_squared * k_values) / (2 * np.pi)
-        r_squared = 1 - np.sum((frequencies - omega_fit) ** 2) / np.sum(
-            (frequencies - np.mean(frequencies)) ** 2
-        )
-
-        return {"omega_0": omega_0, "c": c, "r_squared": r_squared, "coefficients": p}
 
     def analyze(self, data: Any) -> Dict[str, Any]:
         """
@@ -624,87 +202,3 @@ class CollectiveExcitations(AbstractModel):
             "response_analysis": response_analysis,
             "dispersion": dispersion,
         }
-
-    def _solve_dispersion_equation(self, k: float) -> float:
-        """
-        Solve dispersion equation for given wave vector.
-        
-        Physical Meaning:
-            Solves the dispersion equation ω(k) for collective
-            modes in the multi-particle system.
-        """
-        # Simple dispersion relation: ω = c*k
-        # where c is the phase velocity
-        c = 1.0  # Phase velocity
-        omega = c * k
-        
-        return omega
-    
-    def _compute_group_velocity(self, k: float, omega: float) -> float:
-        """
-        Compute group velocity for given k and ω.
-        
-        Physical Meaning:
-            Calculates the group velocity v_g = dω/dk
-            for the dispersion relation.
-        """
-        # For linear dispersion ω = c*k, v_g = c
-        c = 1.0  # Phase velocity
-        v_g = c
-        
-        return v_g
-    
-    def _fit_dispersion_relation(self, k_values: np.ndarray, frequencies: np.ndarray) -> Dict[str, Any]:
-        """
-        Fit dispersion relation to data.
-        
-        Physical Meaning:
-            Fits a mathematical model to the computed
-            dispersion relation data.
-        """
-        # Fit quadratic dispersion relation: ω² = ω₀² + c²k²
-        if len(k_values) > 2:
-            # Fit ω² vs k²
-            k_squared = k_values**2
-            omega_squared = frequencies**2
-            slope, intercept = np.polyfit(k_squared, omega_squared, 1)
-            
-            omega_0 = np.sqrt(max(0, intercept))  # Natural frequency
-            c = np.sqrt(max(0, slope))  # Phase velocity
-        else:
-            omega_0 = 1.0
-            c = 1.0
-        
-        # Compute R²
-        if len(k_values) > 1:
-            omega_squared_fit = omega_0**2 + c**2 * k_values**2
-            ss_res = np.sum((frequencies**2 - omega_squared_fit)**2)
-            ss_tot = np.sum((frequencies**2 - np.mean(frequencies**2))**2)
-            r_squared = 1 - (ss_res / (ss_tot + 1e-10))
-        else:
-            r_squared = 1.0
-        
-        return {
-            "omega_0": omega_0,
-            "c": c,
-            "r_squared": r_squared,
-            "coefficients": [omega_0, c],
-        }
-
-    def _setup_analysis_parameters(self) -> None:
-        """
-        Setup analysis parameters for collective excitations.
-        
-        Physical Meaning:
-            Initializes parameters needed for dispersion
-            relation analysis and response computation.
-        """
-        # Wave vector parameters
-        self.k_max = 10.0  # Maximum wave vector
-        self.n_k_points = 50  # Number of k points for dispersion
-        
-        # Time step for analysis
-        self.dt = 0.01  # Time step
-        
-        # Peak detection parameters
-        self.peak_threshold = 0.1  # Threshold for peak detection

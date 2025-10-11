@@ -4,10 +4,9 @@ email: vasilyvz@gmail.com
 
 Nonlinear effects implementation for Level F models.
 
-This module implements the NonlinearEffects class for studying
-nonlinear interactions in multi-particle systems. It includes methods
-for adding nonlinear interactions, finding nonlinear modes, and
-analyzing solitonic solutions.
+This module provides a facade for nonlinear effects functionality
+for Level F models in 7D phase field theory, ensuring proper functionality
+of all nonlinear analysis components.
 
 Theoretical Background:
     Nonlinear effects in multi-particle systems arise from
@@ -29,6 +28,9 @@ Example:
 import numpy as np
 from typing import Dict, Any, List, Optional, Tuple
 from ..base.abstract_model import AbstractModel
+from .basic_effects import BasicNonlinearEffects
+from .soliton_analysis import SolitonAnalyzer
+from .mode_analysis import NonlinearModeAnalyzer
 
 
 class NonlinearEffects(AbstractModel):
@@ -52,51 +54,38 @@ class NonlinearEffects(AbstractModel):
         nonlinear_type (str): Type of nonlinearity
     """
 
-    def __init__(self, system: "MultiParticleSystem", nonlinear_params: Dict[str, Any]):
+    def __init__(self, system, nonlinear_params: Dict[str, Any]):
         """
-        Initialize nonlinear effects model.
+        Initialize nonlinear effects.
 
         Physical Meaning:
-            Sets up the model for studying nonlinear effects
-            in the multi-particle system.
+            Sets up the nonlinear effects system with
+            nonlinear parameters and analysis components.
 
         Args:
-            system (MultiParticleSystem): Multi-particle system
-            nonlinear_params (Dict): Nonlinear parameters:
-                - nonlinear_strength: g (nonlinear coupling)
-                - order: n (order of nonlinearity)
-                - type: "cubic", "quartic", "sine_gordon"
+            system: Multi-particle system
+            nonlinear_params (Dict[str, Any]): Nonlinear parameters
         """
-        super().__init__(system.domain)
+        super().__init__()
         self.system = system
         self.nonlinear_params = nonlinear_params
-        self.params = nonlinear_params  # Alias for compatibility
-
-        # Extract parameters
+        
+        # Nonlinear parameters
         self.nonlinear_strength = nonlinear_params.get("strength", 1.0)
         self.nonlinear_order = nonlinear_params.get("order", 3)
         self.nonlinear_type = nonlinear_params.get("type", "cubic")
-        self.coupling_type = nonlinear_params.get("coupling", "local")
         
-        # Initialize dynamics parameters
-        self.omega_0 = nonlinear_params.get("omega_0", 1.0)
-        self.driving_amplitude = nonlinear_params.get("driving_amplitude", 0.1)
-        self.driving_frequency = nonlinear_params.get("driving_frequency", 1.0)
-        
-        # Initialize nonlinear coefficients
-        self.lambda_1 = nonlinear_params.get("lambda_1", 0.1)
-        self.lambda_2 = nonlinear_params.get("lambda_2", 0.01)
-        self.lambda_3 = nonlinear_params.get("lambda_3", 0.001)
-
-        # Initialize nonlinear terms
-        self._setup_nonlinear_terms()
+        # Initialize analysis components
+        self.basic_effects = BasicNonlinearEffects(system, nonlinear_params)
+        self.soliton_analyzer = SolitonAnalyzer(system, nonlinear_params)
+        self.mode_analyzer = NonlinearModeAnalyzer(system, nonlinear_params)
 
     def add_nonlinear_interactions(self, nonlinear_params: Dict[str, Any]) -> None:
         """
         Add nonlinear interactions to the system.
 
         Physical Meaning:
-            Introduces nonlinear terms into the effective
+            Adds nonlinear interaction terms to the system
             potential and equations of motion.
 
         Args:
@@ -113,6 +102,76 @@ class NonlinearEffects(AbstractModel):
         self._add_nonlinear_potential()
         self._add_nonlinear_dynamics()
 
+    def _add_nonlinear_potential(self) -> None:
+        """
+        Add nonlinear potential to system.
+
+        Physical Meaning:
+            Adds nonlinear potential terms to the system
+            potential energy.
+        """
+        # Add nonlinear potential to system
+        if hasattr(self.system, 'add_potential'):
+            self.system.add_potential(self._nonlinear_potential)
+
+    def _add_nonlinear_dynamics(self) -> None:
+        """
+        Add nonlinear dynamics to system.
+
+        Physical Meaning:
+            Adds nonlinear dynamics terms to the system
+            equations of motion.
+        """
+        # Add nonlinear force to system
+        if hasattr(self.system, 'add_force'):
+            self.system.add_force(self._nonlinear_force)
+
+    def _nonlinear_potential(self, psi: np.ndarray) -> np.ndarray:
+        """
+        Nonlinear potential function.
+
+        Physical Meaning:
+            Computes the nonlinear potential energy
+            for the given field configuration.
+
+        Args:
+            psi (np.ndarray): Field configuration.
+
+        Returns:
+            np.ndarray: Nonlinear potential energy.
+        """
+        if self.nonlinear_type == "cubic":
+            return self.nonlinear_strength * np.abs(psi) ** 3
+        elif self.nonlinear_type == "quartic":
+            return self.nonlinear_strength * np.abs(psi) ** 4
+        elif self.nonlinear_type == "sine_gordon":
+            return self.nonlinear_strength * (1 - np.cos(psi))
+        else:
+            raise ValueError(f"Unknown nonlinear type: {self.nonlinear_type}")
+
+    def _nonlinear_force(self, psi: np.ndarray) -> np.ndarray:
+        """
+        Nonlinear force function.
+
+        Physical Meaning:
+            Computes the nonlinear force acting on the field
+            due to nonlinear interactions.
+
+        Args:
+            psi (np.ndarray): Field configuration.
+
+        Returns:
+            np.ndarray: Nonlinear force.
+        """
+        if self.nonlinear_type == "cubic":
+            return -3 * self.nonlinear_strength * np.abs(psi) * np.sign(psi)
+        elif self.nonlinear_type == "quartic":
+            return -4 * self.nonlinear_strength * np.abs(psi) ** 2 * np.sign(psi)
+        elif self.nonlinear_type == "sine_gordon":
+            return -self.nonlinear_strength * np.sin(psi)
+        else:
+            raise ValueError(f"Unknown nonlinear type: {self.nonlinear_type}")
+
     def find_nonlinear_modes(self) -> Dict[str, Any]:
         """
         Find nonlinear modes in the system.
@@ -128,569 +187,332 @@ class NonlinearEffects(AbstractModel):
                 - stability: stability analysis
                 - bifurcations: bifurcation points
         """
-        # Get linear modes first
-        linear_modes = self.system.find_collective_modes()
-
-        # Find nonlinear corrections
-        nonlinear_corrections = self._compute_nonlinear_corrections(linear_modes)
-
-        # Find bifurcation points
-        bifurcations = self._find_bifurcation_points()
-
-        # Analyze stability
-        stability = self._analyze_nonlinear_stability()
-
-        return {
-            "linear_frequencies": linear_modes["frequencies"],
-            "nonlinear_frequencies": nonlinear_corrections["frequencies"],
-            "amplitudes": nonlinear_corrections["amplitudes"],
-            "stability": stability,
-            "bifurcations": bifurcations,
-        }
+        # Use mode analyzer to find nonlinear modes
+        return self.mode_analyzer.find_nonlinear_modes()
 
     def find_soliton_solutions(self) -> Dict[str, Any]:
         """
-        Find solitonic solutions in the system.
+        Find soliton solutions.
 
         Physical Meaning:
-            Identifies solitonic solutions that arise
-            from nonlinear interactions.
+            Finds soliton solutions in the nonlinear system
+            using optimization methods.
 
         Returns:
-            Dict containing:
-                - solitons: list of soliton solutions
+            Dict[str, Any]: Soliton solutions including:
                 - profiles: soliton profiles
-                - velocities: soliton velocities
-                - stability: soliton stability
+                - energies: soliton energies
+                - stability: stability analysis
+                - interactions: soliton interactions
         """
-        solitons = []
+        # Use soliton analyzer to find soliton solutions
+        return self.soliton_analyzer.find_soliton_solutions()
 
-        if self.nonlinear_type == "sine_gordon":
-            solitons = self._find_sine_gordon_solitons()
-        elif self.nonlinear_type == "cubic":
-            solitons = self._find_cubic_solitons()
-        elif self.nonlinear_type == "quartic":
-            solitons = self._find_quartic_solitons()
-
-        # Analyze soliton properties
-        soliton_analysis = self._analyze_soliton_properties(solitons)
-
-        return {
-            "solitons": solitons,
-            "profiles": soliton_analysis["profiles"],
-            "velocities": soliton_analysis["velocities"],
-            "stability": soliton_analysis["stability"],
-        }
-
-    def check_nonlinear_stability(self) -> Dict[str, Any]:
+    def analyze_nonlinear_strength(self, field: np.ndarray) -> Dict[str, Any]:
         """
-        Check stability of nonlinear solutions.
+        Analyze nonlinear strength.
 
         Physical Meaning:
-            Analyzes stability of nonlinear modes and
-            solitonic solutions.
+            Analyzes the strength of nonlinear effects
+            in the field configuration.
+
+        Args:
+            field (np.ndarray): Field configuration.
 
         Returns:
-            Dict containing:
-                - linear_stability: linear stability analysis
-                - nonlinear_stability: nonlinear stability
-                - growth_rates: instability growth rates
-                - stability_regions: parameter regions of stability
+            Dict[str, Any]: Nonlinear strength analysis.
         """
-        # Linear stability analysis
-        linear_stability = self._analyze_linear_stability()
+        # Use basic effects analyzer
+        return self.basic_effects.analyze_nonlinear_strength(field)
 
-        # Nonlinear stability analysis
-        nonlinear_stability = self._analyze_nonlinear_stability()
-
-        # Growth rates
-        growth_rates = self._compute_growth_rates()
-
-        # Stability regions
-        stability_regions = self._identify_stability_regions()
-
-        return {
-            "linear_stability": linear_stability,
-            "nonlinear_stability": nonlinear_stability,
-            "growth_rates": growth_rates,
-            "stability_regions": stability_regions,
-        }
-
-    def _setup_nonlinear_terms(self) -> None:
+    def compute_nonlinear_energy(self, field: np.ndarray) -> float:
         """
-        Setup nonlinear terms for the system.
+        Compute nonlinear energy.
 
         Physical Meaning:
-            Initializes nonlinear interaction terms
-            based on the specified nonlinearity type.
-        """
-        if self.nonlinear_type == "cubic":
-            self._setup_cubic_nonlinearity()
-        elif self.nonlinear_type == "quartic":
-            self._setup_quartic_nonlinearity()
-        elif self.nonlinear_type == "sine_gordon":
-            self._setup_sine_gordon_nonlinearity()
-        else:
-            raise ValueError(f"Unknown nonlinear type: {self.nonlinear_type}")
+            Computes the nonlinear energy contribution
+            to the total system energy.
 
-    def _setup_cubic_nonlinearity(self) -> None:
+        Args:
+            field (np.ndarray): Field configuration.
+
+        Returns:
+            float: Nonlinear energy.
         """
-        Setup cubic nonlinearity terms.
+        # Use basic effects analyzer
+        return self.basic_effects.compute_nonlinear_energy(field)
+
+    def compute_nonlinear_force(self, field: np.ndarray) -> np.ndarray:
+        """
+        Compute nonlinear force.
 
         Physical Meaning:
-            Initializes cubic nonlinear terms of the form
-            g * |ψ|³ in the effective potential.
-        """
-        self.nonlinear_potential = (
-            lambda psi: self.nonlinear_strength * np.abs(psi) ** 3
-        )
-        self.nonlinear_derivative = (
-            lambda psi: 3 * self.nonlinear_strength * np.abs(psi) * np.sign(psi)
-        )
+            Computes the nonlinear force acting on the field
+            due to nonlinear interactions.
 
-    def _setup_quartic_nonlinearity(self) -> None:
+        Args:
+            field (np.ndarray): Field configuration.
+
+        Returns:
+            np.ndarray: Nonlinear force.
         """
-        Setup quartic nonlinearity terms.
+        # Use basic effects analyzer
+        return self.basic_effects.compute_nonlinear_force(field)
+
+    def analyze_nonlinear_stability(self) -> Dict[str, Any]:
+        """
+        Analyze nonlinear stability.
 
         Physical Meaning:
-            Initializes quartic nonlinear terms of the form
-            g * |ψ|⁴ in the effective potential.
-        """
-        self.nonlinear_potential = (
-            lambda psi: self.nonlinear_strength * np.abs(psi) ** 4
-        )
-        self.nonlinear_derivative = (
-            lambda psi: 4 * self.nonlinear_strength * np.abs(psi) ** 2 * np.sign(psi)
-        )
+            Analyzes the stability of nonlinear modes
+            in the system.
 
-    def _setup_sine_gordon_nonlinearity(self) -> None:
+        Returns:
+            Dict[str, Any]: Stability analysis.
         """
-        Setup sine-Gordon nonlinearity terms.
+        # Use mode analyzer
+        return self.mode_analyzer._analyze_nonlinear_stability()
+
+    def find_bifurcation_points(self) -> List[Dict[str, Any]]:
+        """
+        Find bifurcation points.
 
         Physical Meaning:
-            Initializes sine-Gordon nonlinear terms of the form
-            λ * sin(φ) in the effective potential.
+            Identifies bifurcation points in the nonlinear
+            system where qualitative changes occur.
+
+        Returns:
+            List[Dict[str, Any]]: Bifurcation points.
         """
-        self.nonlinear_potential = lambda psi: self.nonlinear_strength * (
-            1 - np.cos(psi)
-        )
-        self.nonlinear_derivative = lambda psi: self.nonlinear_strength * np.sin(psi)
+        # Use mode analyzer
+        return self.mode_analyzer._find_bifurcation_points()
 
-    def _add_nonlinear_potential(self) -> None:
-        """
-        Add nonlinear potential to the system.
-
-        Physical Meaning:
-            Adds nonlinear potential terms to the
-            effective potential of the system.
-
-        Mathematical Foundation:
-            V_nonlinear = λ₁|φ|² + λ₂|φ|⁴ + λ₃|φ|⁶ + ...
-            where φ is the field amplitude and λᵢ are coupling constants.
-        """
-        # Initialize nonlinear coupling constants
-        self.lambda_1 = self.params.get("lambda_1", 0.1)  # Quadratic term
-        self.lambda_2 = self.params.get("lambda_2", 0.01)  # Quartic term
-        self.lambda_3 = self.params.get("lambda_3", 0.001)  # Sextic term
-
-        # Add nonlinear terms to effective potential
-        self.nonlinear_terms = {
-            "quadratic": self.lambda_1,
-            "quartic": self.lambda_2,
-            "sextic": self.lambda_3,
-        }
-
-        # Update system parameters
-        self.effective_potential = self._compute_effective_potential()
-
-    def _add_nonlinear_dynamics(self) -> None:
-        """
-        Add nonlinear dynamics to the system.
-        
-        Physical Meaning:
-            Adds nonlinear terms to the equations
-            of motion using 7D BVP theory.
-        
-        Mathematical Foundation:
-            ∂²φ/∂t² + ω₀²φ + λ₁φ + λ₂φ³ + λ₃φ⁵ = F(t)
-            where energy exchange occurs through step resonator boundaries.
-        """
-        # Initialize nonlinear dynamics parameters (NO DAMPING)
-        self.omega_0 = self.params.get("omega_0", 1.0)  # Natural frequency
-        self.driving_amplitude = self.params.get("driving_amplitude", 0.1)
-        self.driving_frequency = self.params.get("driving_frequency", 1.0)
-        
-        # Define nonlinear force terms (NO DAMPING FORCE)
-        self.nonlinear_force = self._compute_nonlinear_force
-        self.driving_force = self._compute_driving_force
-        self.boundary_energy_exchange = self._compute_boundary_energy_exchange
-
-        # Update equations of motion
-        self.equations_of_motion = self._formulate_equations_of_motion()
-
-    def _compute_nonlinear_corrections(
-        self, linear_modes: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def compute_nonlinear_corrections(self, linear_modes: Dict[str, Any]) -> Dict[str, Any]:
         """
         Compute nonlinear corrections to linear modes.
 
         Physical Meaning:
-            Calculates nonlinear corrections to the
-            linear collective modes.
-        """
-        linear_frequencies = linear_modes["frequencies"]
-        linear_amplitudes = linear_modes["amplitudes"]
-
-        # Nonlinear frequency shifts
-        frequency_shifts = []
-        for freq, amp in zip(linear_frequencies, linear_amplitudes):
-            # Nonlinear frequency shift
-            shift = self.nonlinear_strength * np.mean(amp) ** self.nonlinear_order
-            frequency_shifts.append(shift)
-
-        # Corrected frequencies
-        nonlinear_frequencies = linear_frequencies + np.array(frequency_shifts)
-
-        # Nonlinear amplitude corrections
-        amplitude_corrections = []
-        for amp in linear_amplitudes:
-            # Nonlinear amplitude correction
-            correction = self.nonlinear_strength * np.mean(amp) ** (
-                self.nonlinear_order - 1
-            )
-            amplitude_corrections.append(correction)
-
-        corrected_amplitudes = linear_amplitudes + np.array(amplitude_corrections)
-
-        return {
-            "frequencies": nonlinear_frequencies,
-            "amplitudes": corrected_amplitudes,
-            "frequency_shifts": frequency_shifts,
-            "amplitude_corrections": amplitude_corrections,
-        }
-
-    def _find_bifurcation_points(self) -> List[Dict[str, Any]]:
-        """
-        Find bifurcation points in the system.
-
-        Physical Meaning:
-            Identifies bifurcation points where
-            the system behavior changes qualitatively.
-        """
-        bifurcations = []
-
-        # Find bifurcations based on nonlinear strength
-        if self.nonlinear_strength > 1.0:
-            bifurcations.append(
-                {
-                    "parameter": "nonlinear_strength",
-                    "value": self.nonlinear_strength,
-                    "type": "pitchfork",
-                    "stability": "unstable",
-                }
-            )
-
-        return bifurcations
-
-    def _analyze_nonlinear_stability(self) -> Dict[str, Any]:
-        """
-        Analyze stability of nonlinear modes.
-
-        Physical Meaning:
-            Analyzes the stability of nonlinear
+            Computes nonlinear corrections to linear
             collective modes.
-        """
-        # Get system stability
-        system_stability = self.system.check_stability()
 
-        # Nonlinear stability criteria
-        nonlinear_stable = (
-            system_stability["is_stable"] and self.nonlinear_strength < 2.0
+        Args:
+            linear_modes (Dict[str, Any]): Linear mode results.
+
+        Returns:
+            Dict[str, Any]: Nonlinear corrections.
+        """
+        # Use mode analyzer
+        return self.mode_analyzer._compute_nonlinear_corrections(linear_modes)
+
+    def analyze_soliton_stability(self, soliton_profiles: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Analyze soliton stability.
+
+        Physical Meaning:
+            Analyzes the stability of soliton solutions.
+
+        Args:
+            soliton_profiles (List[Dict[str, Any]]): Soliton profiles.
+
+        Returns:
+            Dict[str, Any]: Stability analysis.
+        """
+        # Use soliton analyzer
+        return self.soliton_analyzer._analyze_soliton_stability(soliton_profiles)
+
+    def analyze_soliton_interactions(self, soliton_profiles: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Analyze soliton interactions.
+
+        Physical Meaning:
+            Analyzes interactions between soliton solutions.
+
+        Args:
+            soliton_profiles (List[Dict[str, Any]]): Soliton profiles.
+
+        Returns:
+            Dict[str, Any]: Interaction analysis.
+        """
+        # Use soliton analyzer
+        return self.soliton_analyzer._analyze_soliton_interactions(soliton_profiles)
+
+    def compute_soliton_energies(self, soliton_profiles: List[Dict[str, Any]]) -> List[float]:
+        """
+        Compute soliton energies.
+
+        Physical Meaning:
+            Computes the energies of soliton solutions.
+
+        Args:
+            soliton_profiles (List[Dict[str, Any]]): Soliton profiles.
+
+        Returns:
+            List[float]: Soliton energies.
+        """
+        # Use soliton analyzer
+        return self.soliton_analyzer._compute_soliton_energies(soliton_profiles)
+
+    def validate_nonlinear_analysis(self, results: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Validate nonlinear analysis results.
+
+        Physical Meaning:
+            Validates the nonlinear analysis results to ensure
+            they meet quality and consistency criteria.
+
+        Args:
+            results (Dict[str, Any]): Analysis results to validate.
+
+        Returns:
+            Dict[str, Any]: Validation results.
+        """
+        # Validate basic effects
+        basic_validation = self._validate_basic_effects(results.get("basic_effects", {}))
+
+        # Validate soliton analysis
+        soliton_validation = self._validate_soliton_analysis(results.get("soliton_analysis", {}))
+
+        # Validate mode analysis
+        mode_validation = self._validate_mode_analysis(results.get("mode_analysis", {}))
+
+        # Calculate overall validation
+        overall_validation = self._calculate_overall_validation(
+            basic_validation, soliton_validation, mode_validation
         )
 
         return {
-            "is_stable": nonlinear_stable,
-            "stability_margin": system_stability["stability_margin"],
-            "nonlinear_criteria": self.nonlinear_strength < 2.0,
+            "basic_validation": basic_validation,
+            "soliton_validation": soliton_validation,
+            "mode_validation": mode_validation,
+            "overall_validation": overall_validation,
+            "validation_complete": True,
         }
 
-    def _find_sine_gordon_solitons(self) -> List[Dict[str, Any]]:
+    def _validate_basic_effects(self, basic_effects: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Find sine-Gordon soliton solutions.
+        Validate basic effects results.
 
         Physical Meaning:
-            Identifies kink and antikink solitons
-            in the sine-Gordon model.
-        """
-        solitons = []
-
-        # Kink soliton
-        kink = {
-            "type": "kink",
-            "velocity": 0.5,
-            "amplitude": 2.0,
-            "width": 1.0,
-            "position": 0.0,
-            "stability": True,
-        }
-        solitons.append(kink)
-
-        # Antikink soliton
-        antikink = {
-            "type": "antikink",
-            "velocity": -0.5,
-            "amplitude": -2.0,
-            "width": 1.0,
-            "position": 0.0,
-            "stability": True,
-        }
-        solitons.append(antikink)
-
-        return solitons
-
-    def _find_cubic_solitons(self) -> List[Dict[str, Any]]:
-        """
-        Find cubic nonlinearity soliton solutions.
-
-        Physical Meaning:
-            Identifies solitons in the cubic
-            nonlinear Schrödinger equation.
-        """
-        solitons = []
-
-        # Bright soliton
-        bright_soliton = {
-            "type": "bright",
-            "velocity": 0.0,
-            "amplitude": 1.0,
-            "width": 1.0,
-            "position": 0.0,
-            "stability": True,
-        }
-        solitons.append(bright_soliton)
-
-        return solitons
-
-    def _find_quartic_solitons(self) -> List[Dict[str, Any]]:
-        """
-        Find quartic nonlinearity soliton solutions.
-
-        Physical Meaning:
-            Identifies solitons in the quartic
-            nonlinear system.
-        """
-        solitons = []
-
-        # Quartic soliton
-        quartic_soliton = {
-            "type": "quartic",
-            "velocity": 0.0,
-            "amplitude": 1.0,
-            "width": 1.0,
-            "position": 0.0,
-            "stability": True,
-        }
-        solitons.append(quartic_soliton)
-
-        return solitons
-
-    def _analyze_soliton_properties(
-        self, solitons: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
-        """
-        Analyze properties of soliton solutions.
-
-        Physical Meaning:
-            Analyzes the properties of found
-            soliton solutions.
-        """
-        profiles = []
-        velocities = []
-        stability = []
-
-        for soliton in solitons:
-            # Soliton profile
-            profile = self._compute_soliton_profile(soliton)
-            profiles.append(profile)
-
-            # Velocity
-            velocities.append(soliton["velocity"])
-
-            # Stability
-            stability.append(soliton["stability"])
-
-        return {"profiles": profiles, "velocities": velocities, "stability": stability}
-
-    def _compute_soliton_profile(self, soliton: Dict[str, Any]) -> np.ndarray:
-        """
-        Compute soliton profile.
-
-        Physical Meaning:
-            Calculates the spatial profile of
-            the soliton solution.
-        """
-        # Create spatial grid
-        x = np.linspace(-10, 10, 100)
-
-        # Soliton profile based on type
-        if soliton["type"] == "kink":
-            profile = soliton["amplitude"] * np.tanh(
-                (x - soliton["position"]) / soliton["width"]
-            )
-        elif soliton["type"] == "antikink":
-            profile = -soliton["amplitude"] * np.tanh(
-                (x - soliton["position"]) / soliton["width"]
-            )
-        elif soliton["type"] == "bright":
-            profile = soliton["amplitude"] / np.cosh(
-                (x - soliton["position"]) / soliton["width"]
-            )
-        else:
-            # Use power law profile instead of exponential (no exponential attenuation)
-            # Power law: profile = amplitude / (1 + (x-position)^2/width^2)
-            profile = soliton["amplitude"] / (1.0 + ((x - soliton["position"]) / soliton["width"]) ** 2)
-
-        return profile
-
-    def _analyze_linear_stability(self) -> Dict[str, Any]:
-        """
-        Analyze linear stability of nonlinear solutions.
-
-        Physical Meaning:
-            Performs linear stability analysis
-            of nonlinear solutions.
-        """
-        # Get system stability
-        system_stability = self.system.check_stability()
-
-        return {
-            "is_stable": system_stability["is_stable"],
-            "stability_margin": system_stability["stability_margin"],
-            "eigenvalues": system_stability["eigenvalues"],
-        }
-
-    def _compute_growth_rates(self) -> np.ndarray:
-        """
-        Compute instability growth rates.
-
-        Physical Meaning:
-            Calculates growth rates for unstable
-            modes in the system.
-        """
-        # Get system eigenvalues
-        system_stability = self.system.check_stability()
-        eigenvalues = system_stability["eigenvalues"]
-
-        # Growth rates are real parts of eigenvalues
-        growth_rates = np.real(eigenvalues)
-
-        return growth_rates
-
-    def _identify_stability_regions(self) -> Dict[str, Any]:
-        """
-        Identify stability regions in parameter space.
-
-        Physical Meaning:
-            Identifies regions of parameter space
-            where nonlinear solutions are stable.
-        """
-        return {
-            "stable_regions": {
-                "nonlinear_strength": (0.0, 2.0),
-                "nonlinear_order": (1, 4),
-            },
-            "unstable_regions": {
-                "nonlinear_strength": (2.0, np.inf),
-                "nonlinear_order": (4, np.inf),
-            },
-        }
-
-    def analyze(self, data: Any) -> Dict[str, Any]:
-        """
-        Analyze data for this model.
-
-        Physical Meaning:
-            Performs comprehensive analysis of nonlinear effects,
-            including nonlinear modes and soliton solutions.
+            Validates the basic effects analysis results.
 
         Args:
-            data (Any): Input data to analyze (not used for this model)
+            basic_effects (Dict[str, Any]): Basic effects results.
 
         Returns:
-            Dict: Analysis results including modes, solitons, and stability
+            Dict[str, Any]: Basic effects validation.
         """
-        # Find nonlinear modes
-        modes = self.find_nonlinear_modes()
+        # Check if basic effects are present
+        is_present = len(basic_effects) > 0
 
-        # Find soliton solutions
-        solitons = self.find_soliton_solutions()
+        # Check quality metrics
+        quality_metrics = basic_effects.get("quality_metrics", {})
+        quality_score = quality_metrics.get("overall_quality", 0.0)
+
+        return {
+            "is_present": is_present,
+            "quality_score": quality_score,
+            "validation_passed": is_present and quality_score > 0.7,
+        }
+
+    def _validate_soliton_analysis(self, soliton_analysis: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Validate soliton analysis results.
+
+        Physical Meaning:
+            Validates the soliton analysis results.
+
+        Args:
+            soliton_analysis (Dict[str, Any]): Soliton analysis results.
+
+        Returns:
+            Dict[str, Any]: Soliton analysis validation.
+        """
+        # Check if soliton analysis is present
+        is_present = len(soliton_analysis) > 0
+
+        # Check soliton profiles
+        profiles = soliton_analysis.get("profiles", [])
+        num_profiles = len(profiles)
 
         # Check stability
-        stability = self.check_nonlinear_stability()
+        stability = soliton_analysis.get("stability", {})
+        stability_score = stability.get("overall_stability", 0.0)
 
-        return {"nonlinear_modes": modes, "solitons": solitons, "stability": stability}
+        return {
+            "is_present": is_present,
+            "num_profiles": num_profiles,
+            "stability_score": stability_score,
+            "validation_passed": is_present and num_profiles > 0 and stability_score > 0.5,
+        }
 
-    def _compute_effective_potential(self) -> callable:
-        """Compute effective potential including nonlinear terms."""
-
-        def potential(phi):
-            return (
-                self.lambda_1 * np.abs(phi) ** 2
-                + self.lambda_2 * np.abs(phi) ** 4
-                + self.lambda_3 * np.abs(phi) ** 6
-            )
-
-        return potential
-
-    def _compute_nonlinear_force(self, phi: np.ndarray) -> np.ndarray:
-        """Compute nonlinear force terms."""
-        return self.lambda_1 * phi + self.lambda_2 * phi**3 + self.lambda_3 * phi**5
-
-    def _compute_boundary_energy_exchange(self, field) -> float:
+    def _validate_mode_analysis(self, mode_analysis: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Compute energy exchange through step resonator boundaries.
-        
+        Validate mode analysis results.
+
         Physical Meaning:
-            Calculates energy exchange between field and environment
-            through semi-transparent step resonator boundaries.
+            Validates the mode analysis results.
+
+        Args:
+            mode_analysis (Dict[str, Any]): Mode analysis results.
+
+        Returns:
+            Dict[str, Any]: Mode analysis validation.
         """
-        # For scalar field, simulate boundary energy exchange
-        if np.isscalar(field):
-            # Simple boundary energy exchange for scalar
-            R = 0.1  # Reflection coefficient
-            T = 0.9  # Transmission coefficient
-            
-            # Simulate boundary effects
-            energy_exchange = (T - R) * np.abs(field)**2
-            return energy_exchange
-        else:
-            # For array field, use step resonator
-            from bhlff.core.bvp.boundary.step_resonator import apply_step_resonator
-            
-            # Apply step resonator boundary
-            boundary_field = apply_step_resonator(field, axes=(0, 1, 2), R=0.1, T=0.9)
-            
-            # Compute energy exchange rate
-            energy_exchange = np.real(boundary_field * np.conj(field))
-            
-            return energy_exchange
+        # Check if mode analysis is present
+        is_present = len(mode_analysis) > 0
 
-    def _compute_driving_force(self, t: float) -> float:
-        """Compute driving force."""
-        return self.driving_amplitude * np.cos(self.driving_frequency * t)
+        # Check frequencies
+        frequencies = mode_analysis.get("nonlinear_frequencies", [])
+        num_frequencies = len(frequencies)
 
-    def _formulate_equations_of_motion(self) -> callable:
-        """Formulate complete equations of motion without damping."""
+        # Check stability
+        stability = mode_analysis.get("stability", {})
+        stability_score = stability.get("overall_stability", 0.0)
 
-        def equations(t, y):
-            phi, phi_dot = y
-            dphi_dt = phi_dot
-            dphi_dot_dt = (
-                -self.omega_0**2 * phi
-                - self._compute_nonlinear_force(phi)
-                + self._compute_driving_force(t)
-                + self._compute_boundary_energy_exchange(phi)
-            )
-            return [dphi_dt, dphi_dot_dt]
+        return {
+            "is_present": is_present,
+            "num_frequencies": num_frequencies,
+            "stability_score": stability_score,
+            "validation_passed": is_present and num_frequencies > 0 and stability_score > 0.5,
+        }
 
-        return equations
+    def _calculate_overall_validation(
+        self, basic_validation: Dict[str, Any], soliton_validation: Dict[str, Any], mode_validation: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Calculate overall validation.
+
+        Physical Meaning:
+            Calculates the overall validation of all analysis components.
+
+        Args:
+            basic_validation (Dict[str, Any]): Basic effects validation.
+            soliton_validation (Dict[str, Any]): Soliton analysis validation.
+            mode_validation (Dict[str, Any]): Mode analysis validation.
+
+        Returns:
+            Dict[str, Any]: Overall validation results.
+        """
+        # Calculate overall quality
+        overall_quality = np.mean([
+            basic_validation["quality_score"],
+            soliton_validation["stability_score"],
+            mode_validation["stability_score"],
+        ])
+
+        # Calculate overall validation status
+        overall_passed = all([
+            basic_validation["validation_passed"],
+            soliton_validation["validation_passed"],
+            mode_validation["validation_passed"],
+        ])
+
+        return {
+            "overall_quality": overall_quality,
+            "overall_passed": overall_passed,
+            "validation_summary": {
+                "basic_validation": basic_validation["validation_passed"],
+                "soliton_validation": soliton_validation["validation_passed"],
+                "mode_validation": mode_validation["validation_passed"],
+            },
+        }

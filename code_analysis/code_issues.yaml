@@ -83,10 +83,10 @@ issues:
     file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
     limit: 400
     lines: 689
-  - exceeds_limit: 423
+  - exceeds_limit: 507
     file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
     limit: 400
-    lines: 823
+    lines: 907
   - exceeds_limit: 212
     file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
     limit: 400

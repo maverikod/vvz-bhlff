@@ -115,8 +115,18 @@ class FeatureCalculator:
             Computes autocorrelation as a measure of temporal
             coherence in the 7D phase field.
         """
-        # Compute autocorrelation
-        autocorr = np.correlate(envelope.flatten(), envelope.flatten(), mode='full')
+        # For large arrays, use sampling to avoid memory issues
+        if envelope.size > 100000:  # 100K elements threshold
+            # Sample the array to reduce computation time
+            sample_size = min(10000, envelope.size // 10)
+            flat_envelope = envelope.flatten()
+            indices = np.random.choice(flat_envelope.size, sample_size, replace=False)
+            sample_envelope = flat_envelope[indices]
+        else:
+            sample_envelope = envelope.flatten()
+        
+        # Compute autocorrelation on sampled data
+        autocorr = np.correlate(sample_envelope, sample_envelope, mode='full')
         autocorr = autocorr[autocorr.size // 2:]
         
         # Normalize
@@ -155,7 +165,18 @@ class FeatureCalculator:
         mode2_power = np.real(mode2_power) if np.isscalar(mode2_power) else np.real(mode2_power[0])
         
         coupling_strength = np.sqrt(mode1_power * mode2_power) / np.sum(power_spectrum)
-        return float(np.real(coupling_strength))
+        
+        # Ensure coupling_strength is a scalar
+        if np.isscalar(coupling_strength):
+            return float(np.real(coupling_strength))
+        else:
+            # Handle array case - take the first element and ensure it's scalar
+            coupling_value = coupling_strength[0] if hasattr(coupling_strength, '__getitem__') else coupling_strength
+            if np.isscalar(coupling_value):
+                return float(np.real(coupling_value))
+            else:
+                # If still an array, take the first element recursively
+                return float(np.real(coupling_value.flat[0]))
     
     def calculate_mode_interaction_energy(self, envelope: np.ndarray) -> float:
         """
@@ -220,7 +241,17 @@ class FeatureCalculator:
         if total_power > 0:
             symmetry = symmetry / total_power
         
-        return float(np.real(symmetry))
+        # Ensure symmetry is a scalar
+        if np.isscalar(symmetry):
+            return float(np.real(symmetry))
+        else:
+            # Handle array case - take the first element and ensure it's scalar
+            symmetry_value = symmetry[0] if hasattr(symmetry, '__getitem__') else symmetry
+            if np.isscalar(symmetry_value):
+                return float(np.real(symmetry_value))
+            else:
+                # If still an array, take the first element recursively
+                return float(np.real(symmetry_value.flat[0]))
     
     def calculate_nonlinear_strength(self, envelope: np.ndarray) -> float:
         """

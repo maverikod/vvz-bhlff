@@ -5068,19 +5068,23 @@ Class: BeatingMLPredictionCore
   _setup_vectorized_processor(self) -> None
     File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 590
   _optimize_with_vectorized_processing(self, envelope, parameters) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 623
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 633
   _extract_vectorized_optimization_results(self, vectorized_results, parameters) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 664
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 674
   _compute_vectorized_optimization_metrics(self, vectorized_results) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 704
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 714
   _compute_optimal_horizon_from_vectorized(self, vectorized_results) -> int
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 734
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 744
   _compute_optimal_regularization_from_vectorized(self, vectorized_results) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 754
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 764
   _compute_optimization_quality_from_vectorized(self, vectorized_results) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 774
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 784
   _optimize_without_vectorization(self, envelope, parameters) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 791
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 801
+  _extract_features_vectorized(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 834
+  _extract_features_from_vectorized_results(self, vectorized_results) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 857
 
 Class: BeatingMLOptimizationCore
   __init__(self, bvp_core)
@@ -5464,17 +5468,17 @@ Class: FeatureCalculator
   calculate_autocorrelation(self, envelope) -> float
     File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 110
   calculate_frequency_coupling_strength(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 132
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 142
   calculate_mode_interaction_energy(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 160
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 181
   calculate_coupling_symmetry(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 179
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 200
   calculate_nonlinear_strength(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 225
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 256
   calculate_mode_mixing_degree(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 241
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 272
   calculate_coupling_efficiency(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 266
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 297
 
 Class: TrainingDataGenerator
   __init__(self)

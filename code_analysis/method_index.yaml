@@ -5690,7 +5690,7 @@ method_index:
       - envelope
       - parameters
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 623
+      line: 633
       name: _optimize_with_vectorized_processing
       returns: Dict[str, Any]
     - args:
@@ -5698,35 +5698,35 @@ method_index:
       - vectorized_results
       - parameters
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 664
+      line: 674
       name: _extract_vectorized_optimization_results
       returns: Dict[str, Any]
     - args:
       - self
       - vectorized_results
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 704
+      line: 714
       name: _compute_vectorized_optimization_metrics
       returns: Dict[str, Any]
     - args:
       - self
       - vectorized_results
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 734
+      line: 744
       name: _compute_optimal_horizon_from_vectorized
       returns: int
     - args:
       - self
       - vectorized_results
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 754
+      line: 764
       name: _compute_optimal_regularization_from_vectorized
       returns: float
     - args:
       - self
       - vectorized_results
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 774
+      line: 784
       name: _compute_optimization_quality_from_vectorized
       returns: float
     - args:
@@ -5734,8 +5734,22 @@ method_index:
       - envelope
       - parameters
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 791
+      line: 801
       name: _optimize_without_vectorization
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 834
+      name: _extract_features_vectorized
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - vectorized_results
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 857
+      name: _extract_features_from_vectorized_results
       returns: Dict[str, Any]
     BeatingMLPredictionFeatures:
     - args:
@@ -12578,42 +12592,42 @@ method_index:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 132
+      line: 142
       name: calculate_frequency_coupling_strength
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 160
+      line: 181
       name: calculate_mode_interaction_energy
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 179
+      line: 200
       name: calculate_coupling_symmetry
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 225
+      line: 256
       name: calculate_nonlinear_strength
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 241
+      line: 272
       name: calculate_mode_mixing_degree
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 266
+      line: 297
       name: calculate_coupling_efficiency
       returns: float
     FeatureExtractor:
@@ -40281,6 +40295,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 5622
+    total_class_methods: 5624
     total_classes: 580
     total_standalone_functions: 0

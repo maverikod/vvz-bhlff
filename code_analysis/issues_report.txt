@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 804
+Total issues found: 807
 
 METHODS_WITHOUT_DOCSTRINGS: 109 issues
 ----------------------------------------
@@ -515,7 +515,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 8 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 595 issues
+IMPORTS_IN_MIDDLE: 597 issues
 ----------------------------------------
   ./setup.py
     Line 28
@@ -622,6 +622,9 @@ IMPORTS_IN_MIDDLE: 595 issues
   ./tests/unit/test_ml_prediction_vectorized_implementation.py
     Line 42
 
+  ./tests/unit/test_soliton_optimization_compliance.py
+    Line 24
+
   ./tests/unit/test_7d_vectorized_processing.py
     Line 26
 
@@ -630,6 +633,9 @@ IMPORTS_IN_MIDDLE: 595 issues
 
   ./tests/unit/test_physics_validation_step_2_1_1.py
     Line 168
+
+  ./tests/unit/test_soliton_optimization_algorithms.py
+    Line 26
 
   ./tests/unit/test_automated_testing.py
     Line 24
@@ -1177,7 +1183,7 @@ IMPORTS_IN_MIDDLE: 595 issues
   ./bhlff/models/level_c/memory/pinning_analysis_evolution.py
     Line 23
 
-  ./bhlff/models/level_f/transitions.py
+  ./bhlff/models/level_f/transitions_facade.py
     Line 23
 
   ./bhlff/models/level_f/multi_particle_analysis.py
@@ -2303,7 +2309,7 @@ IMPORTS_IN_MIDDLE: 595 issues
     Line 23
 
 
-FILES_TOO_LARGE: 88 issues
+FILES_TOO_LARGE: 89 issues
 ----------------------------------------
   ./tests/unit/test_ml_prediction_vectorized_implementations.py
 
@@ -2384,6 +2390,8 @@ FILES_TOO_LARGE: 88 issues
   ./bhlff/models/level_f/nonlinear.py
 
   ./bhlff/models/level_f/nonlinear/mode_analysis.py
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
 
   ./bhlff/models/level_f/collective/excitation_analysis.py
 

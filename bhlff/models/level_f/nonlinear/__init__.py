@@ -18,5 +18,5 @@ Example:
 """
 
 from .basic_effects import BasicNonlinearEffects
-from .soliton_analysis import SolitonAnalyzer
+from .soliton_analysis import SingleSolitonSolver, MultiSolitonSolutions
 from .mode_analysis import NonlinearModeAnalyzer

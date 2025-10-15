@@ -76,9 +76,9 @@ class MultiSolitonCore(SolitonAnalysisBase):
             # Compute fractional Laplacian term
             fractional_laplacian = self.mu * (np.abs(x) ** (2 * self.beta)) * field
             
-            # Two soliton source terms
-            source1 = amp1 * np.exp(-((x - pos1) ** 2) / (2 * width1 ** 2))
-            source2 = amp2 * np.exp(-((x - pos2) ** 2) / (2 * width2 ** 2))
+            # Two soliton source terms using 7D BVP step resonator theory
+            source1 = amp1 * self._step_resonator_source(x, pos1, width1)
+            source2 = amp2 * self._step_resonator_source(x, pos2, width2)
             total_source = source1 + source2
             
             # Soliton-soliton interaction potential
@@ -128,10 +128,10 @@ class MultiSolitonCore(SolitonAnalysisBase):
             # Compute fractional Laplacian term
             fractional_laplacian = self.mu * (np.abs(x) ** (2 * self.beta)) * field
             
-            # Three soliton source terms
-            source1 = amp1 * np.exp(-((x - pos1) ** 2) / (2 * width1 ** 2))
-            source2 = amp2 * np.exp(-((x - pos2) ** 2) / (2 * width2 ** 2))
-            source3 = amp3 * np.exp(-((x - pos3) ** 2) / (2 * width3 ** 2))
+            # Three soliton source terms using 7D BVP step resonator theory
+            source1 = amp1 * self._step_resonator_source(x, pos1, width1)
+            source2 = amp2 * self._step_resonator_source(x, pos2, width2)
+            source3 = amp3 * self._step_resonator_source(x, pos3, width3)
             total_source = source1 + source2 + source3
             
             # Multi-soliton interaction potential
@@ -277,3 +277,34 @@ class MultiSolitonCore(SolitonAnalysisBase):
         except Exception as e:
             self.logger.error(f"Step resonator interaction computation failed: {e}")
             return 0.0
+    
+    def _step_resonator_source(self, x: np.ndarray, position: float, width: float) -> np.ndarray:
+        """
+        Step resonator source term using 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step resonator source term instead of exponential
+            decay, following 7D BVP theory principles with sharp
+            cutoff at source width.
+            
+        Mathematical Foundation:
+            Step resonator source:
+            s(x) = 1 if |x - pos| < width, 0 if |x - pos| ≥ width
+            where width is the source width parameter.
+            
+        Args:
+            x (np.ndarray): Spatial coordinate array.
+            position (float): Source position.
+            width (float): Source width parameter.
+            
+        Returns:
+            np.ndarray: Step resonator source term.
+        """
+        try:
+            # Step resonator: sharp cutoff at source width
+            distance = np.abs(x - position)
+            return np.where(distance < width, 1.0, 0.0)
+            
+        except Exception as e:
+            self.logger.error(f"Step resonator source computation failed: {e}")
+            return np.zeros_like(x)

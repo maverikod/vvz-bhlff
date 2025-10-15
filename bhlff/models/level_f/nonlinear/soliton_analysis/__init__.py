@@ -21,14 +21,12 @@ Example:
 
 from .base import SolitonAnalysisBase
 from .single_soliton import SingleSolitonSolver
-from .multi_soliton import MultiSolitonSolver
-from .interactions import SolitonInteractionAnalyzer
-from .solutions import SolitonAnalysisSolutions
+from .multi_soliton_solutions import MultiSolitonSolutions
+from .multi_soliton_core import MultiSolitonCore
 
 __all__ = [
     'SolitonAnalysisBase',
     'SingleSolitonSolver', 
-    'MultiSolitonSolver',
-    'SolitonInteractionAnalyzer',
-    'SolitonAnalysisSolutions'
+    'MultiSolitonSolutions',
+    'MultiSolitonCore'
 ]

@@ -17035,6 +17035,15 @@ method_index:
       line: 249
       name: _step_resonator_interaction
       returns: float
+    - args:
+      - self
+      - x
+      - position
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py
+      line: 281
+      name: _step_resonator_source
+      returns: np.ndarray
     MultiSolitonSolutions:
     - args:
       - self
@@ -17089,6 +17098,15 @@ method_index:
       line: 322
       name: _compute_final_three_soliton_solution
       returns: Dict[str, Any]
+    - args:
+      - self
+      - x
+      - position
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 378
+      name: _step_resonator_profile
+      returns: np.ndarray
     - args:
       - params
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
@@ -24234,6 +24252,23 @@ method_index:
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
       line: 279
       name: _compute_full_fractional_laplacian
+      returns: np.ndarray
+    - args:
+      - self
+      - x
+      - position
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+      line: 328
+      name: _step_resonator_profile
+      returns: np.ndarray
+    - args:
+      - self
+      - x
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+      line: 359
+      name: _step_resonator_source
       returns: np.ndarray
     - args:
       - params
@@ -37987,6 +38022,192 @@ method_index:
       line: 306
       name: test_soliton_report
       returns: null
+    TestSolitonOptimizationAlgorithms:
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 40
+      name: mock_system
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 48
+      name: nonlinear_params
+      returns: null
+    - args:
+      - self
+      - mock_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 58
+      name: test_single_soliton_optimization_complete
+      returns: null
+    - args:
+      - self
+      - mock_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 101
+      name: test_step_resonator_profile_implementation
+      returns: null
+    - args:
+      - self
+      - mock_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 126
+      name: test_step_resonator_source_implementation
+      returns: null
+    - args:
+      - self
+      - mock_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 151
+      name: test_multi_soliton_optimization_complete
+      returns: null
+    - args:
+      - self
+      - mock_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 209
+      name: test_step_resonator_interaction_implementation
+      returns: null
+    - args:
+      - self
+      - mock_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 234
+      name: test_7d_fractional_laplacian_implementation
+      returns: null
+    - args:
+      - self
+      - mock_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 262
+      name: test_energy_computation_complete
+      returns: null
+    - args:
+      - self
+      - mock_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 287
+      name: test_topological_charge_computation
+      returns: null
+    - args:
+      - self
+      - mock_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 312
+      name: test_no_simplified_implementations
+      returns: null
+    - args:
+      - self
+      - mock_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 341
+      name: test_step_resonator_vs_exponential_comparison
+      returns: null
+    TestSolitonOptimizationCompliance:
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_optimization_compliance.py
+      line: 38
+      name: nonlinear_params
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_optimization_compliance.py
+      line: 49
+      name: test_system
+      returns: null
+    - args:
+      - self
+      - test_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_compliance.py
+      line: 57
+      name: test_single_soliton_full_optimization
+      returns: null
+    - args:
+      - self
+      - test_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_compliance.py
+      line: 92
+      name: test_two_soliton_full_optimization
+      returns: null
+    - args:
+      - self
+      - test_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_compliance.py
+      line: 124
+      name: test_three_soliton_full_optimization
+      returns: null
+    - args:
+      - self
+      - test_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_compliance.py
+      line: 152
+      name: test_no_exponential_decay_in_soliton_interactions
+      returns: null
+    - args:
+      - self
+      - test_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_compliance.py
+      line: 184
+      name: test_full_energy_calculations_with_interactions
+      returns: null
+    - args:
+      - self
+      - test_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_compliance.py
+      line: 217
+      name: test_7d_fractional_laplacian_implementation
+      returns: null
+    - args:
+      - self
+      - test_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_compliance.py
+      line: 241
+      name: test_no_simplified_implementations
+      returns: null
+    - args:
+      - self
+      - test_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_compliance.py
+      line: 267
+      name: test_complete_bvp_solving
+      returns: null
+    - args:
+      - self
+      - test_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_compliance.py
+      line: 292
+      name: test_step_resonator_vs_exponential
+      returns: null
+    - args:
+      - self
+      - test_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_optimization_compliance.py
+      line: 321
+      name: test_complete_optimization_parameters
+      returns: null
     TestSolitonPhysics:
     - args:
       - self
@@ -42463,6 +42684,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 5900
-    total_classes: 596
+    total_class_methods: 5928
+    total_classes: 598
     total_standalone_functions: 0

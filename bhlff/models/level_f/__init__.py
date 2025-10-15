@@ -25,12 +25,12 @@ Example:
 from .multi_particle_system import MultiParticleSystem
 from .collective import ExcitationAnalyzer, DispersionAnalyzer
 from .transitions_facade import PhaseTransitions
-from .nonlinear import NonlinearEffects
+from .nonlinear import BasicNonlinearEffects
 
 __all__ = [
     "MultiParticleSystem",
     "ExcitationAnalyzer",
     "DispersionAnalyzer", 
     "PhaseTransitions",
-    "NonlinearEffects",
+    "BasicNonlinearEffects",
 ]

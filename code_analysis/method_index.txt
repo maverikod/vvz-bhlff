@@ -712,6 +712,32 @@ Class: TestMLPredictionVectorizedImplementation
   test_vectorized_block_processing_physics(self, bvp_core, test_envelope, test_parameters)
     File: ./tests/unit/test_ml_prediction_vectorized_implementation.py, Line: 549
 
+Class: TestSolitonOptimizationCompliance
+  nonlinear_params(self) -> Dict[str, Any]
+    File: ./tests/unit/test_soliton_optimization_compliance.py, Line: 38
+  test_system(self)
+    File: ./tests/unit/test_soliton_optimization_compliance.py, Line: 49
+  test_single_soliton_full_optimization(self, test_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_compliance.py, Line: 57
+  test_two_soliton_full_optimization(self, test_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_compliance.py, Line: 92
+  test_three_soliton_full_optimization(self, test_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_compliance.py, Line: 124
+  test_no_exponential_decay_in_soliton_interactions(self, test_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_compliance.py, Line: 152
+  test_full_energy_calculations_with_interactions(self, test_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_compliance.py, Line: 184
+  test_7d_fractional_laplacian_implementation(self, test_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_compliance.py, Line: 217
+  test_no_simplified_implementations(self, test_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_compliance.py, Line: 241
+  test_complete_bvp_solving(self, test_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_compliance.py, Line: 267
+  test_step_resonator_vs_exponential(self, test_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_compliance.py, Line: 292
+  test_complete_optimization_parameters(self, test_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_compliance.py, Line: 321
+
 Class: TestMLPrediction7DBVP
   setup_method(self)
     File: ./tests/unit/test_ml_prediction_7d_bvp.py, Line: 24
@@ -891,6 +917,32 @@ Class: TestPhysicsValidationStep2_1_1
     File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 401
   test_comprehensive_physics_validation(self)
     File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 419
+
+Class: TestSolitonOptimizationAlgorithms
+  mock_system(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 40
+  nonlinear_params(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 48
+  test_single_soliton_optimization_complete(self, mock_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 58
+  test_step_resonator_profile_implementation(self, mock_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 101
+  test_step_resonator_source_implementation(self, mock_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 126
+  test_multi_soliton_optimization_complete(self, mock_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 151
+  test_step_resonator_interaction_implementation(self, mock_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 209
+  test_7d_fractional_laplacian_implementation(self, mock_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 234
+  test_energy_computation_complete(self, mock_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 262
+  test_topological_charge_computation(self, mock_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 287
+  test_no_simplified_implementations(self, mock_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 312
+  test_step_resonator_vs_exponential_comparison(self, mock_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 341
 
 Class: TestParticleValidation
   test_validation_initialization(self)
@@ -6987,6 +7039,10 @@ Class: SingleSolitonSolver
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 233
   _compute_full_fractional_laplacian(self, x, field) -> np.ndarray
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 279
+  _step_resonator_profile(self, x, position, width) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 328
+  _step_resonator_source(self, x, width) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 359
   soliton_equations_7d(params)
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 77
   soliton_ode(x, y)
@@ -7041,6 +7097,8 @@ Class: MultiSolitonSolutions
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 272
   _compute_final_three_soliton_solution(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 322
+  _step_resonator_profile(self, x, position, width) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 378
   two_soliton_equations_7d(params)
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 105
   three_soliton_equations_7d(params)
@@ -7101,6 +7159,8 @@ Class: MultiSolitonCore
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py, Line: 197
   _step_resonator_interaction(self, distance, interaction_range) -> float
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py, Line: 249
+  _step_resonator_source(self, x, position, width) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py, Line: 281
 
 Class: DispersionAnalyzer
   __init__(self, system)

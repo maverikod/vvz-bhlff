@@ -19,10 +19,7 @@ Example:
 import numpy as np
 from typing import Dict, Any, List, Optional, Tuple
 from scipy.optimize import minimize
-from ..base.abstract_model import AbstractModel
-
-
-class NonlinearModeAnalyzer(AbstractModel):
+class NonlinearModeAnalyzer:
     """
     Nonlinear mode analysis for collective systems.
 
@@ -50,7 +47,7 @@ class NonlinearModeAnalyzer(AbstractModel):
             system: Multi-particle system
             nonlinear_params (Dict[str, Any]): Nonlinear parameters
         """
-        super().__init__()
+        # Initialize base class
         self.system = system
         self.nonlinear_params = nonlinear_params
         

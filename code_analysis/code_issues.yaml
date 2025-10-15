@@ -185,6 +185,10 @@ issues:
     file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
     limit: 400
     lines: 511
+  - exceeds_limit: 7
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+    limit: 400
+    lines: 407
   - exceeds_limit: 37
     file: ./bhlff/models/level_f/collective/excitation_analysis.py
     limit: 400
@@ -457,12 +461,16 @@ issues:
     line: 345
   - file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
     line: 42
+  - file: ./tests/unit/test_soliton_optimization_compliance.py
+    line: 24
   - file: ./tests/unit/test_7d_vectorized_processing.py
     line: 26
   - file: ./tests/unit/test_7d_bvp_physics.py
     line: 33
   - file: ./tests/unit/test_physics_validation_step_2_1_1.py
     line: 168
+  - file: ./tests/unit/test_soliton_optimization_algorithms.py
+    line: 26
   - file: ./tests/unit/test_automated_testing.py
     line: 24
   - file: ./tests/unit/test_level_g/test_gravity_physics.py
@@ -827,7 +835,7 @@ issues:
     line: 24
   - file: ./bhlff/models/level_c/memory/pinning_analysis_evolution.py
     line: 23
-  - file: ./bhlff/models/level_f/transitions.py
+  - file: ./bhlff/models/level_f/transitions_facade.py
     line: 23
   - file: ./bhlff/models/level_f/multi_particle_analysis.py
     line: 24
@@ -2018,9 +2026,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 8
-  files_too_large: 88
+  files_too_large: 89
   files_without_docstrings: 4
-  imports_in_middle: 595
+  imports_in_middle: 597
   methods_with_pass: 0
   methods_without_docstrings: 109
   not_implemented_in_non_abstract: 0

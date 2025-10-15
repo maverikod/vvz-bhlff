@@ -21,10 +21,7 @@ import numpy as np
 from typing import Dict, Any, Optional
 import logging
 
-from ...base.abstract_model import AbstractModel
-
-
-class SolitonAnalysisBase(AbstractModel):
+class SolitonAnalysisBase:
     """
     Base class for soliton analysis functionality.
     
@@ -52,7 +49,8 @@ class SolitonAnalysisBase(AbstractModel):
             nonlinear_params (Dict[str, Any]): Nonlinear parameters including
                 μ, β, λ, and interaction strengths.
         """
-        super().__init__(system, nonlinear_params)
+        # Initialize base class
+        self.system = system
         self.logger = logging.getLogger(__name__)
         
         # 7D BVP parameters

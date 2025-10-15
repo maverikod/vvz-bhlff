@@ -19,6 +19,10 @@ issues:
     file: ./examples/level_g_example.py
     line: 174
   files_too_large:
+  - exceeds_limit: 294
+    file: ./tests/unit/test_ml_prediction_vectorized_implementations.py
+    limit: 400
+    lines: 694
   - exceeds_limit: 192
     file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
     limit: 400
@@ -79,6 +83,10 @@ issues:
     file: ./bhlff/models/level_c/beating/background_analysis.py
     limit: 400
     lines: 452
+  - exceeds_limit: 440
+    file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py
+    limit: 400
+    lines: 840
   - exceeds_limit: 289
     file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
     limit: 400
@@ -95,18 +103,22 @@ issues:
     file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
     limit: 400
     lines: 930
-  - exceeds_limit: 410
-    file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+  - exceeds_limit: 94
+    file: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py
     limit: 400
-    lines: 810
+    lines: 494
+  - exceeds_limit: 25
+    file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
+    limit: 400
+    lines: 425
   - exceeds_limit: 88
     file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
     limit: 400
     lines: 488
-  - exceeds_limit: 13
+  - exceeds_limit: 59
     file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
     limit: 400
-    lines: 413
+    lines: 459
   - exceeds_limit: 98
     file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
     limit: 400
@@ -339,6 +351,8 @@ issues:
   imports_in_middle:
   - file: ./setup.py
     line: 28
+  - file: ./test_debug.py
+    line: 102
   - file: ./scripts/demo_vectorized_power_law.py
     line: 203
   - file: ./scripts/demo_7d_vectorized_processing.py
@@ -397,6 +411,8 @@ issues:
     line: 45
   - file: ./tests/integration/automated_testing/test_performance_integration.py
     line: 217
+  - file: ./tests/unit/test_ml_prediction_vectorized_implementations.py
+    line: 397
   - file: ./tests/unit/test_ml_prediction_physics_validation.py
     line: 25
   - file: ./tests/unit/test_acceptance_criteria.py
@@ -663,18 +679,28 @@ issues:
     line: 297
   - file: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py
     line: 21
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_refactored.py
+    line: 31
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py
+    line: 370
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
     line: 268
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py
+    line: 278
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
     line: 26
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
     line: 246
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
     line: 25
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
+    line: 21
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
     line: 23
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
-    line: 340
+    line: 31
   - file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
     line: 26
   - file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
@@ -1880,9 +1906,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 6
-  files_too_large: 77
+  files_too_large: 80
   files_without_docstrings: 4
-  imports_in_middle: 573
+  imports_in_middle: 580
   methods_with_pass: 0
   methods_without_docstrings: 98
   not_implemented_in_non_abstract: 0

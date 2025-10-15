@@ -422,6 +422,48 @@ Class: TestPerformanceIntegration
   _create_mock_test_results(self) -> TestResults
     File: ./tests/integration/automated_testing/test_performance_integration.py, Line: 343
 
+Class: TestVectorizedMLPredictionImplementations
+  setup_method(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 32
+  test_vectorized_frequency_prediction(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 57
+  test_vectorized_coupling_prediction(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 95
+  test_vectorized_pattern_classification(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 141
+  test_vectorized_7d_phase_field_symmetry(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 188
+  test_vectorized_7d_phase_field_regularity(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 216
+  test_vectorized_ml_pattern_features_extraction(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 244
+  test_vectorized_7d_phase_field_energy(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 299
+  test_vectorized_7d_phase_field_momentum(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 322
+  test_vectorized_7d_phase_field_angular_momentum(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 343
+  test_vectorized_7d_phase_field_entropy(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 366
+  test_vectorized_computation_performance(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 389
+  test_vectorized_computation_consistency(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 420
+  test_pattern_feature_extractor(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 445
+  test_pattern_classifier(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 504
+  test_refactored_beating_ml_patterns(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 557
+  test_feature_extractor_spectral_entropy(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 586
+  test_feature_extractor_frequency_analysis(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 616
+  test_pattern_classifier_coherence_computation(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 640
+  test_pattern_classifier_stability_computation(self)
+    File: ./tests/unit/test_ml_prediction_vectorized_implementations.py, Line: 668
+
 Class: TestMLPredictionPhysicsValidation
   test_envelope(self)
     File: ./tests/unit/test_ml_prediction_physics_validation.py, Line: 38
@@ -4988,6 +5030,74 @@ Class: PinnedSuppressionAnalyzer
   _compute_suppression_factors(self, time_evolution, pinning_params) -> List[float]
     File: ./bhlff/models/level_c/beating/pinned_analysis_suppression.py, Line: 159
 
+Class: BeatingMLPatterns
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_refactored.py, Line: 47
+  classify_beating_patterns(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_refactored.py, Line: 71
+  _setup_vectorized_processor(self) -> None
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_refactored.py, Line: 100
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 33
+  classify_beating_patterns(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 50
+  _extract_pattern_features(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 78
+  _classify_patterns_ml(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 126
+  _classify_patterns_simple(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 177
+  _calculate_symmetry_score(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 263
+  _calculate_regularity_score(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 286
+  _calculate_complexity_score(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 309
+  _load_trained_pattern_classifier(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 332
+  _load_pattern_scaler(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 357
+  _extract_ml_pattern_features(self, features) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 382
+  _get_pattern_feature_importance(self, model) -> Dict[str, float]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 417
+  _classify_patterns_analytical(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 449
+  _compute_7d_pattern_coherence(self, features) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 501
+  _compute_7d_pattern_stability(self, features) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 528
+  _compute_7d_phase_field_symmetry(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 555
+  _compute_vbp_envelope_symmetry(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 591
+  _setup_vectorized_processor(self) -> None
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 814
+  _combine_7d_symmetries(self, phase_field_symmetry, vbp_symmetry) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 637
+  _compute_7d_phase_field_regularity(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 648
+  _compute_vbp_envelope_regularity(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 677
+  _combine_7d_regularities(self, phase_field_regularity, vbp_regularity) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 695
+  _compute_7d_phase_field_complexity(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 706
+  _compute_vbp_envelope_complexity(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 749
+  _combine_7d_complexities(self, phase_field_complexity, vbp_complexity) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 768
+  _compute_topological_charge(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 779
+  _compute_energy_symmetry(self, energy_density) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py, Line: 796
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 47
+  classify_beating_patterns(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 71
+  _setup_vectorized_processor(self) -> None
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 100
+
 Class: BeatingMLClassificationOptimizer
   __init__(self, bvp_core)
     File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 39
@@ -5029,6 +5139,28 @@ Class: BeatingMLClassificationOptimizer
     File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 651
   classification_objective_function(param_values)
     File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py, Line: 282
+
+Class: BeatingMLPatternClassifier
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py, Line: 40
+  classify_patterns(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py, Line: 60
+  _classify_patterns_ml(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py, Line: 83
+  _classify_patterns_analytical(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py, Line: 134
+  _compute_7d_pattern_coherence(self, features) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py, Line: 186
+  _compute_7d_pattern_stability(self, features) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py, Line: 213
+  _load_trained_pattern_classifier(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py, Line: 240
+  _load_pattern_scaler(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py, Line: 265
+  _extract_ml_pattern_features(self, features) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py, Line: 290
+  _get_pattern_feature_importance(self, model) -> Dict[str, float]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py, Line: 326
 
 Class: BeatingMLPredictionCore
   __init__(self, bvp_core)
@@ -5180,6 +5312,84 @@ Class: BeatingMLPredictionOptimizer
   _optimize_without_vectorization(self, envelope, parameters) -> Dict[str, Any]
     File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py, Line: 899
 
+Class: BeatingMLPatternFeatureExtractor
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 39
+  extract_pattern_features(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 52
+  _extract_spatial_features(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 85
+  _extract_frequency_features(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 106
+  _extract_pattern_characteristics(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 133
+  _compute_spectral_entropy(self, spectrum) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 153
+  _compute_frequency_spacing(self, spectrum) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 169
+  _compute_frequency_bandwidth(self, spectrum) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 184
+  _find_spectral_peaks(self, spectrum, threshold) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 196
+  _calculate_symmetry_score(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 211
+  _calculate_regularity_score(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 230
+  _calculate_complexity_score(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 249
+  _compute_7d_phase_field_symmetry(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 268
+  _compute_vbp_envelope_symmetry(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 301
+  _combine_7d_symmetries(self, phase_field_symmetry, vbp_symmetry) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 319
+  _compute_7d_phase_field_regularity(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 330
+  _compute_vbp_envelope_regularity(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 359
+  _combine_7d_regularities(self, phase_field_regularity, vbp_regularity) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 377
+  _compute_7d_phase_field_complexity(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 388
+  _compute_vbp_envelope_complexity(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 431
+  _combine_7d_complexities(self, phase_field_complexity, vbp_complexity) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 450
+  _compute_topological_charge(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 461
+  _compute_energy_symmetry(self, energy_density) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py, Line: 478
+
+Class: BeatingMLVectorizedMethods
+  __init__(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 37
+  compute_7d_phase_field_symmetry_vectorized(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 46
+  _compute_spatial_symmetry_vectorized(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 81
+  _compute_spectral_symmetry_vectorized(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 116
+  _compute_phase_symmetry_vectorized(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 148
+  compute_7d_phase_field_regularity_vectorized(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 174
+  _compute_spatial_regularity_vectorized(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 209
+  _compute_temporal_regularity_vectorized(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 227
+  _compute_spectral_regularity_vectorized(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 248
+  extract_ml_pattern_features_vectorized(self, features) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 270
+  compute_7d_phase_field_energy_vectorized(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 306
+  compute_7d_phase_field_momentum_vectorized(self, envelope) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 330
+  compute_7d_phase_field_angular_momentum_vectorized(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 363
+  compute_7d_phase_field_entropy_vectorized(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 394
+
 Class: BeatingMLCore
   __init__(self, bvp_core)
     File: ./bhlff/models/level_c/beating/ml/beating_ml_core.py, Line: 36
@@ -5225,62 +5435,6 @@ Class: BeatingMLPrediction
     File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 56
   predict_mode_coupling(self, envelope) -> Dict[str, Any]
     File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction.py, Line: 76
-
-Class: BeatingMLPatterns
-  __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 33
-  classify_beating_patterns(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 50
-  _extract_pattern_features(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 78
-  _classify_patterns_ml(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 126
-  _classify_patterns_simple(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 177
-  _calculate_symmetry_score(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 233
-  _calculate_regularity_score(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 256
-  _calculate_complexity_score(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 279
-  _load_trained_pattern_classifier(self)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 302
-  _load_pattern_scaler(self)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 327
-  _extract_ml_pattern_features(self, features) -> np.ndarray
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 352
-  _get_pattern_feature_importance(self, model) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 387
-  _classify_patterns_analytical(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 419
-  _compute_7d_pattern_coherence(self, features) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 471
-  _compute_7d_pattern_stability(self, features) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 498
-  _compute_7d_phase_field_symmetry(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 525
-  _compute_vbp_envelope_symmetry(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 561
-  _setup_vectorized_processor(self) -> None
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 784
-  _combine_7d_symmetries(self, phase_field_symmetry, vbp_symmetry) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 607
-  _compute_7d_phase_field_regularity(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 618
-  _compute_vbp_envelope_regularity(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 647
-  _combine_7d_regularities(self, phase_field_regularity, vbp_regularity) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 665
-  _compute_7d_phase_field_complexity(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 676
-  _compute_vbp_envelope_complexity(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 719
-  _combine_7d_complexities(self, phase_field_complexity, vbp_complexity) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 738
-  _compute_topological_charge(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 749
-  _compute_energy_symmetry(self, energy_density) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py, Line: 766
 
 Class: BeatingMLOptimization
   __init__(self, bvp_core)
@@ -5412,13 +5566,13 @@ Class: PredictionEngine
   _predict_frequencies_simple(self, features) -> Dict[str, Any]
     File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 192
   _predict_coupling_simple(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 248
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 267
   _compute_prediction_confidence(self, features, model) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 311
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 357
   _get_feature_importance(self, model) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 346
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 392
   _compute_prediction_variance(self, features, model) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 388
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 434
 
 Class: MLTrainer
   __init__(self, model_manager)

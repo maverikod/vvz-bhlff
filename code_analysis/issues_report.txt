@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 758
+Total issues found: 768
 
 METHODS_WITHOUT_DOCSTRINGS: 98 issues
 ----------------------------------------
@@ -461,10 +461,13 @@ CLASSES_WITHOUT_DOCSTRINGS: 6 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 573 issues
+IMPORTS_IN_MIDDLE: 580 issues
 ----------------------------------------
   ./setup.py
     Line 28
+
+  ./test_debug.py
+    Line 102
 
   ./scripts/demo_vectorized_power_law.py
     Line 203
@@ -552,6 +555,9 @@ IMPORTS_IN_MIDDLE: 573 issues
 
   ./tests/integration/automated_testing/test_performance_integration.py
     Line 217
+
+  ./tests/unit/test_ml_prediction_vectorized_implementations.py
+    Line 397
 
   ./tests/unit/test_ml_prediction_physics_validation.py
     Line 25
@@ -952,8 +958,17 @@ IMPORTS_IN_MIDDLE: 573 issues
   ./bhlff/models/level_c/beating/pinned_analysis_suppression.py
     Line 21
 
+  ./bhlff/models/level_c/beating/ml/beating_ml_patterns_refactored.py
+    Line 31
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py
+    Line 370
+
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
     Line 268
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py
+    Line 278
 
   ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
     Line 26
@@ -964,11 +979,17 @@ IMPORTS_IN_MIDDLE: 573 issues
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
     Line 25
 
+  ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py
+    Line 23
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
+    Line 21
+
   ./bhlff/models/level_c/beating/ml/beating_ml_prediction_features.py
     Line 23
 
   ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
-    Line 340
+    Line 31
 
   ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
     Line 26
@@ -2183,8 +2204,10 @@ IMPORTS_IN_MIDDLE: 573 issues
     Line 23
 
 
-FILES_TOO_LARGE: 77 issues
+FILES_TOO_LARGE: 80 issues
 ----------------------------------------
+  ./tests/unit/test_ml_prediction_vectorized_implementations.py
+
   ./tests/unit/test_ml_prediction_vectorized_implementation.py
 
   ./tests/unit/test_physics_validation_step_2_1_1.py
@@ -2215,6 +2238,8 @@ FILES_TOO_LARGE: 77 issues
 
   ./bhlff/models/level_c/beating/background_analysis.py
 
+  ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py
+
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
 
   ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
@@ -2223,7 +2248,9 @@ FILES_TOO_LARGE: 77 issues
 
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
 
-  ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
+  ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
 
   ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
 

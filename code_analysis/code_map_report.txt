@@ -4,15 +4,15 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 805
+Total files analyzed: 812
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 670
+Total classes: 676
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 5726
+Total functions: 5803
 
 ISSUES SUMMARY:
 ----------------------------------------
@@ -21,8 +21,8 @@ not_implemented_in_non_abstract: 0
 methods_without_docstrings: 98
 files_without_docstrings: 4
 classes_without_docstrings: 6
-imports_in_middle: 573
-files_too_large: 77
+imports_in_middle: 580
+files_too_large: 80
 
 METHODS_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -119,6 +119,9 @@ IMPORTS_IN_MIDDLE:
   File: ./setup.py
   Line: 28
 
+  File: ./test_debug.py
+  Line: 102
+
   File: ./scripts/demo_vectorized_power_law.py
   Line: 203
 
@@ -143,13 +146,12 @@ IMPORTS_IN_MIDDLE:
   File: ./tests/test_bvp_level_a_integration.py
   Line: 30
 
-  File: ./tests/conftest.py
-  Line: 37
-
-  ... and 563 more
+  ... and 570 more
 
 FILES_TOO_LARGE:
 ----------------------------------------
+  File: ./tests/unit/test_ml_prediction_vectorized_implementations.py
+
   File: ./tests/unit/test_ml_prediction_vectorized_implementation.py
 
   File: ./tests/unit/test_physics_validation_step_2_1_1.py
@@ -168,6 +170,4 @@ FILES_TOO_LARGE:
 
   File: ./tests/unit/test_level_a/test_A03_zero_mode.py
 
-  File: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
-
-  ... and 67 more
+  ... and 70 more

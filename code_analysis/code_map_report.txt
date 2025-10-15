@@ -4,25 +4,25 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 812
+Total files analyzed: 820
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 676
+Total classes: 685
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 5803
+Total functions: 5948
 
 ISSUES SUMMARY:
 ----------------------------------------
 methods_with_pass: 0
 not_implemented_in_non_abstract: 0
-methods_without_docstrings: 98
+methods_without_docstrings: 109
 files_without_docstrings: 4
-classes_without_docstrings: 6
-imports_in_middle: 580
-files_too_large: 80
+classes_without_docstrings: 8
+imports_in_middle: 590
+files_too_large: 88
 
 METHODS_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -52,25 +52,25 @@ METHODS_WITHOUT_DOCSTRINGS:
   Line: 146
   Method: __init__
 
-  File: ./tests/unit/test_level_g/test_gravity_physics.py
-  Line: 67
-  Method: test_effective_metric_basic_properties
+  File: ./tests/unit/test_power_law_7d_bvp_compliance.py
+  Line: 168
+  Method: __init__
 
-  File: ./tests/unit/test_level_g/test_gravity_physics.py
-  Line: 67
-  Class: TestEnvelopeEffectiveMetricGravity
-  Method: test_effective_metric_basic_properties
+  File: ./tests/unit/test_power_law_7d_bvp_compliance.py
+  Line: 168
+  Class: MockBVPCore
+  Method: __init__
 
-  File: ./tests/unit/test_level_g/test_gravity_physics.py
-  Line: 77
-  Method: test_metric_sensitivity_to_invariants
+  File: ./tests/unit/test_power_law_7d_bvp_compliance.py
+  Line: 213
+  Method: __init__
 
-  File: ./tests/unit/test_level_g/test_gravity_physics.py
-  Line: 77
-  Class: TestEnvelopeEffectiveMetricGravity
-  Method: test_metric_sensitivity_to_invariants
+  File: ./tests/unit/test_power_law_7d_bvp_compliance.py
+  Line: 213
+  Class: MockBVPCore
+  Method: __init__
 
-  ... and 88 more
+  ... and 99 more
 
 FILES_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -97,6 +97,14 @@ CLASSES_WITHOUT_DOCSTRINGS:
   Line: 145
   Class: MockDomain
 
+  File: ./tests/unit/test_power_law_7d_bvp_compliance.py
+  Line: 167
+  Class: MockBVPCore
+
+  File: ./tests/unit/test_power_law_7d_bvp_compliance.py
+  Line: 212
+  Class: MockBVPCore
+
   File: ./tests/unit/test_level_g/test_gravity_physics.py
   Line: 60
   Class: MockSystem
@@ -118,9 +126,6 @@ IMPORTS_IN_MIDDLE:
 ----------------------------------------
   File: ./setup.py
   Line: 28
-
-  File: ./test_debug.py
-  Line: 102
 
   File: ./scripts/demo_vectorized_power_law.py
   Line: 203
@@ -146,7 +151,10 @@ IMPORTS_IN_MIDDLE:
   File: ./tests/test_bvp_level_a_integration.py
   Line: 30
 
-  ... and 570 more
+  File: ./tests/conftest.py
+  Line: 37
+
+  ... and 580 more
 
 FILES_TOO_LARGE:
 ----------------------------------------
@@ -156,18 +164,18 @@ FILES_TOO_LARGE:
 
   File: ./tests/unit/test_physics_validation_step_2_1_1.py
 
+  File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+
+  File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+
   File: ./tests/unit/automated_testing/test_integration.py
 
   File: ./tests/unit/automated_testing/test_quality_monitor.py
 
   File: ./tests/unit/test_core/test_7d_physics.py
 
+  File: ./tests/unit/test_core/test_power_law_optimization_full.py
+
   File: ./tests/unit/test_core/test_bvp_constants_comprehensive.py
 
-  File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
-
-  File: ./tests/unit/test_level_a/test_reporting_advanced.py
-
-  File: ./tests/unit/test_level_a/test_A03_zero_mode.py
-
-  ... and 70 more
+  ... and 78 more

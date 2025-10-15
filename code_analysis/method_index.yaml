@@ -6334,84 +6334,84 @@ method_index:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
-      line: 81
+      line: 85
       name: _compute_spatial_symmetry_vectorized
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
-      line: 116
+      line: 140
       name: _compute_spectral_symmetry_vectorized
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
-      line: 148
+      line: 192
       name: _compute_phase_symmetry_vectorized
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
-      line: 174
+      line: 218
       name: compute_7d_phase_field_regularity_vectorized
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
-      line: 209
+      line: 253
       name: _compute_spatial_regularity_vectorized
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
-      line: 227
+      line: 271
       name: _compute_temporal_regularity_vectorized
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
-      line: 248
+      line: 303
       name: _compute_spectral_regularity_vectorized
       returns: float
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
-      line: 270
+      line: 325
       name: extract_ml_pattern_features_vectorized
       returns: np.ndarray
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
-      line: 306
+      line: 361
       name: compute_7d_phase_field_energy_vectorized
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
-      line: 330
+      line: 385
       name: compute_7d_phase_field_momentum_vectorized
       returns: np.ndarray
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
-      line: 363
+      line: 418
       name: compute_7d_phase_field_angular_momentum_vectorized
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
-      line: 394
+      line: 449
       name: compute_7d_phase_field_entropy_vectorized
       returns: float
     BeatingMethodOptimizer:
@@ -11234,16 +11234,23 @@ method_index:
       returns: Dict[str, Any]
     - args:
       - self
+      - config
+      file: ./bhlff/models/level_e/discretization/domain_effects.py
+      line: 164
+      name: _run_simplified_simulation
+      returns: Dict[str, Any]
+    - args:
+      - self
       - output
       file: ./bhlff/models/level_e/discretization/domain_effects.py
-      line: 149
+      line: 193
       name: _compute_metrics
       returns: Dict[str, float]
     - args:
       - self
       - results
       file: ./bhlff/models/level_e/discretization/domain_effects.py
-      line: 159
+      line: 203
       name: _analyze_domain_effects
       returns: Dict[str, Any]
     - args:
@@ -11251,15 +11258,104 @@ method_index:
       - domain_sizes
       - values
       file: ./bhlff/models/level_e/discretization/domain_effects.py
-      line: 187
+      line: 231
       name: _analyze_domain_dependence
       returns: Dict[str, Any]
     - args:
       - self
       - domain_effects
       file: ./bhlff/models/level_e/discretization/domain_effects.py
-      line: 217
+      line: 261
       name: _analyze_overall_domain_effects
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - x
+      - beta
+      - mu
+      - lambda_param
+      file: ./bhlff/models/level_e/discretization/domain_effects.py
+      line: 291
+      name: _initialize_7d_phase_field
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      - x
+      - beta
+      - mu
+      file: ./bhlff/models/level_e/discretization/domain_effects.py
+      line: 314
+      name: _apply_7d_boundary_conditions
+      returns: np.ndarray
+    - args:
+      - self
+      - initial_field
+      - x
+      - beta
+      - mu
+      - lambda_param
+      file: ./bhlff/models/level_e/discretization/domain_effects.py
+      line: 330
+      name: _solve_7d_fractional_laplacian
+      returns: np.ndarray
+    - args:
+      - self
+      - solution
+      - x
+      - beta
+      file: ./bhlff/models/level_e/discretization/domain_effects.py
+      line: 369
+      name: _compute_7d_power_law_exponent
+      returns: float
+    - args:
+      - self
+      - solution
+      - x
+      file: ./bhlff/models/level_e/discretization/domain_effects.py
+      line: 396
+      name: _compute_7d_topological_charge
+      returns: float
+    - args:
+      - self
+      - solution
+      - x
+      - beta
+      - mu
+      - lambda_param
+      file: ./bhlff/models/level_e/discretization/domain_effects.py
+      line: 414
+      name: _compute_7d_energy
+      returns: float
+    - args:
+      - self
+      - solution
+      - x
+      - mu
+      - nu
+      file: ./bhlff/models/level_e/discretization/domain_effects.py
+      line: 442
+      name: _compute_7d_quality_factor
+      returns: float
+    - args:
+      - self
+      - solution
+      - x
+      - beta
+      - mu
+      file: ./bhlff/models/level_e/discretization/domain_effects.py
+      line: 462
+      name: _compute_7d_stability
+      returns: float
+    - args:
+      - self
+      - solution
+      - x
+      - L
+      - N
+      file: ./bhlff/models/level_e/discretization/domain_effects.py
+      line: 483
+      name: _compute_domain_size_effects
       returns: Dict[str, Any]
     DualModeSource:
     - args:
@@ -16862,6 +16958,153 @@ method_index:
       line: 444
       name: _calculate_overall_validation
       returns: Dict[str, Any]
+    MultiSolitonSolver:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+      line: 44
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+      line: 49
+      name: find_multi_soliton_solutions
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+      line: 81
+      name: find_two_soliton_solutions
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+      line: 176
+      name: find_three_soliton_solutions
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - x
+      - y
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+      line: 268
+      name: _compute_7d_two_soliton_ode
+      returns: np.ndarray
+    - args:
+      - self
+      - x
+      - y
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+      line: 298
+      name: _compute_7d_three_soliton_ode
+      returns: np.ndarray
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+      line: 334
+      name: _compute_two_soliton_energy
+      returns: float
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+      line: 354
+      name: _compute_three_soliton_energy
+      returns: float
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+      line: 385
+      name: _compute_final_two_soliton_solution
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+      line: 422
+      name: _compute_final_three_soliton_solution
+      returns: Dict[str, Any]
+    - args:
+      - params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+      line: 101
+      name: two_soliton_equations_7d
+      returns: null
+    - args:
+      - params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+      line: 196
+      name: three_soliton_equations_7d
+      returns: null
+    - args:
+      - x
+      - y
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+      line: 105
+      name: two_soliton_ode
+      returns: null
+    - args:
+      - ya
+      - yb
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+      line: 205
+      name: bc
+      returns: null
+    - args:
+      - x
+      - y
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+      line: 200
+      name: three_soliton_ode
+      returns: null
     NewtonSolver:
     - args:
       - self
@@ -20932,9 +21175,59 @@ method_index:
       - region_data
       - power_law_fit
       file: ./bhlff/core/bvp/power_law/power_law_core.py
-      line: 345
+      line: 408
       name: _calculate_fitting_quality
       returns: float
+    - args:
+      - self
+      - distances
+      - amplitudes
+      - popt
+      - func
+      file: ./bhlff/core/bvp/power_law/power_law_core.py
+      line: 484
+      name: _compute_r_squared_full
+      returns: float
+    - args:
+      - self
+      - distances
+      - amplitudes
+      - popt
+      - func
+      file: ./bhlff/core/bvp/power_law/power_law_core.py
+      line: 520
+      name: _compute_chi_squared_full
+      returns: float
+    - args:
+      - self
+      - pcov
+      file: ./bhlff/core/bvp/power_law/power_law_core.py
+      line: 551
+      name: _compute_fitting_quality_full
+      returns: float
+    - args:
+      - self
+      - exponent
+      - coefficient
+      file: ./bhlff/core/bvp/power_law/power_law_core.py
+      line: 581
+      name: _compute_physical_constraints_quality
+      returns: float
+    - args:
+      - self
+      - data_points
+      file: ./bhlff/core/bvp/power_law/power_law_core.py
+      line: 617
+      name: _compute_data_points_quality
+      returns: float
+    - args:
+      - r
+      - amplitude
+      - exponent
+      file: ./bhlff/core/bvp/power_law/power_law_core.py
+      line: 354
+      name: power_law_func
+      returns: null
     PowerLawCoreMain:
     - args:
       - self
@@ -21020,12 +21313,89 @@ method_index:
       name: _compute_chi_squared
       returns: float
     - args:
+      - self
+      - region_data
+      - method
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+      line: 415
+      name: fit_power_law_advanced
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - radial_profile
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+      line: 480
+      name: _fit_using_curve_fit
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - radial_profile
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+      line: 539
+      name: _fit_using_minimize
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - radial_profile
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+      line: 616
+      name: _fit_using_custom_optimization
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - r
+      - values
+      - amplitude
+      - exponent
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+      line: 702
+      name: _compute_gradients
+      returns: Tuple[float, float]
+    - args:
+      - self
+      - radial_profile
+      - fit_result
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+      line: 737
+      name: _perform_comprehensive_quality_analysis
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - r_squared
+      - chi_squared
+      - data_points
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+      line: 806
+      name: _compute_statistical_quality
+      returns: float
+    - args:
+      - self
+      - amplitude
+      - exponent
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+      line: 837
+      name: _compute_physical_quality
+      returns: float
+    - args:
+      - self
+      - parameter_errors
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+      line: 860
+      name: _compute_uncertainty_quality
+      returns: float
+    - args:
       - r
       - amplitude
       - exponent
       file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 71
+      line: 501
       name: power_law_func
+      returns: null
+    - args:
+      - params
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+      line: 560
+      name: objective_function
       returns: null
     PowerLawOptimization:
     - args:
@@ -21047,7 +21417,7 @@ method_index:
       - envelope
       - region
       file: ./bhlff/core/bvp/power_law/power_law_optimization.py
-      line: 61
+      line: 121
       name: _optimize_region_fit
       returns: Dict[str, Any]
     - args:
@@ -21055,23 +21425,110 @@ method_index:
       - region_data
       - initial_fit
       file: ./bhlff/core/bvp/power_law/power_law_optimization.py
-      line: 72
+      line: 228
       name: _iterative_refinement
       returns: Dict[str, Any]
     - args:
       - self
       - fit_params
       file: ./bhlff/core/bvp/power_law/power_law_optimization.py
-      line: 83
+      line: 314
       name: _adjust_fit_parameters
       returns: Dict[str, float]
     - args:
       - self
       - optimized_results
       file: ./bhlff/core/bvp/power_law/power_law_optimization.py
-      line: 91
+      line: 367
       name: _calculate_optimization_quality
       returns: Dict[str, float]
+    - args:
+      - self
+      - successful_results
+      file: ./bhlff/core/bvp/power_law/power_law_optimization.py
+      line: 458
+      name: _compute_parameter_uncertainty_quality
+      returns: float
+    - args:
+      - self
+      - successful_results
+      file: ./bhlff/core/bvp/power_law/power_law_optimization.py
+      line: 501
+      name: _compute_physical_constraints_quality
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/core/bvp/power_law/power_law_optimization.py
+      line: 589
+      name: _extract_optimization_regions
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/core/bvp/power_law/power_law_optimization.py
+      line: 611
+      name: _simple_region_extraction
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - mask
+      file: ./bhlff/core/bvp/power_law/power_law_optimization.py
+      line: 636
+      name: _compute_region_center
+      returns: np.ndarray
+    - args:
+      - self
+      - envelope
+      - region
+      file: ./bhlff/core/bvp/power_law/power_law_optimization.py
+      line: 644
+      name: _extract_region_data
+      returns: Dict[str, np.ndarray]
+    - args:
+      - self
+      - region_data
+      file: ./bhlff/core/bvp/power_law/power_law_optimization.py
+      line: 671
+      name: _get_initial_parameters
+      returns: np.ndarray
+    - args:
+      - self
+      - region_data
+      - params
+      file: ./bhlff/core/bvp/power_law/power_law_optimization.py
+      line: 700
+      name: _compute_fit_quality
+      returns: float
+    - args:
+      - self
+      - func
+      - params
+      - h
+      file: ./bhlff/core/bvp/power_law/power_law_optimization.py
+      line: 727
+      name: _compute_gradient
+      returns: np.ndarray
+    - args:
+      - self
+      - param_value
+      - param_name
+      file: ./bhlff/core/bvp/power_law/power_law_optimization.py
+      line: 752
+      name: _compute_parameter_sensitivity
+      returns: float
+    - args:
+      - params
+      file: ./bhlff/core/bvp/power_law/power_law_optimization.py
+      line: 148
+      name: objective_function
+      returns: null
+    - args:
+      - params
+      file: ./bhlff/core/bvp/power_law/power_law_optimization.py
+      line: 250
+      name: refinement_objective
+      returns: null
     PowerLawRegionAnalysis:
     - args:
       - self
@@ -23567,6 +24024,50 @@ method_index:
       line: 174
       name: _make_serializable
       returns: Any
+    SingleSolitonSolver:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+      line: 44
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+      line: 49
+      name: find_single_soliton
+      returns: Optional[Dict[str, Any]]
+    - args:
+      - self
+      - amplitude
+      - width
+      - position
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+      line: 141
+      name: _compute_final_soliton_solution
+      returns: Dict[str, Any]
+    - args:
+      - params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+      line: 77
+      name: soliton_equations_7d
+      returns: null
+    - args:
+      - x
+      - y
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+      line: 81
+      name: soliton_ode
+      returns: null
+    - args:
+      - ya
+      - yb
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+      line: 86
+      name: bc
+      returns: null
     SobolAnalyzer:
     - args:
       - self
@@ -23644,6 +24145,53 @@ method_index:
       line: 360
       name: _compute_stability_metrics
       returns: Dict[str, Any]
+    SolitonAnalysisBase:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
+      line: 42
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - solution
+      - amplitude
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
+      line: 65
+      name: compute_soliton_energy
+      returns: float
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
+      line: 111
+      name: compute_topological_charge
+      returns: float
+    - args:
+      - self
+      - x
+      - y
+      - amplitude
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
+      line: 140
+      name: compute_7d_soliton_ode
+      returns: np.ndarray
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
+      line: 187
+      name: compute_soliton_interaction_strength
+      returns: float
     SolitonAnalysisInitialization:
     - args:
       - self
@@ -23682,59 +24230,23 @@ method_index:
       - self
       - system
       - nonlinear_params
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
-      line: 42
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/solutions.py
+      line: 45
       name: __init__
       returns: null
     - args:
       - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
-      line: 59
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/solutions.py
+      line: 66
       name: find_soliton_solutions
-      returns: Dict[str, Any]
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
-      line: 102
-      name: _find_soliton_profiles
       returns: List[Dict[str, Any]]
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
-      line: 126
-      name: _find_single_soliton
-      returns: Optional[Dict[str, Any]]
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
-      line: 176
-      name: _find_multi_soliton_solutions
-      returns: List[Dict[str, Any]]
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
-      line: 201
-      name: _find_two_soliton_solution
-      returns: Optional[Dict[str, Any]]
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
-      line: 249
-      name: _find_three_soliton_solution
-      returns: Optional[Dict[str, Any]]
     - args:
       - self
       - soliton_profiles
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
-      line: 298
-      name: _calculate_solution_quality
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/solutions.py
+      line: 103
+      name: calculate_solution_quality
       returns: Dict[str, Any]
-    - args:
-      - params
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
-      line: 266
-      name: objective
-      returns: null
     SolitonAnalyzer:
     - args:
       - self
@@ -23815,6 +24327,64 @@ method_index:
       line: 235
       name: _compute_wzw_gradient
       returns: np.ndarray
+    SolitonInteractionAnalyzer:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
+      line: 40
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - multi_solitons
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
+      line: 45
+      name: analyze_interactions
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
+      line: 114
+      name: analyze_two_soliton_stability
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
+      line: 159
+      name: analyze_three_soliton_interactions
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
+      line: 222
+      name: analyze_three_soliton_stability
+      returns: Dict[str, Any]
     SolitonModel:
     - args:
       - self
@@ -31163,6 +31733,127 @@ method_index:
       line: 200
       name: test_parameters_repr
       returns: null
+    TestDomainEffectsFull:
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 36
+      name: setup_method
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 54
+      name: test_analyzer_initialization
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 60
+      name: test_domain_size_effects_analysis_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 96
+      name: test_simulation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 130
+      name: test_7d_phase_field_initialization_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 146
+      name: test_7d_boundary_conditions_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 162
+      name: test_7d_fractional_laplacian_solving_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 179
+      name: test_7d_power_law_exponent_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 194
+      name: test_7d_topological_charge_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 207
+      name: test_7d_energy_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 224
+      name: test_7d_quality_factor_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 240
+      name: test_7d_stability_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 256
+      name: test_domain_size_effects_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 283
+      name: test_simplified_simulation_fallback
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 314
+      name: test_metrics_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 337
+      name: test_domain_effects_analysis_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 379
+      name: test_domain_dependence_analysis_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 399
+      name: test_overall_domain_effects_analysis_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 426
+      name: test_error_handling_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+      line: 444
+      name: test_performance_full_implementation
+      returns: null
     TestEffectiveMetricComprehensive:
     - args:
       - self
@@ -35178,6 +35869,94 @@ method_index:
       line: 97
       name: test_power_balance_postulate_physics
       returns: null
+    TestPowerLaw7DBVPCompliance:
+    - args:
+      - self
+      file: ./tests/unit/test_power_law_7d_bvp_compliance.py
+      line: 33
+      name: sample_region_data
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_power_law_7d_bvp_compliance.py
+      line: 45
+      name: sample_envelope
+      returns: null
+    - args:
+      - self
+      - sample_region_data
+      file: ./tests/unit/test_power_law_7d_bvp_compliance.py
+      line: 58
+      name: test_power_law_fitting_full_implementation
+      returns: null
+    - args:
+      - self
+      - sample_region_data
+      file: ./tests/unit/test_power_law_7d_bvp_compliance.py
+      line: 96
+      name: test_advanced_power_law_fitting_methods
+      returns: null
+    - args:
+      - self
+      - sample_envelope
+      file: ./tests/unit/test_power_law_7d_bvp_compliance.py
+      line: 122
+      name: test_power_law_optimization_full_implementation
+      returns: null
+    - args:
+      - self
+      - sample_envelope
+      file: ./tests/unit/test_power_law_7d_bvp_compliance.py
+      line: 158
+      name: test_power_law_core_full_implementation
+      returns: null
+    - args:
+      - self
+      - sample_envelope
+      file: ./tests/unit/test_power_law_7d_bvp_compliance.py
+      line: 203
+      name: test_power_law_statistics_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_power_law_7d_bvp_compliance.py
+      line: 241
+      name: test_no_simplified_implementations
+      returns: null
+    - args:
+      - self
+      - sample_region_data
+      file: ./tests/unit/test_power_law_7d_bvp_compliance.py
+      line: 271
+      name: test_7d_bvp_theory_compliance
+      returns: null
+    - args:
+      - self
+      - sample_region_data
+      file: ./tests/unit/test_power_law_7d_bvp_compliance.py
+      line: 306
+      name: test_error_handling_completeness
+      returns: null
+    - args:
+      - self
+      - sample_region_data
+      file: ./tests/unit/test_power_law_7d_bvp_compliance.py
+      line: 333
+      name: test_vectorized_processing_integration
+      returns: null
+    - args:
+      - self
+      - sample_region_data
+      file: ./tests/unit/test_power_law_7d_bvp_compliance.py
+      line: 359
+      name: test_comprehensive_quality_analysis
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_power_law_7d_bvp_compliance.py
+      line: 213
+      name: __init__
+      returns: null
     TestPowerLawCoreFixesAdvanced:
     - args:
       - self
@@ -35343,6 +36122,121 @@ method_index:
       file: ./tests/unit/test_models/test_level_b_power_law_core_fixes_basic.py
       line: 249
       name: test_physical_meaning_preservation
+      returns: null
+    TestPowerLawOptimizationFull:
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 38
+      name: setup_method
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 52
+      name: _create_test_envelope
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 65
+      name: test_optimization_initialization
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 71
+      name: test_optimize_power_law_fits_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 91
+      name: test_region_optimization_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 120
+      name: test_iterative_refinement_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 151
+      name: test_parameter_adjustment_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 176
+      name: test_optimization_quality_calculation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 219
+      name: test_region_extraction_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 241
+      name: test_region_data_extraction_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 264
+      name: test_initial_parameter_estimation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 283
+      name: test_fit_quality_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 301
+      name: test_gradient_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 321
+      name: test_parameter_sensitivity_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 338
+      name: test_optimization_without_bvp_core
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 353
+      name: test_error_handling_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 366
+      name: test_performance_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 382
+      name: test_convergence_criteria_full_implementation
+      returns: null
+    - args:
+      - params
+      file: ./tests/unit/test_core/test_power_law_optimization_full.py
+      line: 304
+      name: test_func
       returns: null
     TestPriority:
     - args:
@@ -38436,6 +39330,139 @@ method_index:
       line: 90
       name: test_tail_resonatorness_postulate_physics
       returns: null
+    TestTimeStabilityFull:
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 36
+      name: setup_method
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 55
+      name: test_analyzer_initialization
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 380
+      name: test_time_step_stability_analysis_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 98
+      name: test_simulation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 134
+      name: test_7d_phase_field_initialization_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 150
+      name: test_7d_boundary_conditions_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 166
+      name: test_7d_time_evolution_integration_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 188
+      name: test_7d_time_derivative_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 206
+      name: test_7d_power_law_exponent_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 221
+      name: test_7d_topological_charge_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 234
+      name: test_7d_energy_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 251
+      name: test_7d_quality_factor_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 267
+      name: test_7d_stability_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 284
+      name: test_time_step_effects_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 313
+      name: test_energy_conservation_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 327
+      name: test_simplified_simulation_fallback
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 357
+      name: test_metrics_computation_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 423
+      name: test_metric_stability_analysis_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 445
+      name: test_overall_stability_analysis_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 470
+      name: test_error_handling_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 489
+      name: test_performance_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+      line: 506
+      name: test_cfl_condition_checking
+      returns: null
     TestTransitionZonePostulatePhysics:
     - args:
       - self
@@ -39107,16 +40134,23 @@ method_index:
       returns: Dict[str, Any]
     - args:
       - self
+      - config
+      file: ./bhlff/models/level_e/discretization/time_stability.py
+      line: 161
+      name: _run_simplified_simulation
+      returns: Dict[str, Any]
+    - args:
+      - self
       - output
       file: ./bhlff/models/level_e/discretization/time_stability.py
-      line: 143
+      line: 191
       name: _compute_metrics
       returns: Dict[str, float]
     - args:
       - self
       - results
       file: ./bhlff/models/level_e/discretization/time_stability.py
-      line: 153
+      line: 201
       name: _analyze_time_step_stability
       returns: Dict[str, Any]
     - args:
@@ -39124,16 +40158,129 @@ method_index:
       - time_steps
       - values
       file: ./bhlff/models/level_e/discretization/time_stability.py
-      line: 178
+      line: 226
       name: _analyze_metric_stability
       returns: Dict[str, Any]
     - args:
       - self
       - stability_metrics
       file: ./bhlff/models/level_e/discretization/time_stability.py
-      line: 216
+      line: 264
       name: _analyze_overall_stability
       returns: Dict[str, Any]
+    - args:
+      - self
+      - x
+      - beta
+      - mu
+      - lambda_param
+      file: ./bhlff/models/level_e/discretization/time_stability.py
+      line: 293
+      name: _initialize_7d_phase_field
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      - x
+      - beta
+      - mu
+      file: ./bhlff/models/level_e/discretization/time_stability.py
+      line: 316
+      name: _apply_7d_boundary_conditions
+      returns: np.ndarray
+    - args:
+      - self
+      - initial_field
+      - x
+      - dt
+      - T
+      - beta
+      - mu
+      - lambda_param
+      - nu
+      file: ./bhlff/models/level_e/discretization/time_stability.py
+      line: 332
+      name: _integrate_7d_time_evolution
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      - x
+      - beta
+      - mu
+      - lambda_param
+      - nu
+      file: ./bhlff/models/level_e/discretization/time_stability.py
+      line: 367
+      name: _compute_7d_time_derivative
+      returns: np.ndarray
+    - args:
+      - self
+      - solution
+      - x
+      - beta
+      file: ./bhlff/models/level_e/discretization/time_stability.py
+      line: 406
+      name: _compute_7d_power_law_exponent
+      returns: float
+    - args:
+      - self
+      - solution
+      - x
+      file: ./bhlff/models/level_e/discretization/time_stability.py
+      line: 433
+      name: _compute_7d_topological_charge
+      returns: float
+    - args:
+      - self
+      - solution
+      - x
+      - beta
+      - mu
+      - lambda_param
+      file: ./bhlff/models/level_e/discretization/time_stability.py
+      line: 451
+      name: _compute_7d_energy
+      returns: float
+    - args:
+      - self
+      - solution
+      - x
+      - mu
+      - nu
+      file: ./bhlff/models/level_e/discretization/time_stability.py
+      line: 479
+      name: _compute_7d_quality_factor
+      returns: float
+    - args:
+      - self
+      - solution
+      - x
+      - beta
+      - mu
+      - dt
+      file: ./bhlff/models/level_e/discretization/time_stability.py
+      line: 499
+      name: _compute_7d_stability
+      returns: float
+    - args:
+      - self
+      - solution
+      - x
+      - dt
+      - T
+      file: ./bhlff/models/level_e/discretization/time_stability.py
+      line: 525
+      name: _compute_time_step_effects
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - solution
+      - x
+      file: ./bhlff/models/level_e/discretization/time_stability.py
+      line: 563
+      name: _compute_energy_conservation
+      returns: float
     TopologicalAnalysis:
     - args:
       - self
@@ -40789,6 +41936,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 5697
-    total_classes: 584
+    total_class_methods: 5846
+    total_classes: 592
     total_standalone_functions: 0

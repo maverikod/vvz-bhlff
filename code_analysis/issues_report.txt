@@ -2,9 +2,9 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 768
+Total issues found: 799
 
-METHODS_WITHOUT_DOCSTRINGS: 98 issues
+METHODS_WITHOUT_DOCSTRINGS: 109 issues
 ----------------------------------------
   ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
     Line 77
@@ -30,6 +30,32 @@ METHODS_WITHOUT_DOCSTRINGS: 98 issues
 
   ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
     Line 146
+    Method: __init__
+
+  ./tests/unit/test_power_law_7d_bvp_compliance.py
+    Line 168
+    Method: __init__
+
+  ./tests/unit/test_power_law_7d_bvp_compliance.py
+    Line 168
+    Class: MockBVPCore
+    Method: __init__
+
+  ./tests/unit/test_power_law_7d_bvp_compliance.py
+    Line 213
+    Method: __init__
+
+  ./tests/unit/test_power_law_7d_bvp_compliance.py
+    Line 213
+    Class: MockBVPCore
+    Method: __init__
+
+  ./tests/unit/test_power_law_7d_bvp_compliance.py
+    Line 168
+    Method: __init__
+
+  ./tests/unit/test_power_law_7d_bvp_compliance.py
+    Line 213
     Method: __init__
 
   ./tests/unit/test_level_g/test_gravity_physics.py
@@ -221,6 +247,10 @@ METHODS_WITHOUT_DOCSTRINGS: 98 issues
     Line 14
     Method: __init__
 
+  ./tests/unit/test_core/test_power_law_optimization_full.py
+    Line 304
+    Method: test_func
+
   ./tests/unit/test_core/test_step_resonator_boundary.py
     Line 12
     Method: test_step_resonator_basic_1d
@@ -249,17 +279,17 @@ METHODS_WITHOUT_DOCSTRINGS: 98 issues
     Line 47
     Method: test_admittance_scales_with_conductivity
 
-  ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
-    Line 145
-    Method: objective
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+    Line 110
+    Method: bc
 
-  ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
-    Line 218
-    Method: objective
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+    Line 205
+    Method: bc
 
-  ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
-    Line 266
-    Method: objective
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+    Line 86
+    Method: bc
 
   ./bhlff/core/bvp/memory_decorator.py
     Line 58
@@ -380,9 +410,25 @@ METHODS_WITHOUT_DOCSTRINGS: 98 issues
     Line 38
     Method: __init__
 
+  ./bhlff/core/bvp/power_law/power_law_optimization.py
+    Line 148
+    Method: objective_function
+
+  ./bhlff/core/bvp/power_law/power_law_optimization.py
+    Line 250
+    Method: refinement_objective
+
   ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
     Line 71
     Method: power_law_func
+
+  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+    Line 501
+    Method: power_law_func
+
+  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+    Line 560
+    Method: objective_function
 
   ./bhlff/core/bvp/envelope_equation/bvp_envelope_equation_7d_facade.py
     Line 119
@@ -434,7 +480,7 @@ FILES_WITHOUT_DOCSTRINGS: 4 issues
     Line 1
 
 
-CLASSES_WITHOUT_DOCSTRINGS: 6 issues
+CLASSES_WITHOUT_DOCSTRINGS: 8 issues
 ----------------------------------------
   ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
     Line 76
@@ -443,6 +489,14 @@ CLASSES_WITHOUT_DOCSTRINGS: 6 issues
   ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
     Line 145
     Class: MockDomain
+
+  ./tests/unit/test_power_law_7d_bvp_compliance.py
+    Line 167
+    Class: MockBVPCore
+
+  ./tests/unit/test_power_law_7d_bvp_compliance.py
+    Line 212
+    Class: MockBVPCore
 
   ./tests/unit/test_level_g/test_gravity_physics.py
     Line 60
@@ -461,13 +515,10 @@ CLASSES_WITHOUT_DOCSTRINGS: 6 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 580 issues
+IMPORTS_IN_MIDDLE: 590 issues
 ----------------------------------------
   ./setup.py
     Line 28
-
-  ./test_debug.py
-    Line 102
 
   ./scripts/demo_vectorized_power_law.py
     Line 203
@@ -622,6 +673,12 @@ IMPORTS_IN_MIDDLE: 580 issues
   ./tests/unit/test_models/test_level_b_power_law_core_fixes_basic.py
     Line 30
 
+  ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+    Line 491
+
+  ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+    Line 446
+
   ./tests/unit/test_level_e/test_soliton_physics_advanced.py
     Line 30
 
@@ -729,6 +786,9 @@ IMPORTS_IN_MIDDLE: 580 issues
 
   ./tests/unit/test_core/test_quenches_postulate_physics.py
     Line 29
+
+  ./tests/unit/test_core/test_power_law_optimization_full.py
+    Line 368
 
   ./tests/unit/test_core/test_base_time_integrator.py
     Line 27
@@ -1144,9 +1204,6 @@ IMPORTS_IN_MIDDLE: 580 issues
   ./bhlff/models/level_f/collective.py
     Line 30
 
-  ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py
-    Line 24
-
   ./bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py
     Line 23
 
@@ -1161,6 +1218,24 @@ IMPORTS_IN_MIDDLE: 580 issues
 
   ./bhlff/models/level_f/nonlinear/mode_analysis.py
     Line 22
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+    Line 26
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+    Line 26
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
+    Line 24
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/solutions.py
+    Line 28
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/__init__.py
+    Line 26
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
+    Line 24
 
   ./bhlff/models/level_f/collective/dispersion_analysis.py
     Line 22
@@ -1397,7 +1472,7 @@ IMPORTS_IN_MIDDLE: 580 issues
     Line 24
 
   ./bhlff/models/level_e/discretization/domain_effects.py
-    Line 24
+    Line 422
 
   ./bhlff/models/level_e/discretization/discretization_analyzer.py
     Line 32
@@ -1406,7 +1481,7 @@ IMPORTS_IN_MIDDLE: 580 issues
     Line 32
 
   ./bhlff/models/level_e/discretization/time_stability.py
-    Line 24
+    Line 459
 
   ./bhlff/models/level_e/experiments/specialized_experiments.py
     Line 26
@@ -1882,6 +1957,12 @@ IMPORTS_IN_MIDDLE: 580 issues
   ./bhlff/core/bvp/boundary/step_resonator.py
     Line 24
 
+  ./bhlff/core/bvp/power_law/power_law_optimization.py
+    Line 621
+
+  ./bhlff/core/bvp/power_law/power_law_core.py
+    Line 322
+
   ./bhlff/core/bvp/constants/frequency_dependent_properties.py
     Line 28
 
@@ -1896,6 +1977,9 @@ IMPORTS_IN_MIDDLE: 580 issues
 
   ./bhlff/core/bvp/constants/nonlinear_coefficients.py
     Line 26
+
+  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+    Line 554
 
   ./bhlff/core/bvp/envelope_equation/solver_core_basic.py
     Line 251
@@ -2204,7 +2288,7 @@ IMPORTS_IN_MIDDLE: 580 issues
     Line 23
 
 
-FILES_TOO_LARGE: 80 issues
+FILES_TOO_LARGE: 88 issues
 ----------------------------------------
   ./tests/unit/test_ml_prediction_vectorized_implementations.py
 
@@ -2212,11 +2296,17 @@ FILES_TOO_LARGE: 80 issues
 
   ./tests/unit/test_physics_validation_step_2_1_1.py
 
+  ./tests/unit/test_models/test_level_e/test_time_stability_full.py
+
+  ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
+
   ./tests/unit/automated_testing/test_integration.py
 
   ./tests/unit/automated_testing/test_quality_monitor.py
 
   ./tests/unit/test_core/test_7d_physics.py
+
+  ./tests/unit/test_core/test_power_law_optimization_full.py
 
   ./tests/unit/test_core/test_bvp_constants_comprehensive.py
 
@@ -2278,6 +2368,8 @@ FILES_TOO_LARGE: 80 issues
 
   ./bhlff/models/level_f/nonlinear/mode_analysis.py
 
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
+
   ./bhlff/models/level_f/collective/excitation_analysis.py
 
   ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
@@ -2316,6 +2408,10 @@ FILES_TOO_LARGE: 80 issues
 
   ./bhlff/models/level_e/failure_detection.py
 
+  ./bhlff/models/level_e/discretization/domain_effects.py
+
+  ./bhlff/models/level_e/discretization/time_stability.py
+
   ./bhlff/models/level_e/experiments/experiment_runner.py
 
   ./bhlff/models/level_g/gravity_curvature.py
@@ -2341,6 +2437,10 @@ FILES_TOO_LARGE: 80 issues
   ./bhlff/core/bvp/physical_validation_decorator.py
 
   ./bhlff/core/bvp/validation/physical_constraints.py
+
+  ./bhlff/core/bvp/power_law/power_law_optimization.py
+
+  ./bhlff/core/bvp/power_law/power_law_core.py
 
   ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
 

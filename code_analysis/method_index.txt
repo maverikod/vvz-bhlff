@@ -716,6 +716,34 @@ Class: TestParticleInversion
   test_inversion_optimization(self)
     File: ./tests/unit/test_level_g_particle_inversion_advanced.py, Line: 166
 
+Class: TestPowerLaw7DBVPCompliance
+  sample_region_data(self)
+    File: ./tests/unit/test_power_law_7d_bvp_compliance.py, Line: 33
+  sample_envelope(self)
+    File: ./tests/unit/test_power_law_7d_bvp_compliance.py, Line: 45
+  test_power_law_fitting_full_implementation(self, sample_region_data)
+    File: ./tests/unit/test_power_law_7d_bvp_compliance.py, Line: 58
+  test_advanced_power_law_fitting_methods(self, sample_region_data)
+    File: ./tests/unit/test_power_law_7d_bvp_compliance.py, Line: 96
+  test_power_law_optimization_full_implementation(self, sample_envelope)
+    File: ./tests/unit/test_power_law_7d_bvp_compliance.py, Line: 122
+  test_power_law_core_full_implementation(self, sample_envelope)
+    File: ./tests/unit/test_power_law_7d_bvp_compliance.py, Line: 158
+  test_power_law_statistics_full_implementation(self, sample_envelope)
+    File: ./tests/unit/test_power_law_7d_bvp_compliance.py, Line: 203
+  test_no_simplified_implementations(self)
+    File: ./tests/unit/test_power_law_7d_bvp_compliance.py, Line: 241
+  test_7d_bvp_theory_compliance(self, sample_region_data)
+    File: ./tests/unit/test_power_law_7d_bvp_compliance.py, Line: 271
+  test_error_handling_completeness(self, sample_region_data)
+    File: ./tests/unit/test_power_law_7d_bvp_compliance.py, Line: 306
+  test_vectorized_processing_integration(self, sample_region_data)
+    File: ./tests/unit/test_power_law_7d_bvp_compliance.py, Line: 333
+  test_comprehensive_quality_analysis(self, sample_region_data)
+    File: ./tests/unit/test_power_law_7d_bvp_compliance.py, Line: 359
+  __init__(self)
+    File: ./tests/unit/test_power_law_7d_bvp_compliance.py, Line: 213
+
 Class: TestAstrophysicalObjectModelBasic
   test_star_model_initialization(self)
     File: ./tests/unit/test_level_g_astrophysics_basic.py, Line: 30
@@ -1253,6 +1281,94 @@ Class: TestPowerLawCoreFixesBasic
     File: ./tests/unit/test_models/test_level_b_power_law_core_fixes_basic.py, Line: 208
   test_physical_meaning_preservation(self, power_law_core, test_envelope_3d)
     File: ./tests/unit/test_models/test_level_b_power_law_core_fixes_basic.py, Line: 249
+
+Class: TestTimeStabilityFull
+  setup_method(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 36
+  test_analyzer_initialization(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 55
+  test_time_step_stability_analysis_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 380
+  test_simulation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 98
+  test_7d_phase_field_initialization_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 134
+  test_7d_boundary_conditions_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 150
+  test_7d_time_evolution_integration_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 166
+  test_7d_time_derivative_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 188
+  test_7d_power_law_exponent_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 206
+  test_7d_topological_charge_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 221
+  test_7d_energy_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 234
+  test_7d_quality_factor_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 251
+  test_7d_stability_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 267
+  test_time_step_effects_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 284
+  test_energy_conservation_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 313
+  test_simplified_simulation_fallback(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 327
+  test_metrics_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 357
+  test_metric_stability_analysis_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 423
+  test_overall_stability_analysis_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 445
+  test_error_handling_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 470
+  test_performance_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 489
+  test_cfl_condition_checking(self)
+    File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py, Line: 506
+
+Class: TestDomainEffectsFull
+  setup_method(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 36
+  test_analyzer_initialization(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 54
+  test_domain_size_effects_analysis_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 60
+  test_simulation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 96
+  test_7d_phase_field_initialization_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 130
+  test_7d_boundary_conditions_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 146
+  test_7d_fractional_laplacian_solving_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 162
+  test_7d_power_law_exponent_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 179
+  test_7d_topological_charge_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 194
+  test_7d_energy_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 207
+  test_7d_quality_factor_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 224
+  test_7d_stability_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 240
+  test_domain_size_effects_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 256
+  test_simplified_simulation_fallback(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 283
+  test_metrics_computation_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 314
+  test_domain_effects_analysis_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 337
+  test_domain_dependence_analysis_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 379
+  test_overall_domain_effects_analysis_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 399
+  test_error_handling_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 426
+  test_performance_full_implementation(self)
+    File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py, Line: 444
 
 Class: TestSolitonPhysicsAdvanced
   domain_3d(self)
@@ -2265,6 +2381,46 @@ Class: DummyDomain
     File: ./tests/unit/test_core/test_cuda_fft_backend_parity.py, Line: 18
   __init__(self, shape)
     File: ./tests/unit/test_core/test_cuda_fft_backend_parity.py, Line: 14
+
+Class: TestPowerLawOptimizationFull
+  setup_method(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 38
+  _create_test_envelope(self) -> np.ndarray
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 52
+  test_optimization_initialization(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 65
+  test_optimize_power_law_fits_full_implementation(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 71
+  test_region_optimization_full_implementation(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 91
+  test_iterative_refinement_full_implementation(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 120
+  test_parameter_adjustment_full_implementation(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 151
+  test_optimization_quality_calculation_full_implementation(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 176
+  test_region_extraction_full_implementation(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 219
+  test_region_data_extraction_full_implementation(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 241
+  test_initial_parameter_estimation_full_implementation(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 264
+  test_fit_quality_computation_full_implementation(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 283
+  test_gradient_computation_full_implementation(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 301
+  test_parameter_sensitivity_computation_full_implementation(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 321
+  test_optimization_without_bvp_core(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 338
+  test_error_handling_full_implementation(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 353
+  test_performance_full_implementation(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 366
+  test_convergence_criteria_full_implementation(self)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 382
+  test_func(params)
+    File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 304
 
 Class: TestNoExponentialDamping
   test_no_exponential_memory_kernel(self)
@@ -5366,29 +5522,29 @@ Class: BeatingMLVectorizedMethods
   compute_7d_phase_field_symmetry_vectorized(self, envelope) -> float
     File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 46
   _compute_spatial_symmetry_vectorized(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 81
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 85
   _compute_spectral_symmetry_vectorized(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 116
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 140
   _compute_phase_symmetry_vectorized(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 148
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 192
   compute_7d_phase_field_regularity_vectorized(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 174
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 218
   _compute_spatial_regularity_vectorized(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 209
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 253
   _compute_temporal_regularity_vectorized(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 227
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 271
   _compute_spectral_regularity_vectorized(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 248
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 303
   extract_ml_pattern_features_vectorized(self, features) -> np.ndarray
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 270
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 325
   compute_7d_phase_field_energy_vectorized(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 306
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 361
   compute_7d_phase_field_momentum_vectorized(self, envelope) -> np.ndarray
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 330
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 385
   compute_7d_phase_field_angular_momentum_vectorized(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 363
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 418
   compute_7d_phase_field_entropy_vectorized(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 394
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py, Line: 449
 
 Class: BeatingMLCore
   __init__(self, bvp_core)
@@ -6658,26 +6814,6 @@ Class: CollectiveExcitations
   analyze(self, data) -> Dict[str, Any]
     File: ./bhlff/models/level_f/collective.py, Line: 171
 
-Class: SolitonAnalysisSolutions
-  __init__(self, system, nonlinear_params)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 42
-  find_soliton_solutions(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 59
-  _find_soliton_profiles(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 102
-  _find_single_soliton(self) -> Optional[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 126
-  _find_multi_soliton_solutions(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 176
-  _find_two_soliton_solution(self) -> Optional[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 201
-  _find_three_soliton_solution(self) -> Optional[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 249
-  _calculate_solution_quality(self, soliton_profiles) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 298
-  objective(params)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis_solutions.py, Line: 266
-
 Class: SolitonAnalysisInitialization
   __init__(self, system, nonlinear_params)
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py, Line: 41
@@ -6771,6 +6907,84 @@ Class: NonlinearModeAnalyzer
     File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 465
   _analyze_sine_gordon_mode_interactions(self, modes) -> Dict[str, Any]
     File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 489
+
+Class: MultiSolitonSolver
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 44
+  find_multi_soliton_solutions(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 49
+  find_two_soliton_solutions(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 81
+  find_three_soliton_solutions(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 176
+  _compute_7d_two_soliton_ode(self, x, y, amp1, width1, pos1, amp2, width2, pos2) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 268
+  _compute_7d_three_soliton_ode(self, x, y, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 298
+  _compute_two_soliton_energy(self, solution, amp1, width1, pos1, amp2, width2, pos2) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 334
+  _compute_three_soliton_energy(self, solution, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 354
+  _compute_final_two_soliton_solution(self, amp1, width1, pos1, amp2, width2, pos2) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 385
+  _compute_final_three_soliton_solution(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 422
+  two_soliton_equations_7d(params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 101
+  three_soliton_equations_7d(params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 196
+  two_soliton_ode(x, y)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 105
+  bc(ya, yb)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 205
+  three_soliton_ode(x, y)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 200
+
+Class: SingleSolitonSolver
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 44
+  find_single_soliton(self) -> Optional[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 49
+  _compute_final_soliton_solution(self, amplitude, width, position) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 141
+  soliton_equations_7d(params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 77
+  soliton_ode(x, y)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 81
+  bc(ya, yb)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 86
+
+Class: SolitonInteractionAnalyzer
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 40
+  analyze_interactions(self, multi_solitons) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 45
+  analyze_two_soliton_stability(self, amp1, width1, pos1, amp2, width2, pos2) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 114
+  analyze_three_soliton_interactions(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 159
+  analyze_three_soliton_stability(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 222
+
+Class: SolitonAnalysisSolutions
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/solutions.py, Line: 45
+  find_soliton_solutions(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/solutions.py, Line: 66
+  calculate_solution_quality(self, soliton_profiles) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/solutions.py, Line: 103
+
+Class: SolitonAnalysisBase
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 42
+  compute_soliton_energy(self, solution, amplitude, width) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 65
+  compute_topological_charge(self, field) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 111
+  compute_7d_soliton_ode(self, x, y, amplitude, width) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 140
+  compute_soliton_interaction_strength(self, amp1, width1, pos1, amp2, width2, pos2) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 187
 
 Class: DispersionAnalyzer
   __init__(self, system)
@@ -7424,7 +7638,19 @@ Class: PowerLawCore
   _fit_power_law(self, region_data) -> Dict[str, float]
     File: ./bhlff/core/bvp/power_law/power_law_core.py, Line: 301
   _calculate_fitting_quality(self, region_data, power_law_fit) -> float
-    File: ./bhlff/core/bvp/power_law/power_law_core.py, Line: 345
+    File: ./bhlff/core/bvp/power_law/power_law_core.py, Line: 408
+  _compute_r_squared_full(self, distances, amplitudes, popt, func) -> float
+    File: ./bhlff/core/bvp/power_law/power_law_core.py, Line: 484
+  _compute_chi_squared_full(self, distances, amplitudes, popt, func) -> float
+    File: ./bhlff/core/bvp/power_law/power_law_core.py, Line: 520
+  _compute_fitting_quality_full(self, pcov) -> float
+    File: ./bhlff/core/bvp/power_law/power_law_core.py, Line: 551
+  _compute_physical_constraints_quality(self, exponent, coefficient) -> float
+    File: ./bhlff/core/bvp/power_law/power_law_core.py, Line: 581
+  _compute_data_points_quality(self, data_points) -> float
+    File: ./bhlff/core/bvp/power_law/power_law_core.py, Line: 617
+  power_law_func(r, amplitude, exponent)
+    File: ./bhlff/core/bvp/power_law/power_law_core.py, Line: 354
 
 Class: CriticalExponents
   __init__(self, bvp_core)
@@ -8415,14 +8641,34 @@ Class: DomainEffectsAnalyzer
     File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 97
   _run_simulation(self, config) -> Dict[str, Any]
     File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 104
+  _run_simplified_simulation(self, config) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 164
   _compute_metrics(self, output) -> Dict[str, float]
-    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 149
+    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 193
   _analyze_domain_effects(self, results) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 159
+    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 203
   _analyze_domain_dependence(self, domain_sizes, values) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 187
+    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 231
   _analyze_overall_domain_effects(self, domain_effects) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 217
+    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 261
+  _initialize_7d_phase_field(self, x, beta, mu, lambda_param) -> np.ndarray
+    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 291
+  _apply_7d_boundary_conditions(self, field, x, beta, mu) -> np.ndarray
+    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 314
+  _solve_7d_fractional_laplacian(self, initial_field, x, beta, mu, lambda_param) -> np.ndarray
+    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 330
+  _compute_7d_power_law_exponent(self, solution, x, beta) -> float
+    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 369
+  _compute_7d_topological_charge(self, solution, x) -> float
+    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 396
+  _compute_7d_energy(self, solution, x, beta, mu, lambda_param) -> float
+    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 414
+  _compute_7d_quality_factor(self, solution, x, mu, nu) -> float
+    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 442
+  _compute_7d_stability(self, solution, x, beta, mu) -> float
+    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 462
+  _compute_domain_size_effects(self, solution, x, L, N) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 483
 
 Class: TimeStabilityAnalyzer
   __init__(self, reference_config)
@@ -8435,14 +8681,38 @@ Class: TimeStabilityAnalyzer
     File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 91
   _run_simulation(self, config) -> Dict[str, Any]
     File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 98
+  _run_simplified_simulation(self, config) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 161
   _compute_metrics(self, output) -> Dict[str, float]
-    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 143
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 191
   _analyze_time_step_stability(self, results) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 153
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 201
   _analyze_metric_stability(self, time_steps, values) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 178
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 226
   _analyze_overall_stability(self, stability_metrics) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 216
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 264
+  _initialize_7d_phase_field(self, x, beta, mu, lambda_param) -> np.ndarray
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 293
+  _apply_7d_boundary_conditions(self, field, x, beta, mu) -> np.ndarray
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 316
+  _integrate_7d_time_evolution(self, initial_field, x, dt, T, beta, mu, lambda_param, nu) -> np.ndarray
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 332
+  _compute_7d_time_derivative(self, field, x, beta, mu, lambda_param, nu) -> np.ndarray
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 367
+  _compute_7d_power_law_exponent(self, solution, x, beta) -> float
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 406
+  _compute_7d_topological_charge(self, solution, x) -> float
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 433
+  _compute_7d_energy(self, solution, x, beta, mu, lambda_param) -> float
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 451
+  _compute_7d_quality_factor(self, solution, x, mu, nu) -> float
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 479
+  _compute_7d_stability(self, solution, x, beta, mu, dt) -> float
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 499
+  _compute_time_step_effects(self, solution, x, dt, T) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 525
+  _compute_energy_conservation(self, solution, x) -> float
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 563
 
 Class: SpecializedExperiments
   __init__(self)
@@ -10804,13 +11074,37 @@ Class: PowerLawOptimization
   optimize_power_law_fits(self, envelope) -> Dict[str, Any]
     File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 34
   _optimize_region_fit(self, envelope, region) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 61
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 121
   _iterative_refinement(self, region_data, initial_fit) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 72
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 228
   _adjust_fit_parameters(self, fit_params) -> Dict[str, float]
-    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 83
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 314
   _calculate_optimization_quality(self, optimized_results) -> Dict[str, float]
-    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 91
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 367
+  _compute_parameter_uncertainty_quality(self, successful_results) -> float
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 458
+  _compute_physical_constraints_quality(self, successful_results) -> float
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 501
+  _extract_optimization_regions(self, envelope) -> List[Dict[str, Any]]
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 589
+  _simple_region_extraction(self, envelope) -> List[Dict[str, Any]]
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 611
+  _compute_region_center(self, mask) -> np.ndarray
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 636
+  _extract_region_data(self, envelope, region) -> Dict[str, np.ndarray]
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 644
+  _get_initial_parameters(self, region_data) -> np.ndarray
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 671
+  _compute_fit_quality(self, region_data, params) -> float
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 700
+  _compute_gradient(self, func, params, h) -> np.ndarray
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 727
+  _compute_parameter_sensitivity(self, param_value, param_name) -> float
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 752
+  objective_function(params)
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 148
+  refinement_objective(params)
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 250
 
 Class: PowerLawStatistics
   __init__(self, bvp_core)
@@ -10931,8 +11225,28 @@ Class: PowerLawFitting
     File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 349
   _compute_chi_squared(self, radial_profile, popt, func) -> float
     File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 379
+  fit_power_law_advanced(self, region_data, method) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 415
+  _fit_using_curve_fit(self, radial_profile) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 480
+  _fit_using_minimize(self, radial_profile) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 539
+  _fit_using_custom_optimization(self, radial_profile) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 616
+  _compute_gradients(self, r, values, amplitude, exponent) -> Tuple[float, float]
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 702
+  _perform_comprehensive_quality_analysis(self, radial_profile, fit_result) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 737
+  _compute_statistical_quality(self, r_squared, chi_squared, data_points) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 806
+  _compute_physical_quality(self, amplitude, exponent) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 837
+  _compute_uncertainty_quality(self, parameter_errors) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 860
   power_law_func(r, amplitude, exponent)
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 71
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 501
+  objective_function(params)
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 560
 
 Class: EnvelopeSolverCoreBasic
   __init__(self, domain, config)

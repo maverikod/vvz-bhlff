@@ -117,10 +117,6 @@ issues:
     file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
     limit: 400
     lines: 689
-  - exceeds_limit: 507
-    file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-    limit: 400
-    lines: 907
   - exceeds_limit: 212
     file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
     limit: 400
@@ -137,6 +133,18 @@ issues:
     file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
     limit: 400
     lines: 480
+  - exceeds_limit: 112
+    file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+    limit: 400
+    lines: 512
+  - exceeds_limit: 84
+    file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+    limit: 400
+    lines: 484
+  - exceeds_limit: 4
+    file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+    limit: 400
+    lines: 404
   - exceeds_limit: 88
     file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
     limit: 400
@@ -349,10 +357,10 @@ issues:
     file: ./bhlff/core/bvp/power_law/power_law_core.py
     limit: 400
     lines: 645
-  - exceeds_limit: 476
-    file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+  - exceeds_limit: 10
+    file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
     limit: 400
-    lines: 876
+    lines: 410
   - exceeds_limit: 41
     file: ./bhlff/core/bvp/envelope_equation/solver_core_basic.py
     limit: 400
@@ -759,8 +767,6 @@ issues:
     line: 268
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py
     line: 278
-  - file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-    line: 26
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
     line: 246
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
@@ -773,6 +779,18 @@ issues:
     line: 23
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
     line: 31
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py
+    line: 23
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+    line: 29
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py
+    line: 21
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+    line: 26
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/__init__.py
+    line: 24
+  - file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+    line: 23
   - file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
     line: 26
   - file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
@@ -906,7 +924,7 @@ issues:
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/__init__.py
     line: 25
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
-    line: 24
+    line: 26
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
     line: 22
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py
@@ -919,6 +937,16 @@ issues:
     line: 25
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
     line: 27
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/stability_analysis.py
+    line: 23
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/binding_analysis.py
+    line: 25
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/__init__.py
+    line: 25
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/interaction_analyzer.py
+    line: 24
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py
+    line: 25
   - file: ./bhlff/models/level_f/collective/dispersion_analysis.py
     line: 22
   - file: ./bhlff/models/level_f/collective/excitation_analysis.py
@@ -1054,11 +1082,21 @@ issues:
   - file: ./bhlff/models/level_e/performance/scaling/__init__.py
     line: 26
   - file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py
-    line: 22
+    line: 21
   - file: ./bhlff/models/level_e/phase_mapping_components/regime_classification.py
     line: 164
   - file: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py
     line: 22
+  - file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py
+    line: 21
+  - file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+    line: 24
+  - file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/__init__.py
+    line: 25
   - file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
     line: 108
   - file: ./bhlff/models/level_e/sensitivity/sobol_analysis.py
@@ -1137,8 +1175,6 @@ issues:
     line: 32
   - file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
     line: 31
-  - file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
-    line: 264
   - file: ./bhlff/models/level_g/analysis/statistical_analysis.py
     line: 28
   - file: ./bhlff/models/level_g/analysis/__init__.py
@@ -1153,6 +1189,16 @@ issues:
     line: 29
   - file: ./bhlff/models/level_g/analysis/parameter_analysis.py
     line: 28
+  - file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+    line: 21
+  - file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+    line: 21
+  - file: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py
+    line: 24
+  - file: ./bhlff/models/level_g/analysis/observational_comparison/__init__.py
+    line: 25
+  - file: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+    line: 22
   - file: ./bhlff/models/level_g/evolution/cosmological_evolution.py
     line: 30
   - file: ./bhlff/models/level_g/evolution/cosmological_parameters.py
@@ -1423,8 +1469,16 @@ issues:
     line: 33
   - file: ./bhlff/core/bvp/constants/nonlinear_coefficients.py
     line: 26
-  - file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-    line: 554
+  - file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/advanced_fitting.py
+    line: 26
+  - file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+    line: 23
+  - file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/__init__.py
+    line: 24
+  - file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
+    line: 30
+  - file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
+    line: 22
   - file: ./bhlff/core/bvp/envelope_equation/solver_core_basic.py
     line: 251
   - file: ./bhlff/core/bvp/envelope_equation/__init__.py
@@ -2024,17 +2078,17 @@ issues:
     line: 250
     method: refinement_objective
   - class: null
-    file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-    line: 71
+    file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+    line: 64
     method: power_law_func
   - class: null
-    file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-    line: 501
-    method: power_law_func
-  - class: null
-    file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-    line: 560
+    file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+    line: 121
     method: objective_function
+  - class: null
+    file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
+    line: 104
+    method: power_law_func
   - class: null
     file: ./bhlff/core/bvp/envelope_equation/bvp_envelope_equation_7d_facade.py
     line: 119
@@ -2070,9 +2124,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 8
-  files_too_large: 93
+  files_too_large: 95
   files_without_docstrings: 4
-  imports_in_middle: 611
+  imports_in_middle: 634
   methods_with_pass: 0
   methods_without_docstrings: 109
   not_implemented_in_non_abstract: 0

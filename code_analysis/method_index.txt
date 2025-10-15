@@ -4818,15 +4818,37 @@ Class: BoundaryAnalyzer
   analyze_boundary_energy(self, envelope) -> Dict[str, Any]
     File: ./bhlff/models/level_c/boundaries.py, Line: 92
   __init__(self)
-    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py, Line: 35
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 42
   analyze_regime_boundaries(self, parameter_grid, classifications) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py, Line: 48
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 60
+  _extract_regime_data(self, classifications) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 90
   _find_regime_boundary(self, regime_data, regime1, regime2) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py, Line: 77
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 110
   _compute_regime_separation(self, regime1_data, regime2_data) -> float
-    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py, Line: 101
-  _find_boundary_points(self, regime1_data, regime2_data) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py, Line: 122
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 159
+  _find_boundary_points_7d(self, regime1_data, regime2_data) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 186
+  _compute_7d_boundary_analysis(self, regime1_params, regime2_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 232
+  _find_critical_boundary_points(self, regime1_data, regime2_data, boundary_analysis) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 266
+  _is_7d_boundary_point(self, params1, params2, boundary_analysis) -> bool
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 299
+  _compute_7d_boundary_strength(self, params1, params2) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 327
+  _compute_7d_phase_gradient(self, regime1_params, regime2_params) -> np.ndarray
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 347
+  _compute_phase_coherence_length(self, regime1_params, regime2_params) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 353
+  _compute_topological_defect_density(self, regime1_params, regime2_params) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 358
+  _compute_boundary_strength(self, phase_gradient, coherence_length) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 363
+  _check_phase_field_criteria(self, params1, params2, boundary_analysis) -> bool
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 368
+  _check_topological_criteria(self, params1, params2, boundary_analysis) -> bool
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py, Line: 372
   __init__(self, domain_7d)
     File: ./bhlff/core/bvp/postulates/power_balance/boundary_analyzer.py, Line: 49
   compute_radiation_losses(self, envelope) -> float
@@ -5464,59 +5486,57 @@ Class: BeatingMLPatternClassifier
 
 Class: BeatingMLPredictionCore
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 42
-  predict_beating_frequencies(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 36
+  predict_beating_frequencies(self, envelope)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 50
+  predict_mode_coupling(self, envelope)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 54
+  train_frequency_model(self, n_samples)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 58
+  train_coupling_model(self, n_samples)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 62
+  train_all_models(self, n_samples)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 66
+  validate_models(self, n_samples)
     File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 70
+  get_model_performance(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 74
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 45
+  predict_beating_frequencies(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 73
   predict_mode_coupling(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 130
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 133
   train_frequency_model(self, n_samples) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 200
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 203
   train_coupling_model(self, n_samples) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 221
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 224
   train_all_models(self, n_samples) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 242
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 245
   validate_models(self, n_samples) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 259
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 262
   get_model_performance(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 276
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 279
   _load_trained_frequency_model(self)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 289
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 292
   _load_frequency_scaler(self)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 306
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 300
   _load_trained_coupling_model(self)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 322
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 308
   _load_coupling_scaler(self)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 339
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 316
   _compute_prediction_confidence(self, features, model) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 355
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 324
   _get_feature_importance(self, model) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 394
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 346
   _compute_prediction_variance(self, features, model) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 440
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 376
   _predict_frequencies_analytical(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 471
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 390
   _predict_coupling_analytical(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 527
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 430
   _setup_vectorized_processor(self) -> None
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 590
-  _optimize_with_vectorized_processing(self, envelope, parameters) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 633
-  _extract_vectorized_optimization_results(self, vectorized_results, parameters) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 674
-  _compute_vectorized_optimization_metrics(self, vectorized_results) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 714
-  _compute_optimal_horizon_from_vectorized(self, vectorized_results) -> int
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 744
-  _compute_optimal_regularization_from_vectorized(self, vectorized_results) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 764
-  _compute_optimization_quality_from_vectorized(self, vectorized_results) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 784
-  _optimize_without_vectorization(self, envelope, parameters) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 801
-  _extract_features_vectorized(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 834
-  _extract_features_from_vectorized_results(self, vectorized_results) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 857
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 477
 
 Class: BeatingMLOptimizationCore
   __init__(self, bvp_core)
@@ -5746,7 +5766,163 @@ Class: BeatingMLOptimization
   optimize_prediction_parameters(self, envelope) -> Dict[str, Any]
     File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization.py, Line: 98
 
+Class: MLModelManager
+  __init__(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py, Line: 39
+  get_frequency_model(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py, Line: 56
+  get_coupling_model(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py, Line: 68
+  get_frequency_scaler(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py, Line: 80
+  get_coupling_scaler(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py, Line: 92
+  save_frequency_model(self, model, scaler)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py, Line: 104
+  save_coupling_model(self, model, scaler)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py, Line: 113
+  update_model_performance(self, model_type, performance)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py, Line: 122
+  get_model_performance(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py, Line: 126
+  clear_models(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py, Line: 130
+  list_available_models(self) -> Dict[str, bool]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py, Line: 145
+  __init__(self, model_dir)
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 41
+  _initialize_models(self) -> None
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 68
+  _load_trained_model(self, model_type) -> None
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 93
+  _create_default_model(self, model_type) -> None
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 119
+  get_frequency_model(self) -> Optional[RandomForestRegressor]
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 146
+  get_coupling_model(self) -> Optional[MLPRegressor]
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 158
+  get_frequency_scaler(self) -> StandardScaler
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 170
+  get_coupling_scaler(self) -> StandardScaler
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 182
+  save_model(self, model_type, model, scaler) -> None
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 194
+  is_model_loaded(self, model_type) -> bool
+    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 222
+
+Class: PredictionEngine
+  __init__(self, model_manager, feature_extractor)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py, Line: 37
+  predict_frequencies(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py, Line: 49
+  predict_coupling(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py, Line: 98
+  _compute_prediction_confidence(self, features, model) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py, Line: 157
+  _compute_prediction_uncertainty(self, features, model) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py, Line: 179
+  _predict_frequencies_analytical(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py, Line: 194
+  _predict_coupling_analytical(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py, Line: 223
+  __init__(self, model_manager, feature_extractor)
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 41
+  predict_frequencies(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 58
+  predict_coupling(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 120
+  _predict_frequencies_simple(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 192
+  _predict_coupling_simple(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 267
+  _compute_prediction_confidence(self, features, model) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 357
+  _get_feature_importance(self, model) -> Dict[str, float]
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 392
+  _compute_prediction_variance(self, features, model) -> float
+    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 434
+
+Class: MLTrainer
+  __init__(self, model_manager)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py, Line: 42
+  train_frequency_model(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py, Line: 52
+  train_coupling_model(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py, Line: 120
+  train_all_models(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py, Line: 187
+  validate_models(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py, Line: 220
+  get_model_performance(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py, Line: 253
+  _generate_frequency_training_data(self, n_samples) -> Tuple[np.ndarray, np.ndarray]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py, Line: 257
+  _generate_coupling_training_data(self, n_samples) -> Tuple[np.ndarray, np.ndarray]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py, Line: 282
+  _generate_synthetic_envelope(self) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py, Line: 307
+  _extract_frequency_features(self, envelope) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py, Line: 333
+  _extract_coupling_features(self, envelope) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py, Line: 357
+  _generate_target_frequencies(self, features) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py, Line: 384
+  _generate_target_coupling(self, features) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py, Line: 398
+  _validate_frequency_model(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py, Line: 418
+  _validate_coupling_model(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py, Line: 452
+  __init__(self, model_manager)
+    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 47
+  train_frequency_model(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 81
+  train_coupling_model(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 147
+  train_all_models(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 207
+  validate_models(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 235
+  get_model_performance(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 288
+
 Class: FeatureExtractor
+  __init__(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 39
+  extract_frequency_features(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 43
+  extract_coupling_features(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 89
+  extract_7d_phase_features(self, features) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 139
+  _compute_spectral_entropy(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 178
+  _compute_frequency_spacing(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 196
+  _compute_frequency_bandwidth(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 217
+  _compute_autocorrelation(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 241
+  _compute_coupling_strength(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 263
+  _compute_interaction_energy(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 274
+  _compute_coupling_symmetry(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 285
+  _compute_nonlinear_strength(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 303
+  _compute_mixing_degree(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 321
+  _compute_coupling_efficiency(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 339
+  _compute_phase_coherence(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 356
+  _compute_topological_charge(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 368
+  _compute_energy_density(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 384
+  _compute_phase_velocity(self, envelope) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py, Line: 395
   __init__(self)
     File: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py, Line: 42
   extract_frequency_features(self, envelope) -> Dict[str, Any]
@@ -5855,60 +6031,6 @@ Class: PhaseFieldFeatures
     File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 101
   _compute_phase_velocity(self, features) -> float
     File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 115
-
-Class: PredictionEngine
-  __init__(self, model_manager, feature_extractor)
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 41
-  predict_frequencies(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 58
-  predict_coupling(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 120
-  _predict_frequencies_simple(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 192
-  _predict_coupling_simple(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 267
-  _compute_prediction_confidence(self, features, model) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 357
-  _get_feature_importance(self, model) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 392
-  _compute_prediction_variance(self, features, model) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py, Line: 434
-
-Class: MLTrainer
-  __init__(self, model_manager)
-    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 47
-  train_frequency_model(self, n_samples) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 81
-  train_coupling_model(self, n_samples) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 147
-  train_all_models(self, n_samples) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 207
-  validate_models(self, n_samples) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 235
-  get_model_performance(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/core/ml_trainer.py, Line: 288
-
-Class: MLModelManager
-  __init__(self, model_dir)
-    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 41
-  _initialize_models(self) -> None
-    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 68
-  _load_trained_model(self, model_type) -> None
-    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 93
-  _create_default_model(self, model_type) -> None
-    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 119
-  get_frequency_model(self) -> Optional[RandomForestRegressor]
-    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 146
-  get_coupling_model(self) -> Optional[MLPRegressor]
-    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 158
-  get_frequency_scaler(self) -> StandardScaler
-    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 170
-  get_coupling_scaler(self) -> StandardScaler
-    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 182
-  save_model(self, model_type, model, scaler) -> None
-    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 194
-  is_model_loaded(self, model_type) -> bool
-    File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 222
 
 Class: FeatureCalculator
   __init__(self)
@@ -6171,6 +6293,34 @@ Class: PhaseCoherenceAnalyzer
     File: ./bhlff/models/level_c/beating/basic/core_analysis_phase.py, Line: 101
   _calculate_phase_correlation(self, envelope) -> float
     File: ./bhlff/models/level_c/beating/basic/core_analysis_phase.py, Line: 126
+  __init__(self)
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py, Line: 38
+  analyze_boundary_coherence(self, regime1_data, regime2_data, boundary_points) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py, Line: 50
+  compute_7d_phase_coherence_at_point(self, point) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py, Line: 88
+  _compute_local_phase_coherence(self, d1, d2) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py, Line: 106
+  _compute_phase_correlation(self, d1, d2) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py, Line: 127
+  _compute_local_phase_gradient(self, d1, d2) -> np.ndarray
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py, Line: 144
+  _compute_7d_phase_coherence(self, d1, d2) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py, Line: 161
+  _compute_coherence_strength(self, coherence_length, correlation) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py, Line: 178
+  _assess_coherence_quality(self, coherence_length, correlation, phase_gradient) -> str
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py, Line: 188
+  _compute_7d_coherence_from_position_energy(self, position, energy) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py, Line: 210
+  _compute_7d_phase_coherence_from_distance(self, param_distance) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py, Line: 216
+  _compute_normalized_correlation(self, params1, params2) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py, Line: 221
+  _compute_phase_gradient_from_parameters(self, params1, params2) -> np.ndarray
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py, Line: 239
+  _compute_7d_coherence_from_parameters(self, params1, params2) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py, Line: 243
 
 Class: StatisticalSignificanceTester
   __init__(self, bvp_core)
@@ -7186,17 +7336,27 @@ Class: SolitonInteractionAnalyzer
   _compute_mode_splitting(self, eigenvalues, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> float
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 158
   __init__(self, system, nonlinear_params)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 40
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 48
   analyze_interactions(self, multi_solitons) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 45
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 59
   analyze_two_soliton_stability(self, amp1, width1, pos1, amp2, width2, pos2) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 114
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 75
   analyze_three_soliton_interactions(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 159
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 92
   analyze_three_soliton_stability(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 222
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 110
   _compute_full_mode_analysis(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 277
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 128
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/interaction_analyzer.py, Line: 41
+  analyze_interactions(self, multi_solitons) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/interaction_analyzer.py, Line: 46
+  analyze_two_soliton_interactions(self, amp1, width1, pos1, amp2, width2, pos2) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/interaction_analyzer.py, Line: 115
+  analyze_three_soliton_interactions(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/interaction_analyzer.py, Line: 160
+  _step_resonator_interaction(self, distance, interaction_range) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/interaction_analyzer.py, Line: 213
 
 Class: MultiSolitonSolutions
   __init__(self, system, nonlinear_params)
@@ -7301,6 +7461,20 @@ Class: SolitonModeAnalyzer
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py, Line: 144
   _compute_mode_splitting(self, eigenvalues, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> float
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py, Line: 189
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py, Line: 43
+  compute_full_mode_analysis(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py, Line: 48
+  _compute_interaction_matrix(self, x, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py, Line: 134
+  _compute_kinetic_matrix(self, x) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py, Line: 162
+  _compute_mode_participation_ratios(self, eigenvectors, profile1, profile2, profile3) -> Dict[str, float]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py, Line: 187
+  _compute_mode_splitting(self, eigenvalues, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py, Line: 216
+  _step_resonator_interaction(self, distance, interaction_range) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py, Line: 232
 
 Class: MultiSolitonValidation
   __init__(self, system, nonlinear_params)
@@ -7363,6 +7537,44 @@ Class: MultiSolitonOptimization
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 259
   three_soliton_ode(x, y)
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 254
+
+Class: SolitonStabilityAnalyzer
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/stability_analysis.py, Line: 39
+  analyze_two_soliton_stability(self, amp1, width1, pos1, amp2, width2, pos2) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/stability_analysis.py, Line: 44
+  analyze_three_soliton_stability(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/stability_analysis.py, Line: 89
+  _step_resonator_interaction(self, distance, interaction_range) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/stability_analysis.py, Line: 166
+  __init__(self, domain, physics_params)
+    File: ./bhlff/models/level_e/soliton_stability.py, Line: 32
+  analyze_stability(self, soliton) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/soliton_stability.py, Line: 43
+  _compute_energy_hessian(self, field) -> np.ndarray
+    File: ./bhlff/models/level_e/soliton_stability.py, Line: 90
+  _compute_energy_functional(self, field) -> float
+    File: ./bhlff/models/level_e/soliton_stability.py, Line: 134
+  _analyze_eigenmodes(self, eigenvalues, eigenvectors) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/soliton_stability.py, Line: 166
+  _analyze_mode_symmetry(self, eigenvector) -> str
+    File: ./bhlff/models/level_e/soliton_stability.py, Line: 202
+  _is_translational_mode(self, eigenvector) -> bool
+    File: ./bhlff/models/level_e/soliton_stability.py, Line: 224
+  _is_rotational_mode(self, eigenvector) -> bool
+    File: ./bhlff/models/level_e/soliton_stability.py, Line: 247
+
+Class: SolitonBindingAnalyzer
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/binding_analysis.py, Line: 42
+  analyze_binding_energy(self, amp1, width1, pos1, amp2, width2, pos2) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/binding_analysis.py, Line: 47
+  analyze_three_soliton_binding(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/binding_analysis.py, Line: 95
+  analyze_collective_binding(self, multi_solitons) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/binding_analysis.py, Line: 164
+  _step_resonator_interaction(self, distance, interaction_range) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/binding_analysis.py, Line: 240
 
 Class: DispersionAnalyzer
   __init__(self, system)
@@ -8412,24 +8624,6 @@ Class: SolitonEnergyCalculator
   _compute_wzw_gradient(self, field) -> np.ndarray
     File: ./bhlff/models/level_e/soliton_energy.py, Line: 235
 
-Class: SolitonStabilityAnalyzer
-  __init__(self, domain, physics_params)
-    File: ./bhlff/models/level_e/soliton_stability.py, Line: 32
-  analyze_stability(self, soliton) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/soliton_stability.py, Line: 43
-  _compute_energy_hessian(self, field) -> np.ndarray
-    File: ./bhlff/models/level_e/soliton_stability.py, Line: 90
-  _compute_energy_functional(self, field) -> float
-    File: ./bhlff/models/level_e/soliton_stability.py, Line: 134
-  _analyze_eigenmodes(self, eigenvalues, eigenvectors) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/soliton_stability.py, Line: 166
-  _analyze_mode_symmetry(self, eigenvector) -> str
-    File: ./bhlff/models/level_e/soliton_stability.py, Line: 202
-  _is_translational_mode(self, eigenvector) -> bool
-    File: ./bhlff/models/level_e/soliton_stability.py, Line: 224
-  _is_rotational_mode(self, eigenvector) -> bool
-    File: ./bhlff/models/level_e/soliton_stability.py, Line: 247
-
 Class: DefectModel
   __init__(self, domain, physics_params)
     File: ./bhlff/models/level_e/defect_core.py, Line: 46
@@ -8881,6 +9075,66 @@ Class: ResonanceAnalyzer
     File: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py, Line: 135
   _summarize_classifications(self, classifications) -> Dict[str, Any]
     File: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py, Line: 146
+
+Class: EnergyLandscapeAnalyzer
+  __init__(self)
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 38
+  analyze_boundary_energy(self, regime1_data, regime2_data, boundary_points) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 50
+  compute_energy_landscape(self, regime1_data, regime2_data) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 87
+  find_energy_minima(self, energy_landscape) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 110
+  find_saddle_points(self, energy_landscape) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 127
+  analyze_critical_point_stability(self, point, energy_landscape) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 144
+  _analyze_energy_structure(self, energy_landscape, critical_points) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 163
+  _compute_7d_energy_invariants(self, d1, d2) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 189
+  _assess_energy_quality(self, energy_landscape, critical_points) -> str
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 206
+  _compute_7d_energy_landscape(self, mean1, mean2) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 230
+  _find_7d_energy_minima(self, energy, gradient) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 241
+  _find_7d_saddle_points(self, energy, gradient) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 248
+  _analyze_7d_critical_point_stability(self, position, energy, energy_landscape) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 255
+  _compute_energy_variance(self, energy_landscape) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 269
+  _compute_energy_entropy(self, energy_landscape) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 274
+  _compute_7d_energy_invariants_from_parameters(self, params1, params2) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py, Line: 279
+
+Class: TopologicalAnalyzer
+  __init__(self)
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py, Line: 38
+  analyze_boundary_topology(self, regime1_data, regime2_data, boundary_points) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py, Line: 50
+  _compute_topological_charge_density(self, d1, d2) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py, Line: 89
+  _compute_winding_number(self, d1, d2) -> int
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py, Line: 109
+  _compute_defect_density(self, d1, d2) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py, Line: 126
+  _compute_7d_topological_invariants(self, d1, d2) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py, Line: 146
+  _compute_topological_strength(self, charge_density, winding_number) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py, Line: 163
+  _assess_topological_quality(self, charge_density, winding_number, defect_density) -> str
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py, Line: 173
+  _compute_7d_charge_density_from_distance(self, param_distance) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py, Line: 194
+  _compute_7d_winding_number_from_parameters(self, params1, params2) -> int
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py, Line: 199
+  _compute_7d_defect_density_from_distance(self, param_distance) -> float
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py, Line: 208
+  _compute_7d_invariants_from_parameters(self, params1, params2) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py, Line: 213
 
 Class: EnergyComplexityAnalyzer
   __init__(self)
@@ -9548,24 +9802,6 @@ Class: ObservationalComparisonStatisticsCore
   _compute_bic_from_7d_field(self, chi_squared, n_parameters, n_data_points) -> float
     File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 260
 
-Class: ObservationalComparisonCore
-  __init__(self, evolution_results, observational_data, analysis_parameters)
-    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 58
-  compare_with_observations(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 77
-  _load_observational_data(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 121
-  _compute_7d_observables(self, model_data) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 147
-  _statistical_comparison(self, obs_data, model_observables) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 173
-  _compute_parameter_correlation(self, obs_data, model_observables) -> float
-    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 197
-  _compute_statistical_significance(self, obs_data, model_observables) -> float
-    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 245
-  _compute_model_consistency(self, obs_data, model_observables) -> bool
-    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 285
-
 Class: StatisticalAnalysis
   __init__(self, evolution_results, analysis_parameters)
     File: ./bhlff/models/level_g/analysis/statistical_analysis.py, Line: 51
@@ -9693,6 +9929,128 @@ Class: ParameterAnalysis
     File: ./bhlff/models/level_g/analysis/parameter_analysis.py, Line: 320
   _compute_overall_stability(self, scale_factor, hubble_parameter) -> float
     File: ./bhlff/models/level_g/analysis/parameter_analysis.py, Line: 346
+
+Class: ObservableExtractor
+  __init__(self, evolution_results, analysis_parameters)
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 41
+  compute_7d_observables(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 56
+  _extract_cosmological_parameters_from_7d_field(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 91
+  _compute_structure_formation_observables(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 122
+  _compute_7d_bvp_specific_observables(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 145
+  _compute_statistical_observables(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 169
+  _extract_hubble_parameter_from_7d_field(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 193
+  _extract_matter_density_from_7d_field(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 198
+  _extract_dark_energy_from_7d_field(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 203
+  _extract_baryon_density_from_7d_field(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 208
+  _extract_neutrino_density_from_7d_field(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 213
+  _extract_curvature_from_7d_field(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 218
+  _compute_7d_correlation_function(self) -> np.ndarray
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 223
+  _compute_7d_power_spectrum(self) -> np.ndarray
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 230
+  _compute_7d_structure_statistics(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 237
+  _compute_topological_defect_observables(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 248
+  _compute_phase_coherence_observables(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 258
+  _compute_7d_phase_space_observables(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 268
+  _compute_statistical_correlation(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 278
+  _compute_statistical_moments(self) -> Dict[str, float]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 283
+  _compute_information_measures(self) -> Dict[str, float]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 293
+
+Class: ObservationalDataLoader
+  __init__(self, observational_data, analysis_parameters)
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 41
+  load_observational_data(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 56
+  _validate_and_process_observational_data(self, obs_data) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 76
+  _load_default_observational_data(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 104
+  _get_default_parameter_value(self, parameter) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 138
+  _compute_default_correlation_function(self) -> np.ndarray
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 150
+  _compute_default_power_spectrum(self) -> np.ndarray
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 157
+  _compute_default_structure_statistics(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 164
+  _compute_7d_phase_field_observables(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 174
+  _extract_7d_observables_from_data(self, obs_data) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 184
+  _compute_topological_defect_statistics(self, obs_data) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 188
+  _compute_phase_coherence_measurements(self, obs_data) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 197
+  _generate_statistical_data_points(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 206
+  _compute_measurement_errors(self) -> Dict[str, float]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 214
+  _compute_covariance_matrix(self) -> np.ndarray
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 224
+
+Class: ObservationalComparisonCore
+  __init__(self, evolution_results, observational_data, analysis_parameters)
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py, Line: 52
+  compare_with_observations(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py, Line: 74
+  _compare_structure_formation(self, obs_data, model_observables) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py, Line: 118
+  _compare_parameters(self, obs_data, model_observables) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py, Line: 150
+  _compare_correlation_functions(self, obs_corr, model_corr) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py, Line: 180
+  _compare_power_spectra(self, obs_power, model_power) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py, Line: 197
+  _compare_structure_statistics(self, obs_stats, model_stats) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py, Line: 214
+  _compare_parameter(self, obs_value, model_value) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py, Line: 233
+
+Class: StatisticalComparison
+  __init__(self, analysis_parameters)
+    File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 42
+  perform_comparison(self, obs_data, model_observables) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 55
+  compute_chi_squared(self, obs_data, model_observables) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 79
+  compute_likelihood(self, chi_squared) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 115
+  compute_goodness_of_fit(self, obs_data, model_observables) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 134
+  _compute_parameter_correlation(self, obs_data, model_observables) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 171
+  _compute_statistical_significance(self, obs_data, model_observables) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 219
+  _compute_model_consistency(self, obs_data, model_observables) -> bool
+    File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 257
+  _get_measurement_error(self, parameter) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 295
+  _compute_r_squared(self, obs_data, model_observables) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 306
+  _compute_aic(self, chi_squared, n_params) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 333
+  _compute_bic(self, chi_squared, n_params, n_data) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 337
+  _assess_goodness_quality(self, chi_squared, r_squared) -> str
+    File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 341
 
 Class: CosmologicalEvolution
   __init__(self, initial_conditions, cosmology_params)
@@ -11676,45 +12034,79 @@ Class: PowerLawTailAnalysis
   _analyze_tail_region(self, envelope, region) -> Dict[str, Any]
     File: ./bhlff/core/bvp/power_law_core_modules/power_law_tail_analysis.py, Line: 84
 
+Class: AdvancedPowerLawFitting
+  __init__(self, bvp_core)
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/advanced_fitting.py, Line: 43
+  fit_power_law_advanced(self, region_data, method) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/advanced_fitting.py, Line: 59
+  _extract_radial_profile(self, region_data) -> Dict[str, np.ndarray]
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/advanced_fitting.py, Line: 124
+
+Class: OptimizationMethods
+  __init__(self)
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py, Line: 41
+  fit_using_curve_fit(self, radial_profile) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py, Line: 45
+  fit_using_minimize(self, radial_profile) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py, Line: 102
+  fit_using_custom_optimization(self, radial_profile) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py, Line: 177
+  _compute_gradients(self, r, values, amplitude, exponent) -> Tuple[float, float]
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py, Line: 263
+  _compute_r_squared(self, radial_profile, popt, func) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py, Line: 298
+  _compute_fitting_quality(self, pcov) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py, Line: 321
+  _compute_chi_squared(self, radial_profile, popt, func) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py, Line: 339
+  power_law_func(r, amplitude, exponent)
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py, Line: 64
+  objective_function(params)
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py, Line: 121
+
 Class: PowerLawFitting
   __init__(self, bvp_core)
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 30
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 49
   fit_power_law(self, region_data) -> Dict[str, float]
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 45
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 78
   calculate_fitting_quality(self, region_data, power_law_fit) -> float
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 124
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 157
   calculate_decay_rate(self, power_law_fit) -> float
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 190
-  _extract_radial_profile(self, region_data) -> Dict[str, np.ndarray]
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 247
-  _compute_r_squared(self, radial_profile, popt, func) -> float
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 312
-  _compute_fitting_quality(self, pcov) -> float
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 349
-  _compute_chi_squared(self, radial_profile, popt, func) -> float
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 379
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 176
   fit_power_law_advanced(self, region_data, method) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 415
-  _fit_using_curve_fit(self, radial_profile) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 480
-  _fit_using_minimize(self, radial_profile) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 539
-  _fit_using_custom_optimization(self, radial_profile) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 616
-  _compute_gradients(self, r, values, amplitude, exponent) -> Tuple[float, float]
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 702
-  _perform_comprehensive_quality_analysis(self, radial_profile, fit_result) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 737
-  _compute_statistical_quality(self, r_squared, chi_squared, data_points) -> float
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 806
-  _compute_physical_quality(self, amplitude, exponent) -> float
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 837
-  _compute_uncertainty_quality(self, parameter_errors) -> float
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 860
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 192
+  _extract_radial_profile(self, region_data) -> Dict[str, np.ndarray]
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 210
+  _compute_r_squared(self, radial_profile, popt, func) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 275
+  _compute_fitting_quality(self, pcov) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 279
+  _compute_chi_squared(self, radial_profile, popt, func) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 283
   power_law_func(r, amplitude, exponent)
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 501
-  objective_function(params)
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py, Line: 560
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 104
+
+Class: QualityAnalyzer
+  __init__(self)
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py, Line: 41
+  calculate_fitting_quality(self, region_data, power_law_fit) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py, Line: 45
+  calculate_decay_rate(self, power_law_fit) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py, Line: 111
+  compute_r_squared(self, radial_profile, popt, func) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py, Line: 168
+  compute_fitting_quality(self, pcov) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py, Line: 205
+  compute_chi_squared(self, radial_profile, popt, func) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py, Line: 235
+  perform_comprehensive_quality_analysis(self, radial_profile, fit_result) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py, Line: 271
+  _compute_statistical_quality(self, r_squared, chi_squared, data_points) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py, Line: 340
+  _compute_physical_quality(self, amplitude, exponent) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py, Line: 371
+  _compute_uncertainty_quality(self, parameter_errors) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py, Line: 394
 
 Class: EnvelopeSolverCoreBasic
   __init__(self, domain, config)

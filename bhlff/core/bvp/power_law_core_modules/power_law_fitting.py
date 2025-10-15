@@ -4,21 +4,24 @@ email: vasilyvz@gmail.com
 
 Power law fitting for BVP framework.
 
-This module implements fitting functionality
-for power law analysis in the BVP framework.
+This module provides a facade interface for the comprehensive
+power law fitting package, maintaining backward compatibility
+while using the full 7D BVP theory implementation.
+
+Theoretical Background:
+    Power law fitting involves fitting power law functions
+    to data using various optimization methods and statistical
+    techniques for 7D phase field theory.
+
+Example:
+    >>> fitter = PowerLawFitting(bvp_core)
+    >>> results = fitter.fit_power_law(region_data)
 """
 
-import numpy as np
-from typing import Dict, Any, Tuple, List
-import logging
-from scipy.optimize import curve_fit
-from scipy import stats
+from .power_law_fitting import PowerLawFitting
 
-from ..bvp_core.bvp_core_facade import BVPCoreFacade as BVPCore
-from ...domain.vectorized_7d_processor import Vectorized7DProcessor
-
-
-class PowerLawFitting:
+# Maintain backward compatibility
+__all__ = ['PowerLawFitting']
     """
     Power law fitting for BVP framework.
 

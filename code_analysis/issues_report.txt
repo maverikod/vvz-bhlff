@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 825
+Total issues found: 850
 
 METHODS_WITHOUT_DOCSTRINGS: 109 issues
 ----------------------------------------
@@ -418,17 +418,17 @@ METHODS_WITHOUT_DOCSTRINGS: 109 issues
     Line 250
     Method: refinement_objective
 
-  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-    Line 71
+  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+    Line 64
     Method: power_law_func
 
-  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-    Line 501
-    Method: power_law_func
-
-  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-    Line 560
+  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+    Line 121
     Method: objective_function
+
+  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
+    Line 104
+    Method: power_law_func
 
   ./bhlff/core/bvp/envelope_equation/bvp_envelope_equation_7d_facade.py
     Line 119
@@ -515,7 +515,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 8 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 611 issues
+IMPORTS_IN_MIDDLE: 634 issues
 ----------------------------------------
   ./setup.py
     Line 28
@@ -1045,9 +1045,6 @@ IMPORTS_IN_MIDDLE: 611 issues
   ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py
     Line 278
 
-  ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-    Line 26
-
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
     Line 246
 
@@ -1065,6 +1062,24 @@ IMPORTS_IN_MIDDLE: 611 issues
 
   ./bhlff/models/level_c/beating/ml/beating_ml_patterns.py
     Line 31
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py
+    Line 23
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+    Line 29
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py
+    Line 21
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+    Line 26
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_prediction/__init__.py
+    Line 24
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+    Line 23
 
   ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
     Line 26
@@ -1265,7 +1280,7 @@ IMPORTS_IN_MIDDLE: 611 issues
     Line 25
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
-    Line 24
+    Line 26
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
     Line 22
@@ -1284,6 +1299,21 @@ IMPORTS_IN_MIDDLE: 611 issues
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
     Line 27
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/stability_analysis.py
+    Line 23
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/binding_analysis.py
+    Line 25
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/__init__.py
+    Line 25
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/interaction_analyzer.py
+    Line 24
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py
+    Line 25
 
   ./bhlff/models/level_f/collective/dispersion_analysis.py
     Line 22
@@ -1487,13 +1517,28 @@ IMPORTS_IN_MIDDLE: 611 issues
     Line 26
 
   ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py
-    Line 22
+    Line 21
 
   ./bhlff/models/level_e/phase_mapping_components/regime_classification.py
     Line 164
 
   ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py
     Line 22
+
+  ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+    Line 21
+
+  ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+    Line 21
+
+  ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py
+    Line 21
+
+  ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+    Line 24
+
+  ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/__init__.py
+    Line 25
 
   ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
     Line 108
@@ -1612,9 +1657,6 @@ IMPORTS_IN_MIDDLE: 611 issues
   ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
     Line 31
 
-  ./bhlff/models/level_g/analysis/observational_comparison_core.py
-    Line 264
-
   ./bhlff/models/level_g/analysis/statistical_analysis.py
     Line 28
 
@@ -1635,6 +1677,21 @@ IMPORTS_IN_MIDDLE: 611 issues
 
   ./bhlff/models/level_g/analysis/parameter_analysis.py
     Line 28
+
+  ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+    Line 21
+
+  ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+    Line 21
+
+  ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py
+    Line 24
+
+  ./bhlff/models/level_g/analysis/observational_comparison/__init__.py
+    Line 25
+
+  ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+    Line 22
 
   ./bhlff/models/level_g/evolution/cosmological_evolution.py
     Line 30
@@ -2041,8 +2098,20 @@ IMPORTS_IN_MIDDLE: 611 issues
   ./bhlff/core/bvp/constants/nonlinear_coefficients.py
     Line 26
 
-  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-    Line 554
+  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/advanced_fitting.py
+    Line 26
+
+  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+    Line 23
+
+  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/__init__.py
+    Line 24
+
+  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
+    Line 30
+
+  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
+    Line 22
 
   ./bhlff/core/bvp/envelope_equation/solver_core_basic.py
     Line 251
@@ -2351,7 +2420,7 @@ IMPORTS_IN_MIDDLE: 611 issues
     Line 23
 
 
-FILES_TOO_LARGE: 93 issues
+FILES_TOO_LARGE: 95 issues
 ----------------------------------------
   ./tests/unit/test_ml_prediction_vectorized_implementations.py
 
@@ -2399,8 +2468,6 @@ FILES_TOO_LARGE: 93 issues
 
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
 
-  ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
 
   ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
@@ -2408,6 +2475,12 @@ FILES_TOO_LARGE: 93 issues
   ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py
 
   ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
 
   ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
 
@@ -2515,7 +2588,7 @@ FILES_TOO_LARGE: 93 issues
 
   ./bhlff/core/bvp/power_law/power_law_core.py
 
-  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
 
   ./bhlff/core/bvp/envelope_equation/solver_core_basic.py
 

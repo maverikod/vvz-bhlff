@@ -666,6 +666,29 @@ method_index:
       line: 270
       name: _calculate_resonance_strength
       returns: float
+    AdvancedPowerLawFitting:
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/advanced_fitting.py
+      line: 43
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - region_data
+      - method
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/advanced_fitting.py
+      line: 59
+      name: fit_power_law_advanced
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - region_data
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/advanced_fitting.py
+      line: 124
+      name: _extract_radial_profile
+      returns: Dict[str, np.ndarray]
     AlertSystem:
     - args:
       - self
@@ -5842,190 +5865,179 @@ method_index:
       - self
       - bvp_core
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 42
+      line: 36
       name: __init__
       returns: null
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 50
+      name: predict_beating_frequencies
+      returns: null
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 54
+      name: predict_mode_coupling
+      returns: null
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 58
+      name: train_frequency_model
+      returns: null
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 62
+      name: train_coupling_model
+      returns: null
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 66
+      name: train_all_models
+      returns: null
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
       line: 70
+      name: validate_models
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
+      line: 74
+      name: get_model_performance
+      returns: null
+    - args:
+      - self
+      - bvp_core
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 45
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 73
       name: predict_beating_frequencies
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 130
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 133
       name: predict_mode_coupling
       returns: Dict[str, Any]
     - args:
       - self
       - n_samples
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 200
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 203
       name: train_frequency_model
       returns: Dict[str, Any]
     - args:
       - self
       - n_samples
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 221
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 224
       name: train_coupling_model
       returns: Dict[str, Any]
     - args:
       - self
       - n_samples
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 242
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 245
       name: train_all_models
       returns: Dict[str, Any]
     - args:
       - self
       - n_samples
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 259
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 262
       name: validate_models
       returns: Dict[str, Any]
     - args:
       - self
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 276
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 279
       name: get_model_performance
       returns: Dict[str, Any]
     - args:
       - self
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 289
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 292
       name: _load_trained_frequency_model
       returns: null
     - args:
       - self
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 306
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 300
       name: _load_frequency_scaler
       returns: null
     - args:
       - self
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 322
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 308
       name: _load_trained_coupling_model
       returns: null
     - args:
       - self
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 339
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 316
       name: _load_coupling_scaler
       returns: null
     - args:
       - self
       - features
       - model
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 355
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 324
       name: _compute_prediction_confidence
       returns: float
     - args:
       - self
       - model
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 394
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 346
       name: _get_feature_importance
       returns: Dict[str, float]
     - args:
       - self
       - features
       - model
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 440
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 376
       name: _compute_prediction_variance
       returns: float
     - args:
       - self
       - features
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 471
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 390
       name: _predict_frequencies_analytical
       returns: Dict[str, Any]
     - args:
       - self
       - features
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 527
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 430
       name: _predict_coupling_analytical
       returns: Dict[str, Any]
     - args:
       - self
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 590
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
+      line: 477
       name: _setup_vectorized_processor
       returns: None
-    - args:
-      - self
-      - envelope
-      - parameters
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 633
-      name: _optimize_with_vectorized_processing
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - vectorized_results
-      - parameters
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 674
-      name: _extract_vectorized_optimization_results
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - vectorized_results
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 714
-      name: _compute_vectorized_optimization_metrics
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - vectorized_results
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 744
-      name: _compute_optimal_horizon_from_vectorized
-      returns: int
-    - args:
-      - self
-      - vectorized_results
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 764
-      name: _compute_optimal_regularization_from_vectorized
-      returns: float
-    - args:
-      - self
-      - vectorized_results
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 784
-      name: _compute_optimization_quality_from_vectorized
-      returns: float
-    - args:
-      - self
-      - envelope
-      - parameters
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 801
-      name: _optimize_without_vectorization
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 834
-      name: _extract_features_vectorized
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - vectorized_results
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 857
-      name: _extract_features_from_vectorized_results
-      returns: Dict[str, Any]
     BeatingMLPredictionFeatures:
     - args:
       - self
@@ -7676,43 +7688,134 @@ method_index:
       returns: Dict[str, Any]
     - args:
       - self
-      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py
-      line: 35
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 42
       name: __init__
       returns: null
     - args:
       - self
       - parameter_grid
       - classifications
-      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py
-      line: 48
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 60
       name: analyze_regime_boundaries
       returns: Dict[str, Any]
+    - args:
+      - self
+      - classifications
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 90
+      name: _extract_regime_data
+      returns: List[Dict[str, Any]]
     - args:
       - self
       - regime_data
       - regime1
       - regime2
-      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py
-      line: 77
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 110
       name: _find_regime_boundary
       returns: Dict[str, Any]
     - args:
       - self
       - regime1_data
       - regime2_data
-      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py
-      line: 101
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 159
       name: _compute_regime_separation
       returns: float
     - args:
       - self
       - regime1_data
       - regime2_data
-      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py
-      line: 122
-      name: _find_boundary_points
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 186
+      name: _find_boundary_points_7d
       returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - regime1_params
+      - regime2_params
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 232
+      name: _compute_7d_boundary_analysis
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - regime1_data
+      - regime2_data
+      - boundary_analysis
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 266
+      name: _find_critical_boundary_points
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - params1
+      - params2
+      - boundary_analysis
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 299
+      name: _is_7d_boundary_point
+      returns: bool
+    - args:
+      - self
+      - params1
+      - params2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 327
+      name: _compute_7d_boundary_strength
+      returns: float
+    - args:
+      - self
+      - regime1_params
+      - regime2_params
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 347
+      name: _compute_7d_phase_gradient
+      returns: np.ndarray
+    - args:
+      - self
+      - regime1_params
+      - regime2_params
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 353
+      name: _compute_phase_coherence_length
+      returns: float
+    - args:
+      - self
+      - regime1_params
+      - regime2_params
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 358
+      name: _compute_topological_defect_density
+      returns: float
+    - args:
+      - self
+      - phase_gradient
+      - coherence_length
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 363
+      name: _compute_boundary_strength
+      returns: float
+    - args:
+      - self
+      - params1
+      - params2
+      - boundary_analysis
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 368
+      name: _check_phase_field_criteria
+      returns: bool
+    - args:
+      - self
+      - params1
+      - params2
+      - boundary_analysis
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+      line: 372
+      name: _check_topological_criteria
+      returns: bool
     - args:
       - self
       - domain_7d
@@ -11562,6 +11665,131 @@ method_index:
       line: 122
       name: _energy_density_7d
       returns: np.ndarray
+    EnergyLandscapeAnalyzer:
+    - args:
+      - self
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 38
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - regime1_data
+      - regime2_data
+      - boundary_points
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 50
+      name: analyze_boundary_energy
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - regime1_data
+      - regime2_data
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 87
+      name: compute_energy_landscape
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - energy_landscape
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 110
+      name: find_energy_minima
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - energy_landscape
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 127
+      name: find_saddle_points
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - point
+      - energy_landscape
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 144
+      name: analyze_critical_point_stability
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - energy_landscape
+      - critical_points
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 163
+      name: _analyze_energy_structure
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - d1
+      - d2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 189
+      name: _compute_7d_energy_invariants
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - energy_landscape
+      - critical_points
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 206
+      name: _assess_energy_quality
+      returns: str
+    - args:
+      - self
+      - mean1
+      - mean2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 230
+      name: _compute_7d_energy_landscape
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - energy
+      - gradient
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 241
+      name: _find_7d_energy_minima
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - energy
+      - gradient
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 248
+      name: _find_7d_saddle_points
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - position
+      - energy
+      - energy_landscape
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 255
+      name: _analyze_7d_critical_point_stability
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - energy_landscape
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 269
+      name: _compute_energy_variance
+      returns: float
+    - args:
+      - self
+      - energy_landscape
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 274
+      name: _compute_energy_entropy
+      returns: float
+    - args:
+      - self
+      - params1
+      - params2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/energy_landscape_analysis.py
+      line: 279
+      name: _compute_7d_energy_invariants_from_parameters
+      returns: Dict[str, Any]
     EnvelopeEffectiveMetric:
     - args:
       - self
@@ -13100,6 +13328,131 @@ method_index:
       name: calculate_coupling_efficiency
       returns: float
     FeatureExtractor:
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 39
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 43
+      name: extract_frequency_features
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 89
+      name: extract_coupling_features
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 139
+      name: extract_7d_phase_features
+      returns: np.ndarray
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 178
+      name: _compute_spectral_entropy
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 196
+      name: _compute_frequency_spacing
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 217
+      name: _compute_frequency_bandwidth
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 241
+      name: _compute_autocorrelation
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 263
+      name: _compute_coupling_strength
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 274
+      name: _compute_interaction_energy
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 285
+      name: _compute_coupling_symmetry
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 303
+      name: _compute_nonlinear_strength
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 321
+      name: _compute_mixing_degree
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 339
+      name: _compute_coupling_efficiency
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 356
+      name: _compute_phase_coherence
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 368
+      name: _compute_topological_charge
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 384
+      name: _compute_energy_density
+      returns: float
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
+      line: 395
+      name: _compute_phase_velocity
+      returns: float
     - args:
       - self
       file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
@@ -15468,6 +15821,78 @@ method_index:
     MLModelManager:
     - args:
       - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py
+      line: 39
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py
+      line: 56
+      name: get_frequency_model
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py
+      line: 68
+      name: get_coupling_model
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py
+      line: 80
+      name: get_frequency_scaler
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py
+      line: 92
+      name: get_coupling_scaler
+      returns: null
+    - args:
+      - self
+      - model
+      - scaler
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py
+      line: 104
+      name: save_frequency_model
+      returns: null
+    - args:
+      - self
+      - model
+      - scaler
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py
+      line: 113
+      name: save_coupling_model
+      returns: null
+    - args:
+      - self
+      - model_type
+      - performance
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py
+      line: 122
+      name: update_model_performance
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py
+      line: 126
+      name: get_model_performance
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py
+      line: 130
+      name: clear_models
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_model_manager.py
+      line: 145
+      name: list_available_models
+      returns: Dict[str, bool]
+    - args:
+      - self
       - model_dir
       file: ./bhlff/models/level_c/beating/ml/core/ml_models.py
       line: 41
@@ -15534,6 +15959,109 @@ method_index:
       name: is_model_loaded
       returns: bool
     MLTrainer:
+    - args:
+      - self
+      - model_manager
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+      line: 42
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+      line: 52
+      name: train_frequency_model
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+      line: 120
+      name: train_coupling_model
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+      line: 187
+      name: train_all_models
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+      line: 220
+      name: validate_models
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+      line: 253
+      name: get_model_performance
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+      line: 257
+      name: _generate_frequency_training_data
+      returns: Tuple[np.ndarray, np.ndarray]
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+      line: 282
+      name: _generate_coupling_training_data
+      returns: Tuple[np.ndarray, np.ndarray]
+    - args:
+      - self
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+      line: 307
+      name: _generate_synthetic_envelope
+      returns: np.ndarray
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+      line: 333
+      name: _extract_frequency_features
+      returns: np.ndarray
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+      line: 357
+      name: _extract_coupling_features
+      returns: np.ndarray
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+      line: 384
+      name: _generate_target_frequencies
+      returns: np.ndarray
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+      line: 398
+      name: _generate_target_coupling
+      returns: np.ndarray
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+      line: 418
+      name: _validate_frequency_model
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - n_samples
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
+      line: 452
+      name: _validate_coupling_model
+      returns: Dict[str, Any]
     - args:
       - self
       - model_manager
@@ -18287,6 +18815,135 @@ method_index:
       line: 210
       name: update_parameters
       returns: None
+    ObservableExtractor:
+    - args:
+      - self
+      - evolution_results
+      - analysis_parameters
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 56
+      name: compute_7d_observables
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 91
+      name: _extract_cosmological_parameters_from_7d_field
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 122
+      name: _compute_structure_formation_observables
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 145
+      name: _compute_7d_bvp_specific_observables
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 169
+      name: _compute_statistical_observables
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 193
+      name: _extract_hubble_parameter_from_7d_field
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 198
+      name: _extract_matter_density_from_7d_field
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 203
+      name: _extract_dark_energy_from_7d_field
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 208
+      name: _extract_baryon_density_from_7d_field
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 213
+      name: _extract_neutrino_density_from_7d_field
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 218
+      name: _extract_curvature_from_7d_field
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 223
+      name: _compute_7d_correlation_function
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 230
+      name: _compute_7d_power_spectrum
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 237
+      name: _compute_7d_structure_statistics
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 248
+      name: _compute_topological_defect_observables
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 258
+      name: _compute_phase_coherence_observables
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 268
+      name: _compute_7d_phase_space_observables
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 278
+      name: _compute_statistical_correlation
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 283
+      name: _compute_statistical_moments
+      returns: Dict[str, float]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 293
+      name: _compute_information_measures
+      returns: Dict[str, float]
     ObservablePropertiesCalculator:
     - args:
       - self
@@ -18378,61 +19035,64 @@ method_index:
       - evolution_results
       - observational_data
       - analysis_parameters
-      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
-      line: 58
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py
+      line: 52
       name: __init__
       returns: null
     - args:
       - self
-      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
-      line: 77
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py
+      line: 74
       name: compare_with_observations
       returns: Dict[str, Any]
     - args:
       - self
-      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
-      line: 121
-      name: _load_observational_data
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - model_data
-      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
-      line: 147
-      name: _compute_7d_observables
+      - obs_data
+      - model_observables
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py
+      line: 118
+      name: _compare_structure_formation
       returns: Dict[str, Any]
     - args:
       - self
       - obs_data
       - model_observables
-      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
-      line: 173
-      name: _statistical_comparison
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py
+      line: 150
+      name: _compare_parameters
       returns: Dict[str, Any]
     - args:
       - self
-      - obs_data
-      - model_observables
-      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
+      - obs_corr
+      - model_corr
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py
+      line: 180
+      name: _compare_correlation_functions
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - obs_power
+      - model_power
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py
       line: 197
-      name: _compute_parameter_correlation
-      returns: float
+      name: _compare_power_spectra
+      returns: Dict[str, Any]
     - args:
       - self
-      - obs_data
-      - model_observables
-      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
-      line: 245
-      name: _compute_statistical_significance
-      returns: float
+      - obs_stats
+      - model_stats
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py
+      line: 214
+      name: _compare_structure_statistics
+      returns: Dict[str, Any]
     - args:
       - self
-      - obs_data
-      - model_observables
-      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
-      line: 285
-      name: _compute_model_consistency
-      returns: bool
+      - obs_value
+      - model_value
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_comparison_core.py
+      line: 233
+      name: _compare_parameter
+      returns: Dict[str, Any]
     ObservationalComparisonParameters:
     - args:
       - self
@@ -18688,6 +19348,104 @@ method_index:
       line: 260
       name: _compute_bic_from_7d_field
       returns: float
+    ObservationalDataLoader:
+    - args:
+      - self
+      - observational_data
+      - analysis_parameters
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 56
+      name: load_observational_data
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - obs_data
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 76
+      name: _validate_and_process_observational_data
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 104
+      name: _load_default_observational_data
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - parameter
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 138
+      name: _get_default_parameter_value
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 150
+      name: _compute_default_correlation_function
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 157
+      name: _compute_default_power_spectrum
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 164
+      name: _compute_default_structure_statistics
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 174
+      name: _compute_7d_phase_field_observables
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - obs_data
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 184
+      name: _extract_7d_observables_from_data
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - obs_data
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 188
+      name: _compute_topological_defect_statistics
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - obs_data
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 197
+      name: _compute_phase_coherence_measurements
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 206
+      name: _generate_statistical_data_points
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 214
+      name: _compute_measurement_errors
+      returns: Dict[str, float]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 224
+      name: _compute_covariance_matrix
+      returns: np.ndarray
     OperatorRiesz:
     - args:
       - self
@@ -18722,6 +19480,83 @@ method_index:
       line: 158
       name: __repr__
       returns: str
+    OptimizationMethods:
+    - args:
+      - self
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - radial_profile
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+      line: 45
+      name: fit_using_curve_fit
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - radial_profile
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+      line: 102
+      name: fit_using_minimize
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - radial_profile
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+      line: 177
+      name: fit_using_custom_optimization
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - r
+      - values
+      - amplitude
+      - exponent
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+      line: 263
+      name: _compute_gradients
+      returns: Tuple[float, float]
+    - args:
+      - self
+      - radial_profile
+      - popt
+      - func
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+      line: 298
+      name: _compute_r_squared
+      returns: float
+    - args:
+      - self
+      - pcov
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+      line: 321
+      name: _compute_fitting_quality
+      returns: float
+    - args:
+      - self
+      - radial_profile
+      - popt
+      - func
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+      line: 339
+      name: _compute_chi_squared
+      returns: float
+    - args:
+      - r
+      - amplitude
+      - exponent
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+      line: 64
+      name: power_law_func
+      returns: null
+    - args:
+      - params
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
+      line: 121
+      name: objective_function
+      returns: null
     OptimizationScalingAnalyzer:
     - args:
       - self
@@ -20115,6 +20950,116 @@ method_index:
       file: ./bhlff/models/level_c/beating/basic/core_analysis_phase.py
       line: 126
       name: _calculate_phase_correlation
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+      line: 38
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - regime1_data
+      - regime2_data
+      - boundary_points
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+      line: 50
+      name: analyze_boundary_coherence
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - point
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+      line: 88
+      name: compute_7d_phase_coherence_at_point
+      returns: float
+    - args:
+      - self
+      - d1
+      - d2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+      line: 106
+      name: _compute_local_phase_coherence
+      returns: float
+    - args:
+      - self
+      - d1
+      - d2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+      line: 127
+      name: _compute_phase_correlation
+      returns: float
+    - args:
+      - self
+      - d1
+      - d2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+      line: 144
+      name: _compute_local_phase_gradient
+      returns: np.ndarray
+    - args:
+      - self
+      - d1
+      - d2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+      line: 161
+      name: _compute_7d_phase_coherence
+      returns: float
+    - args:
+      - self
+      - coherence_length
+      - correlation
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+      line: 178
+      name: _compute_coherence_strength
+      returns: float
+    - args:
+      - self
+      - coherence_length
+      - correlation
+      - phase_gradient
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+      line: 188
+      name: _assess_coherence_quality
+      returns: str
+    - args:
+      - self
+      - position
+      - energy
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+      line: 210
+      name: _compute_7d_coherence_from_position_energy
+      returns: float
+    - args:
+      - self
+      - param_distance
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+      line: 216
+      name: _compute_7d_phase_coherence_from_distance
+      returns: float
+    - args:
+      - self
+      - params1
+      - params2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+      line: 221
+      name: _compute_normalized_correlation
+      returns: float
+    - args:
+      - self
+      - params1
+      - params2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+      line: 239
+      name: _compute_phase_gradient_from_parameters
+      returns: np.ndarray
+    - args:
+      - self
+      - params1
+      - params2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
+      line: 243
+      name: _compute_7d_coherence_from_parameters
       returns: float
     PhaseComponents:
     - args:
@@ -22170,37 +23115,45 @@ method_index:
     - args:
       - self
       - bvp_core
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 30
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
+      line: 49
       name: __init__
       returns: null
     - args:
       - self
       - region_data
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 45
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
+      line: 78
       name: fit_power_law
       returns: Dict[str, float]
     - args:
       - self
       - region_data
       - power_law_fit
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 124
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
+      line: 157
       name: calculate_fitting_quality
       returns: float
     - args:
       - self
       - power_law_fit
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 190
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
+      line: 176
       name: calculate_decay_rate
       returns: float
     - args:
       - self
       - region_data
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 247
+      - method
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
+      line: 192
+      name: fit_power_law_advanced
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - region_data
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
+      line: 210
       name: _extract_radial_profile
       returns: Dict[str, np.ndarray]
     - args:
@@ -22208,15 +23161,15 @@ method_index:
       - radial_profile
       - popt
       - func
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 312
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
+      line: 275
       name: _compute_r_squared
       returns: float
     - args:
       - self
       - pcov
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 349
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
+      line: 279
       name: _compute_fitting_quality
       returns: float
     - args:
@@ -22224,94 +23177,17 @@ method_index:
       - radial_profile
       - popt
       - func
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 379
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
+      line: 283
       name: _compute_chi_squared
       returns: float
     - args:
-      - self
-      - region_data
-      - method
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 415
-      name: fit_power_law_advanced
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - radial_profile
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 480
-      name: _fit_using_curve_fit
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - radial_profile
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 539
-      name: _fit_using_minimize
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - radial_profile
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 616
-      name: _fit_using_custom_optimization
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - r
-      - values
-      - amplitude
-      - exponent
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 702
-      name: _compute_gradients
-      returns: Tuple[float, float]
-    - args:
-      - self
-      - radial_profile
-      - fit_result
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 737
-      name: _perform_comprehensive_quality_analysis
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - r_squared
-      - chi_squared
-      - data_points
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 806
-      name: _compute_statistical_quality
-      returns: float
-    - args:
-      - self
-      - amplitude
-      - exponent
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 837
-      name: _compute_physical_quality
-      returns: float
-    - args:
-      - self
-      - parameter_errors
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 860
-      name: _compute_uncertainty_quality
-      returns: float
-    - args:
       - r
       - amplitude
       - exponent
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 501
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
+      line: 104
       name: power_law_func
-      returns: null
-    - args:
-      - params
-      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
-      line: 560
-      name: objective_function
       returns: null
     PowerLawOptimization:
     - args:
@@ -22547,6 +23423,58 @@ method_index:
       - self
       - model_manager
       - feature_extractor
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py
+      line: 37
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py
+      line: 49
+      name: predict_frequencies
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py
+      line: 98
+      name: predict_coupling
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - features
+      - model
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py
+      line: 157
+      name: _compute_prediction_confidence
+      returns: float
+    - args:
+      - self
+      - features
+      - model
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py
+      line: 179
+      name: _compute_prediction_uncertainty
+      returns: float
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py
+      line: 194
+      name: _predict_frequencies_analytical
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - features
+      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/prediction_engine.py
+      line: 223
+      name: _predict_coupling_analytical
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - model_manager
+      - feature_extractor
       file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
       line: 41
       name: __init__
@@ -22646,6 +23574,85 @@ method_index:
       line: 131
       name: _analyze_optimization_opportunities
       returns: Dict[str, Any]
+    QualityAnalyzer:
+    - args:
+      - self
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - region_data
+      - power_law_fit
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
+      line: 45
+      name: calculate_fitting_quality
+      returns: float
+    - args:
+      - self
+      - power_law_fit
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
+      line: 111
+      name: calculate_decay_rate
+      returns: float
+    - args:
+      - self
+      - radial_profile
+      - popt
+      - func
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
+      line: 168
+      name: compute_r_squared
+      returns: float
+    - args:
+      - self
+      - pcov
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
+      line: 205
+      name: compute_fitting_quality
+      returns: float
+    - args:
+      - self
+      - radial_profile
+      - popt
+      - func
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
+      line: 235
+      name: compute_chi_squared
+      returns: float
+    - args:
+      - self
+      - radial_profile
+      - fit_result
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
+      line: 271
+      name: perform_comprehensive_quality_analysis
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - r_squared
+      - chi_squared
+      - data_points
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
+      line: 340
+      name: _compute_statistical_quality
+      returns: float
+    - args:
+      - self
+      - amplitude
+      - exponent
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
+      line: 371
+      name: _compute_physical_quality
+      returns: float
+    - args:
+      - self
+      - parameter_errors
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
+      line: 394
+      name: _compute_uncertainty_quality
+      returns: float
     QualityMonitor:
     - args:
       - self
@@ -25447,6 +26454,57 @@ method_index:
       line: 64
       name: find_soliton_solutions
       returns: Dict[str, Any]
+    SolitonBindingAnalyzer:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/binding_analysis.py
+      line: 42
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/binding_analysis.py
+      line: 47
+      name: analyze_binding_energy
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/binding_analysis.py
+      line: 95
+      name: analyze_three_soliton_binding
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - multi_solitons
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/binding_analysis.py
+      line: 164
+      name: analyze_collective_binding
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - distance
+      - interaction_range
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/binding_analysis.py
+      line: 240
+      name: _step_resonator_interaction
+      returns: float
     SolitonEnergyCalculator:
     - args:
       - self
@@ -25639,14 +26697,14 @@ method_index:
       - system
       - nonlinear_params
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
-      line: 40
+      line: 48
       name: __init__
       returns: null
     - args:
       - self
       - multi_solitons
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
-      line: 45
+      line: 59
       name: analyze_interactions
       returns: Dict[str, Any]
     - args:
@@ -25658,7 +26716,7 @@ method_index:
       - width2
       - pos2
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
-      line: 114
+      line: 75
       name: analyze_two_soliton_stability
       returns: Dict[str, Any]
     - args:
@@ -25673,7 +26731,7 @@ method_index:
       - width3
       - pos3
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
-      line: 159
+      line: 92
       name: analyze_three_soliton_interactions
       returns: Dict[str, Any]
     - args:
@@ -25688,7 +26746,7 @@ method_index:
       - width3
       - pos3
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
-      line: 222
+      line: 110
       name: analyze_three_soliton_stability
       returns: Dict[str, Any]
     - args:
@@ -25703,9 +26761,59 @@ method_index:
       - width3
       - pos3
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
-      line: 277
+      line: 128
       name: _compute_full_mode_analysis
       returns: Dict[str, Any]
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/interaction_analyzer.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - multi_solitons
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/interaction_analyzer.py
+      line: 46
+      name: analyze_interactions
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/interaction_analyzer.py
+      line: 115
+      name: analyze_two_soliton_interactions
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/interaction_analyzer.py
+      line: 160
+      name: analyze_three_soliton_interactions
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - distance
+      - interaction_range
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/interaction_analyzer.py
+      line: 213
+      name: _step_resonator_interaction
+      returns: float
     SolitonModeAnalyzer:
     - args:
       - self
@@ -25763,6 +26871,86 @@ method_index:
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py
       line: 189
       name: _compute_mode_splitting
+      returns: float
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py
+      line: 43
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py
+      line: 48
+      name: compute_full_mode_analysis
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - x
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py
+      line: 134
+      name: _compute_interaction_matrix
+      returns: np.ndarray
+    - args:
+      - self
+      - x
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py
+      line: 162
+      name: _compute_kinetic_matrix
+      returns: np.ndarray
+    - args:
+      - self
+      - eigenvectors
+      - profile1
+      - profile2
+      - profile3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py
+      line: 187
+      name: _compute_mode_participation_ratios
+      returns: Dict[str, float]
+    - args:
+      - self
+      - eigenvalues
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py
+      line: 216
+      name: _compute_mode_splitting
+      returns: float
+    - args:
+      - self
+      - distance
+      - interaction_range
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py
+      line: 232
+      name: _step_resonator_interaction
       returns: float
     SolitonModel:
     - args:
@@ -25906,6 +27094,49 @@ method_index:
       name: _compute_wzw_gradient
       returns: np.ndarray
     SolitonStabilityAnalyzer:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/stability_analysis.py
+      line: 39
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/stability_analysis.py
+      line: 44
+      name: analyze_two_soliton_stability
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/stability_analysis.py
+      line: 89
+      name: analyze_three_soliton_stability
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - distance
+      - interaction_range
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/stability_analysis.py
+      line: 166
+      name: _step_resonator_interaction
+      returns: float
     - args:
       - self
       - domain
@@ -26854,6 +28085,109 @@ method_index:
       line: 70
       name: perform_statistical_analysis
       returns: Dict[str, Any]
+    StatisticalComparison:
+    - args:
+      - self
+      - analysis_parameters
+      file: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+      line: 42
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - obs_data
+      - model_observables
+      file: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+      line: 55
+      name: perform_comparison
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - obs_data
+      - model_observables
+      file: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+      line: 79
+      name: compute_chi_squared
+      returns: float
+    - args:
+      - self
+      - chi_squared
+      file: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+      line: 115
+      name: compute_likelihood
+      returns: float
+    - args:
+      - self
+      - obs_data
+      - model_observables
+      file: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+      line: 134
+      name: compute_goodness_of_fit
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - obs_data
+      - model_observables
+      file: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+      line: 171
+      name: _compute_parameter_correlation
+      returns: float
+    - args:
+      - self
+      - obs_data
+      - model_observables
+      file: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+      line: 219
+      name: _compute_statistical_significance
+      returns: float
+    - args:
+      - self
+      - obs_data
+      - model_observables
+      file: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+      line: 257
+      name: _compute_model_consistency
+      returns: bool
+    - args:
+      - self
+      - parameter
+      file: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+      line: 295
+      name: _get_measurement_error
+      returns: float
+    - args:
+      - self
+      - obs_data
+      - model_observables
+      file: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+      line: 306
+      name: _compute_r_squared
+      returns: float
+    - args:
+      - self
+      - chi_squared
+      - n_params
+      file: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+      line: 333
+      name: _compute_aic
+      returns: float
+    - args:
+      - self
+      - chi_squared
+      - n_params
+      - n_data
+      file: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+      line: 337
+      name: _compute_bic
+      returns: float
+    - args:
+      - self
+      - chi_squared
+      - r_squared
+      file: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+      line: 341
+      name: _assess_goodness_quality
+      returns: str
     StatisticalConfidenceAnalyzer:
     - args:
       - self
@@ -42211,6 +43545,101 @@ method_index:
       line: 379
       name: is_sink_node
       returns: bool
+    TopologicalAnalyzer:
+    - args:
+      - self
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py
+      line: 38
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - regime1_data
+      - regime2_data
+      - boundary_points
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py
+      line: 50
+      name: analyze_boundary_topology
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - d1
+      - d2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py
+      line: 89
+      name: _compute_topological_charge_density
+      returns: float
+    - args:
+      - self
+      - d1
+      - d2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py
+      line: 109
+      name: _compute_winding_number
+      returns: int
+    - args:
+      - self
+      - d1
+      - d2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py
+      line: 126
+      name: _compute_defect_density
+      returns: float
+    - args:
+      - self
+      - d1
+      - d2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py
+      line: 146
+      name: _compute_7d_topological_invariants
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - charge_density
+      - winding_number
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py
+      line: 163
+      name: _compute_topological_strength
+      returns: float
+    - args:
+      - self
+      - charge_density
+      - winding_number
+      - defect_density
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py
+      line: 173
+      name: _assess_topological_quality
+      returns: str
+    - args:
+      - self
+      - param_distance
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py
+      line: 194
+      name: _compute_7d_charge_density_from_distance
+      returns: float
+    - args:
+      - self
+      - params1
+      - params2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py
+      line: 199
+      name: _compute_7d_winding_number_from_parameters
+      returns: int
+    - args:
+      - self
+      - param_distance
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py
+      line: 208
+      name: _compute_7d_defect_density_from_distance
+      returns: float
+    - args:
+      - self
+      - params1
+      - params2
+      file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py
+      line: 213
+      name: _compute_7d_invariants_from_parameters
+      returns: Dict[str, Any]
     TopologicalChargeAnalyzer:
     - args:
       - self
@@ -43763,6 +45192,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 6060
-    total_classes: 612
+    total_class_methods: 6247
+    total_classes: 621
     total_standalone_functions: 0

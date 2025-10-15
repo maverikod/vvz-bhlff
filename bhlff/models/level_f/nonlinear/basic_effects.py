@@ -18,7 +18,7 @@ Example:
 
 import numpy as np
 from typing import Dict, Any, List, Optional, Tuple
-from ..base.abstract_model import AbstractModel
+from ...base.abstract_model import AbstractModel
 
 
 class BasicNonlinearEffects(AbstractModel):

@@ -24,7 +24,7 @@ Example:
 
 from .multi_particle_system import MultiParticleSystem
 from .collective import ExcitationAnalyzer, DispersionAnalyzer
-from .transitions import PhaseTransitions
+from .transitions_facade import PhaseTransitions
 from .nonlinear import NonlinearEffects
 
 __all__ = [

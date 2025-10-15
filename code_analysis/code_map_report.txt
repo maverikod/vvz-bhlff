@@ -4,15 +4,15 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 820
+Total files analyzed: 825
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 685
+Total classes: 690
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 5948
+Total functions: 6002
 
 ISSUES SUMMARY:
 ----------------------------------------
@@ -21,7 +21,7 @@ not_implemented_in_non_abstract: 0
 methods_without_docstrings: 109
 files_without_docstrings: 4
 classes_without_docstrings: 8
-imports_in_middle: 590
+imports_in_middle: 595
 files_too_large: 88
 
 METHODS_WITHOUT_DOCSTRINGS:
@@ -154,11 +154,13 @@ IMPORTS_IN_MIDDLE:
   File: ./tests/conftest.py
   Line: 37
 
-  ... and 580 more
+  ... and 585 more
 
 FILES_TOO_LARGE:
 ----------------------------------------
   File: ./tests/unit/test_ml_prediction_vectorized_implementations.py
+
+  File: ./tests/unit/test_soliton_analysis_optimization.py
 
   File: ./tests/unit/test_ml_prediction_vectorized_implementation.py
 
@@ -175,7 +177,5 @@ FILES_TOO_LARGE:
   File: ./tests/unit/test_core/test_7d_physics.py
 
   File: ./tests/unit/test_core/test_power_law_optimization_full.py
-
-  File: ./tests/unit/test_core/test_bvp_constants_comprehensive.py
 
   ... and 78 more

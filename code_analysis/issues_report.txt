@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 799
+Total issues found: 804
 
 METHODS_WITHOUT_DOCSTRINGS: 109 issues
 ----------------------------------------
@@ -279,16 +279,16 @@ METHODS_WITHOUT_DOCSTRINGS: 109 issues
     Line 47
     Method: test_admittance_scales_with_conductivity
 
-  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-    Line 110
-    Method: bc
-
-  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-    Line 205
-    Method: bc
-
   ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
     Line 86
+    Method: bc
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+    Line 114
+    Method: bc
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+    Line 209
     Method: bc
 
   ./bhlff/core/bvp/memory_decorator.py
@@ -515,7 +515,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 8 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 590 issues
+IMPORTS_IN_MIDDLE: 595 issues
 ----------------------------------------
   ./setup.py
     Line 28
@@ -615,6 +615,9 @@ IMPORTS_IN_MIDDLE: 590 issues
 
   ./tests/unit/test_acceptance_criteria.py
     Line 23
+
+  ./tests/unit/test_soliton_analysis_optimization.py
+    Line 345
 
   ./tests/unit/test_ml_prediction_vectorized_implementation.py
     Line 42
@@ -1220,13 +1223,16 @@ IMPORTS_IN_MIDDLE: 590 issues
     Line 22
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-    Line 26
+    Line 27
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
     Line 26
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
-    Line 24
+    Line 27
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+    Line 27
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/solutions.py
     Line 28
@@ -1234,8 +1240,17 @@ IMPORTS_IN_MIDDLE: 590 issues
   ./bhlff/models/level_f/nonlinear/soliton_analysis/__init__.py
     Line 26
 
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
+    Line 24
+
   ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
     Line 24
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py
+    Line 25
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py
+    Line 25
 
   ./bhlff/models/level_f/collective/dispersion_analysis.py
     Line 22
@@ -2292,6 +2307,8 @@ FILES_TOO_LARGE: 88 issues
 ----------------------------------------
   ./tests/unit/test_ml_prediction_vectorized_implementations.py
 
+  ./tests/unit/test_soliton_analysis_optimization.py
+
   ./tests/unit/test_ml_prediction_vectorized_implementation.py
 
   ./tests/unit/test_physics_validation_step_2_1_1.py
@@ -2367,8 +2384,6 @@ FILES_TOO_LARGE: 88 issues
   ./bhlff/models/level_f/nonlinear.py
 
   ./bhlff/models/level_f/nonlinear/mode_analysis.py
-
-  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
 
   ./bhlff/models/level_f/collective/excitation_analysis.py
 

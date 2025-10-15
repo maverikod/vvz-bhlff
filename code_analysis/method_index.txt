@@ -544,6 +544,44 @@ Class: TestStep111ExponentialDecayFix
   __init__(self)
     File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py, Line: 146
 
+Class: TestSolitonAnalysisOptimization
+  mock_system(self)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 41
+  nonlinear_params(self)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 51
+  single_solver(self, mock_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 62
+  multi_solver(self, mock_system, nonlinear_params)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 67
+  test_single_soliton_optimization_complete(self, single_solver)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 71
+  test_single_soliton_ode_computation(self, single_solver)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 96
+  test_single_soliton_energy_computation(self, single_solver)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 119
+  test_fractional_laplacian_computation(self, single_solver)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 141
+  test_multi_soliton_optimization_complete(self, multi_solver)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 162
+  test_two_soliton_ode_computation(self, multi_solver)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 188
+  test_three_soliton_ode_computation(self, multi_solver)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 213
+  test_soliton_interaction_strength(self, multi_solver)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 239
+  test_step_resonator_interaction(self, multi_solver)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 262
+  test_two_soliton_energy_computation(self, multi_solver)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 287
+  test_three_soliton_energy_computation(self, multi_solver)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 311
+  test_no_placeholder_implementations(self, single_solver, multi_solver)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 336
+  test_7d_bvp_theory_compliance(self, single_solver, multi_solver)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 366
+  test_optimization_convergence(self, single_solver, multi_solver)
+    File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 389
+
 Class: TestEnvelopeEffectiveMetric
   test_metric_initialization(self)
     File: ./tests/unit/test_level_g_cosmology_metric.py, Line: 26
@@ -6912,33 +6950,29 @@ Class: MultiSolitonSolver
   __init__(self, system, nonlinear_params)
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 44
   find_multi_soliton_solutions(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 49
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 53
   find_two_soliton_solutions(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 81
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 68
   find_three_soliton_solutions(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 176
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 83
   _compute_7d_two_soliton_ode(self, x, y, amp1, width1, pos1, amp2, width2, pos2) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 268
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 99
   _compute_7d_three_soliton_ode(self, x, y, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 298
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 103
   _compute_two_soliton_energy(self, solution, amp1, width1, pos1, amp2, width2, pos2) -> float
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 334
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 107
   _compute_three_soliton_energy(self, solution, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> float
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 354
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 111
   _compute_final_two_soliton_solution(self, amp1, width1, pos1, amp2, width2, pos2) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 385
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 115
   _compute_final_three_soliton_solution(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 422
-  two_soliton_equations_7d(params)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 101
-  three_soliton_equations_7d(params)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 196
-  two_soliton_ode(x, y)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 105
-  bc(ya, yb)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 205
-  three_soliton_ode(x, y)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 200
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 119
+  compute_soliton_energy(self, solution, amplitude, width) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 123
+  compute_soliton_interaction_strength(self, amp1, width1, pos1, amp2, width2, pos2) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 127
+  _step_resonator_interaction(self, distance, interaction_range) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py, Line: 132
 
 Class: SingleSolitonSolver
   __init__(self, system, nonlinear_params)
@@ -6947,6 +6981,12 @@ Class: SingleSolitonSolver
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 49
   _compute_final_soliton_solution(self, amplitude, width, position) -> Dict[str, Any]
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 141
+  compute_7d_soliton_ode(self, x, y, amplitude, width) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 186
+  compute_soliton_energy(self, solution, amplitude, width) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 233
+  _compute_full_fractional_laplacian(self, x, field) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 279
   soliton_equations_7d(params)
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 77
   soliton_ode(x, y)
@@ -6956,15 +6996,61 @@ Class: SingleSolitonSolver
 
 Class: SolitonInteractionAnalyzer
   __init__(self, system, nonlinear_params)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 40
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 44
   analyze_interactions(self, multi_solitons) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 45
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 53
   analyze_two_soliton_stability(self, amp1, width1, pos1, amp2, width2, pos2) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 114
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 69
   analyze_three_soliton_interactions(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 159
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 86
   analyze_three_soliton_stability(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 222
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 104
+  _compute_full_mode_analysis(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 122
+  _compute_interaction_matrix(self, x, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 146
+  _compute_kinetic_matrix(self, x) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 150
+  _compute_mode_participation_ratios(self, eigenvectors, profile1, profile2, profile3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 154
+  _compute_mode_splitting(self, eigenvalues, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py, Line: 158
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 40
+  analyze_interactions(self, multi_solitons) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 45
+  analyze_two_soliton_stability(self, amp1, width1, pos1, amp2, width2, pos2) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 114
+  analyze_three_soliton_interactions(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 159
+  analyze_three_soliton_stability(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 222
+  _compute_full_mode_analysis(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py, Line: 277
+
+Class: MultiSolitonSolutions
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 45
+  find_multi_soliton_solutions(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 53
+  find_two_soliton_solutions(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 85
+  find_three_soliton_solutions(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 180
+  _compute_final_two_soliton_solution(self, amp1, width1, pos1, amp2, width2, pos2) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 272
+  _compute_final_three_soliton_solution(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 322
+  two_soliton_equations_7d(params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 105
+  three_soliton_equations_7d(params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 200
+  two_soliton_ode(x, y)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 109
+  bc(ya, yb)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 209
+  three_soliton_ode(x, y)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 204
 
 Class: SolitonAnalysisSolutions
   __init__(self, system, nonlinear_params)
@@ -6985,6 +7071,36 @@ Class: SolitonAnalysisBase
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 140
   compute_soliton_interaction_strength(self, amp1, width1, pos1, amp2, width2, pos2) -> float
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 187
+  _compute_full_fractional_laplacian(self, x, field) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 222
+  _step_resonator_interaction(self, distance, interaction_range) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 271
+
+Class: SolitonModeAnalyzer
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py, Line: 43
+  _compute_interaction_matrix(self, x, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py, Line: 48
+  _compute_kinetic_matrix(self, x) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py, Line: 98
+  _compute_mode_participation_ratios(self, eigenvectors, profile1, profile2, profile3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py, Line: 144
+  _compute_mode_splitting(self, eigenvalues, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py, Line: 189
+
+Class: MultiSolitonCore
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py, Line: 43
+  compute_7d_two_soliton_ode(self, x, y, amp1, width1, pos1, amp2, width2, pos2) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py, Line: 48
+  compute_7d_three_soliton_ode(self, x, y, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py, Line: 99
+  compute_two_soliton_energy(self, solution, amp1, width1, pos1, amp2, width2, pos2) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py, Line: 157
+  compute_three_soliton_energy(self, solution, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py, Line: 197
+  _step_resonator_interaction(self, distance, interaction_range) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py, Line: 249
 
 Class: DispersionAnalyzer
   __init__(self, system)

@@ -16958,6 +16958,170 @@ method_index:
       line: 444
       name: _calculate_overall_validation
       returns: Dict[str, Any]
+    MultiSolitonCore:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py
+      line: 43
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - x
+      - y
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py
+      line: 48
+      name: compute_7d_two_soliton_ode
+      returns: np.ndarray
+    - args:
+      - self
+      - x
+      - y
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py
+      line: 99
+      name: compute_7d_three_soliton_ode
+      returns: np.ndarray
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py
+      line: 157
+      name: compute_two_soliton_energy
+      returns: float
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py
+      line: 197
+      name: compute_three_soliton_energy
+      returns: float
+    - args:
+      - self
+      - distance
+      - interaction_range
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py
+      line: 249
+      name: _step_resonator_interaction
+      returns: float
+    MultiSolitonSolutions:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 45
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 53
+      name: find_multi_soliton_solutions
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 85
+      name: find_two_soliton_solutions
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 180
+      name: find_three_soliton_solutions
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 272
+      name: _compute_final_two_soliton_solution
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 322
+      name: _compute_final_three_soliton_solution
+      returns: Dict[str, Any]
+    - args:
+      - params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 105
+      name: two_soliton_equations_7d
+      returns: null
+    - args:
+      - params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 200
+      name: three_soliton_equations_7d
+      returns: null
+    - args:
+      - x
+      - y
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 109
+      name: two_soliton_ode
+      returns: null
+    - args:
+      - ya
+      - yb
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 209
+      name: bc
+      returns: null
+    - args:
+      - x
+      - y
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 204
+      name: three_soliton_ode
+      returns: null
     MultiSolitonSolver:
     - args:
       - self
@@ -16970,19 +17134,19 @@ method_index:
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-      line: 49
+      line: 53
       name: find_multi_soliton_solutions
       returns: List[Dict[str, Any]]
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-      line: 81
+      line: 68
       name: find_two_soliton_solutions
       returns: List[Dict[str, Any]]
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-      line: 176
+      line: 83
       name: find_three_soliton_solutions
       returns: List[Dict[str, Any]]
     - args:
@@ -16996,7 +17160,7 @@ method_index:
       - width2
       - pos2
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-      line: 268
+      line: 99
       name: _compute_7d_two_soliton_ode
       returns: np.ndarray
     - args:
@@ -17013,7 +17177,7 @@ method_index:
       - width3
       - pos3
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-      line: 298
+      line: 103
       name: _compute_7d_three_soliton_ode
       returns: np.ndarray
     - args:
@@ -17026,7 +17190,7 @@ method_index:
       - width2
       - pos2
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-      line: 334
+      line: 107
       name: _compute_two_soliton_energy
       returns: float
     - args:
@@ -17042,7 +17206,7 @@ method_index:
       - width3
       - pos3
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-      line: 354
+      line: 111
       name: _compute_three_soliton_energy
       returns: float
     - args:
@@ -17054,7 +17218,7 @@ method_index:
       - width2
       - pos2
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-      line: 385
+      line: 115
       name: _compute_final_two_soliton_solution
       returns: Dict[str, Any]
     - args:
@@ -17069,42 +17233,38 @@ method_index:
       - width3
       - pos3
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-      line: 422
+      line: 119
       name: _compute_final_three_soliton_solution
       returns: Dict[str, Any]
     - args:
-      - params
+      - self
+      - solution
+      - amplitude
+      - width
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-      line: 101
-      name: two_soliton_equations_7d
-      returns: null
+      line: 123
+      name: compute_soliton_energy
+      returns: float
     - args:
-      - params
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-      line: 196
-      name: three_soliton_equations_7d
-      returns: null
+      line: 127
+      name: compute_soliton_interaction_strength
+      returns: float
     - args:
-      - x
-      - y
+      - self
+      - distance
+      - interaction_range
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-      line: 105
-      name: two_soliton_ode
-      returns: null
-    - args:
-      - ya
-      - yb
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-      line: 205
-      name: bc
-      returns: null
-    - args:
-      - x
-      - y
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-      line: 200
-      name: three_soliton_ode
-      returns: null
+      line: 132
+      name: _step_resonator_interaction
+      returns: float
     NewtonSolver:
     - args:
       - self
@@ -24049,6 +24209,33 @@ method_index:
       name: _compute_final_soliton_solution
       returns: Dict[str, Any]
     - args:
+      - self
+      - x
+      - y
+      - amplitude
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+      line: 186
+      name: compute_7d_soliton_ode
+      returns: np.ndarray
+    - args:
+      - self
+      - solution
+      - amplitude
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+      line: 233
+      name: compute_soliton_energy
+      returns: float
+    - args:
+      - self
+      - x
+      - field
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+      line: 279
+      name: _compute_full_fractional_laplacian
+      returns: np.ndarray
+    - args:
       - params
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
       line: 77
@@ -24192,6 +24379,22 @@ method_index:
       line: 187
       name: compute_soliton_interaction_strength
       returns: float
+    - args:
+      - self
+      - x
+      - field
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
+      line: 222
+      name: _compute_full_fractional_laplacian
+      returns: np.ndarray
+    - args:
+      - self
+      - distance
+      - interaction_range
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
+      line: 271
+      name: _step_resonator_interaction
+      returns: float
     SolitonAnalysisInitialization:
     - args:
       - self
@@ -24333,14 +24536,14 @@ method_index:
       - system
       - nonlinear_params
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
-      line: 40
+      line: 44
       name: __init__
       returns: null
     - args:
       - self
       - multi_solitons
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
-      line: 45
+      line: 53
       name: analyze_interactions
       returns: Dict[str, Any]
     - args:
@@ -24352,7 +24555,7 @@ method_index:
       - width2
       - pos2
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
-      line: 114
+      line: 69
       name: analyze_two_soliton_stability
       returns: Dict[str, Any]
     - args:
@@ -24367,7 +24570,7 @@ method_index:
       - width3
       - pos3
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
-      line: 159
+      line: 86
       name: analyze_three_soliton_interactions
       returns: Dict[str, Any]
     - args:
@@ -24382,9 +24585,203 @@ method_index:
       - width3
       - pos3
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
+      line: 104
+      name: analyze_three_soliton_stability
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
+      line: 122
+      name: _compute_full_mode_analysis
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - x
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
+      line: 146
+      name: _compute_interaction_matrix
+      returns: np.ndarray
+    - args:
+      - self
+      - x
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
+      line: 150
+      name: _compute_kinetic_matrix
+      returns: np.ndarray
+    - args:
+      - self
+      - eigenvectors
+      - profile1
+      - profile2
+      - profile3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
+      line: 154
+      name: _compute_mode_participation_ratios
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - eigenvalues
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
+      line: 158
+      name: _compute_mode_splitting
+      returns: float
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
+      line: 40
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - multi_solitons
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
+      line: 45
+      name: analyze_interactions
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
+      line: 114
+      name: analyze_two_soliton_stability
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
+      line: 159
+      name: analyze_three_soliton_interactions
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
       line: 222
       name: analyze_three_soliton_stability
       returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
+      line: 277
+      name: _compute_full_mode_analysis
+      returns: Dict[str, Any]
+    SolitonModeAnalyzer:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py
+      line: 43
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - x
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py
+      line: 48
+      name: _compute_interaction_matrix
+      returns: np.ndarray
+    - args:
+      - self
+      - x
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py
+      line: 98
+      name: _compute_kinetic_matrix
+      returns: np.ndarray
+    - args:
+      - self
+      - eigenvectors
+      - profile1
+      - profile2
+      - profile3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py
+      line: 144
+      name: _compute_mode_participation_ratios
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - eigenvalues
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py
+      line: 189
+      name: _compute_mode_splitting
+      returns: float
     SolitonModel:
     - args:
       - self
@@ -37268,6 +37665,136 @@ method_index:
       line: 224
       name: test_soliton_analysis
       returns: null
+    TestSolitonAnalysisOptimization:
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 41
+      name: mock_system
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 51
+      name: nonlinear_params
+      returns: null
+    - args:
+      - self
+      - mock_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 62
+      name: single_solver
+      returns: null
+    - args:
+      - self
+      - mock_system
+      - nonlinear_params
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 67
+      name: multi_solver
+      returns: null
+    - args:
+      - self
+      - single_solver
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 71
+      name: test_single_soliton_optimization_complete
+      returns: null
+    - args:
+      - self
+      - single_solver
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 96
+      name: test_single_soliton_ode_computation
+      returns: null
+    - args:
+      - self
+      - single_solver
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 119
+      name: test_single_soliton_energy_computation
+      returns: null
+    - args:
+      - self
+      - single_solver
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 141
+      name: test_fractional_laplacian_computation
+      returns: null
+    - args:
+      - self
+      - multi_solver
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 162
+      name: test_multi_soliton_optimization_complete
+      returns: null
+    - args:
+      - self
+      - multi_solver
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 188
+      name: test_two_soliton_ode_computation
+      returns: null
+    - args:
+      - self
+      - multi_solver
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 213
+      name: test_three_soliton_ode_computation
+      returns: null
+    - args:
+      - self
+      - multi_solver
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 239
+      name: test_soliton_interaction_strength
+      returns: null
+    - args:
+      - self
+      - multi_solver
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 262
+      name: test_step_resonator_interaction
+      returns: null
+    - args:
+      - self
+      - multi_solver
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 287
+      name: test_two_soliton_energy_computation
+      returns: null
+    - args:
+      - self
+      - multi_solver
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 311
+      name: test_three_soliton_energy_computation
+      returns: null
+    - args:
+      - self
+      - single_solver
+      - multi_solver
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 336
+      name: test_no_placeholder_implementations
+      returns: null
+    - args:
+      - self
+      - single_solver
+      - multi_solver
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 366
+      name: test_7d_bvp_theory_compliance
+      returns: null
+    - args:
+      - self
+      - single_solver
+      - multi_solver
+      file: ./tests/unit/test_soliton_analysis_optimization.py
+      line: 389
+      name: test_optimization_convergence
+      returns: null
     TestSolitonEnergyPhysicsAdvanced:
     - args:
       - self
@@ -41936,6 +42463,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 5846
-    total_classes: 592
+    total_class_methods: 5900
+    total_classes: 596
     total_standalone_functions: 0

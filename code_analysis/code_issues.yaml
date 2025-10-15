@@ -29,6 +29,10 @@ issues:
     file: ./tests/unit/test_ml_prediction_vectorized_implementations.py
     limit: 400
     lines: 694
+  - exceeds_limit: 22
+    file: ./tests/unit/test_soliton_analysis_optimization.py
+    limit: 400
+    lines: 422
   - exceeds_limit: 192
     file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
     limit: 400
@@ -181,10 +185,6 @@ issues:
     file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
     limit: 400
     lines: 511
-  - exceeds_limit: 62
-    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-    limit: 400
-    lines: 462
   - exceeds_limit: 37
     file: ./bhlff/models/level_f/collective/excitation_analysis.py
     limit: 400
@@ -453,6 +453,8 @@ issues:
     line: 25
   - file: ./tests/unit/test_acceptance_criteria.py
     line: 23
+  - file: ./tests/unit/test_soliton_analysis_optimization.py
+    line: 345
   - file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
     line: 42
   - file: ./tests/unit/test_7d_vectorized_processing.py
@@ -856,17 +858,25 @@ issues:
   - file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
     line: 22
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-    line: 26
+    line: 27
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
     line: 26
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
-    line: 24
+    line: 27
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+    line: 27
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/solutions.py
     line: 28
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/__init__.py
     line: 26
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
+    line: 24
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
     line: 24
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py
+    line: 25
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py
+    line: 25
   - file: ./bhlff/models/level_f/collective/dispersion_analysis.py
     line: 22
   - file: ./bhlff/models/level_f/collective/excitation_analysis.py
@@ -1826,16 +1836,16 @@ issues:
     line: 47
     method: test_admittance_scales_with_conductivity
   - class: null
-    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-    line: 110
-    method: bc
-  - class: null
-    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
-    line: 205
-    method: bc
-  - class: null
     file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
     line: 86
+    method: bc
+  - class: null
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+    line: 114
+    method: bc
+  - class: null
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+    line: 209
     method: bc
   - class: null
     file: ./bhlff/core/bvp/memory_decorator.py
@@ -2010,7 +2020,7 @@ summary:
   classes_without_docstrings: 8
   files_too_large: 88
   files_without_docstrings: 4
-  imports_in_middle: 590
+  imports_in_middle: 595
   methods_with_pass: 0
   methods_without_docstrings: 109
   not_implemented_in_non_abstract: 0

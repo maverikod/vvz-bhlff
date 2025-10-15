@@ -582,6 +582,20 @@ Class: TestSolitonAnalysisOptimization
   test_optimization_convergence(self, single_solver, multi_solver)
     File: ./tests/unit/test_soliton_analysis_optimization.py, Line: 389
 
+Class: TestFullAlgorithmImplementations
+  test_observational_comparison_full_implementation(self)
+    File: ./tests/unit/test_full_algorithm_implementations.py, Line: 33
+  test_observational_comparison_parameters_full_implementation(self)
+    File: ./tests/unit/test_full_algorithm_implementations.py, Line: 130
+  test_observational_comparison_statistics_full_implementation(self)
+    File: ./tests/unit/test_full_algorithm_implementations.py, Line: 203
+  test_7d_bvp_theory_compliance(self)
+    File: ./tests/unit/test_full_algorithm_implementations.py, Line: 282
+  test_no_placeholder_implementations(self)
+    File: ./tests/unit/test_full_algorithm_implementations.py, Line: 312
+  test_mathematical_formulation_completeness(self)
+    File: ./tests/unit/test_full_algorithm_implementations.py, Line: 342
+
 Class: TestEnvelopeEffectiveMetric
   test_metric_initialization(self)
     File: ./tests/unit/test_level_g_cosmology_metric.py, Line: 26
@@ -919,30 +933,52 @@ Class: TestPhysicsValidationStep2_1_1
     File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 419
 
 Class: TestSolitonOptimizationAlgorithms
-  mock_system(self)
-    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 40
-  nonlinear_params(self)
-    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 48
-  test_single_soliton_optimization_complete(self, mock_system, nonlinear_params)
-    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 58
-  test_step_resonator_profile_implementation(self, mock_system, nonlinear_params)
-    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 101
-  test_step_resonator_source_implementation(self, mock_system, nonlinear_params)
-    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 126
-  test_multi_soliton_optimization_complete(self, mock_system, nonlinear_params)
-    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 151
-  test_step_resonator_interaction_implementation(self, mock_system, nonlinear_params)
-    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 209
-  test_7d_fractional_laplacian_implementation(self, mock_system, nonlinear_params)
-    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 234
-  test_energy_computation_complete(self, mock_system, nonlinear_params)
-    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 262
-  test_topological_charge_computation(self, mock_system, nonlinear_params)
-    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 287
-  test_no_simplified_implementations(self, mock_system, nonlinear_params)
-    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 312
-  test_step_resonator_vs_exponential_comparison(self, mock_system, nonlinear_params)
-    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 341
+  setup_method(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 30
+  test_single_soliton_solver_initialization(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 45
+  test_single_soliton_find_solution(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 54
+  test_single_soliton_step_resonator_profile(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 90
+  test_single_soliton_validation(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 104
+  test_multi_soliton_solutions_initialization(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 116
+  test_two_soliton_solution_finding(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 127
+  test_three_soliton_solution_finding(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 163
+  test_step_resonator_interaction(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 199
+  test_fractional_laplacian_computation(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 216
+  test_energy_computation(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 229
+  test_physical_properties_computation(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 244
+  test_7d_bvp_properties_computation(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 270
+  test_phase_space_properties(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 286
+  test_solution_quality_validation(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 299
+  test_multi_soliton_energy_computation(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 320
+  test_three_body_interaction_energy(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 335
+  test_step_resonator_boundary_condition(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 352
+  test_optimization_robustness(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 370
+  test_7d_bvp_theory_compliance(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 399
+  test_energy_conservation(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 417
+  test_phase_coherence_computation(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 432
+  test_stability_metric_computation(self)
+    File: ./tests/unit/test_soliton_optimization_algorithms.py, Line: 445
 
 Class: TestParticleValidation
   test_validation_initialization(self)
@@ -989,6 +1025,24 @@ Class: TestAstrophysicalObjectModelAdvanced
     File: ./tests/unit/test_level_g_astrophysics_advanced.py, Line: 300
   test_phase_field_stress_tensor(self)
     File: ./tests/unit/test_level_g_astrophysics_advanced.py, Line: 320
+
+Class: TestClassicalPatternsCompliance
+  test_no_exponential_decay_in_physics_models(self)
+    File: ./tests/unit/test_classical_patterns_compliance.py, Line: 34
+  test_no_spacetime_curvature_references(self)
+    File: ./tests/unit/test_classical_patterns_compliance.py, Line: 79
+  test_no_mass_terms_in_lagrangians(self)
+    File: ./tests/unit/test_classical_patterns_compliance.py, Line: 118
+  test_full_algorithm_implementations(self)
+    File: ./tests/unit/test_classical_patterns_compliance.py, Line: 154
+  test_7d_bvp_theory_compliance(self)
+    File: ./tests/unit/test_classical_patterns_compliance.py, Line: 192
+  test_file_size_compliance(self)
+    File: ./tests/unit/test_classical_patterns_compliance.py, Line: 225
+  test_docstring_compliance(self)
+    File: ./tests/unit/test_classical_patterns_compliance.py, Line: 246
+  test_import_compliance(self)
+    File: ./tests/unit/test_classical_patterns_compliance.py, Line: 276
 
 Class: TestEnvelopeEffectiveMetricGravity
   domain_7d(self)
@@ -4766,13 +4820,13 @@ Class: BoundaryAnalyzer
   __init__(self)
     File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py, Line: 35
   analyze_regime_boundaries(self, parameter_grid, classifications) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py, Line: 45
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py, Line: 48
   _find_regime_boundary(self, regime_data, regime1, regime2) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py, Line: 74
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py, Line: 77
   _compute_regime_separation(self, regime1_data, regime2_data) -> float
-    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py, Line: 98
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py, Line: 101
   _find_boundary_points(self, regime1_data, regime2_data) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py, Line: 119
+    File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py, Line: 122
   __init__(self, domain_7d)
     File: ./bhlff/core/bvp/postulates/power_balance/boundary_analyzer.py, Line: 49
   compute_radiation_losses(self, envelope) -> float
@@ -6409,6 +6463,8 @@ Class: PinningPotentialCreator
     File: ./bhlff/models/level_c/memory/pinning_analysis_potential.py, Line: 40
   create_pinning_potential(self, domain, pinning_params) -> np.ndarray
     File: ./bhlff/models/level_c/memory/pinning_analysis_potential.py, Line: 54
+  _step_resonator_potential(self, X, Y, Z, center, width) -> np.ndarray
+    File: ./bhlff/models/level_c/memory/pinning_analysis_potential.py, Line: 100
 
 Class: PinningAnalyzer
   __init__(self, bvp_core)
@@ -6960,43 +7016,43 @@ Class: SolitonAnalyzer
 
 Class: NonlinearModeAnalyzer
   __init__(self, system, nonlinear_params)
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 41
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 38
   _initialize_mode_methods(self) -> None
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 65
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 62
   _setup_cubic_mode_analysis(self) -> None
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 85
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 82
   _setup_quartic_mode_analysis(self) -> None
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 96
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 93
   _setup_sine_gordon_mode_analysis(self) -> None
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 107
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 104
   find_nonlinear_modes(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 118
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 115
   _compute_nonlinear_corrections(self, linear_modes) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 153
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 150
   _find_bifurcation_points(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 194
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 191
   _analyze_nonlinear_stability(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 222
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 219
   _compute_stability_matrix(self) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 261
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 258
   _find_cubic_modes(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 280
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 277
   _find_quartic_modes(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 309
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 306
   _find_sine_gordon_modes(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 338
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 335
   _analyze_cubic_mode_stability(self, modes) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 368
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 365
   _analyze_quartic_mode_stability(self, modes) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 392
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 389
   _analyze_sine_gordon_mode_stability(self, modes) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 416
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 413
   _analyze_cubic_mode_interactions(self, modes) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 441
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 438
   _analyze_quartic_mode_interactions(self, modes) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 465
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 462
   _analyze_sine_gordon_mode_interactions(self, modes) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 489
+    File: ./bhlff/models/level_f/nonlinear/mode_analysis.py, Line: 486
 
 Class: MultiSolitonSolver
   __init__(self, system, nonlinear_params)
@@ -7028,27 +7084,85 @@ Class: MultiSolitonSolver
 
 Class: SingleSolitonSolver
   __init__(self, system, nonlinear_params)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 44
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 41
   find_single_soliton(self) -> Optional[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 49
-  _compute_final_soliton_solution(self, amplitude, width, position) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 141
-  compute_7d_soliton_ode(self, x, y, amplitude, width) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 186
-  compute_soliton_energy(self, solution, amplitude, width) -> float
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 233
-  _compute_full_fractional_laplacian(self, x, field) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 279
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 50
+  validate_soliton_solution(self, solution, amplitude, width) -> bool
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 65
+  compute_soliton_physical_properties(self, amplitude, width, position, solution) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 83
+
+Class: SingleSolitonValidation
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py, Line: 41
+  validate_soliton_shape(self, solution, amplitude, width) -> bool
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py, Line: 46
+  validate_solution_quality(self, solution, amplitude, width) -> bool
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py, Line: 93
+  compute_soliton_physical_properties(self, amplitude, width, position, solution) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py, Line: 133
+  _compute_stability_metric(self, profile, x) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py, Line: 184
+  _compute_phase_coherence(self, profile, x) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py, Line: 216
+  _compute_7d_bvp_properties(self, profile, x, amplitude, width) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py, Line: 245
+  _compute_fractional_laplacian_contribution(self, profile, x) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py, Line: 283
+  _compute_step_resonator_efficiency(self, profile, x, width) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py, Line: 302
+  _compute_7d_phase_space_properties(self, profile, x) -> Dict[str, float]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py, Line: 321
+  _compute_bvp_convergence_quality(self, profile, x) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py, Line: 346
+  _compute_equation_residual(self, profile, x) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py, Line: 361
   _step_resonator_profile(self, x, position, width) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 328
-  _step_resonator_source(self, x, width) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 359
-  soliton_equations_7d(params)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 77
-  soliton_ode(x, y)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 81
-  bc(ya, yb)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py, Line: 86
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py, Line: 379
+  _step_resonator_source(self, x, position, width) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py, Line: 388
+  _compute_full_fractional_laplacian(self, x, field) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py, Line: 397
+
+Class: MultiSolitonPhysicalProperties
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 41
+  compute_two_soliton_physical_properties(self, amp1, width1, pos1, amp2, width2, pos2, solution) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 46
+  compute_three_soliton_physical_properties(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3, solution) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 94
+  _compute_individual_soliton_energy(self, profile, x) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 150
+  _compute_interaction_energy(self, amp1, width1, pos1, amp2, width2, pos2) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 165
+  _compute_three_body_interaction_energy(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 181
+  _compute_two_soliton_stability(self, solution) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 203
+  _compute_three_soliton_stability(self, solution) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 225
+  _compute_two_soliton_phase_coherence(self, solution) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 247
+  _compute_three_soliton_phase_coherence(self, solution) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 268
+  _compute_two_soliton_7d_bvp_properties(self, solution, amp1, width1, amp2, width2) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 300
+  _compute_three_soliton_7d_bvp_properties(self, solution, amp1, width1, amp2, width2, amp3, width3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 326
+  _compute_fractional_laplacian_contribution(self, profile, x) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 352
+  _compute_two_soliton_step_efficiency(self, solution, width1, width2) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 378
+  _compute_three_soliton_step_efficiency(self, solution, width1, width2, width3) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 404
+  _compute_interaction_efficiency(self, solution) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 436
+  _compute_three_soliton_interaction_efficiency(self, solution) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 451
+  _compute_7d_phase_space_properties(self, profile, x) -> Dict[str, float]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 468
+  _step_resonator_profile(self, x, position, width) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py, Line: 493
 
 Class: SolitonInteractionAnalyzer
   __init__(self, system, nonlinear_params)
@@ -7086,29 +7200,39 @@ Class: SolitonInteractionAnalyzer
 
 Class: MultiSolitonSolutions
   __init__(self, system, nonlinear_params)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 45
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 41
   find_multi_soliton_solutions(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 53
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 50
   find_two_soliton_solutions(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 85
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 65
   find_three_soliton_solutions(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 180
-  _compute_final_two_soliton_solution(self, amp1, width1, pos1, amp2, width2, pos2) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 272
-  _compute_final_three_soliton_solution(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 322
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 80
+  validate_two_soliton_solution(self, solution, amp1, width1, amp2, width2) -> bool
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 95
+  validate_three_soliton_solution(self, solution, amp1, width1, amp2, width2, amp3, width3) -> bool
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 113
+  compute_two_soliton_physical_properties(self, amp1, width1, pos1, amp2, width2, pos2, solution) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 132
+  compute_three_soliton_physical_properties(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3, solution) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 151
+
+Class: SingleSolitonOptimization
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py, Line: 43
+  find_single_soliton(self) -> Optional[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py, Line: 52
+  _compute_final_soliton_solution(self, amplitude, width, position) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py, Line: 180
   _step_resonator_profile(self, x, position, width) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 378
-  two_soliton_equations_7d(params)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 105
-  three_soliton_equations_7d(params)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 200
-  two_soliton_ode(x, y)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 109
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py, Line: 225
+  _step_resonator_boundary_condition(self, field_value, amplitude) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py, Line: 256
+  soliton_equations_7d(params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py, Line: 91
+  soliton_ode(x, y)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py, Line: 95
   bc(ya, yb)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 209
-  three_soliton_ode(x, y)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py, Line: 204
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py, Line: 100
 
 Class: SolitonAnalysisSolutions
   __init__(self, system, nonlinear_params)
@@ -7118,21 +7242,53 @@ Class: SolitonAnalysisSolutions
   calculate_solution_quality(self, soliton_profiles) -> Dict[str, Any]
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/solutions.py, Line: 103
 
+Class: SingleSolitonCore
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py, Line: 42
+  compute_7d_soliton_ode(self, x, y, amplitude, width, position) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py, Line: 47
+  compute_soliton_energy(self, solution, amplitude, width) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py, Line: 94
+  _compute_full_fractional_laplacian(self, x, field) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py, Line: 140
+  _step_resonator_profile(self, x, position, width) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py, Line: 189
+  _step_resonator_source(self, x, position, width) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py, Line: 220
+  _step_resonator_boundary_condition(self, field_value, amplitude) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py, Line: 251
+
 Class: SolitonAnalysisBase
   __init__(self, system, nonlinear_params)
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 42
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 39
   compute_soliton_energy(self, solution, amplitude, width) -> float
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 65
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 63
   compute_topological_charge(self, field) -> float
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 111
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 109
   compute_7d_soliton_ode(self, x, y, amplitude, width) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 140
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 138
   compute_soliton_interaction_strength(self, amp1, width1, pos1, amp2, width2, pos2) -> float
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 187
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 185
   _compute_full_fractional_laplacian(self, x, field) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 222
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 220
   _step_resonator_interaction(self, distance, interaction_range) -> float
-    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 271
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 269
+  _step_resonator_source(self, x, position, width) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py, Line: 301
+
+Class: MultiSolitonValidationCore
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py, Line: 41
+  validate_two_soliton_shape(self, solution, amp1, width1, amp2, width2) -> bool
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py, Line: 46
+  validate_three_soliton_shape(self, solution, amp1, width1, amp2, width2, amp3, width3) -> bool
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py, Line: 94
+  validate_two_soliton_solution_quality(self, solution, amp1, width1, amp2, width2) -> bool
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py, Line: 143
+  validate_three_soliton_solution_quality(self, solution, amp1, width1, amp2, width2, amp3, width3) -> bool
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py, Line: 189
+  _step_resonator_profile(self, x, position, width) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py, Line: 238
 
 Class: SolitonModeAnalyzer
   __init__(self, system, nonlinear_params)
@@ -7145,6 +7301,22 @@ Class: SolitonModeAnalyzer
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py, Line: 144
   _compute_mode_splitting(self, eigenvalues, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> float
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py, Line: 189
+
+Class: MultiSolitonValidation
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py, Line: 43
+  validate_two_soliton_shape(self, solution, amp1, width1, amp2, width2) -> bool
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py, Line: 52
+  validate_three_soliton_shape(self, solution, amp1, width1, amp2, width2, amp3, width3) -> bool
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py, Line: 71
+  validate_two_soliton_solution_quality(self, solution, amp1, width1, amp2, width2) -> bool
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py, Line: 91
+  validate_three_soliton_solution_quality(self, solution, amp1, width1, amp2, width2, amp3, width3) -> bool
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py, Line: 109
+  compute_two_soliton_physical_properties(self, amp1, width1, pos1, amp2, width2, pos2, solution) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py, Line: 128
+  compute_three_soliton_physical_properties(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3, solution) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py, Line: 147
 
 Class: MultiSolitonCore
   __init__(self, system, nonlinear_params)
@@ -7161,6 +7333,36 @@ Class: MultiSolitonCore
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py, Line: 249
   _step_resonator_source(self, x, position, width) -> np.ndarray
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py, Line: 281
+
+Class: MultiSolitonOptimization
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 43
+  find_multi_soliton_solutions(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 52
+  find_two_soliton_solutions(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 84
+  find_three_soliton_solutions(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 216
+  _compute_final_two_soliton_solution(self, amp1, width1, pos1, amp2, width2, pos2) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 345
+  _compute_final_three_soliton_solution(self, amp1, width1, pos1, amp2, width2, pos2, amp3, width3, pos3) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 395
+  _step_resonator_profile(self, x, position, width) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 451
+  _step_resonator_boundary_condition(self, field_value, amplitude) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 482
+  _compute_soliton_interaction_strength(self, amp1, width1, pos1, amp2, width2, pos2) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 508
+  two_soliton_equations_7d(params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 118
+  three_soliton_equations_7d(params)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 250
+  two_soliton_ode(x, y)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 122
+  bc(ya, yb)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 259
+  three_soliton_ode(x, y)
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 254
 
 Class: DispersionAnalyzer
   __init__(self, system)
@@ -7512,7 +7714,7 @@ Class: FieldProjection
   project_field_windows(self, field, window_params) -> Dict[str, Any]
     File: ./bhlff/models/level_d/projections.py, Line: 227
   analyze_field_signatures(self, projections) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/projections.py, Line: 479
+    File: ./bhlff/models/level_d/projections.py, Line: 482
   project(self, field) -> np.ndarray
     File: ./bhlff/models/level_d/projections.py, Line: 413
   _create_em_filter(self, shape) -> np.ndarray
@@ -7530,23 +7732,23 @@ Class: FieldProjection
   _apply_chiral_filter(self, chiral_factor) -> np.ndarray
     File: ./bhlff/models/level_d/projections.py, Line: 461
   _analyze_single_field_signature(self, field, field_type) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/projections.py, Line: 505
+    File: ./bhlff/models/level_d/projections.py, Line: 508
   _compute_localization(self, field) -> float
-    File: ./bhlff/models/level_d/projections.py, Line: 545
+    File: ./bhlff/models/level_d/projections.py, Line: 548
   _compute_range_characteristics(self, field) -> Dict[str, float]
-    File: ./bhlff/models/level_d/projections.py, Line: 551
+    File: ./bhlff/models/level_d/projections.py, Line: 554
   _compute_anisotropy(self, field) -> float
-    File: ./bhlff/models/level_d/projections.py, Line: 564
+    File: ./bhlff/models/level_d/projections.py, Line: 567
   _compute_chirality(self, field) -> float
-    File: ./bhlff/models/level_d/projections.py, Line: 580
+    File: ./bhlff/models/level_d/projections.py, Line: 583
   _compute_confinement(self, field) -> float
-    File: ./bhlff/models/level_d/projections.py, Line: 586
+    File: ./bhlff/models/level_d/projections.py, Line: 589
   _compute_parity_violation(self, field) -> float
-    File: ./bhlff/models/level_d/projections.py, Line: 595
+    File: ./bhlff/models/level_d/projections.py, Line: 598
   _compute_correlation_length(self, field) -> float
-    File: ./bhlff/models/level_d/projections.py, Line: 601
+    File: ./bhlff/models/level_d/projections.py, Line: 604
   _compute_decay_rate(self, field) -> float
-    File: ./bhlff/models/level_d/projections.py, Line: 607
+    File: ./bhlff/models/level_d/projections.py, Line: 610
 
 Class: LevelDBVPIntegration
   __init__(self, bvp_core)
@@ -7678,31 +7880,31 @@ Class: LevelBNodeAnalyzer
   __init__(self)
     File: ./bhlff/models/level_b/node_analyzer.py, Line: 40
   check_spherical_nodes(self, field, center, max_sign_changes) -> Dict[str, Any]
-    File: ./bhlff/models/level_b/node_analyzer.py, Line: 44
+    File: ./bhlff/models/level_b/node_analyzer.py, Line: 47
   compute_topological_charge(self, field, center, contour_points) -> Dict[str, Any]
-    File: ./bhlff/models/level_b/node_analyzer.py, Line: 104
+    File: ./bhlff/models/level_b/node_analyzer.py, Line: 107
   _compute_radial_profile(self, field, center) -> Dict[str, np.ndarray]
-    File: ./bhlff/models/level_b/node_analyzer.py, Line: 165
+    File: ./bhlff/models/level_b/node_analyzer.py, Line: 168
   _count_sign_changes(self, derivative) -> int
-    File: ./bhlff/models/level_b/node_analyzer.py, Line: 202
+    File: ./bhlff/models/level_b/node_analyzer.py, Line: 205
   _find_amplitude_zeros(self, amplitude, radius) -> np.ndarray
-    File: ./bhlff/models/level_b/node_analyzer.py, Line: 208
+    File: ./bhlff/models/level_b/node_analyzer.py, Line: 211
   _check_periodicity(self, zeros, tolerance) -> bool
-    File: ./bhlff/models/level_b/node_analyzer.py, Line: 231
+    File: ./bhlff/models/level_b/node_analyzer.py, Line: 234
   _check_monotonicity(self, amplitude, radius) -> bool
-    File: ./bhlff/models/level_b/node_analyzer.py, Line: 248
+    File: ./bhlff/models/level_b/node_analyzer.py, Line: 251
   _estimate_integration_radius(self, field, center) -> float
-    File: ./bhlff/models/level_b/node_analyzer.py, Line: 260
+    File: ./bhlff/models/level_b/node_analyzer.py, Line: 263
   _create_spherical_contour(self, center, radius, n_points) -> List[Tuple[float, float, float]]
-    File: ./bhlff/models/level_b/node_analyzer.py, Line: 280
+    File: ./bhlff/models/level_b/node_analyzer.py, Line: 283
   _compute_phase_gradient(self, phase, field_shape) -> np.ndarray
-    File: ./bhlff/models/level_b/node_analyzer.py, Line: 294
+    File: ./bhlff/models/level_b/node_analyzer.py, Line: 297
   _integrate_phase_around_contour(self, grad_phase, contour_points) -> float
-    File: ./bhlff/models/level_b/node_analyzer.py, Line: 305
+    File: ./bhlff/models/level_b/node_analyzer.py, Line: 308
   _interpolate_gradient(self, grad_phase, point) -> np.ndarray
-    File: ./bhlff/models/level_b/node_analyzer.py, Line: 328
+    File: ./bhlff/models/level_b/node_analyzer.py, Line: 331
   visualize_node_analysis(self, analysis_result, output_path) -> None
-    File: ./bhlff/models/level_b/node_analyzer.py, Line: 343
+    File: ./bhlff/models/level_b/node_analyzer.py, Line: 346
 
 Class: LevelBZoneAnalyzer
   __init__(self)
@@ -8670,25 +8872,25 @@ Class: ResonanceAnalyzer
   __init__(self)
     File: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py, Line: 35
   classify_resonances(self, resonance_data) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py, Line: 45
+    File: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py, Line: 49
   _compute_universality(self, resonance) -> float
-    File: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py, Line: 91
+    File: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py, Line: 95
   _compute_shape_quality(self, resonance) -> float
-    File: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py, Line: 113
+    File: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py, Line: 117
   _compute_ecology_score(self, resonance) -> float
-    File: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py, Line: 131
+    File: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py, Line: 135
   _summarize_classifications(self, classifications) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py, Line: 142
+    File: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py, Line: 146
 
 Class: EnergyComplexityAnalyzer
   __init__(self)
     File: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py, Line: 41
   analyze_energy_complexity_correlation(self, samples, outputs) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py, Line: 51
+    File: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py, Line: 54
   _compute_energy_metrics(self, samples, energy_params) -> np.ndarray
-    File: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py, Line: 89
+    File: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py, Line: 92
   _compute_complexity_metrics(self, samples, complexity_params) -> np.ndarray
-    File: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py, Line: 139
+    File: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py, Line: 142
 
 Class: SobolAnalyzer
   __init__(self, parameter_ranges)
@@ -9033,7 +9235,7 @@ Class: VBPGravitationalWavesCalculator
     File: ./bhlff/models/level_g/gravity_waves.py, Line: 45
   _setup_wave_parameters(self) -> None
     File: ./bhlff/models/level_g/gravity_waves.py, Line: 61
-  compute_gravitational_waves(self, envelope_solution) -> Dict[str, Any]
+  compute_phase_field_oscillations(self, envelope_solution) -> Dict[str, Any]
     File: ./bhlff/models/level_g/gravity_waves.py, Line: 76
   _compute_strain_tensor_from_envelope(self, envelope_solution) -> np.ndarray
     File: ./bhlff/models/level_g/gravity_waves.py, Line: 124
@@ -9300,17 +9502,9 @@ Class: StellarModel
 
 Class: ObservationalComparison
   __init__(self, evolution_results, observational_data, analysis_parameters)
-    File: ./bhlff/models/level_g/analysis/observational_comparison.py, Line: 54
+    File: ./bhlff/models/level_g/analysis/observational_comparison.py, Line: 55
   compare_with_observations(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/analysis/observational_comparison.py, Line: 71
-  _compare_structure_formation(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/analysis/observational_comparison.py, Line: 95
-  _compare_parameters(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/analysis/observational_comparison.py, Line: 118
-  _compare_statistics(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/analysis/observational_comparison.py, Line: 141
-  _compute_goodness_of_fit(self) -> Dict[str, float]
-    File: ./bhlff/models/level_g/analysis/observational_comparison.py, Line: 163
+    File: ./bhlff/models/level_g/analysis/observational_comparison.py, Line: 73
 
 Class: CosmologicalAnalysis
   __init__(self, evolution_results, observational_data)
@@ -9328,6 +9522,50 @@ Class: CosmologicalAnalysis
   compare_with_observations(self) -> Dict[str, Any]
     File: ./bhlff/models/level_g/analysis/cosmological_analysis.py, Line: 171
 
+Class: ObservationalComparisonStatisticsCore
+  __init__(self, evolution_results, observational_data, analysis_parameters)
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 56
+  compare_statistics(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 74
+  compute_goodness_of_fit(self) -> Dict[str, float]
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 121
+  compute_chi_squared(self, obs_data, model_observables) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 165
+  compute_likelihood(self, chi_squared) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 200
+  _compare_correlation_functions(self, theoretical, observational, tolerance) -> bool
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 219
+  _compare_power_spectra(self, theoretical, observational, tolerance) -> bool
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 227
+  _compare_structure_statistics(self, theoretical, observational, tolerance) -> bool
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 235
+  _compute_chi_squared_from_7d_field(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 246
+  _compute_r_squared_from_7d_field(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 251
+  _compute_aic_from_7d_field(self, chi_squared, n_parameters) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 256
+  _compute_bic_from_7d_field(self, chi_squared, n_parameters, n_data_points) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 260
+
+Class: ObservationalComparisonCore
+  __init__(self, evolution_results, observational_data, analysis_parameters)
+    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 58
+  compare_with_observations(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 77
+  _load_observational_data(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 121
+  _compute_7d_observables(self, model_data) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 147
+  _statistical_comparison(self, obs_data, model_observables) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 173
+  _compute_parameter_correlation(self, obs_data, model_observables) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 197
+  _compute_statistical_significance(self, obs_data, model_observables) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 245
+  _compute_model_consistency(self, obs_data, model_observables) -> bool
+    File: ./bhlff/models/level_g/analysis/observational_comparison_core.py, Line: 285
+
 Class: StatisticalAnalysis
   __init__(self, evolution_results, analysis_parameters)
     File: ./bhlff/models/level_g/analysis/statistical_analysis.py, Line: 51
@@ -9341,6 +9579,30 @@ Class: StatisticalAnalysis
     File: ./bhlff/models/level_g/analysis/statistical_analysis.py, Line: 162
   _compute_correlation(self, x, y) -> float
     File: ./bhlff/models/level_g/analysis/statistical_analysis.py, Line: 208
+
+Class: ObservationalComparisonStatistics7D
+  __init__(self, evolution_results)
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_7d.py, Line: 52
+  compute_7d_correlation_function(self) -> np.ndarray
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_7d.py, Line: 64
+  compute_7d_power_spectrum(self) -> np.ndarray
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_7d.py, Line: 102
+  compute_7d_structure_statistics(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_7d.py, Line: 160
+  _compute_structure_scale(self, density_contrast) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_7d.py, Line: 215
+
+Class: ObservationalComparisonStatistics
+  __init__(self, evolution_results, observational_data, analysis_parameters)
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics.py, Line: 55
+  compare_statistics(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics.py, Line: 73
+  compute_goodness_of_fit(self) -> Dict[str, float]
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics.py, Line: 86
+  compute_chi_squared(self, obs_data, model_observables) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics.py, Line: 99
+  compute_likelihood(self, chi_squared) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics.py, Line: 116
 
 Class: StructureAnalysis
   __init__(self, evolution_results, analysis_parameters)
@@ -9371,6 +9633,36 @@ Class: StructureAnalysis
     File: ./bhlff/models/level_g/structure/structure_analysis.py, Line: 165
   _compute_cluster_mass(self, density_field) -> float
     File: ./bhlff/models/level_g/structure/structure_analysis.py, Line: 228
+
+Class: ObservationalComparisonParameters
+  __init__(self, evolution_results, observational_data, analysis_parameters)
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 54
+  compare_parameters(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 71
+  compare_structure_formation(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 121
+  _extract_formation_time_from_7d_field(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 161
+  _extract_observational_formation_time(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 166
+  _extract_theoretical_structure_scale(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 170
+  _extract_observational_structure_scale(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 174
+  _extract_hubble_parameter_from_7d_field(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 178
+  _extract_matter_density_from_7d_field(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 217
+  _extract_dark_energy_from_7d_field(self) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 243
+  _compute_scale_factor_from_phase_field(self, phase_field) -> np.ndarray
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 269
+  _compute_matter_density_from_phase_field(self, phase_field) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 301
+  _compute_dark_energy_from_phase_field(self, phase_field) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 334
+  _compute_curvature_from_phase_field(self, phase_field) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 369
 
 Class: ParameterAnalysis
   __init__(self, evolution_results, analysis_parameters)

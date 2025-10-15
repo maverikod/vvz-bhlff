@@ -39,7 +39,10 @@ class LevelBNodeAnalyzer:
 
     def __init__(self):
         """Initialize node analyzer."""
-        pass
+        self.max_sign_changes = 1
+        self.tolerance = 1e-6
+        self.radius_threshold = 0.1
+        self.spectral_threshold = 1e-3
 
     def check_spherical_nodes(
         self, field: np.ndarray, center: List[float], max_sign_changes: int = 1

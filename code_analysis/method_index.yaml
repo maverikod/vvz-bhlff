@@ -7685,7 +7685,7 @@ method_index:
       - parameter_grid
       - classifications
       file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py
-      line: 45
+      line: 48
       name: analyze_regime_boundaries
       returns: Dict[str, Any]
     - args:
@@ -7694,7 +7694,7 @@ method_index:
       - regime1
       - regime2
       file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py
-      line: 74
+      line: 77
       name: _find_regime_boundary
       returns: Dict[str, Any]
     - args:
@@ -7702,7 +7702,7 @@ method_index:
       - regime1_data
       - regime2_data
       file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py
-      line: 98
+      line: 101
       name: _compute_regime_separation
       returns: float
     - args:
@@ -7710,7 +7710,7 @@ method_index:
       - regime1_data
       - regime2_data
       file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py
-      line: 119
+      line: 122
       name: _find_boundary_points
       returns: List[Dict[str, Any]]
     - args:
@@ -11510,7 +11510,7 @@ method_index:
       - samples
       - outputs
       file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
-      line: 51
+      line: 54
       name: analyze_energy_complexity_correlation
       returns: Dict[str, Any]
     - args:
@@ -11518,7 +11518,7 @@ method_index:
       - samples
       - energy_params
       file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
-      line: 89
+      line: 92
       name: _compute_energy_metrics
       returns: np.ndarray
     - args:
@@ -11526,7 +11526,7 @@ method_index:
       - samples
       - complexity_params
       file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
-      line: 139
+      line: 142
       name: _compute_complexity_metrics
       returns: np.ndarray
     EnergyComputer:
@@ -13328,7 +13328,7 @@ method_index:
       - self
       - projections
       file: ./bhlff/models/level_d/projections.py
-      line: 479
+      line: 482
       name: analyze_field_signatures
       returns: Dict[str, Any]
     - args:
@@ -13394,63 +13394,63 @@ method_index:
       - field
       - field_type
       file: ./bhlff/models/level_d/projections.py
-      line: 505
+      line: 508
       name: _analyze_single_field_signature
       returns: Dict[str, Any]
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 545
+      line: 548
       name: _compute_localization
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 551
+      line: 554
       name: _compute_range_characteristics
       returns: Dict[str, float]
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 564
+      line: 567
       name: _compute_anisotropy
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 580
+      line: 583
       name: _compute_chirality
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 586
+      line: 589
       name: _compute_confinement
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 595
+      line: 598
       name: _compute_parity_violation
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 601
+      line: 604
       name: _compute_correlation_length
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/projections.py
-      line: 607
+      line: 610
       name: _compute_decay_rate
       returns: float
     FluxComputer:
@@ -14349,7 +14349,7 @@ method_index:
       - center
       - max_sign_changes
       file: ./bhlff/models/level_b/node_analyzer.py
-      line: 44
+      line: 47
       name: check_spherical_nodes
       returns: Dict[str, Any]
     - args:
@@ -14358,7 +14358,7 @@ method_index:
       - center
       - contour_points
       file: ./bhlff/models/level_b/node_analyzer.py
-      line: 104
+      line: 107
       name: compute_topological_charge
       returns: Dict[str, Any]
     - args:
@@ -14366,14 +14366,14 @@ method_index:
       - field
       - center
       file: ./bhlff/models/level_b/node_analyzer.py
-      line: 165
+      line: 168
       name: _compute_radial_profile
       returns: Dict[str, np.ndarray]
     - args:
       - self
       - derivative
       file: ./bhlff/models/level_b/node_analyzer.py
-      line: 202
+      line: 205
       name: _count_sign_changes
       returns: int
     - args:
@@ -14381,7 +14381,7 @@ method_index:
       - amplitude
       - radius
       file: ./bhlff/models/level_b/node_analyzer.py
-      line: 208
+      line: 211
       name: _find_amplitude_zeros
       returns: np.ndarray
     - args:
@@ -14389,7 +14389,7 @@ method_index:
       - zeros
       - tolerance
       file: ./bhlff/models/level_b/node_analyzer.py
-      line: 231
+      line: 234
       name: _check_periodicity
       returns: bool
     - args:
@@ -14397,7 +14397,7 @@ method_index:
       - amplitude
       - radius
       file: ./bhlff/models/level_b/node_analyzer.py
-      line: 248
+      line: 251
       name: _check_monotonicity
       returns: bool
     - args:
@@ -14405,7 +14405,7 @@ method_index:
       - field
       - center
       file: ./bhlff/models/level_b/node_analyzer.py
-      line: 260
+      line: 263
       name: _estimate_integration_radius
       returns: float
     - args:
@@ -14414,7 +14414,7 @@ method_index:
       - radius
       - n_points
       file: ./bhlff/models/level_b/node_analyzer.py
-      line: 280
+      line: 283
       name: _create_spherical_contour
       returns: List[Tuple[float, float, float]]
     - args:
@@ -14422,7 +14422,7 @@ method_index:
       - phase
       - field_shape
       file: ./bhlff/models/level_b/node_analyzer.py
-      line: 294
+      line: 297
       name: _compute_phase_gradient
       returns: np.ndarray
     - args:
@@ -14430,7 +14430,7 @@ method_index:
       - grad_phase
       - contour_points
       file: ./bhlff/models/level_b/node_analyzer.py
-      line: 305
+      line: 308
       name: _integrate_phase_around_contour
       returns: float
     - args:
@@ -14438,7 +14438,7 @@ method_index:
       - grad_phase
       - point
       file: ./bhlff/models/level_b/node_analyzer.py
-      line: 328
+      line: 331
       name: _interpolate_gradient
       returns: np.ndarray
     - args:
@@ -14446,7 +14446,7 @@ method_index:
       - analysis_result
       - output_path
       file: ./bhlff/models/level_b/node_analyzer.py
-      line: 343
+      line: 346
       name: visualize_node_analysis
       returns: None
     LevelBPowerLawAnalyzer:
@@ -17044,31 +17044,31 @@ method_index:
       line: 281
       name: _step_resonator_source
       returns: np.ndarray
-    MultiSolitonSolutions:
+    MultiSolitonOptimization:
     - args:
       - self
       - system
       - nonlinear_params
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-      line: 45
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+      line: 43
       name: __init__
       returns: null
     - args:
       - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-      line: 53
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+      line: 52
       name: find_multi_soliton_solutions
       returns: List[Dict[str, Any]]
     - args:
       - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-      line: 85
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+      line: 84
       name: find_two_soliton_solutions
       returns: List[Dict[str, Any]]
     - args:
       - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-      line: 180
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+      line: 216
       name: find_three_soliton_solutions
       returns: List[Dict[str, Any]]
     - args:
@@ -17079,8 +17079,8 @@ method_index:
       - amp2
       - width2
       - pos2
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-      line: 272
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+      line: 345
       name: _compute_final_two_soliton_solution
       returns: Dict[str, Any]
     - args:
@@ -17094,8 +17094,8 @@ method_index:
       - amp3
       - width3
       - pos3
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-      line: 322
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+      line: 395
       name: _compute_final_three_soliton_solution
       returns: Dict[str, Any]
     - args:
@@ -17103,43 +17103,326 @@ method_index:
       - x
       - position
       - width
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-      line: 378
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+      line: 451
       name: _step_resonator_profile
       returns: np.ndarray
     - args:
+      - self
+      - field_value
+      - amplitude
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+      line: 482
+      name: _step_resonator_boundary_condition
+      returns: float
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+      line: 508
+      name: _compute_soliton_interaction_strength
+      returns: float
+    - args:
       - params
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-      line: 105
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+      line: 118
       name: two_soliton_equations_7d
       returns: null
     - args:
       - params
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-      line: 200
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+      line: 250
       name: three_soliton_equations_7d
       returns: null
     - args:
       - x
       - y
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-      line: 109
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+      line: 122
       name: two_soliton_ode
       returns: null
     - args:
       - ya
       - yb
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-      line: 209
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+      line: 259
       name: bc
       returns: null
     - args:
       - x
       - y
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-      line: 204
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+      line: 254
       name: three_soliton_ode
       returns: null
+    MultiSolitonPhysicalProperties:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - solution
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 46
+      name: compute_two_soliton_physical_properties
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      - solution
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 94
+      name: compute_three_soliton_physical_properties
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - profile
+      - x
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 150
+      name: _compute_individual_soliton_energy
+      returns: float
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 165
+      name: _compute_interaction_energy
+      returns: float
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 181
+      name: _compute_three_body_interaction_energy
+      returns: float
+    - args:
+      - self
+      - solution
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 203
+      name: _compute_two_soliton_stability
+      returns: float
+    - args:
+      - self
+      - solution
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 225
+      name: _compute_three_soliton_stability
+      returns: float
+    - args:
+      - self
+      - solution
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 247
+      name: _compute_two_soliton_phase_coherence
+      returns: float
+    - args:
+      - self
+      - solution
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 268
+      name: _compute_three_soliton_phase_coherence
+      returns: float
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - amp2
+      - width2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 300
+      name: _compute_two_soliton_7d_bvp_properties
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - amp2
+      - width2
+      - amp3
+      - width3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 326
+      name: _compute_three_soliton_7d_bvp_properties
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - profile
+      - x
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 352
+      name: _compute_fractional_laplacian_contribution
+      returns: float
+    - args:
+      - self
+      - solution
+      - width1
+      - width2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 378
+      name: _compute_two_soliton_step_efficiency
+      returns: float
+    - args:
+      - self
+      - solution
+      - width1
+      - width2
+      - width3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 404
+      name: _compute_three_soliton_step_efficiency
+      returns: float
+    - args:
+      - self
+      - solution
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 436
+      name: _compute_interaction_efficiency
+      returns: float
+    - args:
+      - self
+      - solution
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 451
+      name: _compute_three_soliton_interaction_efficiency
+      returns: float
+    - args:
+      - self
+      - profile
+      - x
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 468
+      name: _compute_7d_phase_space_properties
+      returns: Dict[str, float]
+    - args:
+      - self
+      - x
+      - position
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+      line: 493
+      name: _step_resonator_profile
+      returns: np.ndarray
+    MultiSolitonSolutions:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 50
+      name: find_multi_soliton_solutions
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 65
+      name: find_two_soliton_solutions
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 80
+      name: find_three_soliton_solutions
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - amp2
+      - width2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 95
+      name: validate_two_soliton_solution
+      returns: bool
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - amp2
+      - width2
+      - amp3
+      - width3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 113
+      name: validate_three_soliton_solution
+      returns: bool
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - solution
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 132
+      name: compute_two_soliton_physical_properties
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      - solution
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+      line: 151
+      name: compute_three_soliton_physical_properties
+      returns: Dict[str, Any]
     MultiSolitonSolver:
     - args:
       - self
@@ -17283,6 +17566,158 @@ method_index:
       line: 132
       name: _step_resonator_interaction
       returns: float
+    MultiSolitonValidation:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py
+      line: 43
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - amp2
+      - width2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py
+      line: 52
+      name: validate_two_soliton_shape
+      returns: bool
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - amp2
+      - width2
+      - amp3
+      - width3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py
+      line: 71
+      name: validate_three_soliton_shape
+      returns: bool
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - amp2
+      - width2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py
+      line: 91
+      name: validate_two_soliton_solution_quality
+      returns: bool
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - amp2
+      - width2
+      - amp3
+      - width3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py
+      line: 109
+      name: validate_three_soliton_solution_quality
+      returns: bool
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - solution
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py
+      line: 128
+      name: compute_two_soliton_physical_properties
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amp1
+      - width1
+      - pos1
+      - amp2
+      - width2
+      - pos2
+      - amp3
+      - width3
+      - pos3
+      - solution
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py
+      line: 147
+      name: compute_three_soliton_physical_properties
+      returns: Dict[str, Any]
+    MultiSolitonValidationCore:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - amp2
+      - width2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py
+      line: 46
+      name: validate_two_soliton_shape
+      returns: bool
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - amp2
+      - width2
+      - amp3
+      - width3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py
+      line: 94
+      name: validate_three_soliton_shape
+      returns: bool
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - amp2
+      - width2
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py
+      line: 143
+      name: validate_two_soliton_solution_quality
+      returns: bool
+    - args:
+      - self
+      - solution
+      - amp1
+      - width1
+      - amp2
+      - width2
+      - amp3
+      - width3
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py
+      line: 189
+      name: validate_three_soliton_solution_quality
+      returns: bool
+    - args:
+      - self
+      - x
+      - position
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py
+      line: 238
+      name: _step_resonator_profile
+      returns: np.ndarray
     NewtonSolver:
     - args:
       - self
@@ -17678,122 +18113,122 @@ method_index:
       - system
       - nonlinear_params
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 41
+      line: 38
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 65
+      line: 62
       name: _initialize_mode_methods
       returns: None
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 85
+      line: 82
       name: _setup_cubic_mode_analysis
       returns: None
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 96
+      line: 93
       name: _setup_quartic_mode_analysis
       returns: None
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 107
+      line: 104
       name: _setup_sine_gordon_mode_analysis
       returns: None
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 118
+      line: 115
       name: find_nonlinear_modes
       returns: Dict[str, Any]
     - args:
       - self
       - linear_modes
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 153
+      line: 150
       name: _compute_nonlinear_corrections
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 194
+      line: 191
       name: _find_bifurcation_points
       returns: List[Dict[str, Any]]
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 222
+      line: 219
       name: _analyze_nonlinear_stability
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 261
+      line: 258
       name: _compute_stability_matrix
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 280
+      line: 277
       name: _find_cubic_modes
       returns: List[Dict[str, Any]]
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 309
+      line: 306
       name: _find_quartic_modes
       returns: List[Dict[str, Any]]
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 338
+      line: 335
       name: _find_sine_gordon_modes
       returns: List[Dict[str, Any]]
     - args:
       - self
       - modes
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 368
+      line: 365
       name: _analyze_cubic_mode_stability
       returns: Dict[str, Any]
     - args:
       - self
       - modes
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 392
+      line: 389
       name: _analyze_quartic_mode_stability
       returns: Dict[str, Any]
     - args:
       - self
       - modes
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 416
+      line: 413
       name: _analyze_sine_gordon_mode_stability
       returns: Dict[str, Any]
     - args:
       - self
       - modes
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 441
+      line: 438
       name: _analyze_cubic_mode_interactions
       returns: Dict[str, Any]
     - args:
       - self
       - modes
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 465
+      line: 462
       name: _analyze_quartic_mode_interactions
       returns: Dict[str, Any]
     - args:
       - self
       - modes
       file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-      line: 489
+      line: 486
       name: _analyze_sine_gordon_mode_interactions
       returns: Dict[str, Any]
     NonlinearTerms7D:
@@ -17928,39 +18363,331 @@ method_index:
       - observational_data
       - analysis_parameters
       file: ./bhlff/models/level_g/analysis/observational_comparison.py
-      line: 54
+      line: 55
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/models/level_g/analysis/observational_comparison.py
-      line: 71
+      line: 73
+      name: compare_with_observations
+      returns: Dict[str, Any]
+    ObservationalComparisonCore:
+    - args:
+      - self
+      - evolution_results
+      - observational_data
+      - analysis_parameters
+      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
+      line: 58
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
+      line: 77
       name: compare_with_observations
       returns: Dict[str, Any]
     - args:
       - self
-      file: ./bhlff/models/level_g/analysis/observational_comparison.py
-      line: 95
-      name: _compare_structure_formation
+      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
+      line: 121
+      name: _load_observational_data
       returns: Dict[str, Any]
     - args:
       - self
-      file: ./bhlff/models/level_g/analysis/observational_comparison.py
-      line: 118
-      name: _compare_parameters
+      - model_data
+      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
+      line: 147
+      name: _compute_7d_observables
       returns: Dict[str, Any]
     - args:
       - self
-      file: ./bhlff/models/level_g/analysis/observational_comparison.py
-      line: 141
-      name: _compare_statistics
+      - obs_data
+      - model_observables
+      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
+      line: 173
+      name: _statistical_comparison
       returns: Dict[str, Any]
     - args:
       - self
-      file: ./bhlff/models/level_g/analysis/observational_comparison.py
-      line: 163
-      name: _compute_goodness_of_fit
+      - obs_data
+      - model_observables
+      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
+      line: 197
+      name: _compute_parameter_correlation
+      returns: float
+    - args:
+      - self
+      - obs_data
+      - model_observables
+      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
+      line: 245
+      name: _compute_statistical_significance
+      returns: float
+    - args:
+      - self
+      - obs_data
+      - model_observables
+      file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
+      line: 285
+      name: _compute_model_consistency
+      returns: bool
+    ObservationalComparisonParameters:
+    - args:
+      - self
+      - evolution_results
+      - observational_data
+      - analysis_parameters
+      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+      line: 54
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+      line: 71
+      name: compare_parameters
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+      line: 121
+      name: compare_structure_formation
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+      line: 161
+      name: _extract_formation_time_from_7d_field
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+      line: 166
+      name: _extract_observational_formation_time
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+      line: 170
+      name: _extract_theoretical_structure_scale
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+      line: 174
+      name: _extract_observational_structure_scale
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+      line: 178
+      name: _extract_hubble_parameter_from_7d_field
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+      line: 217
+      name: _extract_matter_density_from_7d_field
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+      line: 243
+      name: _extract_dark_energy_from_7d_field
+      returns: float
+    - args:
+      - self
+      - phase_field
+      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+      line: 269
+      name: _compute_scale_factor_from_phase_field
+      returns: np.ndarray
+    - args:
+      - self
+      - phase_field
+      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+      line: 301
+      name: _compute_matter_density_from_phase_field
+      returns: float
+    - args:
+      - self
+      - phase_field
+      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+      line: 334
+      name: _compute_dark_energy_from_phase_field
+      returns: float
+    - args:
+      - self
+      - phase_field
+      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+      line: 369
+      name: _compute_curvature_from_phase_field
+      returns: float
+    ObservationalComparisonStatistics:
+    - args:
+      - self
+      - evolution_results
+      - observational_data
+      - analysis_parameters
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics.py
+      line: 55
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics.py
+      line: 73
+      name: compare_statistics
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics.py
+      line: 86
+      name: compute_goodness_of_fit
       returns: Dict[str, float]
+    - args:
+      - self
+      - obs_data
+      - model_observables
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics.py
+      line: 99
+      name: compute_chi_squared
+      returns: float
+    - args:
+      - self
+      - chi_squared
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics.py
+      line: 116
+      name: compute_likelihood
+      returns: float
+    ObservationalComparisonStatistics7D:
+    - args:
+      - self
+      - evolution_results
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_7d.py
+      line: 52
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_7d.py
+      line: 64
+      name: compute_7d_correlation_function
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_7d.py
+      line: 102
+      name: compute_7d_power_spectrum
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_7d.py
+      line: 160
+      name: compute_7d_structure_statistics
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - density_contrast
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_7d.py
+      line: 215
+      name: _compute_structure_scale
+      returns: float
+    ObservationalComparisonStatisticsCore:
+    - args:
+      - self
+      - evolution_results
+      - observational_data
+      - analysis_parameters
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
+      line: 56
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
+      line: 74
+      name: compare_statistics
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
+      line: 121
+      name: compute_goodness_of_fit
+      returns: Dict[str, float]
+    - args:
+      - self
+      - obs_data
+      - model_observables
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
+      line: 165
+      name: compute_chi_squared
+      returns: float
+    - args:
+      - self
+      - chi_squared
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
+      line: 200
+      name: compute_likelihood
+      returns: float
+    - args:
+      - self
+      - theoretical
+      - observational
+      - tolerance
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
+      line: 219
+      name: _compare_correlation_functions
+      returns: bool
+    - args:
+      - self
+      - theoretical
+      - observational
+      - tolerance
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
+      line: 227
+      name: _compare_power_spectra
+      returns: bool
+    - args:
+      - self
+      - theoretical
+      - observational
+      - tolerance
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
+      line: 235
+      name: _compare_structure_statistics
+      returns: bool
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
+      line: 246
+      name: _compute_chi_squared_from_7d_field
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
+      line: 251
+      name: _compute_r_squared_from_7d_field
+      returns: float
+    - args:
+      - self
+      - chi_squared
+      - n_parameters
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
+      line: 256
+      name: _compute_aic_from_7d_field
+      returns: float
+    - args:
+      - self
+      - chi_squared
+      - n_parameters
+      - n_data_points
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
+      line: 260
+      name: _compute_bic_from_7d_field
+      returns: float
     OperatorRiesz:
     - args:
       - self
@@ -20707,6 +21434,17 @@ method_index:
       line: 54
       name: create_pinning_potential
       returns: np.ndarray
+    - args:
+      - self
+      - X
+      - Y
+      - Z
+      - center
+      - width
+      file: ./bhlff/models/level_c/memory/pinning_analysis_potential.py
+      line: 100
+      name: _step_resonator_potential
+      returns: np.ndarray
     PotentialAnalyzer:
     - args:
       - self
@@ -22900,35 +23638,35 @@ method_index:
       - self
       - resonance_data
       file: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py
-      line: 45
+      line: 49
       name: classify_resonances
       returns: Dict[str, Any]
     - args:
       - self
       - resonance
       file: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py
-      line: 91
+      line: 95
       name: _compute_universality
       returns: float
     - args:
       - self
       - resonance
       file: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py
-      line: 113
+      line: 117
       name: _compute_shape_quality
       returns: float
     - args:
       - self
       - resonance
       file: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py
-      line: 131
+      line: 135
       name: _compute_ecology_score
       returns: float
     - args:
       - self
       - classifications
       file: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py
-      line: 142
+      line: 146
       name: _summarize_classifications
       returns: Dict[str, Any]
     ResonanceDetector:
@@ -24202,38 +24940,24 @@ method_index:
       line: 174
       name: _make_serializable
       returns: Any
-    SingleSolitonSolver:
+    SingleSolitonCore:
     - args:
       - self
       - system
       - nonlinear_params
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
-      line: 44
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py
+      line: 42
       name: __init__
       returns: null
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
-      line: 49
-      name: find_single_soliton
-      returns: Optional[Dict[str, Any]]
-    - args:
-      - self
-      - amplitude
-      - width
-      - position
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
-      line: 141
-      name: _compute_final_soliton_solution
-      returns: Dict[str, Any]
     - args:
       - self
       - x
       - y
       - amplitude
       - width
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
-      line: 186
+      - position
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py
+      line: 47
       name: compute_7d_soliton_ode
       returns: np.ndarray
     - args:
@@ -24241,16 +24965,16 @@ method_index:
       - solution
       - amplitude
       - width
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
-      line: 233
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py
+      line: 94
       name: compute_soliton_energy
       returns: float
     - args:
       - self
       - x
       - field
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
-      line: 279
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py
+      line: 140
       name: _compute_full_fractional_laplacian
       returns: np.ndarray
     - args:
@@ -24258,38 +24982,252 @@ method_index:
       - x
       - position
       - width
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
-      line: 328
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py
+      line: 189
       name: _step_resonator_profile
       returns: np.ndarray
     - args:
       - self
       - x
+      - position
       - width
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
-      line: 359
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py
+      line: 220
       name: _step_resonator_source
       returns: np.ndarray
     - args:
+      - self
+      - field_value
+      - amplitude
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py
+      line: 251
+      name: _step_resonator_boundary_condition
+      returns: float
+    SingleSolitonOptimization:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
+      line: 43
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
+      line: 52
+      name: find_single_soliton
+      returns: Optional[Dict[str, Any]]
+    - args:
+      - self
+      - amplitude
+      - width
+      - position
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
+      line: 180
+      name: _compute_final_soliton_solution
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - x
+      - position
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
+      line: 225
+      name: _step_resonator_profile
+      returns: np.ndarray
+    - args:
+      - self
+      - field_value
+      - amplitude
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
+      line: 256
+      name: _step_resonator_boundary_condition
+      returns: float
+    - args:
       - params
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
-      line: 77
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
+      line: 91
       name: soliton_equations_7d
       returns: null
     - args:
       - x
       - y
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
-      line: 81
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
+      line: 95
       name: soliton_ode
       returns: null
     - args:
       - ya
       - yb
-      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
-      line: 86
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
+      line: 100
       name: bc
       returns: null
+    SingleSolitonSolver:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+      line: 50
+      name: find_single_soliton
+      returns: Optional[Dict[str, Any]]
+    - args:
+      - self
+      - solution
+      - amplitude
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+      line: 65
+      name: validate_soliton_solution
+      returns: bool
+    - args:
+      - self
+      - amplitude
+      - width
+      - position
+      - solution
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
+      line: 83
+      name: compute_soliton_physical_properties
+      returns: Dict[str, Any]
+    SingleSolitonValidation:
+    - args:
+      - self
+      - system
+      - nonlinear_params
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - solution
+      - amplitude
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+      line: 46
+      name: validate_soliton_shape
+      returns: bool
+    - args:
+      - self
+      - solution
+      - amplitude
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+      line: 93
+      name: validate_solution_quality
+      returns: bool
+    - args:
+      - self
+      - amplitude
+      - width
+      - position
+      - solution
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+      line: 133
+      name: compute_soliton_physical_properties
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - profile
+      - x
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+      line: 184
+      name: _compute_stability_metric
+      returns: float
+    - args:
+      - self
+      - profile
+      - x
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+      line: 216
+      name: _compute_phase_coherence
+      returns: float
+    - args:
+      - self
+      - profile
+      - x
+      - amplitude
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+      line: 245
+      name: _compute_7d_bvp_properties
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - profile
+      - x
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+      line: 283
+      name: _compute_fractional_laplacian_contribution
+      returns: float
+    - args:
+      - self
+      - profile
+      - x
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+      line: 302
+      name: _compute_step_resonator_efficiency
+      returns: float
+    - args:
+      - self
+      - profile
+      - x
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+      line: 321
+      name: _compute_7d_phase_space_properties
+      returns: Dict[str, float]
+    - args:
+      - self
+      - profile
+      - x
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+      line: 346
+      name: _compute_bvp_convergence_quality
+      returns: float
+    - args:
+      - self
+      - profile
+      - x
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+      line: 361
+      name: _compute_equation_residual
+      returns: np.ndarray
+    - args:
+      - self
+      - x
+      - position
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+      line: 379
+      name: _step_resonator_profile
+      returns: np.ndarray
+    - args:
+      - self
+      - x
+      - position
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+      line: 388
+      name: _step_resonator_source
+      returns: np.ndarray
+    - args:
+      - self
+      - x
+      - field
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+      line: 397
+      name: _compute_full_fractional_laplacian
+      returns: np.ndarray
     SobolAnalyzer:
     - args:
       - self
@@ -24373,7 +25311,7 @@ method_index:
       - system
       - nonlinear_params
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
-      line: 42
+      line: 39
       name: __init__
       returns: null
     - args:
@@ -24382,14 +25320,14 @@ method_index:
       - amplitude
       - width
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
-      line: 65
+      line: 63
       name: compute_soliton_energy
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
-      line: 111
+      line: 109
       name: compute_topological_charge
       returns: float
     - args:
@@ -24399,7 +25337,7 @@ method_index:
       - amplitude
       - width
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
-      line: 140
+      line: 138
       name: compute_7d_soliton_ode
       returns: np.ndarray
     - args:
@@ -24411,7 +25349,7 @@ method_index:
       - width2
       - pos2
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
-      line: 187
+      line: 185
       name: compute_soliton_interaction_strength
       returns: float
     - args:
@@ -24419,7 +25357,7 @@ method_index:
       - x
       - field
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
-      line: 222
+      line: 220
       name: _compute_full_fractional_laplacian
       returns: np.ndarray
     - args:
@@ -24427,9 +25365,18 @@ method_index:
       - distance
       - interaction_range
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
-      line: 271
+      line: 269
       name: _step_resonator_interaction
       returns: float
+    - args:
+      - self
+      - x
+      - position
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
+      line: 301
+      name: _step_resonator_source
+      returns: np.ndarray
     SolitonAnalysisInitialization:
     - args:
       - self
@@ -31035,6 +31982,55 @@ method_index:
       line: 91
       name: test_carrier_primacy_postulate_physics
       returns: null
+    TestClassicalPatternsCompliance:
+    - args:
+      - self
+      file: ./tests/unit/test_classical_patterns_compliance.py
+      line: 34
+      name: test_no_exponential_decay_in_physics_models
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_classical_patterns_compliance.py
+      line: 79
+      name: test_no_spacetime_curvature_references
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_classical_patterns_compliance.py
+      line: 118
+      name: test_no_mass_terms_in_lagrangians
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_classical_patterns_compliance.py
+      line: 154
+      name: test_full_algorithm_implementations
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_classical_patterns_compliance.py
+      line: 192
+      name: test_7d_bvp_theory_compliance
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_classical_patterns_compliance.py
+      line: 225
+      name: test_file_size_compliance
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_classical_patterns_compliance.py
+      line: 246
+      name: test_docstring_compliance
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_classical_patterns_compliance.py
+      line: 276
+      name: test_import_compliance
+      returns: null
     TestCollectiveExcitationsAdvanced:
     - args:
       - self
@@ -33873,6 +34869,43 @@ method_index:
       file: ./tests/unit/test_level_a/test_final_summary.py
       line: 222
       name: test_framework_summary
+      returns: null
+    TestFullAlgorithmImplementations:
+    - args:
+      - self
+      file: ./tests/unit/test_full_algorithm_implementations.py
+      line: 33
+      name: test_observational_comparison_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_full_algorithm_implementations.py
+      line: 130
+      name: test_observational_comparison_parameters_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_full_algorithm_implementations.py
+      line: 203
+      name: test_observational_comparison_statistics_full_implementation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_full_algorithm_implementations.py
+      line: 282
+      name: test_7d_bvp_theory_compliance
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_full_algorithm_implementations.py
+      line: 312
+      name: test_no_placeholder_implementations
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_full_algorithm_implementations.py
+      line: 342
+      name: test_mathematical_formulation_completeness
       returns: null
     TestIntegration:
     - args:
@@ -38026,94 +39059,140 @@ method_index:
     - args:
       - self
       file: ./tests/unit/test_soliton_optimization_algorithms.py
-      line: 40
-      name: mock_system
+      line: 30
+      name: setup_method
       returns: null
     - args:
       - self
       file: ./tests/unit/test_soliton_optimization_algorithms.py
-      line: 48
-      name: nonlinear_params
+      line: 45
+      name: test_single_soliton_solver_initialization
       returns: null
     - args:
       - self
-      - mock_system
-      - nonlinear_params
       file: ./tests/unit/test_soliton_optimization_algorithms.py
-      line: 58
-      name: test_single_soliton_optimization_complete
+      line: 54
+      name: test_single_soliton_find_solution
       returns: null
     - args:
       - self
-      - mock_system
-      - nonlinear_params
       file: ./tests/unit/test_soliton_optimization_algorithms.py
-      line: 101
-      name: test_step_resonator_profile_implementation
+      line: 90
+      name: test_single_soliton_step_resonator_profile
       returns: null
     - args:
       - self
-      - mock_system
-      - nonlinear_params
       file: ./tests/unit/test_soliton_optimization_algorithms.py
-      line: 126
-      name: test_step_resonator_source_implementation
+      line: 104
+      name: test_single_soliton_validation
       returns: null
     - args:
       - self
-      - mock_system
-      - nonlinear_params
       file: ./tests/unit/test_soliton_optimization_algorithms.py
-      line: 151
-      name: test_multi_soliton_optimization_complete
+      line: 116
+      name: test_multi_soliton_solutions_initialization
       returns: null
     - args:
       - self
-      - mock_system
-      - nonlinear_params
       file: ./tests/unit/test_soliton_optimization_algorithms.py
-      line: 209
-      name: test_step_resonator_interaction_implementation
+      line: 127
+      name: test_two_soliton_solution_finding
       returns: null
     - args:
       - self
-      - mock_system
-      - nonlinear_params
       file: ./tests/unit/test_soliton_optimization_algorithms.py
-      line: 234
-      name: test_7d_fractional_laplacian_implementation
+      line: 163
+      name: test_three_soliton_solution_finding
       returns: null
     - args:
       - self
-      - mock_system
-      - nonlinear_params
       file: ./tests/unit/test_soliton_optimization_algorithms.py
-      line: 262
-      name: test_energy_computation_complete
+      line: 199
+      name: test_step_resonator_interaction
       returns: null
     - args:
       - self
-      - mock_system
-      - nonlinear_params
       file: ./tests/unit/test_soliton_optimization_algorithms.py
-      line: 287
-      name: test_topological_charge_computation
+      line: 216
+      name: test_fractional_laplacian_computation
       returns: null
     - args:
       - self
-      - mock_system
-      - nonlinear_params
       file: ./tests/unit/test_soliton_optimization_algorithms.py
-      line: 312
-      name: test_no_simplified_implementations
+      line: 229
+      name: test_energy_computation
       returns: null
     - args:
       - self
-      - mock_system
-      - nonlinear_params
       file: ./tests/unit/test_soliton_optimization_algorithms.py
-      line: 341
-      name: test_step_resonator_vs_exponential_comparison
+      line: 244
+      name: test_physical_properties_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 270
+      name: test_7d_bvp_properties_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 286
+      name: test_phase_space_properties
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 299
+      name: test_solution_quality_validation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 320
+      name: test_multi_soliton_energy_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 335
+      name: test_three_body_interaction_energy
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 352
+      name: test_step_resonator_boundary_condition
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 370
+      name: test_optimization_robustness
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 399
+      name: test_7d_bvp_theory_compliance
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 417
+      name: test_energy_conservation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 432
+      name: test_phase_coherence_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_soliton_optimization_algorithms.py
+      line: 445
+      name: test_stability_metric_computation
       returns: null
     TestSolitonOptimizationCompliance:
     - args:
@@ -42001,7 +43080,7 @@ method_index:
       - envelope_solution
       file: ./bhlff/models/level_g/gravity_waves.py
       line: 76
-      name: compute_gravitational_waves
+      name: compute_phase_field_oscillations
       returns: Dict[str, Any]
     - args:
       - self
@@ -42684,6 +43763,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 5928
-    total_classes: 598
+    total_class_methods: 6060
+    total_classes: 612
     total_standalone_functions: 0

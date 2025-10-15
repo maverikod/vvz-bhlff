@@ -46,7 +46,10 @@ class EnergyComplexityAnalyzer:
             Sets up the analyzer for studying the relationship
             between energy and complexity in 7D phase field theory.
         """
-        pass
+        self.param_names = ["mu", "beta", "eta", "gamma", "lambda", "nu"]
+        self.energy_weights = {"mu": 1.0, "beta": 0.8, "eta": 0.3}
+        self.complexity_weights = {"eta": 1.0, "gamma": 0.7, "beta": 0.5}
+        self.correlation_threshold = 0.05
 
     def analyze_energy_complexity_correlation(
         self, samples: np.ndarray, outputs: np.ndarray

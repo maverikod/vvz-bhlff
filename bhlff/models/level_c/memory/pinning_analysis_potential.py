@@ -89,15 +89,46 @@ class PinningPotentialCreator:
         z = np.linspace(0, L, N)
         X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
         
-        # Create pinning potential
-        pinning_potential = pinning_strength * np.exp(
-            -(
-                (X - pinning_center[0]) ** 2
-                + (Y - pinning_center[1]) ** 2
-                + (Z - pinning_center[2]) ** 2
-            )
-            / (2 * pinning_width ** 2)
+        # Create pinning potential using step resonator function
+        pinning_potential = pinning_strength * self._step_resonator_potential(
+            X, Y, Z, pinning_center, pinning_width
         )
         
         self.logger.info("Pinning potential created")
         return pinning_potential
+    
+    def _step_resonator_potential(
+        self, X: np.ndarray, Y: np.ndarray, Z: np.ndarray, 
+        center: List[float], width: float
+    ) -> np.ndarray:
+        """
+        Create step resonator potential.
+        
+        Physical Meaning:
+            Creates step resonator potential instead of exponential
+            for 7D BVP theory compliance.
+            
+        Mathematical Foundation:
+            V_step(x) = V₀ * Θ(r_cutoff - |x-x₀|)
+            where Θ is step function and r_cutoff is cutoff radius.
+            
+        Args:
+            X, Y, Z: Coordinate arrays
+            center: Potential center coordinates
+            width: Potential width parameter
+            
+        Returns:
+            Step resonator potential field
+        """
+        # Compute distance from center
+        distance_squared = (
+            (X - center[0]) ** 2
+            + (Y - center[1]) ** 2
+            + (Z - center[2]) ** 2
+        )
+        
+        # Step function: 1 inside cutoff, 0 outside
+        cutoff_radius = width * np.sqrt(2)  # Match exponential width
+        step_potential = np.where(distance_squared < cutoff_radius ** 2, 1.0, 0.0)
+        
+        return step_potential

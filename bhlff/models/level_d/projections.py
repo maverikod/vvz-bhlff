@@ -474,7 +474,10 @@ class SignatureAnalyzer:
 
     def __init__(self):
         """Initialize signature analyzer."""
-        pass
+        self.signature_threshold = 0.1
+        self.localization_threshold = 0.5
+        self.anisotropy_threshold = 0.3
+        self.range_threshold = 0.2
 
     def analyze_field_signatures(
         self, projections: Dict[str, np.ndarray]

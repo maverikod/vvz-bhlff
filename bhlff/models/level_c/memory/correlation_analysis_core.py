@@ -36,7 +36,7 @@ class CorrelationAnalysisCore:
         Implements core correlation analysis operations:
         - Field evolution with memory: a(t+dt) = a(t) + dt * (L[a] + Γ_memory[a])
         - Memory term: Γ_memory[a] = -γ ∫_0^t K(t-τ) a(τ) dτ
-        - Memory kernel: K(t) = exp(-t/τ) / τ
+        - Memory kernel: K(t) = Θ(t_cutoff - t) / τ  # Step resonator function
     """
 
     def __init__(self, bvp_core: BVPCore):

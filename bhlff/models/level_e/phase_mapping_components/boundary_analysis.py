@@ -40,7 +40,10 @@ class BoundaryAnalyzer:
             Sets up the analyzer for studying regime boundaries
             in parameter space.
         """
-        pass
+        self.boundary_threshold = 0.1
+        self.separation_threshold = 0.5
+        self.regime_pairs = [("PL", "R"), ("PL", "FRZ"), ("R", "FRZ"), ("FRZ", "LEAK")]
+        self.parameter_names = ["eta", "chi_double_prime", "beta"]
 
     def analyze_regime_boundaries(
         self, parameter_grid: Dict[str, np.ndarray], classifications: Dict[str, Any]

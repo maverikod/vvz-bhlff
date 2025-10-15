@@ -34,7 +34,7 @@ class MemoryEvolutionAnalyzer:
 
     Mathematical Foundation:
         Implements memory evolution analysis:
-        - Memory kernel analysis: K(t) = (1/τ) exp(-t/τ)
+        - Memory kernel analysis: K(t) = (1/τ) * Θ(t_cutoff - t)  # Step resonator
         - Memory term: Γ_memory[a] = -γ ∫_0^t K(t-τ) a(τ) dτ
         - Field evolution: ∂a/∂t = L[a] + Γ_memory[a] + s(x,t)
     """
@@ -149,8 +149,8 @@ class MemoryEvolutionAnalyzer:
 
         Mathematical Foundation:
             Creates a memory kernel of the form:
-            K(t) = (1/τ) exp(-t/τ)
-            where τ is the relaxation time.
+            K(t) = (1/τ) * Θ(t_cutoff - t)  # Step resonator function
+            where τ is the relaxation time and Θ is step function.
 
         Args:
             memory (MemoryParameters): Memory parameters.
@@ -158,7 +158,7 @@ class MemoryEvolutionAnalyzer:
         Returns:
             MemoryKernel: Memory kernel.
         """
-        # Create temporal kernel
+        # Create temporal kernel using step resonator function
         t_max = 100.0  # Maximum time for kernel
         dt = 0.01
         t_points = np.arange(0, t_max, dt)

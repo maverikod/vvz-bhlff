@@ -40,7 +40,11 @@ class ResonanceAnalyzer:
             Sets up the analyzer for studying resonance
             classification in 7D phase field theory.
         """
-        pass
+        self.universality_threshold = 0.7
+        self.shape_quality_threshold = 0.6
+        self.ecology_threshold = 0.5
+        self.fundamental_threshold = 0.7
+        self.emergent_threshold = 0.4
 
     def classify_resonances(
         self, resonance_data: List[Dict[str, Any]]

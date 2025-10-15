@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 807
+Total issues found: 825
 
 METHODS_WITHOUT_DOCSTRINGS: 109 issues
 ----------------------------------------
@@ -279,16 +279,16 @@ METHODS_WITHOUT_DOCSTRINGS: 109 issues
     Line 47
     Method: test_admittance_scales_with_conductivity
 
-  ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
-    Line 86
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
+    Line 100
     Method: bc
 
-  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-    Line 114
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+    Line 127
     Method: bc
 
-  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-    Line 209
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+    Line 259
     Method: bc
 
   ./bhlff/core/bvp/memory_decorator.py
@@ -515,7 +515,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 8 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 597 issues
+IMPORTS_IN_MIDDLE: 611 issues
 ----------------------------------------
   ./setup.py
     Line 28
@@ -619,6 +619,9 @@ IMPORTS_IN_MIDDLE: 597 issues
   ./tests/unit/test_soliton_analysis_optimization.py
     Line 345
 
+  ./tests/unit/test_full_algorithm_implementations.py
+    Line 345
+
   ./tests/unit/test_ml_prediction_vectorized_implementation.py
     Line 42
 
@@ -635,10 +638,13 @@ IMPORTS_IN_MIDDLE: 597 issues
     Line 168
 
   ./tests/unit/test_soliton_optimization_algorithms.py
-    Line 26
+    Line 24
 
   ./tests/unit/test_automated_testing.py
     Line 24
+
+  ./tests/unit/test_classical_patterns_compliance.py
+    Line 28
 
   ./tests/unit/test_level_g/test_gravity_physics.py
     Line 23
@@ -1226,37 +1232,58 @@ IMPORTS_IN_MIDDLE: 597 issues
     Line 22
 
   ./bhlff/models/level_f/nonlinear/mode_analysis.py
-    Line 22
+    Line 21
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
     Line 27
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
-    Line 26
+    Line 25
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+    Line 24
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+    Line 24
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
     Line 27
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+    Line 25
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
     Line 27
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/solutions.py
     Line 28
 
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py
+    Line 25
+
   ./bhlff/models/level_f/nonlinear/soliton_analysis/__init__.py
-    Line 26
+    Line 25
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
     Line 24
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
-    Line 24
+    Line 22
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py
+    Line 125
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py
     Line 25
 
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py
+    Line 26
+
   ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py
     Line 25
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+    Line 27
 
   ./bhlff/models/level_f/collective/dispersion_analysis.py
     Line 22
@@ -1469,7 +1496,7 @@ IMPORTS_IN_MIDDLE: 597 issues
     Line 22
 
   ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
-    Line 105
+    Line 108
 
   ./bhlff/models/level_e/sensitivity/sobol_analysis.py
     Line 244
@@ -1582,14 +1609,29 @@ IMPORTS_IN_MIDDLE: 597 issues
   ./bhlff/models/level_g/analysis/cosmological_analysis.py
     Line 32
 
+  ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
+    Line 31
+
+  ./bhlff/models/level_g/analysis/observational_comparison_core.py
+    Line 264
+
   ./bhlff/models/level_g/analysis/statistical_analysis.py
     Line 28
 
   ./bhlff/models/level_g/analysis/__init__.py
     Line 26
 
+  ./bhlff/models/level_g/analysis/observational_comparison_statistics_7d.py
+    Line 89
+
+  ./bhlff/models/level_g/analysis/observational_comparison_statistics.py
+    Line 29
+
   ./bhlff/models/level_g/analysis/structure_analysis.py
     Line 28
+
+  ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+    Line 29
 
   ./bhlff/models/level_g/analysis/parameter_analysis.py
     Line 28
@@ -2309,7 +2351,7 @@ IMPORTS_IN_MIDDLE: 597 issues
     Line 23
 
 
-FILES_TOO_LARGE: 89 issues
+FILES_TOO_LARGE: 93 issues
 ----------------------------------------
   ./tests/unit/test_ml_prediction_vectorized_implementations.py
 
@@ -2318,6 +2360,8 @@ FILES_TOO_LARGE: 89 issues
   ./tests/unit/test_ml_prediction_vectorized_implementation.py
 
   ./tests/unit/test_physics_validation_step_2_1_1.py
+
+  ./tests/unit/test_soliton_optimization_algorithms.py
 
   ./tests/unit/test_models/test_level_e/test_time_stability_full.py
 
@@ -2391,7 +2435,11 @@ FILES_TOO_LARGE: 89 issues
 
   ./bhlff/models/level_f/nonlinear/mode_analysis.py
 
-  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
 
   ./bhlff/models/level_f/collective/excitation_analysis.py
 
@@ -2450,6 +2498,8 @@ FILES_TOO_LARGE: 89 issues
   ./bhlff/models/level_g/gravity_einstein.py
 
   ./bhlff/models/level_g/astrophysics/galactic_models.py
+
+  ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
 
   ./bhlff/testing/reporting/physics_interpreter.py
 

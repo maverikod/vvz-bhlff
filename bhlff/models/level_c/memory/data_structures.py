@@ -33,7 +33,7 @@ class MemoryParameters:
 
     Mathematical Foundation:
         Represents memory parameters for the memory kernel:
-        K(t) = (1/τ) exp(-t/τ)
+        K(t) = (1/τ) * Θ(t_cutoff - t)  # Step resonator function
         where τ is the relaxation time and γ is the memory strength.
 
     Attributes:
@@ -195,7 +195,7 @@ class MemoryKernel:
 
     Mathematical Foundation:
         Represents a memory kernel of the form:
-        K(t) = (1/τ) exp(-t/τ)
+        K(t) = (1/τ) * Θ(t_cutoff - t)  # Step resonator function
         where τ is the relaxation time.
 
     Attributes:

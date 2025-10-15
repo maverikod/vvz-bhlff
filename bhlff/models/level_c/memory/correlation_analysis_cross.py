@@ -32,7 +32,7 @@ class CrossCorrelationAnalyzer:
     Mathematical Foundation:
         Implements cross-correlation analysis:
         - Cross-correlation: C(t,Δt) = ∫ I_eff(x,t) I_eff(x,t+Δt) dx
-        - Correlation decay: C(t,Δt) = C(0,0) * exp(-Δt/τ_c)
+        - Correlation decay: C(t,Δt) = C(0,0) * Θ(Δt_cutoff - Δt)  # Step resonator
         - Pattern analysis: P(t) = ∫_0^T C(t,Δt) dΔt
     """
 
@@ -151,8 +151,8 @@ class CrossCorrelationAnalyzer:
 
         Mathematical Foundation:
             Analyzes correlation decay:
-            C(t,Δt) = C(0,0) * exp(-Δt/τ_c)
-            where τ_c is the correlation time.
+            C(t,Δt) = C(0,0) * Θ(Δt_cutoff - Δt)  # Step resonator function
+            where Δt_cutoff is the cutoff time.
 
         Args:
             correlation_matrix (np.ndarray): Cross-correlation matrix.

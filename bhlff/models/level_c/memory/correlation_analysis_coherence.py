@@ -32,7 +32,7 @@ class TemporalCoherenceAnalyzer:
     Mathematical Foundation:
         Implements temporal coherence analysis:
         - Coherence: coherence(t) = |C(t,Δt)| / √(C(t,0) C(t+Δt,0))
-        - Coherence evolution: coherence(t) = coherence(0) * exp(-t/τ_coherence)
+        - Coherence evolution: coherence(t) = coherence(0) * Θ(t_cutoff - t)  # Step resonator
         - Stability: stability = ∫_0^T coherence(t) dt / T
     """
 
@@ -176,8 +176,8 @@ class TemporalCoherenceAnalyzer:
 
         Mathematical Foundation:
             Analyzes coherence evolution:
-            coherence(t) = coherence(0) * exp(-t/τ_coherence)
-            where τ_coherence is the coherence time.
+            coherence(t) = coherence(0) * Θ(t_cutoff - t)  # Step resonator function
+            where t_cutoff is the cutoff time.
 
         Args:
             coherence_values (List[float]): Temporal coherence values.

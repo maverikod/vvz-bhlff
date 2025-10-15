@@ -41,6 +41,10 @@ issues:
     file: ./tests/unit/test_physics_validation_step_2_1_1.py
     limit: 400
     lines: 473
+  - exceeds_limit: 60
+    file: ./tests/unit/test_soliton_optimization_algorithms.py
+    limit: 400
+    lines: 460
   - exceeds_limit: 126
     file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
     limit: 400
@@ -181,14 +185,22 @@ issues:
     file: ./bhlff/models/level_f/nonlinear.py
     limit: 400
     lines: 518
-  - exceeds_limit: 111
+  - exceeds_limit: 108
     file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
     limit: 400
-    lines: 511
-  - exceeds_limit: 7
-    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+    lines: 508
+  - exceeds_limit: 11
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
     limit: 400
-    lines: 407
+    lines: 411
+  - exceeds_limit: 100
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+    limit: 400
+    lines: 500
+  - exceeds_limit: 146
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+    limit: 400
+    lines: 546
   - exceeds_limit: 37
     file: ./bhlff/models/level_f/collective/excitation_analysis.py
     limit: 400
@@ -217,10 +229,10 @@ issues:
     file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
     limit: 400
     lines: 575
-  - exceeds_limit: 211
+  - exceeds_limit: 214
     file: ./bhlff/models/level_d/projections.py
     limit: 400
-    lines: 611
+    lines: 614
   - exceeds_limit: 177
     file: ./bhlff/models/level_d/streamlines.py
     limit: 400
@@ -233,10 +245,10 @@ issues:
     file: ./bhlff/models/level_b/visualization.py
     limit: 400
     lines: 529
-  - exceeds_limit: 7
+  - exceeds_limit: 10
     file: ./bhlff/models/level_b/node_analyzer.py
     limit: 400
-    lines: 407
+    lines: 410
   - exceeds_limit: 35
     file: ./bhlff/models/level_b/power_law/critical_exponents.py
     limit: 400
@@ -305,6 +317,10 @@ issues:
     file: ./bhlff/models/level_g/astrophysics/galactic_models.py
     limit: 400
     lines: 404
+  - exceeds_limit: 7
+    file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+    limit: 400
+    lines: 407
   - exceeds_limit: 3
     file: ./bhlff/testing/reporting/physics_interpreter.py
     limit: 400
@@ -459,6 +475,8 @@ issues:
     line: 23
   - file: ./tests/unit/test_soliton_analysis_optimization.py
     line: 345
+  - file: ./tests/unit/test_full_algorithm_implementations.py
+    line: 345
   - file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
     line: 42
   - file: ./tests/unit/test_soliton_optimization_compliance.py
@@ -470,9 +488,11 @@ issues:
   - file: ./tests/unit/test_physics_validation_step_2_1_1.py
     line: 168
   - file: ./tests/unit/test_soliton_optimization_algorithms.py
-    line: 26
+    line: 24
   - file: ./tests/unit/test_automated_testing.py
     line: 24
+  - file: ./tests/unit/test_classical_patterns_compliance.py
+    line: 28
   - file: ./tests/unit/test_level_g/test_gravity_physics.py
     line: 23
   - file: ./tests/unit/test_level_g/test_vbp_envelope_curvature_physics.py
@@ -864,27 +884,41 @@ issues:
   - file: ./bhlff/models/level_f/nonlinear/__init__.py
     line: 22
   - file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
-    line: 22
+    line: 21
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
     line: 27
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
-    line: 26
+    line: 25
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
+    line: 24
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
+    line: 24
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
     line: 27
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
+    line: 25
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
     line: 27
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/solutions.py
     line: 28
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_core.py
+    line: 25
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/__init__.py
-    line: 26
+    line: 25
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analyzer.py
     line: 24
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
-    line: 24
+    line: 22
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py
+    line: 125
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py
     line: 25
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py
+    line: 26
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py
     line: 25
+  - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+    line: 27
   - file: ./bhlff/models/level_f/collective/dispersion_analysis.py
     line: 22
   - file: ./bhlff/models/level_f/collective/excitation_analysis.py
@@ -1026,7 +1060,7 @@ issues:
   - file: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py
     line: 22
   - file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
-    line: 105
+    line: 108
   - file: ./bhlff/models/level_e/sensitivity/sobol_analysis.py
     line: 244
   - file: ./bhlff/models/level_e/robustness/geometry_testing.py
@@ -1101,12 +1135,22 @@ issues:
     line: 29
   - file: ./bhlff/models/level_g/analysis/cosmological_analysis.py
     line: 32
+  - file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
+    line: 31
+  - file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
+    line: 264
   - file: ./bhlff/models/level_g/analysis/statistical_analysis.py
     line: 28
   - file: ./bhlff/models/level_g/analysis/__init__.py
     line: 26
+  - file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_7d.py
+    line: 89
+  - file: ./bhlff/models/level_g/analysis/observational_comparison_statistics.py
+    line: 29
   - file: ./bhlff/models/level_g/analysis/structure_analysis.py
     line: 28
+  - file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
+    line: 29
   - file: ./bhlff/models/level_g/analysis/parameter_analysis.py
     line: 28
   - file: ./bhlff/models/level_g/evolution/cosmological_evolution.py
@@ -1844,16 +1888,16 @@ issues:
     line: 47
     method: test_admittance_scales_with_conductivity
   - class: null
-    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton.py
-    line: 86
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
+    line: 100
     method: bc
   - class: null
-    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-    line: 114
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+    line: 127
     method: bc
   - class: null
-    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_solutions.py
-    line: 209
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+    line: 259
     method: bc
   - class: null
     file: ./bhlff/core/bvp/memory_decorator.py
@@ -2026,9 +2070,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 8
-  files_too_large: 89
+  files_too_large: 93
   files_without_docstrings: 4
-  imports_in_middle: 597
+  imports_in_middle: 611
   methods_with_pass: 0
   methods_without_docstrings: 109
   not_implemented_in_non_abstract: 0

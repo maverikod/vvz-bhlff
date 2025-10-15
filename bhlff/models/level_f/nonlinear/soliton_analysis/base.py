@@ -167,8 +167,8 @@ class SolitonAnalysisBase:
             # Full implementation with proper spectral representation
             fractional_laplacian = self._compute_full_fractional_laplacian(x, field)
             
-            # Soliton source term
-            source = amplitude * np.exp(-(x ** 2) / (2 * width ** 2))
+            # Soliton source term using 7D BVP step resonator theory
+            source = amplitude * self._step_resonator_source(x, 0.0, width)
             
             # ODE system
             dydx = np.array([
@@ -297,3 +297,34 @@ class SolitonAnalysisBase:
         except Exception as e:
             self.logger.error(f"Step resonator interaction computation failed: {e}")
             return 0.0
+    
+    def _step_resonator_source(self, x: np.ndarray, position: float, width: float) -> np.ndarray:
+        """
+        Step resonator source term using 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step resonator source term instead of exponential
+            decay, following 7D BVP theory principles with sharp
+            cutoff at source width.
+            
+        Mathematical Foundation:
+            Step resonator source:
+            s(x) = 1 if |x - pos| < width, 0 if |x - pos| ≥ width
+            where width is the source width parameter.
+            
+        Args:
+            x (np.ndarray): Spatial coordinate array.
+            position (float): Source position.
+            width (float): Source width parameter.
+            
+        Returns:
+            np.ndarray: Step resonator source term.
+        """
+        try:
+            # Step resonator: sharp cutoff at source width
+            distance = np.abs(x - position)
+            return np.where(distance < width, 1.0, 0.0)
+            
+        except Exception as e:
+            self.logger.error(f"Step resonator source computation failed: {e}")
+            return np.zeros_like(x)

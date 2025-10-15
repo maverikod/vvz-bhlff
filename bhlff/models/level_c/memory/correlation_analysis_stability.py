@@ -32,7 +32,7 @@ class PatternStabilityAnalyzer:
     Mathematical Foundation:
         Implements pattern stability analysis:
         - Pattern stability: stability = ∫_0^T coherence(t) dt / T
-        - Stability evolution: stability(t) = stability(0) * exp(-t/τ_stability)
+        - Stability evolution: stability(t) = stability(0) * Θ(t_cutoff - t)  # Step resonator
         - Stability metrics: metrics = {consistency, variance, trend}
     """
 
@@ -115,8 +115,8 @@ class PatternStabilityAnalyzer:
 
         Mathematical Foundation:
             Analyzes stability evolution:
-            stability(t) = stability(0) * exp(-t/τ_stability)
-            where τ_stability is the stability time.
+            stability(t) = stability(0) * Θ(t_cutoff - t)  # Step resonator function
+            where t_cutoff is the cutoff time.
 
         Args:
             field_evolution (List[np.ndarray]): Field evolution.

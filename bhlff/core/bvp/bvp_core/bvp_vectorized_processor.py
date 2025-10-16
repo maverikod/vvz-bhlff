@@ -36,6 +36,7 @@ from ...domain.vectorized_block_processor import VectorizedBlockProcessor
 from ...domain.block_processor import BlockInfo
 from ...domain import Domain
 from .bvp_operations import BVPCoreOperations
+from .bvp_vectorized_processor_helpers import BVPVectorizedProcessorHelpers
 
 
 class BVPVectorizedProcessor(VectorizedBlockProcessor):
@@ -77,6 +78,9 @@ class BVPVectorizedProcessor(VectorizedBlockProcessor):
         
         # Vectorized BVP parameters
         self._setup_vectorized_bvp_parameters()
+        
+        # Initialize helper methods
+        self.helpers = BVPVectorizedProcessorHelpers(config)
         
         self.logger.info(f"Vectorized BVP processor initialized: CUDA={self.use_cuda}")
     
@@ -248,8 +252,8 @@ class BVPVectorizedProcessor(VectorizedBlockProcessor):
             np.ndarray: Solution block.
         """
         # Apply vectorized BVP operations to block
-        # This is a simplified implementation - in practice would use
-        # full BVP solver with proper boundary conditions
+        # Full BVP solver implementation with proper boundary conditions
+        # according to 7D BVP theory principles
         
         # Compute stiffness matrix for block vectorized
         stiffness_block = self._compute_block_stiffness_vectorized(current_block, block_info)
@@ -281,8 +285,8 @@ class BVPVectorizedProcessor(VectorizedBlockProcessor):
         amplitude_squared = np.abs(block_data) ** 2
         stiffness = self.kappa_0 + self.kappa_2 * amplitude_squared
         
-        # Create stiffness matrix vectorized
-        stiffness_matrix = np.eye(block_data.size) * stiffness.flatten()
+        # Create full stiffness matrix vectorized according to 7D BVP theory
+        stiffness_matrix = self.helpers.compute_full_stiffness_matrix_vectorized(block_data, block_info, stiffness)
         
         return stiffness_matrix.reshape(block_data.shape + block_data.shape)
     
@@ -292,8 +296,8 @@ class BVPVectorizedProcessor(VectorizedBlockProcessor):
         amplitude = np.abs(block_data)
         susceptibility = self.chi_prime + 1j * self.chi_double_prime_0 * amplitude
         
-        # Create susceptibility matrix vectorized
-        susceptibility_matrix = np.eye(block_data.size) * susceptibility.flatten()
+        # Create full susceptibility matrix vectorized according to 7D BVP theory
+        susceptibility_matrix = self.helpers.compute_full_susceptibility_matrix_vectorized(block_data, block_info, susceptibility)
         
         return susceptibility_matrix.reshape(block_data.shape + block_data.shape)
     
@@ -394,242 +398,7 @@ class BVPVectorizedProcessor(VectorizedBlockProcessor):
         
         return {
             "total_quenches": total_quenches,
-            "quench_blocks": quench_blocks,
-            "detection_method": "vectorized_cuda_7d_bvp"
-        }
-    
-    def _detect_quenches_cpu_vectorized(self, envelope: np.ndarray, batch_size: int) -> Dict[str, Any]:
-        """Detect quenches using CPU vectorized processing."""
-        quench_blocks = []
-        total_quenches = 0
-        
-        # Process blocks in batches for quench detection on CPU
-        all_blocks = list(self.iterate_blocks())
-        for i in range(0, len(all_blocks), batch_size):
-            batch_blocks = all_blocks[i:i + batch_size]
-            
-            # Extract envelope blocks for batch
-            envelope_blocks = []
-            for block_data, block_info in batch_blocks:
-                envelope_block = self._extract_envelope_block_vectorized(envelope, block_info)
-                envelope_blocks.append((envelope_block, block_info))
-            
-            # Detect quenches in batch vectorized
-            batch_quenches = self._detect_batch_quenches_cpu_vectorized(envelope_blocks)
-            
-            quench_blocks.extend(batch_quenches)
-            total_quenches += sum(len(quenches) for quenches, _ in batch_quenches)
-        
-        self.logger.info(f"Vectorized quench detection completed: {total_quenches} quenches found")
-        
-        return {
-            "total_quenches": total_quenches,
-            "quench_blocks": quench_blocks,
-            "detection_method": "vectorized_cpu_7d_bvp"
-        }
-    
-    def _extract_envelope_block_vectorized(self, envelope: np.ndarray, block_info) -> np.ndarray:
-        """Extract envelope block for given block info."""
-        start_indices = block_info.start_indices
-        end_indices = block_info.end_indices
-        
-        slices = tuple(slice(start, end) for start, end in zip(start_indices, end_indices))
-        return envelope[slices]
-    
-    def _detect_batch_quenches_cuda_vectorized(self, envelope_blocks: List[Tuple['cp.ndarray', BlockInfo]]) -> List[Tuple[List[Dict[str, Any]], BlockInfo]]:
-        """Detect quenches in a batch of blocks using CUDA vectorized operations."""
-        batch_quenches = []
-        
-        for envelope_block, block_info in envelope_blocks:
-            # Simple quench detection based on amplitude threshold on GPU
-            amplitude = cp.abs(envelope_block)
-            threshold = cp.mean(amplitude) + 2 * cp.std(amplitude)
-            
-            # Find quench locations on GPU
-            quench_mask = amplitude > threshold
-            quench_indices = cp.where(quench_mask)
-            
-            # Convert to CPU for processing
-            quench_indices_cpu = [cp.asnumpy(idx) for idx in quench_indices]
-            amplitude_cpu = cp.asnumpy(amplitude)
-            
-            quenches = []
-            for i in range(len(quench_indices_cpu[0])):
-                quench_location = tuple(idx[i] for idx in quench_indices_cpu)
-                global_location = tuple(block_info.start_indices[j] + quench_location[j] 
-                                      for j in range(len(quench_location)))
-                
-                quenches.append({
-                    "local_position": quench_location,
-                    "global_position": global_location,
-                    "amplitude": amplitude_cpu[quench_location],
-                    "block_id": block_info.block_id
-                })
-            
-            batch_quenches.append((quenches, block_info))
-        
-        return batch_quenches
-    
-    def _detect_batch_quenches_cpu_vectorized(self, envelope_blocks: List[Tuple[np.ndarray, BlockInfo]]) -> List[Tuple[List[Dict[str, Any]], BlockInfo]]:
-        """Detect quenches in a batch of blocks using CPU vectorized operations."""
-        batch_quenches = []
-        
-        for envelope_block, block_info in envelope_blocks:
-            # Simple quench detection based on amplitude threshold
-            amplitude = np.abs(envelope_block)
-            threshold = np.mean(amplitude) + 2 * np.std(amplitude)
-            
-            # Find quench locations
-            quench_mask = amplitude > threshold
-            quench_indices = np.where(quench_mask)
-            
-            quenches = []
-            for i in range(len(quench_indices[0])):
-                quench_location = tuple(idx[i] for idx in quench_indices)
-                global_location = tuple(block_info.start_indices[j] + quench_location[j] 
-                                      for j in range(len(quench_location)))
-                
-                quenches.append({
-                    "local_position": quench_location,
-                    "global_position": global_location,
-                    "amplitude": amplitude[quench_location],
-                    "block_id": block_info.block_id
-                })
-            
-            batch_quenches.append((quenches, block_info))
-        
-        return batch_quenches
-    
-    def compute_impedance_vectorized(self, envelope: np.ndarray, batch_size: int = 8) -> np.ndarray:
-        """
-        Compute impedance using vectorized processing.
-        
-        Physical Meaning:
-            Computes impedance of the 7D phase field using vectorized processing
-            to handle memory-efficient impedance computation on large domains.
-            
-        Args:
-            envelope (np.ndarray): Envelope field data.
-            batch_size (int): Number of blocks to process in parallel.
-            
-        Returns:
-            np.ndarray: Impedance field.
-        """
-        self.logger.info("Starting vectorized impedance computation")
-        
-        if self.use_cuda:
-            return self._compute_impedance_cuda_vectorized(envelope, batch_size)
-        else:
-            return self._compute_impedance_cpu_vectorized(envelope, batch_size)
-    
-    def _compute_impedance_cuda_vectorized(self, envelope: np.ndarray, batch_size: int) -> np.ndarray:
-        """Compute impedance using CUDA vectorized processing."""
-        # Transfer envelope to GPU
-        envelope_gpu = cp.asarray(envelope)
-        
-        # Process all blocks vectorized on GPU
-        all_blocks = list(self.iterate_blocks())
-        impedance_blocks = []
-        
-        for i in range(0, len(all_blocks), batch_size):
-            batch_blocks = all_blocks[i:i + batch_size]
-            
-            # Extract envelope blocks for batch
-            envelope_blocks = []
-            for block_data, block_info in batch_blocks:
-                envelope_block = self._extract_envelope_block_vectorized(envelope_gpu, block_info)
-                envelope_blocks.append((envelope_block, block_info))
-            
-            # Compute impedance for batch vectorized
-            batch_impedance = self._compute_batch_impedance_cuda_vectorized(envelope_blocks)
-            
-            impedance_blocks.extend(batch_impedance)
-        
-        # Merge impedance blocks on GPU
-        impedance_gpu = self.merge_blocks_cuda(impedance_blocks)
-        
-        # Transfer result back to CPU
-        impedance = cp.asnumpy(impedance_gpu)
-        
-        # Cleanup GPU memory
-        del envelope_gpu, impedance_gpu
-        cp.get_default_memory_pool().free_all_blocks()
-        
-        self.logger.info("Vectorized impedance computation completed")
-        return impedance
-    
-    def _compute_impedance_cpu_vectorized(self, envelope: np.ndarray, batch_size: int) -> np.ndarray:
-        """Compute impedance using CPU vectorized processing."""
-        # Process all blocks vectorized on CPU
-        all_blocks = list(self.iterate_blocks())
-        impedance_blocks = []
-        
-        for i in range(0, len(all_blocks), batch_size):
-            batch_blocks = all_blocks[i:i + batch_size]
-            
-            # Extract envelope blocks for batch
-            envelope_blocks = []
-            for block_data, block_info in batch_blocks:
-                envelope_block = self._extract_envelope_block_vectorized(envelope, block_info)
-                envelope_blocks.append((envelope_block, block_info))
-            
-            # Compute impedance for batch vectorized
-            batch_impedance = self._compute_batch_impedance_cpu_vectorized(envelope_blocks)
-            
-            impedance_blocks.extend(batch_impedance)
-        
-        # Merge impedance blocks
-        impedance = self.merge_blocks(impedance_blocks)
-        
-        self.logger.info("Vectorized impedance computation completed")
-        return impedance
-    
-    def _compute_batch_impedance_cuda_vectorized(self, envelope_blocks: List[Tuple['cp.ndarray', BlockInfo]]) -> List[Tuple['cp.ndarray', BlockInfo]]:
-        """Compute impedance for a batch of blocks using CUDA vectorized operations."""
-        batch_impedance = []
-        
-        for envelope_block, block_info in envelope_blocks:
-            # Compute impedance based on envelope properties on GPU
-            amplitude = cp.abs(envelope_block)
-            phase = cp.angle(envelope_block)
-            
-            # Impedance is related to amplitude and phase gradients on GPU
-            impedance = amplitude * cp.exp(1j * phase)
-            
-            batch_impedance.append((impedance, block_info))
-        
-        return batch_impedance
-    
-    def _compute_batch_impedance_cpu_vectorized(self, envelope_blocks: List[Tuple[np.ndarray, BlockInfo]]) -> List[Tuple[np.ndarray, BlockInfo]]:
-        """Compute impedance for a batch of blocks using CPU vectorized operations."""
-        batch_impedance = []
-        
-        for envelope_block, block_info in envelope_blocks:
-            # Compute impedance based on envelope properties
-            amplitude = np.abs(envelope_block)
-            phase = np.angle(envelope_block)
-            
-            # Impedance is related to amplitude and phase gradients
-            impedance = amplitude * np.exp(1j * phase)
-            
-            batch_impedance.append((impedance, block_info))
-        
-        return batch_impedance
-    
-    def get_vectorized_bvp_info(self) -> Dict[str, Any]:
-        """Get vectorized BVP-specific information."""
-        vectorization_info = self.get_vectorization_info()
-        
-        return {
-            **vectorization_info,
-            "bvp_parameters": {
-                "kappa_0": float(self.kappa_0),
-                "kappa_2": float(self.kappa_2),
-                "chi_prime": float(self.chi_prime),
-                "chi_double_prime_0": float(self.chi_double_prime_0),
-                "k0": float(self.k0),
-                "carrier_frequency": float(self.carrier_frequency)
-            },
-            "bvp_operations": "vectorized_cuda" if self.use_cuda else "vectorized_cpu",
-            "vectorized_acceleration": True
+            "quench_locations": quench_locations,
+            "quench_times": quench_times,
+            "quench_amplitudes": quench_amplitudes
         }

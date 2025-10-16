@@ -1510,7 +1510,7 @@ method_index:
       - block_size
       - overlap
       file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-      line: 44
+      line: 45
       name: __init__
       returns: null
     - args:
@@ -1519,7 +1519,7 @@ method_index:
       - max_iterations
       - tolerance
       file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-      line: 69
+      line: 73
       name: solve_envelope_blocked
       returns: np.ndarray
     - args:
@@ -1527,7 +1527,7 @@ method_index:
       - source
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-      line: 124
+      line: 128
       name: _extract_source_block
       returns: np.ndarray
     - args:
@@ -1536,7 +1536,7 @@ method_index:
       - source_block
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-      line: 132
+      line: 136
       name: _solve_block_bvp
       returns: np.ndarray
     - args:
@@ -1544,7 +1544,7 @@ method_index:
       - block_data
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-      line: 174
+      line: 178
       name: _compute_block_stiffness
       returns: np.ndarray
     - args:
@@ -1552,7 +1552,7 @@ method_index:
       - block_data
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-      line: 189
+      line: 193
       name: _compute_block_susceptibility
       returns: np.ndarray
     - args:
@@ -1561,7 +1561,7 @@ method_index:
       - rhs
       - initial_guess
       file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-      line: 205
+      line: 209
       name: _solve_block_iterative
       returns: np.ndarray
     - args:
@@ -1570,14 +1570,14 @@ method_index:
       - new_solution
       - tolerance
       file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-      line: 225
+      line: 229
       name: _check_convergence
       returns: bool
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-      line: 234
+      line: 238
       name: detect_quenches_blocked
       returns: Dict[str, Any]
     - args:
@@ -1585,7 +1585,7 @@ method_index:
       - envelope
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-      line: 272
+      line: 276
       name: _extract_envelope_block
       returns: np.ndarray
     - args:
@@ -1593,14 +1593,14 @@ method_index:
       - envelope_block
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-      line: 280
+      line: 284
       name: _detect_block_quenches
       returns: List[Dict[str, Any]]
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-      line: 306
+      line: 310
       name: compute_impedance_blocked
       returns: np.ndarray
     - args:
@@ -1608,15 +1608,90 @@ method_index:
       - envelope_block
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-      line: 340
+      line: 344
       name: _compute_block_impedance
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-      line: 351
+      line: 355
       name: get_memory_usage
       returns: Dict[str, Any]
+    BVPBlockProcessorHelpers:
+    - args:
+      - self
+      - config
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py
+      line: 42
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - block_data
+      - block_info
+      - stiffness
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py
+      line: 51
+      name: compute_full_stiffness_matrix
+      returns: np.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      - susceptibility
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py
+      line: 105
+      name: compute_full_susceptibility_matrix
+      returns: np.ndarray
+    - args:
+      - self
+      - i
+      - j
+      - block_shape
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py
+      line: 156
+      name: _compute_spatial_distance
+      returns: float
+    - args:
+      - self
+      - spatial_distance
+      - stiffness
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py
+      line: 167
+      name: _compute_7d_bvp_coupling
+      returns: complex
+    - args:
+      - self
+      - block_info
+      - block_shape
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py
+      line: 184
+      name: _apply_7d_bvp_boundary_conditions
+      returns: np.ndarray
+    - args:
+      - self
+      - field_i
+      - field_j
+      - susceptibility
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py
+      line: 210
+      name: _compute_7d_bvp_amplitude_coupling
+      returns: complex
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py
+      line: 229
+      name: _apply_7d_bvp_phase_coupling
+      returns: np.ndarray
+    - args:
+      - self
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py
+      line: 253
+      name: _is_boundary_block
+      returns: bool
     BVPCUDABlockProcessor:
     - args:
       - self
@@ -46031,6 +46106,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 6378
-    total_classes: 628
+    total_class_methods: 6387
+    total_classes: 629
     total_standalone_functions: 0

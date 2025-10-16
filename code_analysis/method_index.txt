@@ -12794,33 +12794,33 @@ Class: PowerBalancePostulate
 
 Class: BVPBlockProcessor
   __init__(self, domain, config, block_size, overlap)
-    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 44
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 45
   solve_envelope_blocked(self, source, max_iterations, tolerance) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 69
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 73
   _extract_source_block(self, source, block_info) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 124
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 128
   _solve_block_bvp(self, current_block, source_block, block_info) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 132
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 136
   _compute_block_stiffness(self, block_data, block_info) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 174
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 178
   _compute_block_susceptibility(self, block_data, block_info) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 189
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 193
   _solve_block_iterative(self, lhs, rhs, initial_guess) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 205
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 209
   _check_convergence(self, old_solution, new_solution, tolerance) -> bool
-    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 225
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 229
   detect_quenches_blocked(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 234
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 238
   _extract_envelope_block(self, envelope, block_info) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 272
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 276
   _detect_block_quenches(self, envelope_block, block_info) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 280
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 284
   compute_impedance_blocked(self, envelope) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 306
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 310
   _compute_block_impedance(self, envelope_block, block_info) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 340
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 344
   get_memory_usage(self) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 351
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py, Line: 355
 
 Class: BVPCUDABlockProcessor
   __init__(self, domain, config, block_size, overlap)
@@ -12895,6 +12895,26 @@ Class: BVP7DOperations
     File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 255
   _validate_physical_observables(self, envelope_7d) -> bool
     File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 260
+
+Class: BVPBlockProcessorHelpers
+  __init__(self, config)
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py, Line: 42
+  compute_full_stiffness_matrix(self, block_data, block_info, stiffness) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py, Line: 51
+  compute_full_susceptibility_matrix(self, block_data, block_info, susceptibility) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py, Line: 105
+  _compute_spatial_distance(self, i, j, block_shape) -> float
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py, Line: 156
+  _compute_7d_bvp_coupling(self, spatial_distance, stiffness) -> complex
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py, Line: 167
+  _apply_7d_bvp_boundary_conditions(self, block_info, block_shape) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py, Line: 184
+  _compute_7d_bvp_amplitude_coupling(self, field_i, field_j, susceptibility) -> complex
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py, Line: 210
+  _apply_7d_bvp_phase_coupling(self, block_data, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py, Line: 229
+  _is_boundary_block(self, block_info) -> bool
+    File: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py, Line: 253
 
 Class: BVPCoreOperations
   __init__(self, domain, config, domain_7d)

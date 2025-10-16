@@ -35,6 +35,7 @@ except ImportError:
 from ...domain.cuda_block_processor import CUDABlockProcessor
 from ...domain import Domain
 from .bvp_operations import BVPCoreOperations
+from .bvp_cuda_block_processor_helpers import BVPCudaBlockProcessorHelpers
 
 
 class BVPCUDABlockProcessor(CUDABlockProcessor):
@@ -75,6 +76,9 @@ class BVPCUDABlockProcessor(CUDABlockProcessor):
         
         # CUDA-specific BVP parameters
         self._setup_cuda_bvp_parameters()
+        
+        # Initialize helper methods
+        self.helpers = BVPCudaBlockProcessorHelpers(config)
         
         self.logger.info(f"CUDA BVP block processor initialized: {self.cuda_available}")
     
@@ -224,8 +228,8 @@ class BVPCUDABlockProcessor(CUDABlockProcessor):
         amplitude_squared = cp.abs(block_data) ** 2
         stiffness = self.kappa_0 + self.kappa_2 * amplitude_squared
         
-        # Create stiffness matrix on GPU (simplified)
-        stiffness_matrix = cp.eye(block_data.size, dtype=cp.complex128) * stiffness.flatten()
+        # Create full stiffness matrix on GPU according to 7D BVP theory
+        stiffness_matrix = self.helpers.compute_full_stiffness_matrix_cuda(block_data, block_info, stiffness)
         
         return stiffness_matrix.reshape(block_data.shape + block_data.shape)
     
@@ -235,8 +239,8 @@ class BVPCUDABlockProcessor(CUDABlockProcessor):
         amplitude = cp.abs(block_data)
         susceptibility = self.chi_prime + 1j * self.chi_double_prime_0 * amplitude
         
-        # Create susceptibility matrix on GPU (simplified)
-        susceptibility_matrix = cp.eye(block_data.size, dtype=cp.complex128) * susceptibility.flatten()
+        # Create full susceptibility matrix on GPU according to 7D BVP theory
+        susceptibility_matrix = self.helpers.compute_full_susceptibility_matrix_cuda(block_data, block_info, susceptibility)
         
         return susceptibility_matrix.reshape(block_data.shape + block_data.shape)
     
@@ -448,4 +452,3 @@ class BVPCUDABlockProcessor(CUDABlockProcessor):
             "bvp_operations": "cuda_blocked" if self.cuda_available else "cpu_blocked",
             "gpu_acceleration": self.cuda_available
         }
-

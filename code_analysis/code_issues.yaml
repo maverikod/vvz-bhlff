@@ -1576,11 +1576,13 @@ issues:
   - file: ./bhlff/core/bvp/postulates/power_balance/power_balance_postulate.py
     line: 29
   - file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-    line: 26
+    line: 27
   - file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
     line: 416
   - file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
     line: 37
+  - file: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py
+    line: 29
   - file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
     line: 306
   - file: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py
@@ -2166,7 +2168,7 @@ summary:
   classes_without_docstrings: 10
   files_too_large: 95
   files_without_docstrings: 4
-  imports_in_middle: 639
+  imports_in_middle: 640
   methods_with_pass: 0
   methods_without_docstrings: 115
   not_implemented_in_non_abstract: 0

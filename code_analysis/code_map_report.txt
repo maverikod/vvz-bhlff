@@ -4,15 +4,15 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 873
+Total files analyzed: 874
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 737
+Total classes: 738
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 6464
+Total functions: 6484
 
 ISSUES SUMMARY:
 ----------------------------------------
@@ -21,7 +21,7 @@ not_implemented_in_non_abstract: 0
 methods_without_docstrings: 115
 files_without_docstrings: 4
 classes_without_docstrings: 10
-imports_in_middle: 638
+imports_in_middle: 639
 files_too_large: 95
 
 METHODS_WITHOUT_DOCSTRINGS:
@@ -162,7 +162,7 @@ IMPORTS_IN_MIDDLE:
   File: ./tests/conftest.py
   Line: 37
 
-  ... and 628 more
+  ... and 629 more
 
 FILES_TOO_LARGE:
 ----------------------------------------

@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 862
+Total issues found: 863
 
 METHODS_WITHOUT_DOCSTRINGS: 115 issues
 ----------------------------------------
@@ -549,7 +549,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 10 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 638 issues
+IMPORTS_IN_MIDDLE: 639 issues
 ----------------------------------------
   ./setup.py
     Line 28
@@ -2288,8 +2288,11 @@ IMPORTS_IN_MIDDLE: 638 issues
   ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
     Line 416
 
+  ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+    Line 37
+
   ./bhlff/core/bvp/bvp_core/bvp_operations.py
-    Line 110
+    Line 306
 
   ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py
     Line 38

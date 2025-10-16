@@ -1280,6 +1280,123 @@ method_index:
       line: 276
       name: _compute_coupling_efficiency_7d
       returns: float
+    BVP7DOperations:
+    - args:
+      - self
+      - domain
+      - config
+      - domain_7d
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 54
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 81
+      name: _setup_phase_vector
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 85
+      name: _setup_envelope_solver
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 89
+      name: _setup_quench_detector
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 93
+      name: _setup_impedance_calculator
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 97
+      name: _setup_phase_operations
+      returns: None
+    - args:
+      - self
+      - source_7d
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 101
+      name: solve_envelope_7d
+      returns: np.ndarray
+    - args:
+      - self
+      - envelope_7d
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 140
+      name: validate_postulates_7d
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope_7d
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 220
+      name: _validate_envelope_equation_consistency
+      returns: bool
+    - args:
+      - self
+      - envelope_7d
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 225
+      name: _validate_energy_conservation
+      returns: bool
+    - args:
+      - self
+      - envelope_7d
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 230
+      name: _validate_phase_coherence
+      returns: bool
+    - args:
+      - self
+      - envelope_7d
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 235
+      name: _validate_topological_charge_conservation
+      returns: bool
+    - args:
+      - self
+      - envelope_7d
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 240
+      name: _validate_quench_threshold_validity
+      returns: bool
+    - args:
+      - self
+      - envelope_7d
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 245
+      name: _validate_impedance_boundary_conditions
+      returns: bool
+    - args:
+      - self
+      - envelope_7d
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 250
+      name: _validate_u1_phase_structure
+      returns: bool
+    - args:
+      - self
+      - envelope_7d
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 255
+      name: _validate_7d_spacetime_consistency
+      returns: bool
+    - args:
+      - self
+      - envelope_7d
+      file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
+      line: 260
+      name: _validate_physical_observables
+      returns: bool
     BVPAdaptive:
     - args:
       - self
@@ -1956,57 +2073,57 @@ method_index:
       - self
       - envelope_7d
       file: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py
-      line: 147
+      line: 152
       name: validate_postulates_7d
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py
-      line: 166
+      line: 176
       name: detect_quenches
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py
-      line: 191
+      line: 201
       name: compute_impedance
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py
-      line: 218
+      line: 228
       name: get_phase_vector
       returns: Optional[np.ndarray]
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py
-      line: 233
+      line: 243
       name: get_bvp_constants
       returns: BVPConstants
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py
-      line: 246
+      line: 256
       name: get_7d_interface
       returns: Optional[BVPCore7DInterface]
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py
-      line: 259
+      line: 269
       name: get_phase_operations
       returns: null
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py
-      line: 272
+      line: 282
       name: get_parameter_access
       returns: null
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py
-      line: 285
+      line: 295
       name: __repr__
       returns: str
     BVPCoreOperations:
@@ -2064,36 +2181,55 @@ method_index:
       returns: np.ndarray
     - args:
       - self
-      - envelope
+      - source
       file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
       line: 158
+      name: solve
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
+      line: 174
+      name: get_spectral_coefficients
+      returns: np.ndarray
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
+      line: 188
       name: detect_quenches
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
-      line: 195
+      line: 225
       name: compute_impedance
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
-      line: 222
+      line: 252
       name: get_phase_vector
       returns: PhaseVector
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
-      line: 236
+      line: 266
       name: get_phase_operations
       returns: BVPPhaseOperations
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
-      line: 249
+      line: 279
       name: get_parameter_access
       returns: BVPParameterAccess
+    - args:
+      - self
+      file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
+      line: 292
+      name: get_7d_operations
+      returns: null
     BVPCoreSolver:
     - args:
       - self
@@ -45895,6 +46031,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 6358
-    total_classes: 627
+    total_class_methods: 6378
+    total_classes: 628
     total_standalone_functions: 0

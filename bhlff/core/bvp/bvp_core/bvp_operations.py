@@ -155,6 +155,36 @@ class BVPCoreOperations:
 
         return envelope
 
+    def solve(self, source: np.ndarray) -> np.ndarray:
+        """
+        Main solve method - alias for solve_envelope.
+        
+        Physical Meaning:
+            Solves the BVP envelope equation using the main solve interface.
+            This is an alias for solve_envelope() for compatibility.
+            
+        Args:
+            source (np.ndarray): Source term s(x,φ,t) in 7D space-time.
+                
+        Returns:
+            np.ndarray: BVP envelope a(x,φ,t) in 7D space-time.
+        """
+        return self.solve_envelope(source)
+
+    def get_spectral_coefficients(self) -> np.ndarray:
+        """
+        Get spectral coefficients for the BVP envelope equation.
+        
+        Physical Meaning:
+            Returns the spectral coefficients used in the BVP envelope
+            equation solution, representing the frequency-dependent
+            response characteristics of the system.
+            
+        Returns:
+            np.ndarray: Spectral coefficients for the BVP equation.
+        """
+        return self._envelope_solver.get_spectral_coefficients()
+
     def detect_quenches(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
         Detect quench events when local thresholds are reached.

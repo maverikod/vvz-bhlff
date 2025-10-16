@@ -12860,6 +12860,42 @@ Class: BVPCUDABlockProcessor
   get_cuda_bvp_info(self) -> Dict[str, Any]
     File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 432
 
+Class: BVP7DOperations
+  __init__(self, domain, config, domain_7d)
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 54
+  _setup_phase_vector(self) -> None
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 81
+  _setup_envelope_solver(self) -> None
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 85
+  _setup_quench_detector(self) -> None
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 89
+  _setup_impedance_calculator(self) -> None
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 93
+  _setup_phase_operations(self) -> None
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 97
+  solve_envelope_7d(self, source_7d) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 101
+  validate_postulates_7d(self, envelope_7d) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 140
+  _validate_envelope_equation_consistency(self, envelope_7d) -> bool
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 220
+  _validate_energy_conservation(self, envelope_7d) -> bool
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 225
+  _validate_phase_coherence(self, envelope_7d) -> bool
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 230
+  _validate_topological_charge_conservation(self, envelope_7d) -> bool
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 235
+  _validate_quench_threshold_validity(self, envelope_7d) -> bool
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 240
+  _validate_impedance_boundary_conditions(self, envelope_7d) -> bool
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 245
+  _validate_u1_phase_structure(self, envelope_7d) -> bool
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 250
+  _validate_7d_spacetime_consistency(self, envelope_7d) -> bool
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 255
+  _validate_physical_observables(self, envelope_7d) -> bool
+    File: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py, Line: 260
+
 Class: BVPCoreOperations
   __init__(self, domain, config, domain_7d)
     File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 54
@@ -12877,16 +12913,22 @@ Class: BVPCoreOperations
     File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 108
   solve_envelope(self, source) -> np.ndarray
     File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 120
-  detect_quenches(self, envelope) -> Dict[str, Any]
+  solve(self, source) -> np.ndarray
     File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 158
+  get_spectral_coefficients(self) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 174
+  detect_quenches(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 188
   compute_impedance(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 195
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 225
   get_phase_vector(self) -> PhaseVector
-    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 222
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 252
   get_phase_operations(self) -> BVPPhaseOperations
-    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 236
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 266
   get_parameter_access(self) -> BVPParameterAccess
-    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 249
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 279
+  get_7d_operations(self)
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 292
 
 Class: BVPCoreFacade
   __init__(self, domain, config, domain_7d)
@@ -12896,23 +12938,23 @@ Class: BVPCoreFacade
   solve_envelope_7d(self, source_7d) -> np.ndarray
     File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 127
   validate_postulates_7d(self, envelope_7d) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 147
+    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 152
   detect_quenches(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 166
+    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 176
   compute_impedance(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 191
+    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 201
   get_phase_vector(self) -> Optional[np.ndarray]
-    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 218
+    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 228
   get_bvp_constants(self) -> BVPConstants
-    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 233
+    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 243
   get_7d_interface(self) -> Optional[BVPCore7DInterface]
-    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 246
+    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 256
   get_phase_operations(self)
-    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 259
+    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 269
   get_parameter_access(self)
-    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 272
+    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 282
   __repr__(self) -> str
-    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 285
+    File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 295
 
 Class: BVPCore7DInterface
   __init__(self, domain_7d, config)

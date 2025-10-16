@@ -31,7 +31,7 @@ from scipy import stats
 from scipy.optimize import minimize
 
 from .sensitivity.sobol_analysis import SobolAnalyzer
-from .sensitivity.mass_complexity_analysis import EnergyComplexityAnalyzer
+from .sensitivity.energy_complexity_analysis import EnergyComplexityAnalyzer
 
 
 class SensitivityAnalyzer:
@@ -64,7 +64,7 @@ class SensitivityAnalyzer:
 
         # Initialize analysis components
         self.sobol_analyzer = SobolAnalyzer(parameter_ranges)
-        self.mass_complexity_analyzer = MassComplexityAnalyzer()
+        self.energy_complexity_analyzer = EnergyComplexityAnalyzer()
 
     def generate_lhs_samples(self, n_samples: int) -> np.ndarray:
         """
@@ -144,18 +144,18 @@ class SensitivityAnalyzer:
             "parameter_ranges": self.param_ranges,
         }
 
-    def analyze_mass_complexity_correlation(
+    def analyze_energy_complexity_correlation(
         self, samples: np.ndarray, outputs: np.ndarray
     ) -> Dict[str, Any]:
         """
-        Analyze correlation between mass and complexity.
+        Analyze correlation between energy and complexity.
 
         Physical Meaning:
-            Investigates the "mass = complexity" thesis by analyzing
-            the correlation between particle mass and field complexity
+            Investigates the "energy = complexity" thesis by analyzing
+            the correlation between particle energy and field complexity
             in the 7D phase field theory.
         """
-        return self.mass_complexity_analyzer.analyze_mass_complexity_correlation(samples, outputs)
+        return self.energy_complexity_analyzer.analyze_energy_complexity_correlation(samples, outputs)
 
     def save_results(self, results: Dict[str, Any], filename: str) -> None:
         """

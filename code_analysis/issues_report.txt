@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 867
+Total issues found: 870
 
 METHODS_WITHOUT_DOCSTRINGS: 115 issues
 ----------------------------------------
@@ -506,7 +506,7 @@ FILES_WITHOUT_DOCSTRINGS: 4 issues
     Line 1
 
 
-CLASSES_WITHOUT_DOCSTRINGS: 10 issues
+CLASSES_WITHOUT_DOCSTRINGS: 12 issues
 ----------------------------------------
   ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
     Line 76
@@ -543,6 +543,14 @@ CLASSES_WITHOUT_DOCSTRINGS: 10 issues
   ./tests/unit/test_core/test_fractional_laplacian_parameters.py
     Line 177
     Class: MockInvalidParameters
+
+  ./bhlff/core/bvp/quench_detector.py
+    Line 35
+    Class: DummyCuPy
+
+  ./bhlff/core/bvp/quench_detector.py
+    Line 36
+    Class: ndarray
 
   ./examples/level_g_example.py
     Line 174
@@ -1583,11 +1591,11 @@ IMPORTS_IN_MIDDLE: 642 issues
   ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/__init__.py
     Line 25
 
-  ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
-    Line 108
-
   ./bhlff/models/level_e/sensitivity/sobol_analysis.py
     Line 244
+
+  ./bhlff/models/level_e/sensitivity/energy_complexity_analysis.py
+    Line 108
 
   ./bhlff/models/level_e/robustness/geometry_testing.py
     Line 27
@@ -1962,7 +1970,7 @@ IMPORTS_IN_MIDDLE: 642 issues
     Line 24
 
   ./bhlff/core/bvp/quench_detector.py
-    Line 30
+    Line 43
 
   ./bhlff/core/bvp/bvp_impedance_calculator.py
     Line 34
@@ -2478,7 +2486,7 @@ IMPORTS_IN_MIDDLE: 642 issues
     Line 23
 
 
-FILES_TOO_LARGE: 96 issues
+FILES_TOO_LARGE: 97 issues
 ----------------------------------------
   ./tests/unit/test_ml_prediction_vectorized_implementations.py
 
@@ -2639,6 +2647,8 @@ FILES_TOO_LARGE: 96 issues
   ./bhlff/testing/quality/quality_monitor.py
 
   ./bhlff/core/time/bvp_envelope_integrator.py
+
+  ./bhlff/core/bvp/quench_detector.py
 
   ./bhlff/core/bvp/physical_validation_decorator.py
 

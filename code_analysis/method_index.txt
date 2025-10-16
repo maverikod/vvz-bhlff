@@ -8777,7 +8777,7 @@ Class: SensitivityAnalyzer
     File: ./bhlff/models/level_e/sensitivity_analysis.py, Line: 85
   analyze_parameter_sensitivity(self, n_samples) -> Dict[str, Any]
     File: ./bhlff/models/level_e/sensitivity_analysis.py, Line: 108
-  analyze_mass_complexity_correlation(self, samples, outputs) -> Dict[str, Any]
+  analyze_energy_complexity_correlation(self, samples, outputs) -> Dict[str, Any]
     File: ./bhlff/models/level_e/sensitivity_analysis.py, Line: 147
   save_results(self, results, filename) -> None
     File: ./bhlff/models/level_e/sensitivity_analysis.py, Line: 160
@@ -9388,16 +9388,6 @@ Class: TopologicalAnalyzer
   _compute_7d_invariants_from_parameters(self, params1, params2) -> Dict[str, Any]
     File: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/topological_analysis.py, Line: 213
 
-Class: EnergyComplexityAnalyzer
-  __init__(self)
-    File: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py, Line: 41
-  analyze_energy_complexity_correlation(self, samples, outputs) -> Dict[str, Any]
-    File: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py, Line: 54
-  _compute_energy_metrics(self, samples, energy_params) -> np.ndarray
-    File: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py, Line: 92
-  _compute_complexity_metrics(self, samples, complexity_params) -> np.ndarray
-    File: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py, Line: 142
-
 Class: SobolAnalyzer
   __init__(self, parameter_ranges)
     File: ./bhlff/models/level_e/sensitivity/sobol_analysis.py, Line: 39
@@ -9421,6 +9411,16 @@ Class: SobolAnalyzer
     File: ./bhlff/models/level_e/sensitivity/sobol_analysis.py, Line: 360
   _step_resonator_spatial_envelope(self, r_squared, width) -> np.ndarray
     File: ./bhlff/models/level_e/sensitivity/sobol_analysis.py, Line: 396
+
+Class: EnergyComplexityAnalyzer
+  __init__(self)
+    File: ./bhlff/models/level_e/sensitivity/energy_complexity_analysis.py, Line: 41
+  analyze_energy_complexity_correlation(self, samples, outputs) -> Dict[str, Any]
+    File: ./bhlff/models/level_e/sensitivity/energy_complexity_analysis.py, Line: 54
+  _compute_energy_metrics(self, samples, energy_params) -> np.ndarray
+    File: ./bhlff/models/level_e/sensitivity/energy_complexity_analysis.py, Line: 92
+  _compute_complexity_metrics(self, samples, complexity_params) -> np.ndarray
+    File: ./bhlff/models/level_e/sensitivity/energy_complexity_analysis.py, Line: 142
 
 Class: GeometryRobustnessTester
   __init__(self, base_config)
@@ -11036,17 +11036,27 @@ Class: QuenchDetector
   __repr__(self) -> str
     File: ./bhlff/core/time/quench_detector.py, Line: 313
   __init__(self, domain_7d, config)
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 51
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 64
   detect_quenches(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 96
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 119
+  _detect_quenches_cuda(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 156
+  _detect_quenches_cpu(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 193
   _detect_amplitude_quenches(self, envelope) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 149
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 217
   _detect_detuning_quenches(self, envelope) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 212
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 280
   _detect_gradient_quenches(self, envelope) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 283
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 351
+  _detect_amplitude_quenches_cuda(self, envelope_gpu) -> List[Dict[str, Any]]
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 415
+  _detect_detuning_quenches_cuda(self, envelope_gpu) -> List[Dict[str, Any]]
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 455
+  _detect_gradient_quenches_cuda(self, envelope_gpu) -> List[Dict[str, Any]]
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 499
   _validate_thresholds(self) -> None
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 347
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 539
 
 Class: CrankNicolsonIntegrator
   __init__(self, domain, parameters) -> None

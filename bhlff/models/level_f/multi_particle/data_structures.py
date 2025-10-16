@@ -256,7 +256,7 @@ class Particle:
             "position": self.position.tolist(),
             "charge": self.charge,
             "phase": self.phase,
-            "mass": self.mass,
+            "energy": self.energy,
         }
 
     @classmethod

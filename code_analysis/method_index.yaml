@@ -12140,7 +12140,7 @@ method_index:
     EnergyComplexityAnalyzer:
     - args:
       - self
-      file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
+      file: ./bhlff/models/level_e/sensitivity/energy_complexity_analysis.py
       line: 41
       name: __init__
       returns: null
@@ -12148,7 +12148,7 @@ method_index:
       - self
       - samples
       - outputs
-      file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
+      file: ./bhlff/models/level_e/sensitivity/energy_complexity_analysis.py
       line: 54
       name: analyze_energy_complexity_correlation
       returns: Dict[str, Any]
@@ -12156,7 +12156,7 @@ method_index:
       - self
       - samples
       - energy_params
-      file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
+      file: ./bhlff/models/level_e/sensitivity/energy_complexity_analysis.py
       line: 92
       name: _compute_energy_metrics
       returns: np.ndarray
@@ -12164,7 +12164,7 @@ method_index:
       - self
       - samples
       - complexity_params
-      file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
+      file: ./bhlff/models/level_e/sensitivity/energy_complexity_analysis.py
       line: 142
       name: _compute_complexity_metrics
       returns: np.ndarray
@@ -24531,41 +24531,76 @@ method_index:
       - domain_7d
       - config
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 51
+      line: 64
       name: __init__
       returns: null
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 96
+      line: 119
       name: detect_quenches
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 149
+      line: 156
+      name: _detect_quenches_cuda
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/core/bvp/quench_detector.py
+      line: 193
+      name: _detect_quenches_cpu
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/core/bvp/quench_detector.py
+      line: 217
       name: _detect_amplitude_quenches
       returns: List[Dict[str, Any]]
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 212
+      line: 280
       name: _detect_detuning_quenches
       returns: List[Dict[str, Any]]
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 283
+      line: 351
       name: _detect_gradient_quenches
       returns: List[Dict[str, Any]]
     - args:
       - self
+      - envelope_gpu
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 347
+      line: 415
+      name: _detect_amplitude_quenches_cuda
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - envelope_gpu
+      file: ./bhlff/core/bvp/quench_detector.py
+      line: 455
+      name: _detect_detuning_quenches_cuda
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      - envelope_gpu
+      file: ./bhlff/core/bvp/quench_detector.py
+      line: 499
+      name: _detect_gradient_quenches_cuda
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/core/bvp/quench_detector.py
+      line: 539
       name: _validate_thresholds
       returns: None
     QuenchMemoryAnalysis:
@@ -26547,7 +26582,7 @@ method_index:
       - outputs
       file: ./bhlff/models/level_e/sensitivity_analysis.py
       line: 147
-      name: analyze_mass_complexity_correlation
+      name: analyze_energy_complexity_correlation
       returns: Dict[str, Any]
     - args:
       - self
@@ -46313,6 +46348,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 6412
+    total_class_methods: 6417
     total_classes: 631
     total_standalone_functions: 0

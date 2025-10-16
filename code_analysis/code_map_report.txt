@@ -8,11 +8,11 @@ Total files analyzed: 877
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 741
+Total classes: 743
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 6518
+Total functions: 6523
 
 ISSUES SUMMARY:
 ----------------------------------------
@@ -20,9 +20,9 @@ methods_with_pass: 0
 not_implemented_in_non_abstract: 0
 methods_without_docstrings: 115
 files_without_docstrings: 4
-classes_without_docstrings: 10
+classes_without_docstrings: 12
 imports_in_middle: 642
-files_too_large: 96
+files_too_large: 97
 
 METHODS_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -125,10 +125,11 @@ CLASSES_WITHOUT_DOCSTRINGS:
   Line: 177
   Class: MockInvalidParameters
 
-  File: ./examples/level_g_example.py
-  Line: 174
-  Class: MockSystem
+  File: ./bhlff/core/bvp/quench_detector.py
+  Line: 35
+  Class: DummyCuPy
 
+  ... and 2 more
 
 IMPORTS_IN_MIDDLE:
 ----------------------------------------
@@ -186,4 +187,4 @@ FILES_TOO_LARGE:
 
   File: ./tests/unit/automated_testing/test_quality_monitor.py
 
-  ... and 86 more
+  ... and 87 more

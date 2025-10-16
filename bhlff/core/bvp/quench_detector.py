@@ -23,6 +23,19 @@ Example:
 
 import numpy as np
 from typing import Dict, Any, List, Tuple
+import logging
+
+try:
+    import cupy as cp
+    CUDA_AVAILABLE = True
+except ImportError:
+    CUDA_AVAILABLE = False
+    cp = None
+    # Create a dummy class for type hints when CUDA is not available
+    class DummyCuPy:
+        class ndarray:
+            pass
+    cp = DummyCuPy()
 
 from ..domain.domain_7d import Domain7D
 from .quench_thresholds import QuenchThresholdComputer
@@ -67,6 +80,16 @@ class QuenchDetector:
         """
         self.domain_7d = domain_7d
         self.config = config
+        
+        # Setup logging
+        self.logger = logging.getLogger(__name__)
+        
+        # Check CUDA availability and setup
+        self.cuda_available = CUDA_AVAILABLE and config.get("use_cuda", True)
+        if self.cuda_available:
+            self.logger.info("CUDA available - using GPU acceleration for quench detection")
+        else:
+            self.logger.info("CUDA not available - using CPU processing for quench detection")
 
         # Initialize threshold computer, morphology processor, and characteristics computer
         self.threshold_computer = QuenchThresholdComputer(domain_7d)
@@ -124,6 +147,51 @@ class QuenchDetector:
                 - detuning_quenches (List[Tuple]): Detuning quench locations
                 - gradient_quenches (List[Tuple]): Gradient quench locations
         """
+        # Use CUDA if available, otherwise use CPU
+        if self.cuda_available:
+            return self._detect_quenches_cuda(envelope)
+        else:
+            return self._detect_quenches_cpu(envelope)
+    
+    def _detect_quenches_cuda(self, envelope: np.ndarray) -> Dict[str, Any]:
+        """Detect quenches using CUDA acceleration."""
+        try:
+            # Transfer envelope to GPU
+            envelope_gpu = cp.asarray(envelope)
+            
+            # Detect different types of quenches on GPU
+            amplitude_quenches = self._detect_amplitude_quenches_cuda(envelope_gpu)
+            detuning_quenches = self._detect_detuning_quenches_cuda(envelope_gpu)
+            gradient_quenches = self._detect_gradient_quenches_cuda(envelope_gpu)
+            
+            # Cleanup GPU memory
+            del envelope_gpu
+            cp.get_default_memory_pool().free_all_blocks()
+            
+            # Combine results
+            all_quenches = amplitude_quenches + detuning_quenches + gradient_quenches
+            quench_locations = [q["location"] for q in all_quenches]
+            quench_types = [q["type"] for q in all_quenches]
+            quench_strengths = [q["strength"] for q in all_quenches]
+
+            return {
+                "quenches_detected": len(all_quenches) > 0,
+                "quench_locations": quench_locations,
+                "quench_types": quench_types,
+                "quench_strengths": quench_strengths,
+                "amplitude_quenches": [q["location"] for q in amplitude_quenches],
+                "detuning_quenches": [q["location"] for q in detuning_quenches],
+                "gradient_quenches": [q["location"] for q in gradient_quenches],
+                "total_quenches": len(all_quenches),
+                "detection_method": "cuda_7d_bvp"
+            }
+            
+        except Exception as e:
+            self.logger.warning(f"CUDA quench detection failed: {e}, falling back to CPU")
+            return self._detect_quenches_cpu(envelope)
+    
+    def _detect_quenches_cpu(self, envelope: np.ndarray) -> Dict[str, Any]:
+        """Detect quenches using CPU processing."""
         # Detect different types of quenches
         amplitude_quenches = self._detect_amplitude_quenches(envelope)
         detuning_quenches = self._detect_detuning_quenches(envelope)
@@ -342,6 +410,130 @@ class QuenchDetector:
                     }
                 )
 
+        return quenches
+
+    def _detect_amplitude_quenches_cuda(self, envelope_gpu) -> List[Dict[str, Any]]:
+        """Detect amplitude quenches using CUDA acceleration."""
+        quenches = []
+        
+        # Compute amplitude on GPU
+        amplitude = cp.abs(envelope_gpu)
+        
+        # Find locations exceeding threshold
+        quench_mask = amplitude > self.amplitude_threshold
+        
+        if cp.any(quench_mask):
+            # Apply morphological operations to filter noise
+            quench_mask = self.morphology.apply_morphological_operations_cuda(quench_mask)
+            
+            # Find connected components
+            quench_components = self.morphology.find_connected_components_cuda(quench_mask)
+            
+            # Process each component
+            for component_id, component_mask in quench_components.items():
+                if cp.sum(component_mask) < self.config.get("min_quench_size", 5):
+                    continue  # Skip small components
+                
+                # Compute component characteristics
+                center = self.characteristics.compute_center_of_mass_cuda(component_mask)
+                strength = self.characteristics.compute_quench_strength_cuda(
+                    component_mask, amplitude
+                )
+                size = cp.sum(component_mask)
+                
+                quenches.append({
+                    "location": center,
+                    "type": "amplitude",
+                    "strength": float(strength),
+                    "threshold": self.amplitude_threshold,
+                    "size": int(size),
+                    "component_id": component_id,
+                })
+        
+        return quenches
+
+    def _detect_detuning_quenches_cuda(self, envelope_gpu) -> List[Dict[str, Any]]:
+        """Detect detuning quenches using CUDA acceleration."""
+        quenches = []
+        
+        # Compute local frequency from phase evolution
+        if envelope_gpu.shape[-1] > 1:  # Need at least 2 time slices
+            local_frequency = self.characteristics.compute_local_frequency_cuda(envelope_gpu)
+            
+            # Detuning from carrier frequency
+            detuning = cp.abs(local_frequency - self.carrier_frequency)
+            
+            # Find locations exceeding detuning threshold
+            quench_mask = detuning > self.detuning_threshold
+            
+            if cp.any(quench_mask):
+                # Apply morphological operations to filter noise
+                quench_mask = self.morphology.apply_morphological_operations_cuda(quench_mask)
+                
+                # Find connected components
+                quench_components = self.morphology.find_connected_components_cuda(quench_mask)
+                
+                # Process each component
+                for component_id, component_mask in quench_components.items():
+                    if cp.sum(component_mask) < self.config.get("min_quench_size", 5):
+                        continue  # Skip small components
+                    
+                    # Compute component characteristics
+                    center = self.characteristics.compute_center_of_mass_cuda(component_mask)
+                    strength = self.characteristics.compute_detuning_strength_cuda(
+                        component_mask, detuning
+                    )
+                    size = cp.sum(component_mask)
+                    
+                    quenches.append({
+                        "location": center,
+                        "type": "detuning",
+                        "strength": float(strength),
+                        "threshold": self.detuning_threshold,
+                        "size": int(size),
+                        "component_id": component_id,
+                    })
+        
+        return quenches
+
+    def _detect_gradient_quenches_cuda(self, envelope_gpu) -> List[Dict[str, Any]]:
+        """Detect gradient quenches using CUDA acceleration."""
+        quenches = []
+        
+        # Compute 7D gradient on GPU
+        gradient_magnitude = self.characteristics.compute_7d_gradient_magnitude_cuda(envelope_gpu)
+        
+        # Find locations exceeding gradient threshold
+        quench_mask = gradient_magnitude > self.gradient_threshold
+        
+        if cp.any(quench_mask):
+            # Apply morphological operations to filter noise
+            quench_mask = self.morphology.apply_morphological_operations_cuda(quench_mask)
+            
+            # Find connected components
+            quench_components = self.morphology.find_connected_components_cuda(quench_mask)
+            
+            # Process each component
+            for component_id, component_mask in quench_components.items():
+                if cp.sum(component_mask) < self.config.get("min_quench_size", 5):
+                    continue  # Skip small components
+                
+                # Compute component characteristics
+                center = self.characteristics.compute_center_of_mass_cuda(component_mask)
+                strength = self.characteristics.compute_gradient_strength_cuda(
+                    component_mask, gradient_magnitude
+                )
+                size = cp.sum(component_mask)
+                
+                quenches.append({
+                    "location": center,
+                    "type": "gradient",
+                    "strength": float(strength),
+                    "threshold": self.gradient_threshold,
+                    "size": int(size),
+                    "component_id": component_id,
+                })
+        
         return quenches
 
     def _validate_thresholds(self) -> None:

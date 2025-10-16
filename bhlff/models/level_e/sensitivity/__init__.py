@@ -1,2 +1,2 @@
 from .sobol_analysis import SobolAnalyzer
-from .mass_complexity_analysis import EnergyComplexityAnalyzer
+from .energy_complexity_analysis import EnergyComplexityAnalyzer

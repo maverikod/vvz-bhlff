@@ -27,6 +27,12 @@ issues:
   - class: MockInvalidParameters
     file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
     line: 177
+  - class: DummyCuPy
+    file: ./bhlff/core/bvp/quench_detector.py
+    line: 35
+  - class: ndarray
+    file: ./bhlff/core/bvp/quench_detector.py
+    line: 36
   - class: MockSystem
     file: ./examples/level_g_example.py
     line: 174
@@ -351,6 +357,10 @@ issues:
     file: ./bhlff/core/time/bvp_envelope_integrator.py
     limit: 400
     lines: 404
+  - exceeds_limit: 160
+    file: ./bhlff/core/bvp/quench_detector.py
+    limit: 400
+    lines: 560
   - exceeds_limit: 50
     file: ./bhlff/core/bvp/physical_validation_decorator.py
     limit: 400
@@ -1113,10 +1123,10 @@ issues:
     line: 24
   - file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/__init__.py
     line: 25
-  - file: ./bhlff/models/level_e/sensitivity/mass_complexity_analysis.py
-    line: 108
   - file: ./bhlff/models/level_e/sensitivity/sobol_analysis.py
     line: 244
+  - file: ./bhlff/models/level_e/sensitivity/energy_complexity_analysis.py
+    line: 108
   - file: ./bhlff/models/level_e/robustness/geometry_testing.py
     line: 27
   - file: ./bhlff/models/level_e/robustness/noise_testing.py
@@ -1366,7 +1376,7 @@ issues:
   - file: ./bhlff/core/bvp/bvp_postulate_base.py
     line: 24
   - file: ./bhlff/core/bvp/quench_detector.py
-    line: 30
+    line: 43
   - file: ./bhlff/core/bvp/bvp_impedance_calculator.py
     line: 34
   - file: ./bhlff/core/bvp/envelope_linear_solver.py
@@ -2173,8 +2183,8 @@ issues:
     method: __init__
   not_implemented_in_non_abstract: []
 summary:
-  classes_without_docstrings: 10
-  files_too_large: 96
+  classes_without_docstrings: 12
+  files_too_large: 97
   files_without_docstrings: 4
   imports_in_middle: 642
   methods_with_pass: 0

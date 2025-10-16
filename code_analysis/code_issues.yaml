@@ -21,6 +21,12 @@ issues:
   - class: DummyDomain
     file: ./tests/unit/test_core/test_cuda_fft_backend_parity.py
     line: 13
+  - class: MockParameters
+    file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    line: 101
+  - class: MockInvalidParameters
+    file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    line: 177
   - class: MockSystem
     file: ./examples/level_g_example.py
     line: 174
@@ -73,10 +79,10 @@ issues:
     file: ./tests/unit/test_core/test_bvp_constants_comprehensive.py
     limit: 400
     lines: 437
-  - exceeds_limit: 147
+  - exceeds_limit: 131
     file: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
     limit: 400
-    lines: 547
+    lines: 531
   - exceeds_limit: 32
     file: ./tests/unit/test_level_a/test_reporting_advanced.py
     limit: 400
@@ -85,10 +91,10 @@ issues:
     file: ./tests/unit/test_level_a/test_A03_zero_mode.py
     limit: 400
     lines: 427
-  - exceeds_limit: 60
+  - exceeds_limit: 65
     file: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
     limit: 400
-    lines: 460
+    lines: 465
   - exceeds_limit: 98
     file: ./bhlff/models/level_c/boundaries_core.py
     limit: 400
@@ -628,7 +634,7 @@ issues:
   - file: ./tests/unit/test_core/test_crank_nicolson_integrator.py
     line: 26
   - file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
-    line: 38
+    line: 45
   - file: ./tests/unit/test_core/test_quench_detector.py
     line: 28
   - file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
@@ -639,6 +645,8 @@ issues:
     line: 325
   - file: ./tests/unit/test_core/test_fft_physics.py
     line: 37
+  - file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    line: 242
   - file: ./tests/unit/test_core/test_u1_phase_structure_postulate_physics.py
     line: 29
   - file: ./tests/unit/test_core/test_bvp_postulates_integration_physics.py
@@ -1610,7 +1618,7 @@ issues:
   - file: ./bhlff/core/operators/memory_kernel.py
     line: 29
   - file: ./bhlff/core/operators/fractional_laplacian.py
-    line: 32
+    line: 33
   - file: ./bhlff/core/operators/__init__.py
     line: 22
   - file: ./bhlff/core/operators/operator_riesz.py
@@ -1942,6 +1950,30 @@ issues:
     line: 47
     method: test_admittance_scales_with_conductivity
   - class: null
+    file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    line: 102
+    method: __init__
+  - class: MockParameters
+    file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    line: 102
+    method: __init__
+  - class: null
+    file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    line: 178
+    method: __init__
+  - class: MockInvalidParameters
+    file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    line: 178
+    method: __init__
+  - class: null
+    file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    line: 102
+    method: __init__
+  - class: null
+    file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    line: 178
+    method: __init__
+  - class: null
     file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
     line: 100
     method: bc
@@ -2123,10 +2155,10 @@ issues:
     method: __init__
   not_implemented_in_non_abstract: []
 summary:
-  classes_without_docstrings: 8
+  classes_without_docstrings: 10
   files_too_large: 95
   files_without_docstrings: 4
-  imports_in_middle: 634
+  imports_in_middle: 635
   methods_with_pass: 0
-  methods_without_docstrings: 109
+  methods_without_docstrings: 115
   not_implemented_in_non_abstract: 0

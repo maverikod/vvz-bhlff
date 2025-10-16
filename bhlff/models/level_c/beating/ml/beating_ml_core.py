@@ -14,7 +14,7 @@ import logging
 
 from bhlff.core.bvp import BVPCore
 from .beating_ml_patterns import BeatingMLPatterns
-from .beating_ml_prediction import BeatingMLPrediction
+from .beating_ml_prediction.beating_ml_prediction_core import BeatingMLPredictionCore as BeatingMLPrediction
 from .beating_ml_optimization import BeatingMLOptimization
 
 

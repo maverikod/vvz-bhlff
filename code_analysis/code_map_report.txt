@@ -4,24 +4,24 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 865
+Total files analyzed: 869
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 724
+Total classes: 730
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 6349
+Total functions: 6419
 
 ISSUES SUMMARY:
 ----------------------------------------
 methods_with_pass: 0
 not_implemented_in_non_abstract: 0
-methods_without_docstrings: 109
+methods_without_docstrings: 115
 files_without_docstrings: 4
-classes_without_docstrings: 8
-imports_in_middle: 634
+classes_without_docstrings: 10
+imports_in_middle: 635
 files_too_large: 95
 
 METHODS_WITHOUT_DOCSTRINGS:
@@ -70,7 +70,7 @@ METHODS_WITHOUT_DOCSTRINGS:
   Class: MockBVPCore
   Method: __init__
 
-  ... and 99 more
+  ... and 105 more
 
 FILES_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -117,6 +117,14 @@ CLASSES_WITHOUT_DOCSTRINGS:
   Line: 13
   Class: DummyDomain
 
+  File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+  Line: 101
+  Class: MockParameters
+
+  File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+  Line: 177
+  Class: MockInvalidParameters
+
   File: ./examples/level_g_example.py
   Line: 174
   Class: MockSystem
@@ -154,7 +162,7 @@ IMPORTS_IN_MIDDLE:
   File: ./tests/conftest.py
   Line: 37
 
-  ... and 624 more
+  ... and 625 more
 
 FILES_TOO_LARGE:
 ----------------------------------------

@@ -2,9 +2,9 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 850
+Total issues found: 859
 
-METHODS_WITHOUT_DOCSTRINGS: 109 issues
+METHODS_WITHOUT_DOCSTRINGS: 115 issues
 ----------------------------------------
   ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
     Line 77
@@ -279,6 +279,32 @@ METHODS_WITHOUT_DOCSTRINGS: 109 issues
     Line 47
     Method: test_admittance_scales_with_conductivity
 
+  ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    Line 102
+    Method: __init__
+
+  ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    Line 102
+    Class: MockParameters
+    Method: __init__
+
+  ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    Line 178
+    Method: __init__
+
+  ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    Line 178
+    Class: MockInvalidParameters
+    Method: __init__
+
+  ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    Line 102
+    Method: __init__
+
+  ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    Line 178
+    Method: __init__
+
   ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
     Line 100
     Method: bc
@@ -480,7 +506,7 @@ FILES_WITHOUT_DOCSTRINGS: 4 issues
     Line 1
 
 
-CLASSES_WITHOUT_DOCSTRINGS: 8 issues
+CLASSES_WITHOUT_DOCSTRINGS: 10 issues
 ----------------------------------------
   ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
     Line 76
@@ -510,12 +536,20 @@ CLASSES_WITHOUT_DOCSTRINGS: 8 issues
     Line 13
     Class: DummyDomain
 
+  ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    Line 101
+    Class: MockParameters
+
+  ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    Line 177
+    Class: MockInvalidParameters
+
   ./examples/level_g_example.py
     Line 174
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 634 issues
+IMPORTS_IN_MIDDLE: 635 issues
 ----------------------------------------
   ./setup.py
     Line 28
@@ -836,7 +870,7 @@ IMPORTS_IN_MIDDLE: 634 issues
     Line 26
 
   ./tests/unit/test_core/test_spectral_laplacian_physics.py
-    Line 38
+    Line 45
 
   ./tests/unit/test_core/test_quench_detector.py
     Line 28
@@ -852,6 +886,9 @@ IMPORTS_IN_MIDDLE: 634 issues
 
   ./tests/unit/test_core/test_fft_physics.py
     Line 37
+
+  ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+    Line 242
 
   ./tests/unit/test_core/test_u1_phase_structure_postulate_physics.py
     Line 29
@@ -2309,7 +2346,7 @@ IMPORTS_IN_MIDDLE: 634 issues
     Line 29
 
   ./bhlff/core/operators/fractional_laplacian.py
-    Line 32
+    Line 33
 
   ./bhlff/core/operators/__init__.py
     Line 22

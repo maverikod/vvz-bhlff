@@ -510,6 +510,48 @@ Class: TestMLPredictionFullImplementation
   test_no_simplified_predictions(self)
     File: ./tests/unit/test_ml_prediction_full_implementation.py, Line: 358
 
+Class: TestBVP7DAnalytics
+  setup_method(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 21
+  test_initialization(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 43
+  test_7d_frequency_prediction(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 56
+  test_7d_coupling_prediction(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 68
+  test_analytical_confidence(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 86
+  test_coupling_analytical_confidence(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 102
+  test_analytical_feature_importance(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 118
+  test_coupling_analytical_feature_importance(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 136
+  test_base_frequency_computation(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 154
+  test_spacing_factor_computation(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 166
+  test_bandwidth_factor_computation(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 178
+  test_coupling_strength_computation(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 190
+  test_interaction_energy_computation(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 198
+  test_coupling_symmetry_computation(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 206
+  test_nonlinear_strength_computation(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 214
+  test_mixing_degree_computation(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 222
+  test_coupling_efficiency_computation(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 230
+  test_edge_cases(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 238
+  test_prediction_consistency(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 256
+  test_numerical_stability(self)
+    File: ./tests/unit/test_7d_bvp_analytics.py, Line: 282
+
 Class: TestAcceptanceCriteria
   domain_3d(self)
     File: ./tests/unit/test_acceptance_criteria.py, Line: 30
@@ -543,6 +585,42 @@ Class: TestStep111ExponentialDecayFix
     File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py, Line: 176
   __init__(self)
     File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py, Line: 146
+
+Class: TestFeatureCalculator
+  setup_method(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 21
+  test_initialization(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 27
+  test_spectral_entropy_calculation(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 35
+  test_frequency_spacing_calculation(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 48
+  test_frequency_bandwidth_calculation(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 56
+  test_autocorrelation_calculation(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 64
+  test_frequency_coupling_strength_calculation(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 77
+  test_mode_interaction_energy_calculation(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 85
+  test_coupling_symmetry_calculation(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 99
+  test_nonlinear_strength_calculation(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 107
+  test_mode_mixing_degree_calculation(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 115
+  test_coupling_efficiency_calculation(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 123
+  test_large_array_handling(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 131
+  test_edge_cases(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 145
+  test_feature_calculation_consistency(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 161
+  test_memory_efficiency(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 192
+  test_numerical_stability(self)
+    File: ./tests/unit/test_feature_calculators.py, Line: 202
 
 Class: TestSolitonAnalysisOptimization
   mock_system(self)
@@ -793,6 +871,32 @@ Class: TestParticleInversion
     File: ./tests/unit/test_level_g_particle_inversion_advanced.py, Line: 121
   test_inversion_optimization(self)
     File: ./tests/unit/test_level_g_particle_inversion_advanced.py, Line: 166
+
+Class: TestPhaseFieldFeatures
+  setup_method(self)
+    File: ./tests/unit/test_phase_field_features.py, Line: 21
+  test_initialization(self)
+    File: ./tests/unit/test_phase_field_features.py, Line: 35
+  test_7d_phase_field_features_computation(self)
+    File: ./tests/unit/test_phase_field_features.py, Line: 49
+  test_phase_coherence_computation(self)
+    File: ./tests/unit/test_phase_field_features.py, Line: 77
+  test_topological_charge_computation(self)
+    File: ./tests/unit/test_phase_field_features.py, Line: 95
+  test_energy_density_computation(self)
+    File: ./tests/unit/test_phase_field_features.py, Line: 113
+  test_phase_velocity_computation(self)
+    File: ./tests/unit/test_phase_field_features.py, Line: 131
+  test_edge_cases(self)
+    File: ./tests/unit/test_phase_field_features.py, Line: 149
+  test_extreme_values(self)
+    File: ./tests/unit/test_phase_field_features.py, Line: 179
+  test_feature_consistency(self)
+    File: ./tests/unit/test_phase_field_features.py, Line: 215
+  test_feature_weights(self)
+    File: ./tests/unit/test_phase_field_features.py, Line: 225
+  test_mathematical_foundation(self)
+    File: ./tests/unit/test_phase_field_features.py, Line: 242
 
 Class: TestPowerLaw7DBVPCompliance
   sample_region_data(self)
@@ -3199,36 +3303,36 @@ Class: TestSpectralLaplacianPhysics
     File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 24
   fft_backend(self, domain_7d)
     File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 36
-  spectral_ops(self, fft_backend)
+  spectral_ops(self, domain_7d)
     File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 43
   fractional_laplacian(self, domain_7d)
-    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 48
+    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 49
   test_spectral_laplacian_physics(self, domain_7d, spectral_ops)
-    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 52
+    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 53
   test_spectral_laplacian_energy_conservation_physics(self, domain_7d, spectral_ops)
-    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 77
+    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 78
   test_spectral_laplacian_7d_structure_physics(self, domain_7d, spectral_ops)
-    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 103
+    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 104
   test_spectral_laplacian_numerical_stability_physics(self, domain_7d, spectral_ops)
-    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 126
+    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 127
   test_spectral_laplacian_precision_physics(self, domain_7d, spectral_ops)
-    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 153
+    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 152
   test_spectral_laplacian_boundary_conditions_physics(self, domain_7d, spectral_ops)
-    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 185
+    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 184
   test_spectral_laplacian_phase_structure_physics(self, domain_7d, spectral_ops)
-    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 213
+    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 212
   test_fractional_laplacian_physics(self, domain_7d, fractional_laplacian)
-    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 247
+    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 242
   test_fractional_laplacian_energy_conservation_physics(self, domain_7d, fractional_laplacian)
-    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 272
+    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 267
   test_fractional_laplacian_7d_structure_physics(self, domain_7d, fractional_laplacian)
-    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 298
+    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 293
   test_fractional_laplacian_numerical_stability_physics(self, domain_7d, fractional_laplacian)
-    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 323
+    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 318
   test_fractional_laplacian_precision_physics(self, domain_7d, fractional_laplacian)
-    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 350
+    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 343
   _create_test_field(self, domain) -> np.ndarray
-    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 384
+    File: ./tests/unit/test_core/test_spectral_laplacian_physics.py, Line: 378
 
 Class: TestBVPCoreCoverage
   domain_7d(self)
@@ -3597,6 +3701,36 @@ Class: TestBVPConstantsPhysics
     File: ./tests/unit/test_core/test_bvp_constants_physics.py, Line: 240
   test_bvp_constants_physical_meaning(self, bvp_constants)
     File: ./tests/unit/test_core/test_bvp_constants_physics.py, Line: 267
+
+Class: TestFractionalLaplacianParameters
+  domain_7d(self)
+    File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py, Line: 31
+  parameters_7d(self)
+    File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py, Line: 36
+  test_parameters_object_initialization(self, domain_7d, parameters_7d)
+    File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py, Line: 46
+  test_float_initialization_backward_compatibility(self, domain_7d)
+    File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py, Line: 62
+  test_parameters_object_with_custom_lambda(self, domain_7d, parameters_7d)
+    File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py, Line: 77
+  test_parameters_object_without_lambda_attribute(self, domain_7d)
+    File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py, Line: 92
+  test_apply_method_with_parameters_object(self, domain_7d, parameters_7d)
+    File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py, Line: 112
+  test_spectral_coefficients_with_parameters_object(self, domain_7d, parameters_7d)
+    File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py, Line: 133
+  test_fractional_order_retrieval(self, domain_7d, parameters_7d)
+    File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py, Line: 152
+  test_validation_with_parameters_object(self, domain_7d)
+    File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py, Line: 168
+  test_validation_with_float_parameters(self, domain_7d)
+    File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py, Line: 187
+  test_consistency_between_initialization_methods(self, domain_7d, parameters_7d)
+    File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py, Line: 203
+  test_fft_solver_integration(self, domain_7d, parameters_7d)
+    File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py, Line: 234
+  __init__(self)
+    File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py, Line: 178
 
 Class: TestU1PhaseStructurePostulatePhysics
   domain_7d(self)
@@ -4217,6 +4351,12 @@ Class: TestBasicValidation
     File: ./tests/unit/test_core/fft_solver_7d_validation/test_basic_validation.py, Line: 178
   test_A05_parameter_dependence(self, solver, domain_7d)
     File: ./tests/unit/test_core/fft_solver_7d_validation/test_basic_validation.py, Line: 204
+  test_A06_solve_method_alias(self, solver, domain_7d)
+    File: ./tests/unit/test_core/fft_solver_7d_validation/test_basic_validation.py, Line: 249
+  test_A07_get_spectral_coefficients(self, solver, domain_7d)
+    File: ./tests/unit/test_core/fft_solver_7d_validation/test_basic_validation.py, Line: 272
+  test_A08_spectral_coefficients_consistency(self, solver, domain_7d)
+    File: ./tests/unit/test_core/fft_solver_7d_validation/test_basic_validation.py, Line: 299
 
 Class: TestBoundaryCases
   domain_7d(self)
@@ -4387,26 +4527,28 @@ Class: TestA02SimpleMultiFrequency
     File: ./tests/unit/test_level_a/test_A02_simple_multi_frequency.py, Line: 189
 
 Class: TestA01PlaneWaveAdvanced
-  setup_method(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 44
+  setup_test(self)
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 45
+  _create_7d_source(self, k_test)
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 74
   test_boundary_conditions(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 73
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 91
   test_stability_analysis(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 97
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 114
   test_performance_benchmark(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 141
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 157
   test_memory_usage(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 173
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 187
   test_parameter_sensitivity(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 195
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 208
   test_error_handling(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 236
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 248
   test_convergence_rate(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 260
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 272
   test_spectral_accuracy(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 299
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 320
   test_energy_conservation(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 327
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py, Line: 346
 
 Class: TestA05ResidualEnergyAdvanced
   setup_method(self)
@@ -4420,25 +4562,25 @@ Class: TestA05ResidualEnergyAdvanced
   test_solver_validation(self)
     File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 167
   test_energy_conservation(self)
-    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 203
+    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 200
   test_residual_accuracy(self)
-    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 234
+    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 231
   test_residual_stability(self)
-    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 260
+    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 254
   test_residual_performance(self)
-    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 308
+    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 302
   test_residual_memory_usage(self)
-    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 339
+    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 333
   test_residual_parameter_sensitivity(self)
-    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 361
+    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 355
   test_residual_error_handling(self)
-    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 408
+    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 402
   test_residual_convergence_rate(self)
-    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 433
+    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 427
   test_residual_spectral_accuracy(self)
-    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 486
+    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 477
   test_residual_energy_balance(self)
-    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 512
+    File: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py, Line: 500
 
 Class: TestReporterAdvanced
   __init__(self, output_dir)
@@ -4474,11 +4616,11 @@ Class: TestA02MultiPlaneBasic
   test_superposition_principle(self)
     File: ./tests/unit/test_level_a/test_A02_multi_plane_basic.py, Line: 193
   test_individual_mode_solutions(self)
-    File: ./tests/unit/test_level_a/test_A02_multi_plane_basic.py, Line: 224
+    File: ./tests/unit/test_level_a/test_A02_multi_plane_basic.py, Line: 222
   test_aliasing_detection(self)
-    File: ./tests/unit/test_level_a/test_A02_multi_plane_basic.py, Line: 253
+    File: ./tests/unit/test_level_a/test_A02_multi_plane_basic.py, Line: 249
   test_spectral_analysis(self)
-    File: ./tests/unit/test_level_a/test_A02_multi_plane_basic.py, Line: 280
+    File: ./tests/unit/test_level_a/test_A02_multi_plane_basic.py, Line: 276
 
 Class: TestA03ZeroMode
   setup_method(self)
@@ -4530,19 +4672,19 @@ Class: TestA01PlaneWaveBasic
   test_plane_wave_single_mode(self)
     File: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py, Line: 74
   test_plane_wave_multiple_modes(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py, Line: 101
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py, Line: 108
   test_anisotropy_check(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py, Line: 131
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py, Line: 144
   test_grid_convergence(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py, Line: 158
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py, Line: 176
   test_fractional_laplacian_operator(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py, Line: 198
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py, Line: 220
   test_spectral_coefficients(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py, Line: 224
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py, Line: 254
   test_solver_validation(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py, Line: 250
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py, Line: 280
   test_solver_info(self)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py, Line: 279
+    File: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py, Line: 313
 
 Class: TestSimpleBasic
   test_domain_creation(self)
@@ -4622,15 +4764,15 @@ Class: TestA05ResidualEnergyBasic
   test_residual_computation(self)
     File: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py, Line: 170
   test_residual_orthogonality(self)
-    File: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py, Line: 196
+    File: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py, Line: 193
   test_energy_balance(self)
-    File: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py, Line: 222
+    File: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py, Line: 216
   test_multi_frequency_residual(self)
-    File: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py, Line: 249
+    File: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py, Line: 243
   test_residual_spectral_analysis(self)
-    File: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py, Line: 277
+    File: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py, Line: 268
   test_residual_convergence(self)
-    File: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py, Line: 305
+    File: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py, Line: 296
 
 Class: TestA01Minimal
   setup_method(self)
@@ -4666,15 +4808,15 @@ Class: TestA02MultiPlaneAdvanced
   test_phase_preservation(self)
     File: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py, Line: 233
   test_energy_conservation(self)
-    File: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py, Line: 263
+    File: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py, Line: 264
   test_spectral_coefficients_consistency(self)
-    File: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py, Line: 298
+    File: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py, Line: 305
   test_convergence_with_modes(self)
-    File: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py, Line: 326
+    File: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py, Line: 333
   test_parameter_sensitivity(self)
-    File: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py, Line: 370
+    File: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py, Line: 375
   test_stability_analysis(self)
-    File: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py, Line: 412
+    File: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py, Line: 417
 
 Class: CUDABackend
   detect_cuda_availability(()) -> bool
@@ -5956,105 +6098,105 @@ Class: BVP7DAnalytics
   __init__(self)
     File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 36
   compute_7d_frequency_prediction(self, phase_features, features) -> List[float]
-    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 45
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 54
   compute_7d_coupling_prediction(self, phase_features, features) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 86
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 95
   compute_analytical_confidence(self, features) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 140
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 149
   compute_coupling_analytical_confidence(self, features) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 161
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 170
   compute_analytical_feature_importance(self, features) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 182
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 191
   compute_coupling_analytical_feature_importance(self, features) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 204
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 213
   _compute_base_frequency_7d(self, spectral_entropy, phase_coherence) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 227
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 236
   _compute_spacing_factor_7d(self, frequency_spacing, topological_charge) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 232
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 241
   _compute_bandwidth_factor_7d(self, frequency_bandwidth, phase_coherence) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 237
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 246
   _compute_coupling_strength_7d(self, coupling_strength, phase_coherence, topological_charge) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 242
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 251
   _compute_interaction_energy_7d(self, interaction_energy, phase_coherence, topological_charge) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 247
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 256
   _compute_coupling_symmetry_7d(self, coupling_symmetry, phase_coherence, topological_charge) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 252
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 261
   _compute_nonlinear_strength_7d(self, nonlinear_strength, phase_coherence, topological_charge) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 257
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 266
   _compute_mixing_degree_7d(self, mixing_degree, phase_coherence, topological_charge) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 262
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 271
   _compute_coupling_efficiency_7d(self, coupling_efficiency, phase_coherence, topological_charge) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 267
+    File: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py, Line: 276
   __init__(self)
     File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 36
   compute_7d_frequency_prediction(self, phase_features, features) -> List[float]
-    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 45
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 54
   compute_7d_coupling_prediction(self, phase_features, features) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 86
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 95
   compute_analytical_confidence(self, features) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 140
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 149
   compute_coupling_analytical_confidence(self, features) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 161
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 170
   compute_analytical_feature_importance(self, features) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 182
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 191
   compute_coupling_analytical_feature_importance(self, features) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 204
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 213
   _compute_base_frequency_7d(self, spectral_entropy, phase_coherence) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 227
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 236
   _compute_spacing_factor_7d(self, frequency_spacing, topological_charge) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 232
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 241
   _compute_bandwidth_factor_7d(self, frequency_bandwidth, phase_coherence) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 237
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 246
   _compute_coupling_strength_7d(self, coupling_strength, phase_coherence, topological_charge) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 242
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 251
   _compute_interaction_energy_7d(self, interaction_energy, phase_coherence, topological_charge) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 247
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 256
   _compute_coupling_symmetry_7d(self, coupling_symmetry, phase_coherence, topological_charge) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 252
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 261
   _compute_nonlinear_strength_7d(self, nonlinear_strength, phase_coherence, topological_charge) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 257
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 266
   _compute_mixing_degree_7d(self, mixing_degree, phase_coherence, topological_charge) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 262
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 271
   _compute_coupling_efficiency_7d(self, coupling_efficiency, phase_coherence, topological_charge) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 267
+    File: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py, Line: 276
 
 Class: PhaseFieldFeatures
   __init__(self)
     File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 36
   compute_7d_phase_field_features(self, features) -> list
-    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 45
+    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 54
   _compute_phase_coherence(self, features) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 73
+    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 82
   _compute_topological_charge(self, features) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 87
+    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 96
   _compute_energy_density(self, features) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 101
+    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 110
   _compute_phase_velocity(self, features) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 115
+    File: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py, Line: 124
 
 Class: FeatureCalculator
   __init__(self)
     File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 36
   calculate_spectral_entropy(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 45
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 48
   calculate_frequency_spacing(self, envelope, shape) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 68
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 71
   calculate_frequency_bandwidth(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 87
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 90
   calculate_autocorrelation(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 110
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 113
   calculate_frequency_coupling_strength(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 142
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 145
   calculate_mode_interaction_energy(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 181
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 184
   calculate_coupling_symmetry(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 200
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 203
   calculate_nonlinear_strength(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 256
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 259
   calculate_mode_mixing_degree(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 272
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 275
   calculate_coupling_efficiency(self, envelope) -> float
-    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 297
+    File: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py, Line: 300
 
 Class: TrainingDataGenerator
   __init__(self)
@@ -13116,19 +13258,19 @@ Class: U1PhaseField
 
 Class: FractionalLaplacian
   __init__(self, domain, beta, lambda_param) -> None
-    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 54
+    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 55
   _setup_spectral_coefficients(self) -> None
-    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 81
+    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 96
   apply(self, field) -> np.ndarray
-    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 104
+    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 119
   get_spectral_coefficients(self) -> np.ndarray
-    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 144
+    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 159
   get_fractional_order(self) -> float
-    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 157
+    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 172
   _compute_k_magnitude(self) -> np.ndarray
-    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 170
+    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 185
   __repr__(self) -> str
-    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 205
+    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 220
 
 Class: OperatorRiesz
   __init__(self, domain, parameters) -> None
@@ -13385,18 +13527,24 @@ Class: FFTSolver7DBasic
     File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 45
   solve_stationary(self, source) -> np.ndarray
     File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 83
-  solve_envelope(self, source) -> np.ndarray
+  solve(self, source) -> np.ndarray
     File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 133
+  get_spectral_coefficients(self) -> np.ndarray
+    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 154
+  get_info(self) -> Dict[str, Any]
+    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 167
+  solve_envelope(self, source) -> np.ndarray
+    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 194
   validate_solution(self, solution, source) -> Dict[str, Any]
-    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 156
+    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 217
   _setup_spectral_coefficients(self) -> None
-    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 204
+    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 265
   _setup_fft_plan(self) -> None
-    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 243
+    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 304
   _compute_residual(self, solution, source) -> np.ndarray
-    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 259
+    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 320
   get_solver_info(self) -> Dict[str, Any]
-    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 282
+    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 343
 
 Class: FFTSolverTimeMethods
   __init__(self, domain, parameters)

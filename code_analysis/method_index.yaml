@@ -1035,7 +1035,7 @@ method_index:
       - phase_features
       - features
       file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
-      line: 45
+      line: 54
       name: compute_7d_frequency_prediction
       returns: List[float]
     - args:
@@ -1043,35 +1043,35 @@ method_index:
       - phase_features
       - features
       file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
-      line: 86
+      line: 95
       name: compute_7d_coupling_prediction
       returns: Dict[str, float]
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
-      line: 140
+      line: 149
       name: compute_analytical_confidence
       returns: float
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
-      line: 161
+      line: 170
       name: compute_coupling_analytical_confidence
       returns: float
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
-      line: 182
+      line: 191
       name: compute_analytical_feature_importance
       returns: Dict[str, float]
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
-      line: 204
+      line: 213
       name: compute_coupling_analytical_feature_importance
       returns: Dict[str, float]
     - args:
@@ -1079,7 +1079,7 @@ method_index:
       - spectral_entropy
       - phase_coherence
       file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
-      line: 227
+      line: 236
       name: _compute_base_frequency_7d
       returns: float
     - args:
@@ -1087,7 +1087,7 @@ method_index:
       - frequency_spacing
       - topological_charge
       file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
-      line: 232
+      line: 241
       name: _compute_spacing_factor_7d
       returns: float
     - args:
@@ -1095,7 +1095,7 @@ method_index:
       - frequency_bandwidth
       - phase_coherence
       file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
-      line: 237
+      line: 246
       name: _compute_bandwidth_factor_7d
       returns: float
     - args:
@@ -1104,7 +1104,7 @@ method_index:
       - phase_coherence
       - topological_charge
       file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
-      line: 242
+      line: 251
       name: _compute_coupling_strength_7d
       returns: float
     - args:
@@ -1113,7 +1113,7 @@ method_index:
       - phase_coherence
       - topological_charge
       file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
-      line: 247
+      line: 256
       name: _compute_interaction_energy_7d
       returns: float
     - args:
@@ -1122,7 +1122,7 @@ method_index:
       - phase_coherence
       - topological_charge
       file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
-      line: 252
+      line: 261
       name: _compute_coupling_symmetry_7d
       returns: float
     - args:
@@ -1131,7 +1131,7 @@ method_index:
       - phase_coherence
       - topological_charge
       file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
-      line: 257
+      line: 266
       name: _compute_nonlinear_strength_7d
       returns: float
     - args:
@@ -1140,7 +1140,7 @@ method_index:
       - phase_coherence
       - topological_charge
       file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
-      line: 262
+      line: 271
       name: _compute_mixing_degree_7d
       returns: float
     - args:
@@ -1149,7 +1149,7 @@ method_index:
       - phase_coherence
       - topological_charge
       file: ./bhlff/models/level_c/beating/ml/core/7d_bvp_analytics.py
-      line: 267
+      line: 276
       name: _compute_coupling_efficiency_7d
       returns: float
     - args:
@@ -1163,7 +1163,7 @@ method_index:
       - phase_features
       - features
       file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
-      line: 45
+      line: 54
       name: compute_7d_frequency_prediction
       returns: List[float]
     - args:
@@ -1171,35 +1171,35 @@ method_index:
       - phase_features
       - features
       file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
-      line: 86
+      line: 95
       name: compute_7d_coupling_prediction
       returns: Dict[str, float]
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
-      line: 140
+      line: 149
       name: compute_analytical_confidence
       returns: float
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
-      line: 161
+      line: 170
       name: compute_coupling_analytical_confidence
       returns: float
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
-      line: 182
+      line: 191
       name: compute_analytical_feature_importance
       returns: Dict[str, float]
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
-      line: 204
+      line: 213
       name: compute_coupling_analytical_feature_importance
       returns: Dict[str, float]
     - args:
@@ -1207,7 +1207,7 @@ method_index:
       - spectral_entropy
       - phase_coherence
       file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
-      line: 227
+      line: 236
       name: _compute_base_frequency_7d
       returns: float
     - args:
@@ -1215,7 +1215,7 @@ method_index:
       - frequency_spacing
       - topological_charge
       file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
-      line: 232
+      line: 241
       name: _compute_spacing_factor_7d
       returns: float
     - args:
@@ -1223,7 +1223,7 @@ method_index:
       - frequency_bandwidth
       - phase_coherence
       file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
-      line: 237
+      line: 246
       name: _compute_bandwidth_factor_7d
       returns: float
     - args:
@@ -1232,7 +1232,7 @@ method_index:
       - phase_coherence
       - topological_charge
       file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
-      line: 242
+      line: 251
       name: _compute_coupling_strength_7d
       returns: float
     - args:
@@ -1241,7 +1241,7 @@ method_index:
       - phase_coherence
       - topological_charge
       file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
-      line: 247
+      line: 256
       name: _compute_interaction_energy_7d
       returns: float
     - args:
@@ -1250,7 +1250,7 @@ method_index:
       - phase_coherence
       - topological_charge
       file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
-      line: 252
+      line: 261
       name: _compute_coupling_symmetry_7d
       returns: float
     - args:
@@ -1259,7 +1259,7 @@ method_index:
       - phase_coherence
       - topological_charge
       file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
-      line: 257
+      line: 266
       name: _compute_nonlinear_strength_7d
       returns: float
     - args:
@@ -1268,7 +1268,7 @@ method_index:
       - phase_coherence
       - topological_charge
       file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
-      line: 262
+      line: 271
       name: _compute_mixing_degree_7d
       returns: float
     - args:
@@ -1277,7 +1277,7 @@ method_index:
       - phase_coherence
       - topological_charge
       file: ./bhlff/models/level_c/beating/ml/core/bvp_7d_analytics.py
-      line: 267
+      line: 276
       name: _compute_coupling_efficiency_7d
       returns: float
     BVPAdaptive:
@@ -12934,6 +12934,25 @@ method_index:
       - source
       file: ./bhlff/core/fft/fft_solver_7d_basic.py
       line: 133
+      name: solve
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/core/fft/fft_solver_7d_basic.py
+      line: 154
+      name: get_spectral_coefficients
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/core/fft/fft_solver_7d_basic.py
+      line: 167
+      name: get_info
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - source
+      file: ./bhlff/core/fft/fft_solver_7d_basic.py
+      line: 194
       name: solve_envelope
       returns: np.ndarray
     - args:
@@ -12941,19 +12960,19 @@ method_index:
       - solution
       - source
       file: ./bhlff/core/fft/fft_solver_7d_basic.py
-      line: 156
+      line: 217
       name: validate_solution
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/core/fft/fft_solver_7d_basic.py
-      line: 204
+      line: 265
       name: _setup_spectral_coefficients
       returns: None
     - args:
       - self
       file: ./bhlff/core/fft/fft_solver_7d_basic.py
-      line: 243
+      line: 304
       name: _setup_fft_plan
       returns: None
     - args:
@@ -12961,13 +12980,13 @@ method_index:
       - solution
       - source
       file: ./bhlff/core/fft/fft_solver_7d_basic.py
-      line: 259
+      line: 320
       name: _compute_residual
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/core/fft/fft_solver_7d_basic.py
-      line: 282
+      line: 343
       name: get_solver_info
       returns: Dict[str, Any]
     FFTSolverTimeMethods:
@@ -13260,7 +13279,7 @@ method_index:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 45
+      line: 48
       name: calculate_spectral_entropy
       returns: float
     - args:
@@ -13268,63 +13287,63 @@ method_index:
       - envelope
       - shape
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 68
+      line: 71
       name: calculate_frequency_spacing
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 87
+      line: 90
       name: calculate_frequency_bandwidth
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 110
+      line: 113
       name: calculate_autocorrelation
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 142
+      line: 145
       name: calculate_frequency_coupling_strength
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 181
+      line: 184
       name: calculate_mode_interaction_energy
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 200
+      line: 203
       name: calculate_coupling_symmetry
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 256
+      line: 259
       name: calculate_nonlinear_strength
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 272
+      line: 275
       name: calculate_mode_mixing_degree
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/models/level_c/beating/ml/core/feature_calculators.py
-      line: 297
+      line: 300
       name: calculate_coupling_efficiency
       returns: float
     FeatureExtractor:
@@ -13836,44 +13855,44 @@ method_index:
       - beta
       - lambda_param
       file: ./bhlff/core/operators/fractional_laplacian.py
-      line: 54
+      line: 55
       name: __init__
       returns: None
     - args:
       - self
       file: ./bhlff/core/operators/fractional_laplacian.py
-      line: 81
+      line: 96
       name: _setup_spectral_coefficients
       returns: None
     - args:
       - self
       - field
       file: ./bhlff/core/operators/fractional_laplacian.py
-      line: 104
+      line: 119
       name: apply
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/core/operators/fractional_laplacian.py
-      line: 144
+      line: 159
       name: get_spectral_coefficients
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/core/operators/fractional_laplacian.py
-      line: 157
+      line: 172
       name: get_fractional_order
       returns: float
     - args:
       - self
       file: ./bhlff/core/operators/fractional_laplacian.py
-      line: 170
+      line: 185
       name: _compute_k_magnitude
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/core/operators/fractional_laplacian.py
-      line: 205
+      line: 220
       name: __repr__
       returns: str
     FrequencyDependentProperties:
@@ -21313,35 +21332,35 @@ method_index:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py
-      line: 45
+      line: 54
       name: compute_7d_phase_field_features
       returns: list
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py
-      line: 73
+      line: 82
       name: _compute_phase_coherence
       returns: float
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py
-      line: 87
+      line: 96
       name: _compute_topological_charge
       returns: float
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py
-      line: 101
+      line: 110
       name: _compute_energy_density
       returns: float
     - args:
       - self
       - features
       file: ./bhlff/models/level_c/beating/ml/core/phase_field_features.py
-      line: 115
+      line: 124
       name: _compute_phase_velocity
       returns: float
     PhaseMapper:
@@ -29381,61 +29400,68 @@ method_index:
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py
-      line: 44
-      name: setup_method
+      line: 45
+      name: setup_test
+      returns: null
+    - args:
+      - self
+      - k_test
+      file: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py
+      line: 74
+      name: _create_7d_source
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py
-      line: 73
+      line: 91
       name: test_boundary_conditions
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py
-      line: 97
+      line: 114
       name: test_stability_analysis
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py
-      line: 141
+      line: 157
       name: test_performance_benchmark
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py
-      line: 173
+      line: 187
       name: test_memory_usage
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py
-      line: 195
+      line: 208
       name: test_parameter_sensitivity
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py
-      line: 236
+      line: 248
       name: test_error_handling
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py
-      line: 260
+      line: 272
       name: test_convergence_rate
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py
-      line: 299
+      line: 320
       name: test_spectral_accuracy
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py
-      line: 327
+      line: 346
       name: test_energy_conservation
       returns: null
     TestA01PlaneWaveBasic:
@@ -29454,43 +29480,43 @@ method_index:
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py
-      line: 101
+      line: 108
       name: test_plane_wave_multiple_modes
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py
-      line: 131
+      line: 144
       name: test_anisotropy_check
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py
-      line: 158
+      line: 176
       name: test_grid_convergence
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py
-      line: 198
+      line: 220
       name: test_fractional_laplacian_operator
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py
-      line: 224
+      line: 254
       name: test_spectral_coefficients
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py
-      line: 250
+      line: 280
       name: test_solver_validation
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py
-      line: 279
+      line: 313
       name: test_solver_info
       returns: null
     TestA01SimplePlaneWave:
@@ -29589,31 +29615,31 @@ method_index:
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
-      line: 263
+      line: 264
       name: test_energy_conservation
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
-      line: 298
+      line: 305
       name: test_spectral_coefficients_consistency
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
-      line: 326
+      line: 333
       name: test_convergence_with_modes
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
-      line: 370
+      line: 375
       name: test_parameter_sensitivity
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
-      line: 412
+      line: 417
       name: test_stability_analysis
       returns: null
     TestA02MultiPlaneBasic:
@@ -29655,19 +29681,19 @@ method_index:
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A02_multi_plane_basic.py
-      line: 224
+      line: 222
       name: test_individual_mode_solutions
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A02_multi_plane_basic.py
-      line: 253
+      line: 249
       name: test_aliasing_detection
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A02_multi_plane_basic.py
-      line: 280
+      line: 276
       name: test_spectral_analysis
       returns: null
     TestA02SimpleMultiFrequency:
@@ -29878,61 +29904,61 @@ method_index:
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
-      line: 203
+      line: 200
       name: test_energy_conservation
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
-      line: 234
+      line: 231
       name: test_residual_accuracy
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
-      line: 260
+      line: 254
       name: test_residual_stability
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
-      line: 308
+      line: 302
       name: test_residual_performance
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
-      line: 339
+      line: 333
       name: test_residual_memory_usage
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
-      line: 361
+      line: 355
       name: test_residual_parameter_sensitivity
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
-      line: 408
+      line: 402
       name: test_residual_error_handling
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
-      line: 433
+      line: 427
       name: test_residual_convergence_rate
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
-      line: 486
+      line: 477
       name: test_residual_spectral_accuracy
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
-      line: 512
+      line: 500
       name: test_residual_energy_balance
       returns: null
     TestA05ResidualEnergyBasic:
@@ -29974,31 +30000,31 @@ method_index:
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py
-      line: 196
+      line: 193
       name: test_residual_orthogonality
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py
-      line: 222
+      line: 216
       name: test_energy_balance
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py
-      line: 249
+      line: 243
       name: test_multi_frequency_residual
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py
-      line: 277
+      line: 268
       name: test_residual_spectral_analysis
       returns: null
     - args:
       - self
       file: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py
-      line: 305
+      line: 296
       name: test_residual_convergence
       returns: null
     TestABCDModel:
@@ -30900,6 +30926,127 @@ method_index:
       file: ./tests/unit/automated_testing/test_automated_testing_system_basic.py
       line: 286
       name: test_level_test_results_aggregation
+      returns: null
+    TestBVP7DAnalytics:
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 21
+      name: setup_method
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 43
+      name: test_initialization
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 56
+      name: test_7d_frequency_prediction
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 68
+      name: test_7d_coupling_prediction
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 86
+      name: test_analytical_confidence
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 102
+      name: test_coupling_analytical_confidence
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 118
+      name: test_analytical_feature_importance
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 136
+      name: test_coupling_analytical_feature_importance
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 154
+      name: test_base_frequency_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 166
+      name: test_spacing_factor_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 178
+      name: test_bandwidth_factor_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 190
+      name: test_coupling_strength_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 198
+      name: test_interaction_energy_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 206
+      name: test_coupling_symmetry_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 214
+      name: test_nonlinear_strength_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 222
+      name: test_mixing_degree_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 230
+      name: test_coupling_efficiency_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 238
+      name: test_edge_cases
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 256
+      name: test_prediction_consistency
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_7d_bvp_analytics.py
+      line: 282
+      name: test_numerical_stability
       returns: null
     TestBVPConstantsBase:
     - args:
@@ -33196,6 +33343,30 @@ method_index:
       file: ./tests/unit/test_core/fft_solver_7d_validation/test_basic_validation.py
       line: 204
       name: test_A05_parameter_dependence
+      returns: null
+    - args:
+      - self
+      - solver
+      - domain_7d
+      file: ./tests/unit/test_core/fft_solver_7d_validation/test_basic_validation.py
+      line: 249
+      name: test_A06_solve_method_alias
+      returns: null
+    - args:
+      - self
+      - solver
+      - domain_7d
+      file: ./tests/unit/test_core/fft_solver_7d_validation/test_basic_validation.py
+      line: 272
+      name: test_A07_get_spectral_coefficients
+      returns: null
+    - args:
+      - self
+      - solver
+      - domain_7d
+      file: ./tests/unit/test_core/fft_solver_7d_validation/test_basic_validation.py
+      line: 299
+      name: test_A08_spectral_coefficients_consistency
       returns: null
     TestBoundaryCases:
     - args:
@@ -35918,6 +36089,109 @@ method_index:
       line: 247
       name: test_failure_report
       returns: null
+    TestFeatureCalculator:
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 21
+      name: setup_method
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 27
+      name: test_initialization
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 35
+      name: test_spectral_entropy_calculation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 48
+      name: test_frequency_spacing_calculation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 56
+      name: test_frequency_bandwidth_calculation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 64
+      name: test_autocorrelation_calculation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 77
+      name: test_frequency_coupling_strength_calculation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 85
+      name: test_mode_interaction_energy_calculation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 99
+      name: test_coupling_symmetry_calculation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 107
+      name: test_nonlinear_strength_calculation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 115
+      name: test_mode_mixing_degree_calculation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 123
+      name: test_coupling_efficiency_calculation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 131
+      name: test_large_array_handling
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 145
+      name: test_edge_cases
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 161
+      name: test_feature_calculation_consistency
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 192
+      name: test_memory_efficiency
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_feature_calculators.py
+      line: 202
+      name: test_numerical_stability
+      returns: null
     TestFieldProjection:
     - args:
       - self
@@ -36203,6 +36477,109 @@ method_index:
       file: ./tests/unit/test_level_a/test_final_summary.py
       line: 222
       name: test_framework_summary
+      returns: null
+    TestFractionalLaplacianParameters:
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+      line: 31
+      name: domain_7d
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+      line: 36
+      name: parameters_7d
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      - parameters_7d
+      file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+      line: 46
+      name: test_parameters_object_initialization
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+      line: 62
+      name: test_float_initialization_backward_compatibility
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      - parameters_7d
+      file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+      line: 77
+      name: test_parameters_object_with_custom_lambda
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+      line: 92
+      name: test_parameters_object_without_lambda_attribute
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      - parameters_7d
+      file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+      line: 112
+      name: test_apply_method_with_parameters_object
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      - parameters_7d
+      file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+      line: 133
+      name: test_spectral_coefficients_with_parameters_object
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      - parameters_7d
+      file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+      line: 152
+      name: test_fractional_order_retrieval
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+      line: 168
+      name: test_validation_with_parameters_object
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+      line: 187
+      name: test_validation_with_float_parameters
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      - parameters_7d
+      file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+      line: 203
+      name: test_consistency_between_initialization_methods
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      - parameters_7d
+      file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+      line: 234
+      name: test_fft_solver_integration
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
+      line: 178
+      name: __init__
       returns: null
     TestFullAlgorithmImplementations:
     - args:
@@ -38244,6 +38621,79 @@ method_index:
       file: ./tests/unit/test_level_g/test_phase_envelope_balance_physics.py
       line: 105
       name: test_balance_operator_components
+      returns: null
+    TestPhaseFieldFeatures:
+    - args:
+      - self
+      file: ./tests/unit/test_phase_field_features.py
+      line: 21
+      name: setup_method
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_phase_field_features.py
+      line: 35
+      name: test_initialization
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_phase_field_features.py
+      line: 49
+      name: test_7d_phase_field_features_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_phase_field_features.py
+      line: 77
+      name: test_phase_coherence_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_phase_field_features.py
+      line: 95
+      name: test_topological_charge_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_phase_field_features.py
+      line: 113
+      name: test_energy_density_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_phase_field_features.py
+      line: 131
+      name: test_phase_velocity_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_phase_field_features.py
+      line: 149
+      name: test_edge_cases
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_phase_field_features.py
+      line: 179
+      name: test_extreme_values
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_phase_field_features.py
+      line: 215
+      name: test_feature_consistency
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_phase_field_features.py
+      line: 225
+      name: test_feature_weights
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_phase_field_features.py
+      line: 242
+      name: test_mathematical_foundation
       returns: null
     TestPhaseMapper:
     - args:
@@ -42131,7 +42581,7 @@ method_index:
       returns: null
     - args:
       - self
-      - fft_backend
+      - domain_7d
       file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
       line: 43
       name: spectral_ops
@@ -42140,7 +42590,7 @@ method_index:
       - self
       - domain_7d
       file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
-      line: 48
+      line: 49
       name: fractional_laplacian
       returns: null
     - args:
@@ -42148,7 +42598,7 @@ method_index:
       - domain_7d
       - spectral_ops
       file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
-      line: 52
+      line: 53
       name: test_spectral_laplacian_physics
       returns: null
     - args:
@@ -42156,7 +42606,7 @@ method_index:
       - domain_7d
       - spectral_ops
       file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
-      line: 77
+      line: 78
       name: test_spectral_laplacian_energy_conservation_physics
       returns: null
     - args:
@@ -42164,7 +42614,7 @@ method_index:
       - domain_7d
       - spectral_ops
       file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
-      line: 103
+      line: 104
       name: test_spectral_laplacian_7d_structure_physics
       returns: null
     - args:
@@ -42172,7 +42622,7 @@ method_index:
       - domain_7d
       - spectral_ops
       file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
-      line: 126
+      line: 127
       name: test_spectral_laplacian_numerical_stability_physics
       returns: null
     - args:
@@ -42180,7 +42630,7 @@ method_index:
       - domain_7d
       - spectral_ops
       file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
-      line: 153
+      line: 152
       name: test_spectral_laplacian_precision_physics
       returns: null
     - args:
@@ -42188,7 +42638,7 @@ method_index:
       - domain_7d
       - spectral_ops
       file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
-      line: 185
+      line: 184
       name: test_spectral_laplacian_boundary_conditions_physics
       returns: null
     - args:
@@ -42196,7 +42646,7 @@ method_index:
       - domain_7d
       - spectral_ops
       file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
-      line: 213
+      line: 212
       name: test_spectral_laplacian_phase_structure_physics
       returns: null
     - args:
@@ -42204,7 +42654,7 @@ method_index:
       - domain_7d
       - fractional_laplacian
       file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
-      line: 247
+      line: 242
       name: test_fractional_laplacian_physics
       returns: null
     - args:
@@ -42212,7 +42662,7 @@ method_index:
       - domain_7d
       - fractional_laplacian
       file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
-      line: 272
+      line: 267
       name: test_fractional_laplacian_energy_conservation_physics
       returns: null
     - args:
@@ -42220,7 +42670,7 @@ method_index:
       - domain_7d
       - fractional_laplacian
       file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
-      line: 298
+      line: 293
       name: test_fractional_laplacian_7d_structure_physics
       returns: null
     - args:
@@ -42228,7 +42678,7 @@ method_index:
       - domain_7d
       - fractional_laplacian
       file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
-      line: 323
+      line: 318
       name: test_fractional_laplacian_numerical_stability_physics
       returns: null
     - args:
@@ -42236,14 +42686,14 @@ method_index:
       - domain_7d
       - fractional_laplacian
       file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
-      line: 350
+      line: 343
       name: test_fractional_laplacian_precision_physics
       returns: null
     - args:
       - self
       - domain
       file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
-      line: 384
+      line: 378
       name: _create_test_field
       returns: np.ndarray
     TestSpectralOperations:
@@ -45192,6 +45642,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 6247
-    total_classes: 621
+    total_class_methods: 6317
+    total_classes: 625
     total_standalone_functions: 0

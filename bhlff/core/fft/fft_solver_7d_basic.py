@@ -130,6 +130,40 @@ class FFTSolver7DBasic:
         self.logger.info("Stationary solution computed")
         return solution.real
 
+    def solve(self, source: np.ndarray) -> np.ndarray:
+        """
+        Main solve method - alias for solve_stationary.
+        
+        Physical Meaning:
+            Solves the fractional Laplacian equation L_β a = s
+            using spectral methods in 7D space-time.
+            
+        Args:
+            source (np.ndarray): Source term s(x) in real space.
+                Represents external excitations or initial conditions
+                that drive the phase field evolution.
+                
+        Returns:
+            np.ndarray: Solution field a(x) in real space.
+                Represents the phase field configuration that
+                satisfies the equation and describes the spatial
+                distribution of phase values.
+        """
+        return self.solve_stationary(source)
+
+    def get_spectral_coefficients(self) -> np.ndarray:
+        """
+        Get spectral coefficients for the fractional Laplacian.
+        
+        Physical Meaning:
+            Returns the pre-computed spectral coefficients
+            |k|^(2β) + λ used in the fractional Laplacian operator.
+            
+        Returns:
+            np.ndarray: Spectral coefficients |k|^(2β) + λ
+        """
+        return self.spectral_coefficients
+
     def solve_envelope(self, source: np.ndarray) -> np.ndarray:
         """
         Solve the envelope equation.

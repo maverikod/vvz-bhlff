@@ -11582,7 +11582,7 @@ Class: AbstractBVPFacade
   get_phase_vector(self) -> Optional[np.ndarray]
     File: ./bhlff/core/bvp/abstract_bvp_facade.py, Line: 143
   validate_configuration(self) -> bool
-    File: ./bhlff/core/bvp/abstract_bvp_facade.py, Line: 158
+    File: ./bhlff/core/bvp/abstract_bvp_facade.py, Line: 260
   is_7d_available(self) -> bool
     File: ./bhlff/core/bvp/abstract_bvp_facade.py, Line: 189
   get_7d_domain(self) -> Optional[Domain7D]
@@ -11592,7 +11592,7 @@ Class: AbstractBVPFacade
   get_configuration_info(self) -> Dict[str, Any]
     File: ./bhlff/core/bvp/abstract_bvp_facade.py, Line: 242
   __repr__(self) -> str
-    File: ./bhlff/core/bvp/abstract_bvp_facade.py, Line: 260
+    File: ./bhlff/core/bvp/abstract_bvp_facade.py, Line: 314
 
 Class: ScaleSeparationPostulate
   __init__(self, domain, constants)
@@ -12870,23 +12870,23 @@ Class: BVPCoreOperations
   _setup_quench_detector(self) -> None
     File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 91
   _setup_impedance_calculator(self) -> None
-    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 95
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 100
   _setup_phase_operations(self) -> None
-    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 99
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 104
   _setup_parameter_access(self) -> None
-    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 103
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 108
   solve_envelope(self, source) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 115
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 120
   detect_quenches(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 153
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 158
   compute_impedance(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 178
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 195
   get_phase_vector(self) -> PhaseVector
-    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 205
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 222
   get_phase_operations(self) -> BVPPhaseOperations
-    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 219
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 236
   get_parameter_access(self) -> BVPParameterAccess
-    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 232
+    File: ./bhlff/core/bvp/bvp_core/bvp_operations.py, Line: 249
 
 Class: BVPCoreFacade
   __init__(self, domain, config, domain_7d)

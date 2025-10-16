@@ -2289,7 +2289,7 @@ IMPORTS_IN_MIDDLE: 638 issues
     Line 416
 
   ./bhlff/core/bvp/bvp_core/bvp_operations.py
-    Line 105
+    Line 110
 
   ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py
     Line 38

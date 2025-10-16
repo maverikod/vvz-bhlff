@@ -40,7 +40,7 @@ method_index:
     - args:
       - self
       file: ./bhlff/core/bvp/abstract_bvp_facade.py
-      line: 158
+      line: 260
       name: validate_configuration
       returns: bool
     - args:
@@ -70,7 +70,7 @@ method_index:
     - args:
       - self
       file: ./bhlff/core/bvp/abstract_bvp_facade.py
-      line: 260
+      line: 314
       name: __repr__
       returns: str
     AbstractLevelModels:
@@ -2040,58 +2040,58 @@ method_index:
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
-      line: 95
+      line: 100
       name: _setup_impedance_calculator
       returns: None
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
-      line: 99
+      line: 104
       name: _setup_phase_operations
       returns: None
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
-      line: 103
+      line: 108
       name: _setup_parameter_access
       returns: None
     - args:
       - self
       - source
       file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
-      line: 115
+      line: 120
       name: solve_envelope
       returns: np.ndarray
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
-      line: 153
+      line: 158
       name: detect_quenches
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
-      line: 178
+      line: 195
       name: compute_impedance
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
-      line: 205
+      line: 222
       name: get_phase_vector
       returns: PhaseVector
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
-      line: 219
+      line: 236
       name: get_phase_operations
       returns: BVPPhaseOperations
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
-      line: 232
+      line: 249
       name: get_parameter_access
       returns: BVPParameterAccess
     BVPCoreSolver:

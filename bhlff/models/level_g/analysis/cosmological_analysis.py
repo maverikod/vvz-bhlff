@@ -29,7 +29,7 @@ from ...base.model_base import ModelBase
 from .structure_analysis import StructureAnalysis
 from .parameter_analysis import ParameterAnalysis
 from .statistical_analysis import StatisticalAnalysis
-from .observational_comparison import ObservationalComparison
+from .observational_comparison import ObservationalComparisonCore
 
 
 class CosmologicalAnalysis(ModelBase):

@@ -22,13 +22,13 @@ Example:
 from .cosmological_analysis import CosmologicalAnalysis
 from .structure_analysis import StructureAnalysis
 from .parameter_analysis import ParameterAnalysis
-from .observational_comparison import ObservationalComparison
+from .observational_comparison import ObservationalComparisonCore
 from .statistical_analysis import StatisticalAnalysis
 
 __all__ = [
     'CosmologicalAnalysis',
     'StructureAnalysis',
     'ParameterAnalysis',
-    'ObservationalComparison',
+    'ObservationalComparisonCore',
     'StatisticalAnalysis'
 ]

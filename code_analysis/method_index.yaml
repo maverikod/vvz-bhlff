@@ -9241,6 +9241,159 @@ method_index:
       line: 401
       name: _analyze_mode_spacing
       returns: Dict[str, Any]
+    ConcreteModel:
+    - args:
+      - self
+      - data
+      file: ./tests/unit/test_base_models.py
+      line: 23
+      name: analyze
+      returns: null
+    - args:
+      - self
+      - field
+      file: ./tests/unit/test_base_models.py
+      line: 31
+      name: analyze_field
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 256
+      name: setup_method
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 272
+      name: test_initialization
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 55
+      name: test_analyze_method
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 142
+      name: test_validate_domain
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 149
+      name: test_get_domain_info
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 316
+      name: test_logging_methods
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 329
+      name: test_string_representations
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 111
+      name: test_abstract_model_cannot_be_instantiated
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 130
+      name: test_initialization_with_domain
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 136
+      name: test_initialization_without_domain
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 164
+      name: test_get_domain_info_no_domain
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 172
+      name: test_validate_array
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 290
+      name: test_validate_parameters
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 204
+      name: test_compute_statistics
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 222
+      name: test_compute_statistics_invalid_array
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 279
+      name: test_analyze_field_method
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 294
+      name: test_get_parameter
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 308
+      name: test_set_parameter
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 342
+      name: test_abstract_level_models_cannot_be_instantiated
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 351
+      name: test_model_inheritance_hierarchy
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 369
+      name: test_model_polymorphism
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 393
+      name: test_model_error_handling
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_base_models.py
+      line: 412
+      name: test_model_performance
+      returns: null
     ConcreteSolver:
     - args:
       - self
@@ -12171,7 +12324,7 @@ method_index:
       - time_end
       - dt
       file: ./bhlff/models/level_g/evolution/evolution_analysis.py
-      line: 59
+      line: 63
       name: analyze_cosmological_evolution
       returns: Dict[str, Any]
     - args:
@@ -12180,21 +12333,21 @@ method_index:
       - time_start
       - time_end
       file: ./bhlff/models/level_g/evolution/evolution_analysis.py
-      line: 95
+      line: 104
       name: _compute_structure_formation_rate
       returns: float
     - args:
       - self
       - evolution_results
       file: ./bhlff/models/level_g/evolution/evolution_analysis.py
-      line: 156
+      line: 167
       name: _analyze_parameter_evolution
       returns: Dict[str, Any]
     - args:
       - self
       - cosmological_params
       file: ./bhlff/models/level_g/evolution/evolution_analysis.py
-      line: 200
+      line: 213
       name: _compute_parameter_trends
       returns: Dict[str, float]
     ExcitationAnalyzer:
@@ -19119,90 +19272,62 @@ method_index:
       - observational_data
       - analysis_parameters
       file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-      line: 54
+      line: 60
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-      line: 71
+      line: 77
       name: compare_parameters
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-      line: 121
+      line: 127
       name: compare_structure_formation
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-      line: 161
+      line: 167
       name: _extract_formation_time_from_7d_field
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-      line: 166
+      line: 172
       name: _extract_observational_formation_time
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-      line: 170
+      line: 176
       name: _extract_theoretical_structure_scale
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-      line: 174
+      line: 180
       name: _extract_observational_structure_scale
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-      line: 178
+      line: 184
       name: _extract_hubble_parameter_from_7d_field
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-      line: 217
+      line: 223
       name: _extract_matter_density_from_7d_field
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-      line: 243
+      line: 249
       name: _extract_dark_energy_from_7d_field
-      returns: float
-    - args:
-      - self
-      - phase_field
-      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-      line: 269
-      name: _compute_scale_factor_from_phase_field
-      returns: np.ndarray
-    - args:
-      - self
-      - phase_field
-      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-      line: 301
-      name: _compute_matter_density_from_phase_field
-      returns: float
-    - args:
-      - self
-      - phase_field
-      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-      line: 334
-      name: _compute_dark_energy_from_phase_field
-      returns: float
-    - args:
-      - self
-      - phase_field
-      file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-      line: 369
-      name: _compute_curvature_from_phase_field
       returns: float
     ObservationalComparisonStatistics:
     - args:
@@ -21514,26 +21639,26 @@ method_index:
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 118
+      line: 120
       name: compute_order_parameters
       returns: Dict[str, float]
     - args:
       - self
       - phase_diagram
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 146
+      line: 148
       name: identify_critical_points
       returns: List[Dict[str, Any]]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 186
+      line: 188
       name: analyze_phase_stability
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 209
+      line: 213
       name: _setup_analysis_parameters
       returns: None
     - args:
@@ -21541,50 +21666,50 @@ method_index:
       - parameter
       - value
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 215
+      line: 219
       name: _update_system_parameter
       returns: None
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 232
+      line: 236
       name: _equilibrate_system
       returns: None
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 247
+      line: 261
       name: _analyze_system_state
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 274
+      line: 288
       name: _compute_topological_order
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 294
+      line: 308
       name: _compute_phase_coherence
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 316
+      line: 330
       name: _compute_spatial_order
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 342
+      line: 356
       name: _compute_energy_density
       returns: float
     - args:
       - self
       - phase_diagram
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 362
+      line: 376
       name: _find_discontinuities
       returns: List[Dict[str, Any]]
     - args:
@@ -21592,7 +21717,7 @@ method_index:
       - phase_diagram
       - discontinuities
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 395
+      line: 411
       name: _find_critical_points
       returns: List[Dict[str, Any]]
     - args:
@@ -21600,48 +21725,104 @@ method_index:
       - phase_diagram
       - critical_point
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 420
+      line: 438
       name: _compute_critical_exponents
       returns: Dict[str, float]
     - args:
       - self
       - state
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 441
+      line: 459
       name: _check_phase_stability
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 466
+      line: 484
       name: _analyze_phase_boundaries
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 483
+      line: 501
       name: _identify_stability_regions
       returns: Dict[str, Any]
     - args:
       - self
       - order_params
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 500
+      line: 518
       name: _classify_phase
       returns: str
     - args:
       - self
       - data
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 520
+      line: 538
       name: analyze
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 543
+      line: 561
       name: _step_resonator_phase_coherence
       returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
+      line: 597
+      name: _get_current_field_configuration
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
+      line: 620
+      name: _compute_field_evolution_gradient
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      - gradient
+      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
+      line: 645
+      name: _update_field_configuration
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
+      line: 668
+      name: _check_equilibration_convergence
+      returns: bool
+    - args:
+      - self
+      - particle
+      - grid_size
+      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
+      line: 691
+      name: _particle_to_grid_index
+      returns: tuple
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
+      line: 705
+      name: _compute_fractional_laplacian
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
+      line: 719
+      name: _compute_nonlinear_interaction
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
+      line: 724
+      name: _update_system_from_field
+      returns: None
     PhaseVector:
     - args:
       - self
@@ -25517,9 +25698,9 @@ method_index:
     ResourceManager:
     - args:
       - self
-      - resource_manager
+      - message
       file: ./bhlff/testing/automated_testing/resource_manager.py
-      line: 84
+      line: 106
       name: __init__
       returns: null
     - args:
@@ -27041,10 +27222,9 @@ method_index:
     SolitonOptimizer:
     - args:
       - self
-      - domain
-      - physics_params
+      - message
       file: ./bhlff/models/level_e/soliton_optimization.py
-      line: 32
+      line: 248
       name: __init__
       returns: null
     - args:
@@ -35216,6 +35396,79 @@ method_index:
       line: 290
       name: _create_mock_test_results
       returns: TestResults
+    TestEvolutionAnalysis:
+    - args:
+      - self
+      file: ./tests/unit/test_evolution_analysis.py
+      line: 21
+      name: setup_method
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_evolution_analysis.py
+      line: 34
+      name: test_initialization
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_evolution_analysis.py
+      line: 44
+      name: test_cosmological_evolution_analysis
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_evolution_analysis.py
+      line: 72
+      name: test_structure_formation_rate
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_evolution_analysis.py
+      line: 89
+      name: test_parameter_evolution_analysis
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_evolution_analysis.py
+      line: 106
+      name: test_parameter_trends_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_evolution_analysis.py
+      line: 120
+      name: test_edge_cases
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_evolution_analysis.py
+      line: 143
+      name: test_extreme_values
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_evolution_analysis.py
+      line: 172
+      name: test_analysis_consistency
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_evolution_analysis.py
+      line: 206
+      name: test_numerical_stability
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_evolution_analysis.py
+      line: 240
+      name: test_parameter_validation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_evolution_analysis.py
+      line: 258
+      name: test_memory_efficiency
+      returns: null
     TestFFTBackend:
     - args:
       - self
@@ -45642,6 +45895,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 6317
-    total_classes: 625
+    total_class_methods: 6358
+    total_classes: 627
     total_standalone_functions: 0

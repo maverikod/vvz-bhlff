@@ -47,6 +47,10 @@ issues:
     file: ./tests/unit/test_physics_validation_step_2_1_1.py
     limit: 400
     lines: 473
+  - exceeds_limit: 31
+    file: ./tests/unit/test_base_models.py
+    limit: 400
+    lines: 431
   - exceeds_limit: 60
     file: ./tests/unit/test_soliton_optimization_algorithms.py
     limit: 400
@@ -239,10 +243,10 @@ issues:
     file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
     limit: 400
     lines: 436
-  - exceeds_limit: 175
+  - exceeds_limit: 332
     file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
     limit: 400
-    lines: 575
+    lines: 732
   - exceeds_limit: 214
     file: ./bhlff/models/level_d/projections.py
     limit: 400
@@ -331,10 +335,6 @@ issues:
     file: ./bhlff/models/level_g/astrophysics/galactic_models.py
     limit: 400
     lines: 404
-  - exceeds_limit: 7
-    file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-    limit: 400
-    lines: 407
   - exceeds_limit: 3
     file: ./bhlff/testing/reporting/physics_interpreter.py
     limit: 400
@@ -501,6 +501,8 @@ issues:
     line: 33
   - file: ./tests/unit/test_physics_validation_step_2_1_1.py
     line: 168
+  - file: ./tests/unit/test_base_models.py
+    line: 422
   - file: ./tests/unit/test_soliton_optimization_algorithms.py
     line: 24
   - file: ./tests/unit/test_automated_testing.py
@@ -1183,6 +1185,10 @@ issues:
     line: 32
   - file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
     line: 31
+  - file: ./bhlff/models/level_g/analysis/observational_parameter_utils.py
+    line: 25
+  - file: ./bhlff/models/level_g/analysis/observational_comparison_core.py
+    line: 21
   - file: ./bhlff/models/level_g/analysis/statistical_analysis.py
     line: 28
   - file: ./bhlff/models/level_g/analysis/__init__.py
@@ -1194,7 +1200,7 @@ issues:
   - file: ./bhlff/models/level_g/analysis/structure_analysis.py
     line: 28
   - file: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-    line: 29
+    line: 30
   - file: ./bhlff/models/level_g/analysis/parameter_analysis.py
     line: 28
   - file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
@@ -2158,7 +2164,7 @@ summary:
   classes_without_docstrings: 10
   files_too_large: 95
   files_without_docstrings: 4
-  imports_in_middle: 635
+  imports_in_middle: 638
   methods_with_pass: 0
   methods_without_docstrings: 115
   not_implemented_in_non_abstract: 0

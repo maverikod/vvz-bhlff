@@ -830,6 +830,32 @@ Class: TestSolitonOptimizationCompliance
   test_complete_optimization_parameters(self, test_system, nonlinear_params)
     File: ./tests/unit/test_soliton_optimization_compliance.py, Line: 321
 
+Class: TestEvolutionAnalysis
+  setup_method(self)
+    File: ./tests/unit/test_evolution_analysis.py, Line: 21
+  test_initialization(self)
+    File: ./tests/unit/test_evolution_analysis.py, Line: 34
+  test_cosmological_evolution_analysis(self)
+    File: ./tests/unit/test_evolution_analysis.py, Line: 44
+  test_structure_formation_rate(self)
+    File: ./tests/unit/test_evolution_analysis.py, Line: 72
+  test_parameter_evolution_analysis(self)
+    File: ./tests/unit/test_evolution_analysis.py, Line: 89
+  test_parameter_trends_computation(self)
+    File: ./tests/unit/test_evolution_analysis.py, Line: 106
+  test_edge_cases(self)
+    File: ./tests/unit/test_evolution_analysis.py, Line: 120
+  test_extreme_values(self)
+    File: ./tests/unit/test_evolution_analysis.py, Line: 143
+  test_analysis_consistency(self)
+    File: ./tests/unit/test_evolution_analysis.py, Line: 172
+  test_numerical_stability(self)
+    File: ./tests/unit/test_evolution_analysis.py, Line: 206
+  test_parameter_validation(self)
+    File: ./tests/unit/test_evolution_analysis.py, Line: 240
+  test_memory_efficiency(self)
+    File: ./tests/unit/test_evolution_analysis.py, Line: 258
+
 Class: TestMLPrediction7DBVP
   setup_method(self)
     File: ./tests/unit/test_ml_prediction_7d_bvp.py, Line: 24
@@ -1035,6 +1061,58 @@ Class: TestPhysicsValidationStep2_1_1
     File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 401
   test_comprehensive_physics_validation(self)
     File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 419
+
+Class: ConcreteModel
+  analyze(self, data)
+    File: ./tests/unit/test_base_models.py, Line: 23
+  analyze_field(self, field)
+    File: ./tests/unit/test_base_models.py, Line: 31
+  setup_method(self)
+    File: ./tests/unit/test_base_models.py, Line: 256
+  test_initialization(self)
+    File: ./tests/unit/test_base_models.py, Line: 272
+  test_analyze_method(self)
+    File: ./tests/unit/test_base_models.py, Line: 55
+  test_validate_domain(self)
+    File: ./tests/unit/test_base_models.py, Line: 142
+  test_get_domain_info(self)
+    File: ./tests/unit/test_base_models.py, Line: 149
+  test_logging_methods(self)
+    File: ./tests/unit/test_base_models.py, Line: 316
+  test_string_representations(self)
+    File: ./tests/unit/test_base_models.py, Line: 329
+  test_abstract_model_cannot_be_instantiated(self)
+    File: ./tests/unit/test_base_models.py, Line: 111
+  test_initialization_with_domain(self)
+    File: ./tests/unit/test_base_models.py, Line: 130
+  test_initialization_without_domain(self)
+    File: ./tests/unit/test_base_models.py, Line: 136
+  test_get_domain_info_no_domain(self)
+    File: ./tests/unit/test_base_models.py, Line: 164
+  test_validate_array(self)
+    File: ./tests/unit/test_base_models.py, Line: 172
+  test_validate_parameters(self)
+    File: ./tests/unit/test_base_models.py, Line: 290
+  test_compute_statistics(self)
+    File: ./tests/unit/test_base_models.py, Line: 204
+  test_compute_statistics_invalid_array(self)
+    File: ./tests/unit/test_base_models.py, Line: 222
+  test_analyze_field_method(self)
+    File: ./tests/unit/test_base_models.py, Line: 279
+  test_get_parameter(self)
+    File: ./tests/unit/test_base_models.py, Line: 294
+  test_set_parameter(self)
+    File: ./tests/unit/test_base_models.py, Line: 308
+  test_abstract_level_models_cannot_be_instantiated(self)
+    File: ./tests/unit/test_base_models.py, Line: 342
+  test_model_inheritance_hierarchy(self)
+    File: ./tests/unit/test_base_models.py, Line: 351
+  test_model_polymorphism(self)
+    File: ./tests/unit/test_base_models.py, Line: 369
+  test_model_error_handling(self)
+    File: ./tests/unit/test_base_models.py, Line: 393
+  test_model_performance(self)
+    File: ./tests/unit/test_base_models.py, Line: 412
 
 Class: TestSolitonOptimizationAlgorithms
   setup_method(self)
@@ -7996,45 +8074,61 @@ Class: PhaseTransitions
   parameter_sweep(self, parameter, values) -> Dict[str, Any]
     File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 64
   compute_order_parameters(self) -> Dict[str, float]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 118
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 120
   identify_critical_points(self, phase_diagram) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 146
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 148
   analyze_phase_stability(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 186
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 188
   _setup_analysis_parameters(self) -> None
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 209
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 213
   _update_system_parameter(self, parameter, value) -> None
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 215
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 219
   _equilibrate_system(self) -> None
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 232
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 236
   _analyze_system_state(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 247
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 261
   _compute_topological_order(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 274
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 288
   _compute_phase_coherence(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 294
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 308
   _compute_spatial_order(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 316
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 330
   _compute_energy_density(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 342
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 356
   _find_discontinuities(self, phase_diagram) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 362
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 376
   _find_critical_points(self, phase_diagram, discontinuities) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 395
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 411
   _compute_critical_exponents(self, phase_diagram, critical_point) -> Dict[str, float]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 420
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 438
   _check_phase_stability(self, state) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 441
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 459
   _analyze_phase_boundaries(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 466
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 484
   _identify_stability_regions(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 483
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 501
   _classify_phase(self, order_params) -> str
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 500
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 518
   analyze(self, data) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 520
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 538
   _step_resonator_phase_coherence(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 543
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 561
+  _get_current_field_configuration(self) -> np.ndarray
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 597
+  _compute_field_evolution_gradient(self, field) -> np.ndarray
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 620
+  _update_field_configuration(self, field, gradient) -> None
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 645
+  _check_equilibration_convergence(self) -> bool
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 668
+  _particle_to_grid_index(self, particle, grid_size) -> tuple
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 691
+  _compute_fractional_laplacian(self, field) -> np.ndarray
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 705
+  _compute_nonlinear_interaction(self, field) -> np.ndarray
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 719
+  _update_system_from_field(self, field) -> None
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 724
 
 Class: LevelDModels
   __init__(self, domain, parameters)
@@ -8725,8 +8819,8 @@ Class: PhaseMapper
     File: ./bhlff/models/level_e/phase_mapping.py, Line: 271
 
 Class: SolitonOptimizer
-  __init__(self, domain, physics_params)
-    File: ./bhlff/models/level_e/soliton_optimization.py, Line: 32
+  __init__(self, message)
+    File: ./bhlff/models/level_e/soliton_optimization.py, Line: 248
   find_solution(self, initial_guess) -> np.ndarray
     File: ./bhlff/models/level_e/soliton_optimization.py, Line: 43
   _solve_stationary_equation(self, initial_guess) -> np.ndarray
@@ -10014,33 +10108,25 @@ Class: StructureAnalysis
 
 Class: ObservationalComparisonParameters
   __init__(self, evolution_results, observational_data, analysis_parameters)
-    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 54
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 60
   compare_parameters(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 71
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 77
   compare_structure_formation(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 121
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 127
   _extract_formation_time_from_7d_field(self) -> float
-    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 161
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 167
   _extract_observational_formation_time(self) -> float
-    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 166
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 172
   _extract_theoretical_structure_scale(self) -> float
-    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 170
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 176
   _extract_observational_structure_scale(self) -> float
-    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 174
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 180
   _extract_hubble_parameter_from_7d_field(self) -> float
-    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 178
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 184
   _extract_matter_density_from_7d_field(self) -> float
-    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 217
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 223
   _extract_dark_energy_from_7d_field(self) -> float
-    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 243
-  _compute_scale_factor_from_phase_field(self, phase_field) -> np.ndarray
-    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 269
-  _compute_matter_density_from_phase_field(self, phase_field) -> float
-    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 301
-  _compute_dark_energy_from_phase_field(self, phase_field) -> float
-    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 334
-  _compute_curvature_from_phase_field(self, phase_field) -> float
-    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 369
+    File: ./bhlff/models/level_g/analysis/observational_comparison_parameters.py, Line: 249
 
 Class: ParameterAnalysis
   __init__(self, evolution_results, analysis_parameters)
@@ -10246,13 +10332,13 @@ Class: EvolutionAnalysis
   __init__(self)
     File: ./bhlff/models/level_g/evolution/evolution_analysis.py, Line: 49
   analyze_cosmological_evolution(self, evolution_results, time_start, time_end, dt) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/evolution/evolution_analysis.py, Line: 59
+    File: ./bhlff/models/level_g/evolution/evolution_analysis.py, Line: 63
   _compute_structure_formation_rate(self, evolution_results, time_start, time_end) -> float
-    File: ./bhlff/models/level_g/evolution/evolution_analysis.py, Line: 95
+    File: ./bhlff/models/level_g/evolution/evolution_analysis.py, Line: 104
   _analyze_parameter_evolution(self, evolution_results) -> Dict[str, Any]
-    File: ./bhlff/models/level_g/evolution/evolution_analysis.py, Line: 156
+    File: ./bhlff/models/level_g/evolution/evolution_analysis.py, Line: 167
   _compute_parameter_trends(self, cosmological_params) -> Dict[str, float]
-    File: ./bhlff/models/level_g/evolution/evolution_analysis.py, Line: 200
+    File: ./bhlff/models/level_g/evolution/evolution_analysis.py, Line: 213
 
 Class: StructureFormation
   __init__(self, cosmology_params)
@@ -10737,8 +10823,8 @@ Class: TestScheduler
     File: ./bhlff/testing/automated_testing/test_scheduler.py, Line: 91
 
 Class: ResourceManager
-  __init__(self, resource_manager)
-    File: ./bhlff/testing/automated_testing/resource_manager.py, Line: 84
+  __init__(self, message)
+    File: ./bhlff/testing/automated_testing/resource_manager.py, Line: 106
   _parse_memory_limit(self, memory_limit) -> int
     File: ./bhlff/testing/automated_testing/resource_manager.py, Line: 66
   get_execution_context(self)

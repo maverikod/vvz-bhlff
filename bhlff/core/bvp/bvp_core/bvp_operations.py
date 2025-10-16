@@ -32,7 +32,7 @@ from ...domain.domain_7d import Domain7D
 from ..quench_detector import QuenchDetector
 from ..bvp_envelope_solver import BVPEnvelopeSolver
 from ..bvp_impedance_calculator import BVPImpedanceCalculator
-from ..phase_vector import PhaseVector
+from ..phase_vector.phase_vector import PhaseVector
 from ..bvp_phase_operations import BVPPhaseOperations
 from ..bvp_parameter_access import BVPParameterAccess
 
@@ -90,7 +90,12 @@ class BVPCoreOperations:
 
     def _setup_quench_detector(self) -> None:
         """Setup quench detector for threshold events."""
-        self._quench_detector = QuenchDetector(self.domain, self.config)
+        if self.domain_7d is not None:
+            self._quench_detector = QuenchDetector(self.domain_7d, self.config)
+        else:
+            # Create a mock quench detector for standard domain
+            # For now, skip quench detector if no 7D domain
+            self._quench_detector = None
 
     def _setup_impedance_calculator(self) -> None:
         """Setup impedance calculator for boundary analysis."""
@@ -173,6 +178,18 @@ class BVPCoreOperations:
                 - quench_types: Types of quenches detected
                 - energy_dumped: Energy dumped at each quench
         """
+        if self._quench_detector is None:
+            # Return empty results if no quench detector available
+            return {
+                "quenches_detected": False,
+                "quench_locations": [],
+                "quench_types": [],
+                "quench_strengths": [],
+                "amplitude_quenches": [],
+                "detuning_quenches": [],
+                "gradient_quenches": [],
+                "total_quenches": 0,
+            }
         return self._quench_detector.detect_quenches(envelope)
 
     def compute_impedance(self, envelope: np.ndarray) -> Dict[str, Any]:

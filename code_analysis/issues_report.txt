@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 859
+Total issues found: 862
 
 METHODS_WITHOUT_DOCSTRINGS: 115 issues
 ----------------------------------------
@@ -549,7 +549,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 10 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 635 issues
+IMPORTS_IN_MIDDLE: 638 issues
 ----------------------------------------
   ./setup.py
     Line 28
@@ -670,6 +670,9 @@ IMPORTS_IN_MIDDLE: 635 issues
 
   ./tests/unit/test_physics_validation_step_2_1_1.py
     Line 168
+
+  ./tests/unit/test_base_models.py
+    Line 422
 
   ./tests/unit/test_soliton_optimization_algorithms.py
     Line 24
@@ -1694,6 +1697,12 @@ IMPORTS_IN_MIDDLE: 635 issues
   ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
     Line 31
 
+  ./bhlff/models/level_g/analysis/observational_parameter_utils.py
+    Line 25
+
+  ./bhlff/models/level_g/analysis/observational_comparison_core.py
+    Line 21
+
   ./bhlff/models/level_g/analysis/statistical_analysis.py
     Line 28
 
@@ -1710,7 +1719,7 @@ IMPORTS_IN_MIDDLE: 635 issues
     Line 28
 
   ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
-    Line 29
+    Line 30
 
   ./bhlff/models/level_g/analysis/parameter_analysis.py
     Line 28
@@ -2467,6 +2476,8 @@ FILES_TOO_LARGE: 95 issues
 
   ./tests/unit/test_physics_validation_step_2_1_1.py
 
+  ./tests/unit/test_base_models.py
+
   ./tests/unit/test_soliton_optimization_algorithms.py
 
   ./tests/unit/test_models/test_level_e/test_time_stability_full.py
@@ -2608,8 +2619,6 @@ FILES_TOO_LARGE: 95 issues
   ./bhlff/models/level_g/gravity_einstein.py
 
   ./bhlff/models/level_g/astrophysics/galactic_models.py
-
-  ./bhlff/models/level_g/analysis/observational_comparison_parameters.py
 
   ./bhlff/testing/reporting/physics_interpreter.py
 

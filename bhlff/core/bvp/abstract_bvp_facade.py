@@ -257,6 +257,60 @@ class AbstractBVPFacade(ABC):
             "has_carrier_frequency": "carrier_frequency" in self.config,
         }
 
+    def validate_configuration(self) -> bool:
+        """
+        Validate BVP configuration parameters.
+        
+        Physical Meaning:
+            Validates that all required configuration parameters
+            are present and have valid values for BVP operations.
+            
+        Returns:
+            bool: True if configuration is valid, False otherwise.
+        """
+        # Check if envelope_equation is present
+        if "envelope_equation" not in self.config:
+            return False
+            
+        # Check if carrier_frequency is present
+        if "carrier_frequency" not in self.config:
+            return False
+            
+        # Get envelope equation config
+        envelope_config = self.config.get("envelope_equation", {})
+        
+        # Check if envelope equation config is a dictionary
+        if not isinstance(envelope_config, dict):
+            return False
+            
+        # Check if all required envelope parameters are present
+        required_envelope_keys = [
+            "kappa_0",
+            "kappa_2", 
+            "chi_prime",
+            "chi_double_prime_0",
+            "k0_squared"
+        ]
+        
+        for key in required_envelope_keys:
+            if key not in envelope_config:
+                return False
+                
+        # Check if values are valid
+        try:
+            if self.config["carrier_frequency"] <= 0:
+                return False
+            if envelope_config["kappa_0"] <= 0:
+                return False
+            if envelope_config["kappa_2"] < 0:
+                return False
+            if envelope_config["k0_squared"] <= 0:
+                return False
+        except (TypeError, ValueError):
+            return False
+            
+        return True
+
     def __repr__(self) -> str:
         """String representation of BVP facade."""
         return (

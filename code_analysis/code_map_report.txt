@@ -12,7 +12,7 @@ Total classes: 741
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 6512
+Total functions: 6518
 
 ISSUES SUMMARY:
 ----------------------------------------

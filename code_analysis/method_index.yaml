@@ -3972,6 +3972,22 @@ method_index:
       line: 218
       name: get_carrier_info
       returns: Dict[str, Any]
+    - args:
+      - self
+      - r_squared
+      - width
+      file: ./bhlff/core/sources/bvp_source_envelope.py
+      line: 238
+      name: _step_resonator_envelope
+      returns: np.ndarray
+    - args:
+      - self
+      - r
+      - decay_rate
+      file: ./bhlff/core/sources/bvp_source_envelope.py
+      line: 249
+      name: _step_resonator_decay
+      returns: np.ndarray
     BVPSourceGenerators:
     - args:
       - self
@@ -4019,6 +4035,14 @@ method_index:
       line: 229
       name: get_source_info
       returns: Dict[str, Any]
+    - args:
+      - self
+      - r_squared
+      - width
+      file: ./bhlff/core/sources/bvp_source_generators.py
+      line: 267
+      name: _step_resonator_source
+      returns: np.ndarray
     BVPVectorizedProcessor:
     - args:
       - self
@@ -22661,7 +22685,7 @@ method_index:
       - domain
       - pinning_params
       file: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py
-      line: 117
+      line: 107
       name: _create_pinning_potential
       returns: np.ndarray
     - args:
@@ -22672,8 +22696,19 @@ method_index:
       - pinning_center
       - pinning_width
       file: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py
-      line: 158
+      line: 148
       name: _step_resonator_pinning_potential
+      returns: np.ndarray
+    - args:
+      - self
+      - X
+      - Y
+      - Z
+      - center
+      - sigma
+      file: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py
+      line: 165
+      name: _step_resonator_mode_profile
       returns: np.ndarray
     PinnedFieldEvolution:
     - args:
@@ -27699,6 +27734,13 @@ method_index:
       line: 239
       name: _compute_wzw_gradient
       returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_e/soliton_optimization.py
+      line: 258
+      name: _step_resonator_potential_7d
+      returns: np.ndarray
     SolitonStabilityAnalyzer:
     - args:
       - self
@@ -27801,6 +27843,13 @@ method_index:
       line: 247
       name: _is_rotational_mode
       returns: bool
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_e/soliton_stability.py
+      line: 270
+      name: _step_resonator_potential_7d
+      returns: np.ndarray
     SolverAdaptive:
     - args:
       - self
@@ -46264,6 +46313,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 6406
+    total_class_methods: 6412
     total_classes: 631
     total_standalone_functions: 0

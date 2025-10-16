@@ -5412,9 +5412,11 @@ Class: PinnedFieldCreator
   create_pinned_dual_mode_field(self, domain, dual_mode, pinning_params) -> np.ndarray
     File: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py, Line: 44
   _create_pinning_potential(self, domain, pinning_params) -> np.ndarray
-    File: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py, Line: 117
+    File: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py, Line: 107
   _step_resonator_pinning_potential(self, X, Y, Z, pinning_center, pinning_width) -> np.ndarray
-    File: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py, Line: 158
+    File: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py, Line: 148
+  _step_resonator_mode_profile(self, X, Y, Z, center, sigma) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py, Line: 165
 
 Class: BeatingCoreBasic
   __init__(self, bvp_core)
@@ -7799,6 +7801,8 @@ Class: SolitonStabilityAnalyzer
     File: ./bhlff/models/level_e/soliton_stability.py, Line: 224
   _is_rotational_mode(self, eigenvector) -> bool
     File: ./bhlff/models/level_e/soliton_stability.py, Line: 247
+  _step_resonator_potential_7d(self, field) -> np.ndarray
+    File: ./bhlff/models/level_e/soliton_stability.py, Line: 270
 
 Class: SolitonBindingAnalyzer
   __init__(self, system, nonlinear_params)
@@ -8843,6 +8847,8 @@ Class: SolitonOptimizer
     File: ./bhlff/models/level_e/soliton_optimization.py, Line: 234
   _compute_wzw_gradient(self, field) -> np.ndarray
     File: ./bhlff/models/level_e/soliton_optimization.py, Line: 239
+  _step_resonator_potential_7d(self, field) -> np.ndarray
+    File: ./bhlff/models/level_e/soliton_optimization.py, Line: 258
 
 Class: SolitonEnergyCalculator
   __init__(self, domain, physics_params)
@@ -13519,6 +13525,10 @@ Class: BVPSourceEnvelope
     File: ./bhlff/core/sources/bvp_source_envelope.py, Line: 200
   get_carrier_info(self) -> Dict[str, Any]
     File: ./bhlff/core/sources/bvp_source_envelope.py, Line: 218
+  _step_resonator_envelope(self, r_squared, width) -> np.ndarray
+    File: ./bhlff/core/sources/bvp_source_envelope.py, Line: 238
+  _step_resonator_decay(self, r, decay_rate) -> np.ndarray
+    File: ./bhlff/core/sources/bvp_source_envelope.py, Line: 249
 
 Class: BVPSourceGenerators
   __init__(self, domain, config) -> None
@@ -13535,6 +13545,8 @@ Class: BVPSourceGenerators
     File: ./bhlff/core/sources/bvp_source_generators.py, Line: 217
   get_source_info(self, source_type) -> Dict[str, Any]
     File: ./bhlff/core/sources/bvp_source_generators.py, Line: 229
+  _step_resonator_source(self, r_squared, width) -> np.ndarray
+    File: ./bhlff/core/sources/bvp_source_generators.py, Line: 267
 
 Class: BVPSource
   __init__(self, domain, config) -> None

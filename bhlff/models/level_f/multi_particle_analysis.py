@@ -180,7 +180,7 @@ class MultiParticleSystemAnalyzer:
         kinetic_energy = 0.0
         
         for particle in self.particles:
-            kinetic_energy += 0.5 * particle.mass * np.linalg.norm(particle.velocity) ** 2
+            kinetic_energy += 0.5 * particle.energy * np.linalg.norm(particle.velocity) ** 2
         
         return kinetic_energy
     

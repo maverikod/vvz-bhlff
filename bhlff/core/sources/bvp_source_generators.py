@@ -94,8 +94,8 @@ class BVPSourceGenerators:
         dz = Z - center[2]
         r_squared = dx**2 + dy**2 + dz**2
 
-        # Generate Gaussian source
-        source = amplitude * np.exp(-r_squared / (2 * width**2))
+        # Generate step resonator source
+        source = amplitude * self._step_resonator_source(r_squared, width)
 
         return source
 
@@ -263,3 +263,14 @@ class BVPSourceGenerators:
         }
 
         return source_info.get(source_type, {})
+    
+    def _step_resonator_source(self, r_squared: np.ndarray, width: float) -> np.ndarray:
+        """
+        Step resonator source according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function source instead of exponential decay
+            according to 7D BVP theory principles.
+        """
+        cutoff_radius_squared = (width * 2.0) ** 2  # 2-sigma cutoff
+        return np.where(r_squared < cutoff_radius_squared, 1.0, 0.0)

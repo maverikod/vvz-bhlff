@@ -80,24 +80,14 @@ class PinnedFieldCreator:
         center = np.array([L / 2, L / 2, L / 2])
         sigma = L / 8
         
-        # First mode profile
-        profile_1 = np.exp(
-            -(
-                (X - center[0]) ** 2
-                + (Y - center[1]) ** 2
-                + (Z - center[2]) ** 2
-            )
-            / (2 * sigma ** 2)
+        # First mode profile using step resonator model
+        profile_1 = self._step_resonator_mode_profile(
+            X, Y, Z, center, sigma
         )
         
-        # Second mode profile
-        profile_2 = np.exp(
-            -(
-                (X - center[0] - L / 4) ** 2
-                + (Y - center[1]) ** 2
-                + (Z - center[2]) ** 2
-            )
-            / (2 * sigma ** 2)
+        # Second mode profile using step resonator model
+        profile_2 = self._step_resonator_mode_profile(
+            X - L / 4, Y, Z, center, sigma
         )
         
         # Create pinning potential
@@ -170,4 +160,21 @@ class PinnedFieldCreator:
             + (Z - pinning_center[2]) ** 2
         )
         cutoff_radius_squared = (pinning_width * 0.8) ** 2  # 80% of pinning width
+        return np.where(distance_squared < cutoff_radius_squared, 1.0, 0.0)
+    
+    def _step_resonator_mode_profile(self, X: np.ndarray, Y: np.ndarray, Z: np.ndarray, 
+                                   center: np.ndarray, sigma: float) -> np.ndarray:
+        """
+        Step resonator mode profile according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function mode profile instead of exponential decay
+            according to 7D BVP theory principles.
+        """
+        distance_squared = (
+            (X - center[0]) ** 2
+            + (Y - center[1]) ** 2
+            + (Z - center[2]) ** 2
+        )
+        cutoff_radius_squared = (sigma * 2.0) ** 2  # 2-sigma cutoff
         return np.where(distance_squared < cutoff_radius_squared, 1.0, 0.0)

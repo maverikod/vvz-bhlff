@@ -105,7 +105,7 @@ class BVPSourceEnvelope:
             dz = Z - center[2]
             r_squared = dx**2 + dy**2 + dz**2
 
-            envelope = self.envelope_amplitude * np.exp(-r_squared / (2 * width**2))
+            envelope = self.envelope_amplitude * self._step_resonator_envelope(r_squared, width)
 
         elif envelope_type == "sine":
             # Sine wave envelope
@@ -127,7 +127,7 @@ class BVPSourceEnvelope:
             dz = Z - center[2]
             r = np.sqrt(dx**2 + dy**2 + dz**2)
 
-            envelope = self.envelope_amplitude * np.exp(-decay_rate * r)
+            envelope = self.envelope_amplitude * self._step_resonator_decay(r, decay_rate)
 
         else:
             # Default to constant envelope
@@ -234,3 +234,25 @@ class BVPSourceEnvelope:
                 2 * np.pi / self.carrier_frequency if self.carrier_frequency > 0 else 0
             ),
         }
+    
+    def _step_resonator_envelope(self, r_squared: np.ndarray, width: float) -> np.ndarray:
+        """
+        Step resonator envelope according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function envelope instead of exponential decay
+            according to 7D BVP theory principles.
+        """
+        cutoff_radius_squared = (width * 2.0) ** 2  # 2-sigma cutoff
+        return np.where(r_squared < cutoff_radius_squared, 1.0, 0.0)
+    
+    def _step_resonator_decay(self, r: np.ndarray, decay_rate: float) -> np.ndarray:
+        """
+        Step resonator decay according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function decay instead of exponential decay
+            according to 7D BVP theory principles.
+        """
+        cutoff_radius = 1.0 / decay_rate  # Inverse decay rate cutoff
+        return np.where(r < cutoff_radius, 1.0, 0.0)

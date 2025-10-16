@@ -164,6 +164,33 @@ class FFTSolver7DBasic:
         """
         return self.spectral_coefficients
 
+    def get_info(self) -> Dict[str, Any]:
+        """
+        Get solver information.
+        
+        Physical Meaning:
+            Returns comprehensive information about the solver
+            configuration and parameters for debugging and analysis.
+            
+        Returns:
+            Dict[str, Any]: Solver information including domain,
+            parameters, and spectral configuration.
+        """
+        return {
+            'domain_shape': self.domain.shape,
+            'domain_size': self.domain.size,
+            'mu': getattr(self.parameters, 'mu', 1.0),
+            'beta': getattr(self.parameters, 'beta', 1.0),
+            'lambda_param': getattr(self.parameters, 'lambda_param', 0.0),
+            'precision': getattr(self.parameters, 'precision', 'float64'),
+            'tolerance': getattr(self.parameters, 'tolerance', 1e-12),
+            'spectral_coefficients_shape': self.spectral_coefficients.shape,
+            'spectral_coefficients_min': np.min(self.spectral_coefficients),
+            'spectral_coefficients_max': np.max(self.spectral_coefficients),
+            'solver_type': 'FFTSolver7DBasic',
+            'fractional_laplacian_beta': self.fractional_laplacian.get_fractional_order()
+        }
+
     def solve_envelope(self, source: np.ndarray) -> np.ndarray:
         """
         Solve the envelope equation.

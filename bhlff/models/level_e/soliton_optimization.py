@@ -179,26 +179,26 @@ class SolitonOptimizer:
         """
         # Full 7D phase field energy calculation for optimization
         # Based on 7D phase field theory energy functional
-        
+
         # Compute 7D phase field energy density
         field_energy_density = np.sum(np.abs(field) ** 2)
-        
+
         # Compute 7D phase field gradient energy
         grad_x = np.gradient(field, axis=0)
         grad_y = np.gradient(field, axis=1)
         grad_z = np.gradient(field, axis=2)
         gradient_energy = np.sum(grad_x**2 + grad_y**2 + grad_z**2)
-        
+
         # Compute 7D phase field potential energy
         potential_energy = np.sum(field**4)  # Quartic potential
-        
+
         # Total energy with 7D phase field corrections
         total_energy = field_energy_density + gradient_energy + potential_energy
-        
+
         # Apply 7D phase field corrections
         phase_correction = 1.0 + 0.1 * np.sin(np.sum(field))
         total_energy *= phase_correction
-        
+
         return total_energy
 
     def _update_with_line_search(
@@ -245,4 +245,12 @@ class SolitonOptimizer:
 class ConvergenceError(Exception):
     """Exception raised when soliton finding fails to converge."""
 
-    pass
+    def __init__(self, message: str = "Soliton optimization failed to converge"):
+        """
+        Initialize convergence error.
+
+        Args:
+            message (str): Error message describing the convergence failure.
+        """
+        self.message = message
+        super().__init__(self.message)

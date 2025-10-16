@@ -27,6 +27,12 @@ Example:
 
 import numpy as np
 from typing import Dict, Any
+from .observational_parameter_utils import (
+    compute_scale_factor_from_phase_field,
+    compute_matter_density_from_phase_field,
+    compute_dark_energy_from_phase_field,
+    compute_curvature_from_phase_field,
+)
 
 
 class ObservationalComparisonParameters:
@@ -198,7 +204,7 @@ class ObservationalComparisonParameters:
             return 70.0  # Default value
         
         # Compute scale factor from phase field
-        scale_factor = self._compute_scale_factor_from_phase_field(phase_field)
+        scale_factor = compute_scale_factor_from_phase_field(phase_field)
         
         # Compute Hubble parameter
         if len(scale_factor) > 1 and len(time_evolution) > 1:
@@ -236,7 +242,7 @@ class ObservationalComparisonParameters:
             return 0.3  # Default value
         
         # Compute matter density from phase field
-        matter_density = self._compute_matter_density_from_phase_field(phase_field)
+        matter_density = compute_matter_density_from_phase_field(phase_field)
         
         return float(matter_density)
 
@@ -262,146 +268,14 @@ class ObservationalComparisonParameters:
             return 0.7  # Default value
         
         # Compute dark energy from phase field
-        dark_energy = self._compute_dark_energy_from_phase_field(phase_field)
+        dark_energy = compute_dark_energy_from_phase_field(phase_field)
         
         return float(dark_energy)
     
-    def _compute_scale_factor_from_phase_field(self, phase_field: np.ndarray) -> np.ndarray:
-        """
-        Compute scale factor from phase field.
-        
-        Physical Meaning:
-            Computes cosmological scale factor from 7D phase field
-            evolution using BVP theory.
-            
-        Mathematical Foundation:
-            a(t) = exp(∫ H(t) dt) where H is Hubble parameter
-            extracted from phase field evolution.
-            
-        Args:
-            phase_field: Phase field evolution data
-            
-        Returns:
-            Scale factor evolution
-        """
-        if len(phase_field) == 0:
-            return np.array([1.0])
-        
-        # Compute phase field amplitude evolution
-        if phase_field.ndim > 1:
-            amplitude_evolution = np.mean(np.abs(phase_field), axis=tuple(range(1, phase_field.ndim)))
-        else:
-            amplitude_evolution = np.abs(phase_field)
-        
-        # Normalize to get scale factor
-        scale_factor = amplitude_evolution / np.max(amplitude_evolution)
-        
-        return scale_factor
+    # Delegated to utils: compute_scale_factor_from_phase_field
     
-    def _compute_matter_density_from_phase_field(self, phase_field: np.ndarray) -> float:
-        """
-        Compute matter density from phase field.
-        
-        Physical Meaning:
-            Computes matter density parameter from 7D phase field
-            using BVP theory principles.
-            
-        Mathematical Foundation:
-            Ω_m = (8πG/3H²)ρ_m where ρ_m is extracted from
-            phase field density fluctuations.
-            
-        Args:
-            phase_field: Phase field data
-            
-        Returns:
-            Matter density parameter
-        """
-        if len(phase_field) == 0:
-            return 0.3
-        
-        # Compute density fluctuations
-        mean_density = np.mean(phase_field)
-        density_contrast = (phase_field - mean_density) / mean_density
-        
-        # Compute matter density from fluctuations
-        matter_density = np.mean(density_contrast ** 2)  # Variance as proxy
-        
-        # Normalize to reasonable range
-        matter_density = np.clip(matter_density, 0.1, 0.5)
-        
-        return float(matter_density)
+    # Delegated to utils: compute_matter_density_from_phase_field
     
-    def _compute_dark_energy_from_phase_field(self, phase_field: np.ndarray) -> float:
-        """
-        Compute dark energy from phase field.
-        
-        Physical Meaning:
-            Computes dark energy parameter from 7D phase field
-            using BVP theory principles.
-            
-        Mathematical Foundation:
-            Ω_Λ = 1 - Ω_m - Ω_k where Ω_k is curvature parameter
-            extracted from phase field geometry.
-            
-        Args:
-            phase_field: Phase field data
-            
-        Returns:
-            Dark energy parameter
-        """
-        if len(phase_field) == 0:
-            return 0.7
-        
-        # Compute matter density first
-        matter_density = self._compute_matter_density_from_phase_field(phase_field)
-        
-        # Compute curvature from phase field geometry
-        curvature = self._compute_curvature_from_phase_field(phase_field)
-        
-        # Dark energy = 1 - matter - curvature
-        dark_energy = 1.0 - matter_density - curvature
-        
-        # Ensure positive value
-        dark_energy = max(0.1, dark_energy)
-        
-        return float(dark_energy)
+    # Delegated to utils: compute_dark_energy_from_phase_field
     
-    def _compute_curvature_from_phase_field(self, phase_field: np.ndarray) -> float:
-        """
-        Compute curvature from phase field geometry.
-        
-        Physical Meaning:
-            Computes spatial curvature from 7D phase field
-            geometry using BVP theory.
-            
-        Mathematical Foundation:
-            K = R/6 where R is Ricci scalar
-            computed from phase field metric.
-            
-        Args:
-            phase_field: Phase field data
-            
-        Returns:
-            Curvature parameter
-        """
-        if len(phase_field) == 0:
-            return 0.0
-        
-        # Compute spatial gradients
-        if phase_field.ndim > 1:
-            # Compute spatial derivatives
-            grad_x = np.gradient(phase_field, axis=0)
-            if phase_field.ndim > 2:
-                grad_y = np.gradient(phase_field, axis=1)
-                grad_z = np.gradient(phase_field, axis=2)
-                # Compute curvature from gradients
-                curvature = np.mean(grad_x**2 + grad_y**2 + grad_z**2)
-            else:
-                curvature = np.mean(grad_x**2)
-        else:
-            curvature = 0.0
-        
-        # Normalize to reasonable range
-        curvature = np.clip(curvature, 0.0, 0.1)
-        
-        return float(curvature)
+    # Delegated to utils: compute_curvature_from_phase_field

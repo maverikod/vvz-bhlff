@@ -103,4 +103,12 @@ class ResourceContext:
 class ResourceLimitError(Exception):
     """Exception for resource limit violations."""
 
-    pass
+    def __init__(self, message: str = "Resource limit exceeded"):
+        """
+        Initialize resource limit error.
+        
+        Args:
+            message (str): Error message describing the resource limit violation.
+        """
+        self.message = message
+        super().__init__(self.message)

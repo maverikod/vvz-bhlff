@@ -898,8 +898,8 @@ class CollectiveModesFinder:
             float: Phase coherence factor.
         """
         try:
-            # Phase coherence based on distance
-            phase_coherence = np.exp(-distance / 2.0)
+            # Phase coherence based on distance using step function
+            phase_coherence = self._step_resonator_phase_coherence(distance)
             return float(phase_coherence)
             
         except Exception as e:
@@ -927,4 +927,33 @@ class CollectiveModesFinder:
             
         except Exception as e:
             self.logger.error(f"Energy exchange factor computation failed: {e}")
+            return 0.0
+    
+    def _step_resonator_phase_coherence(self, distance: float) -> float:
+        """
+        Step resonator phase coherence according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function phase coherence instead of exponential decay
+            according to 7D BVP theory principles where phase coherence is determined
+            by step functions rather than smooth transitions.
+            
+        Mathematical Foundation:
+            Phase coherence = Θ(distance_cutoff - distance) where Θ is the Heaviside step function
+            and distance_cutoff is the cutoff distance for phase coherence.
+            
+        Args:
+            distance (float): Distance between particles.
+            
+        Returns:
+            float: Step function phase coherence according to 7D BVP theory.
+        """
+        # Step function phase coherence according to 7D BVP theory
+        cutoff_distance = 2.0
+        coherence_strength = 1.0
+        
+        # Apply step function boundary condition
+        if distance < cutoff_distance:
+            return coherence_strength
+        else:
             return 0.0

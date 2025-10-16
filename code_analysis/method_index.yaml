@@ -1700,13 +1700,13 @@ method_index:
       - block_size
       - overlap
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 54
+      line: 55
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 81
+      line: 85
       name: _setup_cuda_bvp_parameters
       returns: None
     - args:
@@ -1715,7 +1715,7 @@ method_index:
       - max_iterations
       - tolerance
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 100
+      line: 104
       name: solve_envelope_cuda_blocked
       returns: np.ndarray
     - args:
@@ -1724,7 +1724,7 @@ method_index:
       - max_iterations
       - tolerance
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 169
+      line: 173
       name: _solve_envelope_cpu_fallback
       returns: np.ndarray
     - args:
@@ -1732,7 +1732,7 @@ method_index:
       - source_gpu
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 177
+      line: 181
       name: _extract_source_block_cuda
       returns: cp.ndarray
     - args:
@@ -1741,7 +1741,7 @@ method_index:
       - source_block
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 185
+      line: 189
       name: _solve_block_bvp_cuda
       returns: cp.ndarray
     - args:
@@ -1749,7 +1749,7 @@ method_index:
       - block_data
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 221
+      line: 225
       name: _compute_block_stiffness_cuda
       returns: cp.ndarray
     - args:
@@ -1757,7 +1757,7 @@ method_index:
       - block_data
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 232
+      line: 236
       name: _compute_block_susceptibility_cuda
       returns: cp.ndarray
     - args:
@@ -1766,7 +1766,7 @@ method_index:
       - rhs
       - initial_guess
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 243
+      line: 247
       name: _solve_block_iterative_cuda
       returns: cp.ndarray
     - args:
@@ -1775,21 +1775,21 @@ method_index:
       - new_solution
       - tolerance
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 263
+      line: 267
       name: _check_convergence_cuda
       returns: bool
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 272
+      line: 276
       name: detect_quenches_cuda_blocked
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 321
+      line: 325
       name: _detect_quenches_cpu_fallback
       returns: Dict[str, Any]
     - args:
@@ -1797,7 +1797,7 @@ method_index:
       - envelope_gpu
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 328
+      line: 332
       name: _extract_envelope_block_cuda
       returns: cp.ndarray
     - args:
@@ -1805,21 +1805,21 @@ method_index:
       - envelope_block
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 336
+      line: 340
       name: _detect_block_quenches_cuda
       returns: List[Dict[str, Any]]
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 366
+      line: 370
       name: compute_impedance_cuda_blocked
       returns: np.ndarray
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 414
+      line: 418
       name: _compute_impedance_cpu_fallback
       returns: np.ndarray
     - args:
@@ -1827,13 +1827,13 @@ method_index:
       - envelope_block
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 421
+      line: 425
       name: _compute_block_impedance_cuda
       returns: cp.ndarray
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-      line: 432
+      line: 436
       name: get_cuda_bvp_info
       returns: Dict[str, Any]
     BVPConstants:
@@ -2382,6 +2382,81 @@ method_index:
       file: ./bhlff/core/fft/bvp_basic/bvp_basic_core.py
       line: 369
       name: _check_7d_structure
+      returns: bool
+    BVPCudaBlockProcessorHelpers:
+    - args:
+      - self
+      - config
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py
+      line: 41
+      name: __init__
+      returns: null
+    - args:
+      - self
+      - block_data
+      - block_info
+      - stiffness
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py
+      line: 50
+      name: compute_full_stiffness_matrix_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - block_data
+      - block_info
+      - susceptibility
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py
+      line: 100
+      name: compute_full_susceptibility_matrix_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - i
+      - j
+      - block_shape
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py
+      line: 150
+      name: _compute_spatial_distance_cuda
+      returns: float
+    - args:
+      - self
+      - spatial_distance
+      - stiffness
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py
+      line: 161
+      name: _compute_7d_bvp_coupling_cuda
+      returns: complex
+    - args:
+      - self
+      - block_info
+      - block_shape
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py
+      line: 178
+      name: _apply_7d_bvp_boundary_conditions_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - field_i
+      - field_j
+      - susceptibility
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py
+      line: 204
+      name: _compute_7d_bvp_amplitude_coupling_cuda
+      returns: complex
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py
+      line: 222
+      name: _apply_7d_bvp_phase_coupling_cuda
+      returns: cp.ndarray
+    - args:
+      - self
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py
+      line: 246
+      name: _is_boundary_block_cuda
       returns: bool
     BVPEnvelopeEquation7D:
     - args:
@@ -3938,13 +4013,13 @@ method_index:
       - overlap
       - use_cuda
       file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 55
+      line: 56
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 83
+      line: 87
       name: _setup_vectorized_bvp_parameters
       returns: None
     - args:
@@ -3954,7 +4029,7 @@ method_index:
       - tolerance
       - batch_size
       file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 108
+      line: 112
       name: solve_envelope_vectorized
       returns: np.ndarray
     - args:
@@ -3964,7 +4039,7 @@ method_index:
       - tolerance
       - batch_size
       file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 139
+      line: 143
       name: _solve_envelope_cuda_vectorized
       returns: np.ndarray
     - args:
@@ -3974,7 +4049,7 @@ method_index:
       - tolerance
       - batch_size
       file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 187
+      line: 191
       name: _solve_envelope_cpu_vectorized
       returns: np.ndarray
     - args:
@@ -3982,7 +4057,7 @@ method_index:
       - source
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 225
+      line: 229
       name: _extract_source_block_vectorized
       returns: np.ndarray
     - args:
@@ -3991,7 +4066,7 @@ method_index:
       - source_block
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 233
+      line: 237
       name: _solve_block_bvp_vectorized
       returns: np.ndarray
     - args:
@@ -3999,7 +4074,7 @@ method_index:
       - block_data
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 278
+      line: 282
       name: _compute_block_stiffness_vectorized
       returns: np.ndarray
     - args:
@@ -4007,7 +4082,7 @@ method_index:
       - block_data
       - block_info
       file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 289
+      line: 293
       name: _compute_block_susceptibility_vectorized
       returns: np.ndarray
     - args:
@@ -4016,7 +4091,7 @@ method_index:
       - rhs
       - initial_guess
       file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 300
+      line: 304
       name: _solve_block_iterative_vectorized
       returns: np.ndarray
     - args:
@@ -4025,7 +4100,7 @@ method_index:
       - new_solution
       - tolerance
       file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 329
+      line: 333
       name: _check_convergence_vectorized
       returns: bool
     - args:
@@ -4033,7 +4108,7 @@ method_index:
       - envelope
       - batch_size
       file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 342
+      line: 346
       name: detect_quenches_vectorized
       returns: Dict[str, Any]
     - args:
@@ -4041,83 +4116,84 @@ method_index:
       - envelope
       - batch_size
       file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 364
+      line: 368
       name: _detect_quenches_cuda_vectorized
       returns: Dict[str, Any]
+    BVPVectorizedProcessorHelpers:
     - args:
       - self
-      - envelope
-      - batch_size
-      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 401
-      name: _detect_quenches_cpu_vectorized
-      returns: Dict[str, Any]
+      - config
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py
+      line: 42
+      name: __init__
+      returns: null
     - args:
       - self
-      - envelope
+      - block_data
       - block_info
-      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 431
-      name: _extract_envelope_block_vectorized
+      - stiffness
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py
+      line: 51
+      name: compute_full_stiffness_matrix_vectorized
       returns: np.ndarray
     - args:
       - self
-      - envelope_blocks
-      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 439
-      name: _detect_batch_quenches_cuda_vectorized
-      returns: List[Tuple[List[Dict[str, Any]], BlockInfo]]
-    - args:
-      - self
-      - envelope_blocks
-      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 473
-      name: _detect_batch_quenches_cpu_vectorized
-      returns: List[Tuple[List[Dict[str, Any]], BlockInfo]]
-    - args:
-      - self
-      - envelope
-      - batch_size
-      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 503
-      name: compute_impedance_vectorized
+      - block_data
+      - block_info
+      - susceptibility
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py
+      line: 102
+      name: compute_full_susceptibility_matrix_vectorized
       returns: np.ndarray
     - args:
       - self
-      - envelope
-      - batch_size
-      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 525
-      name: _compute_impedance_cuda_vectorized
+      - i
+      - j
+      - block_shape
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py
+      line: 153
+      name: _compute_spatial_distance_vectorized
+      returns: float
+    - args:
+      - self
+      - spatial_distance
+      - stiffness
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py
+      line: 164
+      name: _compute_7d_bvp_coupling_vectorized
+      returns: complex
+    - args:
+      - self
+      - block_info
+      - block_shape
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py
+      line: 181
+      name: _apply_7d_bvp_boundary_conditions_vectorized
       returns: np.ndarray
     - args:
       - self
-      - envelope
-      - batch_size
-      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 561
-      name: _compute_impedance_cpu_vectorized
+      - field_i
+      - field_j
+      - susceptibility
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py
+      line: 207
+      name: _compute_7d_bvp_amplitude_coupling_vectorized
+      returns: complex
+    - args:
+      - self
+      - block_data
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py
+      line: 226
+      name: _apply_7d_bvp_phase_coupling_vectorized
       returns: np.ndarray
     - args:
       - self
-      - envelope_blocks
-      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 587
-      name: _compute_batch_impedance_cuda_vectorized
-      returns: List[Tuple['cp.ndarray', BlockInfo]]
-    - args:
-      - self
-      - envelope_blocks
-      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 603
-      name: _compute_batch_impedance_cpu_vectorized
-      returns: List[Tuple[np.ndarray, BlockInfo]]
-    - args:
-      - self
-      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-      line: 619
-      name: get_vectorized_bvp_info
-      returns: Dict[str, Any]
+      - block_info
+      file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py
+      line: 250
+      name: _is_boundary_block_vectorized
+      returns: bool
     BackgroundBeatingAnalyzer:
     - args:
       - self
@@ -21836,7 +21912,7 @@ method_index:
       - self
       - system
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 45
+      line: 46
       name: __init__
       returns: null
     - args:
@@ -21844,32 +21920,32 @@ method_index:
       - parameter
       - values
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 64
+      line: 68
       name: parameter_sweep
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 120
+      line: 124
       name: compute_order_parameters
       returns: Dict[str, float]
     - args:
       - self
       - phase_diagram
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 148
+      line: 152
       name: identify_critical_points
       returns: List[Dict[str, Any]]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 188
+      line: 192
       name: analyze_phase_stability
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 213
+      line: 217
       name: _setup_analysis_parameters
       returns: None
     - args:
@@ -21877,163 +21953,111 @@ method_index:
       - parameter
       - value
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 219
+      line: 223
       name: _update_system_parameter
       returns: None
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 236
+      line: 240
       name: _equilibrate_system
       returns: None
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 261
+      line: 265
       name: _analyze_system_state
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 288
+      line: 292
       name: _compute_topological_order
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 308
+      line: 312
       name: _compute_phase_coherence
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 330
+      line: 334
       name: _compute_spatial_order
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 356
+      line: 360
       name: _compute_energy_density
       returns: float
     - args:
       - self
       - phase_diagram
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 376
+      line: 380
       name: _find_discontinuities
       returns: List[Dict[str, Any]]
+    PhaseTransitionsHelpers:
     - args:
       - self
-      - phase_diagram
-      - discontinuities
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 411
-      name: _find_critical_points
-      returns: List[Dict[str, Any]]
+      - config
+      file: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py
+      line: 41
+      name: __init__
+      returns: null
     - args:
       - self
-      - phase_diagram
-      - critical_point
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 438
-      name: _compute_critical_exponents
-      returns: Dict[str, float]
-    - args:
-      - self
-      - state
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 459
-      name: _check_phase_stability
-      returns: Dict[str, Any]
-    - args:
-      - self
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 484
-      name: _analyze_phase_boundaries
-      returns: Dict[str, Any]
-    - args:
-      - self
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 501
-      name: _identify_stability_regions
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - order_params
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 518
-      name: _classify_phase
-      returns: str
-    - args:
-      - self
-      - data
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 538
-      name: analyze
-      returns: Dict[str, Any]
-    - args:
-      - self
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 561
-      name: _step_resonator_phase_coherence
+      - local_field
+      - particle
+      file: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py
+      line: 50
+      name: compute_particle_energy_7d_bvp
       returns: float
     - args:
       - self
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 597
-      name: _get_current_field_configuration
-      returns: np.ndarray
-    - args:
-      - self
-      - field
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 620
-      name: _compute_field_evolution_gradient
-      returns: np.ndarray
-    - args:
-      - self
-      - field
-      - gradient
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 645
-      name: _update_field_configuration
-      returns: None
-    - args:
-      - self
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 668
-      name: _check_equilibration_convergence
-      returns: bool
-    - args:
-      - self
+      - local_field
       - particle
-      - grid_size
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 691
-      name: _particle_to_grid_index
-      returns: tuple
+      file: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py
+      line: 79
+      name: compute_particle_coupling_7d_bvp
+      returns: float
     - args:
       - self
       - field
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 705
-      name: _compute_fractional_laplacian
+      file: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py
+      line: 107
+      name: compute_field_energy_7d_bvp
+      returns: float
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py
+      line: 135
+      name: compute_field_coupling_7d_bvp
+      returns: float
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py
+      line: 162
+      name: compute_nonlinear_interaction_7d_bvp
       returns: np.ndarray
     - args:
       - self
       - field
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 719
-      name: _compute_nonlinear_interaction
-      returns: np.ndarray
+      file: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py
+      line: 185
+      name: compute_phase_coherence_7d_bvp
+      returns: float
     - args:
       - self
       - field
-      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 724
-      name: _update_system_from_field
-      returns: None
+      file: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py
+      line: 208
+      name: compute_amplitude_coherence_7d_bvp
+      returns: float
     PhaseVector:
     - args:
       - self
@@ -46107,5 +46131,5 @@ method_index:
   standalone_functions: []
   summary:
     total_class_methods: 6387
-    total_classes: 629
+    total_classes: 632
     total_standalone_functions: 0

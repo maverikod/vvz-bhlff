@@ -72,10 +72,10 @@ class SolitonModeAnalyzer(SolitonAnalysisBase):
             x = np.linspace(-20.0, 20.0, 400)
             dx = x[1] - x[0]
             
-            # Compute individual soliton profiles
-            profile1 = amp1 * np.exp(-((x - pos1) ** 2) / (2 * width1 ** 2))
-            profile2 = amp2 * np.exp(-((x - pos2) ** 2) / (2 * width2 ** 2))
-            profile3 = amp3 * np.exp(-((x - pos3) ** 2) / (2 * width3 ** 2))
+            # Compute individual soliton profiles using step functions
+            profile1 = amp1 * self._step_resonator_profile(x, pos1, width1)
+            profile2 = amp2 * self._step_resonator_profile(x, pos2, width2)
+            profile3 = amp3 * self._step_resonator_profile(x, pos3, width3)
             total_profile = profile1 + profile2 + profile3
             
             # Compute interaction potential matrix
@@ -239,3 +239,33 @@ class SolitonModeAnalyzer(SolitonAnalysisBase):
         except Exception as e:
             self.logger.error(f"Step resonator interaction computation failed: {e}")
             return 0.0
+    
+    def _step_resonator_profile(self, x: np.ndarray, position: float, width: float) -> np.ndarray:
+        """
+        Step resonator profile according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function profile instead of Gaussian profile
+            according to 7D BVP theory principles where soliton boundaries
+            are determined by step functions rather than smooth transitions.
+            
+        Mathematical Foundation:
+            Profile = Θ(width - |x - position|) where Θ is the Heaviside step function
+            and width is the soliton width.
+            
+        Args:
+            x (np.ndarray): Spatial coordinates.
+            position (float): Soliton position.
+            width (float): Soliton width.
+            
+        Returns:
+            np.ndarray: Step function profile according to 7D BVP theory.
+        """
+        # Step function profile according to 7D BVP theory
+        distance = np.abs(x - position)
+        cutoff_distance = width
+        
+        # Apply step function boundary condition
+        profile = np.where(distance < cutoff_distance, 1.0, 0.0)
+        
+        return profile

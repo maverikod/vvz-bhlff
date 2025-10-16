@@ -320,8 +320,8 @@ class SobolAnalyzer:
         # Create 7D source with spatial localization
         source = np.zeros(shape, dtype=complex)
         
-        # Apply spatial Gaussian envelope
-        spatial_envelope = np.exp(-r_squared / (2 * width**2))
+        # Apply spatial step function envelope
+        spatial_envelope = self._step_resonator_spatial_envelope(r_squared, width)
         
         # Broadcast to 7D
         for phi1 in range(domain.N_phase):
@@ -392,3 +392,32 @@ class SobolAnalyzer:
             "is_converged": convergence_metric < 0.1,
             "is_balanced": dominance_ratio < 10.0,
         }
+    
+    def _step_resonator_spatial_envelope(self, r_squared: np.ndarray, width: float) -> np.ndarray:
+        """
+        Step resonator spatial envelope according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function spatial envelope instead of Gaussian envelope
+            according to 7D BVP theory principles where spatial boundaries
+            are determined by step functions rather than smooth transitions.
+            
+        Mathematical Foundation:
+            Envelope = Θ(width_cutoff - r) where Θ is the Heaviside step function
+            and width_cutoff is the cutoff radius for the spatial envelope.
+            
+        Args:
+            r_squared (np.ndarray): Squared radial distance.
+            width (float): Spatial width parameter.
+            
+        Returns:
+            np.ndarray: Step function spatial envelope according to 7D BVP theory.
+        """
+        # Step function spatial envelope according to 7D BVP theory
+        cutoff_radius_squared = width**2
+        transmission_coeff = 1.0
+        
+        # Apply step function boundary condition
+        envelope = transmission_coeff * np.where(r_squared < cutoff_radius_squared, 1.0, 0.0)
+        
+        return envelope

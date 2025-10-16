@@ -243,10 +243,6 @@ issues:
     file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
     limit: 400
     lines: 436
-  - exceeds_limit: 332
-    file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-    limit: 400
-    lines: 732
   - exceeds_limit: 214
     file: ./bhlff/models/level_d/projections.py
     limit: 400
@@ -375,14 +371,14 @@ issues:
     file: ./bhlff/core/bvp/envelope_equation/advanced/solver_advanced_core.py
     limit: 400
     lines: 401
-  - exceeds_limit: 51
+  - exceeds_limit: 54
     file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
     limit: 400
-    lines: 451
-  - exceeds_limit: 235
+    lines: 454
+  - exceeds_limit: 4
     file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
     limit: 400
-    lines: 635
+    lines: 404
   - exceeds_limit: 4
     file: ./bhlff/core/domain/vectorized_block_processor.py
     limit: 400
@@ -980,7 +976,9 @@ issues:
   - file: ./bhlff/models/level_f/multi_particle/collective_modes.py
     line: 25
   - file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-    line: 24
+    line: 25
+  - file: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py
+    line: 28
   - file: ./bhlff/models/level_d/level_d_models.py
     line: 37
   - file: ./bhlff/models/level_d/projections.py
@@ -1578,10 +1576,12 @@ issues:
   - file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
     line: 27
   - file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-    line: 416
+    line: 420
   - file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
     line: 37
   - file: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py
+    line: 29
+  - file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py
     line: 29
   - file: ./bhlff/core/bvp/bvp_core/bvp_operations.py
     line: 306
@@ -1589,12 +1589,14 @@ issues:
     line: 38
   - file: ./bhlff/core/bvp/bvp_core/__init__.py
     line: 30
+  - file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py
+    line: 28
   - file: ./bhlff/core/bvp/bvp_core/bvp_core_facade.py
     line: 30
   - file: ./bhlff/core/bvp/bvp_core/bvp_7d_interface.py
     line: 32
   - file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-    line: 38
+    line: 39
   - file: ./bhlff/core/domain/cuda_block_processor.py
     line: 36
   - file: ./bhlff/core/domain/block_processor.py
@@ -2166,9 +2168,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 10
-  files_too_large: 95
+  files_too_large: 94
   files_without_docstrings: 4
-  imports_in_middle: 640
+  imports_in_middle: 643
   methods_with_pass: 0
   methods_without_docstrings: 115
   not_implemented_in_non_abstract: 0

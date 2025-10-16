@@ -8070,65 +8070,51 @@ Class: CollectiveModesAnalyzer
 
 Class: PhaseTransitions
   __init__(self, system)
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 45
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 46
   parameter_sweep(self, parameter, values) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 64
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 68
   compute_order_parameters(self) -> Dict[str, float]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 120
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 124
   identify_critical_points(self, phase_diagram) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 148
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 152
   analyze_phase_stability(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 188
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 192
   _setup_analysis_parameters(self) -> None
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 213
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 217
   _update_system_parameter(self, parameter, value) -> None
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 219
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 223
   _equilibrate_system(self) -> None
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 236
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 240
   _analyze_system_state(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 261
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 265
   _compute_topological_order(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 288
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 292
   _compute_phase_coherence(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 308
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 312
   _compute_spatial_order(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 330
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 334
   _compute_energy_density(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 356
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 360
   _find_discontinuities(self, phase_diagram) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 376
-  _find_critical_points(self, phase_diagram, discontinuities) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 411
-  _compute_critical_exponents(self, phase_diagram, critical_point) -> Dict[str, float]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 438
-  _check_phase_stability(self, state) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 459
-  _analyze_phase_boundaries(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 484
-  _identify_stability_regions(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 501
-  _classify_phase(self, order_params) -> str
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 518
-  analyze(self, data) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 538
-  _step_resonator_phase_coherence(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 561
-  _get_current_field_configuration(self) -> np.ndarray
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 597
-  _compute_field_evolution_gradient(self, field) -> np.ndarray
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 620
-  _update_field_configuration(self, field, gradient) -> None
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 645
-  _check_equilibration_convergence(self) -> bool
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 668
-  _particle_to_grid_index(self, particle, grid_size) -> tuple
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 691
-  _compute_fractional_laplacian(self, field) -> np.ndarray
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 705
-  _compute_nonlinear_interaction(self, field) -> np.ndarray
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 719
-  _update_system_from_field(self, field) -> None
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 724
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 380
+
+Class: PhaseTransitionsHelpers
+  __init__(self, config)
+    File: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py, Line: 41
+  compute_particle_energy_7d_bvp(self, local_field, particle) -> float
+    File: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py, Line: 50
+  compute_particle_coupling_7d_bvp(self, local_field, particle) -> float
+    File: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py, Line: 79
+  compute_field_energy_7d_bvp(self, field) -> float
+    File: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py, Line: 107
+  compute_field_coupling_7d_bvp(self, field) -> float
+    File: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py, Line: 135
+  compute_nonlinear_interaction_7d_bvp(self, field) -> np.ndarray
+    File: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py, Line: 162
+  compute_phase_coherence_7d_bvp(self, field) -> float
+    File: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py, Line: 185
+  compute_amplitude_coherence_7d_bvp(self, field) -> float
+    File: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py, Line: 208
 
 Class: LevelDModels
   __init__(self, domain, parameters)
@@ -12824,41 +12810,41 @@ Class: BVPBlockProcessor
 
 Class: BVPCUDABlockProcessor
   __init__(self, domain, config, block_size, overlap)
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 54
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 55
   _setup_cuda_bvp_parameters(self) -> None
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 81
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 85
   solve_envelope_cuda_blocked(self, source, max_iterations, tolerance) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 100
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 104
   _solve_envelope_cpu_fallback(self, source, max_iterations, tolerance) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 169
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 173
   _extract_source_block_cuda(self, source_gpu, block_info) -> cp.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 177
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 181
   _solve_block_bvp_cuda(self, current_block, source_block, block_info) -> cp.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 185
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 189
   _compute_block_stiffness_cuda(self, block_data, block_info) -> cp.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 221
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 225
   _compute_block_susceptibility_cuda(self, block_data, block_info) -> cp.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 232
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 236
   _solve_block_iterative_cuda(self, lhs, rhs, initial_guess) -> cp.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 243
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 247
   _check_convergence_cuda(self, old_solution, new_solution, tolerance) -> bool
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 263
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 267
   detect_quenches_cuda_blocked(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 272
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 276
   _detect_quenches_cpu_fallback(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 321
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 325
   _extract_envelope_block_cuda(self, envelope_gpu, block_info) -> cp.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 328
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 332
   _detect_block_quenches_cuda(self, envelope_block, block_info) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 336
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 340
   compute_impedance_cuda_blocked(self, envelope) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 366
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 370
   _compute_impedance_cpu_fallback(self, envelope) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 414
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 418
   _compute_block_impedance_cuda(self, envelope_block, block_info) -> cp.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 421
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 425
   get_cuda_bvp_info(self) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 432
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py, Line: 436
 
 Class: BVP7DOperations
   __init__(self, domain, config, domain_7d)
@@ -12915,6 +12901,26 @@ Class: BVPBlockProcessorHelpers
     File: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py, Line: 229
   _is_boundary_block(self, block_info) -> bool
     File: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py, Line: 253
+
+Class: BVPVectorizedProcessorHelpers
+  __init__(self, config)
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py, Line: 42
+  compute_full_stiffness_matrix_vectorized(self, block_data, block_info, stiffness) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py, Line: 51
+  compute_full_susceptibility_matrix_vectorized(self, block_data, block_info, susceptibility) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py, Line: 102
+  _compute_spatial_distance_vectorized(self, i, j, block_shape) -> float
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py, Line: 153
+  _compute_7d_bvp_coupling_vectorized(self, spatial_distance, stiffness) -> complex
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py, Line: 164
+  _apply_7d_bvp_boundary_conditions_vectorized(self, block_info, block_shape) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py, Line: 181
+  _compute_7d_bvp_amplitude_coupling_vectorized(self, field_i, field_j, susceptibility) -> complex
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py, Line: 207
+  _apply_7d_bvp_phase_coupling_vectorized(self, block_data, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py, Line: 226
+  _is_boundary_block_vectorized(self, block_info) -> bool
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor_helpers.py, Line: 250
 
 Class: BVPCoreOperations
   __init__(self, domain, config, domain_7d)
@@ -12976,6 +12982,26 @@ Class: BVPCoreFacade
   __repr__(self) -> str
     File: ./bhlff/core/bvp/bvp_core/bvp_core_facade_impl.py, Line: 295
 
+Class: BVPCudaBlockProcessorHelpers
+  __init__(self, config)
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py, Line: 41
+  compute_full_stiffness_matrix_cuda(self, block_data, block_info, stiffness) -> cp.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py, Line: 50
+  compute_full_susceptibility_matrix_cuda(self, block_data, block_info, susceptibility) -> cp.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py, Line: 100
+  _compute_spatial_distance_cuda(self, i, j, block_shape) -> float
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py, Line: 150
+  _compute_7d_bvp_coupling_cuda(self, spatial_distance, stiffness) -> complex
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py, Line: 161
+  _apply_7d_bvp_boundary_conditions_cuda(self, block_info, block_shape) -> cp.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py, Line: 178
+  _compute_7d_bvp_amplitude_coupling_cuda(self, field_i, field_j, susceptibility) -> complex
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py, Line: 204
+  _apply_7d_bvp_phase_coupling_cuda(self, block_data, block_info) -> cp.ndarray
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py, Line: 222
+  _is_boundary_block_cuda(self, block_info) -> bool
+    File: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor_helpers.py, Line: 246
+
 Class: BVPCore7DInterface
   __init__(self, domain_7d, config)
     File: ./bhlff/core/bvp/bvp_core/bvp_7d_interface.py, Line: 50
@@ -12996,51 +13022,31 @@ Class: BVPCore7DInterface
 
 Class: BVPVectorizedProcessor
   __init__(self, domain, config, block_size, overlap, use_cuda)
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 55
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 56
   _setup_vectorized_bvp_parameters(self) -> None
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 83
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 87
   solve_envelope_vectorized(self, source, max_iterations, tolerance, batch_size) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 108
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 112
   _solve_envelope_cuda_vectorized(self, source, max_iterations, tolerance, batch_size) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 139
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 143
   _solve_envelope_cpu_vectorized(self, source, max_iterations, tolerance, batch_size) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 187
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 191
   _extract_source_block_vectorized(self, source, block_info) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 225
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 229
   _solve_block_bvp_vectorized(self, current_block, source_block, block_info) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 233
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 237
   _compute_block_stiffness_vectorized(self, block_data, block_info) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 278
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 282
   _compute_block_susceptibility_vectorized(self, block_data, block_info) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 289
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 293
   _solve_block_iterative_vectorized(self, lhs, rhs, initial_guess) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 300
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 304
   _check_convergence_vectorized(self, old_solution, new_solution, tolerance) -> bool
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 329
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 333
   detect_quenches_vectorized(self, envelope, batch_size) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 342
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 346
   _detect_quenches_cuda_vectorized(self, envelope, batch_size) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 364
-  _detect_quenches_cpu_vectorized(self, envelope, batch_size) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 401
-  _extract_envelope_block_vectorized(self, envelope, block_info) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 431
-  _detect_batch_quenches_cuda_vectorized(self, envelope_blocks) -> List[Tuple[List[Dict[str, Any]], BlockInfo]]
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 439
-  _detect_batch_quenches_cpu_vectorized(self, envelope_blocks) -> List[Tuple[List[Dict[str, Any]], BlockInfo]]
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 473
-  compute_impedance_vectorized(self, envelope, batch_size) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 503
-  _compute_impedance_cuda_vectorized(self, envelope, batch_size) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 525
-  _compute_impedance_cpu_vectorized(self, envelope, batch_size) -> np.ndarray
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 561
-  _compute_batch_impedance_cuda_vectorized(self, envelope_blocks) -> List[Tuple['cp.ndarray', BlockInfo]]
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 587
-  _compute_batch_impedance_cpu_vectorized(self, envelope_blocks) -> List[Tuple[np.ndarray, BlockInfo]]
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 603
-  get_vectorized_bvp_info(self) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 619
+    File: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py, Line: 368
 
 Class: CUDABlockProcessor
   __init__(self, domain, block_size, overlap)

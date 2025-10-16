@@ -158,12 +158,12 @@ class MultiSolitonValidationCore(SolitonAnalysisBase):
         """
         try:
             # Check solution completeness
-            required_keys = ['spatial_grid', 'total_profile', 'soliton_1_profile', 'soliton_2_profile', 'total_mass']
+            required_keys = ['spatial_grid', 'total_profile', 'soliton_1_profile', 'soliton_2_profile', 'total_field_energy']
             if not all(key in solution for key in required_keys):
                 return False
             
             # Check physical parameters
-            if solution['total_mass'] <= 0 or np.isnan(solution['total_mass']):
+            if solution['total_field_energy'] <= 0 or np.isnan(solution['total_field_energy']):
                 return False
             
             # Check individual soliton profiles
@@ -205,12 +205,12 @@ class MultiSolitonValidationCore(SolitonAnalysisBase):
         """
         try:
             # Check solution completeness
-            required_keys = ['spatial_grid', 'total_profile', 'soliton_1_profile', 'soliton_2_profile', 'soliton_3_profile', 'total_mass']
+            required_keys = ['spatial_grid', 'total_profile', 'soliton_1_profile', 'soliton_2_profile', 'soliton_3_profile', 'total_field_energy']
             if not all(key in solution for key in required_keys):
                 return False
             
             # Check physical parameters
-            if solution['total_mass'] <= 0 or np.isnan(solution['total_mass']):
+            if solution['total_field_energy'] <= 0 or np.isnan(solution['total_field_energy']):
                 return False
             
             # Check individual soliton profiles

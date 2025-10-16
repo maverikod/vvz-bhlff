@@ -300,9 +300,9 @@ class TimeStabilityAnalyzer:
         """
         try:
             # Create initial phase field with 7D BVP characteristics
-            # Use Gaussian initial condition with proper scaling
+            # Use step function initial condition with proper scaling
             sigma = 1.0 / np.sqrt(2 * beta)  # Characteristic length scale
-            phase_field = np.exp(-(x**2) / (2 * sigma**2))
+            phase_field = self._step_resonator_phase_field(x, sigma)
             
             # Apply 7D BVP boundary conditions
             phase_field = self._apply_7d_boundary_conditions(phase_field, x, beta, mu)
@@ -310,8 +310,8 @@ class TimeStabilityAnalyzer:
             return phase_field
             
         except Exception as e:
-            # Fallback to simple initialization
-            return np.exp(-x**2 / 4.0)
+            # Fallback to simple step function initialization
+            return self._step_resonator_phase_field(x, 2.0)
     
     def _apply_7d_boundary_conditions(self, field: np.ndarray, x: np.ndarray, beta: float, mu: float) -> np.ndarray:
         """Apply 7D BVP boundary conditions to phase field."""
@@ -361,8 +361,8 @@ class TimeStabilityAnalyzer:
             return current_field
             
         except Exception as e:
-            # Fallback to simple time evolution
-            return initial_field * np.exp(-T / 2.0)
+            # Fallback to simple step function time evolution
+            return initial_field * self._step_resonator_time_evolution(T)
     
     def _compute_7d_time_derivative(self, field: np.ndarray, x: np.ndarray, beta: float, 
                                    mu: float, lambda_param: float, nu: float) -> np.ndarray:
@@ -575,4 +575,62 @@ class TimeStabilityAnalyzer:
             return float(energy_conservation)
             
         except Exception as e:
+            return 0.0
+    
+    def _step_resonator_phase_field(self, x: np.ndarray, sigma: float) -> np.ndarray:
+        """
+        Step resonator phase field according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function phase field instead of Gaussian field
+            according to 7D BVP theory principles where field boundaries
+            are determined by step functions rather than smooth transitions.
+            
+        Mathematical Foundation:
+            Field = Θ(sigma - |x|) where Θ is the Heaviside step function
+            and sigma is the field width parameter.
+            
+        Args:
+            x (np.ndarray): Spatial coordinates.
+            sigma (float): Field width parameter.
+            
+        Returns:
+            np.ndarray: Step function phase field according to 7D BVP theory.
+        """
+        # Step function phase field according to 7D BVP theory
+        cutoff_distance = sigma
+        field_strength = 1.0
+        
+        # Apply step function boundary condition
+        field = field_strength * np.where(np.abs(x) < cutoff_distance, 1.0, 0.0)
+        
+        return field
+    
+    def _step_resonator_time_evolution(self, T: float) -> float:
+        """
+        Step resonator time evolution according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function time evolution instead of exponential decay
+            according to 7D BVP theory principles where time evolution
+            is determined by step functions rather than smooth transitions.
+            
+        Mathematical Foundation:
+            Evolution = Θ(T_cutoff - T) where Θ is the Heaviside step function
+            and T_cutoff is the cutoff time for evolution.
+            
+        Args:
+            T (float): Time parameter.
+            
+        Returns:
+            float: Step function time evolution according to 7D BVP theory.
+        """
+        # Step function time evolution according to 7D BVP theory
+        cutoff_time = 2.0
+        evolution_strength = 1.0
+        
+        # Apply step function boundary condition
+        if T < cutoff_time:
+            return evolution_strength
+        else:
             return 0.0

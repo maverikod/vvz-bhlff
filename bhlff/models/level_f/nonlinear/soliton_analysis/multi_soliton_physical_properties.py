@@ -437,10 +437,10 @@ class MultiSolitonPhysicalProperties(SolitonAnalysisBase):
         """Compute interaction efficiency."""
         try:
             overlap_integral = solution.get('overlap_integral', 0.0)
-            total_mass = solution.get('total_mass', 1.0)
+            total_field_energy = solution.get('total_field_energy', 1.0)
             
-            if total_mass > 0:
-                return overlap_integral / total_mass
+            if total_field_energy > 0:
+                return overlap_integral / total_field_energy
             else:
                 return 0.0
                 
@@ -452,12 +452,12 @@ class MultiSolitonPhysicalProperties(SolitonAnalysisBase):
         """Compute three-soliton interaction efficiency."""
         try:
             overlap_integrals = solution.get('overlap_integrals', [])
-            total_mass = solution.get('total_mass', 1.0)
+            total_field_energy = solution.get('total_field_energy', 1.0)
             
-            if total_mass > 0 and len(overlap_integrals) >= 3:
+            if total_field_energy > 0 and len(overlap_integrals) >= 3:
                 # Compute average interaction efficiency
                 total_overlap = sum(overlap_integrals)
-                return total_overlap / total_mass
+                return total_overlap / total_field_energy
             else:
                 return 0.0
                 

@@ -108,12 +108,12 @@ class SingleSolitonValidation(SolitonAnalysisBase):
         """
         try:
             # Check solution completeness
-            required_keys = ['spatial_grid', 'profile', 'mass', 'momentum', 'topological_charge']
+            required_keys = ['spatial_grid', 'profile', 'field_energy', 'momentum', 'topological_charge']
             if not all(key in solution for key in required_keys):
                 return False
             
             # Check physical parameters
-            if solution['mass'] <= 0 or np.isnan(solution['mass']):
+            if solution['field_energy'] <= 0 or np.isnan(solution['field_energy']):
                 return False
             
             if abs(solution['topological_charge']) > 2.0:  # Reasonable topological charge

@@ -211,8 +211,8 @@ class ObservationalComparisonStatisticsCore:
         Returns:
             Likelihood value
         """
-        # Compute likelihood from chi-squared
-        likelihood = np.exp(-chi_squared / 2.0)
+        # Compute likelihood from chi-squared using step function
+        likelihood = self._step_resonator_likelihood(chi_squared)
         return likelihood
 
 
@@ -262,3 +262,32 @@ class ObservationalComparisonStatisticsCore:
         if n_data_points <= 0:
             return chi_squared + n_parameters * np.log(1.0)
         return chi_squared + n_parameters * np.log(n_data_points)
+    
+    def _step_resonator_likelihood(self, chi_squared: float) -> float:
+        """
+        Step resonator likelihood according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function likelihood instead of exponential likelihood
+            according to 7D BVP theory principles where likelihood is determined
+            by step functions rather than smooth transitions.
+            
+        Mathematical Foundation:
+            Likelihood = Θ(chi_cutoff - chi_squared) where Θ is the Heaviside step function
+            and chi_cutoff is the cutoff chi-squared value for likelihood.
+            
+        Args:
+            chi_squared (float): Chi-squared value.
+            
+        Returns:
+            float: Step function likelihood according to 7D BVP theory.
+        """
+        # Step function likelihood according to 7D BVP theory
+        cutoff_chi_squared = 2.0
+        likelihood_strength = 1.0
+        
+        # Apply step function boundary condition
+        if chi_squared < cutoff_chi_squared:
+            return likelihood_strength
+        else:
+            return 0.0

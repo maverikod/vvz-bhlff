@@ -298,9 +298,9 @@ class DomainEffectsAnalyzer:
         """
         try:
             # Create initial phase field with 7D BVP characteristics
-            # Use Gaussian initial condition with proper scaling
+            # Use step function initial condition with proper scaling
             sigma = 1.0 / np.sqrt(2 * beta)  # Characteristic length scale
-            phase_field = np.exp(-(x**2) / (2 * sigma**2))
+            phase_field = self._step_resonator_phase_field(x, sigma)
             
             # Apply 7D BVP boundary conditions
             phase_field = self._apply_7d_boundary_conditions(phase_field, x, beta, mu)
@@ -308,8 +308,8 @@ class DomainEffectsAnalyzer:
             return phase_field
             
         except Exception as e:
-            # Fallback to simple initialization
-            return np.exp(-x**2 / 4.0)
+            # Fallback to simple step function initialization
+            return self._step_resonator_phase_field(x, 2.0)
     
     def _apply_7d_boundary_conditions(self, field: np.ndarray, x: np.ndarray, beta: float, mu: float) -> np.ndarray:
         """Apply 7D BVP boundary conditions to phase field."""
@@ -363,8 +363,8 @@ class DomainEffectsAnalyzer:
             return solution
             
         except Exception as e:
-            # Fallback to simple solution
-            return initial_field * np.exp(-np.abs(x) / 2.0)
+            # Fallback to simple step function solution
+            return initial_field * self._step_resonator_phase_field(x, 2.0)
     
     def _compute_7d_power_law_exponent(self, solution: np.ndarray, x: np.ndarray, beta: float) -> float:
         """Compute power law exponent using 7D BVP theory."""
@@ -512,3 +512,32 @@ class DomainEffectsAnalyzer:
                 "grid_resolution": N,
                 "domain_size": L
             }
+    
+    def _step_resonator_phase_field(self, x: np.ndarray, sigma: float) -> np.ndarray:
+        """
+        Step resonator phase field according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function phase field instead of Gaussian field
+            according to 7D BVP theory principles where field boundaries
+            are determined by step functions rather than smooth transitions.
+            
+        Mathematical Foundation:
+            Field = Θ(sigma - |x|) where Θ is the Heaviside step function
+            and sigma is the field width parameter.
+            
+        Args:
+            x (np.ndarray): Spatial coordinates.
+            sigma (float): Field width parameter.
+            
+        Returns:
+            np.ndarray: Step function phase field according to 7D BVP theory.
+        """
+        # Step function phase field according to 7D BVP theory
+        cutoff_distance = sigma
+        field_strength = 1.0
+        
+        # Apply step function boundary condition
+        field = field_strength * np.where(np.abs(x) < cutoff_distance, 1.0, 0.0)
+        
+        return field

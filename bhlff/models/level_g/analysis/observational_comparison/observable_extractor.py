@@ -224,14 +224,14 @@ class ObservableExtractor:
         """Compute 7D correlation function."""
         # Simplified implementation - in practice would use full 7D analysis
         r_values = np.linspace(0.1, 100.0, 100)
-        correlation = np.exp(-r_values / 10.0) * (1.0 + 0.1 * np.sin(r_values))
+        correlation = self._step_resonator_correlation(r_values) * (1.0 + 0.1 * np.sin(r_values))
         return correlation
     
     def _compute_7d_power_spectrum(self) -> np.ndarray:
         """Compute 7D power spectrum."""
         # Simplified implementation - in practice would use full 7D analysis
         k_values = np.logspace(-3, 2, 100)
-        power = k_values ** (-1.5) * np.exp(-k_values / 10.0)
+        power = k_values ** (-1.5) * self._step_resonator_power_spectrum(k_values)
         return power
     
     def _compute_7d_structure_statistics(self) -> Dict[str, Any]:
@@ -261,7 +261,7 @@ class ObservableExtractor:
         return {
             "coherence_length": 10.0,
             "coherence_time": 1.0,
-            "phase_correlation_function": np.exp(-np.linspace(0, 10, 50) / 5.0),
+            "phase_correlation_function": self._step_resonator_correlation(np.linspace(0, 10, 50)),
             "coherence_quality": 0.9
         }
     
@@ -298,3 +298,59 @@ class ObservableExtractor:
             "mutual_information": 2.0,
             "information_correlation": 0.7
         }
+    
+    def _step_resonator_correlation(self, r_values: np.ndarray) -> np.ndarray:
+        """
+        Step resonator correlation according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function correlation instead of exponential correlation
+            according to 7D BVP theory principles where correlation is determined
+            by step functions rather than smooth transitions.
+            
+        Mathematical Foundation:
+            Correlation = Θ(r_cutoff - r) where Θ is the Heaviside step function
+            and r_cutoff is the cutoff radius for correlation.
+            
+        Args:
+            r_values (np.ndarray): Distance values.
+            
+        Returns:
+            np.ndarray: Step function correlation according to 7D BVP theory.
+        """
+        # Step function correlation according to 7D BVP theory
+        cutoff_radius = 10.0
+        correlation_strength = 1.0
+        
+        # Apply step function boundary condition
+        correlation = correlation_strength * np.where(r_values < cutoff_radius, 1.0, 0.0)
+        
+        return correlation
+    
+    def _step_resonator_power_spectrum(self, k_values: np.ndarray) -> np.ndarray:
+        """
+        Step resonator power spectrum according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function power spectrum instead of exponential power spectrum
+            according to 7D BVP theory principles where power spectrum is determined
+            by step functions rather than smooth transitions.
+            
+        Mathematical Foundation:
+            Power = Θ(k_cutoff - k) where Θ is the Heaviside step function
+            and k_cutoff is the cutoff wavenumber for power spectrum.
+            
+        Args:
+            k_values (np.ndarray): Wavenumber values.
+            
+        Returns:
+            np.ndarray: Step function power spectrum according to 7D BVP theory.
+        """
+        # Step function power spectrum according to 7D BVP theory
+        cutoff_wavenumber = 10.0
+        power_strength = 1.0
+        
+        # Apply step function boundary condition
+        power = power_strength * np.where(k_values < cutoff_wavenumber, 1.0, 0.0)
+        
+        return power

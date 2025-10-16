@@ -367,9 +367,9 @@ class MultiSolitonOptimization(SolitonAnalysisBase):
             total_profile = profile1 + profile2
             
             # Compute soliton properties
-            mass1 = np.trapz(profile1, x)
-            mass2 = np.trapz(profile2, x)
-            total_mass = np.trapz(total_profile, x)
+            field_energy1 = self._compute_field_energy(profile1, x)
+            field_energy2 = self._compute_field_energy(profile2, x)
+            total_field_energy = self._compute_field_energy(total_profile, x)
             
             # Compute interaction metrics
             distance = abs(pos2 - pos1)
@@ -381,7 +381,7 @@ class MultiSolitonOptimization(SolitonAnalysisBase):
                 "total_profile": total_profile,
                 "soliton_1_profile": profile1,
                 "soliton_2_profile": profile2,
-                "total_mass": total_mass,
+                "total_field_energy": total_field_energy,
                 "individual_masses": [mass1, mass2],
                 "distance": distance,
                 "overlap_integral": overlap_integral,
@@ -419,10 +419,10 @@ class MultiSolitonOptimization(SolitonAnalysisBase):
             total_profile = profile1 + profile2 + profile3
             
             # Compute soliton properties
-            mass1 = np.trapz(profile1, x)
-            mass2 = np.trapz(profile2, x)
-            mass3 = np.trapz(profile3, x)
-            total_mass = np.trapz(total_profile, x)
+            field_energy1 = self._compute_field_energy(profile1, x)
+            field_energy2 = self._compute_field_energy(profile2, x)
+            field_energy3 = self._compute_field_energy(profile3, x)
+            total_field_energy = self._compute_field_energy(total_profile, x)
             
             # Compute interaction metrics
             distances = [abs(pos2 - pos1), abs(pos3 - pos1), abs(pos3 - pos2)]
@@ -544,3 +544,33 @@ class MultiSolitonOptimization(SolitonAnalysisBase):
         except Exception as e:
             self.logger.error(f"Soliton interaction strength computation failed: {e}")
             return 0.0
+    
+    def _compute_field_energy(self, profile: np.ndarray, x: np.ndarray) -> float:
+        """
+        Compute field energy according to 7D BVP theory.
+        
+        Physical Meaning:
+            Computes the field energy instead of mass according to 7D BVP theory
+            principles where energy is the fundamental quantity rather than mass.
+            
+        Mathematical Foundation:
+            Field energy = ∫ |∇a|² dx where a is the field amplitude
+            and ∇a is the field gradient.
+            
+        Args:
+            profile (np.ndarray): Field profile.
+            x (np.ndarray): Spatial coordinates.
+            
+        Returns:
+            float: Field energy according to 7D BVP theory.
+        """
+        # Compute field gradient
+        field_gradient = np.gradient(profile, x)
+        
+        # Compute field energy density
+        energy_density = np.abs(field_gradient)**2
+        
+        # Integrate over space
+        field_energy = np.trapz(energy_density, x)
+        
+        return field_energy

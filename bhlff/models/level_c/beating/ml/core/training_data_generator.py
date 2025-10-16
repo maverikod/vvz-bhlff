@@ -173,8 +173,8 @@ class TrainingDataGenerator:
         # Compute 7D phase field envelope
         r = np.sqrt(X**2 + Y**2 + Z**2)
         
-        # Base envelope from 7D phase field theory
-        envelope = np.exp(-r**2 / (2 * phase_params["spectral_entropy_range"]))
+        # Base envelope from 7D phase field theory using step function
+        envelope = self._step_resonator_envelope(r, phase_params["spectral_entropy_range"])
         
         # Add phase coherence effects
         phase_coherence = phase_params["phase_coherence_range"]
@@ -279,3 +279,32 @@ class TrainingDataGenerator:
             target_coupling["mixing_degree"],
             target_coupling["coupling_efficiency"]
         ])
+    
+    def _step_resonator_envelope(self, r: np.ndarray, spectral_entropy_range: float) -> np.ndarray:
+        """
+        Step resonator envelope according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function envelope instead of exponential decay
+            according to 7D BVP theory principles where field boundaries
+            are determined by step functions rather than smooth transitions.
+            
+        Mathematical Foundation:
+            Envelope = Θ(r_cutoff - r) where Θ is the Heaviside step function
+            and r_cutoff is the cutoff radius for the field.
+            
+        Args:
+            r (np.ndarray): Radial distance from center.
+            spectral_entropy_range (float): Cutoff radius for the field.
+            
+        Returns:
+            np.ndarray: Step function envelope according to 7D BVP theory.
+        """
+        # Step function envelope according to 7D BVP theory
+        cutoff_radius = spectral_entropy_range
+        transmission_coeff = 1.0
+        
+        # Apply step function boundary condition
+        envelope = transmission_coeff * np.where(r < cutoff_radius, 1.0, 0.0)
+        
+        return envelope

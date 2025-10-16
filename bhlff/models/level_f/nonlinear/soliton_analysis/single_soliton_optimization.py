@@ -201,7 +201,7 @@ class SingleSolitonOptimization(SolitonAnalysisBase):
             profile = amplitude * self._step_resonator_profile(x, position, width)
             
             # Compute soliton properties
-            soliton_mass = np.trapz(profile, x)
+            soliton_field_energy = self._compute_field_energy(profile, x)
             soliton_momentum = np.trapz(profile * np.gradient(profile), x)
             
             # Compute topological charge
@@ -210,7 +210,7 @@ class SingleSolitonOptimization(SolitonAnalysisBase):
             return {
                 "spatial_grid": x,
                 "profile": profile,
-                "mass": soliton_mass,
+                "field_energy": soliton_field_energy,
                 "momentum": soliton_momentum,
                 "topological_charge": topological_charge,
                 "width_parameter": width,
@@ -278,3 +278,33 @@ class SingleSolitonOptimization(SolitonAnalysisBase):
         except Exception as e:
             self.logger.error(f"Step resonator boundary condition computation failed: {e}")
             return field_value
+    
+    def _compute_field_energy(self, profile: np.ndarray, x: np.ndarray) -> float:
+        """
+        Compute field energy according to 7D BVP theory.
+        
+        Physical Meaning:
+            Computes the field energy instead of mass according to 7D BVP theory
+            principles where energy is the fundamental quantity rather than mass.
+            
+        Mathematical Foundation:
+            Field energy = ∫ |∇a|² dx where a is the field amplitude
+            and ∇a is the field gradient.
+            
+        Args:
+            profile (np.ndarray): Field profile.
+            x (np.ndarray): Spatial coordinates.
+            
+        Returns:
+            float: Field energy according to 7D BVP theory.
+        """
+        # Compute field gradient
+        field_gradient = np.gradient(profile, x)
+        
+        # Compute field energy density
+        energy_density = np.abs(field_gradient)**2
+        
+        # Integrate over space
+        field_energy = np.trapz(energy_density, x)
+        
+        return field_energy

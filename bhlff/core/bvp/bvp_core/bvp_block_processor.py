@@ -24,6 +24,7 @@ import logging
 from ...domain.block_processor import BlockProcessor, BlockInfo
 from ...domain import Domain
 from .bvp_operations import BVPCoreOperations
+from .bvp_block_processor_helpers import BVPBlockProcessorHelpers
 
 
 class BVPBlockProcessor:
@@ -63,6 +64,9 @@ class BVPBlockProcessor:
         
         # Initialize BVP operations for block processing
         self.bvp_operations = BVPCoreOperations(domain, config, None)
+        
+        # Initialize helper methods
+        self.helpers = BVPBlockProcessorHelpers(config)
         
         self.logger.info(f"BVP block processor initialized with block size {block_size}")
     
@@ -181,10 +185,10 @@ class BVPBlockProcessor:
         amplitude_squared = np.abs(block_data) ** 2
         stiffness = kappa_0 + kappa_2 * amplitude_squared
         
-        # Create stiffness matrix (simplified)
-        stiffness_matrix = np.eye(block_data.size) * stiffness.flatten()
+        # Create full stiffness matrix according to 7D BVP theory
+        stiffness_matrix = self.helpers.compute_full_stiffness_matrix(block_data, block_info, stiffness)
         
-        return stiffness_matrix.reshape(block_data.shape + block_data.shape)
+        return stiffness_matrix
     
     def _compute_block_susceptibility(self, block_data: np.ndarray, block_info: BlockInfo) -> np.ndarray:
         """Compute susceptibility for block."""
@@ -197,10 +201,10 @@ class BVPBlockProcessor:
         amplitude = np.abs(block_data)
         susceptibility = chi_prime + 1j * chi_double_prime_0 * amplitude
         
-        # Create susceptibility matrix (simplified)
-        susceptibility_matrix = np.eye(block_data.size) * susceptibility.flatten()
+        # Create full susceptibility matrix according to 7D BVP theory
+        susceptibility_matrix = self.helpers.compute_full_susceptibility_matrix(block_data, block_info, susceptibility)
         
-        return susceptibility_matrix.reshape(block_data.shape + block_data.shape)
+        return susceptibility_matrix
     
     def _solve_block_iterative(self, lhs: np.ndarray, rhs: np.ndarray, 
                              initial_guess: np.ndarray) -> np.ndarray:

@@ -142,7 +142,12 @@ class BVPCoreFacade(AbstractBVPFacade):
         if self._7d_interface is None:
             raise ValueError("7D interface not available - domain_7d was not provided")
 
-        return self._7d_interface.solve_envelope_7d(source_7d)
+        # Use 7D operations from core operations
+        operations_7d = self._operations.get_7d_operations()
+        if operations_7d is None:
+            raise ValueError("7D operations not available - domain_7d was not provided")
+        
+        return operations_7d.solve_envelope_7d(source_7d)
 
     def validate_postulates_7d(self, envelope_7d: np.ndarray) -> Dict[str, Any]:
         """
@@ -161,7 +166,12 @@ class BVPCoreFacade(AbstractBVPFacade):
         if self._7d_interface is None:
             raise ValueError("7D interface not available - domain_7d was not provided")
 
-        return self._7d_interface.validate_postulates_7d(envelope_7d)
+        # Use 7D operations from core operations
+        operations_7d = self._operations.get_7d_operations()
+        if operations_7d is None:
+            raise ValueError("7D operations not available - domain_7d was not provided")
+        
+        return operations_7d.validate_postulates_7d(envelope_7d)
 
     def detect_quenches(self, envelope: np.ndarray) -> Dict[str, Any]:
         """

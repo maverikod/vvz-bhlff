@@ -258,3 +258,20 @@ class BVPCoreOperations:
             BVPParameterAccess: Parameter access object.
         """
         return self._parameter_access
+
+    def get_7d_operations(self):
+        """
+        Get 7D operations interface.
+
+        Physical Meaning:
+            Returns the 7D operations interface for full space-time operations
+            if a 7D domain was provided during initialization.
+
+        Returns:
+            BVP7DOperations: 7D operations interface or None if not available.
+        """
+        if self.domain_7d is None:
+            return None
+        
+        from .bvp_7d_operations import BVP7DOperations
+        return BVP7DOperations(self.domain, self.config, self.domain_7d)

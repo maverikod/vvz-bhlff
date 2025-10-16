@@ -28,26 +28,26 @@ class Particle:
 
     Physical Meaning:
         Represents a topological defect with position, charge, phase,
-        and effective mass in the 7D phase field theory.
+        and energy in the 7D phase field theory.
 
     Mathematical Foundation:
         Represents a particle with:
         - Position: x = (x, y, z) in 3D space
         - Charge: q ∈ ℤ (topological charge)
         - Phase: φ ∈ [0, 2π) (initial phase)
-        - Mass: M_eff (effective mass)
+        - Energy: E_eff (effective energy from field configuration)
 
     Attributes:
         position (np.ndarray): 3D coordinates of the particle
         charge (int): Topological charge q ∈ ℤ
         phase (float): Initial phase φ ∈ [0, 2π)
-        mass (float): Effective mass M_eff
+        energy (float): Effective energy E_eff from field configuration
     """
 
     position: np.ndarray
     charge: int
     phase: float = 0.0
-    mass: float = 1.0
+    energy: float = 1.0
 
     def __post_init__(self):
         """Initialize particle properties."""
@@ -62,9 +62,9 @@ class Particle:
         # Normalize phase to [0, 2π)
         self.phase = self.phase % (2 * np.pi)
         
-        # Ensure mass is positive
-        if self.mass <= 0:
-            raise ValueError("Mass must be positive")
+        # Ensure energy is positive
+        if self.energy <= 0:
+            raise ValueError("Energy must be positive")
 
     @property
     def x(self) -> float:
@@ -277,7 +277,7 @@ class Particle:
             position=np.array(data["position"]),
             charge=data["charge"],
             phase=data["phase"],
-            mass=data["mass"],
+            energy=data["energy"],
         )
 
     def __str__(self) -> str:
@@ -291,7 +291,7 @@ class Particle:
         Returns:
             str: String representation.
         """
-        return f"Particle(position={self.position}, charge={self.charge}, phase={self.phase:.3f}, mass={self.mass:.3f})"
+        return f"Particle(position={self.position}, charge={self.charge}, phase={self.phase:.3f}, energy={self.energy:.3f})"
 
     def __repr__(self) -> str:
         """
@@ -304,7 +304,7 @@ class Particle:
         Returns:
             str: Detailed string representation.
         """
-        return f"Particle(position={self.position}, charge={self.charge}, phase={self.phase:.3f}, mass={self.mass:.3f})"
+        return f"Particle(position={self.position}, charge={self.charge}, phase={self.phase:.3f}, energy={self.energy:.3f})"
 
 
 @dataclass

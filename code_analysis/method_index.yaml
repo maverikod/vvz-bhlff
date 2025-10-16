@@ -689,6 +689,13 @@ method_index:
       line: 124
       name: _extract_radial_profile
       returns: Dict[str, np.ndarray]
+    - args:
+      - self
+      - r
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/advanced_fitting.py
+      line: 173
+      name: _step_resonator_transmission
+      returns: np.ndarray
     AlertSystem:
     - args:
       - self
@@ -2678,6 +2685,14 @@ method_index:
       line: 222
       name: setup_spectral_evolution_matrix
       returns: None
+    - args:
+      - self
+      - k_magnitude
+      - k_max
+      file: ./bhlff/solvers/integrators/bvp_evolution_computer.py
+      line: 246
+      name: _step_resonator_spectral_filter
+      returns: np.ndarray
     BVPImpedanceCalculator:
     - args:
       - self
@@ -4610,6 +4625,27 @@ method_index:
       file: ./bhlff/models/level_f/nonlinear/basic_effects.py
       line: 379
       name: _compute_stability_matrix
+      returns: np.ndarray
+    - args:
+      - self
+      - psi
+      file: ./bhlff/models/level_f/nonlinear/basic_effects.py
+      line: 397
+      name: _step_resonator_potential_3d
+      returns: np.ndarray
+    - args:
+      - self
+      - psi
+      file: ./bhlff/models/level_f/nonlinear/basic_effects.py
+      line: 416
+      name: _step_resonator_potential_4d
+      returns: np.ndarray
+    - args:
+      - self
+      - psi
+      file: ./bhlff/models/level_f/nonlinear/basic_effects.py
+      line: 435
+      name: _step_resonator_potential_sine_gordon
       returns: np.ndarray
     BeatingAnalysisCore:
     - args:
@@ -9441,6 +9477,13 @@ method_index:
       line: 909
       name: _compute_energy_exchange_factor
       returns: float
+    - args:
+      - self
+      - distance
+      file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
+      line: 932
+      name: _step_resonator_phase_coherence
+      returns: float
     CollectiveModesSpectrumAnalyzer:
     - args:
       - self
@@ -11111,6 +11154,20 @@ method_index:
       line: 421
       name: _compute_defect_energy_from_field
       returns: float
+    - args:
+      - self
+      - r
+      file: ./bhlff/models/level_e/defect_interactions.py
+      line: 453
+      name: _step_resonator_screening
+      returns: float
+    - args:
+      - self
+      - beta
+      file: ./bhlff/models/level_e/defect_interactions.py
+      line: 482
+      name: _compute_7d_bvp_normalization
+      returns: float
     DefectModel:
     - args:
       - self
@@ -11177,6 +11234,13 @@ method_index:
       file: ./bhlff/models/level_e/defect_core.py
       line: 291
       name: _compute_fractional_green_normalization
+      returns: float
+    - args:
+      - self
+      - beta
+      file: ./bhlff/models/level_e/defect_core.py
+      line: 322
+      name: _compute_7d_bvp_normalization
       returns: float
     DensityEvolution:
     - args:
@@ -11900,6 +11964,14 @@ method_index:
       line: 483
       name: _compute_domain_size_effects
       returns: Dict[str, Any]
+    - args:
+      - self
+      - x
+      - sigma
+      file: ./bhlff/models/level_e/discretization/domain_effects.py
+      line: 516
+      name: _step_resonator_phase_field
+      returns: np.ndarray
     DualModeSource:
     - args:
       - self
@@ -18115,6 +18187,14 @@ method_index:
       name: _compute_soliton_interaction_strength
       returns: float
     - args:
+      - self
+      - profile
+      - x
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+      line: 548
+      name: _compute_field_energy
+      returns: float
+    - args:
       - params
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
       line: 118
@@ -19403,6 +19483,20 @@ method_index:
       line: 293
       name: _compute_information_measures
       returns: Dict[str, float]
+    - args:
+      - self
+      - r_values
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 302
+      name: _step_resonator_correlation
+      returns: np.ndarray
+    - args:
+      - self
+      - k_values
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py
+      line: 330
+      name: _step_resonator_power_spectrum
+      returns: np.ndarray
     ObservablePropertiesCalculator:
     - args:
       - self
@@ -19779,6 +19873,13 @@ method_index:
       line: 260
       name: _compute_bic_from_7d_field
       returns: float
+    - args:
+      - self
+      - chi_squared
+      file: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py
+      line: 266
+      name: _step_resonator_likelihood
+      returns: float
     ObservationalDataLoader:
     - args:
       - self
@@ -19876,6 +19977,27 @@ method_index:
       file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
       line: 224
       name: _compute_covariance_matrix
+      returns: np.ndarray
+    - args:
+      - self
+      - r_values
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 231
+      name: _step_resonator_correlation
+      returns: np.ndarray
+    - args:
+      - self
+      - k_values
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 242
+      name: _step_resonator_power_spectrum
+      returns: np.ndarray
+    - args:
+      - self
+      - r_values
+      file: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py
+      line: 253
+      name: _step_resonator_phase_correlation
       returns: np.ndarray
     OperatorRiesz:
     - args:
@@ -22542,6 +22664,17 @@ method_index:
       line: 117
       name: _create_pinning_potential
       returns: np.ndarray
+    - args:
+      - self
+      - X
+      - Y
+      - Z
+      - pinning_center
+      - pinning_width
+      file: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py
+      line: 158
+      name: _step_resonator_pinning_potential
+      returns: np.ndarray
     PinnedFieldEvolution:
     - args:
       - self
@@ -23593,18 +23726,25 @@ method_index:
       returns: Dict[str, np.ndarray]
     - args:
       - self
+      - r
+      file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
+      line: 275
+      name: _step_resonator_transmission
+      returns: np.ndarray
+    - args:
+      - self
       - radial_profile
       - popt
       - func
       file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
-      line: 275
+      line: 293
       name: _compute_r_squared
       returns: float
     - args:
       - self
       - pcov
       file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
-      line: 279
+      line: 297
       name: _compute_fitting_quality
       returns: float
     - args:
@@ -23613,7 +23753,7 @@ method_index:
       - popt
       - func
       file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
-      line: 283
+      line: 301
       name: _compute_chi_squared
       returns: float
     - args:
@@ -23714,9 +23854,16 @@ method_index:
       returns: Dict[str, np.ndarray]
     - args:
       - self
-      - region_data
+      - r
       file: ./bhlff/core/bvp/power_law/power_law_optimization.py
       line: 671
+      name: _step_resonator_transmission
+      returns: np.ndarray
+    - args:
+      - self
+      - region_data
+      file: ./bhlff/core/bvp/power_law/power_law_optimization.py
+      line: 689
       name: _get_initial_parameters
       returns: np.ndarray
     - args:
@@ -23724,7 +23871,7 @@ method_index:
       - region_data
       - params
       file: ./bhlff/core/bvp/power_law/power_law_optimization.py
-      line: 700
+      line: 718
       name: _compute_fit_quality
       returns: float
     - args:
@@ -23733,7 +23880,7 @@ method_index:
       - params
       - h
       file: ./bhlff/core/bvp/power_law/power_law_optimization.py
-      line: 727
+      line: 745
       name: _compute_gradient
       returns: np.ndarray
     - args:
@@ -23741,7 +23888,7 @@ method_index:
       - param_value
       - param_name
       file: ./bhlff/core/bvp/power_law/power_law_optimization.py
-      line: 752
+      line: 770
       name: _compute_parameter_sensitivity
       returns: float
     - args:
@@ -26487,6 +26634,14 @@ method_index:
       name: _step_resonator_boundary_condition
       returns: float
     - args:
+      - self
+      - profile
+      - x
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
+      line: 282
+      name: _compute_field_energy
+      returns: float
+    - args:
       - params
       file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
       line: 91
@@ -26747,6 +26902,14 @@ method_index:
       line: 360
       name: _compute_stability_metrics
       returns: Dict[str, Any]
+    - args:
+      - self
+      - r_squared
+      - width
+      file: ./bhlff/models/level_e/sensitivity/sobol_analysis.py
+      line: 396
+      name: _step_resonator_spatial_envelope
+      returns: np.ndarray
     SolitonAnalysisBase:
     - args:
       - self
@@ -27387,6 +27550,15 @@ method_index:
       line: 232
       name: _step_resonator_interaction
       returns: float
+    - args:
+      - self
+      - x
+      - position
+      - width
+      file: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py
+      line: 243
+      name: _step_resonator_profile
+      returns: np.ndarray
     SolitonModel:
     - args:
       - self
@@ -28315,74 +28487,6 @@ method_index:
       line: 188
       name: __repr__
       returns: str
-    SpectralFiltering:
-    - args:
-      - self
-      - domain
-      - precision
-      file: ./bhlff/core/fft/spectral_filtering.py
-      line: 58
-      name: __init__
-      returns: null
-    - args:
-      - self
-      - field
-      - cutoff_frequency
-      - order
-      file: ./bhlff/core/fft/spectral_filtering.py
-      line: 80
-      name: apply_low_pass_filter
-      returns: np.ndarray
-    - args:
-      - self
-      - field
-      - cutoff_frequency
-      - order
-      file: ./bhlff/core/fft/spectral_filtering.py
-      line: 123
-      name: apply_high_pass_filter
-      returns: np.ndarray
-    - args:
-      - self
-      - field
-      - center_frequency
-      - bandwidth
-      - order
-      file: ./bhlff/core/fft/spectral_filtering.py
-      line: 165
-      name: apply_band_pass_filter
-      returns: np.ndarray
-    - args:
-      - self
-      - field
-      - sigma
-      file: ./bhlff/core/fft/spectral_filtering.py
-      line: 212
-      name: apply_gaussian_filter
-      returns: np.ndarray
-    - args:
-      - self
-      - field
-      - filter_type
-      file: ./bhlff/core/fft/spectral_filtering.py
-      line: 249
-      name: apply_spectral_filter
-      returns: np.ndarray
-    - args:
-      - self
-      - field
-      - noise_level
-      - method
-      file: ./bhlff/core/fft/spectral_filtering.py
-      line: 278
-      name: apply_noise_reduction
-      returns: np.ndarray
-    - args:
-      - self
-      file: ./bhlff/core/fft/spectral_filtering.py
-      line: 307
-      name: _compute_k_magnitude
-      returns: np.ndarray
     SpectralOperations:
     - args:
       - self
@@ -28622,6 +28726,13 @@ method_index:
       line: 341
       name: _assess_goodness_quality
       returns: str
+    - args:
+      - self
+      - chi_squared
+      file: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py
+      line: 352
+      name: _step_resonator_likelihood
+      returns: float
     StatisticalConfidenceAnalyzer:
     - args:
       - self
@@ -44380,6 +44491,21 @@ method_index:
       line: 563
       name: _compute_energy_conservation
       returns: float
+    - args:
+      - self
+      - x
+      - sigma
+      file: ./bhlff/models/level_e/discretization/time_stability.py
+      line: 580
+      name: _step_resonator_phase_field
+      returns: np.ndarray
+    - args:
+      - self
+      - T
+      file: ./bhlff/models/level_e/discretization/time_stability.py
+      line: 609
+      name: _step_resonator_time_evolution
+      returns: float
     TopologicalAnalysis:
     - args:
       - self
@@ -44870,6 +44996,14 @@ method_index:
       file: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py
       line: 247
       name: _compute_target_coupling
+      returns: np.ndarray
+    - args:
+      - self
+      - r
+      - spectral_entropy_range
+      file: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py
+      line: 283
+      name: _step_resonator_envelope
       returns: np.ndarray
     TransitionAnalysis:
     - args:
@@ -46130,6 +46264,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 6387
-    total_classes: 632
+    total_class_methods: 6406
+    total_classes: 631
     total_standalone_functions: 0

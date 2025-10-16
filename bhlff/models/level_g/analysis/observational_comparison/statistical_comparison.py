@@ -129,7 +129,7 @@ class StatisticalComparison:
         Returns:
             Likelihood value
         """
-        return np.exp(-chi_squared / 2.0)
+        return self._step_resonator_likelihood(chi_squared)
 
     def compute_goodness_of_fit(self, obs_data: Dict[str, Any], model_observables: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -348,3 +348,14 @@ class StatisticalComparison:
             return "fair"
         else:
             return "poor"
+    
+    def _step_resonator_likelihood(self, chi_squared: float) -> float:
+        """
+        Step resonator likelihood function according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function likelihood instead of exponential decay
+            according to 7D BVP theory principles.
+        """
+        cutoff_chi_squared = 10.0
+        return 1.0 if chi_squared < cutoff_chi_squared else 0.0

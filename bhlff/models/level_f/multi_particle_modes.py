@@ -67,8 +67,8 @@ class MultiParticleModesAnalyzer:
             through diagonalization of dynamics matrix.
             
         Mathematical Foundation:
-            Collective modes: diagonalization of M⁻¹K
-            where M is the mass matrix and K is the stiffness matrix.
+            Collective modes: diagonalization of E⁻¹K
+            where E is the energy matrix and K is the stiffness matrix.
             
         Returns:
             Dict[str, Any]: Collective modes analysis results.
@@ -143,7 +143,7 @@ class MultiParticleModesAnalyzer:
         Returns:
             np.ndarray: Dynamics matrix.
         """
-        # Create energy matrix instead of mass matrix
+        # Create energy matrix from field configuration
         energy_matrix = self._create_energy_matrix()
         
         # Create stiffness matrix

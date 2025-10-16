@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 866
+Total issues found: 867
 
 METHODS_WITHOUT_DOCSTRINGS: 115 issues
 ----------------------------------------
@@ -549,7 +549,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 10 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 643 issues
+IMPORTS_IN_MIDDLE: 642 issues
 ----------------------------------------
   ./setup.py
     Line 28
@@ -2435,9 +2435,6 @@ IMPORTS_IN_MIDDLE: 643 issues
   ./bhlff/core/fft/fft_solver_validation.py
     Line 32
 
-  ./bhlff/core/fft/spectral_filtering.py
-    Line 36
-
   ./bhlff/core/fft/__init__.py
     Line 33
 
@@ -2481,7 +2478,7 @@ IMPORTS_IN_MIDDLE: 643 issues
     Line 23
 
 
-FILES_TOO_LARGE: 94 issues
+FILES_TOO_LARGE: 96 issues
 ----------------------------------------
   ./tests/unit/test_ml_prediction_vectorized_implementations.py
 
@@ -2569,6 +2566,8 @@ FILES_TOO_LARGE: 94 issues
 
   ./bhlff/models/level_f/nonlinear.py
 
+  ./bhlff/models/level_f/nonlinear/basic_effects.py
+
   ./bhlff/models/level_f/nonlinear/mode_analysis.py
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
@@ -2612,6 +2611,8 @@ FILES_TOO_LARGE: 94 issues
   ./bhlff/models/level_e/defect_interactions.py
 
   ./bhlff/models/level_e/failure_detection.py
+
+  ./bhlff/models/level_e/sensitivity/sobol_analysis.py
 
   ./bhlff/models/level_e/discretization/domain_effects.py
 

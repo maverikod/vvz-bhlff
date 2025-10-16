@@ -72,8 +72,8 @@ class CollectiveModesAnalyzer(AbstractModel):
             through diagonalization of dynamics matrix.
 
         Mathematical Foundation:
-            Mode finding: diagonalization of dynamics matrix M⁻¹K
-            where M is the mass matrix and K is the stiffness matrix.
+            Mode finding: diagonalization of dynamics matrix E⁻¹K
+            where E is the energy matrix and K is the stiffness matrix.
 
         Returns:
             Dict[str, Any]: Collective modes analysis results.

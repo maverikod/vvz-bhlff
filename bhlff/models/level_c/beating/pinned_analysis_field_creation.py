@@ -149,13 +149,25 @@ class PinnedFieldCreator:
         pinning_center = pinning_params.get("pinning_center", [L / 2, L / 2, L / 2])
         pinning_width = pinning_params.get("pinning_width", L / 4)
         
-        pinning_potential = pinning_strength * np.exp(
-            -(
-                (X - pinning_center[0]) ** 2
-                + (Y - pinning_center[1]) ** 2
-                + (Z - pinning_center[2]) ** 2
-            )
-            / (2 * pinning_width ** 2)
+        pinning_potential = pinning_strength * self._step_resonator_pinning_potential(
+            X, Y, Z, pinning_center, pinning_width
         )
         
         return pinning_potential
+    
+    def _step_resonator_pinning_potential(self, X: np.ndarray, Y: np.ndarray, Z: np.ndarray, 
+                                        pinning_center: List[float], pinning_width: float) -> np.ndarray:
+        """
+        Step resonator pinning potential according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function pinning potential instead of exponential decay
+            according to 7D BVP theory principles.
+        """
+        distance_squared = (
+            (X - pinning_center[0]) ** 2
+            + (Y - pinning_center[1]) ** 2
+            + (Z - pinning_center[2]) ** 2
+        )
+        cutoff_radius_squared = (pinning_width * 0.8) ** 2  # 80% of pinning width
+        return np.where(distance_squared < cutoff_radius_squared, 1.0, 0.0)

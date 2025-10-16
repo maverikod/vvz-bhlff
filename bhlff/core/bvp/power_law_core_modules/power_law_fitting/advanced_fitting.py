@@ -149,7 +149,7 @@ class AdvancedPowerLawFitting:
             else:
                 # Fallback: generate synthetic radial profile
                 r = np.linspace(0.1, 10.0, 100)
-                values = np.exp(-r) * r**(-2.0)
+                values = self._step_resonator_transmission(r) * r**(-2.0)
             
             # Data validation and sorting
             valid_mask = (r > 0) & (values > 0)
@@ -167,5 +167,23 @@ class AdvancedPowerLawFitting:
             self.logger.error(f"Radial profile extraction failed: {e}")
             # Return default profile
             r = np.linspace(0.1, 10.0, 100)
-            values = np.exp(-r) * r**(-2.0)
+            values = self._step_resonator_transmission(r) * r**(-2.0)
             return {'r': r, 'values': values}
+    
+    def _step_resonator_transmission(self, r: np.ndarray) -> np.ndarray:
+        """
+        Step resonator transmission coefficient according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function transmission coefficient
+            instead of exponential decay according to 7D BVP theory.
+            
+        Args:
+            r (np.ndarray): Radial coordinate.
+            
+        Returns:
+            np.ndarray: Step function transmission coefficient.
+        """
+        cutoff_radius = 5.0
+        transmission_coeff = 1.0
+        return transmission_coeff * np.where(r < cutoff_radius, 1.0, 0.0)

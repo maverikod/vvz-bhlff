@@ -36,8 +36,8 @@ class CollectiveModesFinder:
         
     Mathematical Foundation:
         Implements collective modes finding:
-        - Mode finding: diagonalization of dynamics matrix M⁻¹K
-        - Dynamics matrix: M⁻¹K where M is mass matrix and K is stiffness matrix
+        - Mode finding: diagonalization of dynamics matrix E⁻¹K
+        - Dynamics matrix: E⁻¹K where E is energy matrix and K is stiffness matrix
     """
     
     def __init__(self, domain, particles: List[Particle], system_params: SystemParameters):
@@ -79,8 +79,8 @@ class CollectiveModesFinder:
             through diagonalization of dynamics matrix.
             
         Mathematical Foundation:
-            Mode finding: diagonalization of dynamics matrix M⁻¹K
-            where M is the mass matrix and K is the stiffness matrix.
+            Mode finding: diagonalization of dynamics matrix E⁻¹K
+            where E is the energy matrix and K is the stiffness matrix.
             
         Returns:
             Dict[str, Any]: Collective modes analysis results.
@@ -129,7 +129,7 @@ class CollectiveModesFinder:
             Sets up dynamics matrices for collective modes analysis
             including energy and stiffness matrices using 7D BVP theory.
         """
-        # Setup energy matrix instead of mass matrix
+        # Setup energy matrix from field configuration
         self.energy_matrix = self._create_energy_matrix()
         
         # Setup stiffness matrix

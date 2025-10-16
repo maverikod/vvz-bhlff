@@ -106,7 +106,7 @@ class BasicNonlinearEffects(AbstractModel):
             Sets up cubic nonlinear terms in the potential
             U_nonlinear = g * |ψ|^3
         """
-        self.nonlinear_potential = lambda psi: self.nonlinear_strength * np.abs(psi) ** 3
+        self.nonlinear_potential = lambda psi: self.nonlinear_strength * self._step_resonator_potential_3d(psi)
         self.nonlinear_force = lambda psi: -3 * self.nonlinear_strength * np.abs(psi) * np.sign(psi)
 
     def _setup_quartic_nonlinearity(self) -> None:
@@ -117,7 +117,7 @@ class BasicNonlinearEffects(AbstractModel):
             Sets up quartic nonlinear terms in the potential
             U_nonlinear = g * |ψ|^4
         """
-        self.nonlinear_potential = lambda psi: self.nonlinear_strength * np.abs(psi) ** 4
+        self.nonlinear_potential = lambda psi: self.nonlinear_strength * self._step_resonator_potential_4d(psi)
         self.nonlinear_force = lambda psi: -4 * self.nonlinear_strength * np.abs(psi) ** 2 * np.sign(psi)
 
     def _setup_sine_gordon_nonlinearity(self) -> None:
@@ -128,7 +128,7 @@ class BasicNonlinearEffects(AbstractModel):
             Sets up sine-Gordon nonlinear terms in the potential
             U_nonlinear = g * sin(φ)
         """
-        self.nonlinear_potential = lambda psi: self.nonlinear_strength * (1 - np.cos(psi))
+        self.nonlinear_potential = lambda psi: self.nonlinear_strength * self._step_resonator_potential_sine_gordon(psi)
         self.nonlinear_force = lambda psi: -self.nonlinear_strength * np.sin(psi)
 
     def _initialize_nonlinear_dynamics(self) -> None:
@@ -393,3 +393,60 @@ class BasicNonlinearEffects(AbstractModel):
         stability_matrix = np.random.rand(n_modes, n_modes) - 0.5
 
         return stability_matrix
+    
+    def _step_resonator_potential_3d(self, psi: np.ndarray) -> np.ndarray:
+        """
+        Step resonator potential for 3D nonlinearity according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function potential for 3D nonlinearity
+            instead of classical |ψ|^3 potential according to 7D BVP theory.
+            
+        Args:
+            psi (np.ndarray): Field values.
+            
+        Returns:
+            np.ndarray: Step function potential values.
+        """
+        cutoff_amplitude = 1.0
+        potential_coeff = 1.0
+        return potential_coeff * np.where(np.abs(psi) < cutoff_amplitude, 
+                                         np.abs(psi), 0.0)
+    
+    def _step_resonator_potential_4d(self, psi: np.ndarray) -> np.ndarray:
+        """
+        Step resonator potential for 4D nonlinearity according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function potential for 4D nonlinearity
+            instead of classical |ψ|^4 potential according to 7D BVP theory.
+            
+        Args:
+            psi (np.ndarray): Field values.
+            
+        Returns:
+            np.ndarray: Step function potential values.
+        """
+        cutoff_amplitude = 1.0
+        potential_coeff = 1.0
+        return potential_coeff * np.where(np.abs(psi) < cutoff_amplitude, 
+                                         np.abs(psi)**2, 0.0)
+    
+    def _step_resonator_potential_sine_gordon(self, psi: np.ndarray) -> np.ndarray:
+        """
+        Step resonator potential for sine-Gordon nonlinearity according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function potential for sine-Gordon nonlinearity
+            instead of classical (1 - cos(ψ)) potential according to 7D BVP theory.
+            
+        Args:
+            psi (np.ndarray): Field values.
+            
+        Returns:
+            np.ndarray: Step function potential values.
+        """
+        cutoff_phase = np.pi/2
+        potential_coeff = 1.0
+        return potential_coeff * np.where(np.abs(psi) < cutoff_phase, 
+                                         np.abs(psi), 0.0)

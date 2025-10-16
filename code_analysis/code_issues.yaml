@@ -203,6 +203,10 @@ issues:
     file: ./bhlff/models/level_f/nonlinear.py
     limit: 400
     lines: 518
+  - exceeds_limit: 52
+    file: ./bhlff/models/level_f/nonlinear/basic_effects.py
+    limit: 400
+    lines: 452
   - exceeds_limit: 108
     file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
     limit: 400
@@ -215,10 +219,10 @@ issues:
     file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
     limit: 400
     lines: 500
-  - exceeds_limit: 146
+  - exceeds_limit: 176
     file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
     limit: 400
-    lines: 546
+    lines: 576
   - exceeds_limit: 37
     file: ./bhlff/models/level_f/collective/excitation_analysis.py
     limit: 400
@@ -235,10 +239,10 @@ issues:
     file: ./bhlff/models/level_f/multi_particle/data_structures.py
     limit: 400
     lines: 471
-  - exceeds_limit: 530
+  - exceeds_limit: 559
     file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
     limit: 400
-    lines: 930
+    lines: 959
   - exceeds_limit: 36
     file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
     limit: 400
@@ -283,22 +287,26 @@ issues:
     file: ./bhlff/models/level_e/bvp_integration.py
     limit: 400
     lines: 425
-  - exceeds_limit: 51
+  - exceeds_limit: 109
     file: ./bhlff/models/level_e/defect_interactions.py
     limit: 400
-    lines: 451
+    lines: 509
   - exceeds_limit: 182
     file: ./bhlff/models/level_e/failure_detection.py
     limit: 400
     lines: 582
-  - exceeds_limit: 114
+  - exceeds_limit: 23
+    file: ./bhlff/models/level_e/sensitivity/sobol_analysis.py
+    limit: 400
+    lines: 423
+  - exceeds_limit: 143
     file: ./bhlff/models/level_e/discretization/domain_effects.py
     limit: 400
-    lines: 514
-  - exceeds_limit: 178
+    lines: 543
+  - exceeds_limit: 236
     file: ./bhlff/models/level_e/discretization/time_stability.py
     limit: 400
-    lines: 578
+    lines: 636
   - exceeds_limit: 55
     file: ./bhlff/models/level_e/experiments/experiment_runner.py
     limit: 400
@@ -351,10 +359,10 @@ issues:
     file: ./bhlff/core/bvp/validation/physical_constraints.py
     limit: 400
     lines: 417
-  - exceeds_limit: 365
+  - exceeds_limit: 383
     file: ./bhlff/core/bvp/power_law/power_law_optimization.py
     limit: 400
-    lines: 765
+    lines: 783
   - exceeds_limit: 245
     file: ./bhlff/core/bvp/power_law/power_law_core.py
     limit: 400
@@ -1673,8 +1681,6 @@ issues:
     line: 32
   - file: ./bhlff/core/fft/fft_solver_validation.py
     line: 32
-  - file: ./bhlff/core/fft/spectral_filtering.py
-    line: 36
   - file: ./bhlff/core/fft/__init__.py
     line: 33
   - file: ./bhlff/core/fft/fft_plan_7d.py
@@ -2168,9 +2174,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 10
-  files_too_large: 94
+  files_too_large: 96
   files_without_docstrings: 4
-  imports_in_middle: 643
+  imports_in_middle: 642
   methods_with_pass: 0
   methods_without_docstrings: 115
   not_implemented_in_non_abstract: 0

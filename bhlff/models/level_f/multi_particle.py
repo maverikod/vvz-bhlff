@@ -15,7 +15,7 @@ Theoretical Background:
     U_eff = Σᵢ Uᵢ + Σᵢ<ⱼ Uᵢⱼ + Σᵢ<ⱼ<ₖ Uᵢⱼₖ + ...
     
     Collective modes arise from the diagonalization of the dynamics matrix
-    M⁻¹K, where M is the mass matrix and K is the stiffness matrix.
+    E⁻¹K, where E is the energy matrix and K is the stiffness matrix.
 
 Example:
     >>> particles = [Particle(position=[5,10,10], charge=1, phase=0),
@@ -102,8 +102,8 @@ class MultiParticleSystem(AbstractModel):
             through diagonalization of dynamics matrix.
 
         Mathematical Foundation:
-            Collective modes: diagonalization of M⁻¹K
-            where M is the mass matrix and K is the stiffness matrix.
+            Collective modes: diagonalization of E⁻¹K
+            where E is the energy matrix and K is the stiffness matrix.
 
         Returns:
             Dict[str, Any]: Collective modes analysis results.

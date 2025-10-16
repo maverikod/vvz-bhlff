@@ -177,7 +177,7 @@ class BVPEvolutionComputer:
         k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
 
         # Apply spectral filter
-        spectral_filter = np.exp(-((k_magnitude / k_max) ** 4))
+        spectral_filter = self._step_resonator_spectral_filter(k_magnitude, k_max)
         nonlinear_spectral *= spectral_filter
 
         # Convert back to real space
@@ -242,3 +242,14 @@ class BVPEvolutionComputer:
         # BVP evolution matrix in spectral space
         # This represents the linear part of the BVP evolution
         self._spectral_evolution_matrix = -0.5 * k_squared + 1j * self.carrier_frequency
+    
+    def _step_resonator_spectral_filter(self, k_magnitude: np.ndarray, k_max: float) -> np.ndarray:
+        """
+        Step resonator spectral filter according to 7D BVP theory.
+        
+        Physical Meaning:
+            Implements step function spectral filter instead of exponential decay
+            according to 7D BVP theory principles.
+        """
+        cutoff_frequency = k_max * 0.8  # 80% of maximum frequency
+        return np.where(k_magnitude < cutoff_frequency, 1.0, 0.0)

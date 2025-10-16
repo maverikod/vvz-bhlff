@@ -5413,6 +5413,8 @@ Class: PinnedFieldCreator
     File: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py, Line: 44
   _create_pinning_potential(self, domain, pinning_params) -> np.ndarray
     File: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py, Line: 117
+  _step_resonator_pinning_potential(self, X, Y, Z, pinning_center, pinning_width) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/pinned_analysis_field_creation.py, Line: 158
 
 Class: BeatingCoreBasic
   __init__(self, bvp_core)
@@ -6293,6 +6295,8 @@ Class: TrainingDataGenerator
     File: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py, Line: 227
   _compute_target_coupling(self, phase_params) -> np.ndarray
     File: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py, Line: 247
+  _step_resonator_envelope(self, r, spectral_entropy_range) -> np.ndarray
+    File: ./bhlff/models/level_c/beating/ml/core/training_data_generator.py, Line: 283
 
 Class: PatternComparator
   __init__(self)
@@ -7377,6 +7381,12 @@ Class: BasicNonlinearEffects
     File: ./bhlff/models/level_f/nonlinear/basic_effects.py, Line: 340
   _compute_stability_matrix(self) -> np.ndarray
     File: ./bhlff/models/level_f/nonlinear/basic_effects.py, Line: 379
+  _step_resonator_potential_3d(self, psi) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/basic_effects.py, Line: 397
+  _step_resonator_potential_4d(self, psi) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/basic_effects.py, Line: 416
+  _step_resonator_potential_sine_gordon(self, psi) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/basic_effects.py, Line: 435
 
 Class: SolitonAnalyzer
   __init__(self, system, nonlinear_params)
@@ -7607,6 +7617,8 @@ Class: SingleSolitonOptimization
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py, Line: 225
   _step_resonator_boundary_condition(self, field_value, amplitude) -> float
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py, Line: 256
+  _compute_field_energy(self, profile, x) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py, Line: 282
   soliton_equations_7d(params)
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py, Line: 91
   soliton_ode(x, y)
@@ -7695,6 +7707,8 @@ Class: SolitonModeAnalyzer
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py, Line: 216
   _step_resonator_interaction(self, distance, interaction_range) -> float
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py, Line: 232
+  _step_resonator_profile(self, x, position, width) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py, Line: 243
 
 Class: MultiSolitonValidation
   __init__(self, system, nonlinear_params)
@@ -7747,6 +7761,8 @@ Class: MultiSolitonOptimization
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 482
   _compute_soliton_interaction_strength(self, amp1, width1, pos1, amp2, width2, pos2) -> float
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 508
+  _compute_field_energy(self, profile, x) -> float
+    File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 548
   two_soliton_equations_7d(params)
     File: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py, Line: 118
   three_soliton_equations_7d(params)
@@ -7999,6 +8015,8 @@ Class: CollectiveModesFinder
     File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 886
   _compute_energy_exchange_factor(self, distance) -> float
     File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 909
+  _step_resonator_phase_coherence(self, distance) -> float
+    File: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py, Line: 932
 
 Class: PotentialOptimizationAnalyzer
   __init__(self, domain, particles, system_params)
@@ -8865,6 +8883,8 @@ Class: DefectModel
     File: ./bhlff/models/level_e/defect_core.py, Line: 269
   _compute_fractional_green_normalization(self, beta) -> float
     File: ./bhlff/models/level_e/defect_core.py, Line: 291
+  _compute_7d_bvp_normalization(self, beta) -> float
+    File: ./bhlff/models/level_e/defect_core.py, Line: 322
 
 Class: LevelEBVPIntegration
   __init__(self, bvp_core)
@@ -8935,6 +8955,10 @@ Class: DefectInteractions
     File: ./bhlff/models/level_e/defect_interactions.py, Line: 390
   _compute_defect_energy_from_field(self) -> float
     File: ./bhlff/models/level_e/defect_interactions.py, Line: 421
+  _step_resonator_screening(self, r) -> float
+    File: ./bhlff/models/level_e/defect_interactions.py, Line: 453
+  _compute_7d_bvp_normalization(self, beta) -> float
+    File: ./bhlff/models/level_e/defect_interactions.py, Line: 482
 
 Class: SolitonModel
   __init__(self, domain, physics_params)
@@ -9389,6 +9413,8 @@ Class: SobolAnalyzer
     File: ./bhlff/models/level_e/sensitivity/sobol_analysis.py, Line: 337
   _compute_stability_metrics(self, sobol_indices) -> Dict[str, Any]
     File: ./bhlff/models/level_e/sensitivity/sobol_analysis.py, Line: 360
+  _step_resonator_spatial_envelope(self, r_squared, width) -> np.ndarray
+    File: ./bhlff/models/level_e/sensitivity/sobol_analysis.py, Line: 396
 
 Class: GeometryRobustnessTester
   __init__(self, base_config)
@@ -9523,6 +9549,8 @@ Class: DomainEffectsAnalyzer
     File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 462
   _compute_domain_size_effects(self, solution, x, L, N) -> Dict[str, Any]
     File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 483
+  _step_resonator_phase_field(self, x, sigma) -> np.ndarray
+    File: ./bhlff/models/level_e/discretization/domain_effects.py, Line: 516
 
 Class: TimeStabilityAnalyzer
   __init__(self, reference_config)
@@ -9567,6 +9595,10 @@ Class: TimeStabilityAnalyzer
     File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 525
   _compute_energy_conservation(self, solution, x) -> float
     File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 563
+  _step_resonator_phase_field(self, x, sigma) -> np.ndarray
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 580
+  _step_resonator_time_evolution(self, T) -> float
+    File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 609
 
 Class: SpecializedExperiments
   __init__(self)
@@ -10023,6 +10055,8 @@ Class: ObservationalComparisonStatisticsCore
     File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 256
   _compute_bic_from_7d_field(self, chi_squared, n_parameters, n_data_points) -> float
     File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 260
+  _step_resonator_likelihood(self, chi_squared) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison_statistics_core.py, Line: 266
 
 Class: StatisticalAnalysis
   __init__(self, evolution_results, analysis_parameters)
@@ -10187,6 +10221,10 @@ Class: ObservableExtractor
     File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 283
   _compute_information_measures(self) -> Dict[str, float]
     File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 293
+  _step_resonator_correlation(self, r_values) -> np.ndarray
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 302
+  _step_resonator_power_spectrum(self, k_values) -> np.ndarray
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observable_extractor.py, Line: 330
 
 Class: ObservationalDataLoader
   __init__(self, observational_data, analysis_parameters)
@@ -10219,6 +10257,12 @@ Class: ObservationalDataLoader
     File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 214
   _compute_covariance_matrix(self) -> np.ndarray
     File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 224
+  _step_resonator_correlation(self, r_values) -> np.ndarray
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 231
+  _step_resonator_power_spectrum(self, k_values) -> np.ndarray
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 242
+  _step_resonator_phase_correlation(self, r_values) -> np.ndarray
+    File: ./bhlff/models/level_g/analysis/observational_comparison/observational_data_loader.py, Line: 253
 
 Class: ObservationalComparisonCore
   __init__(self, evolution_results, observational_data, analysis_parameters)
@@ -10265,6 +10309,8 @@ Class: StatisticalComparison
     File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 337
   _assess_goodness_quality(self, chi_squared, r_squared) -> str
     File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 341
+  _step_resonator_likelihood(self, chi_squared) -> float
+    File: ./bhlff/models/level_g/analysis/observational_comparison/statistical_comparison.py, Line: 352
 
 Class: CosmologicalEvolution
   __init__(self, initial_conditions, cosmology_params)
@@ -10885,6 +10931,8 @@ Class: BVPEvolutionComputer
     File: ./bhlff/solvers/integrators/bvp_evolution_computer.py, Line: 186
   setup_spectral_evolution_matrix(self) -> None
     File: ./bhlff/solvers/integrators/bvp_evolution_computer.py, Line: 222
+  _step_resonator_spectral_filter(self, k_magnitude, k_max) -> np.ndarray
+    File: ./bhlff/solvers/integrators/bvp_evolution_computer.py, Line: 246
 
 Class: BVPModulationIntegrator
   __init__(self, domain, config) -> None
@@ -12133,14 +12181,16 @@ Class: PowerLawOptimization
     File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 636
   _extract_region_data(self, envelope, region) -> Dict[str, np.ndarray]
     File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 644
-  _get_initial_parameters(self, region_data) -> np.ndarray
+  _step_resonator_transmission(self, r) -> np.ndarray
     File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 671
+  _get_initial_parameters(self, region_data) -> np.ndarray
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 689
   _compute_fit_quality(self, region_data, params) -> float
-    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 700
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 718
   _compute_gradient(self, func, params, h) -> np.ndarray
-    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 727
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 745
   _compute_parameter_sensitivity(self, param_value, param_name) -> float
-    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 752
+    File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 770
   objective_function(params)
     File: ./bhlff/core/bvp/power_law/power_law_optimization.py, Line: 148
   refinement_objective(params)
@@ -12255,6 +12305,8 @@ Class: AdvancedPowerLawFitting
     File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/advanced_fitting.py, Line: 59
   _extract_radial_profile(self, region_data) -> Dict[str, np.ndarray]
     File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/advanced_fitting.py, Line: 124
+  _step_resonator_transmission(self, r) -> np.ndarray
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/advanced_fitting.py, Line: 173
 
 Class: OptimizationMethods
   __init__(self)
@@ -12291,12 +12343,14 @@ Class: PowerLawFitting
     File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 192
   _extract_radial_profile(self, region_data) -> Dict[str, np.ndarray]
     File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 210
-  _compute_r_squared(self, radial_profile, popt, func) -> float
+  _step_resonator_transmission(self, r) -> np.ndarray
     File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 275
+  _compute_r_squared(self, radial_profile, popt, func) -> float
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 293
   _compute_fitting_quality(self, pcov) -> float
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 279
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 297
   _compute_chi_squared(self, radial_profile, popt, func) -> float
-    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 283
+    File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 301
   power_law_func(r, amplitude, exponent)
     File: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py, Line: 104
 
@@ -13757,24 +13811,6 @@ Class: FFTSolverValidation
     File: ./bhlff/core/fft/fft_solver_validation.py, Line: 170
   check_boundary_conditions(self, field, boundary_type) -> Dict[str, Any]
     File: ./bhlff/core/fft/fft_solver_validation.py, Line: 246
-
-Class: SpectralFiltering
-  __init__(self, domain, precision)
-    File: ./bhlff/core/fft/spectral_filtering.py, Line: 58
-  apply_low_pass_filter(self, field, cutoff_frequency, order) -> np.ndarray
-    File: ./bhlff/core/fft/spectral_filtering.py, Line: 80
-  apply_high_pass_filter(self, field, cutoff_frequency, order) -> np.ndarray
-    File: ./bhlff/core/fft/spectral_filtering.py, Line: 123
-  apply_band_pass_filter(self, field, center_frequency, bandwidth, order) -> np.ndarray
-    File: ./bhlff/core/fft/spectral_filtering.py, Line: 165
-  apply_gaussian_filter(self, field, sigma) -> np.ndarray
-    File: ./bhlff/core/fft/spectral_filtering.py, Line: 212
-  apply_spectral_filter(self, field, filter_type) -> np.ndarray
-    File: ./bhlff/core/fft/spectral_filtering.py, Line: 249
-  apply_noise_reduction(self, field, noise_level, method) -> np.ndarray
-    File: ./bhlff/core/fft/spectral_filtering.py, Line: 278
-  _compute_k_magnitude(self) -> np.ndarray
-    File: ./bhlff/core/fft/spectral_filtering.py, Line: 307
 
 Class: FFTPlan7D
   __init__(self, domain_shape, precision)

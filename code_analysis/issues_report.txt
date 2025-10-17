@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 873
+Total issues found: 879
 
 METHODS_WITHOUT_DOCSTRINGS: 115 issues
 ----------------------------------------
@@ -557,7 +557,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 12 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 642 issues
+IMPORTS_IN_MIDDLE: 645 issues
 ----------------------------------------
   ./test_quench_detector_minimal.py
     Line 30
@@ -925,6 +925,9 @@ IMPORTS_IN_MIDDLE: 642 issues
   ./tests/unit/test_core/test_spectral_derivatives_physics.py
     Line 37
 
+  ./tests/unit/test_core/test_phase_vector_u1_structure.py
+    Line 32
+
   ./tests/unit/test_core/test_bvp_postulates_physics.py
     Line 48
 
@@ -942,6 +945,9 @@ IMPORTS_IN_MIDDLE: 642 issues
 
   ./tests/unit/test_core/test_power_balance_postulate_physics.py
     Line 29
+
+  ./tests/unit/test_core/test_phase_vector_cuda.py
+    Line 40
 
   ./tests/unit/test_core/test_fft_coverage.py
     Line 22
@@ -990,6 +996,9 @@ IMPORTS_IN_MIDDLE: 642 issues
 
   ./bhlff/utils/cuda_utils.py
     Line 173
+
+  ./bhlff/utils/memory_monitor.py
+    Line 36
 
   ./bhlff/models/base/abstract_models.py
     Line 28
@@ -2117,16 +2126,16 @@ IMPORTS_IN_MIDDLE: 642 issues
     Line 28
 
   ./bhlff/core/bvp/phase_vector/phase_components.py
-    Line 29
+    Line 34
 
   ./bhlff/core/bvp/phase_vector/__init__.py
     Line 32
 
   ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-    Line 29
+    Line 34
 
   ./bhlff/core/bvp/phase_vector/phase_vector.py
-    Line 35
+    Line 49
 
   ./bhlff/core/bvp/level_integration/__init__.py
     Line 35
@@ -2486,7 +2495,7 @@ IMPORTS_IN_MIDDLE: 642 issues
     Line 23
 
 
-FILES_TOO_LARGE: 100 issues
+FILES_TOO_LARGE: 103 issues
 ----------------------------------------
   ./test_quench_detector_optimized.py
 
@@ -2514,7 +2523,11 @@ FILES_TOO_LARGE: 100 issues
 
   ./tests/unit/test_core/test_power_law_optimization_full.py
 
+  ./tests/unit/test_core/test_phase_vector_u1_structure.py
+
   ./tests/unit/test_core/test_bvp_constants_comprehensive.py
+
+  ./tests/unit/test_core/test_phase_vector_cuda.py
 
   ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
 
@@ -2657,6 +2670,8 @@ FILES_TOO_LARGE: 100 issues
   ./bhlff/core/bvp/physical_validation_decorator.py
 
   ./bhlff/core/bvp/quench_characteristics.py
+
+  ./bhlff/core/bvp/phase_vector/phase_vector.py
 
   ./bhlff/core/bvp/validation/physical_constraints.py
 

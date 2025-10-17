@@ -89,10 +89,18 @@ issues:
     file: ./tests/unit/test_core/test_power_law_optimization_full.py
     limit: 400
     lines: 404
+  - exceeds_limit: 118
+    file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+    limit: 400
+    lines: 518
   - exceeds_limit: 37
     file: ./tests/unit/test_core/test_bvp_constants_comprehensive.py
     limit: 400
     lines: 437
+  - exceeds_limit: 70
+    file: ./tests/unit/test_core/test_phase_vector_cuda.py
+    limit: 400
+    lines: 470
   - exceeds_limit: 131
     file: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
     limit: 400
@@ -377,6 +385,10 @@ issues:
     file: ./bhlff/core/bvp/quench_characteristics.py
     limit: 400
     lines: 576
+  - exceeds_limit: 370
+    file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+    limit: 400
+    lines: 770
   - exceeds_limit: 17
     file: ./bhlff/core/bvp/validation/physical_constraints.py
     limit: 400
@@ -691,6 +703,8 @@ issues:
     line: 33
   - file: ./tests/unit/test_core/test_spectral_derivatives_physics.py
     line: 37
+  - file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+    line: 32
   - file: ./tests/unit/test_core/test_bvp_postulates_physics.py
     line: 48
   - file: ./tests/unit/test_core/test_spectral_boundary_conditions_physics.py
@@ -703,6 +717,8 @@ issues:
     line: 30
   - file: ./tests/unit/test_core/test_power_balance_postulate_physics.py
     line: 29
+  - file: ./tests/unit/test_core/test_phase_vector_cuda.py
+    line: 40
   - file: ./tests/unit/test_core/test_fft_coverage.py
     line: 22
   - file: ./tests/unit/test_core/test_spectral_energy_spectrum_physics.py
@@ -735,6 +751,8 @@ issues:
     line: 47
   - file: ./bhlff/utils/cuda_utils.py
     line: 173
+  - file: ./bhlff/utils/memory_monitor.py
+    line: 36
   - file: ./bhlff/models/base/abstract_models.py
     line: 28
   - file: ./bhlff/models/base/model_base.py
@@ -1486,13 +1504,13 @@ issues:
   - file: ./bhlff/core/bvp/u1_phase_structure/u1_phase_structure_postulate.py
     line: 28
   - file: ./bhlff/core/bvp/phase_vector/phase_components.py
-    line: 29
+    line: 34
   - file: ./bhlff/core/bvp/phase_vector/__init__.py
     line: 32
   - file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-    line: 29
+    line: 34
   - file: ./bhlff/core/bvp/phase_vector/phase_vector.py
-    line: 35
+    line: 49
   - file: ./bhlff/core/bvp/level_integration/__init__.py
     line: 35
   - file: ./bhlff/core/bvp/boundary/step_resonator.py
@@ -2196,9 +2214,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 12
-  files_too_large: 100
+  files_too_large: 103
   files_without_docstrings: 4
-  imports_in_middle: 642
+  imports_in_middle: 645
   methods_with_pass: 0
   methods_without_docstrings: 115
   not_implemented_in_non_abstract: 0

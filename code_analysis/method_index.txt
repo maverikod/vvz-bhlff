@@ -240,13 +240,13 @@ Class: TestBVPPhaseVectorPhysics
   domain_7d(self)
     File: ./tests/integration/test_bvp_phase_vector_physics.py, Line: 39
   bvp_constants(self)
-    File: ./tests/integration/test_bvp_phase_vector_physics.py, Line: 51
+    File: ./tests/integration/test_bvp_phase_vector_physics.py, Line: 48
   bvp_core(self, domain_7d, bvp_constants)
-    File: ./tests/integration/test_bvp_phase_vector_physics.py, Line: 70
+    File: ./tests/integration/test_bvp_phase_vector_physics.py, Line: 67
   test_bvp_phase_vector_physics(self, domain_7d, bvp_core)
-    File: ./tests/integration/test_bvp_phase_vector_physics.py, Line: 74
+    File: ./tests/integration/test_bvp_phase_vector_physics.py, Line: 71
   _generate_physical_source(self, domain) -> np.ndarray
-    File: ./tests/integration/test_bvp_phase_vector_physics.py, Line: 117
+    File: ./tests/integration/test_bvp_phase_vector_physics.py, Line: 114
 
 Class: TestBVPInterfacePipelinePhysics
   domain_7d(self)
@@ -3940,6 +3940,60 @@ Class: TestSpectralDerivativesPhysics
   _create_test_field(self, domain) -> np.ndarray
     File: ./tests/unit/test_core/test_spectral_derivatives_physics.py, Line: 311
 
+Class: TestPhaseVectorU1Structure
+  domain_7d_small(self)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 349
+  domain_7d(self)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 44
+  phase_vector_config(self)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 49
+  phase_vector(self, domain_7d_small, phase_vector_config)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 72
+  test_phase_vector_initialization(self, phase_vector, domain_7d_small)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 76
+  test_phase_components_structure(self, phase_vector)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 95
+  test_total_phase_computation(self, phase_vector)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 114
+  test_phase_decomposition(self, phase_vector)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 128
+  test_topological_charge_computation(self, phase_vector)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 158
+  test_phase_coherence_computation(self, phase_vector)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 188
+  test_electroweak_currents_computation(self, phase_vector)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 206
+  test_su2_coupling_management(self, phase_vector)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 232
+  test_electroweak_coefficients_management(self, electroweak_coupling)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 473
+  test_phase_components_update(self, phase_vector)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 283
+  test_7d_phase_structure(self, domain_7d, phase_vector_config)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 306
+  test_phase_vector_repr(self, phase_vector)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 329
+  phase_components_config(self)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 354
+  phase_components(self, domain_7d_small, phase_components_config)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 368
+  test_phase_components_initialization(self, phase_components, domain_7d_small)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 372
+  test_phase_components_get_components(self, phase_components)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 389
+  test_phase_components_total_phase(self, phase_components)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 406
+  test_phase_components_coherence(self, phase_components)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 420
+  electroweak_config(self)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 440
+  electroweak_coupling(self, electroweak_config)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 452
+  test_electroweak_coupling_initialization(self, electroweak_coupling)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 456
+  test_weinberg_angle_management(self, electroweak_coupling)
+    File: ./tests/unit/test_core/test_phase_vector_u1_structure.py, Line: 499
+
 Class: TestSpectralBoundaryConditionsPhysics
   domain_7d(self)
     File: ./tests/unit/test_core/test_spectral_boundary_conditions_physics.py, Line: 23
@@ -4263,6 +4317,50 @@ Class: TestPowerBalancePostulatePhysics
     File: ./tests/unit/test_core/test_power_balance_postulate_physics.py, Line: 63
   test_power_balance_postulate_physics(self, domain_7d, bvp_constants, test_envelope)
     File: ./tests/unit/test_core/test_power_balance_postulate_physics.py, Line: 97
+
+Class: TestPhaseVectorCUDA
+  domain_7d_small(self)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 348
+  phase_vector_config_cuda(self)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 55
+  phase_vector_config_cpu(self)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 79
+  phase_vector_cuda(self, domain_7d_small, phase_vector_config_cuda)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 103
+  phase_vector_cpu(self, domain_7d_small, phase_vector_config_cpu)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 108
+  test_cuda_initialization(self, phase_vector_cuda)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 113
+  test_cpu_initialization(self, phase_vector_cpu)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 125
+  test_cuda_vs_cpu_correctness(self, phase_vector_cuda, phase_vector_cpu)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 137
+  test_cuda_performance(self, phase_vector_cuda, phase_vector_cpu)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 169
+  test_gpu_memory_management(self, phase_vector_cuda)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 210
+  test_cuda_gradient_operations(self, phase_vector_cuda)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 240
+  test_cuda_mathematical_operations(self, phase_vector_cuda)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 265
+  test_cuda_fallback_to_cpu(self)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 300
+  phase_components_config_cuda(self)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 353
+  phase_components_cuda(self, domain_7d_small, phase_components_config_cuda)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 368
+  test_phase_components_cuda_initialization(self, phase_components_cuda)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 373
+  test_phase_components_cuda_coherence(self, phase_components_cuda)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 386
+  electroweak_config_cuda(self)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 406
+  electroweak_coupling_cuda(self, electroweak_config_cuda)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 419
+  test_electroweak_coupling_cuda_initialization(self, electroweak_coupling_cuda)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 424
+  test_electroweak_coupling_cuda_currents(self, electroweak_coupling_cuda)
+    File: ./tests/unit/test_core/test_phase_vector_cuda.py, Line: 437
 
 Class: TestFFTCoverage
   domain(self)
@@ -4929,6 +5027,38 @@ Class: CUDABackend
     File: ./bhlff/utils/cuda_utils.py, Line: 167
   get_memory_info(self) -> dict
     File: ./bhlff/utils/cuda_utils.py, Line: 171
+
+Class: MemoryMonitor
+  memory_monitor_context(monitor, auto_cleanup)
+    File: ./bhlff/utils/memory_monitor.py, Line: 329
+  create_memory_monitor(log_interval) -> MemoryMonitor
+    File: ./bhlff/utils/memory_monitor.py, Line: 354
+  __init__(self, log_interval)
+    File: ./bhlff/utils/memory_monitor.py, Line: 51
+  get_cpu_memory_usage(self) -> Dict[str, float]
+    File: ./bhlff/utils/memory_monitor.py, Line: 71
+  get_gpu_memory_usage(self) -> Optional[Dict[str, float]]
+    File: ./bhlff/utils/memory_monitor.py, Line: 91
+  get_memory_stats(self) -> Dict[str, Any]
+    File: ./bhlff/utils/memory_monitor.py, Line: 122
+  start_monitoring(self) -> None
+    File: ./bhlff/utils/memory_monitor.py, Line: 159
+  stop_monitoring(self) -> None
+    File: ./bhlff/utils/memory_monitor.py, Line: 175
+  _monitor_loop(self) -> None
+    File: ./bhlff/utils/memory_monitor.py, Line: 187
+  force_garbage_collection(self) -> None
+    File: ./bhlff/utils/memory_monitor.py, Line: 208
+  get_memory_history(self) -> List[Dict[str, Any]]
+    File: ./bhlff/utils/memory_monitor.py, Line: 226
+  clear_memory_history(self) -> None
+    File: ./bhlff/utils/memory_monitor.py, Line: 239
+  set_memory_thresholds(self, cpu_warning, cpu_critical, gpu_warning, gpu_critical) -> None
+    File: ./bhlff/utils/memory_monitor.py, Line: 243
+  get_memory_recommendations(self) -> List[str]
+    File: ./bhlff/utils/memory_monitor.py, Line: 272
+  __repr__(self) -> str
+    File: ./bhlff/utils/memory_monitor.py, Line: 322
 
 Class: AbstractLevelModels
   __init__(self, domain, parameters)
@@ -11988,63 +12118,127 @@ Class: U1PhaseStructurePostulate
 
 Class: PhaseComponents
   __init__(self, domain, config) -> None
-    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 50
+    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 60
   _setup_phase_components(self) -> None
-    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 69
+    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 90
   get_components(self) -> List[np.ndarray]
-    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 106
+    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 137
   get_total_phase(self, coupling_matrix) -> np.ndarray
-    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 119
+    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 150
   update_components(self, envelope) -> None
-    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 153
+    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 184
   compute_phase_coherence(self) -> np.ndarray
-    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 181
+    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 212
+  _to_gpu(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 241
+  _to_cpu(self, array) -> np.ndarray
+    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 258
+  _cuda_exp(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 275
+  _cuda_abs(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 292
+  _cuda_angle(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 309
+  _cuda_mean(self, array, axis) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 326
   __repr__(self) -> str
-    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 208
+    File: ./bhlff/core/bvp/phase_vector/phase_components.py, Line: 344
 
 Class: ElectroweakCoupling
   __init__(self, config) -> None
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 50
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 60
   _setup_electroweak_coefficients(self) -> None
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 68
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 89
   compute_electroweak_currents(self, envelope, phase_components, domain) -> Dict[str, np.ndarray]
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 87
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 108
   get_electroweak_coefficients(self) -> Dict[str, float]
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 173
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 201
   set_electroweak_coefficients(self, coefficients) -> None
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 186
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 214
   get_weinberg_angle(self) -> float
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 199
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 227
   set_weinberg_angle(self, angle) -> None
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 212
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 240
+  _to_gpu(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 253
+  _to_cpu(self, array) -> np.ndarray
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 270
+  _cuda_gradient(self, array, axis) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 287
+  _cuda_sqrt(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 305
+  _cuda_sum(self, array, axis) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 322
+  _cuda_sin(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 340
+  _cuda_cos(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 357
+  _cuda_abs(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 374
   __repr__(self) -> str
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 225
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 391
 
 Class: PhaseVector
   __init__(self, domain, config, constants) -> None
-    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 61
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 79
   _setup_su2_coupling(self) -> None
-    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 91
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 128
   get_phase_components(self) -> List[np.ndarray]
-    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 121
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 158
   get_total_phase(self) -> np.ndarray
-    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 134
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 176
   compute_electroweak_currents(self, envelope) -> Dict[str, np.ndarray]
-    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 151
-  compute_phase_coherence(self) -> np.ndarray
-    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 181
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 193
+  compute_phase_coherence(self, envelope) -> float
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 453
   get_su2_coupling_strength(self) -> float
-    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 199
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 255
   set_su2_coupling_strength(self, strength) -> None
-    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 212
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 268
   update_phase_components(self, envelope) -> None
-    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 234
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 290
   get_electroweak_coefficients(self) -> Dict[str, float]
-    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 251
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 307
   set_electroweak_coefficients(self, coefficients) -> None
-    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 264
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 320
+  decompose_phase_structure(self, envelope) -> tuple
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 333
+  compute_topological_charge(self, envelope) -> float
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 378
+  _to_gpu(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 489
+  _to_cpu(self, array) -> np.ndarray
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 506
+  _cuda_gradient(self, array, axis) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 523
+  _cuda_abs(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 541
+  _cuda_angle(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 558
+  _cuda_exp(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 575
+  _cuda_sum(self, array, axis) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 592
+  _cuda_mean(self, array, axis) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 610
+  _cuda_sqrt(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 628
+  _cuda_sin(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 645
+  _cuda_cos(self, array) -> 'cp.ndarray'
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 662
+  _check_memory_usage(self, operation_name) -> None
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 679
+  start_memory_monitoring(self) -> None
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 710
+  stop_memory_monitoring(self) -> None
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 722
+  get_memory_stats(self) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 733
+  force_memory_cleanup(self) -> None
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 748
   __repr__(self) -> str
-    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 277
+    File: ./bhlff/core/bvp/phase_vector/phase_vector.py, Line: 760
 
 Class: TheoreticalBoundsValidator
   __init__(self, domain_shape, parameters)

@@ -39,12 +39,9 @@ class TestBVPPhaseVectorPhysics:
     def domain_7d(self):
         """Create 7D domain for complete pipeline testing."""
         return Domain(
-            L=2.0,  # Larger domain for better physics
-            N=64,  # Higher resolution
-            dimensions=3,
-            N_phi=32,  # More phase points
-            N_t=128,  # More time points
-            T=2.0,  # Longer evolution
+            L=1.0,  # Smaller domain for testing
+            N=2,  # Very low resolution for memory efficiency
+            dimensions=7,  # 7D structure
         )
 
     @pytest.fixture

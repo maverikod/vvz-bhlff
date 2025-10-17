@@ -11948,13 +11948,13 @@ method_index:
       - self
       - config
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 50
+      line: 60
       name: __init__
       returns: None
     - args:
       - self
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 68
+      line: 89
       name: _setup_electroweak_coefficients
       returns: None
     - args:
@@ -11963,39 +11963,97 @@ method_index:
       - phase_components
       - domain
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 87
+      line: 108
       name: compute_electroweak_currents
       returns: Dict[str, np.ndarray]
     - args:
       - self
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 173
+      line: 201
       name: get_electroweak_coefficients
       returns: Dict[str, float]
     - args:
       - self
       - coefficients
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 186
+      line: 214
       name: set_electroweak_coefficients
       returns: None
     - args:
       - self
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 199
+      line: 227
       name: get_weinberg_angle
       returns: float
     - args:
       - self
       - angle
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 212
+      line: 240
       name: set_weinberg_angle
       returns: None
     - args:
       - self
+      - array
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 225
+      line: 253
+      name: _to_gpu
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
+      line: 270
+      name: _to_cpu
+      returns: np.ndarray
+    - args:
+      - self
+      - array
+      - axis
+      file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
+      line: 287
+      name: _cuda_gradient
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
+      line: 305
+      name: _cuda_sqrt
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      - axis
+      file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
+      line: 322
+      name: _cuda_sum
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
+      line: 340
+      name: _cuda_sin
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
+      line: 357
+      name: _cuda_cos
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
+      line: 374
+      name: _cuda_abs
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
+      line: 391
       name: __repr__
       returns: str
     EnergyAnalyzer:
@@ -17020,6 +17078,103 @@ method_index:
       line: 360
       name: cleanup
       returns: None
+    MemoryMonitor:
+    - args:
+      - monitor
+      - auto_cleanup
+      file: ./bhlff/utils/memory_monitor.py
+      line: 329
+      name: memory_monitor_context
+      returns: null
+    - args:
+      - log_interval
+      file: ./bhlff/utils/memory_monitor.py
+      line: 354
+      name: create_memory_monitor
+      returns: MemoryMonitor
+    - args:
+      - self
+      - log_interval
+      file: ./bhlff/utils/memory_monitor.py
+      line: 51
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/utils/memory_monitor.py
+      line: 71
+      name: get_cpu_memory_usage
+      returns: Dict[str, float]
+    - args:
+      - self
+      file: ./bhlff/utils/memory_monitor.py
+      line: 91
+      name: get_gpu_memory_usage
+      returns: Optional[Dict[str, float]]
+    - args:
+      - self
+      file: ./bhlff/utils/memory_monitor.py
+      line: 122
+      name: get_memory_stats
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/utils/memory_monitor.py
+      line: 159
+      name: start_monitoring
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/utils/memory_monitor.py
+      line: 175
+      name: stop_monitoring
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/utils/memory_monitor.py
+      line: 187
+      name: _monitor_loop
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/utils/memory_monitor.py
+      line: 208
+      name: force_garbage_collection
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/utils/memory_monitor.py
+      line: 226
+      name: get_memory_history
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/utils/memory_monitor.py
+      line: 239
+      name: clear_memory_history
+      returns: None
+    - args:
+      - self
+      - cpu_warning
+      - cpu_critical
+      - gpu_warning
+      - gpu_critical
+      file: ./bhlff/utils/memory_monitor.py
+      line: 243
+      name: set_memory_thresholds
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/utils/memory_monitor.py
+      line: 272
+      name: get_memory_recommendations
+      returns: List[str]
+    - args:
+      - self
+      file: ./bhlff/utils/memory_monitor.py
+      line: 322
+      name: __repr__
+      returns: str
     MemoryParameters:
     - args:
       - self
@@ -21535,45 +21690,88 @@ method_index:
       - domain
       - config
       file: ./bhlff/core/bvp/phase_vector/phase_components.py
-      line: 50
+      line: 60
       name: __init__
       returns: None
     - args:
       - self
       file: ./bhlff/core/bvp/phase_vector/phase_components.py
-      line: 69
+      line: 90
       name: _setup_phase_components
       returns: None
     - args:
       - self
       file: ./bhlff/core/bvp/phase_vector/phase_components.py
-      line: 106
+      line: 137
       name: get_components
       returns: List[np.ndarray]
     - args:
       - self
       - coupling_matrix
       file: ./bhlff/core/bvp/phase_vector/phase_components.py
-      line: 119
+      line: 150
       name: get_total_phase
       returns: np.ndarray
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/phase_vector/phase_components.py
-      line: 153
+      line: 184
       name: update_components
       returns: None
     - args:
       - self
       file: ./bhlff/core/bvp/phase_vector/phase_components.py
-      line: 181
+      line: 212
       name: compute_phase_coherence
       returns: np.ndarray
     - args:
       - self
+      - array
       file: ./bhlff/core/bvp/phase_vector/phase_components.py
-      line: 208
+      line: 241
+      name: _to_gpu
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/phase_components.py
+      line: 258
+      name: _to_cpu
+      returns: np.ndarray
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/phase_components.py
+      line: 275
+      name: _cuda_exp
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/phase_components.py
+      line: 292
+      name: _cuda_abs
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/phase_components.py
+      line: 309
+      name: _cuda_angle
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      - axis
+      file: ./bhlff/core/bvp/phase_vector/phase_components.py
+      line: 326
+      name: _cuda_mean
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      file: ./bhlff/core/bvp/phase_vector/phase_components.py
+      line: 344
       name: __repr__
       returns: str
     PhaseEnvelopeBalanceSolver:
@@ -22102,77 +22300,203 @@ method_index:
       - config
       - constants
       file: ./bhlff/core/bvp/phase_vector/phase_vector.py
-      line: 61
+      line: 79
       name: __init__
       returns: None
     - args:
       - self
       file: ./bhlff/core/bvp/phase_vector/phase_vector.py
-      line: 91
+      line: 128
       name: _setup_su2_coupling
       returns: None
     - args:
       - self
       file: ./bhlff/core/bvp/phase_vector/phase_vector.py
-      line: 121
+      line: 158
       name: get_phase_components
       returns: List[np.ndarray]
     - args:
       - self
       file: ./bhlff/core/bvp/phase_vector/phase_vector.py
-      line: 134
+      line: 176
       name: get_total_phase
       returns: np.ndarray
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/phase_vector/phase_vector.py
-      line: 151
+      line: 193
       name: compute_electroweak_currents
       returns: Dict[str, np.ndarray]
     - args:
       - self
+      - envelope
       file: ./bhlff/core/bvp/phase_vector/phase_vector.py
-      line: 181
+      line: 453
       name: compute_phase_coherence
-      returns: np.ndarray
+      returns: float
     - args:
       - self
       file: ./bhlff/core/bvp/phase_vector/phase_vector.py
-      line: 199
+      line: 255
       name: get_su2_coupling_strength
       returns: float
     - args:
       - self
       - strength
       file: ./bhlff/core/bvp/phase_vector/phase_vector.py
-      line: 212
+      line: 268
       name: set_su2_coupling_strength
       returns: None
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/phase_vector/phase_vector.py
-      line: 234
+      line: 290
       name: update_phase_components
       returns: None
     - args:
       - self
       file: ./bhlff/core/bvp/phase_vector/phase_vector.py
-      line: 251
+      line: 307
       name: get_electroweak_coefficients
       returns: Dict[str, float]
     - args:
       - self
       - coefficients
       file: ./bhlff/core/bvp/phase_vector/phase_vector.py
-      line: 264
+      line: 320
       name: set_electroweak_coefficients
       returns: None
     - args:
       - self
+      - envelope
       file: ./bhlff/core/bvp/phase_vector/phase_vector.py
-      line: 277
+      line: 333
+      name: decompose_phase_structure
+      returns: tuple
+    - args:
+      - self
+      - envelope
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 378
+      name: compute_topological_charge
+      returns: float
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 489
+      name: _to_gpu
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 506
+      name: _to_cpu
+      returns: np.ndarray
+    - args:
+      - self
+      - array
+      - axis
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 523
+      name: _cuda_gradient
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 541
+      name: _cuda_abs
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 558
+      name: _cuda_angle
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 575
+      name: _cuda_exp
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      - axis
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 592
+      name: _cuda_sum
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      - axis
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 610
+      name: _cuda_mean
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 628
+      name: _cuda_sqrt
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 645
+      name: _cuda_sin
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - array
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 662
+      name: _cuda_cos
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - operation_name
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 679
+      name: _check_memory_usage
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 710
+      name: start_memory_monitoring
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 722
+      name: stop_memory_monitoring
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 733
+      name: get_memory_stats
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 748
+      name: force_memory_cleanup
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/core/bvp/phase_vector/phase_vector.py
+      line: 760
       name: __repr__
       returns: str
     PhysicalConstraintsValidator:
@@ -33002,7 +33326,7 @@ method_index:
     - args:
       - self
       file: ./tests/integration/test_bvp_phase_vector_physics.py
-      line: 51
+      line: 48
       name: bvp_constants
       returns: null
     - args:
@@ -33010,7 +33334,7 @@ method_index:
       - domain_7d
       - bvp_constants
       file: ./tests/integration/test_bvp_phase_vector_physics.py
-      line: 70
+      line: 67
       name: bvp_core
       returns: null
     - args:
@@ -33018,14 +33342,14 @@ method_index:
       - domain_7d
       - bvp_core
       file: ./tests/integration/test_bvp_phase_vector_physics.py
-      line: 74
+      line: 71
       name: test_bvp_phase_vector_physics
       returns: null
     - args:
       - self
       - domain
       file: ./tests/integration/test_bvp_phase_vector_physics.py
-      line: 117
+      line: 114
       name: _generate_physical_source
       returns: np.ndarray
     TestBVPPostulateCoverage:
@@ -39554,6 +39878,336 @@ method_index:
       file: ./tests/unit/test_level_f/test_transitions_basic.py
       line: 309
       name: test_critical_exponents_computation
+      returns: null
+    TestPhaseVectorCUDA:
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 348
+      name: domain_7d_small
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 55
+      name: phase_vector_config_cuda
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 79
+      name: phase_vector_config_cpu
+      returns: null
+    - args:
+      - self
+      - domain_7d_small
+      - phase_vector_config_cuda
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 103
+      name: phase_vector_cuda
+      returns: null
+    - args:
+      - self
+      - domain_7d_small
+      - phase_vector_config_cpu
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 108
+      name: phase_vector_cpu
+      returns: null
+    - args:
+      - self
+      - phase_vector_cuda
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 113
+      name: test_cuda_initialization
+      returns: null
+    - args:
+      - self
+      - phase_vector_cpu
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 125
+      name: test_cpu_initialization
+      returns: null
+    - args:
+      - self
+      - phase_vector_cuda
+      - phase_vector_cpu
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 137
+      name: test_cuda_vs_cpu_correctness
+      returns: null
+    - args:
+      - self
+      - phase_vector_cuda
+      - phase_vector_cpu
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 169
+      name: test_cuda_performance
+      returns: null
+    - args:
+      - self
+      - phase_vector_cuda
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 210
+      name: test_gpu_memory_management
+      returns: null
+    - args:
+      - self
+      - phase_vector_cuda
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 240
+      name: test_cuda_gradient_operations
+      returns: null
+    - args:
+      - self
+      - phase_vector_cuda
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 265
+      name: test_cuda_mathematical_operations
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 300
+      name: test_cuda_fallback_to_cpu
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 353
+      name: phase_components_config_cuda
+      returns: null
+    - args:
+      - self
+      - domain_7d_small
+      - phase_components_config_cuda
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 368
+      name: phase_components_cuda
+      returns: null
+    - args:
+      - self
+      - phase_components_cuda
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 373
+      name: test_phase_components_cuda_initialization
+      returns: null
+    - args:
+      - self
+      - phase_components_cuda
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 386
+      name: test_phase_components_cuda_coherence
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 406
+      name: electroweak_config_cuda
+      returns: null
+    - args:
+      - self
+      - electroweak_config_cuda
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 419
+      name: electroweak_coupling_cuda
+      returns: null
+    - args:
+      - self
+      - electroweak_coupling_cuda
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 424
+      name: test_electroweak_coupling_cuda_initialization
+      returns: null
+    - args:
+      - self
+      - electroweak_coupling_cuda
+      file: ./tests/unit/test_core/test_phase_vector_cuda.py
+      line: 437
+      name: test_electroweak_coupling_cuda_currents
+      returns: null
+    TestPhaseVectorU1Structure:
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 349
+      name: domain_7d_small
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 44
+      name: domain_7d
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 49
+      name: phase_vector_config
+      returns: null
+    - args:
+      - self
+      - domain_7d_small
+      - phase_vector_config
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 72
+      name: phase_vector
+      returns: null
+    - args:
+      - self
+      - phase_vector
+      - domain_7d_small
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 76
+      name: test_phase_vector_initialization
+      returns: null
+    - args:
+      - self
+      - phase_vector
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 95
+      name: test_phase_components_structure
+      returns: null
+    - args:
+      - self
+      - phase_vector
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 114
+      name: test_total_phase_computation
+      returns: null
+    - args:
+      - self
+      - phase_vector
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 128
+      name: test_phase_decomposition
+      returns: null
+    - args:
+      - self
+      - phase_vector
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 158
+      name: test_topological_charge_computation
+      returns: null
+    - args:
+      - self
+      - phase_vector
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 188
+      name: test_phase_coherence_computation
+      returns: null
+    - args:
+      - self
+      - phase_vector
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 206
+      name: test_electroweak_currents_computation
+      returns: null
+    - args:
+      - self
+      - phase_vector
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 232
+      name: test_su2_coupling_management
+      returns: null
+    - args:
+      - self
+      - electroweak_coupling
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 473
+      name: test_electroweak_coefficients_management
+      returns: null
+    - args:
+      - self
+      - phase_vector
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 283
+      name: test_phase_components_update
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      - phase_vector_config
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 306
+      name: test_7d_phase_structure
+      returns: null
+    - args:
+      - self
+      - phase_vector
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 329
+      name: test_phase_vector_repr
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 354
+      name: phase_components_config
+      returns: null
+    - args:
+      - self
+      - domain_7d_small
+      - phase_components_config
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 368
+      name: phase_components
+      returns: null
+    - args:
+      - self
+      - phase_components
+      - domain_7d_small
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 372
+      name: test_phase_components_initialization
+      returns: null
+    - args:
+      - self
+      - phase_components
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 389
+      name: test_phase_components_get_components
+      returns: null
+    - args:
+      - self
+      - phase_components
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 406
+      name: test_phase_components_total_phase
+      returns: null
+    - args:
+      - self
+      - phase_components
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 420
+      name: test_phase_components_coherence
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 440
+      name: electroweak_config
+      returns: null
+    - args:
+      - self
+      - electroweak_config
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 452
+      name: electroweak_coupling
+      returns: null
+    - args:
+      - self
+      - electroweak_coupling
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 456
+      name: test_electroweak_coupling_initialization
+      returns: null
+    - args:
+      - self
+      - electroweak_coupling
+      file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
+      line: 499
+      name: test_weinberg_angle_management
       returns: null
     TestPhysicsValidationIntegration:
     - args:
@@ -46265,6 +46919,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 6405
-    total_classes: 628
+    total_class_methods: 6499
+    total_classes: 631
     total_standalone_functions: 0

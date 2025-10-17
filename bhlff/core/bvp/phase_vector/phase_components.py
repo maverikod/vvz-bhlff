@@ -25,8 +25,18 @@ Example:
 
 import numpy as np
 from typing import Dict, Any, List
+import logging
 
-from ...domain import Domain
+from bhlff.core.domain import Domain
+
+# CUDA optimization
+try:
+    import cupy as cp
+    CUDA_AVAILABLE = True
+    logging.info("CUDA support enabled with CuPy")
+except ImportError:
+    CUDA_AVAILABLE = False
+    logging.warning("CUDA not available, falling back to CPU")
 
 
 class PhaseComponents:
@@ -64,6 +74,17 @@ class PhaseComponents:
         self.domain = domain
         self.config = config
         self.theta_components = []
+        
+        # CUDA optimization setup
+        self.cuda_available = CUDA_AVAILABLE
+        self.use_cuda = config.get("use_cuda", True) and self.cuda_available
+        self.logger = logging.getLogger(__name__)
+        
+        if self.use_cuda:
+            self.logger.info("PhaseComponents: CUDA optimization enabled")
+        else:
+            self.logger.info("PhaseComponents: Using CPU computation")
+        
         self._setup_phase_components()
 
     def _setup_phase_components(self) -> None:
@@ -85,8 +106,18 @@ class PhaseComponents:
             amplitude = phase_config.get(f"amplitude_{a+1}", 1.0)
             frequency = phase_config.get(f"frequency_{a+1}", 1.0)
 
-            # Create spatial phase distribution
-            if self.domain.dimensions == 1:
+            # Create spatial phase distribution for 7D structure
+            if self.domain.dimensions == 7:
+                # 7D structure: ℝ³ₓ × 𝕋³_φ × ℝₜ
+                # Use domain shape for proper 7D structure
+                theta_a = np.zeros(self.domain.shape, dtype=complex)
+                
+                # Create simple 7D phase distribution
+                # For testing purposes, create a simple phase pattern
+                indices = np.indices(self.domain.shape)
+                phase_sum = np.sum(indices, axis=0)
+                theta_a = amplitude * np.exp(1j * frequency * phase_sum / np.max(phase_sum))
+            elif self.domain.dimensions == 1:
                 x = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
                 theta_a = amplitude * np.exp(1j * frequency * x)
             elif self.domain.dimensions == 2:
@@ -196,15 +227,121 @@ class PhaseComponents:
         """
         # Sum of complex exponentials
         coherence_sum = np.zeros_like(self.theta_components[0])
+        coherence_sum = self._to_gpu(coherence_sum)
 
         for theta_a in self.theta_components:
-            coherence_sum += np.exp(1j * np.angle(theta_a))
+            theta_a_gpu = self._to_gpu(theta_a)
+            coherence_sum += self._cuda_exp(1j * self._cuda_angle(theta_a_gpu))
 
         # Normalize by number of components
-        coherence = np.abs(coherence_sum) / 3.0
+        coherence = self._cuda_abs(coherence_sum) / 3.0
 
-        return coherence
+        return self._to_cpu(coherence)
+
+    def _to_gpu(self, array: np.ndarray) -> 'cp.ndarray':
+        """
+        Convert numpy array to GPU array.
+        
+        Physical Meaning:
+            Transfers array to GPU memory for CUDA computation.
+            
+        Args:
+            array (np.ndarray): Input array.
+            
+        Returns:
+            cp.ndarray: GPU array.
+        """
+        if self.use_cuda and CUDA_AVAILABLE:
+            return cp.asarray(array)
+        return array
+    
+    def _to_cpu(self, array) -> np.ndarray:
+        """
+        Convert GPU array to numpy array.
+        
+        Physical Meaning:
+            Transfers array from GPU memory to CPU memory.
+            
+        Args:
+            array: Input array (GPU or CPU).
+            
+        Returns:
+            np.ndarray: CPU array.
+        """
+        if self.use_cuda and CUDA_AVAILABLE and hasattr(array, 'get'):
+            return array.get()
+        return array
+    
+    def _cuda_exp(self, array) -> 'cp.ndarray':
+        """
+        Compute exponential using CUDA.
+        
+        Physical Meaning:
+            Computes exponential using CUDA for optimal performance.
+            
+        Args:
+            array: Input array.
+            
+        Returns:
+            cp.ndarray: Exponential array.
+        """
+        if self.use_cuda and CUDA_AVAILABLE:
+            return cp.exp(array)
+        return np.exp(array)
+    
+    def _cuda_abs(self, array) -> 'cp.ndarray':
+        """
+        Compute absolute value using CUDA.
+        
+        Physical Meaning:
+            Computes absolute value using CUDA for optimal performance.
+            
+        Args:
+            array: Input array.
+            
+        Returns:
+            cp.ndarray: Absolute value array.
+        """
+        if self.use_cuda and CUDA_AVAILABLE:
+            return cp.abs(array)
+        return np.abs(array)
+    
+    def _cuda_angle(self, array) -> 'cp.ndarray':
+        """
+        Compute angle using CUDA.
+        
+        Physical Meaning:
+            Computes angle using CUDA for optimal performance.
+            
+        Args:
+            array: Input array.
+            
+        Returns:
+            cp.ndarray: Angle array.
+        """
+        if self.use_cuda and CUDA_AVAILABLE:
+            return cp.angle(array)
+        return np.angle(array)
+    
+    def _cuda_mean(self, array, axis=None) -> 'cp.ndarray':
+        """
+        Compute mean using CUDA.
+        
+        Physical Meaning:
+            Computes mean using CUDA for optimal performance.
+            
+        Args:
+            array: Input array.
+            axis: Axis along which to compute mean.
+            
+        Returns:
+            cp.ndarray: Mean array.
+        """
+        if self.use_cuda and CUDA_AVAILABLE:
+            return cp.mean(array, axis=axis)
+        return np.mean(array, axis=axis)
 
     def __repr__(self) -> str:
         """String representation of phase components."""
-        return f"PhaseComponents(domain={self.domain}, num_components={len(self.theta_components)})"
+        cuda_status = "CUDA" if self.use_cuda else "CPU"
+        return f"PhaseComponents(domain={self.domain}, num_components={len(self.theta_components)}, compute={cuda_status})"

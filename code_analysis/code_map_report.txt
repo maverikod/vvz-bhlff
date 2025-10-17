@@ -4,7 +4,7 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 877
+Total files analyzed: 881
 
 CLASSES SUMMARY:
 ----------------------------------------
@@ -12,7 +12,7 @@ Total classes: 743
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 6523
+Total functions: 6552
 
 ISSUES SUMMARY:
 ----------------------------------------
@@ -21,8 +21,8 @@ not_implemented_in_non_abstract: 0
 methods_without_docstrings: 115
 files_without_docstrings: 4
 classes_without_docstrings: 12
-imports_in_middle: 642
-files_too_large: 97
+imports_in_middle: 646
+files_too_large: 100
 
 METHODS_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -126,15 +126,27 @@ CLASSES_WITHOUT_DOCSTRINGS:
   Class: MockInvalidParameters
 
   File: ./bhlff/core/bvp/quench_detector.py
-  Line: 35
+  Line: 37
   Class: DummyCuPy
 
   ... and 2 more
 
 IMPORTS_IN_MIDDLE:
 ----------------------------------------
+  File: ./test_quench_detector_minimal.py
+  Line: 30
+
+  File: ./test_quench_detector_light.py
+  Line: 36
+
+  File: ./test_quench_detector_cuda.py
+  Line: 30
+
   File: ./setup.py
   Line: 28
+
+  File: ./test_quench_detector_optimized.py
+  Line: 261
 
   File: ./scripts/demo_vectorized_power_law.py
   Line: 203
@@ -151,22 +163,12 @@ IMPORTS_IN_MIDDLE:
   File: ./scripts/demo_ml_prediction_simple.py
   Line: 24
 
-  File: ./scripts/demo_ml_prediction_models.py
-  Line: 22
-
-  File: ./tests/test_bvp_level_c_integration.py
-  Line: 30
-
-  File: ./tests/test_bvp_level_a_integration.py
-  Line: 30
-
-  File: ./tests/conftest.py
-  Line: 37
-
-  ... and 632 more
+  ... and 636 more
 
 FILES_TOO_LARGE:
 ----------------------------------------
+  File: ./test_quench_detector_optimized.py
+
   File: ./tests/unit/test_ml_prediction_vectorized_implementations.py
 
   File: ./tests/unit/test_soliton_analysis_optimization.py
@@ -185,6 +187,4 @@ FILES_TOO_LARGE:
 
   File: ./tests/unit/automated_testing/test_integration.py
 
-  File: ./tests/unit/automated_testing/test_quality_monitor.py
-
-  ... and 87 more
+  ... and 90 more

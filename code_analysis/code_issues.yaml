@@ -29,14 +29,18 @@ issues:
     line: 177
   - class: DummyCuPy
     file: ./bhlff/core/bvp/quench_detector.py
-    line: 35
+    line: 37
   - class: ndarray
     file: ./bhlff/core/bvp/quench_detector.py
-    line: 36
+    line: 38
   - class: MockSystem
     file: ./examples/level_g_example.py
     line: 174
   files_too_large:
+  - exceeds_limit: 17
+    file: ./test_quench_detector_optimized.py
+    limit: 400
+    lines: 417
   - exceeds_limit: 294
     file: ./tests/unit/test_ml_prediction_vectorized_implementations.py
     limit: 400
@@ -358,13 +362,21 @@ issues:
     limit: 400
     lines: 404
   - exceeds_limit: 160
-    file: ./bhlff/core/bvp/quench_detector.py
+    file: ./bhlff/core/bvp/quench_morphology.py
     limit: 400
     lines: 560
+  - exceeds_limit: 253
+    file: ./bhlff/core/bvp/quench_detector.py
+    limit: 400
+    lines: 653
   - exceeds_limit: 50
     file: ./bhlff/core/bvp/physical_validation_decorator.py
     limit: 400
     lines: 450
+  - exceeds_limit: 176
+    file: ./bhlff/core/bvp/quench_characteristics.py
+    limit: 400
+    lines: 576
   - exceeds_limit: 17
     file: ./bhlff/core/bvp/validation/physical_constraints.py
     limit: 400
@@ -435,8 +447,16 @@ issues:
   - file: ./bhlff/models/level_e/experiments/__init__.py
     line: 1
   imports_in_middle:
+  - file: ./test_quench_detector_minimal.py
+    line: 30
+  - file: ./test_quench_detector_light.py
+    line: 36
+  - file: ./test_quench_detector_cuda.py
+    line: 30
   - file: ./setup.py
     line: 28
+  - file: ./test_quench_detector_optimized.py
+    line: 261
   - file: ./scripts/demo_vectorized_power_law.py
     line: 203
   - file: ./scripts/demo_7d_vectorized_processing.py
@@ -1368,7 +1388,7 @@ issues:
   - file: ./bhlff/core/bvp/quenches_postulate_core.py
     line: 28
   - file: ./bhlff/core/bvp/quench_morphology.py
-    line: 32
+    line: 39
   - file: ./bhlff/core/bvp/transition_zone_postulate.py
     line: 25
   - file: ./bhlff/core/bvp/resonance_detector.py
@@ -1376,7 +1396,7 @@ issues:
   - file: ./bhlff/core/bvp/bvp_postulate_base.py
     line: 24
   - file: ./bhlff/core/bvp/quench_detector.py
-    line: 43
+    line: 205
   - file: ./bhlff/core/bvp/bvp_impedance_calculator.py
     line: 34
   - file: ./bhlff/core/bvp/envelope_linear_solver.py
@@ -1450,7 +1470,7 @@ issues:
   - file: ./bhlff/core/bvp/level_c_interface.py
     line: 26
   - file: ./bhlff/core/bvp/quench_characteristics.py
-    line: 31
+    line: 39
   - file: ./bhlff/core/bvp/bvp_envelope_equation_7d.py
     line: 29
   - file: ./bhlff/core/bvp/tail_resonatorness_postulate.py
@@ -2184,9 +2204,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 12
-  files_too_large: 97
+  files_too_large: 100
   files_without_docstrings: 4
-  imports_in_middle: 642
+  imports_in_middle: 646
   methods_with_pass: 0
   methods_without_docstrings: 115
   not_implemented_in_non_abstract: 0

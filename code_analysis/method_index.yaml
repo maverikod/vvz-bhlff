@@ -24419,14 +24419,14 @@ method_index:
       - self
       - domain_7d
       file: ./bhlff/core/bvp/quench_characteristics.py
-      line: 50
+      line: 58
       name: __init__
       returns: null
     - args:
       - self
       - component_mask
       file: ./bhlff/core/bvp/quench_characteristics.py
-      line: 63
+      line: 72
       name: compute_center_of_mass
       returns: Tuple[float, ...]
     - args:
@@ -24434,14 +24434,14 @@ method_index:
       - component_mask
       - amplitude
       file: ./bhlff/core/bvp/quench_characteristics.py
-      line: 95
+      line: 104
       name: compute_quench_strength
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/quench_characteristics.py
-      line: 125
+      line: 134
       name: compute_local_frequency
       returns: np.ndarray
     - args:
@@ -24449,14 +24449,14 @@ method_index:
       - component_mask
       - detuning
       file: ./bhlff/core/bvp/quench_characteristics.py
-      line: 170
+      line: 179
       name: compute_detuning_strength
       returns: float
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/quench_characteristics.py
-      line: 200
+      line: 209
       name: compute_7d_gradient_magnitude
       returns: np.ndarray
     - args:
@@ -24464,8 +24464,53 @@ method_index:
       - component_mask
       - gradient_magnitude
       file: ./bhlff/core/bvp/quench_characteristics.py
-      line: 255
+      line: 264
       name: compute_gradient_strength
+      returns: float
+    - args:
+      - self
+      - component_mask_gpu
+      file: ./bhlff/core/bvp/quench_characteristics.py
+      line: 294
+      name: compute_center_of_mass_cuda
+      returns: Tuple[float, ...]
+    - args:
+      - self
+      - component_mask_gpu
+      - amplitude_gpu
+      file: ./bhlff/core/bvp/quench_characteristics.py
+      line: 335
+      name: compute_quench_strength_cuda
+      returns: float
+    - args:
+      - self
+      - envelope_gpu
+      file: ./bhlff/core/bvp/quench_characteristics.py
+      line: 379
+      name: compute_local_frequency_cuda
+      returns: np.ndarray
+    - args:
+      - self
+      - component_mask_gpu
+      - detuning_gpu
+      file: ./bhlff/core/bvp/quench_characteristics.py
+      line: 431
+      name: compute_detuning_strength_cuda
+      returns: float
+    - args:
+      - self
+      - envelope_gpu
+      file: ./bhlff/core/bvp/quench_characteristics.py
+      line: 475
+      name: compute_7d_gradient_magnitude_cuda
+      returns: np.ndarray
+    - args:
+      - self
+      - component_mask_gpu
+      - gradient_magnitude_gpu
+      file: ./bhlff/core/bvp/quench_characteristics.py
+      line: 530
+      name: compute_gradient_strength_cuda
       returns: float
     QuenchDetector:
     - args:
@@ -24531,76 +24576,76 @@ method_index:
       - domain_7d
       - config
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 64
+      line: 67
       name: __init__
       returns: null
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 119
+      line: 126
       name: detect_quenches
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 156
+      line: 163
       name: _detect_quenches_cuda
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 193
+      line: 210
       name: _detect_quenches_cpu
       returns: Dict[str, Any]
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 217
+      line: 234
       name: _detect_amplitude_quenches
       returns: List[Dict[str, Any]]
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 280
+      line: 297
       name: _detect_detuning_quenches
       returns: List[Dict[str, Any]]
     - args:
       - self
       - envelope
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 351
+      line: 368
       name: _detect_gradient_quenches
       returns: List[Dict[str, Any]]
     - args:
       - self
       - envelope_gpu
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 415
+      line: 432
       name: _detect_amplitude_quenches_cuda
       returns: List[Dict[str, Any]]
     - args:
       - self
       - envelope_gpu
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 455
+      line: 494
       name: _detect_detuning_quenches_cuda
       returns: List[Dict[str, Any]]
     - args:
       - self
       - envelope_gpu
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 499
+      line: 565
       name: _detect_gradient_quenches_cuda
       returns: List[Dict[str, Any]]
     - args:
       - self
       file: ./bhlff/core/bvp/quench_detector.py
-      line: 539
+      line: 632
       name: _validate_thresholds
       returns: None
     QuenchMemoryAnalysis:
@@ -24641,49 +24686,49 @@ method_index:
     - args:
       - self
       file: ./bhlff/core/bvp/quench_morphology.py
-      line: 55
+      line: 63
       name: __init__
       returns: null
     - args:
       - self
       - mask
       file: ./bhlff/core/bvp/quench_morphology.py
-      line: 59
+      line: 68
       name: apply_morphological_operations
       returns: np.ndarray
     - args:
       - self
       - mask
       file: ./bhlff/core/bvp/quench_morphology.py
-      line: 83
+      line: 92
       name: find_connected_components
       returns: Dict[int, np.ndarray]
     - args:
       - self
       - mask
       file: ./bhlff/core/bvp/quench_morphology.py
-      line: 107
+      line: 116
       name: _apply_scipy_operations
       returns: np.ndarray
     - args:
       - self
       - mask
       file: ./bhlff/core/bvp/quench_morphology.py
-      line: 133
+      line: 143
       name: _apply_simple_operations
       returns: np.ndarray
     - args:
       - self
       - mask
       file: ./bhlff/core/bvp/quench_morphology.py
-      line: 171
+      line: 181
       name: _find_scipy_components
       returns: Dict[int, np.ndarray]
     - args:
       - self
       - mask
       file: ./bhlff/core/bvp/quench_morphology.py
-      line: 197
+      line: 207
       name: _find_simple_components
       returns: Dict[int, np.ndarray]
     - args:
@@ -24693,9 +24738,72 @@ method_index:
       - component_mask
       - start_point
       file: ./bhlff/core/bvp/quench_morphology.py
-      line: 230
+      line: 240
       name: _flood_fill_7d
       returns: None
+    - args:
+      - self
+      - mask_gpu
+      file: ./bhlff/core/bvp/quench_morphology.py
+      line: 315
+      name: apply_morphological_operations_cuda
+      returns: null
+    - args:
+      - self
+      - mask_gpu
+      file: ./bhlff/core/bvp/quench_morphology.py
+      line: 347
+      name: find_connected_components_cuda
+      returns: Dict[int, np.ndarray]
+    - args:
+      - self
+      - mask_gpu
+      - structure
+      file: ./bhlff/core/bvp/quench_morphology.py
+      line: 384
+      name: _binary_opening_cuda
+      returns: null
+    - args:
+      - self
+      - mask_gpu
+      - structure
+      file: ./bhlff/core/bvp/quench_morphology.py
+      line: 390
+      name: _binary_closing_cuda
+      returns: null
+    - args:
+      - self
+      - mask_gpu
+      - structure
+      file: ./bhlff/core/bvp/quench_morphology.py
+      line: 396
+      name: _erosion_cuda_vectorized
+      returns: null
+    - args:
+      - self
+      - mask_gpu
+      - structure
+      file: ./bhlff/core/bvp/quench_morphology.py
+      line: 432
+      name: _dilation_cuda_vectorized
+      returns: null
+    - args:
+      - self
+      - mask_gpu
+      file: ./bhlff/core/bvp/quench_morphology.py
+      line: 466
+      name: _label_components_cuda
+      returns: null
+    - args:
+      - self
+      - mask_gpu
+      - labeled_gpu
+      - start_point
+      - component_id
+      file: ./bhlff/core/bvp/quench_morphology.py
+      line: 502
+      name: _flood_fill_cuda
+      returns: null
     QuenchThresholdComputer:
     - args:
       - self
@@ -24725,13 +24833,13 @@ method_index:
     - args:
       - self
       file: ./bhlff/core/bvp/quench_thresholds.py
-      line: 179
+      line: 180
       name: compute_gradient_threshold
       returns: float
     - args:
       - self
       file: ./bhlff/core/bvp/quench_thresholds.py
-      line: 228
+      line: 230
       name: compute_carrier_frequency
       returns: float
     QuenchesAnalyzer:
@@ -46348,6 +46456,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 6417
+    total_class_methods: 6431
     total_classes: 631
     total_standalone_functions: 0

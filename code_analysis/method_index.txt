@@ -11036,27 +11036,27 @@ Class: QuenchDetector
   __repr__(self) -> str
     File: ./bhlff/core/time/quench_detector.py, Line: 313
   __init__(self, domain_7d, config)
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 64
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 67
   detect_quenches(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 119
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 126
   _detect_quenches_cuda(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 156
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 163
   _detect_quenches_cpu(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 193
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 210
   _detect_amplitude_quenches(self, envelope) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 217
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 234
   _detect_detuning_quenches(self, envelope) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 280
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 297
   _detect_gradient_quenches(self, envelope) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 351
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 368
   _detect_amplitude_quenches_cuda(self, envelope_gpu) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 415
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 432
   _detect_detuning_quenches_cuda(self, envelope_gpu) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 455
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 494
   _detect_gradient_quenches_cuda(self, envelope_gpu) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 499
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 565
   _validate_thresholds(self) -> None
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 539
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 632
 
 Class: CrankNicolsonIntegrator
   __init__(self, domain, parameters) -> None
@@ -11222,21 +11222,37 @@ Class: QuenchesPostulate
 
 Class: QuenchMorphology
   __init__(self)
-    File: ./bhlff/core/bvp/quench_morphology.py, Line: 55
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 63
   apply_morphological_operations(self, mask) -> np.ndarray
-    File: ./bhlff/core/bvp/quench_morphology.py, Line: 59
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 68
   find_connected_components(self, mask) -> Dict[int, np.ndarray]
-    File: ./bhlff/core/bvp/quench_morphology.py, Line: 83
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 92
   _apply_scipy_operations(self, mask) -> np.ndarray
-    File: ./bhlff/core/bvp/quench_morphology.py, Line: 107
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 116
   _apply_simple_operations(self, mask) -> np.ndarray
-    File: ./bhlff/core/bvp/quench_morphology.py, Line: 133
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 143
   _find_scipy_components(self, mask) -> Dict[int, np.ndarray]
-    File: ./bhlff/core/bvp/quench_morphology.py, Line: 171
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 181
   _find_simple_components(self, mask) -> Dict[int, np.ndarray]
-    File: ./bhlff/core/bvp/quench_morphology.py, Line: 197
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 207
   _flood_fill_7d(self, mask, visited, component_mask, start_point) -> None
-    File: ./bhlff/core/bvp/quench_morphology.py, Line: 230
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 240
+  apply_morphological_operations_cuda(self, mask_gpu)
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 315
+  find_connected_components_cuda(self, mask_gpu) -> Dict[int, np.ndarray]
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 347
+  _binary_opening_cuda(self, mask_gpu, structure)
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 384
+  _binary_closing_cuda(self, mask_gpu, structure)
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 390
+  _erosion_cuda_vectorized(self, mask_gpu, structure)
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 396
+  _dilation_cuda_vectorized(self, mask_gpu, structure)
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 432
+  _label_components_cuda(self, mask_gpu)
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 466
+  _flood_fill_cuda(self, mask_gpu, labeled_gpu, start_point, component_id)
+    File: ./bhlff/core/bvp/quench_morphology.py, Line: 502
 
 Class: TransitionZonePostulate
   __init__(self, domain, constants)
@@ -11686,9 +11702,9 @@ Class: QuenchThresholdComputer
   compute_detuning_threshold(self) -> float
     File: ./bhlff/core/bvp/quench_thresholds.py, Line: 142
   compute_gradient_threshold(self) -> float
-    File: ./bhlff/core/bvp/quench_thresholds.py, Line: 179
+    File: ./bhlff/core/bvp/quench_thresholds.py, Line: 180
   compute_carrier_frequency(self) -> float
-    File: ./bhlff/core/bvp/quench_thresholds.py, Line: 228
+    File: ./bhlff/core/bvp/quench_thresholds.py, Line: 230
 
 Class: CoreRegionAnalyzer
   __init__(self, domain, constants)
@@ -11804,19 +11820,31 @@ Class: LevelCInterface
 
 Class: QuenchCharacteristics
   __init__(self, domain_7d)
-    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 50
+    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 58
   compute_center_of_mass(self, component_mask) -> Tuple[float, ...]
-    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 63
+    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 72
   compute_quench_strength(self, component_mask, amplitude) -> float
-    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 95
+    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 104
   compute_local_frequency(self, envelope) -> np.ndarray
-    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 125
+    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 134
   compute_detuning_strength(self, component_mask, detuning) -> float
-    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 170
+    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 179
   compute_7d_gradient_magnitude(self, envelope) -> np.ndarray
-    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 200
+    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 209
   compute_gradient_strength(self, component_mask, gradient_magnitude) -> float
-    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 255
+    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 264
+  compute_center_of_mass_cuda(self, component_mask_gpu) -> Tuple[float, ...]
+    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 294
+  compute_quench_strength_cuda(self, component_mask_gpu, amplitude_gpu) -> float
+    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 335
+  compute_local_frequency_cuda(self, envelope_gpu) -> np.ndarray
+    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 379
+  compute_detuning_strength_cuda(self, component_mask_gpu, detuning_gpu) -> float
+    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 431
+  compute_7d_gradient_magnitude_cuda(self, envelope_gpu) -> np.ndarray
+    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 475
+  compute_gradient_strength_cuda(self, component_mask_gpu, gradient_magnitude_gpu) -> float
+    File: ./bhlff/core/bvp/quench_characteristics.py, Line: 530
 
 Class: TailResonatornessPostulate
   __init__(self, domain, constants)

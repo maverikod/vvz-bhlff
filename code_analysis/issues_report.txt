@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 870
+Total issues found: 877
 
 METHODS_WITHOUT_DOCSTRINGS: 115 issues
 ----------------------------------------
@@ -545,11 +545,11 @@ CLASSES_WITHOUT_DOCSTRINGS: 12 issues
     Class: MockInvalidParameters
 
   ./bhlff/core/bvp/quench_detector.py
-    Line 35
+    Line 37
     Class: DummyCuPy
 
   ./bhlff/core/bvp/quench_detector.py
-    Line 36
+    Line 38
     Class: ndarray
 
   ./examples/level_g_example.py
@@ -557,10 +557,22 @@ CLASSES_WITHOUT_DOCSTRINGS: 12 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 642 issues
+IMPORTS_IN_MIDDLE: 646 issues
 ----------------------------------------
+  ./test_quench_detector_minimal.py
+    Line 30
+
+  ./test_quench_detector_light.py
+    Line 36
+
+  ./test_quench_detector_cuda.py
+    Line 30
+
   ./setup.py
     Line 28
+
+  ./test_quench_detector_optimized.py
+    Line 261
 
   ./scripts/demo_vectorized_power_law.py
     Line 203
@@ -1958,7 +1970,7 @@ IMPORTS_IN_MIDDLE: 642 issues
     Line 28
 
   ./bhlff/core/bvp/quench_morphology.py
-    Line 32
+    Line 39
 
   ./bhlff/core/bvp/transition_zone_postulate.py
     Line 25
@@ -1970,7 +1982,7 @@ IMPORTS_IN_MIDDLE: 642 issues
     Line 24
 
   ./bhlff/core/bvp/quench_detector.py
-    Line 43
+    Line 205
 
   ./bhlff/core/bvp/bvp_impedance_calculator.py
     Line 34
@@ -2081,7 +2093,7 @@ IMPORTS_IN_MIDDLE: 642 issues
     Line 26
 
   ./bhlff/core/bvp/quench_characteristics.py
-    Line 31
+    Line 39
 
   ./bhlff/core/bvp/bvp_envelope_equation_7d.py
     Line 29
@@ -2486,8 +2498,10 @@ IMPORTS_IN_MIDDLE: 642 issues
     Line 23
 
 
-FILES_TOO_LARGE: 97 issues
+FILES_TOO_LARGE: 100 issues
 ----------------------------------------
+  ./test_quench_detector_optimized.py
+
   ./tests/unit/test_ml_prediction_vectorized_implementations.py
 
   ./tests/unit/test_soliton_analysis_optimization.py
@@ -2648,9 +2662,13 @@ FILES_TOO_LARGE: 97 issues
 
   ./bhlff/core/time/bvp_envelope_integrator.py
 
+  ./bhlff/core/bvp/quench_morphology.py
+
   ./bhlff/core/bvp/quench_detector.py
 
   ./bhlff/core/bvp/physical_validation_decorator.py
+
+  ./bhlff/core/bvp/quench_characteristics.py
 
   ./bhlff/core/bvp/validation/physical_constraints.py
 

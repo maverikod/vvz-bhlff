@@ -162,7 +162,8 @@ class ElectroweakCoupling:
                 gradients.append(self._cuda_gradient(theta_a_gpu, axis=6))  # t
 
             # Compute magnitude of gradient vector in 7D
-            grad_theta = self._cuda_sqrt(self._cuda_sum([self._cuda_abs(g) ** 2 for g in gradients], axis=0))
+            grad_squares = [self._cuda_abs(g) ** 2 for g in gradients]
+            grad_theta = self._cuda_sqrt(self._cuda_sum(grad_squares, axis=0))
             phase_gradients.append(grad_theta)
 
         # Transfer envelope to GPU
@@ -327,14 +328,26 @@ class ElectroweakCoupling:
             Computes sum using CUDA for optimal performance.
             
         Args:
-            array: Input array.
+            array: Input array or list of arrays.
             axis: Axis along which to sum.
             
         Returns:
             cp.ndarray: Sum array.
         """
         if self.use_cuda and CUDA_AVAILABLE:
+            if isinstance(array, list):
+                # Sum list of arrays
+                result = array[0]
+                for arr in array[1:]:
+                    result = result + arr
+                return result
             return cp.sum(array, axis=axis)
+        if isinstance(array, list):
+            # Sum list of arrays
+            result = array[0]
+            for arr in array[1:]:
+                result = result + arr
+            return result
         return np.sum(array, axis=axis)
     
     def _cuda_sin(self, array) -> 'cp.ndarray':

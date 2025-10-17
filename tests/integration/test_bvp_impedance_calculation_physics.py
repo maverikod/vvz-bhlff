@@ -69,7 +69,27 @@ class TestBVPImpedanceCalculationPhysics:
     @pytest.fixture
     def bvp_core(self, domain_7d, bvp_constants):
         """Create BVP core for complete pipeline testing."""
-        return BVPCore(domain_7d, bvp_constants)
+        # BVPCore expects a dictionary configuration, not BVPConstantsAdvanced object
+        config = {
+            "carrier_frequency": 1.85e43,  # Required parameter
+            "envelope_equation": {
+                "kappa_0": 1.0,
+                "kappa_2": 0.1,
+                "chi_prime": 1.0,
+                "chi_double_prime_0": 0.01,
+                "k0_squared": 1.0,
+            },
+            "impedance_calculation": {
+                "frequency_range": [1e15, 1e20],
+                "frequency_points": 1000,
+            },
+            "basic_material": {
+                "mu": 1.0,
+                "beta": 1.5,
+                "lambda_param": 0.1,
+            },
+        }
+        return BVPCore(domain_7d, config)
 
     def test_bvp_impedance_calculation_physics(self, domain_7d, bvp_core):
         """

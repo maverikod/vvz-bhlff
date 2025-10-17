@@ -385,6 +385,10 @@ issues:
     file: ./bhlff/core/bvp/quench_characteristics.py
     limit: 400
     lines: 576
+  - exceeds_limit: 13
+    file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
+    limit: 400
+    lines: 413
   - exceeds_limit: 370
     file: ./bhlff/core/bvp/phase_vector/phase_vector.py
     limit: 400
@@ -2214,7 +2218,7 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 12
-  files_too_large: 103
+  files_too_large: 104
   files_without_docstrings: 4
   imports_in_middle: 645
   methods_with_pass: 0

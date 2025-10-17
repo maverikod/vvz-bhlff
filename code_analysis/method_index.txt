@@ -232,9 +232,9 @@ Class: TestBVPImpedanceCalculationPhysics
   bvp_core(self, domain_7d, bvp_constants)
     File: ./tests/integration/test_bvp_impedance_calculation_physics.py, Line: 70
   test_bvp_impedance_calculation_physics(self, domain_7d, bvp_core)
-    File: ./tests/integration/test_bvp_impedance_calculation_physics.py, Line: 74
+    File: ./tests/integration/test_bvp_impedance_calculation_physics.py, Line: 94
   _generate_physical_source(self, domain) -> np.ndarray
-    File: ./tests/integration/test_bvp_impedance_calculation_physics.py, Line: 111
+    File: ./tests/integration/test_bvp_impedance_calculation_physics.py, Line: 131
 
 Class: TestBVPPhaseVectorPhysics
   domain_7d(self)
@@ -2851,6 +2851,24 @@ Class: TestDomainCoverage
     File: ./tests/unit/test_core/test_domain_coverage.py, Line: 192
   test_parameters_repr(self)
     File: ./tests/unit/test_core/test_domain_coverage.py, Line: 200
+
+Class: TestBVPImpedanceCalculatorSimple
+  domain_7d(self)
+    File: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py, Line: 26
+  config(self)
+    File: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py, Line: 38
+  constants(self, config)
+    File: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py, Line: 48
+  test_impedance_calculator_creation(self, domain_7d, config, constants)
+    File: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py, Line: 52
+  test_impedance_calculator_parameters(self, domain_7d, config, constants)
+    File: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py, Line: 60
+  test_impedance_calculation_simple(self, domain_7d, config, constants)
+    File: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py, Line: 70
+  test_impedance_calculator_components(self, domain_7d, config, constants)
+    File: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py, Line: 111
+  test_quality_factor_threshold(self, domain_7d, config, constants)
+    File: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py, Line: 123
 
 Class: TestNoMassTerms
   test_no_k0_mass_terms_in_energy_computer(self)
@@ -12152,31 +12170,31 @@ Class: ElectroweakCoupling
   compute_electroweak_currents(self, envelope, phase_components, domain) -> Dict[str, np.ndarray]
     File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 108
   get_electroweak_coefficients(self) -> Dict[str, float]
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 201
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 202
   set_electroweak_coefficients(self, coefficients) -> None
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 214
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 215
   get_weinberg_angle(self) -> float
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 227
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 228
   set_weinberg_angle(self, angle) -> None
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 240
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 241
   _to_gpu(self, array) -> 'cp.ndarray'
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 253
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 254
   _to_cpu(self, array) -> np.ndarray
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 270
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 271
   _cuda_gradient(self, array, axis) -> 'cp.ndarray'
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 287
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 288
   _cuda_sqrt(self, array) -> 'cp.ndarray'
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 305
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 306
   _cuda_sum(self, array, axis) -> 'cp.ndarray'
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 322
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 323
   _cuda_sin(self, array) -> 'cp.ndarray'
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 340
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 353
   _cuda_cos(self, array) -> 'cp.ndarray'
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 357
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 370
   _cuda_abs(self, array) -> 'cp.ndarray'
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 374
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 387
   __repr__(self) -> str
-    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 391
+    File: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py, Line: 404
 
 Class: PhaseVector
   __init__(self, domain, config, constants) -> None
@@ -13348,41 +13366,41 @@ Class: Domain7D
   __init__(self, spatial_config, phase_config, temporal_config)
     File: ./bhlff/core/domain/domain_7d.py, Line: 51
   _setup_spatial_coordinates(self) -> None
-    File: ./bhlff/core/domain/domain_7d.py, Line: 78
+    File: ./bhlff/core/domain/domain_7d.py, Line: 81
   _setup_phase_coordinates(self) -> None
-    File: ./bhlff/core/domain/domain_7d.py, Line: 93
+    File: ./bhlff/core/domain/domain_7d.py, Line: 96
   _setup_temporal_coordinates(self) -> None
-    File: ./bhlff/core/domain/domain_7d.py, Line: 116
+    File: ./bhlff/core/domain/domain_7d.py, Line: 119
   _setup_metric_tensor(self) -> None
-    File: ./bhlff/core/domain/domain_7d.py, Line: 124
+    File: ./bhlff/core/domain/domain_7d.py, Line: 127
   _create_full_coordinate_grids(self) -> None
-    File: ./bhlff/core/domain/domain_7d.py, Line: 140
+    File: ./bhlff/core/domain/domain_7d.py, Line: 143
   get_spatial_coordinates(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]
-    File: ./bhlff/core/domain/domain_7d.py, Line: 169
+    File: ./bhlff/core/domain/domain_7d.py, Line: 172
   get_phase_coordinates(self) -> Tuple[np.ndarray, np.ndarray, np.ndarray]
-    File: ./bhlff/core/domain/domain_7d.py, Line: 178
+    File: ./bhlff/core/domain/domain_7d.py, Line: 181
   get_temporal_coordinates(self) -> np.ndarray
-    File: ./bhlff/core/domain/domain_7d.py, Line: 187
+    File: ./bhlff/core/domain/domain_7d.py, Line: 190
   get_full_7d_coordinates(self) -> np.ndarray
-    File: ./bhlff/core/domain/domain_7d.py, Line: 196
+    File: ./bhlff/core/domain/domain_7d.py, Line: 199
   get_metric_tensor(self) -> np.ndarray
-    File: ./bhlff/core/domain/domain_7d.py, Line: 205
+    File: ./bhlff/core/domain/domain_7d.py, Line: 208
   get_spatial_shape(self) -> Tuple[int, int, int]
-    File: ./bhlff/core/domain/domain_7d.py, Line: 214
+    File: ./bhlff/core/domain/domain_7d.py, Line: 217
   get_phase_shape(self) -> Tuple[int, int, int]
-    File: ./bhlff/core/domain/domain_7d.py, Line: 227
+    File: ./bhlff/core/domain/domain_7d.py, Line: 230
   get_full_7d_shape(self) -> Tuple[int, int, int, int, int, int]
-    File: ./bhlff/core/domain/domain_7d.py, Line: 240
+    File: ./bhlff/core/domain/domain_7d.py, Line: 243
   shape(self) -> Tuple[int, int, int, int, int, int, int]
-    File: ./bhlff/core/domain/domain_7d.py, Line: 257
+    File: ./bhlff/core/domain/domain_7d.py, Line: 260
   get_differentials(self) -> Dict[str, float]
-    File: ./bhlff/core/domain/domain_7d.py, Line: 279
+    File: ./bhlff/core/domain/domain_7d.py, Line: 282
   compute_7d_volume_element(self) -> np.ndarray
-    File: ./bhlff/core/domain/domain_7d.py, Line: 296
+    File: ./bhlff/core/domain/domain_7d.py, Line: 299
   compute_7d_distance(self, point1, point2) -> float
-    File: ./bhlff/core/domain/domain_7d.py, Line: 320
+    File: ./bhlff/core/domain/domain_7d.py, Line: 323
   __repr__(self) -> str
-    File: ./bhlff/core/domain/domain_7d.py, Line: 342
+    File: ./bhlff/core/domain/domain_7d.py, Line: 345
 
 Class: Field
   __post_init__(self) -> None

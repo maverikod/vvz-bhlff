@@ -11484,97 +11484,97 @@ method_index:
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 78
+      line: 81
       name: _setup_spatial_coordinates
       returns: None
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 93
+      line: 96
       name: _setup_phase_coordinates
       returns: None
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 116
+      line: 119
       name: _setup_temporal_coordinates
       returns: None
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 124
+      line: 127
       name: _setup_metric_tensor
       returns: None
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 140
+      line: 143
       name: _create_full_coordinate_grids
       returns: None
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 169
+      line: 172
       name: get_spatial_coordinates
       returns: Tuple[np.ndarray, np.ndarray, np.ndarray]
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 178
+      line: 181
       name: get_phase_coordinates
       returns: Tuple[np.ndarray, np.ndarray, np.ndarray]
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 187
+      line: 190
       name: get_temporal_coordinates
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 196
+      line: 199
       name: get_full_7d_coordinates
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 205
+      line: 208
       name: get_metric_tensor
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 214
+      line: 217
       name: get_spatial_shape
       returns: Tuple[int, int, int]
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 227
+      line: 230
       name: get_phase_shape
       returns: Tuple[int, int, int]
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 240
+      line: 243
       name: get_full_7d_shape
       returns: Tuple[int, int, int, int, int, int]
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 257
+      line: 260
       name: shape
       returns: Tuple[int, int, int, int, int, int, int]
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 279
+      line: 282
       name: get_differentials
       returns: Dict[str, float]
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 296
+      line: 299
       name: compute_7d_volume_element
       returns: np.ndarray
     - args:
@@ -11582,13 +11582,13 @@ method_index:
       - point1
       - point2
       file: ./bhlff/core/domain/domain_7d.py
-      line: 320
+      line: 323
       name: compute_7d_distance
       returns: float
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 342
+      line: 345
       name: __repr__
       returns: str
     Domain7DBVP:
@@ -11969,41 +11969,41 @@ method_index:
     - args:
       - self
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 201
+      line: 202
       name: get_electroweak_coefficients
       returns: Dict[str, float]
     - args:
       - self
       - coefficients
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 214
+      line: 215
       name: set_electroweak_coefficients
       returns: None
     - args:
       - self
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 227
+      line: 228
       name: get_weinberg_angle
       returns: float
     - args:
       - self
       - angle
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 240
+      line: 241
       name: set_weinberg_angle
       returns: None
     - args:
       - self
       - array
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 253
+      line: 254
       name: _to_gpu
       returns: '''cp.ndarray'''
     - args:
       - self
       - array
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 270
+      line: 271
       name: _to_cpu
       returns: np.ndarray
     - args:
@@ -12011,14 +12011,14 @@ method_index:
       - array
       - axis
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 287
+      line: 288
       name: _cuda_gradient
       returns: '''cp.ndarray'''
     - args:
       - self
       - array
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 305
+      line: 306
       name: _cuda_sqrt
       returns: '''cp.ndarray'''
     - args:
@@ -12026,34 +12026,34 @@ method_index:
       - array
       - axis
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 322
+      line: 323
       name: _cuda_sum
       returns: '''cp.ndarray'''
     - args:
       - self
       - array
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 340
+      line: 353
       name: _cuda_sin
       returns: '''cp.ndarray'''
     - args:
       - self
       - array
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 357
+      line: 370
       name: _cuda_cos
       returns: '''cp.ndarray'''
     - args:
       - self
       - array
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 374
+      line: 387
       name: _cuda_abs
       returns: '''cp.ndarray'''
     - args:
       - self
       file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-      line: 391
+      line: 404
       name: __repr__
       returns: str
     EnergyAnalyzer:
@@ -32903,16 +32903,81 @@ method_index:
       - domain_7d
       - bvp_core
       file: ./tests/integration/test_bvp_impedance_calculation_physics.py
-      line: 74
+      line: 94
       name: test_bvp_impedance_calculation_physics
       returns: null
     - args:
       - self
       - domain
       file: ./tests/integration/test_bvp_impedance_calculation_physics.py
-      line: 111
+      line: 131
       name: _generate_physical_source
       returns: np.ndarray
+    TestBVPImpedanceCalculatorSimple:
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py
+      line: 26
+      name: domain_7d
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py
+      line: 38
+      name: config
+      returns: null
+    - args:
+      - self
+      - config
+      file: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py
+      line: 48
+      name: constants
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      - config
+      - constants
+      file: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py
+      line: 52
+      name: test_impedance_calculator_creation
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      - config
+      - constants
+      file: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py
+      line: 60
+      name: test_impedance_calculator_parameters
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      - config
+      - constants
+      file: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py
+      line: 70
+      name: test_impedance_calculation_simple
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      - config
+      - constants
+      file: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py
+      line: 111
+      name: test_impedance_calculator_components
+      returns: null
+    - args:
+      - self
+      - domain_7d
+      - config
+      - constants
+      file: ./tests/unit/test_core/test_bvp_impedance_calculator_simple.py
+      line: 123
+      name: test_quality_factor_threshold
+      returns: null
     TestBVPInterfaceCoverage:
     - args:
       - self
@@ -46919,6 +46984,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 6499
-    total_classes: 631
+    total_class_methods: 6507
+    total_classes: 632
     total_standalone_functions: 0

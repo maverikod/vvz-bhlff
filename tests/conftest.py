@@ -41,7 +41,7 @@ except ImportError:
 
 
 @pytest.fixture(scope="session")
-def test_domain_7d() -> Domain:
+def domain_7d() -> Domain:
     """
     Create 7D domain for testing.
 
@@ -55,10 +55,10 @@ def test_domain_7d() -> Domain:
     """
     return Domain(
         L=1.0,  # Spatial domain size
-        N=32,  # Spatial resolution
-        dimensions=3,
-        N_phi=16,  # Phase resolution
-        N_t=64,  # Temporal resolution
+        N=4,  # Spatial resolution (minimal for memory)
+        dimensions=7,  # 7D space-time for BVP theory
+        N_phi=4,  # Phase resolution (minimal for memory)
+        N_t=8,  # Temporal resolution (minimal for memory)
         T=1.0,  # Temporal domain size
     )
 

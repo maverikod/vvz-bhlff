@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 879
+Total issues found: 880
 
 METHODS_WITHOUT_DOCSTRINGS: 115 issues
 ----------------------------------------
@@ -2495,7 +2495,7 @@ IMPORTS_IN_MIDDLE: 645 issues
     Line 23
 
 
-FILES_TOO_LARGE: 103 issues
+FILES_TOO_LARGE: 104 issues
 ----------------------------------------
   ./test_quench_detector_optimized.py
 
@@ -2670,6 +2670,8 @@ FILES_TOO_LARGE: 103 issues
   ./bhlff/core/bvp/physical_validation_decorator.py
 
   ./bhlff/core/bvp/quench_characteristics.py
+
+  ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
 
   ./bhlff/core/bvp/phase_vector/phase_vector.py
 

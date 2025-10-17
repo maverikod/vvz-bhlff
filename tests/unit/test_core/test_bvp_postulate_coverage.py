@@ -14,10 +14,20 @@ from unittest.mock import Mock, patch
 
 from bhlff.core.bvp.bvp_postulate_base import BVPPostulate
 from bhlff.core.bvp.quench_detector import QuenchDetector
+from bhlff.core.domain.domain_7d import Domain7D
+from bhlff.core.domain.config import SpatialConfig, PhaseConfig, TemporalConfig
 
 
 class TestBVPPostulateCoverage:
     """Simple tests for BVP postulate classes."""
+
+    @pytest.fixture
+    def domain_7d(self):
+        """Create 7D domain for testing."""
+        spatial_config = SpatialConfig(L_x=1.0, L_y=1.0, L_z=1.0, N_x=8, N_y=8, N_z=8)
+        phase_config = PhaseConfig(phi_1_max=2*np.pi, phi_2_max=2*np.pi, phi_3_max=2*np.pi, N_phi_1=4, N_phi_2=4, N_phi_3=4)
+        temporal_config = TemporalConfig(T_max=1.0, N_t=8, dt=0.125)
+        return Domain7D(spatial_config, phase_config, temporal_config)
 
     def test_bvp_postulate_base_creation(self):
         """Test BVP postulate base creation."""

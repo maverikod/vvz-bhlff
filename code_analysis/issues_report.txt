@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 877
+Total issues found: 873
 
 METHODS_WITHOUT_DOCSTRINGS: 115 issues
 ----------------------------------------
@@ -557,7 +557,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 12 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 646 issues
+IMPORTS_IN_MIDDLE: 642 issues
 ----------------------------------------
   ./test_quench_detector_minimal.py
     Line 30
@@ -896,10 +896,10 @@ IMPORTS_IN_MIDDLE: 646 issues
     Line 45
 
   ./tests/unit/test_core/test_quench_detector.py
-    Line 28
+    Line 29
 
   ./tests/unit/test_core/test_bvp_postulate_coverage.py
-    Line 122
+    Line 132
 
   ./tests/unit/test_core/test_bvp_rigidity_postulate_physics.py
     Line 29
@@ -1168,9 +1168,6 @@ IMPORTS_IN_MIDDLE: 646 issues
   ./bhlff/models/level_c/beating/basic/beating_basic_core_optimization.py
     Line 24
 
-  ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    Line 29
-
   ./bhlff/models/level_c/beating/basic/core_analysis_interference.py
     Line 22
 
@@ -1215,9 +1212,6 @@ IMPORTS_IN_MIDDLE: 646 issues
 
   ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py
     Line 23
-
-  ./bhlff/models/level_c/beating/basic/core_analysis.py
-    Line 32
 
   ./bhlff/models/level_c/beating/basic/optimization_parameters.py
     Line 24
@@ -1930,9 +1924,6 @@ IMPORTS_IN_MIDDLE: 646 issues
   ./bhlff/core/time/memory_kernel.py
     Line 26
 
-  ./bhlff/core/time/quench_detector.py
-    Line 24
-
   ./bhlff/core/time/crank_nicolson_integrator.py
     Line 80
 
@@ -2038,9 +2029,6 @@ IMPORTS_IN_MIDDLE: 646 issues
   ./bhlff/core/bvp/level_b_interface.py
     Line 22
 
-  ./bhlff/core/bvp/quenches_detector.py
-    Line 28
-
   ./bhlff/core/bvp/bvp_phase_operations.py
     Line 31
 
@@ -2087,7 +2075,7 @@ IMPORTS_IN_MIDDLE: 646 issues
     Line 32
 
   ./bhlff/core/bvp/quenches_postulate.py
-    Line 28
+    Line 71
 
   ./bhlff/core/bvp/level_c_interface.py
     Line 26
@@ -2444,7 +2432,7 @@ IMPORTS_IN_MIDDLE: 646 issues
     Line 120
 
   ./bhlff/core/fft/fft_solver_time.py
-    Line 236
+    Line 257
 
   ./bhlff/core/fft/spectral_derivatives.py
     Line 31

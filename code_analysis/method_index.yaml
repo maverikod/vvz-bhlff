@@ -4671,51 +4671,6 @@ method_index:
       line: 435
       name: _step_resonator_potential_sine_gordon
       returns: np.ndarray
-    BeatingAnalysisCore:
-    - args:
-      - self
-      - bvp_core
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 46
-      name: __init__
-      returns: null
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 77
-      name: analyze_beating_comprehensive
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 124
-      name: analyze_beating_statistical
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - results1
-      - results2
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 140
-      name: compare_beating_analyses
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - envelope
-      - results
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 159
-      name: optimize_analysis_parameters
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - results
-      file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-      line: 178
-      name: validate_analysis_results
-      returns: Dict[str, Any]
     BeatingBasicComparison:
     - args:
       - self
@@ -6208,61 +6163,6 @@ method_index:
       name: predict_mode_coupling
       returns: Dict[str, Any]
     BeatingMLPredictionCore:
-    - args:
-      - self
-      - bvp_core
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 36
-      name: __init__
-      returns: null
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 50
-      name: predict_beating_frequencies
-      returns: null
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 54
-      name: predict_mode_coupling
-      returns: null
-    - args:
-      - self
-      - n_samples
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 58
-      name: train_frequency_model
-      returns: null
-    - args:
-      - self
-      - n_samples
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 62
-      name: train_coupling_model
-      returns: null
-    - args:
-      - self
-      - n_samples
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 66
-      name: train_all_models
-      returns: null
-    - args:
-      - self
-      - n_samples
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 70
-      name: validate_models
-      returns: null
-    - args:
-      - self
-      file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py
-      line: 74
-      name: get_model_performance
-      returns: null
     - args:
       - self
       - bvp_core
@@ -10182,21 +10082,6 @@ method_index:
       line: 332
       name: test_integrator_config_copy
       returns: null
-    CoreBeatingAnalyzer:
-    - args:
-      - self
-      - bvp_core
-      file: ./bhlff/models/level_c/beating/basic/core_analysis.py
-      line: 50
-      name: __init__
-      returns: null
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/models/level_c/beating/basic/core_analysis.py
-      line: 78
-      name: analyze_beating_comprehensive
-      returns: Dict[str, Any]
     CoreInterface:
     - args:
       - self
@@ -11677,13 +11562,19 @@ method_index:
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 256
+      line: 257
+      name: shape
+      returns: Tuple[int, int, int, int, int, int, int]
+    - args:
+      - self
+      file: ./bhlff/core/domain/domain_7d.py
+      line: 279
       name: get_differentials
       returns: Dict[str, float]
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 273
+      line: 296
       name: compute_7d_volume_element
       returns: np.ndarray
     - args:
@@ -11691,13 +11582,13 @@ method_index:
       - point1
       - point2
       file: ./bhlff/core/domain/domain_7d.py
-      line: 297
+      line: 320
       name: compute_7d_distance
       returns: float
     - args:
       - self
       file: ./bhlff/core/domain/domain_7d.py
-      line: 319
+      line: 342
       name: __repr__
       returns: str
     Domain7DBVP:
@@ -13557,7 +13448,7 @@ method_index:
       - relaxation_times
       - coupling_strengths
       file: ./bhlff/core/fft/fft_solver_time.py
-      line: 181
+      line: 190
       name: set_memory_kernel
       returns: None
     - args:
@@ -13566,19 +13457,19 @@ method_index:
       - rate_threshold
       - magnitude_threshold
       file: ./bhlff/core/fft/fft_solver_time.py
-      line: 218
+      line: 227
       name: set_quench_detector
       returns: None
     - args:
       - self
       file: ./bhlff/core/fft/fft_solver_time.py
-      line: 257
+      line: 279
       name: get_quench_history
       returns: List[Dict]
     - args:
       - self
       file: ./bhlff/core/fft/fft_solver_time.py
-      line: 268
+      line: 290
       name: get_memory_contribution
       returns: np.ndarray
     FFTSolverValidation:
@@ -24515,64 +24406,6 @@ method_index:
     QuenchDetector:
     - args:
       - self
-      - domain
-      - energy_threshold
-      - rate_threshold
-      - magnitude_threshold
-      file: ./bhlff/core/time/quench_detector.py
-      line: 52
-      name: __init__
-      returns: None
-    - args:
-      - self
-      - field
-      - time
-      file: ./bhlff/core/time/quench_detector.py
-      line: 99
-      name: detect_quench
-      returns: bool
-    - args:
-      - self
-      - field
-      file: ./bhlff/core/time/quench_detector.py
-      line: 187
-      name: _calculate_energy
-      returns: float
-    - args:
-      - self
-      file: ./bhlff/core/time/quench_detector.py
-      line: 218
-      name: get_quench_history
-      returns: List[Dict]
-    - args:
-      - self
-      file: ./bhlff/core/time/quench_detector.py
-      line: 227
-      name: clear_history
-      returns: None
-    - args:
-      - self
-      - energy_threshold
-      - rate_threshold
-      - magnitude_threshold
-      file: ./bhlff/core/time/quench_detector.py
-      line: 233
-      name: set_thresholds
-      returns: None
-    - args:
-      - self
-      file: ./bhlff/core/time/quench_detector.py
-      line: 278
-      name: get_statistics
-      returns: Dict[str, Any]
-    - args:
-      - self
-      file: ./bhlff/core/time/quench_detector.py
-      line: 313
-      name: __repr__
-      returns: str
-    - args:
-      - self
       - domain_7d
       - config
       file: ./bhlff/core/bvp/quench_detector.py
@@ -24894,36 +24727,6 @@ method_index:
       line: 230
       name: _compute_surrounding_amplitude
       returns: float
-    QuenchesDetector:
-    - args:
-      - self
-      - domain
-      - constants
-      file: ./bhlff/core/bvp/quenches_detector.py
-      line: 40
-      name: __init__
-      returns: null
-    - args:
-      - self
-      - envelope
-      file: ./bhlff/core/bvp/quenches_detector.py
-      line: 53
-      name: detect_quenches
-      returns: Dict[str, Any]
-    - args:
-      - self
-      - quench_mask
-      file: ./bhlff/core/bvp/quenches_detector.py
-      line: 99
-      name: _filter_small_quenches
-      returns: np.ndarray
-    - args:
-      - self
-      - quench_mask
-      file: ./bhlff/core/bvp/quenches_detector.py
-      line: 128
-      name: _find_quench_locations
-      returns: List[tuple]
     QuenchesPostulate:
     - args:
       - self
@@ -24960,7 +24763,7 @@ method_index:
       - self
       - envelope
       file: ./bhlff/core/bvp/quenches_postulate.py
-      line: 64
+      line: 82
       name: apply
       returns: Dict[str, Any]
     - args:
@@ -24968,7 +24771,7 @@ method_index:
       - quench_analysis
       - energy_analysis
       file: ./bhlff/core/bvp/quenches_postulate.py
-      line: 105
+      line: 123
       name: _validate_quenches
       returns: bool
     RadialAnalysisCore:
@@ -33229,85 +33032,91 @@ method_index:
     - args:
       - self
       file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-      line: 22
+      line: 25
+      name: domain_7d
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
+      line: 32
       name: test_bvp_postulate_base_creation
       returns: null
     - args:
       - self
       file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-      line: 29
+      line: 39
       name: test_quench_detector_creation
       returns: null
     - args:
       - self
       file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-      line: 35
+      line: 45
       name: test_quench_detector_properties
       returns: null
     - args:
       - self
       file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-      line: 44
+      line: 54
       name: test_quench_detector_methods
       returns: null
     - args:
       - self
       file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-      line: 57
+      line: 67
       name: test_quench_detector_validation
       returns: null
     - args:
       - self
       file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-      line: 67
+      line: 77
       name: test_quench_detector_repr
       returns: null
     - args:
       - self
       file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-      line: 75
+      line: 85
       name: test_quench_detector_edge_cases
       returns: null
     - args:
       - self
       file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-      line: 95
+      line: 105
       name: test_quench_detector_numerical_stability
       returns: null
     - args:
       - self
       file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-      line: 114
+      line: 124
       name: test_quench_detector_performance
       returns: null
     - args:
       - self
       file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-      line: 131
+      line: 141
       name: test_quench_detector_memory_usage
       returns: null
     - args:
       - self
       file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-      line: 144
+      line: 154
       name: test_quench_detector_config_handling
       returns: null
     - args:
       - self
       file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-      line: 166
+      line: 176
       name: test_quench_detector_error_handling
       returns: null
     - args:
       - self
       file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-      line: 181
+      line: 191
       name: test_quench_detector_statistics
       returns: null
     - args:
       - self
       file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-      line: 199
+      line: 209
       name: test_quench_detector_7d_structure
       returns: null
     TestBVPPostulatesCoverage:
@@ -40438,14 +40247,14 @@ method_index:
     - args:
       - self
       file: ./tests/unit/test_core/test_quench_detector.py
-      line: 41
+      line: 42
       name: domain_7d
       returns: null
     - args:
       - self
       - domain_7d
       file: ./tests/unit/test_core/test_quench_detector.py
-      line: 46
+      line: 50
       name: quench_detector
       returns: null
     - args:
@@ -40453,7 +40262,7 @@ method_index:
       - quench_detector
       - domain_7d
       file: ./tests/unit/test_core/test_quench_detector.py
-      line: 55
+      line: 60
       name: test_initialization
       returns: null
     - args:
@@ -40461,7 +40270,7 @@ method_index:
       - quench_detector
       - domain_7d
       file: ./tests/unit/test_core/test_quench_detector.py
-      line: 70
+      line: 73
       name: test_quench_detection_energy
       returns: null
     - args:
@@ -40469,7 +40278,7 @@ method_index:
       - quench_detector
       - domain_7d
       file: ./tests/unit/test_core/test_quench_detector.py
-      line: 93
+      line: 97
       name: test_quench_detection_magnitude
       returns: null
     - args:
@@ -40477,30 +40286,30 @@ method_index:
       - quench_detector
       - domain_7d
       file: ./tests/unit/test_core/test_quench_detector.py
-      line: 114
-      name: test_quench_history
+      line: 113
+      name: test_quench_detection_multiple
       returns: null
     - args:
       - self
       - quench_detector
       - domain_7d
       file: ./tests/unit/test_core/test_quench_detector.py
-      line: 136
-      name: test_quench_clear_history
+      line: 128
+      name: test_quench_detection_consistency
       returns: null
     - args:
       - self
       - quench_detector
       - domain_7d
       file: ./tests/unit/test_core/test_quench_detector.py
-      line: 157
-      name: test_quench_detection_rate
+      line: 149
+      name: test_quench_detection_different_fields
       returns: null
     - args:
       - self
       - domain_7d
       file: ./tests/unit/test_core/test_quench_detector.py
-      line: 179
+      line: 167
       name: test_quench_threshold_validation
       returns: null
     - args:
@@ -40508,7 +40317,7 @@ method_index:
       - quench_detector
       - domain_7d
       file: ./tests/unit/test_core/test_quench_detector.py
-      line: 223
+      line: 209
       name: test_quench_field_validation
       returns: null
     - args:
@@ -40516,7 +40325,7 @@ method_index:
       - quench_detector
       - domain_7d
       file: ./tests/unit/test_core/test_quench_detector.py
-      line: 250
+      line: 236
       name: test_quench_statistics
       returns: null
     - args:
@@ -40524,7 +40333,7 @@ method_index:
       - quench_detector
       - domain_7d
       file: ./tests/unit/test_core/test_quench_detector.py
-      line: 278
+      line: 261
       name: test_quench_event_details
       returns: null
     TestQuenchEvent:
@@ -46456,6 +46265,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 6431
-    total_classes: 631
+    total_class_methods: 6405
+    total_classes: 628
     total_standalone_functions: 0

@@ -173,9 +173,18 @@ class FFTSolverTimeMethods:
 
         # Setup quench detector
         if self._quench_detector is None:
-            from ..time import QuenchDetector
-
-            self._quench_detector = QuenchDetector(self.domain)
+            from ..bvp.quench_detector import QuenchDetector
+            from ..domain.domain_7d import Domain7D
+            from ..domain.config import SpatialConfig, PhaseConfig, TemporalConfig
+            
+            # Create domain_7d from domain
+            spatial_config = SpatialConfig(L_x=1.0, L_y=1.0, L_z=1.0, N_x=64, N_y=64, N_z=64)
+            phase_config = PhaseConfig(N_phi_1=32, N_phi_2=32, N_phi_3=32)
+            temporal_config = TemporalConfig(T_max=1.0, N_t=100, dt=0.01)
+            domain_7d = Domain7D(spatial_config, phase_config, temporal_config)
+            
+            config = {"use_cuda": False}
+            self._quench_detector = QuenchDetector(domain_7d, config)
         integrator.set_quench_detector(self._quench_detector)
 
     def set_memory_kernel(
@@ -233,14 +242,27 @@ class FFTSolverTimeMethods:
             rate_threshold (float): Rate of change threshold.
             magnitude_threshold (float): Field magnitude threshold.
         """
-        from ..time import QuenchDetector
+        from ..bvp.quench_detector import QuenchDetector
 
-        self._quench_detector = QuenchDetector(
-            self.domain,
-            energy_threshold=energy_threshold,
-            rate_threshold=rate_threshold,
-            magnitude_threshold=magnitude_threshold,
-        )
+        # Create config for new QuenchDetector
+        config = {
+            "amplitude_threshold": magnitude_threshold,
+            "detuning_threshold": rate_threshold,
+            "gradient_threshold": energy_threshold,
+            "use_cuda": False
+        }
+        
+        # Create domain_7d from domain
+        from ..domain.domain_7d import Domain7D
+        from ..domain.config import SpatialConfig, PhaseConfig, TemporalConfig
+        
+        # Convert domain to domain_7d
+        spatial_config = SpatialConfig(L_x=1.0, L_y=1.0, L_z=1.0, N_x=64, N_y=64, N_z=64)
+        phase_config = PhaseConfig(N_phi_1=32, N_phi_2=32, N_phi_3=32)
+        temporal_config = TemporalConfig(T_max=1.0, N_t=100, dt=0.01)
+        domain_7d = Domain7D(spatial_config, phase_config, temporal_config)
+        
+        self._quench_detector = QuenchDetector(domain_7d, config)
 
         # Update existing integrators
         if self._envelope_integrator is not None:

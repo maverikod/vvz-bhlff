@@ -672,9 +672,9 @@ issues:
   - file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
     line: 45
   - file: ./tests/unit/test_core/test_quench_detector.py
-    line: 28
+    line: 29
   - file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-    line: 122
+    line: 132
   - file: ./tests/unit/test_core/test_bvp_rigidity_postulate_physics.py
     line: 29
   - file: ./tests/unit/test_core/test_spectral_convergence_physics.py
@@ -853,8 +853,6 @@ issues:
     line: 23
   - file: ./bhlff/models/level_c/beating/basic/beating_basic_core_optimization.py
     line: 24
-  - file: ./bhlff/models/level_c/beating/basic/beating_basic_core.py
-    line: 29
   - file: ./bhlff/models/level_c/beating/basic/core_analysis_interference.py
     line: 22
   - file: ./bhlff/models/level_c/beating/basic/comparison_metrics.py
@@ -885,8 +883,6 @@ issues:
     line: 22
   - file: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py
     line: 23
-  - file: ./bhlff/models/level_c/beating/basic/core_analysis.py
-    line: 32
   - file: ./bhlff/models/level_c/beating/basic/optimization_parameters.py
     line: 24
   - file: ./bhlff/models/level_c/beating/basic/core_analysis_basic.py
@@ -1361,8 +1357,6 @@ issues:
     line: 31
   - file: ./bhlff/core/time/memory_kernel.py
     line: 26
-  - file: ./bhlff/core/time/quench_detector.py
-    line: 24
   - file: ./bhlff/core/time/crank_nicolson_integrator.py
     line: 80
   - file: ./bhlff/core/time/__init__.py
@@ -1433,8 +1427,6 @@ issues:
     line: 26
   - file: ./bhlff/core/bvp/level_b_interface.py
     line: 22
-  - file: ./bhlff/core/bvp/quenches_detector.py
-    line: 28
   - file: ./bhlff/core/bvp/bvp_phase_operations.py
     line: 31
   - file: ./bhlff/core/bvp/core_renormalization_analyzer.py
@@ -1466,7 +1458,7 @@ issues:
   - file: ./bhlff/core/bvp/envelope_nonlinear_coefficients.py
     line: 32
   - file: ./bhlff/core/bvp/quenches_postulate.py
-    line: 28
+    line: 71
   - file: ./bhlff/core/bvp/level_c_interface.py
     line: 26
   - file: ./bhlff/core/bvp/quench_characteristics.py
@@ -1704,7 +1696,7 @@ issues:
   - file: ./bhlff/core/fft/fft_solver_7d_basic.py
     line: 120
   - file: ./bhlff/core/fft/fft_solver_time.py
-    line: 236
+    line: 257
   - file: ./bhlff/core/fft/spectral_derivatives.py
     line: 31
   - file: ./bhlff/core/fft/fft_backend_core.py
@@ -2206,7 +2198,7 @@ summary:
   classes_without_docstrings: 12
   files_too_large: 100
   files_without_docstrings: 4
-  imports_in_middle: 646
+  imports_in_middle: 642
   methods_with_pass: 0
   methods_without_docstrings: 115
   not_implemented_in_non_abstract: 0

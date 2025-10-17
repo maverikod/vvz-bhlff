@@ -253,6 +253,29 @@ class Domain7D:
             self.phase_config.N_phi_3,
         )
 
+    @property
+    def shape(self) -> Tuple[int, int, int, int, int, int, int]:
+        """
+        Get full 7D grid shape including temporal dimension.
+
+        Physical Meaning:
+            Returns the complete 7D grid shape including spatial,
+            phase, and temporal dimensions for BVP calculations.
+
+        Returns:
+            Tuple[int, int, int, int, int, int, int]: Full 7D grid shape
+                (N_x, N_y, N_z, N_phi_1, N_phi_2, N_phi_3, N_t).
+        """
+        return (
+            self.spatial_config.N_x,
+            self.spatial_config.N_y,
+            self.spatial_config.N_z,
+            self.phase_config.N_phi_1,
+            self.phase_config.N_phi_2,
+            self.phase_config.N_phi_3,
+            self.temporal_config.N_t,
+        )
+
     def get_differentials(self) -> Dict[str, float]:
         """
         Get coordinate differentials.

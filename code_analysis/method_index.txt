@@ -3446,59 +3446,61 @@ Class: TestBVPCoreCoverage
 
 Class: TestQuenchDetector
   domain_7d(self)
-    File: ./tests/unit/test_core/test_quench_detector.py, Line: 41
+    File: ./tests/unit/test_core/test_quench_detector.py, Line: 42
   quench_detector(self, domain_7d)
-    File: ./tests/unit/test_core/test_quench_detector.py, Line: 46
+    File: ./tests/unit/test_core/test_quench_detector.py, Line: 50
   test_initialization(self, quench_detector, domain_7d)
-    File: ./tests/unit/test_core/test_quench_detector.py, Line: 55
+    File: ./tests/unit/test_core/test_quench_detector.py, Line: 60
   test_quench_detection_energy(self, quench_detector, domain_7d)
-    File: ./tests/unit/test_core/test_quench_detector.py, Line: 70
+    File: ./tests/unit/test_core/test_quench_detector.py, Line: 73
   test_quench_detection_magnitude(self, quench_detector, domain_7d)
-    File: ./tests/unit/test_core/test_quench_detector.py, Line: 93
-  test_quench_history(self, quench_detector, domain_7d)
-    File: ./tests/unit/test_core/test_quench_detector.py, Line: 114
-  test_quench_clear_history(self, quench_detector, domain_7d)
-    File: ./tests/unit/test_core/test_quench_detector.py, Line: 136
-  test_quench_detection_rate(self, quench_detector, domain_7d)
-    File: ./tests/unit/test_core/test_quench_detector.py, Line: 157
+    File: ./tests/unit/test_core/test_quench_detector.py, Line: 97
+  test_quench_detection_multiple(self, quench_detector, domain_7d)
+    File: ./tests/unit/test_core/test_quench_detector.py, Line: 113
+  test_quench_detection_consistency(self, quench_detector, domain_7d)
+    File: ./tests/unit/test_core/test_quench_detector.py, Line: 128
+  test_quench_detection_different_fields(self, quench_detector, domain_7d)
+    File: ./tests/unit/test_core/test_quench_detector.py, Line: 149
   test_quench_threshold_validation(self, domain_7d)
-    File: ./tests/unit/test_core/test_quench_detector.py, Line: 179
+    File: ./tests/unit/test_core/test_quench_detector.py, Line: 167
   test_quench_field_validation(self, quench_detector, domain_7d)
-    File: ./tests/unit/test_core/test_quench_detector.py, Line: 223
+    File: ./tests/unit/test_core/test_quench_detector.py, Line: 209
   test_quench_statistics(self, quench_detector, domain_7d)
-    File: ./tests/unit/test_core/test_quench_detector.py, Line: 250
+    File: ./tests/unit/test_core/test_quench_detector.py, Line: 236
   test_quench_event_details(self, quench_detector, domain_7d)
-    File: ./tests/unit/test_core/test_quench_detector.py, Line: 278
+    File: ./tests/unit/test_core/test_quench_detector.py, Line: 261
 
 Class: TestBVPPostulateCoverage
+  domain_7d(self)
+    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 25
   test_bvp_postulate_base_creation(self)
-    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 22
+    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 32
   test_quench_detector_creation(self)
-    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 29
+    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 39
   test_quench_detector_properties(self)
-    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 35
+    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 45
   test_quench_detector_methods(self)
-    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 44
+    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 54
   test_quench_detector_validation(self)
-    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 57
-  test_quench_detector_repr(self)
     File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 67
+  test_quench_detector_repr(self)
+    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 77
   test_quench_detector_edge_cases(self)
-    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 75
+    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 85
   test_quench_detector_numerical_stability(self)
-    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 95
+    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 105
   test_quench_detector_performance(self)
-    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 114
+    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 124
   test_quench_detector_memory_usage(self)
-    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 131
+    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 141
   test_quench_detector_config_handling(self)
-    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 144
+    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 154
   test_quench_detector_error_handling(self)
-    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 166
+    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 176
   test_quench_detector_statistics(self)
-    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 181
+    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 191
   test_quench_detector_7d_structure(self)
-    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 199
+    File: ./tests/unit/test_core/test_bvp_postulate_coverage.py, Line: 209
 
 Class: TestBVPRigidityPostulatePhysics
   domain_7d(self)
@@ -5708,60 +5710,6 @@ Class: BeatingMLPatternClassifier
   _get_pattern_feature_importance(self, model) -> Dict[str, float]
     File: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py, Line: 326
 
-Class: BeatingMLPredictionCore
-  __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 36
-  predict_beating_frequencies(self, envelope)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 50
-  predict_mode_coupling(self, envelope)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 54
-  train_frequency_model(self, n_samples)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 58
-  train_coupling_model(self, n_samples)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 62
-  train_all_models(self, n_samples)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 66
-  validate_models(self, n_samples)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 70
-  get_model_performance(self)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction_core.py, Line: 74
-  __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 45
-  predict_beating_frequencies(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 73
-  predict_mode_coupling(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 133
-  train_frequency_model(self, n_samples) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 203
-  train_coupling_model(self, n_samples) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 224
-  train_all_models(self, n_samples) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 245
-  validate_models(self, n_samples) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 262
-  get_model_performance(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 279
-  _load_trained_frequency_model(self)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 292
-  _load_frequency_scaler(self)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 300
-  _load_trained_coupling_model(self)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 308
-  _load_coupling_scaler(self)
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 316
-  _compute_prediction_confidence(self, features, model) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 324
-  _get_feature_importance(self, model) -> Dict[str, float]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 346
-  _compute_prediction_variance(self, features, model) -> float
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 376
-  _predict_frequencies_analytical(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 390
-  _predict_coupling_analytical(self, features) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 430
-  _setup_vectorized_processor(self) -> None
-    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 477
-
 Class: BeatingMLOptimizationCore
   __init__(self, bvp_core)
     File: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py, Line: 39
@@ -6033,6 +5981,44 @@ Class: MLModelManager
     File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 194
   is_model_loaded(self, model_type) -> bool
     File: ./bhlff/models/level_c/beating/ml/core/ml_models.py, Line: 222
+
+Class: BeatingMLPredictionCore
+  __init__(self, bvp_core)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 45
+  predict_beating_frequencies(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 73
+  predict_mode_coupling(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 133
+  train_frequency_model(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 203
+  train_coupling_model(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 224
+  train_all_models(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 245
+  validate_models(self, n_samples) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 262
+  get_model_performance(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 279
+  _load_trained_frequency_model(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 292
+  _load_frequency_scaler(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 300
+  _load_trained_coupling_model(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 308
+  _load_coupling_scaler(self)
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 316
+  _compute_prediction_confidence(self, features, model) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 324
+  _get_feature_importance(self, model) -> Dict[str, float]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 346
+  _compute_prediction_variance(self, features, model) -> float
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 376
+  _predict_frequencies_analytical(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 390
+  _predict_coupling_analytical(self, features) -> Dict[str, Any]
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 430
+  _setup_vectorized_processor(self) -> None
+    File: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py, Line: 477
 
 Class: PredictionEngine
   __init__(self, model_manager, feature_extractor)
@@ -6354,20 +6340,6 @@ Class: BeatingCoreOptimization
   optimize_analysis_parameters(self, envelope, results) -> Dict[str, Any]
     File: ./bhlff/models/level_c/beating/basic/beating_basic_core_optimization.py, Line: 61
 
-Class: BeatingAnalysisCore
-  __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 46
-  analyze_beating_comprehensive(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 77
-  analyze_beating_statistical(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 124
-  compare_beating_analyses(self, results1, results2) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 140
-  optimize_analysis_parameters(self, envelope, results) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 159
-  validate_analysis_results(self, results) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/beating_basic_core.py, Line: 178
-
 Class: InterferencePatternAnalyzer
   __init__(self, interference_threshold)
     File: ./bhlff/models/level_c/beating/basic/core_analysis_interference.py, Line: 40
@@ -6663,12 +6635,6 @@ Class: StatisticalConfidenceAnalyzer
     File: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py, Line: 214
   _calculate_overall_confidence(self, pattern_confidence, correlation_analysis) -> Dict[str, Any]
     File: ./bhlff/models/level_c/beating/basic/statistical_analysis_confidence.py, Line: 242
-
-Class: CoreBeatingAnalyzer
-  __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/beating/basic/core_analysis.py, Line: 50
-  analyze_beating_comprehensive(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/beating/basic/core_analysis.py, Line: 78
 
 Class: BeatingParameterOptimizer
   __init__(self, bvp_core)
@@ -11018,46 +10984,6 @@ Class: MemoryKernel
   __repr__(self) -> str
     File: ./bhlff/core/operators/memory_kernel.py, Line: 315
 
-Class: QuenchDetector
-  __init__(self, domain, energy_threshold, rate_threshold, magnitude_threshold) -> None
-    File: ./bhlff/core/time/quench_detector.py, Line: 52
-  detect_quench(self, field, time) -> bool
-    File: ./bhlff/core/time/quench_detector.py, Line: 99
-  _calculate_energy(self, field) -> float
-    File: ./bhlff/core/time/quench_detector.py, Line: 187
-  get_quench_history(self) -> List[Dict]
-    File: ./bhlff/core/time/quench_detector.py, Line: 218
-  clear_history(self) -> None
-    File: ./bhlff/core/time/quench_detector.py, Line: 227
-  set_thresholds(self, energy_threshold, rate_threshold, magnitude_threshold) -> None
-    File: ./bhlff/core/time/quench_detector.py, Line: 233
-  get_statistics(self) -> Dict[str, Any]
-    File: ./bhlff/core/time/quench_detector.py, Line: 278
-  __repr__(self) -> str
-    File: ./bhlff/core/time/quench_detector.py, Line: 313
-  __init__(self, domain_7d, config)
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 67
-  detect_quenches(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 126
-  _detect_quenches_cuda(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 163
-  _detect_quenches_cpu(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 210
-  _detect_amplitude_quenches(self, envelope) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 234
-  _detect_detuning_quenches(self, envelope) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 297
-  _detect_gradient_quenches(self, envelope) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 368
-  _detect_amplitude_quenches_cuda(self, envelope_gpu) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 432
-  _detect_detuning_quenches_cuda(self, envelope_gpu) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 494
-  _detect_gradient_quenches_cuda(self, envelope_gpu) -> List[Dict[str, Any]]
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 565
-  _validate_thresholds(self) -> None
-    File: ./bhlff/core/bvp/quench_detector.py, Line: 632
-
 Class: CrankNicolsonIntegrator
   __init__(self, domain, parameters) -> None
     File: ./bhlff/core/time/crank_nicolson_integrator.py, Line: 60
@@ -11216,9 +11142,9 @@ Class: QuenchesPostulate
   __init__(self, domain, constants)
     File: ./bhlff/core/bvp/quenches_postulate.py, Line: 40
   apply(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/quenches_postulate.py, Line: 64
+    File: ./bhlff/core/bvp/quenches_postulate.py, Line: 82
   _validate_quenches(self, quench_analysis, energy_analysis) -> bool
-    File: ./bhlff/core/bvp/quenches_postulate.py, Line: 105
+    File: ./bhlff/core/bvp/quenches_postulate.py, Line: 123
 
 Class: QuenchMorphology
   __init__(self)
@@ -11291,6 +11217,30 @@ Class: ResonanceDetector
 Class: BVPPostulate
   apply(self, envelope) -> Dict[str, Any]
     File: ./bhlff/core/bvp/bvp_postulate_base.py, Line: 41
+
+Class: QuenchDetector
+  __init__(self, domain_7d, config)
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 67
+  detect_quenches(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 126
+  _detect_quenches_cuda(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 163
+  _detect_quenches_cpu(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 210
+  _detect_amplitude_quenches(self, envelope) -> List[Dict[str, Any]]
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 234
+  _detect_detuning_quenches(self, envelope) -> List[Dict[str, Any]]
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 297
+  _detect_gradient_quenches(self, envelope) -> List[Dict[str, Any]]
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 368
+  _detect_amplitude_quenches_cuda(self, envelope_gpu) -> List[Dict[str, Any]]
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 432
+  _detect_detuning_quenches_cuda(self, envelope_gpu) -> List[Dict[str, Any]]
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 494
+  _detect_gradient_quenches_cuda(self, envelope_gpu) -> List[Dict[str, Any]]
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 565
+  _validate_thresholds(self) -> None
+    File: ./bhlff/core/bvp/quench_detector.py, Line: 632
 
 Class: BVPImpedanceCalculator
   __init__(self, domain, config, constants) -> None
@@ -11571,16 +11521,6 @@ Class: EnvelopeSolverLineSearch
     File: ./bhlff/core/bvp/envelope_solver_line_search.py, Line: 111
   perform_adaptive_line_search(self, envelope, delta_envelope, residual, source, initial_step, residual_func) -> float
     File: ./bhlff/core/bvp/envelope_solver_line_search.py, Line: 180
-
-Class: QuenchesDetector
-  __init__(self, domain, constants)
-    File: ./bhlff/core/bvp/quenches_detector.py, Line: 40
-  detect_quenches(self, envelope) -> Dict[str, Any]
-    File: ./bhlff/core/bvp/quenches_detector.py, Line: 53
-  _filter_small_quenches(self, quench_mask) -> np.ndarray
-    File: ./bhlff/core/bvp/quenches_detector.py, Line: 99
-  _find_quench_locations(self, quench_mask) -> List[tuple]
-    File: ./bhlff/core/bvp/quenches_detector.py, Line: 128
 
 Class: BVPPhaseOperations
   __init__(self, phase_vector)
@@ -13239,14 +13179,16 @@ Class: Domain7D
     File: ./bhlff/core/domain/domain_7d.py, Line: 227
   get_full_7d_shape(self) -> Tuple[int, int, int, int, int, int]
     File: ./bhlff/core/domain/domain_7d.py, Line: 240
+  shape(self) -> Tuple[int, int, int, int, int, int, int]
+    File: ./bhlff/core/domain/domain_7d.py, Line: 257
   get_differentials(self) -> Dict[str, float]
-    File: ./bhlff/core/domain/domain_7d.py, Line: 256
+    File: ./bhlff/core/domain/domain_7d.py, Line: 279
   compute_7d_volume_element(self) -> np.ndarray
-    File: ./bhlff/core/domain/domain_7d.py, Line: 273
+    File: ./bhlff/core/domain/domain_7d.py, Line: 296
   compute_7d_distance(self, point1, point2) -> float
-    File: ./bhlff/core/domain/domain_7d.py, Line: 297
+    File: ./bhlff/core/domain/domain_7d.py, Line: 320
   __repr__(self) -> str
-    File: ./bhlff/core/domain/domain_7d.py, Line: 319
+    File: ./bhlff/core/domain/domain_7d.py, Line: 342
 
 Class: Field
   __post_init__(self) -> None
@@ -13812,13 +13754,13 @@ Class: FFTSolverTimeMethods
   _setup_integrator_components(self, integrator) -> None
     File: ./bhlff/core/fft/fft_solver_time.py, Line: 158
   set_memory_kernel(self, num_memory_vars, relaxation_times, coupling_strengths) -> None
-    File: ./bhlff/core/fft/fft_solver_time.py, Line: 181
+    File: ./bhlff/core/fft/fft_solver_time.py, Line: 190
   set_quench_detector(self, energy_threshold, rate_threshold, magnitude_threshold) -> None
-    File: ./bhlff/core/fft/fft_solver_time.py, Line: 218
+    File: ./bhlff/core/fft/fft_solver_time.py, Line: 227
   get_quench_history(self) -> List[Dict]
-    File: ./bhlff/core/fft/fft_solver_time.py, Line: 257
+    File: ./bhlff/core/fft/fft_solver_time.py, Line: 279
   get_memory_contribution(self) -> np.ndarray
-    File: ./bhlff/core/fft/fft_solver_time.py, Line: 268
+    File: ./bhlff/core/fft/fft_solver_time.py, Line: 290
 
 Class: FFTBackend
   __init__(self, domain, plan_type, precision) -> None

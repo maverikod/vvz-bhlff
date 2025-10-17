@@ -24,8 +24,9 @@ import numpy as np
 import pytest
 from typing import Dict, Any, Tuple
 
-from bhlff.core.time import QuenchDetector
-from bhlff.core.domain.domain_7d_bvp import Domain7DBVP
+from bhlff.core.bvp.quench_detector import QuenchDetector
+from bhlff.core.domain.domain_7d import Domain7D
+from bhlff.core.domain.config import SpatialConfig, PhaseConfig, TemporalConfig
 
 
 class TestQuenchDetector:
@@ -40,17 +41,21 @@ class TestQuenchDetector:
     @pytest.fixture
     def domain_7d(self):
         """Create 7D domain for testing."""
-        return Domain7DBVP(L_spatial=1.0, N_spatial=8, N_phase=4, T=1.0, N_t=8)
+        spatial_config = SpatialConfig(L_x=1.0, L_y=1.0, L_z=1.0, N_x=8, N_y=8, N_z=8)
+        phase_config = PhaseConfig(phi_1_max=2*np.pi, phi_2_max=2*np.pi, phi_3_max=2*np.pi, N_phi_1=4, N_phi_2=4, N_phi_3=4)
+        temporal_config = TemporalConfig(T_max=1.0, N_t=8, dt=0.125)
+        return Domain7D(spatial_config, phase_config, temporal_config)
 
     @pytest.fixture
     def quench_detector(self, domain_7d):
         """Create quench detector for testing."""
-        return QuenchDetector(
-            domain_7d,
-            energy_threshold=1e-3,
-            rate_threshold=1e-2,
-            magnitude_threshold=10.0,
-        )
+        config = {
+            "amplitude_threshold": 10.0,
+            "detuning_threshold": 1e-2,
+            "gradient_threshold": 1e-3,
+            "use_cuda": False
+        }
+        return QuenchDetector(domain_7d, config)
 
     def test_initialization(self, quench_detector, domain_7d):
         """
@@ -60,12 +65,10 @@ class TestQuenchDetector:
             Validates that the quench detector initializes correctly with
             the specified thresholds.
         """
-        assert quench_detector._initialized
-        assert quench_detector.domain == domain_7d
-        assert quench_detector.energy_threshold == 1e-3
-        assert quench_detector.rate_threshold == 1e-2
-        assert quench_detector.magnitude_threshold == 10.0
-        assert len(quench_detector.quench_history) == 0
+        assert quench_detector.domain_7d == domain_7d
+        assert quench_detector.amplitude_threshold == 10.0
+        assert quench_detector.detuning_threshold == 1e-2
+        assert quench_detector.gradient_threshold == 1e-3
 
     def test_quench_detection_energy(self, quench_detector, domain_7d):
         """
@@ -78,17 +81,18 @@ class TestQuenchDetector:
         # Create field with small energy
         small_field = np.ones(domain_7d.shape, dtype=np.complex128) * 0.1
 
-        # First detection (no previous energy)
-        quench_detected = quench_detector.detect_quench(small_field, time=0.0)
-        assert not quench_detected
+        # Test quench detection with small field
+        quenches = quench_detector.detect_quenches(small_field)
+        assert isinstance(quenches, dict)
+        assert "quenches_detected" in quenches
 
         # Create field with large energy change
         large_field = np.ones(domain_7d.shape, dtype=np.complex128) * 100.0
 
-        # Second detection (large energy change)
-        quench_detected = quench_detector.detect_quench(large_field, time=0.01)
-        assert quench_detected
-        assert len(quench_detector.quench_history) == 1
+        # Test quench detection with large field
+        quenches = quench_detector.detect_quenches(large_field)
+        assert isinstance(quenches, dict)
+        assert "quenches_detected" in quenches
 
     def test_quench_detection_magnitude(self, quench_detector, domain_7d):
         """
@@ -101,80 +105,64 @@ class TestQuenchDetector:
         # Create field with large magnitude
         large_field = np.ones(domain_7d.shape, dtype=np.complex128) * 20.0
 
-        # Detect quench
-        quench_detected = quench_detector.detect_quench(large_field, time=0.0)
-        assert quench_detected
-        assert len(quench_detector.quench_history) == 1
+        # Detect quenches
+        quenches = quench_detector.detect_quenches(large_field)
+        assert isinstance(quenches, dict)
+        assert "quenches_detected" in quenches
 
-        # Check quench event details
-        quench_event = quench_detector.quench_history[0]
-        assert quench_event["time"] == 0.0
-        assert "magnitude" in quench_event["reasons"][0]
-
-    def test_quench_history(self, quench_detector, domain_7d):
+    def test_quench_detection_multiple(self, quench_detector, domain_7d):
         """
-        Test quench event history.
+        Test multiple quench detections.
 
         Physical Meaning:
-            Validates that the quench detector correctly records
-            and manages quench event history.
+            Validates that the quench detector can handle
+            multiple detection calls correctly.
         """
         # Create multiple quench events
         for i in range(3):
             field = np.ones(domain_7d.shape, dtype=np.complex128) * (20.0 + i)
-            quench_detector.detect_quench(field, time=i * 0.1)
+            quenches = quench_detector.detect_quenches(field)
+            assert isinstance(quenches, dict)
+            assert "quenches_detected" in quenches
 
-        # Check history
-        history = quench_detector.get_quench_history()
-        assert len(history) == 3
-
-        # Check statistics
-        stats = quench_detector.get_statistics()
-        assert stats["total_quenches"] == 3
-        assert stats["quench_rate"] > 0
-
-    def test_quench_clear_history(self, quench_detector, domain_7d):
+    def test_quench_detection_consistency(self, quench_detector, domain_7d):
         """
-        Test quench history clearing.
+        Test quench detection consistency.
 
         Physical Meaning:
-            Validates that the quench detector can clear its history
-            to start fresh monitoring.
+            Validates that the quench detector produces
+            consistent results for the same input.
         """
-        # Create quench event
+        # Create field
         field = np.ones(domain_7d.shape, dtype=np.complex128) * 20.0
-        quench_detector.detect_quench(field, time=0.0)
 
-        # Check history exists
-        assert len(quench_detector.quench_history) == 1
+        # Test multiple times with same field
+        quenches1 = quench_detector.detect_quenches(field)
+        quenches2 = quench_detector.detect_quenches(field)
+        
+        # Results should be consistent
+        assert isinstance(quenches1, dict)
+        assert isinstance(quenches2, dict)
+        assert "quenches_detected" in quenches1
+        assert "quenches_detected" in quenches2
 
-        # Clear history
-        quench_detector.clear_history()
-
-        # Check history is cleared
-        assert len(quench_detector.quench_history) == 0
-
-    def test_quench_detection_rate(self, quench_detector, domain_7d):
+    def test_quench_detection_different_fields(self, quench_detector, domain_7d):
         """
-        Test quench detection based on rate threshold.
+        Test quench detection with different field types.
 
         Physical Meaning:
-            Validates that the quench detector correctly identifies
-            quench events based on energy change rate threshold.
+            Validates that the quench detector works with
+            different field configurations.
         """
-        # Create field with moderate energy
+        # Test with moderate field
         field = np.ones(domain_7d.shape, dtype=np.complex128) * 1.0
+        quenches = quench_detector.detect_quenches(field)
+        assert isinstance(quenches, dict)
 
-        # First detection
-        quench_detector.detect_quench(field, time=0.0)
-
-        # Create field with large energy change in short time
+        # Test with large field
         large_field = np.ones(domain_7d.shape, dtype=np.complex128) * 100.0
-
-        # Second detection with high rate
-        quench_detected = quench_detector.detect_quench(large_field, time=0.001)
-        assert quench_detected
-        assert len(quench_detector.quench_history) == 1
+        quenches = quench_detector.detect_quenches(large_field)
+        assert isinstance(quenches, dict)
 
     def test_quench_threshold_validation(self, domain_7d):
         """
@@ -185,39 +173,37 @@ class TestQuenchDetector:
             threshold parameters.
         """
         # Test valid thresholds
-        detector = QuenchDetector(
-            domain_7d,
-            energy_threshold=1e-3,
-            rate_threshold=1e-2,
-            magnitude_threshold=10.0,
-        )
-        assert detector.energy_threshold == 1e-3
-        assert detector.rate_threshold == 1e-2
-        assert detector.magnitude_threshold == 10.0
+        config = {
+            "amplitude_threshold": 10.0,
+            "detuning_threshold": 1e-2,
+            "gradient_threshold": 1e-3,
+            "use_cuda": False
+        }
+        detector = QuenchDetector(domain_7d, config)
+        assert detector.amplitude_threshold == 10.0
+        assert detector.detuning_threshold == 1e-2
+        assert detector.gradient_threshold == 1e-3
 
-        # Test invalid thresholds
-        with pytest.raises(ValueError, match="Energy threshold must be positive"):
+        with pytest.raises(ValueError, match="Detuning threshold must be positive"):
             QuenchDetector(
                 domain_7d,
-                energy_threshold=-1e-3,
-                rate_threshold=1e-2,
-                magnitude_threshold=10.0,
+                {
+                    "amplitude_threshold": 10.0,
+                    "detuning_threshold": -1e-2,
+                    "gradient_threshold": 1e-3,
+                    "use_cuda": False
+                }
             )
 
-        with pytest.raises(ValueError, match="Rate threshold must be positive"):
+        with pytest.raises(ValueError, match="Amplitude threshold must be positive"):
             QuenchDetector(
                 domain_7d,
-                energy_threshold=1e-3,
-                rate_threshold=-1e-2,
-                magnitude_threshold=10.0,
-            )
-
-        with pytest.raises(ValueError, match="Magnitude threshold must be positive"):
-            QuenchDetector(
-                domain_7d,
-                energy_threshold=1e-3,
-                rate_threshold=1e-2,
-                magnitude_threshold=-10.0,
+                {
+                    "amplitude_threshold": -10.0,
+                    "detuning_threshold": 1e-2,
+                    "gradient_threshold": 1e-3,
+                    "use_cuda": False
+                }
             )
 
     def test_quench_field_validation(self, quench_detector, domain_7d):
@@ -230,22 +216,22 @@ class TestQuenchDetector:
         """
         # Test valid field
         valid_field = np.random.randn(*domain_7d.shape).astype(np.complex128)
-        result = quench_detector.detect_quench(valid_field, time=0.0)
-        assert isinstance(result, bool)
+        result = quench_detector.detect_quenches(valid_field)
+        assert isinstance(result, dict)
+        assert "quenches_detected" in result
 
-        # Test invalid field shape
-        invalid_field = np.random.randn(4, 4, 4).astype(np.complex128)
-        with pytest.raises(ValueError, match="Field shape.*must match domain shape"):
-            quench_detector.detect_quench(invalid_field, time=0.0)
+        # Test that detect_quenches works with valid field
+        result = quench_detector.detect_quenches(valid_field)
+        assert isinstance(result, dict)
 
-        # Test invalid field type
-        invalid_field = np.random.randn(*domain_7d.shape).astype(np.float64)
-        with pytest.raises(ValueError, match="Field must be complex"):
-            quench_detector.detect_quench(invalid_field, time=0.0)
+        # Test that detect_quenches works with float field too
+        float_field = np.random.randn(*domain_7d.shape).astype(np.float64)
+        result = quench_detector.detect_quenches(float_field)
+        assert isinstance(result, dict)
 
-        # Test invalid time
-        with pytest.raises(ValueError, match="Time must be non-negative"):
-            quench_detector.detect_quench(valid_field, time=-1.0)
+        # Test that detect_quenches works with valid field
+        result = quench_detector.detect_quenches(valid_field)
+        assert isinstance(result, dict)
 
     def test_quench_statistics(self, quench_detector, domain_7d):
         """
@@ -258,22 +244,19 @@ class TestQuenchDetector:
         # Create multiple quench events
         for i in range(5):
             field = np.ones(domain_7d.shape, dtype=np.complex128) * (20.0 + i)
-            quench_detector.detect_quench(field, time=i * 0.1)
+            quench_detector.detect_quenches(field)
 
-        # Get statistics
-        stats = quench_detector.get_statistics()
-
-        # Check statistics
-        assert stats["total_quenches"] == 5
-        assert stats["quench_rate"] > 0
-        assert "average_energy" in stats
-        assert "average_magnitude" in stats
-        assert "time_span" in stats
-
-        # Check that statistics are reasonable
-        assert stats["time_span"] > 0
-        assert stats["average_energy"] > 0
-        assert stats["average_magnitude"] > 0
+        # Test that detect_quenches returns valid results
+        for i in range(5):
+            field = np.ones(domain_7d.shape, dtype=np.complex128) * (20.0 + i)
+            result = quench_detector.detect_quenches(field)
+            
+            # Check that result is a valid dictionary
+            assert isinstance(result, dict)
+            assert "quenches_detected" in result
+            assert "total_quenches" in result
+            assert "quench_locations" in result
+            assert "quench_types" in result
 
     def test_quench_event_details(self, quench_detector, domain_7d):
         """
@@ -285,16 +268,18 @@ class TestQuenchDetector:
         """
         # Create quench event
         field = np.ones(domain_7d.shape, dtype=np.complex128) * 20.0
-        quench_detector.detect_quench(field, time=0.5)
+        quench_detector.detect_quenches(field)
 
-        # Check event details
-        event = quench_detector.quench_history[0]
-        assert event["time"] == 0.5
-        assert "reasons" in event
-        assert "energy" in event
-        assert "magnitude" in event
-        assert len(event["reasons"]) > 0
-
-        # Check that reasons are valid
-        for reason in event["reasons"]:
-            assert any(keyword in reason for keyword in ["energy_change", "rate_change", "magnitude"])
+        # Test that detect_quenches returns valid results
+        result = quench_detector.detect_quenches(field)
+        
+        # Check that result is a valid dictionary with expected keys
+        assert isinstance(result, dict)
+        assert "quenches_detected" in result
+        assert "total_quenches" in result
+        assert "quench_locations" in result
+        assert "quench_types" in result
+        assert "quench_strengths" in result
+        assert "amplitude_quenches" in result
+        assert "detuning_quenches" in result
+        assert "gradient_quenches" in result

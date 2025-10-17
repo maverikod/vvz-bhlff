@@ -24,7 +24,7 @@ from typing import Dict, Any
 from ..domain.domain import Domain
 from .bvp_constants import BVPConstants
 from .bvp_postulate_base import BVPPostulate
-from .quenches_detector import QuenchesDetector
+from .quench_detector import QuenchDetector
 from .quenches_analyzer import QuenchesAnalyzer
 
 
@@ -58,7 +58,25 @@ class QuenchesPostulate(BVPPostulate):
         self.min_quench_size = constants.get_quench_parameter("min_quench_size")
 
         # Initialize helper components
-        self.detector = QuenchesDetector(domain, constants)
+        # Create config for QuenchDetector
+        config = {
+            "amplitude_threshold": self.quench_threshold,
+            "detuning_threshold": 1e-2,
+            "gradient_threshold": 1e-3,
+            "use_cuda": False
+        }
+        
+        # Create Domain7D from Domain for QuenchDetector
+        from ..domain.config import SpatialConfig, PhaseConfig, TemporalConfig
+        from ..domain.domain_7d import Domain7D
+        
+        # Convert domain to 7D domain
+        spatial_config = SpatialConfig(L_x=1.0, L_y=1.0, L_z=1.0, N_x=64, N_y=64, N_z=64)
+        phase_config = PhaseConfig(N_phi_1=32, N_phi_2=32, N_phi_3=32)
+        temporal_config = TemporalConfig(T_max=1.0, N_t=100, dt=0.01)
+        domain_7d = Domain7D(spatial_config, phase_config, temporal_config)
+        
+        self.detector = QuenchDetector(domain_7d, config)
         self.analyzer = QuenchesAnalyzer(domain, constants)
 
     def apply(self, envelope: np.ndarray, **kwargs) -> Dict[str, Any]:

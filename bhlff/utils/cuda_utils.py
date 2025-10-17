@@ -85,11 +85,27 @@ class CUDABackend:
         return cp.asnumpy(array)
 
     def fft(self, array: "cp.ndarray", axes: Optional[tuple] = None) -> "cp.ndarray":
-        """Perform FFT on GPU."""
+        """Perform FFT on GPU with memory check."""
+        # Check available memory before FFT
+        if not self._check_memory_for_fft(array):
+            # Fallback to CPU if not enough GPU memory
+            logger.warning("Insufficient GPU memory for FFT, falling back to CPU")
+            array_cpu = cp.asnumpy(array)
+            result_cpu = np.fft.fftn(array_cpu, axes=axes)
+            return cp.asarray(result_cpu)
+        
         return cp_fft.fftn(array, axes=axes)
 
     def ifft(self, array: "cp.ndarray", axes: Optional[tuple] = None) -> "cp.ndarray":
-        """Perform inverse FFT on GPU."""
+        """Perform inverse FFT on GPU with memory check."""
+        # Check available memory before FFT
+        if not self._check_memory_for_fft(array):
+            # Fallback to CPU if not enough GPU memory
+            logger.warning("Insufficient GPU memory for FFT, falling back to CPU")
+            array_cpu = cp.asnumpy(array)
+            result_cpu = np.fft.ifftn(array_cpu, axes=axes)
+            return cp.asarray(result_cpu)
+        
         return cp_fft.ifftn(array, axes=axes)
 
     def fftshift(
@@ -118,6 +134,40 @@ class CUDABackend:
             "pinned_used": pinned_mempool.n_free_blocks(),
             "pinned_total": pinned_mempool.n_free_blocks(),
         }
+    
+    def _check_memory_for_fft(self, array: "cp.ndarray") -> bool:
+        """
+        Check if there's enough GPU memory for FFT operations.
+        
+        Physical Meaning:
+            FFT operations require 3-4x the input array size in memory
+            for intermediate computations and output arrays.
+            
+        Args:
+            array: Input array for FFT operation.
+            
+        Returns:
+            bool: True if enough memory available, False otherwise.
+        """
+        try:
+            # Estimate memory needed for FFT (3-4x input size)
+            input_size = array.nbytes
+            fft_memory_needed = input_size * 4  # 4x for safety
+            
+            # Get available memory
+            free_memory = self.device.mem_info[0]
+            
+            # Check if we have enough memory
+            if fft_memory_needed > free_memory:
+                logger.warning(f"FFT requires {fft_memory_needed / (1024**2):.1f} MB, "
+                             f"but only {free_memory / (1024**2):.1f} MB available")
+                return False
+                
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error checking memory for FFT: {e}")
+            return False
 
 
 class CPUBackend:

@@ -120,6 +120,11 @@ class UnifiedSpectralOperations:
                 f"Field shape {field.shape} incompatible with domain {self.domain.shape}"
             )
 
+        # Check if field is too large for GPU memory
+        if self._is_field_too_large(field):
+            self.logger.warning(f"Field too large for GPU memory, using CPU fallback")
+            return self._forward_fft_cpu(field, normalization)
+        
         # Use CUDA backend for FFT operations
         field_gpu = self.backend.array(field)
 
@@ -141,6 +146,102 @@ class UnifiedSpectralOperations:
         # Convert back to CPU
         field_spectral = self.backend.to_numpy(field_spectral_gpu)
         return field_spectral
+    
+    def _is_field_too_large(self, field: np.ndarray) -> bool:
+        """
+        Check if field is too large for GPU memory.
+        
+        Physical Meaning:
+            Large 7D fields can exceed GPU memory capacity,
+            requiring CPU fallback for FFT operations.
+            
+        Args:
+            field: Field to check.
+            
+        Returns:
+            bool: True if field is too large for GPU.
+        """
+        try:
+            # Estimate memory needed (4x field size for FFT)
+            field_size_mb = field.nbytes / (1024**2)
+            fft_memory_needed_mb = field_size_mb * 4
+            
+            # Check if we have enough GPU memory
+            if hasattr(self.backend, 'get_memory_info'):
+                memory_info = self.backend.get_memory_info()
+                free_memory_mb = memory_info['free_memory'] / (1024**2)
+                
+                if fft_memory_needed_mb > free_memory_mb:
+                    self.logger.warning(f"FFT requires {fft_memory_needed_mb:.1f} MB, "
+                                      f"but only {free_memory_mb:.1f} MB available")
+                    return True
+                    
+            return False
+            
+        except Exception as e:
+            self.logger.warning(f"Error checking field size: {e}")
+            return True  # Fallback to CPU on error
+    
+    def _forward_fft_cpu(self, field: np.ndarray, normalization: str) -> np.ndarray:
+        """
+        CPU fallback for forward FFT.
+        
+        Physical Meaning:
+            Performs FFT on CPU when GPU memory is insufficient,
+            ensuring computation can continue with reduced performance.
+            
+        Args:
+            field: Field to transform.
+            normalization: Normalization type.
+            
+        Returns:
+            np.ndarray: Spectral field.
+        """
+        import numpy.fft as np_fft
+        
+        # Perform FFT on CPU
+        field_spectral = np_fft.fftn(field)
+        
+        if normalization == "ortho":
+            # Apply orthogonal normalization
+            N_total = np.prod(self.domain.shape)
+            field_spectral /= np.sqrt(N_total)
+        elif normalization == "physics":
+            # Apply physics normalization factor
+            volume_element = self._compute_volume_element()
+            field_spectral *= volume_element
+        
+        return field_spectral
+    
+    def _inverse_fft_cpu(self, spectral_field: np.ndarray, normalization: str) -> np.ndarray:
+        """
+        CPU fallback for inverse FFT.
+        
+        Physical Meaning:
+            Performs inverse FFT on CPU when GPU memory is insufficient,
+            ensuring computation can continue with reduced performance.
+            
+        Args:
+            spectral_field: Spectral field to transform.
+            normalization: Normalization type.
+            
+        Returns:
+            np.ndarray: Real space field.
+        """
+        import numpy.fft as np_fft
+        
+        if normalization == "ortho":
+            # Apply orthogonal normalization
+            N_total = np.prod(self.domain.shape)
+            field_spectral = spectral_field * np.sqrt(N_total)
+            field_real = np_fft.ifftn(field_spectral)
+        elif normalization == "physics":
+            # Apply physics normalization
+            volume_element = self._compute_volume_element()
+            field_spectral = spectral_field / volume_element
+            field_real = np_fft.ifftn(field_spectral)
+        
+        return field_real.real
 
     def inverse_fft(
         self, spectral_field: np.ndarray, normalization: str = "ortho"
@@ -172,6 +273,11 @@ class UnifiedSpectralOperations:
                 f"Spectral field shape {spectral_field.shape} incompatible with domain {self.domain.shape}"
             )
 
+        # Check if field is too large for GPU memory
+        if self._is_field_too_large(spectral_field):
+            self.logger.warning(f"Spectral field too large for GPU memory, using CPU fallback")
+            return self._inverse_fft_cpu(spectral_field, normalization)
+        
         # Use CUDA backend for FFT operations
         spectral_field_gpu = self.backend.array(spectral_field)
 

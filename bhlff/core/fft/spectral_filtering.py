@@ -362,27 +362,27 @@ class SpectralFiltering:
         # Compute wave vectors for all dimensions
         k_magnitude_squared = np.zeros(self.domain.shape)
 
-            # Spatial dimensions (x, y, z)
-            for i in range(3):
-                k = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
-                k = k * 2 * np.pi / self.domain.L
-                k = np.broadcast_to(k.reshape(-1, 1, 1, 1, 1, 1, 1), self.domain.shape)
-                k_magnitude_squared += k**2
-
-            # Phase dimensions (φ₁, φ₂, φ₃)
-            for i in range(3):
-                k = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
-                k = k * 2 * np.pi / (2 * np.pi)
-                k = np.broadcast_to(k.reshape(1, 1, 1, -1, 1, 1, 1), self.domain.shape)
-                k_magnitude_squared += k**2
-
-            # Time dimension (t)
-            k = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
-            k = k * 2 * np.pi / self.domain.T
-            k = np.broadcast_to(k.reshape(1, 1, 1, 1, 1, 1, -1), self.domain.shape)
+        # Spatial dimensions (x, y, z)
+        for i in range(3):
+            k = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
+            k = k * 2 * np.pi / self.domain.L
+            k = np.broadcast_to(k.reshape(-1, 1, 1, 1, 1, 1, 1), self.domain.shape)
             k_magnitude_squared += k**2
 
-            return np.sqrt(k_magnitude_squared)
+        # Phase dimensions (φ₁, φ₂, φ₃)
+        for i in range(3):
+            k = np.fft.fftfreq(self.domain.N_phi, 2 * np.pi / self.domain.N_phi)
+            k = k * 2 * np.pi / (2 * np.pi)
+            k = np.broadcast_to(k.reshape(1, 1, 1, -1, 1, 1, 1), self.domain.shape)
+            k_magnitude_squared += k**2
+
+        # Time dimension (t)
+        k = np.fft.fftfreq(self.domain.N_t, self.domain.T / self.domain.N_t)
+        k = k * 2 * np.pi / self.domain.T
+        k = np.broadcast_to(k.reshape(1, 1, 1, 1, 1, 1, -1), self.domain.shape)
+        k_magnitude_squared += k**2
+
+        return np.sqrt(k_magnitude_squared)
     
     def _step_resonator_transfer_function(self, k_magnitude: np.ndarray, sigma: float) -> np.ndarray:
         """

@@ -4,25 +4,25 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 881
+Total files analyzed: 894
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 747
+Total classes: 767
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 6643
+Total functions: 6802
 
 ISSUES SUMMARY:
 ----------------------------------------
 methods_with_pass: 0
 not_implemented_in_non_abstract: 0
-methods_without_docstrings: 115
+methods_without_docstrings: 118
 files_without_docstrings: 4
-classes_without_docstrings: 12
-imports_in_middle: 646
-files_too_large: 104
+classes_without_docstrings: 13
+imports_in_middle: 658
+files_too_large: 106
 
 METHODS_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -70,7 +70,7 @@ METHODS_WITHOUT_DOCSTRINGS:
   Class: MockBVPCore
   Method: __init__
 
-  ... and 105 more
+  ... and 108 more
 
 FILES_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -117,6 +117,10 @@ CLASSES_WITHOUT_DOCSTRINGS:
   Line: 13
   Class: DummyDomain
 
+  File: ./tests/unit/test_core/test_enhanced_block_processing.py
+  Line: 202
+  Class: MockBlockInfo
+
   File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
   Line: 101
   Class: MockParameters
@@ -125,11 +129,7 @@ CLASSES_WITHOUT_DOCSTRINGS:
   Line: 177
   Class: MockInvalidParameters
 
-  File: ./bhlff/core/bvp/quench_detector.py
-  Line: 37
-  Class: DummyCuPy
-
-  ... and 2 more
+  ... and 3 more
 
 IMPORTS_IN_MIDDLE:
 ----------------------------------------
@@ -138,6 +138,9 @@ IMPORTS_IN_MIDDLE:
 
   File: ./test_quench_detector_light.py
   Line: 36
+
+  File: ./debug_block_processing.py
+  Line: 244
 
   File: ./test_quench_detector_cuda.py
   Line: 30
@@ -157,13 +160,10 @@ IMPORTS_IN_MIDDLE:
   File: ./scripts/demo_vectorized_processing.py
   Line: 22
 
-  File: ./scripts/demo_vectorized_ml_methods.py
-  Line: 205
+  File: ./scripts/demo_block_processing.py
+  Line: 306
 
-  File: ./scripts/demo_ml_prediction_simple.py
-  Line: 24
-
-  ... and 636 more
+  ... and 648 more
 
 FILES_TOO_LARGE:
 ----------------------------------------
@@ -187,4 +187,4 @@ FILES_TOO_LARGE:
 
   File: ./tests/unit/automated_testing/test_integration.py
 
-  ... and 94 more
+  ... and 96 more

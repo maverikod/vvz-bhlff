@@ -2780,6 +2780,42 @@ Class: TestPowerLawOptimizationFull
   test_func(params)
     File: ./tests/unit/test_core/test_power_law_optimization_full.py, Line: 304
 
+Class: TestEnhancedBlockProcessor
+  setup_method(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 265
+  test_initialization(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 161
+  test_optimal_block_size_calculation(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 58
+  test_memory_requirements_check(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 66
+  test_adaptive_strategy_selection(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 84
+  test_cpu_processing(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 96
+  test_processing_stats(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 234
+  test_optimization_for_field(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 245
+  test_cleanup(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 256
+  test_envelope_solution(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 168
+  test_block_extraction(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 183
+  test_block_bvp_solution(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 195
+  test_convergence_check(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 215
+  test_end_to_end_processing(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 271
+  test_memory_efficiency(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 284
+  test_adaptive_processing(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 305
+  __init__(self)
+    File: ./tests/unit/test_core/test_enhanced_block_processing.py, Line: 203
+
 Class: TestNoExponentialDamping
   test_no_exponential_memory_kernel(self)
     File: ./tests/unit/test_core/test_no_exponential_damping.py, Line: 27
@@ -3025,6 +3061,30 @@ Class: TestEffectiveMetricComprehensive
     File: ./tests/unit/test_core/test_effective_metric_comprehensive.py, Line: 229
   test_effective_metric_integration_consistency(self)
     File: ./tests/unit/test_core/test_effective_metric_comprehensive.py, Line: 256
+
+Class: TestUltraSimpleBlockProcessing
+  setup_method(self)
+    File: ./tests/unit/test_core/test_ultra_simple_block_processing.py, Line: 27
+  test_initialization(self)
+    File: ./tests/unit/test_core/test_ultra_simple_block_processing.py, Line: 52
+  test_optimal_block_size_calculation(self)
+    File: ./tests/unit/test_core/test_ultra_simple_block_processing.py, Line: 59
+  test_cpu_processing(self)
+    File: ./tests/unit/test_core/test_ultra_simple_block_processing.py, Line: 67
+  test_processing_stats(self)
+    File: ./tests/unit/test_core/test_ultra_simple_block_processing.py, Line: 79
+  test_optimization_for_field(self)
+    File: ./tests/unit/test_core/test_ultra_simple_block_processing.py, Line: 88
+  test_cleanup(self)
+    File: ./tests/unit/test_core/test_ultra_simple_block_processing.py, Line: 99
+  test_block_processing_operations(self)
+    File: ./tests/unit/test_core/test_ultra_simple_block_processing.py, Line: 104
+  test_memory_efficiency(self)
+    File: ./tests/unit/test_core/test_ultra_simple_block_processing.py, Line: 132
+  test_adaptive_processing(self)
+    File: ./tests/unit/test_core/test_ultra_simple_block_processing.py, Line: 149
+  test_performance_benchmark(self)
+    File: ./tests/unit/test_core/test_ultra_simple_block_processing.py, Line: 180
 
 Class: TestFFTButterflyComputer
   domain(self)
@@ -3281,6 +3341,54 @@ Class: TestStepResonatorNoExponential
     File: ./tests/unit/test_core/test_step_resonator_no_exponential.py, Line: 99
   test_resonator_coefficients_are_step_functions(self)
     File: ./tests/unit/test_core/test_step_resonator_no_exponential.py, Line: 124
+
+Class: TestSimpleBlockProcessing
+  setup_method(self)
+    File: ./tests/unit/test_core/test_simple_block_processing.py, Line: 27
+  test_initialization(self)
+    File: ./tests/unit/test_core/test_simple_block_processing.py, Line: 50
+  test_optimal_block_size_calculation(self)
+    File: ./tests/unit/test_core/test_simple_block_processing.py, Line: 57
+  test_cpu_processing(self)
+    File: ./tests/unit/test_core/test_simple_block_processing.py, Line: 65
+  test_processing_stats(self)
+    File: ./tests/unit/test_core/test_simple_block_processing.py, Line: 77
+  test_optimization_for_field(self)
+    File: ./tests/unit/test_core/test_simple_block_processing.py, Line: 86
+  test_cleanup(self)
+    File: ./tests/unit/test_core/test_simple_block_processing.py, Line: 97
+  test_block_processing_operations(self)
+    File: ./tests/unit/test_core/test_simple_block_processing.py, Line: 102
+  test_memory_efficiency(self)
+    File: ./tests/unit/test_core/test_simple_block_processing.py, Line: 130
+  test_adaptive_processing(self)
+    File: ./tests/unit/test_core/test_simple_block_processing.py, Line: 147
+  test_performance_benchmark(self)
+    File: ./tests/unit/test_core/test_simple_block_processing.py, Line: 179
+  setup_method(self)
+    File: ./tests/unit/test_core/test_block_processing_simple.py, Line: 26
+  test_initialization(self)
+    File: ./tests/unit/test_core/test_block_processing_simple.py, Line: 50
+  test_optimal_block_size_calculation(self)
+    File: ./tests/unit/test_core/test_block_processing_simple.py, Line: 57
+  test_memory_requirements_check(self)
+    File: ./tests/unit/test_core/test_block_processing_simple.py, Line: 65
+  test_adaptive_strategy_selection(self)
+    File: ./tests/unit/test_core/test_block_processing_simple.py, Line: 73
+  test_cpu_processing(self)
+    File: ./tests/unit/test_core/test_block_processing_simple.py, Line: 80
+  test_processing_stats(self)
+    File: ./tests/unit/test_core/test_block_processing_simple.py, Line: 89
+  test_optimization_for_field(self)
+    File: ./tests/unit/test_core/test_block_processing_simple.py, Line: 98
+  test_cleanup(self)
+    File: ./tests/unit/test_core/test_block_processing_simple.py, Line: 109
+  test_block_processing_operations(self)
+    File: ./tests/unit/test_core/test_block_processing_simple.py, Line: 114
+  test_memory_efficiency(self)
+    File: ./tests/unit/test_core/test_block_processing_simple.py, Line: 130
+  test_adaptive_processing(self)
+    File: ./tests/unit/test_core/test_block_processing_simple.py, Line: 143
 
 Class: TestTransitionZonePostulatePhysics
   domain_7d(self)
@@ -3759,6 +3867,36 @@ Class: TestFFTBackend
     File: ./tests/unit/test_core/test_fft_backend.py, Line: 169
   test_fft_backend_7d_structure(self, fft_backend)
     File: ./tests/unit/test_core/test_fft_backend.py, Line: 185
+
+Class: TestOptimizedBlockProcessing
+  setup_method(self)
+    File: ./tests/unit/test_core/test_optimized_block_processing.py, Line: 27
+  test_initialization(self)
+    File: ./tests/unit/test_core/test_optimized_block_processing.py, Line: 51
+  test_optimal_block_size_calculation(self)
+    File: ./tests/unit/test_core/test_optimized_block_processing.py, Line: 59
+  test_memory_requirements_check(self)
+    File: ./tests/unit/test_core/test_optimized_block_processing.py, Line: 67
+  test_adaptive_strategy_selection(self)
+    File: ./tests/unit/test_core/test_optimized_block_processing.py, Line: 75
+  test_cpu_processing(self)
+    File: ./tests/unit/test_core/test_optimized_block_processing.py, Line: 82
+  test_processing_stats(self)
+    File: ./tests/unit/test_core/test_optimized_block_processing.py, Line: 94
+  test_optimization_for_field(self)
+    File: ./tests/unit/test_core/test_optimized_block_processing.py, Line: 104
+  test_cleanup(self)
+    File: ./tests/unit/test_core/test_optimized_block_processing.py, Line: 115
+  test_block_processing_operations(self)
+    File: ./tests/unit/test_core/test_optimized_block_processing.py, Line: 120
+  test_memory_efficiency(self)
+    File: ./tests/unit/test_core/test_optimized_block_processing.py, Line: 148
+  test_adaptive_processing(self)
+    File: ./tests/unit/test_core/test_optimized_block_processing.py, Line: 165
+  test_large_field_processing(self)
+    File: ./tests/unit/test_core/test_optimized_block_processing.py, Line: 197
+  test_performance_benchmark(self)
+    File: ./tests/unit/test_core/test_optimized_block_processing.py, Line: 213
 
 Class: TestFFTPhysics
   domain_7d(self)
@@ -11574,6 +11712,46 @@ Class: TopologicalDefectAnalyzer
   _compute_distribution_uniformity(self, locations) -> float
     File: ./bhlff/core/bvp/analysis/defect_analyzer.py, Line: 320
 
+Class: BVPBlockConfig
+  __init__(self, domain, config)
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 76
+  solve_envelope_blocked(self, source, max_iterations, tolerance) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 128
+  _solve_envelope_blocks(self, current_envelope, source) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 183
+  _solve_block_bvp(self, envelope_block, source_block, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 214
+  _compute_stiffness_block(self, envelope_block, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 246
+  _compute_susceptibility_block(self, envelope_block, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 258
+  _apply_boundary_conditions(self, envelope_block, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 270
+  _solve_block_iterative(self, lhs, rhs, initial) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 282
+  _extract_source_block(self, source, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 288
+  _extract_envelope_block(self, envelope, block_info) -> np.ndarray
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 296
+  _merge_block_result(self, result, block_result, block_info) -> None
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 304
+  _check_envelope_convergence(self, old_envelope, new_envelope, tolerance) -> bool
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 313
+  detect_quenches_blocked(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 329
+  _adjust_quench_positions(self, block_quenches, block_info) -> List
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 364
+  compute_impedance_blocked(self, envelope) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 369
+  _cleanup_memory(self) -> None
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 411
+  get_processing_stats(self) -> Dict[str, Any]
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 419
+  optimize_for_field(self, field) -> None
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 427
+  cleanup(self) -> None
+    File: ./bhlff/core/bvp/bvp_block_processing_system.py, Line: 449
+
 Class: ResonanceQualityCore
   __init__(self, constants)
     File: ./bhlff/core/bvp/resonance_quality_core.py, Line: 26
@@ -13394,6 +13572,104 @@ Class: BlockInfo
   optimize_block_size(self, available_memory_gb) -> int
     File: ./bhlff/core/domain/block_processor.py, Line: 316
 
+Class: ProcessingMode
+  __init__(self, domain, config)
+    File: ./bhlff/core/domain/simple_block_processor.py, Line: 73
+  _calculate_optimal_block_size(self) -> int
+    File: ./bhlff/core/domain/simple_block_processor.py, Line: 110
+  process_7d_field(self, field, operation) -> np.ndarray
+    File: ./bhlff/core/domain/simple_block_processor.py, Line: 145
+  _process_cpu_optimized(self, field, operation) -> np.ndarray
+    File: ./bhlff/core/domain/simple_block_processor.py, Line: 181
+  _process_large_field(self, field, operation) -> np.ndarray
+    File: ./bhlff/core/domain/simple_block_processor.py, Line: 202
+  _process_single_block_cpu(self, block_data, operation) -> np.ndarray
+    File: ./bhlff/core/domain/simple_block_processor.py, Line: 218
+  _solve_bvp_block_cpu(self, block_data) -> np.ndarray
+    File: ./bhlff/core/domain/simple_block_processor.py, Line: 229
+  _merge_block_result(self, result, block_result, block_info) -> None
+    File: ./bhlff/core/domain/simple_block_processor.py, Line: 235
+  get_processing_stats(self) -> Dict[str, Any]
+    File: ./bhlff/core/domain/simple_block_processor.py, Line: 251
+  optimize_for_field(self, field) -> None
+    File: ./bhlff/core/domain/simple_block_processor.py, Line: 259
+  cleanup(self) -> None
+    File: ./bhlff/core/domain/simple_block_processor.py, Line: 279
+  __init__(self, domain, config)
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 83
+  _calculate_optimal_block_size(self) -> int
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 125
+  process_7d_field(self, field, operation) -> np.ndarray
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 160
+  _process_cpu_optimized(self, field, operation) -> np.ndarray
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 205
+  _process_gpu_optimized(self, field, operation) -> np.ndarray
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 226
+  _process_large_field(self, field, operation) -> np.ndarray
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 259
+  _process_single_block_cpu(self, block_data, operation) -> np.ndarray
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 275
+  _process_single_block_gpu(self, block_data, operation)
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 286
+  _solve_bvp_block_cpu(self, block_data) -> np.ndarray
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 297
+  _solve_bvp_block_gpu(self, block_data)
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 303
+  _extract_block_gpu(self, field_gpu, block_info)
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 309
+  _merge_block_result(self, result, block_result, block_info) -> None
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 317
+  _merge_block_result_gpu(self, result_gpu, block_result, block_info) -> None
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 326
+  get_processing_stats(self) -> Dict[str, Any]
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 335
+  optimize_for_field(self, field) -> None
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 344
+  cleanup(self) -> None
+    File: ./bhlff/core/domain/optimized_block_processor.py, Line: 364
+  __init__(self, domain, config)
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 73
+  process_7d_field(self, field, operation) -> np.ndarray
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 110
+  _calculate_optimal_block_size(self) -> int
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 148
+  _check_cuda_availability(self) -> bool
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 183
+  _check_memory_requirements(self, field) -> bool
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 191
+  _choose_adaptive_strategy(self, field) -> ProcessingMode
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 214
+  _process_gpu_preferred(self, field, operation) -> np.ndarray
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 237
+  _process_gpu_only(self, field, operation) -> np.ndarray
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 246
+  _process_cpu_optimized(self, field, operation) -> np.ndarray
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 253
+  _process_gpu_blocks(self, field, operation) -> np.ndarray
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 271
+  _process_single_block_cpu(self, block_data, operation) -> np.ndarray
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 301
+  _process_single_block_gpu(self, block_data, operation) -> cp.ndarray
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 312
+  _solve_bvp_block_cpu(self, block_data) -> np.ndarray
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 323
+  _solve_bvp_block_gpu(self, block_data) -> cp.ndarray
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 329
+  _extract_block_gpu(self, field_gpu, block_info) -> cp.ndarray
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 335
+  _merge_block_result(self, result, block_result, block_info) -> None
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 343
+  _merge_block_result_gpu(self, result_gpu, block_result, block_info) -> None
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 352
+  _fallback_processing(self, field, operation) -> np.ndarray
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 361
+  get_processing_stats(self) -> Dict[str, Any]
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 377
+  optimize_for_field(self, field) -> None
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 386
+  cleanup(self) -> None
+    File: ./bhlff/core/domain/enhanced_block_processor.py, Line: 406
+
 Class: Domain7D
   __init__(self, spatial_config, phase_config, temporal_config)
     File: ./bhlff/core/domain/domain_7d.py, Line: 51
@@ -14047,6 +14323,26 @@ Class: FFTSolverValidation
     File: ./bhlff/core/fft/fft_solver_validation.py, Line: 170
   check_boundary_conditions(self, field, boundary_type) -> Dict[str, Any]
     File: ./bhlff/core/fft/fft_solver_validation.py, Line: 246
+
+Class: SpectralFiltering
+  __init__(self, domain, precision)
+    File: ./bhlff/core/fft/spectral_filtering.py, Line: 58
+  apply_low_pass_filter(self, field, cutoff_frequency, order) -> np.ndarray
+    File: ./bhlff/core/fft/spectral_filtering.py, Line: 80
+  apply_high_pass_filter(self, field, cutoff_frequency, order) -> np.ndarray
+    File: ./bhlff/core/fft/spectral_filtering.py, Line: 123
+  apply_band_pass_filter(self, field, center_frequency, bandwidth, order) -> np.ndarray
+    File: ./bhlff/core/fft/spectral_filtering.py, Line: 165
+  apply_gaussian_filter(self, field, sigma) -> np.ndarray
+    File: ./bhlff/core/fft/spectral_filtering.py, Line: 212
+  apply_spectral_filter(self, field, filter_type) -> np.ndarray
+    File: ./bhlff/core/fft/spectral_filtering.py, Line: 249
+  apply_noise_reduction(self, field, noise_level, method) -> np.ndarray
+    File: ./bhlff/core/fft/spectral_filtering.py, Line: 278
+  _compute_k_magnitude(self) -> np.ndarray
+    File: ./bhlff/core/fft/spectral_filtering.py, Line: 307
+  _step_resonator_transfer_function(self, k_magnitude, sigma) -> np.ndarray
+    File: ./bhlff/core/fft/spectral_filtering.py, Line: 387
 
 Class: FFTPlan7D
   __init__(self, domain_shape, precision)

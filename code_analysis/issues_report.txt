@@ -2,9 +2,9 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 881
+Total issues found: 899
 
-METHODS_WITHOUT_DOCSTRINGS: 115 issues
+METHODS_WITHOUT_DOCSTRINGS: 118 issues
 ----------------------------------------
   ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
     Line 77
@@ -250,6 +250,19 @@ METHODS_WITHOUT_DOCSTRINGS: 115 issues
   ./tests/unit/test_core/test_power_law_optimization_full.py
     Line 304
     Method: test_func
+
+  ./tests/unit/test_core/test_enhanced_block_processing.py
+    Line 203
+    Method: __init__
+
+  ./tests/unit/test_core/test_enhanced_block_processing.py
+    Line 203
+    Class: MockBlockInfo
+    Method: __init__
+
+  ./tests/unit/test_core/test_enhanced_block_processing.py
+    Line 203
+    Method: __init__
 
   ./tests/unit/test_core/test_step_resonator_boundary.py
     Line 12
@@ -506,7 +519,7 @@ FILES_WITHOUT_DOCSTRINGS: 4 issues
     Line 1
 
 
-CLASSES_WITHOUT_DOCSTRINGS: 12 issues
+CLASSES_WITHOUT_DOCSTRINGS: 13 issues
 ----------------------------------------
   ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
     Line 76
@@ -536,6 +549,10 @@ CLASSES_WITHOUT_DOCSTRINGS: 12 issues
     Line 13
     Class: DummyDomain
 
+  ./tests/unit/test_core/test_enhanced_block_processing.py
+    Line 202
+    Class: MockBlockInfo
+
   ./tests/unit/test_core/test_fractional_laplacian_parameters.py
     Line 101
     Class: MockParameters
@@ -557,13 +574,16 @@ CLASSES_WITHOUT_DOCSTRINGS: 12 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 646 issues
+IMPORTS_IN_MIDDLE: 658 issues
 ----------------------------------------
   ./test_quench_detector_minimal.py
     Line 30
 
   ./test_quench_detector_light.py
     Line 36
+
+  ./debug_block_processing.py
+    Line 244
 
   ./test_quench_detector_cuda.py
     Line 30
@@ -583,8 +603,14 @@ IMPORTS_IN_MIDDLE: 646 issues
   ./scripts/demo_vectorized_processing.py
     Line 22
 
+  ./scripts/demo_block_processing.py
+    Line 306
+
   ./scripts/demo_vectorized_ml_methods.py
     Line 205
+
+  ./scripts/demo_enhanced_block_processing.py
+    Line 320
 
   ./scripts/demo_ml_prediction_simple.py
     Line 24
@@ -865,6 +891,9 @@ IMPORTS_IN_MIDDLE: 646 issues
   ./tests/unit/test_core/test_power_law_optimization_full.py
     Line 368
 
+  ./tests/unit/test_core/test_enhanced_block_processing.py
+    Line 21
+
   ./tests/unit/test_core/test_base_time_integrator.py
     Line 27
 
@@ -873,6 +902,9 @@ IMPORTS_IN_MIDDLE: 646 issues
 
   ./tests/unit/test_core/test_scale_separation_postulate_physics.py
     Line 30
+
+  ./tests/unit/test_core/test_ultra_simple_block_processing.py
+    Line 21
 
   ./tests/unit/test_core/test_tail_resonatorness_postulate_physics.py
     Line 29
@@ -885,6 +917,9 @@ IMPORTS_IN_MIDDLE: 646 issues
 
   ./tests/unit/test_core/test_step_resonator_no_exponential.py
     Line 132
+
+  ./tests/unit/test_core/test_simple_block_processing.py
+    Line 21
 
   ./tests/unit/test_core/test_transition_zone_postulate_physics.py
     Line 29
@@ -909,6 +944,9 @@ IMPORTS_IN_MIDDLE: 646 issues
 
   ./tests/unit/test_core/test_spectral_convergence_physics.py
     Line 325
+
+  ./tests/unit/test_core/test_optimized_block_processing.py
+    Line 21
 
   ./tests/unit/test_core/test_fft_physics.py
     Line 37
@@ -2011,6 +2049,9 @@ IMPORTS_IN_MIDDLE: 646 issues
   ./bhlff/core/bvp/topological_defect_analyzer.py
     Line 41
 
+  ./bhlff/core/bvp/bvp_block_processing_system.py
+    Line 413
+
   ./bhlff/core/bvp/impedance_core.py
     Line 29
 
@@ -2347,6 +2388,9 @@ IMPORTS_IN_MIDDLE: 646 issues
   ./bhlff/core/domain/block_processor.py
     Line 233
 
+  ./bhlff/core/domain/simple_block_processor.py
+    Line 33
+
   ./bhlff/core/domain/domain_7d.py
     Line 31
 
@@ -2362,6 +2406,9 @@ IMPORTS_IN_MIDDLE: 646 issues
   ./bhlff/core/domain/7d_vectorized_processor.py
     Line 439
 
+  ./bhlff/core/domain/optimized_block_processor.py
+    Line 40
+
   ./bhlff/core/domain/vectorized_7d_processor.py
     Line 439
 
@@ -2373,6 +2420,9 @@ IMPORTS_IN_MIDDLE: 646 issues
 
   ./bhlff/core/domain/domain_7d_bvp.py
     Line 31
+
+  ./bhlff/core/domain/enhanced_block_processor.py
+    Line 35
 
   ./bhlff/core/domain/domain.py
     Line 103
@@ -2455,6 +2505,9 @@ IMPORTS_IN_MIDDLE: 646 issues
   ./bhlff/core/fft/fft_solver_validation.py
     Line 32
 
+  ./bhlff/core/fft/spectral_filtering.py
+    Line 36
+
   ./bhlff/core/fft/__init__.py
     Line 33
 
@@ -2498,7 +2551,7 @@ IMPORTS_IN_MIDDLE: 646 issues
     Line 23
 
 
-FILES_TOO_LARGE: 104 issues
+FILES_TOO_LARGE: 106 issues
 ----------------------------------------
   ./test_quench_detector_optimized.py
 
@@ -2670,6 +2723,8 @@ FILES_TOO_LARGE: 104 issues
 
   ./bhlff/core/bvp/quench_detector.py
 
+  ./bhlff/core/bvp/bvp_block_processing_system.py
+
   ./bhlff/core/bvp/physical_validation_decorator.py
 
   ./bhlff/core/bvp/quench_characteristics.py
@@ -2699,6 +2754,8 @@ FILES_TOO_LARGE: 104 issues
   ./bhlff/core/domain/7d_vectorized_processor.py
 
   ./bhlff/core/domain/vectorized_7d_processor.py
+
+  ./bhlff/core/domain/enhanced_block_processor.py
 
   ./bhlff/core/fft/spectral_derivatives_impl.py
 

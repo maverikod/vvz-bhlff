@@ -21,6 +21,9 @@ issues:
   - class: DummyDomain
     file: ./tests/unit/test_core/test_cuda_fft_backend_parity.py
     line: 13
+  - class: MockBlockInfo
+    file: ./tests/unit/test_core/test_enhanced_block_processing.py
+    line: 202
   - class: MockParameters
     file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
     line: 101
@@ -377,6 +380,10 @@ issues:
     file: ./bhlff/core/bvp/quench_detector.py
     limit: 400
     lines: 653
+  - exceeds_limit: 53
+    file: ./bhlff/core/bvp/bvp_block_processing_system.py
+    limit: 400
+    lines: 453
   - exceeds_limit: 50
     file: ./bhlff/core/bvp/physical_validation_decorator.py
     limit: 400
@@ -437,6 +444,10 @@ issues:
     file: ./bhlff/core/domain/vectorized_7d_processor.py
     limit: 400
     lines: 456
+  - exceeds_limit: 12
+    file: ./bhlff/core/domain/enhanced_block_processor.py
+    limit: 400
+    lines: 412
   - exceeds_limit: 135
     file: ./bhlff/core/fft/spectral_derivatives_impl.py
     limit: 400
@@ -467,6 +478,8 @@ issues:
     line: 30
   - file: ./test_quench_detector_light.py
     line: 36
+  - file: ./debug_block_processing.py
+    line: 244
   - file: ./test_quench_detector_cuda.py
     line: 30
   - file: ./setup.py
@@ -479,8 +492,12 @@ issues:
     line: 30
   - file: ./scripts/demo_vectorized_processing.py
     line: 22
+  - file: ./scripts/demo_block_processing.py
+    line: 306
   - file: ./scripts/demo_vectorized_ml_methods.py
     line: 205
+  - file: ./scripts/demo_enhanced_block_processing.py
+    line: 320
   - file: ./scripts/demo_ml_prediction_simple.py
     line: 24
   - file: ./scripts/demo_ml_prediction_models.py
@@ -667,12 +684,16 @@ issues:
     line: 29
   - file: ./tests/unit/test_core/test_power_law_optimization_full.py
     line: 368
+  - file: ./tests/unit/test_core/test_enhanced_block_processing.py
+    line: 21
   - file: ./tests/unit/test_core/test_base_time_integrator.py
     line: 27
   - file: ./tests/unit/test_core/test_legacy_code_absence.py
     line: 84
   - file: ./tests/unit/test_core/test_scale_separation_postulate_physics.py
     line: 30
+  - file: ./tests/unit/test_core/test_ultra_simple_block_processing.py
+    line: 21
   - file: ./tests/unit/test_core/test_tail_resonatorness_postulate_physics.py
     line: 29
   - file: ./tests/unit/test_core/test_sources_coverage.py
@@ -681,6 +702,8 @@ issues:
     line: 21
   - file: ./tests/unit/test_core/test_step_resonator_no_exponential.py
     line: 132
+  - file: ./tests/unit/test_core/test_simple_block_processing.py
+    line: 21
   - file: ./tests/unit/test_core/test_transition_zone_postulate_physics.py
     line: 29
   - file: ./tests/unit/test_core/test_core_renormalization_postulate_physics.py
@@ -697,6 +720,8 @@ issues:
     line: 29
   - file: ./tests/unit/test_core/test_spectral_convergence_physics.py
     line: 325
+  - file: ./tests/unit/test_core/test_optimized_block_processing.py
+    line: 21
   - file: ./tests/unit/test_core/test_fft_physics.py
     line: 37
   - file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
@@ -1431,6 +1456,8 @@ issues:
     line: 136
   - file: ./bhlff/core/bvp/topological_defect_analyzer.py
     line: 41
+  - file: ./bhlff/core/bvp/bvp_block_processing_system.py
+    line: 413
   - file: ./bhlff/core/bvp/impedance_core.py
     line: 29
   - file: ./bhlff/core/bvp/memory_decorator.py
@@ -1655,6 +1682,8 @@ issues:
     line: 36
   - file: ./bhlff/core/domain/block_processor.py
     line: 233
+  - file: ./bhlff/core/domain/simple_block_processor.py
+    line: 33
   - file: ./bhlff/core/domain/domain_7d.py
     line: 31
   - file: ./bhlff/core/domain/field.py
@@ -1665,6 +1694,8 @@ issues:
     line: 28
   - file: ./bhlff/core/domain/7d_vectorized_processor.py
     line: 439
+  - file: ./bhlff/core/domain/optimized_block_processor.py
+    line: 40
   - file: ./bhlff/core/domain/vectorized_7d_processor.py
     line: 439
   - file: ./bhlff/core/domain/__init__.py
@@ -1673,6 +1704,8 @@ issues:
     line: 24
   - file: ./bhlff/core/domain/domain_7d_bvp.py
     line: 31
+  - file: ./bhlff/core/domain/enhanced_block_processor.py
+    line: 35
   - file: ./bhlff/core/domain/domain.py
     line: 103
   - file: ./bhlff/core/domain/parameters_7d_bvp.py
@@ -1727,6 +1760,8 @@ issues:
     line: 32
   - file: ./bhlff/core/fft/fft_solver_validation.py
     line: 32
+  - file: ./bhlff/core/fft/spectral_filtering.py
+    line: 36
   - file: ./bhlff/core/fft/__init__.py
     line: 33
   - file: ./bhlff/core/fft/fft_plan_7d.py
@@ -1986,6 +2021,18 @@ issues:
     line: 304
     method: test_func
   - class: null
+    file: ./tests/unit/test_core/test_enhanced_block_processing.py
+    line: 203
+    method: __init__
+  - class: MockBlockInfo
+    file: ./tests/unit/test_core/test_enhanced_block_processing.py
+    line: 203
+    method: __init__
+  - class: null
+    file: ./tests/unit/test_core/test_enhanced_block_processing.py
+    line: 203
+    method: __init__
+  - class: null
     file: ./tests/unit/test_core/test_step_resonator_boundary.py
     line: 12
     method: test_step_resonator_basic_1d
@@ -2219,10 +2266,10 @@ issues:
     method: __init__
   not_implemented_in_non_abstract: []
 summary:
-  classes_without_docstrings: 12
-  files_too_large: 104
+  classes_without_docstrings: 13
+  files_too_large: 106
   files_without_docstrings: 4
-  imports_in_middle: 646
+  imports_in_middle: 658
   methods_with_pass: 0
-  methods_without_docstrings: 115
+  methods_without_docstrings: 118
   not_implemented_in_non_abstract: 0

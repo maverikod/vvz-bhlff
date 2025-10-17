@@ -551,6 +551,8 @@ issues:
     line: 33
   - file: ./tests/unit/test_physics_validation_step_2_1_1.py
     line: 168
+  - file: ./tests/unit/test_ml_prediction_models.py
+    line: 247
   - file: ./tests/unit/test_base_models.py
     line: 422
   - file: ./tests/unit/test_soliton_optimization_algorithms.py
@@ -2220,7 +2222,7 @@ summary:
   classes_without_docstrings: 12
   files_too_large: 104
   files_without_docstrings: 4
-  imports_in_middle: 645
+  imports_in_middle: 646
   methods_with_pass: 0
   methods_without_docstrings: 115
   not_implemented_in_non_abstract: 0

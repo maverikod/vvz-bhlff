@@ -1062,6 +1062,38 @@ Class: TestPhysicsValidationStep2_1_1
   test_comprehensive_physics_validation(self)
     File: ./tests/unit/test_physics_validation_step_2_1_1.py, Line: 419
 
+Class: TestMLPredictionModels
+  setup_method(self)
+    File: ./tests/unit/test_ml_prediction_models.py, Line: 24
+  test_training_data_generation(self)
+    File: ./tests/unit/test_ml_prediction_models.py, Line: 31
+  test_frequency_model_training(self)
+    File: ./tests/unit/test_ml_prediction_models.py, Line: 49
+  test_coupling_model_training(self)
+    File: ./tests/unit/test_ml_prediction_models.py, Line: 67
+  test_all_models_training(self)
+    File: ./tests/unit/test_ml_prediction_models.py, Line: 81
+  test_model_validation(self)
+    File: ./tests/unit/test_ml_prediction_models.py, Line: 101
+  test_model_performance_metrics(self)
+    File: ./tests/unit/test_ml_prediction_models.py, Line: 126
+  test_prediction_core_training(self)
+    File: ./tests/unit/test_ml_prediction_models.py, Line: 153
+  test_prediction_core_validation(self)
+    File: ./tests/unit/test_ml_prediction_models.py, Line: 179
+  test_synthetic_envelope_generation(self)
+    File: ./tests/unit/test_ml_prediction_models.py, Line: 196
+  test_feature_extraction(self)
+    File: ./tests/unit/test_ml_prediction_models.py, Line: 211
+  test_target_computation(self)
+    File: ./tests/unit/test_ml_prediction_models.py, Line: 226
+  test_7d_bvp_analytics_integration(self)
+    File: ./tests/unit/test_ml_prediction_models.py, Line: 245
+  test_model_persistence(self)
+    File: ./tests/unit/test_ml_prediction_models.py, Line: 285
+  test_prediction_accuracy(self)
+    File: ./tests/unit/test_ml_prediction_models.py, Line: 301
+
 Class: ConcreteModel
   analyze(self, data)
     File: ./tests/unit/test_base_models.py, Line: 23

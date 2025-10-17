@@ -357,9 +357,10 @@ class SpectralFiltering:
         """
         cutoff_frequency = sigma * 0.8  # 80% of sigma
         return np.where(k_magnitude < cutoff_frequency, 1.0, 0.0)
-            # Old Domain structure
-            # Compute wave vectors for all dimensions
-            k_magnitude_squared = np.zeros(self.domain.shape)
+        
+        # Old Domain structure
+        # Compute wave vectors for all dimensions
+        k_magnitude_squared = np.zeros(self.domain.shape)
 
             # Spatial dimensions (x, y, z)
             for i in range(3):

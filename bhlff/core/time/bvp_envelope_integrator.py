@@ -26,7 +26,7 @@ import logging
 
 from .base_integrator import BaseTimeIntegrator
 from .memory_kernel import MemoryKernel
-from .quench_detector import QuenchDetector
+from ..bvp.quench_detector import QuenchDetector
 from ..fft import SpectralOperations
 from ..bvp.boundary.step_resonator import FrequencyDependentResonator, CascadeResonatorFilter
 

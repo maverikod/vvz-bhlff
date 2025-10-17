@@ -2,7 +2,7 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 880
+Total issues found: 881
 
 METHODS_WITHOUT_DOCSTRINGS: 115 issues
 ----------------------------------------
@@ -557,7 +557,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 12 issues
     Class: MockSystem
 
 
-IMPORTS_IN_MIDDLE: 645 issues
+IMPORTS_IN_MIDDLE: 646 issues
 ----------------------------------------
   ./test_quench_detector_minimal.py
     Line 30
@@ -690,6 +690,9 @@ IMPORTS_IN_MIDDLE: 645 issues
 
   ./tests/unit/test_physics_validation_step_2_1_1.py
     Line 168
+
+  ./tests/unit/test_ml_prediction_models.py
+    Line 247
 
   ./tests/unit/test_base_models.py
     Line 422

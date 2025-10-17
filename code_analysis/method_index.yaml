@@ -38099,6 +38099,97 @@ method_index:
       line: 358
       name: test_no_simplified_predictions
       returns: null
+    TestMLPredictionModels:
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_models.py
+      line: 24
+      name: setup_method
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_models.py
+      line: 31
+      name: test_training_data_generation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_models.py
+      line: 49
+      name: test_frequency_model_training
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_models.py
+      line: 67
+      name: test_coupling_model_training
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_models.py
+      line: 81
+      name: test_all_models_training
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_models.py
+      line: 101
+      name: test_model_validation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_models.py
+      line: 126
+      name: test_model_performance_metrics
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_models.py
+      line: 153
+      name: test_prediction_core_training
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_models.py
+      line: 179
+      name: test_prediction_core_validation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_models.py
+      line: 196
+      name: test_synthetic_envelope_generation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_models.py
+      line: 211
+      name: test_feature_extraction
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_models.py
+      line: 226
+      name: test_target_computation
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_models.py
+      line: 245
+      name: test_7d_bvp_analytics_integration
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_models.py
+      line: 285
+      name: test_model_persistence
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_ml_prediction_models.py
+      line: 301
+      name: test_prediction_accuracy
+      returns: null
     TestMLPredictionPhysicsValidation:
     - args:
       - self
@@ -46984,6 +47075,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 6507
-    total_classes: 632
+    total_class_methods: 6522
+    total_classes: 633
     total_standalone_functions: 0

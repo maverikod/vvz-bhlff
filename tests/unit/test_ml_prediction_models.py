@@ -221,7 +221,7 @@ class TestMLPredictionModels:
         
         assert len(features) == 14  # 14 features
         assert all(isinstance(f, float) for f in features)
-        assert all(np.isfinite(f) for f in features))
+        assert all(np.isfinite(f) for f in features)
     
     def test_target_computation(self):
         """Test target computation for ML models."""

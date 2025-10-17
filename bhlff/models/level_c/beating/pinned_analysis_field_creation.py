@@ -17,7 +17,7 @@ Example:
 """
 
 import numpy as np
-from typing import Dict, Any
+from typing import Dict, Any, List
 import logging
 
 from .data_structures import DualModeSource

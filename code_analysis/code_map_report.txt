@@ -4,15 +4,15 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 880
+Total files analyzed: 881
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 746
+Total classes: 747
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 6628
+Total functions: 6643
 
 ISSUES SUMMARY:
 ----------------------------------------
@@ -21,7 +21,7 @@ not_implemented_in_non_abstract: 0
 methods_without_docstrings: 115
 files_without_docstrings: 4
 classes_without_docstrings: 12
-imports_in_middle: 645
+imports_in_middle: 646
 files_too_large: 104
 
 METHODS_WITHOUT_DOCSTRINGS:
@@ -163,7 +163,7 @@ IMPORTS_IN_MIDDLE:
   File: ./scripts/demo_ml_prediction_simple.py
   Line: 24
 
-  ... and 635 more
+  ... and 636 more
 
 FILES_TOO_LARGE:
 ----------------------------------------

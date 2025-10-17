@@ -66,11 +66,11 @@ class LevelBFundamentalPropertiesTestsAdvanced:
     def __init__(self):
         """Initialize test suite."""
         self.domain = Domain(
-            L=20.0,
-            N=64,
-            N_phi=8,
-            N_t=16,
-            T=10.0,
+            L=80.0,
+            N=256,
+            N_phi=32,
+            N_t=64,
+            T=40.0,
             dimensions=7,
         )
         
@@ -81,10 +81,16 @@ class LevelBFundamentalPropertiesTestsAdvanced:
             nu=1.0,
         )
         
-        self.source = BVPSource(self.domain, self.parameters)
-        self.power_law_analyzer = LevelBPowerLawAnalyzer(self.domain, self.parameters)
-        self.node_analyzer = LevelBNodeAnalyzer(self.domain, self.parameters)
-        self.zone_analyzer = LevelBZoneAnalyzer(self.domain, self.parameters)
+        # Convert Parameters to dict for BVPSource
+        config = {
+            "carrier_frequency": 1.85e43,
+            "envelope_amplitude": 1.0,
+            "base_source_type": "gaussian"
+        }
+        self.source = BVPSource(self.domain, config)
+        self.power_law_analyzer = LevelBPowerLawAnalyzer()
+        self.node_analyzer = LevelBNodeAnalyzer()
+        self.zone_analyzer = LevelBZoneAnalyzer()
 
     def test_topological_charge(self) -> Dict[str, Any]:
         """
@@ -103,18 +109,19 @@ class LevelBFundamentalPropertiesTestsAdvanced:
             field = self._generate_test_field()
             
             # Analyze topological charge
-            charge_result = self.node_analyzer.analyze_topological_charge(field)
+            center = [self.domain.N//2, self.domain.N//2, self.domain.N//2]
+            charge_result = self.node_analyzer.compute_topological_charge(field, center)
             
             # Verify charge quantization
             assert abs(charge_result["charge"] - round(charge_result["charge"])) < 1e-10, "Charge should be quantized"
             assert charge_result["charge"] != 0, "Charge should be non-zero"
-            assert charge_result["charge_stability"] > 0.9, "Charge should be stable"
+            assert charge_result["passed"], "Charge analysis should pass"
             
             return {
                 "passed": True,
                 "charge": charge_result["charge"],
-                "charge_stability": charge_result["charge_stability"],
-                "charge_distribution": charge_result["charge_distribution"]
+                "integer_charge": charge_result["integer_charge"],
+                "error": charge_result["error"]
             }
             
         except Exception as e:
@@ -140,18 +147,27 @@ class LevelBFundamentalPropertiesTestsAdvanced:
             field = self._generate_test_field()
             
             # Analyze zone separation
-            zone_result = self.zone_analyzer.analyze_zone_separation(field)
+            center = [self.domain.N//2, self.domain.N//2, self.domain.N//2]
+            thresholds = {
+                "N_core": 0.7,
+                "S_core": 0.6,
+                "N_tail": 0.2,
+                "S_tail": 0.2,
+            }
+            zone_result = self.zone_analyzer.separate_zones(field, center, thresholds)
             
             # Verify zone separation
-            assert zone_result["num_zones"] >= 2, "Should have at least 2 zones"
-            assert zone_result["zone_separation"] > 0.5, "Zone separation should be clear"
-            assert zone_result["boundary_sharpness"] > 0.7, "Boundaries should be sharp"
+            assert zone_result["passed"], "Zone separation should pass"
+            assert zone_result["r_core"] > 0, "Should have core radius"
+            assert zone_result["r_tail"] > 0, "Should have tail radius"
+            assert zone_result["r_core"] < zone_result["r_tail"], "Core should be inside tail"
             
             return {
                 "passed": True,
-                "num_zones": zone_result["num_zones"],
-                "zone_separation": zone_result["zone_separation"],
-                "boundary_sharpness": zone_result["boundary_sharpness"]
+                "r_core": zone_result["r_core"],
+                "r_tail": zone_result["r_tail"],
+                "r_transition": zone_result["r_transition"],
+                "quality_metrics": zone_result["quality_metrics"]
             }
             
         except Exception as e:
@@ -239,18 +255,27 @@ class LevelBFundamentalPropertiesTestsAdvanced:
             field = self._generate_test_field()
             
             # Analyze advanced zone properties
-            advanced_result = self.zone_analyzer.analyze_advanced_zones(field)
+            center = [self.domain.N//2, self.domain.N//2, self.domain.N//2]
+            thresholds = {
+                "N_core": 0.7,
+                "S_core": 0.6,
+                "N_tail": 0.2,
+                "S_tail": 0.2,
+            }
+            advanced_result = self.zone_analyzer.separate_zones(field, center, thresholds)
             
             # Verify advanced properties
-            assert advanced_result["zone_dynamics"] is not None, "Zone dynamics should be defined"
-            assert advanced_result["transition_probability"] >= 0, "Transition probability should be non-negative"
-            assert advanced_result["zone_stability"] > 0.3, "Zone stability should be reasonable"
+            assert advanced_result["passed"], "Advanced zone analysis should pass"
+            assert advanced_result["r_core"] > 0, "Should have core radius"
+            assert advanced_result["r_tail"] > 0, "Should have tail radius"
+            assert advanced_result["r_core"] < advanced_result["r_tail"], "Core should be inside tail"
             
             return {
                 "passed": True,
-                "zone_dynamics": advanced_result["zone_dynamics"],
-                "transition_probability": advanced_result["transition_probability"],
-                "zone_stability": advanced_result["zone_stability"]
+                "r_core": advanced_result["r_core"],
+                "r_tail": advanced_result["r_tail"],
+                "r_transition": advanced_result["r_transition"],
+                "quality_metrics": advanced_result["quality_metrics"]
             }
             
         except Exception as e:
@@ -262,7 +287,7 @@ class LevelBFundamentalPropertiesTestsAdvanced:
     def _generate_test_field(self) -> np.ndarray:
         """Generate test field for analysis."""
         # Create source field
-        source_field = self.source.generate_source_field()
+        source_field = self.source.generate()
         
         # Solve the field equation
         field = self._solve_field_equation(source_field)

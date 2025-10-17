@@ -175,94 +175,13 @@ class LevelBFundamentalPropertiesTestsBasic:
 
     def _generate_test_field(self) -> np.ndarray:
         """Generate test field for analysis."""
-        # Create source field
+        # Use the proper BVP source from the project
         source_field = self.source.generate()
         
-        # Solve the field equation
-        field = self._solve_field_equation(source_field)
-        
-        return field
+        # The BVP source already generates the proper 7D field with standing waves
+        # No need to solve additional equations - BVP source IS the field
+        return source_field
 
-    def _solve_field_equation(self, source: np.ndarray) -> np.ndarray:
-        """
-        Solve the field equation with stepwise structure.
-        
-        Physical Meaning:
-            In 7D BVP theory, the field exhibits stepwise structure with
-            discrete layers R₀ < R₁ < R₂ < ... due to the 7D geometry.
-            
-        Mathematical Foundation:
-            The stepwise structure arises from the 7D space-time geometry
-            M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ, where discrete layers correspond to
-            quantized transitions in the phase field.
-        """
-        # Generate stepwise field structure instead of simple power law
-        field = self._generate_stepwise_field(source)
-        return field
-    
-    def _generate_stepwise_field(self, source: np.ndarray) -> np.ndarray:
-        """
-        Generate field with standing wave patterns (Friedel-like waves).
-        
-        Physical Meaning:
-            BVP is non-local and connected, forming static patterns
-            instead of running waves. These are standing wave structures
-            that create the material structure hierarchy.
-            
-        Mathematical Foundation:
-            BVP forms discrete hierarchy of scales through resonator
-            structures - classical standing patterns with quantized
-            dimensions R_n = πn/k.
-        """
-        # Use smaller dimensions for testing
-        shape = (64, 64, 64)  # 3D spatial only for testing
-        
-        # Create standing wave patterns (Friedel-like)
-        field = self._create_standing_wave_patterns(shape)
-        
-        return field
-    
-    def _create_standing_wave_patterns(self, shape: Tuple[int, ...]) -> np.ndarray:
-        """
-        Create standing wave patterns like Friedel waves.
-        
-        Physical Meaning:
-            Creates static interference patterns that form the
-            discrete hierarchy of material structures.
-        """
-        field = np.zeros(shape)
-        
-        # Create coordinate grids
-        x = np.linspace(0, 2*np.pi, shape[0])
-        y = np.linspace(0, 2*np.pi, shape[1])
-        z = np.linspace(0, 2*np.pi, shape[2])
-        X, Y, Z = np.meshgrid(x, y, z, indexing='ij')
-        
-        # Create standing wave patterns with quantized frequencies
-        # These represent the discrete hierarchy of scales
-        frequencies = [1, 2, 3, 5, 8]  # Fibonacci-like quantization
-        amplitudes = [1.0, 0.6, 0.4, 0.3, 0.2]  # Geometric decay
-        
-        for freq, amp in zip(frequencies, amplitudes):
-            # Standing wave in each direction
-            standing_x = amp * np.sin(freq * X)
-            standing_y = amp * np.sin(freq * Y) 
-            standing_z = amp * np.sin(freq * Z)
-            
-            # Interference pattern
-            interference = standing_x * standing_y * standing_z
-            field += interference
-        
-        # Add radial standing waves (spherical harmonics)
-        center = [shape[0]//2, shape[1]//2, shape[2]//2]
-        r = np.sqrt((X - center[0])**2 + (Y - center[1])**2 + (Z - center[2])**2)
-        
-        # Radial standing waves with quantized radii
-        for n in range(1, 4):
-            radial_standing = 0.3 * np.sin(n * np.pi * r / (shape[0]//2))
-            field += radial_standing
-        
-        return field
     
 
     def run_all_tests(self) -> Dict[str, Any]:

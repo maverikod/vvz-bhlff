@@ -37,8 +37,9 @@ class LevelBNodeAnalyzer:
         nodes and ensuring monotonic decay.
     """
 
-    def __init__(self):
+    def __init__(self, use_cuda: bool = False):
         """Initialize node analyzer."""
+        self.use_cuda = use_cuda
         self.max_sign_changes = 1
         self.tolerance = 1e-6
         self.radius_threshold = 0.1

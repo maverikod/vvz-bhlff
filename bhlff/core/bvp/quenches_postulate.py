@@ -58,24 +58,40 @@ class QuenchesPostulate(BVPPostulate):
         self.min_quench_size = constants.get_quench_parameter("min_quench_size")
 
         # Initialize helper components
-        # Create config for QuenchDetector
+        # Create config for QuenchDetector with CUDA toggle (default: True)
+        use_cuda_default = True
+        try:
+            # Allow overriding via constants if provided
+            use_cuda_default = bool(self.constants.get_quench_parameter("use_cuda"))
+        except Exception:
+            pass
+
         config = {
             "amplitude_threshold": self.quench_threshold,
             "detuning_threshold": 1e-2,
             "gradient_threshold": 1e-3,
-            "use_cuda": False
+            "use_cuda": use_cuda_default,
         }
-        
-        # Create Domain7D from Domain for QuenchDetector
+
+        # Prepare 7D domain for detector without allocating giant coordinate grids
         from ..domain.config import SpatialConfig, PhaseConfig, TemporalConfig
         from ..domain.domain_7d import Domain7D
-        
-        # Convert domain to 7D domain
-        spatial_config = SpatialConfig(L_x=1.0, L_y=1.0, L_z=1.0, N_x=64, N_y=64, N_z=64)
-        phase_config = PhaseConfig(N_phi_1=32, N_phi_2=32, N_phi_3=32)
-        temporal_config = TemporalConfig(T_max=1.0, N_t=100, dt=0.01)
-        domain_7d = Domain7D(spatial_config, phase_config, temporal_config)
-        
+
+        if isinstance(domain, Domain7D):
+            domain_7d = domain
+        else:
+            # Derive resolutions from provided domain when possible; fall back to safe defaults
+            N = getattr(domain, "N", 16)
+            N_phi = getattr(domain, "N_phi", 8)
+            N_t = getattr(domain, "N_t", 16)
+            L = getattr(domain, "L", 1.0)
+            T = getattr(domain, "T", 1.0)
+
+            spatial_config = SpatialConfig(L_x=L, L_y=L, L_z=L, N_x=N, N_y=N, N_z=N)
+            phase_config = PhaseConfig(N_phi_1=N_phi, N_phi_2=N_phi, N_phi_3=N_phi)
+            temporal_config = TemporalConfig(T_max=T, N_t=N_t, dt=T / max(N_t, 1))
+            domain_7d = Domain7D(spatial_config, phase_config, temporal_config)
+
         self.detector = QuenchDetector(domain_7d, config)
         self.analyzer = QuenchesAnalyzer(domain, constants)
 

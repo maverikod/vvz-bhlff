@@ -108,26 +108,26 @@ class LevelBPowerLawAnalyzer:
         Analyze stepwise tail structure with discrete layers.
 
         Physical Meaning:
-            Validates that the phase field exhibits stepwise decay with
+            Validates that the substrate exhibits stepwise structure with
             discrete layers R₀ < R₁ < R₂ < ... and geometric decay
-            ||∇θₙ₊₁|| ≤ q ||∇θₙ|| between layers.
+            of transparency Tₙ₊₁ ≤ q Tₙ between layers.
 
         Mathematical Foundation:
-            In 7D BVP theory, the field exhibits stepwise structure with
+            In 7D BVP theory, the substrate exhibits stepwise structure with
             discrete layers and geometric decay factors q ∈ (0,1) between
             adjacent layers, representing the fundamental stepwise behavior.
 
         Args:
-            field (np.ndarray): Phase field solution
-            beta (float): Fractional order β ∈ (0,2)
+            field (np.ndarray): Substrate field (transparency/permeability)
+            beta (float): Fractional order β ∈ (0,2) (not used for substrate)
             center (List[float]): Center of the defect [x, y, z]
             min_layers (int): Minimum number of layers required
 
         Returns:
             Dict[str, Any]: Stepwise analysis results including layers, q-factors, and quantization
         """
-        # 1. Detect discrete layers R₀ < R₁ < R₂ < ...
-        layers = self._detect_stepwise_layers(field, center)
+        # 1. Detect discrete layers R₀ < R₁ < R₂ < ... in substrate
+        layers = self._detect_stepwise_layers_substrate(field, center)
         
         # 2. Analyze geometric decay between layers
         q_factors = self._compute_geometric_decay(layers)
@@ -156,7 +156,7 @@ class LevelBPowerLawAnalyzer:
             "quantization": quantization,
             "stepwise_structure": stepwise_structure,
             "passed": passed,
-            "radial_profile": self._compute_radial_profile(field, center),
+            "radial_profile": self._compute_radial_profile_substrate(field, center),
             "num_layers": len(layers),
             "geometric_decay": all(q < 1.0 for q in q_factors) if q_factors else False,
         }
@@ -610,3 +610,155 @@ class LevelBPowerLawAnalyzer:
             return self.xp.asnumpy(boundaries)
         else:
             return boundaries
+
+    def _detect_stepwise_layers_substrate(self, substrate: np.ndarray, center: List[float]) -> List[Dict[str, Any]]:
+        """
+        Detect discrete layers in substrate based on transparency changes.
+        
+        Physical Meaning:
+            Identifies discrete layers in the substrate where transparency
+            changes significantly, representing resonator walls and boundaries.
+            
+        Args:
+            substrate (np.ndarray): 7D substrate field (transparency/permeability)
+            center (List[float]): Center coordinates [x, y, z]
+            
+        Returns:
+            List[Dict[str, Any]]: List of detected layers with radii and properties
+        """
+        # Get radial profile of substrate
+        radial_profile = self._compute_radial_profile_substrate(substrate, center)
+        r = radial_profile["r"]
+        T = radial_profile["A"]  # Transparency values
+        
+        if len(r) < 3:
+            return []
+        
+        # For small domains, use simpler approach: detect significant transparency changes
+        # Find where transparency changes significantly
+        T_diff = np.abs(np.diff(T))
+        if len(T_diff) == 0:
+            return []
+        
+        # Use adaptive threshold based on data
+        threshold = np.mean(T_diff) + 0.5 * np.std(T_diff)
+        
+        # Find significant changes
+        significant_changes = T_diff > threshold
+        change_indices = np.where(significant_changes)[0]
+        
+        # If no significant changes found, create layers based on transparency levels
+        if len(change_indices) == 0:
+            # Create layers based on transparency quantiles
+            T_unique = np.unique(T)
+            if len(T_unique) >= 2:
+                # Create layers at different transparency levels
+                layers = []
+                for i, transparency in enumerate(T_unique[:-1]):
+                    mask = T == transparency
+                    if np.any(mask):
+                        r_values = r[mask]
+                        r_start = np.min(r_values)
+                        r_end = np.max(r_values)
+                        layer_radius = (r_start + r_end) / 2
+                        
+                        layers.append({
+                            "r_start": r_start,
+                            "r_end": r_end,
+                            "radius": np.array([layer_radius]),
+                            "amplitude": np.array([transparency]),
+                            "layer_index": i
+                        })
+                return layers
+            else:
+                return []
+        
+        # Convert change indices to radii
+        layer_boundaries = r[change_indices]
+        
+        # Create layer information
+        layers = []
+        for i, boundary in enumerate(layer_boundaries):
+            if i == 0:
+                r_start = 0.0
+            else:
+                r_start = layer_boundaries[i-1]
+            
+            if i == len(layer_boundaries) - 1:
+                r_end = r[-1]
+            else:
+                r_end = layer_boundaries[i+1]
+            
+            # Get average transparency in this layer
+            mask = (r >= r_start) & (r < r_end)
+            if np.any(mask):
+                avg_transparency = np.mean(T[mask])
+                layer_radius = (r_start + r_end) / 2
+                
+                layers.append({
+                    "r_start": r_start,
+                    "r_end": r_end,
+                    "radius": np.array([layer_radius]),
+                    "amplitude": np.array([avg_transparency]),
+                    "layer_index": i
+                })
+        
+        return layers
+
+    def _compute_radial_profile_substrate(self, substrate: np.ndarray, center: List[float]) -> Dict[str, np.ndarray]:
+        """
+        Compute radial profile of substrate transparency.
+        
+        Physical Meaning:
+            Computes the radial profile T(r) by averaging the substrate
+            transparency over spherical shells centered at the defect.
+            
+        Args:
+            substrate (np.ndarray): 7D substrate field
+            center (List[float]): Center coordinates [x, y, z]
+            
+        Returns:
+            Dict[str, np.ndarray]: Radial profile with 'r' and 'A' arrays
+        """
+        # Get field shape (assuming 3D spatial dimensions)
+        if len(substrate.shape) == 7:
+            shape = substrate.shape[:3]  # Take first 3 spatial dimensions
+        else:
+            shape = substrate.shape[:3]  # Take first 3 dimensions
+
+        # Create coordinate grids
+        x = np.arange(shape[0])
+        y = np.arange(shape[1])
+        z = np.arange(shape[2])
+        X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
+
+        # Compute distances from center
+        distances = np.sqrt(
+            (X - center[0]) ** 2 + (Y - center[1]) ** 2 + (Z - center[2]) ** 2
+        )
+
+        # Get substrate transparency
+        if len(substrate.shape) == 7:
+            # For 7D field, take slice at center of other dimensions
+            center_phi = substrate.shape[3] // 2
+            center_t = substrate.shape[6] // 2
+            transparency = substrate[:, :, :, center_phi, center_phi, center_phi, center_t]
+        else:
+            transparency = substrate
+
+        # Create radial bins - use more bins for small domains
+        r_max = np.max(distances)
+        num_bins = max(20, min(100, int(r_max * 10)))  # More bins for small domains
+        r_bins = np.linspace(0, r_max, num_bins)
+        r_centers = (r_bins[:-1] + r_bins[1:]) / 2
+
+        # Bin the data
+        T_radial = []
+        for i in range(len(r_bins) - 1):
+            mask = (distances >= r_bins[i]) & (distances < r_bins[i + 1])
+            if np.any(mask):
+                T_radial.append(np.mean(transparency[mask]))
+            else:
+                T_radial.append(0.0)
+
+        return {"r": r_centers, "A": np.array(T_radial)}

@@ -134,8 +134,11 @@ class QuenchThresholdComputer:
         # Compute amplitude threshold
         amplitude_threshold = np.sqrt(2 * E_critical)
 
-        # Ensure reasonable bounds
-        amplitude_threshold = max(0.1, min(10.0, amplitude_threshold))
+        # Ensure reasonable bounds - fix for small domains
+        if amplitude_threshold <= 0 or not np.isfinite(amplitude_threshold):
+            amplitude_threshold = 1.0  # Default reasonable value
+        else:
+            amplitude_threshold = max(0.1, min(10.0, amplitude_threshold))
 
         return float(amplitude_threshold)
 

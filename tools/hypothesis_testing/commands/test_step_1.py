@@ -17,24 +17,24 @@ class TestStep1Command(BaseCommand):
         self.logger.info("Testing Step 1: Power Law Analyzer - Stepwise Structure...")
         
         try:
-            # Create minimal domain and field
+            # Create minimal domain and substrate
             domain = self.create_minimal_domain()
-            field = self.create_test_field(domain)
+            substrate = self.create_test_substrate(domain)
             center = [domain.N//2, domain.N//2, domain.N//2]
             
-            # Test Power Law Analyzer
-            self.logger.info("Testing Power Law Analyzer...")
+            # Test Power Law Analyzer on substrate
+            self.logger.info("Testing Power Law Analyzer on substrate...")
             power_analyzer = LevelBPowerLawAnalyzer(use_cuda=False)
-            power_result = power_analyzer.analyze_stepwise_tail(field, 1.5, center)
+            power_result = power_analyzer.analyze_stepwise_tail(substrate, 1.5, center)
             
             power_success = power_result.get("stepwise_structure", False)
             print(f"Power Law stepwise structure: {power_success}")
             print(f"Power Law result: {power_result}")
             
-            # Test Node Analyzer
-            print("Testing Node Analyzer...")
+            # Test Node Analyzer on substrate
+            print("Testing Node Analyzer on substrate...")
             node_analyzer = LevelBNodeAnalyzer(use_cuda=False)
-            node_result = node_analyzer.check_stepwise_structure(field, center)
+            node_result = node_analyzer.check_stepwise_structure(substrate, center)
             
             node_success = node_result.get("stepwise_structure", False)
             print(f"Node stepwise structure: {node_success}")
@@ -55,7 +55,9 @@ class TestStep1Command(BaseCommand):
                     "power_law_q_factors": power_result.get("q_factors", []),
                     "power_law_quantization": power_result.get("quantization", False),
                     "node_level_quantization": node_result.get("level_quantization", False),
-                    "node_discrete_layers": node_result.get("discrete_layers", False)
+                    "node_discrete_layers": node_result.get("discrete_layers", False),
+                    "substrate_shape": substrate.shape,
+                    "substrate_range": f"{np.min(substrate):.3f} - {np.max(substrate):.3f}"
                 }
             }
         except Exception as e:

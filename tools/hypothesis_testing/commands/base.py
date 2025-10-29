@@ -56,6 +56,36 @@ class BaseCommand(abc.ABC):
         
         return field
     
+    def create_test_substrate(self, domain: Domain) -> np.ndarray:
+        """Create test substrate with topological defects and resonator walls."""
+        from bhlff.core.sources.substrate_generators import TopologicalSubstrateGenerator
+        gen = TopologicalSubstrateGenerator(domain, {"use_cuda": True})
+        base = gen.generate_topological_substrate({
+            "defect_type": "line",
+            "defect_density": 0.2,
+            "transparency": 0.3
+        })
+        substrate = gen.compose_multiscale_substrate_blocked(base, {
+            "num_layers": 3,
+            "base_radius": 0.1,
+            "wave_number": 2.0,
+            "decay_factor": 0.7,
+            "center": [0.5, 0.5, 0.5]
+        })
+        return substrate
+    
+    def _create_layer_wall(self, r: np.ndarray, radius: float, thickness: float) -> np.ndarray:
+        """Create a layer wall at specified radius with given thickness."""
+        # Create smooth wall using sigmoid function
+        wall_center = radius
+        wall_width = thickness
+        
+        # Sigmoid function for smooth wall
+        wall_mask = 1.0 / (1.0 + np.exp(-(r - wall_center) / wall_width))
+        
+        # Threshold to get binary wall
+        return wall_mask > 0.5
+    
     @abc.abstractmethod
     def execute(self) -> Dict[str, Any]:
         """Execute the command."""

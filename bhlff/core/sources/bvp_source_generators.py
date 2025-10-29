@@ -28,6 +28,11 @@ from typing import Dict, Any
 
 from ..domain import Domain
 
+try:
+    import cupy as cp
+    CUDA_AVAILABLE = True
+except Exception:
+    CUDA_AVAILABLE = False
 
 class BVPSourceGenerators:
     """
@@ -60,6 +65,7 @@ class BVPSourceGenerators:
         """
         self.domain = domain
         self.config = config
+        self.use_cuda = bool(config.get("use_cuda", False)) and CUDA_AVAILABLE
 
     def generate_gaussian_source(self) -> np.ndarray:
         """
@@ -81,12 +87,14 @@ class BVPSourceGenerators:
         center = self.config.get("gaussian_center", [0.5, 0.5, 0.5])
         width = self.config.get("gaussian_width", 0.1)
 
-        # Create coordinate arrays
-        x = np.linspace(0, 1, self.domain.N)
-        y = np.linspace(0, 1, self.domain.N)
-        z = np.linspace(0, 1, self.domain.N)
+        xp = cp if self.use_cuda else np
 
-        X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
+        # Create coordinate arrays
+        x = xp.linspace(0, 1, self.domain.N)
+        y = xp.linspace(0, 1, self.domain.N)
+        z = xp.linspace(0, 1, self.domain.N)
+
+        X, Y, Z = xp.meshgrid(x, y, z, indexing="ij")
 
         # Compute distances from center
         dx = X - center[0]
@@ -95,7 +103,10 @@ class BVPSourceGenerators:
         r_squared = dx**2 + dy**2 + dz**2
 
         # Generate step resonator source
-        source = amplitude * self._step_resonator_source(r_squared, width)
+        source = amplitude * self._step_resonator_source(r_squared, width, xp=xp)
+
+        if self.use_cuda:
+            source = cp.asnumpy(source)
 
         return source
 
@@ -153,12 +164,14 @@ class BVPSourceGenerators:
         amplitude = self.config.get("distributed_amplitude", 1.0)
         distribution_type = self.config.get("distribution_type", "sine")
 
-        # Create coordinate arrays
-        x = np.linspace(0, 1, self.domain.N)
-        y = np.linspace(0, 1, self.domain.N)
-        z = np.linspace(0, 1, self.domain.N)
+        xp = cp if self.use_cuda else np
 
-        X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
+        # Create coordinate arrays
+        x = xp.linspace(0, 1, self.domain.N)
+        y = xp.linspace(0, 1, self.domain.N)
+        z = xp.linspace(0, 1, self.domain.N)
+
+        X, Y, Z = xp.meshgrid(x, y, z, indexing="ij")
 
         # Generate distributed source based on type
         if distribution_type == "sine":
@@ -167,7 +180,7 @@ class BVPSourceGenerators:
             ky = self.config.get("sine_ky", 2 * np.pi)
             kz = self.config.get("sine_kz", 2 * np.pi)
 
-            source = amplitude * (np.sin(kx * X) * np.sin(ky * Y) * np.sin(kz * Z))
+            source = amplitude * (xp.sin(kx * X) * xp.sin(ky * Y) * xp.sin(kz * Z))
 
         elif distribution_type == "cosine":
             # Cosine wave distribution
@@ -175,7 +188,7 @@ class BVPSourceGenerators:
             ky = self.config.get("cosine_ky", 2 * np.pi)
             kz = self.config.get("cosine_kz", 2 * np.pi)
 
-            source = amplitude * (np.cos(kx * X) * np.cos(ky * Y) * np.cos(kz * Z))
+            source = amplitude * (xp.cos(kx * X) * xp.cos(ky * Y) * xp.cos(kz * Z))
 
         elif distribution_type == "polynomial":
             # Polynomial distribution
@@ -185,7 +198,10 @@ class BVPSourceGenerators:
 
         else:
             # Default to constant distribution
-            source = amplitude * np.ones_like(X)
+            source = amplitude * xp.ones_like(X)
+
+        if self.use_cuda:
+            source = cp.asnumpy(source)
 
         return source
 
@@ -264,7 +280,232 @@ class BVPSourceGenerators:
 
         return source_info.get(source_type, {})
     
-    def _step_resonator_source(self, r_squared: np.ndarray, width: float) -> np.ndarray:
+    def generate_topological_substrate(self, defect_config: Dict[str, Any]) -> np.ndarray:
+        """
+        Generate topological substrate with defects and resonator walls.
+        
+        Physical Meaning:
+            Creates the fundamental 7D BVP substrate based on topological defects
+            that form semi-transparent resonator walls. This is the primary structure
+            that determines field behavior, not derived from wave patterns.
+            
+        Mathematical Foundation:
+            The substrate S(x,φ,t) represents permeability/loss/phase-shift field
+            in 7D space-time with discrete layers and geometric decay of transparency.
+            Defects create walls with thickness ~1-2 voxels and quantized radii R_n.
+            
+        Args:
+            defect_config (Dict[str, Any]): Configuration for defect generation:
+                - defect_type: "line", "surface", "junction", "dislocation"
+                - defect_density: density of defects per unit volume
+                - core_radius: radius of defect core
+                - wall_thickness: thickness of resonator walls
+                - transparency: base transparency of walls (0-1)
+                - regularization: smoothing parameter for walls
+                
+        Returns:
+            np.ndarray: 7D substrate field S(x,φ,t) with shape (N, N, N, N_phi, N_phi, N_phi, N_t)
+        """
+        # Get defect parameters
+        defect_type = defect_config.get("defect_type", "line")
+        defect_density = defect_config.get("defect_density", 0.1)
+        core_radius = defect_config.get("core_radius", 0.05)
+        wall_thickness = defect_config.get("wall_thickness", 0.02)
+        transparency = defect_config.get("transparency", 0.3)
+        regularization = defect_config.get("regularization", 0.01)
+        
+        # Create 7D coordinate arrays
+        shape = (self.domain.N, self.domain.N, self.domain.N, 
+                self.domain.N_phi, self.domain.N_phi, self.domain.N_phi, 
+                self.domain.N_t)
+        
+        xp = cp if self.use_cuda else np
+        # Initialize substrate with base transparency
+        substrate = xp.full(shape, transparency, dtype=xp.float64)
+        
+        # Generate defects based on type
+        if defect_type == "line":
+            substrate = self._add_line_defects(substrate, defect_density, core_radius, wall_thickness)
+        elif defect_type == "surface":
+            substrate = self._add_surface_defects(substrate, defect_density, core_radius, wall_thickness)
+        elif defect_type == "junction":
+            substrate = self._add_junction_defects(substrate, defect_density, core_radius, wall_thickness)
+        elif defect_type == "dislocation":
+            substrate = self._add_dislocation_defects(substrate, defect_density, core_radius, wall_thickness)
+        
+        # Apply regularization to smooth walls
+        if regularization > 0:
+            # Regularize on CPU for now to avoid complex GPU pipeline
+            substrate_np = cp.asnumpy(substrate) if self.use_cuda else substrate
+            substrate_np = self._regularize_walls(substrate_np, regularization)
+            substrate = cp.asarray(substrate_np) if self.use_cuda else substrate_np
+        
+        if self.use_cuda:
+            return cp.asnumpy(substrate)
+        return substrate
+    
+    def compose_multiscale_substrate(self, base_substrate: np.ndarray, 
+                                   layer_config: Dict[str, Any]) -> np.ndarray:
+        """
+        Compose multiscale substrate with discrete layers and geometric decay.
+        
+        Physical Meaning:
+            Creates discrete layers with quantized radii R_n and geometric decay
+            of transparency q between layers. This implements the stepwise structure
+            of 7D BVP theory.
+            
+        Mathematical Foundation:
+            Layers have radii R_n = πn/k with transparency T_n = T_0 * q^n
+            where q < 1 is the geometric decay factor.
+            
+        Args:
+            base_substrate (np.ndarray): Base substrate from defect generation
+            layer_config (Dict[str, Any]): Layer configuration:
+                - num_layers: number of discrete layers
+                - base_radius: base radius R_0
+                - wave_number: wave number k for R_n = πn/k
+                - decay_factor: geometric decay factor q
+                - center: center coordinates for radial layers
+                
+        Returns:
+            np.ndarray: Multiscale substrate with discrete layers
+        """
+        num_layers = layer_config.get("num_layers", 4)
+        base_radius = layer_config.get("base_radius", 0.1)
+        wave_number = layer_config.get("wave_number", 2.0)
+        decay_factor = layer_config.get("decay_factor", 0.7)
+        center = layer_config.get("center", [0.5, 0.5, 0.5])
+        
+        xp = cp if self.use_cuda else np
+        # Create coordinate arrays
+        x = xp.linspace(0, 1, self.domain.N)
+        y = xp.linspace(0, 1, self.domain.N)
+        z = xp.linspace(0, 1, self.domain.N)
+        
+        X, Y, Z = xp.meshgrid(x, y, z, indexing="ij")
+        
+        # Compute distances from center
+        dx = X - center[0]
+        dy = Y - center[1]
+        dz = Z - center[2]
+        r = np.sqrt(dx**2 + dy**2 + dz**2)
+        
+        # Create discrete layers with geometric decay
+        multiscale_substrate = (cp.asarray(base_substrate) if (self.use_cuda and not isinstance(base_substrate, cp.ndarray)) else base_substrate).copy()
+        
+        for n in range(1, num_layers + 1):
+            # Quantized radius
+            R_n = base_radius + (np.pi * n) / wave_number
+            
+            # Geometric decay of transparency
+            T_n = decay_factor ** n
+            
+            # Create layer wall (semi-transparent barrier)
+            wall_mask = self._create_layer_wall(r, R_n, 0.02, xp=xp)  # 0.02 wall thickness
+            # Expand wall mask (3D) to 7D for broadcasting
+            wall_mask_7d = wall_mask[..., xp.newaxis, xp.newaxis, xp.newaxis, xp.newaxis]
+            multiscale_substrate = xp.where(wall_mask_7d, T_n, multiscale_substrate)
+        
+        if self.use_cuda:
+            return cp.asnumpy(multiscale_substrate)
+        return multiscale_substrate
+    
+    def _add_line_defects(self, substrate: np.ndarray, density: float, 
+                         core_radius: float, wall_thickness: float) -> np.ndarray:
+        """Add line defects (strings) to substrate."""
+        # Simple implementation: add vertical line defects
+        num_defects = int(density * self.domain.N**2)
+        
+        for _ in range(num_defects):
+            # Random line position
+            i = np.random.randint(0, self.domain.N)
+            j = np.random.randint(0, self.domain.N)
+            
+            # Create line defect (low transparency)
+            substrate[i, j, :, :, :, :, :] *= 0.1
+        
+        return substrate
+    
+    def _add_surface_defects(self, substrate: np.ndarray, density: float,
+                           core_radius: float, wall_thickness: float) -> np.ndarray:
+        """Add surface defects (domain walls) to substrate."""
+        # Simple implementation: add planar defects
+        num_defects = int(density * self.domain.N)
+        
+        for _ in range(num_defects):
+            # Random plane position
+            i = np.random.randint(0, self.domain.N)
+            
+            # Create surface defect
+            substrate[i, :, :, :, :, :, :] *= 0.2
+        
+        return substrate
+    
+    def _add_junction_defects(self, substrate: np.ndarray, density: float,
+                            core_radius: float, wall_thickness: float) -> np.ndarray:
+        """Add junction defects to substrate."""
+        # Simple implementation: add point-like junction defects
+        num_defects = int(density * self.domain.N**3)
+        
+        for _ in range(num_defects):
+            # Random junction position
+            i = np.random.randint(0, self.domain.N)
+            j = np.random.randint(0, self.domain.N)
+            k = np.random.randint(0, self.domain.N)
+            
+            # Create junction defect (very low transparency)
+            substrate[i, j, k, :, :, :, :] *= 0.05
+        
+        return substrate
+    
+    def _add_dislocation_defects(self, substrate: np.ndarray, density: float,
+                               core_radius: float, wall_thickness: float) -> np.ndarray:
+        """Add dislocation defects in phase space to substrate."""
+        # Simple implementation: add phase-space dislocations
+        num_defects = int(density * self.domain.N_phi**3)
+        
+        for _ in range(num_defects):
+            # Random dislocation position in phase space
+            phi1 = np.random.randint(0, self.domain.N_phi)
+            phi2 = np.random.randint(0, self.domain.N_phi)
+            phi3 = np.random.randint(0, self.domain.N_phi)
+            
+            # Create dislocation defect
+            substrate[:, :, :, phi1, phi2, phi3, :] *= 0.15
+        
+        return substrate
+    
+    def _create_layer_wall(self, r: np.ndarray, radius: float, thickness: float, xp=np) -> np.ndarray:
+        """Create a layer wall at specified radius with given thickness."""
+        # Create smooth wall using sigmoid function
+        wall_center = radius
+        wall_width = thickness
+        
+        # Sigmoid function for smooth wall
+        wall_mask = 1.0 / (1.0 + xp.exp(-(r - wall_center) / wall_width))
+        
+        # Threshold to get binary wall
+        return wall_mask > 0.5
+    
+    def _regularize_walls(self, substrate: np.ndarray, regularization: float) -> np.ndarray:
+        """Apply regularization to smooth wall boundaries."""
+        # Simple Gaussian smoothing
+        from scipy import ndimage
+        
+        # Apply 3D Gaussian filter to spatial dimensions only
+        smoothed = substrate.copy()
+        for t in range(substrate.shape[6]):
+            for phi3 in range(substrate.shape[5]):
+                for phi2 in range(substrate.shape[4]):
+                    for phi1 in range(substrate.shape[3]):
+                        smoothed[:, :, :, phi1, phi2, phi3, t] = ndimage.gaussian_filter(
+                            substrate[:, :, :, phi1, phi2, phi3, t], 
+                            sigma=regularization
+                        )
+        
+        return smoothed
+
+    def _step_resonator_source(self, r_squared: np.ndarray, width: float, xp=np) -> np.ndarray:
         """
         Step resonator source according to 7D BVP theory.
         
@@ -273,4 +514,4 @@ class BVPSourceGenerators:
             according to 7D BVP theory principles.
         """
         cutoff_radius_squared = (width * 2.0) ** 2  # 2-sigma cutoff
-        return np.where(r_squared < cutoff_radius_squared, 1.0, 0.0)
+        return xp.where(r_squared < cutoff_radius_squared, 1.0, 0.0)

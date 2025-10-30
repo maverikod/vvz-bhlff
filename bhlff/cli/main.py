@@ -92,7 +92,7 @@ def build_parser() -> argparse.ArgumentParser:
         func=lambda args: step04_main(
             (["--minimal"] if args.minimal else [])
             + [
-                "-k",
+                "--k",
                 args.k,
                 "--maxfail",
                 str(args.maxfail),

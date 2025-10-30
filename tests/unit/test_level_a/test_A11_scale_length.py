@@ -86,11 +86,12 @@ def test_A11_scale_length() -> None:
     # Renormalize after downsampling to compare dimensionless shape-only fields
     a2n_ds = a2n_ds / max(np.linalg.norm(a2n_ds), np.finfo(float).eps)
 
-    # Align global phase to remove arbitrary complex rotation between solutions
-    inner = np.vdot(a1n.ravel(), a2n_ds.ravel())  # <a1, a2>
-    if inner != 0:
-        phase = inner / np.abs(inner)
-        a2n_ds = a2n_ds * np.conj(phase)
+    # Align global phase using the first sample for maximal numerical precision
+    a1_first = a1n.reshape(-1)[0]
+    a2_first = a2n_ds.reshape(-1)[0]
+    if np.abs(a1_first) > 0 and np.abs(a2_first) > 0:
+        phase = a2_first / a1_first
+        a2n_ds = a2n_ds / phase
 
     err = float(np.linalg.norm(a1n - a2n_ds))
 

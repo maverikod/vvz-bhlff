@@ -4856,6 +4856,54 @@ Class: TestAdvancedProperties
   test_parameter_sensitivity(self, domain_7d)
     File: ./tests/unit/test_core/frequency_dependent_properties/test_advanced_properties.py, Line: 230
 
+Class: _Domain
+  _load_config(()) -> dict
+    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 26
+  _make_domain_shape(N) -> Tuple[int, int, int]
+    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 34
+  _rand_modes(N, J, seed) -> List[Tuple[int, int, int]]
+    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 38
+  _build_spectral_source(shape, modes, amplitudes) -> np.ndarray
+    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 50
+  test_A02_multi_plane(()) -> None
+    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 66
+  __init__(self, shape)
+    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 80
+  _load_config(()) -> dict
+    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 25
+  _make_domain_shape(N) -> Tuple[int, int, int]
+    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 33
+  _ensure_output_dir(out_dir) -> None
+    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 37
+  _solve_stationary(domain, mu, beta, lam, source) -> np.ndarray
+    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 41
+  test_A03_zero_mode(()) -> None
+    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 67
+  __init__(self, shape)
+    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 76
+  _load_config(()) -> dict
+    File: ./tests/unit/test_level_a/test_A04_time_harmonic.py, Line: 24
+  _make_domain_shape(N) -> Tuple[int, int, int]
+    File: ./tests/unit/test_level_a/test_A04_time_harmonic.py, Line: 32
+  test_A04_time_harmonic_steady_state(()) -> None
+    File: ./tests/unit/test_level_a/test_A04_time_harmonic.py, Line: 36
+  __init__(self, shape)
+    File: ./tests/unit/test_level_a/test_A04_time_harmonic.py, Line: 51
+  _load_config(()) -> dict
+    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 27
+  _make_domain_shape(N) -> Tuple[int, int, int]
+    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 35
+  _generate_plane_wave(shape, mode) -> np.ndarray
+    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 39
+  _compute_reference_amplitude(mu, beta, lam, mode, L, N) -> float
+    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 48
+  _ensure_output_dir(out_dir) -> None
+    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 57
+  test_A01_plane_wave(()) -> None
+    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 61
+  __init__(self, shape)
+    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 74
+
 Class: TestA03SimpleZeroMode
   setup_method(self)
     File: ./tests/unit/test_level_a/test_A03_simple_zero_mode.py, Line: 29
@@ -4985,34 +5033,6 @@ Class: TestA02MultiPlaneBasic
     File: ./tests/unit/test_level_a/test_A02_multi_plane_basic.py, Line: 255
   test_spectral_analysis(self)
     File: ./tests/unit/test_level_a/test_A02_multi_plane_basic.py, Line: 282
-
-Class: _Domain
-  _load_config(()) -> dict
-    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 25
-  _make_domain_shape(N) -> Tuple[int, int, int]
-    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 33
-  _ensure_output_dir(out_dir) -> None
-    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 37
-  _solve_stationary(domain, mu, beta, lam, source) -> np.ndarray
-    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 41
-  test_A03_zero_mode(()) -> None
-    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 67
-  __init__(self, shape)
-    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 76
-  _load_config(()) -> dict
-    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 27
-  _make_domain_shape(N) -> Tuple[int, int, int]
-    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 35
-  _generate_plane_wave(shape, mode) -> np.ndarray
-    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 39
-  _compute_reference_amplitude(mu, beta, lam, mode, L, N) -> float
-    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 48
-  _ensure_output_dir(out_dir) -> None
-    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 57
-  test_A01_plane_wave(()) -> None
-    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 61
-  __init__(self, shape)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 74
 
 Class: TestA01SimplePlaneWave
   setup_method(self)

@@ -48439,6 +48439,45 @@ method_index:
       returns: Dict[str, Any]
     _Domain:
     - args: []
+      file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+      line: 26
+      name: _load_config
+      returns: dict
+    - args:
+      - N
+      file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+      line: 34
+      name: _make_domain_shape
+      returns: Tuple[int, int, int]
+    - args:
+      - N
+      - J
+      - seed
+      file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+      line: 38
+      name: _rand_modes
+      returns: List[Tuple[int, int, int]]
+    - args:
+      - shape
+      - modes
+      - amplitudes
+      file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+      line: 50
+      name: _build_spectral_source
+      returns: np.ndarray
+    - args: []
+      file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+      line: 66
+      name: test_A02_multi_plane
+      returns: None
+    - args:
+      - self
+      - shape
+      file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+      line: 80
+      name: __init__
+      returns: null
+    - args: []
       file: ./tests/unit/test_level_a/test_A03_zero_mode.py
       line: 25
       name: _load_config
@@ -48475,6 +48514,29 @@ method_index:
       - shape
       file: ./tests/unit/test_level_a/test_A03_zero_mode.py
       line: 76
+      name: __init__
+      returns: null
+    - args: []
+      file: ./tests/unit/test_level_a/test_A04_time_harmonic.py
+      line: 24
+      name: _load_config
+      returns: dict
+    - args:
+      - N
+      file: ./tests/unit/test_level_a/test_A04_time_harmonic.py
+      line: 32
+      name: _make_domain_shape
+      returns: Tuple[int, int, int]
+    - args: []
+      file: ./tests/unit/test_level_a/test_A04_time_harmonic.py
+      line: 36
+      name: test_A04_time_harmonic_steady_state
+      returns: None
+    - args:
+      - self
+      - shape
+      file: ./tests/unit/test_level_a/test_A04_time_harmonic.py
+      line: 51
       name: __init__
       returns: null
     - args: []
@@ -48526,6 +48588,6 @@ method_index:
       returns: null
   standalone_functions: []
   summary:
-    total_class_methods: 6723
+    total_class_methods: 6733
     total_classes: 650
     total_standalone_functions: 0

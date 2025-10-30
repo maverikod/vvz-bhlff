@@ -31,8 +31,14 @@ issues:
     file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
     line: 183
   - class: _Domain
+    file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+    line: 79
+  - class: _Domain
     file: ./tests/unit/test_level_a/test_A03_zero_mode.py
     line: 75
+  - class: _Domain
+    file: ./tests/unit/test_level_a/test_A04_time_harmonic.py
+    line: 50
   - class: _Domain
     file: ./tests/unit/test_level_a/test_A01_plane_wave.py
     line: 73
@@ -831,6 +837,8 @@ issues:
     line: 219
   - file: ./tests/unit/test_core/time_integrators/test_advanced_integrators.py
     line: 283
+  - file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+    line: 23
   - file: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py
     line: 28
   - file: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
@@ -847,6 +855,8 @@ issues:
     line: 129
   - file: ./tests/unit/test_level_a/test_reporting_basic.py
     line: 25
+  - file: ./tests/unit/test_level_a/test_A04_time_harmonic.py
+    line: 21
   - file: ./tests/unit/test_level_a/test_A01_plane_wave.py
     line: 24
   - file: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py
@@ -2174,6 +2184,38 @@ issues:
     line: 184
     method: __init__
   - class: null
+    file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+    line: 26
+    method: _load_config
+  - class: null
+    file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+    line: 34
+    method: _make_domain_shape
+  - class: null
+    file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+    line: 38
+    method: _rand_modes
+  - class: null
+    file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+    line: 50
+    method: _build_spectral_source
+  - class: null
+    file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+    line: 66
+    method: test_A02_multi_plane
+  - class: null
+    file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+    line: 80
+    method: __init__
+  - class: _Domain
+    file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+    line: 80
+    method: __init__
+  - class: null
+    file: ./tests/unit/test_level_a/test_A02_multi_plane.py
+    line: 80
+    method: __init__
+  - class: null
     file: ./tests/unit/test_level_a/test_A03_zero_mode.py
     line: 25
     method: _load_config
@@ -2200,6 +2242,30 @@ issues:
   - class: null
     file: ./tests/unit/test_level_a/test_A03_zero_mode.py
     line: 76
+    method: __init__
+  - class: null
+    file: ./tests/unit/test_level_a/test_A04_time_harmonic.py
+    line: 24
+    method: _load_config
+  - class: null
+    file: ./tests/unit/test_level_a/test_A04_time_harmonic.py
+    line: 32
+    method: _make_domain_shape
+  - class: null
+    file: ./tests/unit/test_level_a/test_A04_time_harmonic.py
+    line: 36
+    method: test_A04_time_harmonic_steady_state
+  - class: null
+    file: ./tests/unit/test_level_a/test_A04_time_harmonic.py
+    line: 51
+    method: __init__
+  - class: _Domain
+    file: ./tests/unit/test_level_a/test_A04_time_harmonic.py
+    line: 51
+    method: __init__
+  - class: null
+    file: ./tests/unit/test_level_a/test_A04_time_harmonic.py
+    line: 51
     method: __init__
   - class: null
     file: ./tests/unit/test_level_a/test_A01_plane_wave.py
@@ -2827,10 +2893,10 @@ issues:
     method: execute
   not_implemented_in_non_abstract: []
 summary:
-  classes_without_docstrings: 16
+  classes_without_docstrings: 18
   files_too_large: 121
   files_without_docstrings: 4
-  imports_in_middle: 668
+  imports_in_middle: 670
   methods_with_pass: 0
-  methods_without_docstrings: 236
+  methods_without_docstrings: 250
   not_implemented_in_non_abstract: 0

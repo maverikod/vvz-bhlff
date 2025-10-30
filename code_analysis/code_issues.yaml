@@ -30,6 +30,12 @@ issues:
   - class: MockInvalidParameters
     file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
     line: 183
+  - class: _Domain
+    file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+    line: 75
+  - class: _Domain
+    file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+    line: 73
   - class: DummyCuPy
     file: ./bhlff/core/bvp/quench_detector.py
     line: 37
@@ -135,10 +141,6 @@ issues:
     file: ./tests/unit/test_level_a/test_reporting_advanced.py
     limit: 400
     lines: 442
-  - exceeds_limit: 33
-    file: ./tests/unit/test_level_a/test_A03_zero_mode.py
-    limit: 400
-    lines: 433
   - exceeds_limit: 69
     file: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
     limit: 400
@@ -837,12 +839,16 @@ issues:
     line: 25
   - file: ./tests/unit/test_level_a/test_A02_multi_plane_basic.py
     line: 28
+  - file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+    line: 22
   - file: ./tests/unit/test_level_a/test_A01_plane_wave_basic.py
     line: 28
   - file: ./tests/unit/test_level_a/test_simple_basic.py
     line: 129
   - file: ./tests/unit/test_level_a/test_reporting_basic.py
     line: 25
+  - file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+    line: 24
   - file: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py
     line: 29
   - file: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
@@ -2168,6 +2174,70 @@ issues:
     line: 184
     method: __init__
   - class: null
+    file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+    line: 25
+    method: _load_config
+  - class: null
+    file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+    line: 33
+    method: _make_domain_shape
+  - class: null
+    file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+    line: 37
+    method: _ensure_output_dir
+  - class: null
+    file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+    line: 67
+    method: test_A03_zero_mode
+  - class: null
+    file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+    line: 76
+    method: __init__
+  - class: _Domain
+    file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+    line: 76
+    method: __init__
+  - class: null
+    file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+    line: 76
+    method: __init__
+  - class: null
+    file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+    line: 27
+    method: _load_config
+  - class: null
+    file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+    line: 35
+    method: _make_domain_shape
+  - class: null
+    file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+    line: 39
+    method: _generate_plane_wave
+  - class: null
+    file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+    line: 48
+    method: _compute_reference_amplitude
+  - class: null
+    file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+    line: 57
+    method: _ensure_output_dir
+  - class: null
+    file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+    line: 61
+    method: test_A01_plane_wave
+  - class: null
+    file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+    line: 74
+    method: __init__
+  - class: _Domain
+    file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+    line: 74
+    method: __init__
+  - class: null
+    file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+    line: 74
+    method: __init__
+  - class: null
     file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
     line: 102
     method: bc
@@ -2757,10 +2827,10 @@ issues:
     method: execute
   not_implemented_in_non_abstract: []
 summary:
-  classes_without_docstrings: 14
-  files_too_large: 122
+  classes_without_docstrings: 16
+  files_too_large: 121
   files_without_docstrings: 4
-  imports_in_middle: 666
+  imports_in_middle: 668
   methods_with_pass: 0
-  methods_without_docstrings: 220
+  methods_without_docstrings: 236
   not_implemented_in_non_abstract: 0

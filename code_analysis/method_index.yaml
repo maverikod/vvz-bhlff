@@ -31522,80 +31522,6 @@ method_index:
       line: 193
       name: test_operator_singularity
       returns: null
-    TestA03ZeroMode:
-    - args:
-      - self
-      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
-      line: 37
-      name: setup_method
-      returns: null
-    - args:
-      - self
-      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
-      line: 65
-      name: create_constant_source
-      returns: np.ndarray
-    - args:
-      - self
-      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
-      line: 78
-      name: create_zero_dc_source
-      returns: np.ndarray
-    - args:
-      - self
-      - k_mode
-      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
-      line: 107
-      name: create_plane_wave_source
-      returns: np.ndarray
-    - args:
-      - self
-      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
-      line: 142
-      name: test_zero_mode_detection
-      returns: null
-    - args:
-      - self
-      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
-      line: 163
-      name: test_zero_mode_handling
-      returns: null
-    - args:
-      - self
-      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
-      line: 201
-      name: test_zero_dc_source
-      returns: null
-    - args:
-      - self
-      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
-      line: 236
-      name: test_plane_wave_solution
-      returns: null
-    - args:
-      - self
-      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
-      line: 274
-      name: test_spectral_coefficients_zero_mode
-      returns: null
-    - args:
-      - self
-      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
-      line: 299
-      name: test_operator_singularity
-      returns: null
-    - args:
-      - self
-      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
-      line: 341
-      name: test_mixed_frequency_source
-      returns: null
-    - args:
-      - self
-      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
-      line: 384
-      name: test_error_messages
-      returns: null
     TestA05ResidualEnergyAdvanced:
     - args:
       - self
@@ -48511,8 +48437,95 @@ method_index:
       line: 199
       name: _compute_region_statistics
       returns: Dict[str, Any]
+    _Domain:
+    - args: []
+      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+      line: 25
+      name: _load_config
+      returns: dict
+    - args:
+      - N
+      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+      line: 33
+      name: _make_domain_shape
+      returns: Tuple[int, int, int]
+    - args:
+      - out_dir
+      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+      line: 37
+      name: _ensure_output_dir
+      returns: None
+    - args:
+      - domain
+      - mu
+      - beta
+      - lam
+      - source
+      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+      line: 41
+      name: _solve_stationary
+      returns: np.ndarray
+    - args: []
+      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+      line: 67
+      name: test_A03_zero_mode
+      returns: None
+    - args:
+      - self
+      - shape
+      file: ./tests/unit/test_level_a/test_A03_zero_mode.py
+      line: 76
+      name: __init__
+      returns: null
+    - args: []
+      file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+      line: 27
+      name: _load_config
+      returns: dict
+    - args:
+      - N
+      file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+      line: 35
+      name: _make_domain_shape
+      returns: Tuple[int, int, int]
+    - args:
+      - shape
+      - mode
+      file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+      line: 39
+      name: _generate_plane_wave
+      returns: np.ndarray
+    - args:
+      - mu
+      - beta
+      - lam
+      - mode
+      - L
+      - N
+      file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+      line: 48
+      name: _compute_reference_amplitude
+      returns: float
+    - args:
+      - out_dir
+      file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+      line: 57
+      name: _ensure_output_dir
+      returns: None
+    - args: []
+      file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+      line: 61
+      name: test_A01_plane_wave
+      returns: None
+    - args:
+      - self
+      - shape
+      file: ./tests/unit/test_level_a/test_A01_plane_wave.py
+      line: 74
+      name: __init__
+      returns: null
   standalone_functions: []
   summary:
-    total_class_methods: 6722
+    total_class_methods: 6723
     total_classes: 650
     total_standalone_functions: 0

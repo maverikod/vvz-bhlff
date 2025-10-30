@@ -44,8 +44,10 @@ def _solve_with_units(
     A0: float,
 ) -> np.ndarray:
     """
-    Keep dimensionless ν̃, λ̃ fixed; convert to dimensional ν, λ for solver given base units.
-    For spectral operator here, use effective ν = ν̃ / T0 * L0^(2β) (up to constant factors);
+    Keep dimensionless ν̃, λ̃ fixed; convert to dimensional ν, λ
+    for solver given base units.
+    For spectral operator here, use effective ν = ν̃ / T0 * L0^(2β)
+    (up to constant factors);
     since we compare normalized fields, proportionality suffices.
     """
     shape = _make_domain_shape(N)
@@ -74,8 +76,10 @@ def _solve_with_units(
     # Only mode bin non-zero; compute denominator at that mode
     a_hat = np.zeros_like(s_hat)
     idx = tuple((mi % n) for mi, n in zip(mode, shape))
-    ksq = (2.0 * np.pi / L) ** 2 * float(np.dot(np.array(mode, dtype=float), np.array(mode, dtype=float)))
-    denom = nu_eff * (ksq ** beta) + lam_eff
+    ksq = (2.0 * np.pi / L) ** 2 * float(
+        np.dot(np.array(mode, dtype=float), np.array(mode, dtype=float))
+    )
+    denom = nu_eff * (ksq**beta) + lam_eff
     a_hat[idx] = s_hat[idx] / denom
     a = ops.inverse_fft(a_hat, "ortho").astype(np.complex128)
     return a

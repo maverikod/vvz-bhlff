@@ -50,11 +50,13 @@ def _solve_stationary(
     for idx in map(tuple, nz):
         # Guard division by zero at k=0 when lambda=0
         if lam == 0.0 and all(i == 0 for i in idx):
-            raise ZeroDivisionError("lambda=0 with non-zero zero-mode in source: ŝ(0)≠0")
+            raise ZeroDivisionError(
+                "lambda=0 with non-zero zero-mode in source: ŝ(0)≠0"
+            )
         # Map to integer mode vector m
         m = [i if i <= n // 2 else i - n for i, n in zip(idx, source.shape)]
         ksq = (2.0 * np.pi / domain.L) ** 2 * float(sum(mi * mi for mi in m))
-        denom = mu * (ksq ** beta) + lam
+        denom = mu * (ksq**beta) + lam
         if denom != 0.0:
             a_hat[idx] = s_hat[idx] / denom
 
@@ -99,7 +101,7 @@ def test_A03_zero_mode() -> None:
     for idx in map(tuple, nz):
         m = [i if i <= n // 2 else i - n for i, n in zip(idx, source1.shape)]
         ksq = (2.0 * np.pi / domain.L) ** 2 * float(sum(mi * mi for mi in m))
-        denom = mu * (ksq ** beta) + lam
+        denom = mu * (ksq**beta) + lam
         r1_hat[idx] = denom * a1_hat[idx] - s1_hat[idx]
     res1 = float(
         np.linalg.norm(r1_hat) / max(np.linalg.norm(s1_hat), np.finfo(float).eps)

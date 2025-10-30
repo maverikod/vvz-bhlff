@@ -11,17 +11,16 @@ analytic expectations and that anisotropy is absent for equal |k|.
 
 from __future__ import annotations
 
-import json
-import math
-import os
 import csv
+import json
 from pathlib import Path
 from typing import Tuple
 
 import numpy as np
 
-from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
-from typing import Sequence
+from bhlff.core.fft.unified_spectral_operations import (
+    UnifiedSpectralOperations
+)
 
 
 def _load_config() -> dict:
@@ -87,8 +86,10 @@ def test_A01_plane_wave() -> None:
     # Build solution only at the excited bin
     a_hat = np.zeros_like(s_hat)
     idx = tuple((mi % n) for mi, n in zip(mode, shape))
-    ksq = (2.0 * np.pi / L) ** 2 * float(np.dot(np.array(mode, dtype=float), np.array(mode, dtype=float)))
-    denom = mu * (ksq ** beta) + lam
+    ksq = (2.0 * np.pi / L) ** 2 * float(
+        np.dot(np.array(mode, dtype=float), np.array(mode, dtype=float))
+    )
+    denom = mu * (ksq**beta) + lam
     a_hat[idx] = s_hat[idx] / denom
     a_num = ops.inverse_fft(a_hat, "ortho").astype(np.complex128)
     # Reference via exact spectral formula (inverse FFT of s_hat/denom)
@@ -102,7 +103,8 @@ def test_A01_plane_wave() -> None:
         np.max(np.abs(a_ref)), np.finfo(float).eps
     )
 
-    # Basic anisotropy proxy: compare energy per axis for permutations with same |k|
+    # Basic anisotropy proxy: compare energy per axis
+    # for permutations with same |k|
     energies = []
     for alt in [(mode[0], 0, 0), (0, mode[1], 0), (0, 0, mode[2])]:
         if sum(abs(x) for x in alt) == 0:
@@ -113,7 +115,10 @@ def test_A01_plane_wave() -> None:
     anis = (
         0.0
         if len(energies) <= 1
-        else float(np.max(energies) - np.min(energies)) / max(np.max(energies), 1.0)
+        else (
+            float(np.max(energies) - np.min(energies))
+            / max(np.max(energies), 1.0)
+        )
     )
 
     # Reporting
@@ -141,7 +146,9 @@ def test_A01_plane_wave() -> None:
 
     with open(out_dir / "log.csv", "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow(["test_id", "status", "error_L2", "error_inf", "anisotropy"])
+        writer.writerow(
+            ["test_id", "status", "error_L2", "error_inf", "anisotropy"]
+        )
         writer.writerow(
             [
                 cfg["test_id"],
@@ -152,4 +159,6 @@ def test_A01_plane_wave() -> None:
             ]
         )
 
-    assert err_L2 <= tol, f"A01 failed: L2 error {err_L2:.2e} > {tol:.2e}"
+    assert err_L2 <= tol, (
+        f"A01 failed: L2 error {err_L2:.2e} > {tol:.2e}"
+    )

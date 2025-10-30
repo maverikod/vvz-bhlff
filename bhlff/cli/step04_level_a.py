@@ -11,8 +11,6 @@ verify functionality and collects a simple summary.
 from __future__ import annotations
 
 import argparse
-import json
-import sys
 from pathlib import Path
 from typing import Any, List
 
@@ -33,7 +31,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--k",
         default="",
-        help="Pytest -k expression to filter tests (overrides --minimal)",
+        help=(
+            "Pytest -k expression to filter tests (overrides --minimal)"
+        ),
     )
     parser.add_argument(
         "--maxfail",
@@ -54,7 +54,14 @@ def main(argv: Any = None) -> int:
         return 1
 
     if args.k:
-        pytest_args = [str(tests_root), "-k", args.k, "--maxfail", str(args.maxfail), "-q"]
+        pytest_args = [
+            str(tests_root),
+            "-k",
+            args.k,
+            "--maxfail",
+            str(args.maxfail),
+            "-q",
+        ]
     elif args.minimal:
         # Run only two basic files explicitly
         pytest_args = [
@@ -66,12 +73,17 @@ def main(argv: Any = None) -> int:
         ]
     else:
         kexpr = "A01 or A02 or A03 or A04 or A05 or A11 or A12"
-        pytest_args = [str(tests_root), "-k", kexpr, "--maxfail", str(args.maxfail), "-q"]
+        pytest_args = [
+            str(tests_root),
+            "-k",
+            kexpr,
+            "--maxfail",
+            str(args.maxfail),
+            "-q",
+        ]
     code = _run_pytests(pytest_args)
     return 0 if code == 0 else 1
 
 
 if __name__ == "__main__":  # pragma: no cover
     raise SystemExit(main())
-
-

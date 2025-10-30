@@ -51,8 +51,10 @@ def _solve_stationary(
     s_hat = np.zeros(shape, dtype=np.complex128)
     a_hat = np.zeros_like(s_hat)
     idx = tuple((mi % n) for mi, n in zip(mode, shape))
-    ksq = (2.0 * np.pi / L) ** 2 * float(np.dot(np.array(mode, dtype=float), np.array(mode, dtype=float)))
-    denom = mu * (ksq ** beta) + lam
+    ksq = (2.0 * np.pi / L) ** 2 * float(
+        np.dot(np.array(mode, dtype=float), np.array(mode, dtype=float))
+    )
+    denom = mu * (ksq**beta) + lam
     s_hat[idx] = 1.0 + 0.0j
     a_hat[idx] = s_hat[idx] / denom
     a = ops.inverse_fft(a_hat, "ortho").astype(np.complex128)

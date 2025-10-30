@@ -18,6 +18,7 @@ from .run import main as run_main
 from .analyze import main as analyze_main
 from .report import main as report_main
 from .step03 import main as step03_main
+from .step04_level_a import main as step04_main
 
 
 def _load_json_config(config_path: Path) -> Dict[str, Any]:
@@ -68,6 +69,35 @@ def build_parser() -> argparse.ArgumentParser:
     )
     step03_parser.add_argument(
         "--config", type=Path, default=Path("configs/bvp_7d_config.json")
+    )
+
+    # step-04
+    step04_parser = subparsers.add_parser(
+        "step-04", help="Run Step 04 Level A validation tests"
+    )
+    step04_parser.add_argument(
+        "--minimal",
+        action="store_true",
+        help="Run minimal smoke (A01, A03)",
+    )
+    step04_parser.add_argument(
+        "--k",
+        default="",
+        help="Pytest -k expression to filter tests",
+    )
+    step04_parser.add_argument(
+        "--maxfail", type=int, default=1, help="Stop after N failures"
+    )
+    step04_parser.set_defaults(
+        func=lambda args: step04_main(
+            (["--minimal"] if args.minimal else [])
+            + [
+                "-k",
+                args.k,
+                "--maxfail",
+                str(args.maxfail),
+            ]
+        )
     )
     step03_parser.add_argument(
         "--integrator",

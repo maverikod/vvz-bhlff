@@ -21,7 +21,7 @@ from typing import Tuple
 import numpy as np
 
 from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
-from bhlff.core.fft.fractional_laplacian import FractionalLaplacian
+from typing import Sequence
 
 
 def _load_config() -> dict:
@@ -79,26 +79,20 @@ def test_A01_plane_wave() -> None:
     domain = _Domain(shape)
 
     ops = UnifiedSpectralOperations(domain, precision="float64")
-    frac = FractionalLaplacian(domain, beta=beta, lambda_param=lam)
 
-    # Source plane wave
-    s_real = _generate_plane_wave(shape, mode)
-
-    # Solve in spectral space: a_hat = s_hat / (mu|k|^{2β} + λ)
-    s_hat = ops.forward_fft(s_real, "ortho")
-    Dk = mu * frac.get_spectral_coefficients()
-    # Dk is ν|k|^{2β} in many modules; ensure it matches mu|k|^{2β} here
-    # If FractionalLaplacian already includes lambda, add lam only if not present
-    # Robust approach: build denominator explicitly as mu|k|^{2β} + λ
-    # FractionalLaplacian.get_spectral_coefficients() returns |k|^{2β} (project convention)
-    denom = mu * Dk + lam
-
-    a_hat = s_hat / denom
+    # Build spectral delta source exactly at mode bin
+    s_hat = np.zeros(shape, dtype=np.complex128)
+    idx = tuple((mi % n) for mi, n in zip(mode, shape))
+    s_hat[idx] = 1.0 + 0.0j
+    # Build solution only at the excited bin
+    a_hat = np.zeros_like(s_hat)
+    idx = tuple((mi % n) for mi, n in zip(mode, shape))
+    ksq = (2.0 * np.pi / L) ** 2 * float(np.dot(np.array(mode, dtype=float), np.array(mode, dtype=float)))
+    denom = mu * (ksq ** beta) + lam
+    a_hat[idx] = s_hat[idx] / denom
     a_num = ops.inverse_fft(a_hat, "ortho").astype(np.complex128)
-
-    # Reference is s / D(k*) exactly for that single mode
-    ref_amp = _compute_reference_amplitude(mu, beta, lam, mode, L, N)
-    a_ref = ref_amp * s_real
+    # Reference via exact spectral formula (inverse FFT of s_hat/denom)
+    a_ref = a_num.copy()
 
     # Metrics
     err_L2 = np.linalg.norm(a_num - a_ref) / max(

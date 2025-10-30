@@ -18,7 +18,6 @@ from typing import Tuple
 import numpy as np
 
 from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
-from bhlff.core.fft.fractional_laplacian import FractionalLaplacian
 
 
 def _load_config() -> dict:
@@ -59,7 +58,6 @@ def _solve_with_units(
 
     domain = _Domain(shape, L, N)
     ops = UnifiedSpectralOperations(domain, precision="float64")
-    frac = FractionalLaplacian(domain, beta=beta, lambda_param=0.0)
 
     # Build plane wave source with amplitude scaled by A0 (dimensionful amplitude)
     grid = np.meshgrid(*[np.arange(n) for n in shape], indexing="ij")
@@ -73,8 +71,12 @@ def _solve_with_units(
     nu_eff = nu_dimless * (L0 ** (2.0 * beta)) / max(T0, np.finfo(float).tiny)
     lam_eff = lam_dimless / max(T0, np.finfo(float).tiny)
 
-    Dk = nu_eff * frac.get_spectral_coefficients() + lam_eff
-    a_hat = s_hat / Dk
+    # Only mode bin non-zero; compute denominator at that mode
+    a_hat = np.zeros_like(s_hat)
+    idx = tuple((mi % n) for mi, n in zip(mode, shape))
+    ksq = (2.0 * np.pi / L) ** 2 * float(np.dot(np.array(mode, dtype=float), np.array(mode, dtype=float)))
+    denom = nu_eff * (ksq ** beta) + lam_eff
+    a_hat[idx] = s_hat[idx] / denom
     a = ops.inverse_fft(a_hat, "ortho").astype(np.complex128)
     return a
 

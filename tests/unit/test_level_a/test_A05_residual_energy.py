@@ -18,7 +18,7 @@ from typing import Tuple, List
 import numpy as np
 
 from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
-from bhlff.core.fft.fractional_laplacian import FractionalLaplacian
+from typing import Sequence
 
 
 def _load_config() -> dict:
@@ -79,7 +79,6 @@ def test_A05_residual_energy() -> None:
 
     domain = _Domain(shape)
     ops = UnifiedSpectralOperations(domain, precision="float64")
-    frac = FractionalLaplacian(domain, beta=beta, lambda_param=0.0)
 
     modes = _rand_modes(N, J, seed)
     rng = np.random.default_rng(seed + 11)
@@ -90,14 +89,21 @@ def test_A05_residual_energy() -> None:
     s_real = ops.inverse_fft(s_hat, "ortho")
 
     # Solve: a_hat = s_hat / (mu|k|^{2β} + λ)
-    Dk = mu * frac.get_spectral_coefficients() + lam
     a_hat = np.zeros_like(s_hat)
     for m in modes:
         k = tuple((mi % n) for mi, n in zip(m, shape))
-        a_hat[k] = s_hat[k] / Dk[k]
+        ksq = (2.0 * np.pi / L) ** 2 * float(sum(mi * mi for mi in m))
+        denom = mu * (ksq ** beta) + lam
+        a_hat[k] = s_hat[k] / denom
 
     # Residual in spectral space
-    r_hat = Dk * a_hat - s_hat
+    # Residual only on excited bins
+    r_hat = np.zeros_like(a_hat)
+    for m in modes:
+        k = tuple((mi % n) for mi, n in zip(m, shape))
+        ksq = (2.0 * np.pi / L) ** 2 * float(sum(mi * mi for mi in m))
+        denom = mu * (ksq ** beta) + lam
+        r_hat[k] = denom * a_hat[k] - s_hat[k]
     res_norm = float(
         np.linalg.norm(r_hat) / max(np.linalg.norm(s_hat), np.finfo(float).eps)
     )

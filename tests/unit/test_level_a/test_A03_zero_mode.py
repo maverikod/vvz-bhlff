@@ -19,7 +19,6 @@ from typing import Tuple
 import numpy as np
 
 from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
-from bhlff.core.fft.fractional_laplacian import FractionalLaplacian
 
 
 def _load_config() -> dict:
@@ -43,24 +42,22 @@ def _solve_stationary(
 ) -> np.ndarray:
     """Spectral stationary solver a_hat = s_hat / (mu|k|^{2β} + λ) with k=0 safety."""
     ops = UnifiedSpectralOperations(domain, precision="float64")
-    frac = FractionalLaplacian(domain, beta=beta, lambda_param=lam)
 
     s_hat = ops.forward_fft(source, "ortho")
-    Dk = mu * frac.get_spectral_coefficients() + lam
+    # Build a_hat only at non-zero bins
+    a_hat = np.zeros_like(s_hat)
+    nz = np.argwhere(np.abs(s_hat) > 0)
+    for idx in map(tuple, nz):
+        # Guard division by zero at k=0 when lambda=0
+        if lam == 0.0 and all(i == 0 for i in idx):
+            raise ZeroDivisionError("lambda=0 with non-zero zero-mode in source: ŝ(0)≠0")
+        # Map to integer mode vector m
+        m = [i if i <= n // 2 else i - n for i, n in zip(idx, source.shape)]
+        ksq = (2.0 * np.pi / domain.L) ** 2 * float(sum(mi * mi for mi in m))
+        denom = mu * (ksq ** beta) + lam
+        if denom != 0.0:
+            a_hat[idx] = s_hat[idx] / denom
 
-    # k=0 is at index (0,0,0) in our fft conventions (ij indexing with np.fftfreq mesh)
-    # Guard for division by zero when lambda==0 and s_hat(0)!=0
-    zero_idx = tuple(0 for _ in domain.shape)
-    if lam == 0.0:
-        if np.abs(s_hat[zero_idx]) > 0:
-            raise ZeroDivisionError(
-                "lambda=0 with non-zero zero-mode in source: ŝ(0)≠0"
-            )
-        # Set denominator at zero mode to 1 to avoid NaN (since s_hat(0)=0 this is safe)
-        Dk = Dk.copy()
-        Dk[zero_idx] = 1.0
-
-    a_hat = s_hat / Dk
     return ops.inverse_fft(a_hat, "ortho").astype(np.complex128)
 
 
@@ -85,19 +82,25 @@ def test_A03_zero_mode() -> None:
     _ensure_output_dir(out_dir)
 
     # Case 1: lambda=0, ŝ(0)=0
-    source1 = np.zeros(shape, dtype=np.complex128)
-    # Add non-zero modes only (e.g., a single non-zero spatial frequency)
-    source1[1, 0, 0] = 1.0
-    source1[-1, 0, 0] = 1.0  # maintain hermitian symmetry for real part if needed
+    # Build spectral source with zero DC and transform to real space
+    ops = UnifiedSpectralOperations(domain, precision="float64")
+    s1_hat = np.zeros(shape, dtype=np.complex128)
+    s1_hat[1, 0, 0] = 1.0
+    s1_hat[-1, 0, 0] = 1.0
+    source1 = ops.inverse_fft(s1_hat, "ortho").astype(np.complex128)
 
     a1 = _solve_stationary(domain, mu, beta, lam, source1)
     # Residual r = L_beta a - s in spectral space
-    ops = UnifiedSpectralOperations(domain, precision="float64")
-    frac = FractionalLaplacian(domain, beta=beta, lambda_param=lam)
     a1_hat = ops.forward_fft(a1, "ortho")
     s1_hat = ops.forward_fft(source1, "ortho")
-    D = mu * frac.get_spectral_coefficients() + lam
-    r1_hat = D * a1_hat - s1_hat
+    # Residual only at excited bins
+    r1_hat = np.zeros_like(a1_hat)
+    nz = np.argwhere(np.abs(s1_hat) > 0)
+    for idx in map(tuple, nz):
+        m = [i if i <= n // 2 else i - n for i, n in zip(idx, source1.shape)]
+        ksq = (2.0 * np.pi / domain.L) ** 2 * float(sum(mi * mi for mi in m))
+        denom = mu * (ksq ** beta) + lam
+        r1_hat[idx] = denom * a1_hat[idx] - s1_hat[idx]
     res1 = float(
         np.linalg.norm(r1_hat) / max(np.linalg.norm(s1_hat), np.finfo(float).eps)
     )

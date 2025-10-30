@@ -19,7 +19,6 @@ from typing import Tuple
 import numpy as np
 
 from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
-from bhlff.core.fft.fractional_laplacian import FractionalLaplacian
 
 
 def _load_config() -> dict:
@@ -47,17 +46,15 @@ def _solve_stationary(
 
     domain = _Domain(shape, L, N)
     ops = UnifiedSpectralOperations(domain, precision="float64")
-    frac = FractionalLaplacian(domain, beta=beta, lambda_param=0.0)
 
-    # Real-space plane wave at integer mode indices for this grid
-    grid = np.meshgrid(*[np.arange(n) for n in shape], indexing="ij")
-    m = np.array(mode)
-    phase = sum((2.0 * np.pi * mi * gi) / n for mi, gi, n in zip(m, grid, shape))
-    s = np.exp(1j * phase).astype(np.complex128)
-
-    s_hat = ops.forward_fft(s, "ortho")
-    Dk = mu * frac.get_spectral_coefficients() + lam
-    a_hat = s_hat / Dk
+    # Build spectral delta at exact integer bin to avoid normalization ambiguity
+    s_hat = np.zeros(shape, dtype=np.complex128)
+    a_hat = np.zeros_like(s_hat)
+    idx = tuple((mi % n) for mi, n in zip(mode, shape))
+    ksq = (2.0 * np.pi / L) ** 2 * float(np.dot(np.array(mode, dtype=float), np.array(mode, dtype=float)))
+    denom = mu * (ksq ** beta) + lam
+    s_hat[idx] = 1.0 + 0.0j
+    a_hat[idx] = s_hat[idx] / denom
     a = ops.inverse_fft(a_hat, "ortho").astype(np.complex128)
     return a
 
@@ -85,6 +82,12 @@ def test_A11_scale_length() -> None:
     # Downsample higher-res solution to coarse grid by integer stride (since Δ equal)
     stride = N2 // N1
     a2n_ds = a2n[::stride, ::stride, ::stride]
+
+    # Align global phase to remove arbitrary complex rotation between solutions
+    inner = np.vdot(a1n.ravel(), a2n_ds.ravel())  # <a1, a2>
+    if inner != 0:
+        phase = inner / np.abs(inner)
+        a2n_ds = a2n_ds * np.conj(phase)
 
     err = float(np.linalg.norm(a1n - a2n_ds))
 

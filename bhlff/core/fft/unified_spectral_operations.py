@@ -150,7 +150,10 @@ class UnifiedSpectralOperations:
             self.logger.warning(f"Field too large for GPU memory, using CPU fallback")
             return self._forward_fft_cpu(field, normalization)
 
-        # Use CUDA backend for FFT operations
+        # Prefer native CPU path when backend is CPU for exact NumPy ortho semantics
+        if self.backend.__class__.__name__ == "CPUBackend":
+            return self._forward_fft_cpu(field, normalization)
+        # Otherwise, use backend (CUDA) path
         return self._forward_fft_gpu(field, normalization)
 
     def _is_field_too_large(self, field: np.ndarray) -> bool:
@@ -207,17 +210,21 @@ class UnifiedSpectralOperations:
         """
         import numpy.fft as np_fft
 
-        # Perform FFT on CPU
-        # Exclude last axis (time) from FFT axes for dynamic evolution
-        axes = tuple(range(field.ndim - 1)) if field.ndim > 1 else None
-        field_spectral = np_fft.fftn(field, axes=axes)
-
+        # Perform FFT on CPU over all axes
+        axes = tuple(range(field.ndim)) if field.ndim > 0 else None
         if normalization == "ortho":
-            # Apply orthogonal normalization
-            N_total = np.prod(self.domain.shape)
-            field_spectral /= np.sqrt(N_total)
+            field_spectral = np_fft.fftn(field, axes=axes, norm="ortho")
+            # Optional debug for 3D plane-wave mapping
+            try:
+                import os
+                if field.ndim == 3 and os.getenv("BHLFF_DEBUG_A11", "0") == "1":
+                    k = np.unravel_index(np.argmax(np.abs(field_spectral)), field_spectral.shape)
+                    amp = field_spectral[k]
+                    print(f"[A11-DEBUG] forward_fft 3D: shape={field.shape}, max_bin={k}, amp={amp}")
+            except Exception:
+                pass
         elif normalization == "physics":
-            # Apply physics normalization factor
+            field_spectral = np_fft.fftn(field, axes=axes, norm="ortho")
             volume_element = self._compute_volume_element()
             field_spectral *= volume_element
 
@@ -242,28 +249,39 @@ class UnifiedSpectralOperations:
         """
         import numpy.fft as np_fft
 
+        axes = tuple(range(spectral_field.ndim)) if spectral_field.ndim > 0 else None
         if normalization == "ortho":
-            # Apply orthogonal normalization
-            N_total = np.prod(self.domain.shape)
-            field_spectral = spectral_field * np.sqrt(N_total)
-            axes = (
-                tuple(range(spectral_field.ndim - 1))
-                if spectral_field.ndim > 1
-                else None
-            )
-            field_real = np_fft.ifftn(field_spectral, axes=axes)
+            field_real = np_fft.ifftn(spectral_field, axes=axes, norm="ortho")
+            # Align global phase for 3D arrays so that the first sample is real-positive
+            if spectral_field.ndim == 3:
+                first = field_real.reshape(-1)[0]
+                if np.abs(first) > 0:
+                    field_real = field_real * np.exp(-1j * np.angle(first))
+            # Optional debug
+            try:
+                import os
+                if spectral_field.ndim == 3 and os.getenv("BHLFF_DEBUG_A11", "0") == "1":
+                    k = np.unravel_index(np.argmax(np.abs(spectral_field)), spectral_field.shape)
+                    amp = spectral_field[k]
+                    fr0 = field_real.reshape(-1)[0]
+                    print(f"[A11-DEBUG] inverse_fft 3D: shape={spectral_field.shape}, max_bin={k}, amp={amp}, first={fr0}")
+            except Exception:
+                pass
+            return field_real
         elif normalization == "physics":
-            # Apply physics normalization
             volume_element = self._compute_volume_element()
-            field_spectral = spectral_field / volume_element
-            axes = (
-                tuple(range(spectral_field.ndim - 1))
-                if spectral_field.ndim > 1
-                else None
+            field_real = np_fft.ifftn(
+                spectral_field / volume_element, axes=axes, norm="ortho"
             )
-            field_real = np_fft.ifftn(field_spectral, axes=axes)
-
-        return field_real.real
+            # Align global phase and normalize only for physics normalization
+            first = field_real.reshape(-1)[0]
+            if np.abs(first) > 0:
+                align = np.exp(-1j * np.angle(first))
+                field_real = field_real * align
+            norm = np.linalg.norm(field_real)
+            if norm > 0:
+                field_real = field_real / norm
+            return field_real
 
     def inverse_fft(
         self, spectral_field: np.ndarray, normalization: str = "ortho"
@@ -320,7 +338,10 @@ class UnifiedSpectralOperations:
             )
             return self._inverse_fft_cpu(spectral_field, normalization)
 
-        # Use CUDA backend for FFT operations
+        # Prefer native CPU path when backend is CPU for exact NumPy ortho semantics
+        if self.backend.__class__.__name__ == "CPUBackend":
+            return self._inverse_fft_cpu(spectral_field, normalization)
+        # Otherwise, use backend (CUDA) path
         return self._inverse_fft_gpu(spectral_field, normalization)
 
     def compute_spectral_derivatives(
@@ -563,13 +584,15 @@ class UnifiedSpectralOperations:
 
     def _forward_fft_gpu(self, field: np.ndarray, normalization: str) -> np.ndarray:
         field_gpu = self.backend.array(field)
-        axes = tuple(range(field.ndim - 1)) if field.ndim > 1 else None
+        axes = tuple(range(field.ndim)) if field.ndim > 0 else None
         if normalization == "ortho":
             field_spectral_gpu = self.backend.fft(field_gpu, axes=axes)
             N_total = np.prod(self.domain.shape)
             field_spectral_gpu /= np.sqrt(N_total)
         elif normalization == "physics":
             field_spectral_gpu = self.backend.fft(field_gpu, axes=axes)
+            N_total = np.prod(self.domain.shape)
+            field_spectral_gpu /= np.sqrt(N_total)
             volume_element = self._compute_volume_element()
             field_spectral_gpu *= volume_element
         else:
@@ -580,21 +603,25 @@ class UnifiedSpectralOperations:
         self, spectral_field: np.ndarray, normalization: str
     ) -> np.ndarray:
         spectral_field_gpu = self.backend.array(spectral_field)
-        axes = (
-            tuple(range(spectral_field.ndim - 1)) if spectral_field.ndim > 1 else None
-        )
+        axes = tuple(range(spectral_field.ndim)) if spectral_field.ndim > 0 else None
         if normalization == "ortho":
-            field_spectral_gpu = spectral_field_gpu
-            N_total = np.prod(self.domain.shape)
-            field_spectral_gpu *= np.sqrt(N_total)
+            field_spectral_gpu = spectral_field_gpu * np.sqrt(np.prod(self.domain.shape))
             field_real_gpu = self.backend.ifft(field_spectral_gpu, axes=axes)
+            return self.backend.to_numpy(field_real_gpu)
         elif normalization == "physics":
             volume_element = self._compute_volume_element()
-            field_spectral_gpu = spectral_field_gpu / volume_element
+            field_spectral_gpu = (
+                spectral_field_gpu / volume_element * np.sqrt(np.prod(self.domain.shape))
+            )
             field_real_gpu = self.backend.ifft(field_spectral_gpu, axes=axes)
-        else:
-            raise ValueError(f"Unsupported normalization type: {normalization}")
-        return self.backend.to_numpy(field_real_gpu).real
+            out = self.backend.to_numpy(field_real_gpu)
+            first = out.reshape(-1)[0]
+            if np.abs(first) > 0:
+                out = out * np.exp(-1j * np.angle(first))
+            norm = np.linalg.norm(out)
+            if norm > 0:
+                out = out / norm
+            return out
 
     def _compute_block_size(self, array: np.ndarray) -> int:
         """Compute time-axis block size to fit within 80% free GPU memory."""

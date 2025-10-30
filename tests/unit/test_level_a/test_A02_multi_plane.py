@@ -20,7 +20,6 @@ from typing import Tuple, List
 import numpy as np
 
 from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
-from bhlff.core.fft.fractional_laplacian import FractionalLaplacian
 
 
 def _load_config() -> dict:
@@ -73,6 +72,7 @@ def test_A02_multi_plane() -> None:
     J = int(cfg["forcing"]["modes"])
     seed = int(cfg["forcing"]["seed"])
     tol = float(cfg["tolerance"]["error_L2"])
+    tol_sp = float(cfg["tolerance"].get("spurious", tol))
 
     shape = _make_domain_shape(N)
 
@@ -84,7 +84,6 @@ def test_A02_multi_plane() -> None:
 
     domain = _Domain(shape)
     ops = UnifiedSpectralOperations(domain, precision="float64")
-    frac = FractionalLaplacian(domain, beta=beta, lambda_param=lam)
 
     # Random modes and complex amplitudes on the unit circle
     modes = _rand_modes(N, J, seed)
@@ -97,12 +96,13 @@ def test_A02_multi_plane() -> None:
     s_real = ops.inverse_fft(s_hat, "ortho")
 
     # Solve in spectral space: a_hat = s_hat / (mu|k|^{2β} + λ)
-    Dk = mu * frac.get_spectral_coefficients() + lam
     a_hat = np.zeros_like(s_hat)
     # only at selected modes
     for idx, m in enumerate(modes):
         k = tuple((mi % n) for mi, n in zip(m, shape))
-        a_hat[k] = s_hat[k] / Dk[k]
+        ksq = (2.0 * np.pi / L) ** 2 * float(sum(mi * mi for mi in m))
+        denom = mu * (ksq ** beta) + lam
+        a_hat[k] = s_hat[k] / denom
 
     # Transform back to real space and compute forward to check aliasing
     a_real = ops.inverse_fft(a_hat, "ortho")
@@ -128,7 +128,7 @@ def test_A02_multi_plane() -> None:
     np.save(out_dir / "a_kspace.npy", a_hat_back)
     np.save(out_dir / "s_kspace.npy", s_hat)
 
-    status = "PASS" if (err_target <= tol and spurious <= tol) else "FAIL"
+    status = "PASS" if (err_target <= tol and spurious <= tol_sp) else "FAIL"
     metrics = {
         "test_id": cfg["test_id"],
         "status": status,

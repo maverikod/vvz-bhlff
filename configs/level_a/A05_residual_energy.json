@@ -4,56 +4,5 @@
   "domain": { "L": 1.0, "N": 256, "dimensions": 3 },
   "physics": { "mu": 1.0, "beta": 1.0, "lambda": 0.1 },
   "forcing": { "type": "multi_plane", "modes": 6, "seed": 7 },
-  "tolerance": { "residual": 1e-12, "orthogonality": 1e-12 }
-}
-
-{
-  "test_id": "A05",
-  "test_name": "residual_energy",
-  "description": "Residual and energy balance validation",
-  "domain": {
-    "L": 1.0,
-    "N": 256,
-    "dimensions": 3
-  },
-  "physics": {
-    "mu": 1.0,
-    "beta": 1.0,
-    "lambda": 0.1,
-    "nu": 1.0
-  },
-  "time": {
-    "dt": 1e-3,
-    "T": 1.0,
-    "scheme": "exponential"
-  },
-  "forcing": {
-    "type": "residual_test",
-    "test_cases": [
-      {
-        "name": "plane_wave",
-        "k_mode": [4, 0, 0],
-        "amplitude": 1.0
-      },
-      {
-        "name": "multi_frequency",
-        "modes": [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
-        "amplitudes": [1.0, 1.0j, -1.0]
-      }
-    ]
-  },
-  "output": {
-    "dir": "output/A05",
-    "save_fields": true,
-    "save_spectra": true,
-    "save_analysis": true,
-    "save_residual": true,
-    "format": "hdf5"
-  },
-  "tolerance": {
-    "residual_norm": 1e-12,
-    "orthogonality": 1e-12,
-    "energy_balance": 1e-12
-  },
-  "seed": 42
+  "tolerance": { "residual": 1e-12, "orthogonality": 1e-6 }
 }

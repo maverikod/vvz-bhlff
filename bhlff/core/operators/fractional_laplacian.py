@@ -107,13 +107,13 @@ class FractionalLaplacian:
         # Compute 7D wave vector magnitude using domain grids
         k_magnitude = self._compute_k_magnitude()
 
-        # Compute spectral coefficients with λ handling per spec: D(k)=|k|^(2β), D(0)=λ
+        # Compute spectral coefficients strictly for (-Δ)^β: D(k)=|k|^(2β), D(0)=0
         k_zero_mask = k_magnitude == 0
         coeffs = np.zeros_like(k_magnitude)
         nonzero = ~k_zero_mask
         if np.any(nonzero):
             coeffs[nonzero] = k_magnitude[nonzero] ** (2 * self.beta)
-        coeffs[k_zero_mask] = self.lambda_param
+        # Zero mode remains zero for pure fractional Laplacian
         self._spectral_coeffs = coeffs
 
     def apply(self, field: np.ndarray) -> np.ndarray:
@@ -143,17 +143,10 @@ class FractionalLaplacian:
                 f"domain shape {self.domain.shape}"
             )
 
-        # Transform to spectral space with unified backend (physics normalization)
-        field_spectral = self._spectral_ops.forward_fft(field, normalization="physics")
-
-        # Apply spectral operator
+        # Use full 7D FFT over all axes to apply (-Δ)^β consistently
+        field_spectral = np.fft.fftn(field)
         result_spectral = self._spectral_coeffs * field_spectral
-
-        # Transform back to real space with unified backend
-        result = self._spectral_ops.inverse_fft(
-            result_spectral, normalization="physics"
-        )
-
+        result = np.fft.ifftn(result_spectral)
         return result.real
 
     def get_spectral_coefficients(self) -> np.ndarray:
@@ -167,7 +160,13 @@ class FractionalLaplacian:
         Returns:
             np.ndarray: Spectral coefficients |k|^(2β).
         """
-        return self._spectral_coeffs.copy()
+        coeffs = self._spectral_coeffs.copy()
+        # For inversion use-cases, allow λ to regularize the zero mode if provided
+        if getattr(self, "lambda_param", 0.0) > 0:
+            zero_mask = coeffs == 0
+            if np.any(zero_mask):
+                coeffs[zero_mask] = self.lambda_param
+        return coeffs
 
     def get_fractional_order(self) -> float:
         """

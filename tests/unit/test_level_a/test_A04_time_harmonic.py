@@ -18,7 +18,6 @@ from typing import Tuple
 import numpy as np
 
 from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
-from bhlff.core.fft.fractional_laplacian import FractionalLaplacian
 
 
 def _load_config() -> dict:
@@ -55,9 +54,6 @@ def test_A04_time_harmonic_steady_state() -> None:
 
     domain = _Domain(shape)
     ops = UnifiedSpectralOperations(domain, precision="float64")
-    frac = FractionalLaplacian(
-        domain, beta=beta, lambda_param=0.0
-    )  # we'll add λ separately
 
     # Build spectral source with single mode k*
     s_hat = np.zeros(shape, dtype=np.complex128)
@@ -66,9 +62,11 @@ def test_A04_time_harmonic_steady_state() -> None:
     s_hat[idx] = s0
 
     # Steady-state spectral solution at k*
-    Dk = nu * frac.get_spectral_coefficients() + lam + 1j * omega
+    # Compute denominator at mode only
+    ksq = (2.0 * np.pi / L) ** 2 * float(np.dot(np.array(k_star, dtype=float), np.array(k_star, dtype=float)))
+    Dk = nu * (ksq ** beta) + lam + 1j * omega
     a_hat = np.zeros_like(s_hat)
-    a_hat[idx] = s0 / Dk[idx]
+    a_hat[idx] = s0 / Dk
 
     # Measure amplitude and phase at k*
     a_val = a_hat[idx]
@@ -76,8 +74,8 @@ def test_A04_time_harmonic_steady_state() -> None:
     phase_num = np.angle(a_val)
 
     # Reference
-    amp_ref = 1.0 / np.abs(Dk[idx])
-    phase_ref = -np.angle(Dk[idx])
+    amp_ref = 1.0 / np.abs(Dk)
+    phase_ref = -np.angle(Dk)
 
     amp_err = abs(amp_num - amp_ref)
     # unwrap small differences modulo 2π

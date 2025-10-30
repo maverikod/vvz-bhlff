@@ -252,12 +252,7 @@ class UnifiedSpectralOperations:
         axes = tuple(range(spectral_field.ndim)) if spectral_field.ndim > 0 else None
         if normalization == "ortho":
             field_real = np_fft.ifftn(spectral_field, axes=axes, norm="ortho")
-            # Align global phase for 3D arrays so that the first sample is real-positive
-            if spectral_field.ndim == 3:
-                first = field_real.reshape(-1)[0]
-                if np.abs(first) > 0:
-                    field_real = field_real * np.exp(-1j * np.angle(first))
-            # Optional debug
+            # Optional debug for 3D plane-wave mapping
             try:
                 import os
                 if spectral_field.ndim == 3 and os.getenv("BHLFF_DEBUG_A11", "0") == "1":

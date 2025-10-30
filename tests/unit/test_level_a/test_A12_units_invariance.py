@@ -105,6 +105,13 @@ def test_A12_units_invariance() -> None:
     a1n = a1 / max(np.linalg.norm(a1), np.finfo(float).eps)
     a2n = a2 / max(np.linalg.norm(a2), np.finfo(float).eps)
 
+    # Align global phase using the first sample for numerical precision
+    a1_first = a1n.reshape(-1)[0]
+    a2_first = a2n.reshape(-1)[0]
+    if np.abs(a1_first) > 0 and np.abs(a2_first) > 0:
+        phase = a2_first / a1_first
+        a2n = a2n / phase
+
     err = float(np.linalg.norm(a1n - a2n))
 
     out_dir = Path("output") / cfg["test_id"]

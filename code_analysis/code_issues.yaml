@@ -40,8 +40,17 @@ issues:
     file: ./tests/unit/test_level_a/test_A04_time_harmonic.py
     line: 50
   - class: _Domain
+    file: ./tests/unit/test_level_a/test_A12_units_invariance.py
+    line: 54
+  - class: _Domain
     file: ./tests/unit/test_level_a/test_A01_plane_wave.py
     line: 73
+  - class: _Domain
+    file: ./tests/unit/test_level_a/test_A11_scale_length.py
+    line: 42
+  - class: _Domain
+    file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+    line: 74
   - class: DummyCuPy
     file: ./bhlff/core/bvp/quench_detector.py
     line: 37
@@ -857,10 +866,16 @@ issues:
     line: 25
   - file: ./tests/unit/test_level_a/test_A04_time_harmonic.py
     line: 21
+  - file: ./tests/unit/test_level_a/test_A12_units_invariance.py
+    line: 21
   - file: ./tests/unit/test_level_a/test_A01_plane_wave.py
     line: 24
   - file: ./tests/unit/test_level_a/test_A05_residual_energy_basic.py
     line: 29
+  - file: ./tests/unit/test_level_a/test_A11_scale_length.py
+    line: 22
+  - file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+    line: 21
   - file: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
     line: 27
   - file: ./bhlff/__init__.py
@@ -2268,6 +2283,30 @@ issues:
     line: 51
     method: __init__
   - class: null
+    file: ./tests/unit/test_level_a/test_A12_units_invariance.py
+    line: 24
+    method: _load_config
+  - class: null
+    file: ./tests/unit/test_level_a/test_A12_units_invariance.py
+    line: 32
+    method: _make_domain_shape
+  - class: null
+    file: ./tests/unit/test_level_a/test_A12_units_invariance.py
+    line: 82
+    method: test_A12_units_invariance
+  - class: null
+    file: ./tests/unit/test_level_a/test_A12_units_invariance.py
+    line: 55
+    method: __init__
+  - class: _Domain
+    file: ./tests/unit/test_level_a/test_A12_units_invariance.py
+    line: 55
+    method: __init__
+  - class: null
+    file: ./tests/unit/test_level_a/test_A12_units_invariance.py
+    line: 55
+    method: __init__
+  - class: null
     file: ./tests/unit/test_level_a/test_A01_plane_wave.py
     line: 27
     method: _load_config
@@ -2302,6 +2341,66 @@ issues:
   - class: null
     file: ./tests/unit/test_level_a/test_A01_plane_wave.py
     line: 74
+    method: __init__
+  - class: null
+    file: ./tests/unit/test_level_a/test_A11_scale_length.py
+    line: 25
+    method: _load_config
+  - class: null
+    file: ./tests/unit/test_level_a/test_A11_scale_length.py
+    line: 33
+    method: _make_domain_shape
+  - class: null
+    file: ./tests/unit/test_level_a/test_A11_scale_length.py
+    line: 37
+    method: _solve_stationary
+  - class: null
+    file: ./tests/unit/test_level_a/test_A11_scale_length.py
+    line: 65
+    method: test_A11_scale_length
+  - class: null
+    file: ./tests/unit/test_level_a/test_A11_scale_length.py
+    line: 43
+    method: __init__
+  - class: _Domain
+    file: ./tests/unit/test_level_a/test_A11_scale_length.py
+    line: 43
+    method: __init__
+  - class: null
+    file: ./tests/unit/test_level_a/test_A11_scale_length.py
+    line: 43
+    method: __init__
+  - class: null
+    file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+    line: 24
+    method: _load_config
+  - class: null
+    file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+    line: 32
+    method: _make_domain_shape
+  - class: null
+    file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+    line: 36
+    method: _rand_modes
+  - class: null
+    file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+    line: 47
+    method: _build_spectral_source
+  - class: null
+    file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+    line: 60
+    method: test_A05_residual_energy
+  - class: null
+    file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+    line: 75
+    method: __init__
+  - class: _Domain
+    file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+    line: 75
+    method: __init__
+  - class: null
+    file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+    line: 75
     method: __init__
   - class: null
     file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
@@ -2893,10 +2992,10 @@ issues:
     method: execute
   not_implemented_in_non_abstract: []
 summary:
-  classes_without_docstrings: 18
+  classes_without_docstrings: 21
   files_too_large: 121
   files_without_docstrings: 4
-  imports_in_middle: 670
+  imports_in_middle: 673
   methods_with_pass: 0
-  methods_without_docstrings: 250
+  methods_without_docstrings: 271
   not_implemented_in_non_abstract: 0

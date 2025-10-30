@@ -4890,6 +4890,16 @@ Class: _Domain
   __init__(self, shape)
     File: ./tests/unit/test_level_a/test_A04_time_harmonic.py, Line: 51
   _load_config(()) -> dict
+    File: ./tests/unit/test_level_a/test_A12_units_invariance.py, Line: 24
+  _make_domain_shape(N) -> Tuple[int, int, int]
+    File: ./tests/unit/test_level_a/test_A12_units_invariance.py, Line: 32
+  _solve_with_units(L, N, nu_dimless, beta, lam_dimless, mode, L0, T0, A0) -> np.ndarray
+    File: ./tests/unit/test_level_a/test_A12_units_invariance.py, Line: 36
+  test_A12_units_invariance(()) -> None
+    File: ./tests/unit/test_level_a/test_A12_units_invariance.py, Line: 82
+  __init__(self, shape, L, N)
+    File: ./tests/unit/test_level_a/test_A12_units_invariance.py, Line: 55
+  _load_config(()) -> dict
     File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 27
   _make_domain_shape(N) -> Tuple[int, int, int]
     File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 35
@@ -4903,6 +4913,28 @@ Class: _Domain
     File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 61
   __init__(self, shape)
     File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 74
+  _load_config(()) -> dict
+    File: ./tests/unit/test_level_a/test_A11_scale_length.py, Line: 25
+  _make_domain_shape(N) -> Tuple[int, int, int]
+    File: ./tests/unit/test_level_a/test_A11_scale_length.py, Line: 33
+  _solve_stationary(L, N, mu, beta, lam, mode) -> np.ndarray
+    File: ./tests/unit/test_level_a/test_A11_scale_length.py, Line: 37
+  test_A11_scale_length(()) -> None
+    File: ./tests/unit/test_level_a/test_A11_scale_length.py, Line: 65
+  __init__(self, shape, L, N)
+    File: ./tests/unit/test_level_a/test_A11_scale_length.py, Line: 43
+  _load_config(()) -> dict
+    File: ./tests/unit/test_level_a/test_A05_residual_energy.py, Line: 24
+  _make_domain_shape(N) -> Tuple[int, int, int]
+    File: ./tests/unit/test_level_a/test_A05_residual_energy.py, Line: 32
+  _rand_modes(N, J, seed) -> List[Tuple[int, int, int]]
+    File: ./tests/unit/test_level_a/test_A05_residual_energy.py, Line: 36
+  _build_spectral_source(shape, modes, amplitudes) -> np.ndarray
+    File: ./tests/unit/test_level_a/test_A05_residual_energy.py, Line: 47
+  test_A05_residual_energy(()) -> None
+    File: ./tests/unit/test_level_a/test_A05_residual_energy.py, Line: 60
+  __init__(self, shape)
+    File: ./tests/unit/test_level_a/test_A05_residual_energy.py, Line: 75
 
 Class: TestA03SimpleZeroMode
   setup_method(self)

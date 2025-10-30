@@ -48540,6 +48540,45 @@ method_index:
       name: __init__
       returns: null
     - args: []
+      file: ./tests/unit/test_level_a/test_A12_units_invariance.py
+      line: 24
+      name: _load_config
+      returns: dict
+    - args:
+      - N
+      file: ./tests/unit/test_level_a/test_A12_units_invariance.py
+      line: 32
+      name: _make_domain_shape
+      returns: Tuple[int, int, int]
+    - args:
+      - L
+      - N
+      - nu_dimless
+      - beta
+      - lam_dimless
+      - mode
+      - L0
+      - T0
+      - A0
+      file: ./tests/unit/test_level_a/test_A12_units_invariance.py
+      line: 36
+      name: _solve_with_units
+      returns: np.ndarray
+    - args: []
+      file: ./tests/unit/test_level_a/test_A12_units_invariance.py
+      line: 82
+      name: test_A12_units_invariance
+      returns: None
+    - args:
+      - self
+      - shape
+      - L
+      - N
+      file: ./tests/unit/test_level_a/test_A12_units_invariance.py
+      line: 55
+      name: __init__
+      returns: null
+    - args: []
       file: ./tests/unit/test_level_a/test_A01_plane_wave.py
       line: 27
       name: _load_config
@@ -48586,8 +48625,83 @@ method_index:
       line: 74
       name: __init__
       returns: null
+    - args: []
+      file: ./tests/unit/test_level_a/test_A11_scale_length.py
+      line: 25
+      name: _load_config
+      returns: dict
+    - args:
+      - N
+      file: ./tests/unit/test_level_a/test_A11_scale_length.py
+      line: 33
+      name: _make_domain_shape
+      returns: Tuple[int, int, int]
+    - args:
+      - L
+      - N
+      - mu
+      - beta
+      - lam
+      - mode
+      file: ./tests/unit/test_level_a/test_A11_scale_length.py
+      line: 37
+      name: _solve_stationary
+      returns: np.ndarray
+    - args: []
+      file: ./tests/unit/test_level_a/test_A11_scale_length.py
+      line: 65
+      name: test_A11_scale_length
+      returns: None
+    - args:
+      - self
+      - shape
+      - L
+      - N
+      file: ./tests/unit/test_level_a/test_A11_scale_length.py
+      line: 43
+      name: __init__
+      returns: null
+    - args: []
+      file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+      line: 24
+      name: _load_config
+      returns: dict
+    - args:
+      - N
+      file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+      line: 32
+      name: _make_domain_shape
+      returns: Tuple[int, int, int]
+    - args:
+      - N
+      - J
+      - seed
+      file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+      line: 36
+      name: _rand_modes
+      returns: List[Tuple[int, int, int]]
+    - args:
+      - shape
+      - modes
+      - amplitudes
+      file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+      line: 47
+      name: _build_spectral_source
+      returns: np.ndarray
+    - args: []
+      file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+      line: 60
+      name: test_A05_residual_energy
+      returns: None
+    - args:
+      - self
+      - shape
+      file: ./tests/unit/test_level_a/test_A05_residual_energy.py
+      line: 75
+      name: __init__
+      returns: null
   standalone_functions: []
   summary:
-    total_class_methods: 6733
+    total_class_methods: 6749
     total_classes: 650
     total_standalone_functions: 0

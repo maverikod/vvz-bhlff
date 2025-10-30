@@ -83,6 +83,9 @@ def test_A11_scale_length() -> None:
     stride = N2 // N1
     a2n_ds = a2n[::stride, ::stride, ::stride]
 
+    # Renormalize after downsampling to compare dimensionless shape-only fields
+    a2n_ds = a2n_ds / max(np.linalg.norm(a2n_ds), np.finfo(float).eps)
+
     # Align global phase to remove arbitrary complex rotation between solutions
     inner = np.vdot(a1n.ravel(), a2n_ds.ravel())  # <a1, a2>
     if inner != 0:

@@ -109,7 +109,7 @@ class QuenchDetector:
         self.batch_size = int(config.get("batch_size", 1))
         self.verbose = bool(config.get("verbose", True))
         self.progress_interval = int(config.get("progress_interval", 10))
-        
+
         # Compute physical thresholds from theoretical principles
         thresholds = self.threshold_computer.compute_all_thresholds()
         self.amplitude_threshold = thresholds["amplitude_threshold"]
@@ -141,25 +141,25 @@ class QuenchDetector:
     def _compute_optimal_block_size_from_gpu_memory(self) -> int:
         """
         Compute optimal block size based on available GPU memory.
-        
+
         Physical Meaning:
             Calculates the maximum block size that can fit in 80% of available
             GPU memory, ensuring efficient memory usage while avoiding OOM.
-            
+
         Returns:
             int: Optimal block size for 7D processing.
         """
         if not self.cuda_available:
             return 8  # Default small size for CPU
-            
+
         try:
             # Get GPU memory info
             free_mem, total_mem = cp.cuda.runtime.memGetInfo()
             available_mem = int(free_mem * 0.8)  # Use 80% of free memory
-            
+
             # Estimate memory per element (complex128 = 16 bytes)
             bytes_per_element = 16
-            
+
             # For 7D array, we need space for:
             # - Input field
             # - Amplitude computation
@@ -168,24 +168,30 @@ class QuenchDetector:
             # - Connected components
             # Total overhead factor ~10x
             overhead_factor = 10
-            
+
             # Calculate maximum elements per block
             max_elements = available_mem // (bytes_per_element * overhead_factor)
-            
+
             # For 7D, calculate block size per dimension
             # Assuming roughly equal dimensions
-            elements_per_dim = int(max_elements ** (1/7))
-            
+            elements_per_dim = int(max_elements ** (1 / 7))
+
             # Ensure reasonable bounds
             block_size = max(4, min(elements_per_dim, 64))  # Between 4 and 64
-            
-            self.logger.info(f"GPU memory: {free_mem/1e9:.2f}GB free, {total_mem/1e9:.2f}GB total")
-            self.logger.info(f"Optimal block size: {block_size} (using 80% of free memory)")
-            
+
+            self.logger.info(
+                f"GPU memory: {free_mem/1e9:.2f}GB free, {total_mem/1e9:.2f}GB total"
+            )
+            self.logger.info(
+                f"Optimal block size: {block_size} (using 80% of free memory)"
+            )
+
             return block_size
-            
+
         except Exception as e:
-            self.logger.warning(f"Failed to compute optimal block size: {e}, using default 8")
+            self.logger.warning(
+                f"Failed to compute optimal block size: {e}, using default 8"
+            )
             return 8
 
     def detect_quenches(self, envelope: np.ndarray) -> Dict[str, Any]:
@@ -265,6 +271,7 @@ class QuenchDetector:
         self.logger.info(f"Total blocks: {total_blocks} for shape {envelope.shape}")
 
         import time
+
         start_time = time.time()
 
         def _gpu_mem_info() -> str:
@@ -284,42 +291,63 @@ class QuenchDetector:
             for blk_idx, blk in enumerate(batch):
                 block_view = envelope[blk]
                 blk_global_index = i + blk_idx + 1
-                self.logger.info(f"Start block {blk_global_index}/{total_blocks} slices={blk}")
+                self.logger.info(
+                    f"Start block {blk_global_index}/{total_blocks} slices={blk}"
+                )
                 blk_t0 = time.time()
                 try:
                     if self.cuda_available:
                         # GPU path per block (single transfer)
                         block_gpu = cp.asarray(block_view)
                         amp_q = self._detect_amplitude_quenches_cuda(block_gpu)
-                        self.logger.info(f"  block {blk_global_index}: amplitude done (n={len(amp_q)}) | {_gpu_mem_info()}")
+                        self.logger.info(
+                            f"  block {blk_global_index}: amplitude done (n={len(amp_q)}) | {_gpu_mem_info()}"
+                        )
                         det_q = self._detect_detuning_quenches_cuda(block_gpu)
-                        self.logger.info(f"  block {blk_global_index}: detuning done (n={len(det_q)}) | {_gpu_mem_info()}")
+                        self.logger.info(
+                            f"  block {blk_global_index}: detuning done (n={len(det_q)}) | {_gpu_mem_info()}"
+                        )
                         grad_q = self._detect_gradient_quenches_cuda(block_gpu)
-                        self.logger.info(f"  block {blk_global_index}: gradient done (n={len(grad_q)}) | {_gpu_mem_info()}")
+                        self.logger.info(
+                            f"  block {blk_global_index}: gradient done (n={len(grad_q)}) | {_gpu_mem_info()}"
+                        )
                         del block_gpu
                         cp.get_default_memory_pool().free_all_blocks()
                     else:
                         amp_q = self._detect_amplitude_quenches(block_view)
-                        self.logger.info(f"  block {blk_global_index}: amplitude done (n={len(amp_q)})")
+                        self.logger.info(
+                            f"  block {blk_global_index}: amplitude done (n={len(amp_q)})"
+                        )
                         det_q = self._detect_detuning_quenches(block_view)
-                        self.logger.info(f"  block {blk_global_index}: detuning done (n={len(det_q)})")
+                        self.logger.info(
+                            f"  block {blk_global_index}: detuning done (n={len(det_q)})"
+                        )
                         grad_q = self._detect_gradient_quenches(block_view)
-                        self.logger.info(f"  block {blk_global_index}: gradient done (n={len(grad_q)})")
+                        self.logger.info(
+                            f"  block {blk_global_index}: gradient done (n={len(grad_q)})"
+                        )
                 except Exception as e:
                     # Fallback to CPU for this block
-                    self.logger.warning(f"Block {i+blk_idx}: CUDA path failed ({e}); falling back to CPU")
+                    self.logger.warning(
+                        f"Block {i+blk_idx}: CUDA path failed ({e}); falling back to CPU"
+                    )
                     amp_q = self._detect_amplitude_quenches(block_view)
                     det_q = self._detect_detuning_quenches(block_view)
                     grad_q = self._detect_gradient_quenches(block_view)
 
                 # Offset block-local centers to global coordinates
-                def _offset_events(events: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+                def _offset_events(
+                    events: List[Dict[str, Any]],
+                ) -> List[Dict[str, Any]]:
                     start_indices = [sl.start or 0 for sl in blk]
                     adjusted: List[Dict[str, Any]] = []
                     for ev in events:
                         loc = ev.get("location")
                         if loc is not None and len(loc) == len(start_indices):
-                            loc = tuple(float(loc[d]) + float(start_indices[d]) for d in range(len(start_indices)))
+                            loc = tuple(
+                                float(loc[d]) + float(start_indices[d])
+                                for d in range(len(start_indices))
+                            )
                         ev2 = dict(ev)
                         ev2["location"] = loc
                         adjusted.append(ev2)
@@ -331,8 +359,13 @@ class QuenchDetector:
 
                 processed_blocks += 1
                 blk_dt = time.time() - blk_t0
-                self.logger.info(f"End block {blk_global_index}: took {blk_dt:.2f}s, total events={len(amp_q)+len(det_q)+len(grad_q)}")
-                if processed_blocks % max(1, self.progress_interval) == 0 or processed_blocks == total_blocks:
+                self.logger.info(
+                    f"End block {blk_global_index}: took {blk_dt:.2f}s, total events={len(amp_q)+len(det_q)+len(grad_q)}"
+                )
+                if (
+                    processed_blocks % max(1, self.progress_interval) == 0
+                    or processed_blocks == total_blocks
+                ):
                     elapsed = time.time() - start_time
                     rate = processed_blocks / max(1e-6, elapsed)
                     eta = (total_blocks - processed_blocks) / max(1e-6, rate)
@@ -349,11 +382,19 @@ class QuenchDetector:
             "quench_locations": quench_locations,
             "quench_types": quench_types,
             "quench_strengths": quench_strengths,
-            "amplitude_quenches": [q["location"] for q in all_quenches if q.get("type") == "amplitude"],
-            "detuning_quenches": [q["location"] for q in all_quenches if q.get("type") == "detuning"],
-            "gradient_quenches": [q["location"] for q in all_quenches if q.get("type") == "gradient"],
+            "amplitude_quenches": [
+                q["location"] for q in all_quenches if q.get("type") == "amplitude"
+            ],
+            "detuning_quenches": [
+                q["location"] for q in all_quenches if q.get("type") == "detuning"
+            ],
+            "gradient_quenches": [
+                q["location"] for q in all_quenches if q.get("type") == "gradient"
+            ],
             "total_quenches": len(all_quenches),
-            "detection_method": "blocked_cuda_7d" if self.cuda_available else "blocked_cpu_7d",
+            "detection_method": (
+                "blocked_cuda_7d" if self.cuda_available else "blocked_cpu_7d"
+            ),
         }
 
     def _detect_quenches_cuda(self, envelope: np.ndarray) -> Dict[str, Any]:

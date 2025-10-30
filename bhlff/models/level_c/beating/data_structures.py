@@ -164,7 +164,7 @@ class BeatingPattern:
         Returns:
             float: Pattern energy.
         """
-        return 0.5 * self.magnitude ** 2
+        return 0.5 * self.magnitude**2
 
     @property
     def pattern_momentum(self) -> np.ndarray:

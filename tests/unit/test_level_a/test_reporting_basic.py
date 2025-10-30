@@ -108,8 +108,12 @@ class TestReporterBasic:
         report_data = {
             "summary": {
                 "total_tests": len(self.results),
-                "passed_tests": sum(1 for r in self.results.values() if r["status"] == "PASS"),
-                "failed_tests": sum(1 for r in self.results.values() if r["status"] == "FAIL"),
+                "passed_tests": sum(
+                    1 for r in self.results.values() if r["status"] == "PASS"
+                ),
+                "failed_tests": sum(
+                    1 for r in self.results.values() if r["status"] == "FAIL"
+                ),
                 "generation_time": datetime.now().isoformat(),
             },
             "results": self.results,
@@ -135,15 +139,17 @@ class TestReporterBasic:
             Path to generated CSV log
         """
         csv_path = os.path.join(self.output_dir, "test_results.csv")
-        
+
         with open(csv_path, "w") as f:
             # Write header
             f.write("test_id,test_name,status,execution_time,memory_usage,timestamp\n")
-            
+
             # Write data
             for result in self.results.values():
-                f.write(f"{result['test_id']},{result['test_name']},{result['status']},"
-                       f"{result['execution_time']},{result['memory_usage']},{result['timestamp']}\n")
+                f.write(
+                    f"{result['test_id']},{result['test_name']},{result['status']},"
+                    f"{result['execution_time']},{result['memory_usage']},{result['timestamp']}\n"
+                )
 
         self.logger.info(f"Generated CSV log: {csv_path}")
         return csv_path
@@ -162,10 +168,10 @@ class TestReporterBasic:
         total_tests = len(self.results)
         passed_tests = sum(1 for r in self.results.values() if r["status"] == "PASS")
         failed_tests = sum(1 for r in self.results.values() if r["status"] == "FAIL")
-        
+
         total_execution_time = sum(r["execution_time"] for r in self.results.values())
         total_memory_usage = sum(r["memory_usage"] for r in self.results.values())
-        
+
         return {
             "total_tests": total_tests,
             "passed_tests": passed_tests,
@@ -173,8 +179,12 @@ class TestReporterBasic:
             "pass_rate": passed_tests / total_tests if total_tests > 0 else 0,
             "total_execution_time": total_execution_time,
             "total_memory_usage": total_memory_usage,
-            "average_execution_time": total_execution_time / total_tests if total_tests > 0 else 0,
-            "average_memory_usage": total_memory_usage / total_tests if total_tests > 0 else 0,
+            "average_execution_time": (
+                total_execution_time / total_tests if total_tests > 0 else 0
+            ),
+            "average_memory_usage": (
+                total_memory_usage / total_tests if total_tests > 0 else 0
+            ),
         }
 
     def get_failed_tests(self) -> List[Dict[str, Any]]:
@@ -188,7 +198,9 @@ class TestReporterBasic:
         Returns:
             List of failed test results
         """
-        return [result for result in self.results.values() if result["status"] == "FAIL"]
+        return [
+            result for result in self.results.values() if result["status"] == "FAIL"
+        ]
 
     def get_passed_tests(self) -> List[Dict[str, Any]]:
         """
@@ -201,7 +213,9 @@ class TestReporterBasic:
         Returns:
             List of passed test results
         """
-        return [result for result in self.results.values() if result["status"] == "PASS"]
+        return [
+            result for result in self.results.values() if result["status"] == "PASS"
+        ]
 
     def get_test_metrics(self, test_id: str) -> Optional[Dict[str, Any]]:
         """
@@ -269,7 +283,7 @@ class TestReporterBasic:
 if __name__ == "__main__":
     # Example usage
     reporter = TestReporterBasic()
-    
+
     # Record some test results
     reporter.record_test_result(
         test_id="test_001",
@@ -278,12 +292,12 @@ if __name__ == "__main__":
         metrics={"accuracy": 0.99, "speed": 1.5},
         parameters={"N": 64, "L": 1.0},
         execution_time=0.1,
-        memory_usage=10.5
+        memory_usage=10.5,
     )
-    
+
     # Generate reports
     json_report = reporter.generate_json_report()
     csv_log = reporter.generate_csv_log()
-    
+
     print(f"Generated reports: {json_report}, {csv_log}")
     print(f"Test summary: {reporter.get_test_summary()}")

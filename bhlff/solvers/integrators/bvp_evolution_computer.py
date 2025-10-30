@@ -242,11 +242,13 @@ class BVPEvolutionComputer:
         # BVP evolution matrix in spectral space
         # This represents the linear part of the BVP evolution
         self._spectral_evolution_matrix = -0.5 * k_squared + 1j * self.carrier_frequency
-    
-    def _step_resonator_spectral_filter(self, k_magnitude: np.ndarray, k_max: float) -> np.ndarray:
+
+    def _step_resonator_spectral_filter(
+        self, k_magnitude: np.ndarray, k_max: float
+    ) -> np.ndarray:
         """
         Step resonator spectral filter according to 7D BVP theory.
-        
+
         Physical Meaning:
             Implements step function spectral filter instead of exponential decay
             according to 7D BVP theory principles.

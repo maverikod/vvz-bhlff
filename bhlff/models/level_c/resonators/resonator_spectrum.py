@@ -269,19 +269,19 @@ class ResonatorSpectrumAnalyzer:
         """Calculate quality factor for a resonance peak."""
         # Full 7D phase field quality factor calculation
         # Based on 7D phase field theory resonance analysis
-        
+
         amplitude = peak["amplitude"]
         max_amplitude = np.max(spectrum)
-        
+
         # Compute 7D phase field resonance characteristics
         if amplitude > 0 and max_amplitude > 0:
             # Compute 7D phase field quality factor
             quality_factor = amplitude / max_amplitude
-            
+
             # Apply 7D phase field corrections
             phase_correction = 1.0 + 0.1 * np.sin(np.sum(spectrum))
             quality_factor *= phase_correction
-            
+
             # Apply 7D phase field damping using step resonator model
             damping_factor = self._step_quality_damping(amplitude, max_amplitude)
             quality_factor *= damping_factor
@@ -324,30 +324,30 @@ class ResonatorSpectrumAnalyzer:
                 )
 
         return peaks
-    
+
     def _step_quality_damping(self, amplitude: float, max_amplitude: float) -> float:
         """
         Step function quality damping.
-        
+
         Physical Meaning:
             Implements step resonator model for quality factor damping instead of
             exponential decay. This follows 7D BVP theory principles where
             energy exchange occurs through semi-transparent boundaries.
-            
+
         Mathematical Foundation:
             D(amplitude) = D₀ * Θ(amplitude_cutoff - amplitude) where Θ is the Heaviside step function
             and amplitude_cutoff is the cutoff amplitude for the resonator.
-            
+
         Args:
             amplitude (float): Current amplitude
             max_amplitude (float): Maximum amplitude
-            
+
         Returns:
             float: Step function damping factor
         """
         # Step resonator parameters
         damping_strength = 1.0
         cutoff_ratio = 0.9  # 90% of maximum amplitude
-        
+
         # Step function damping: 1.0 below cutoff, 0.0 above
         return damping_strength if amplitude < max_amplitude * cutoff_ratio else 0.0

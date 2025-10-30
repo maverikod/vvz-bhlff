@@ -24,4 +24,4 @@ from .cosmology.cosmological_model import CosmologicalModel
 from .cosmology.envelope_effective_metric import EnvelopeEffectiveMetric
 
 # Re-export the main classes for backward compatibility
-__all__ = ['CosmologicalModel', 'EnvelopeEffectiveMetric']
+__all__ = ["CosmologicalModel", "EnvelopeEffectiveMetric"]

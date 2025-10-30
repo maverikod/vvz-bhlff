@@ -37,7 +37,9 @@ class OverallComparator:
         - Comparison result determination
     """
 
-    def __init__(self, similarity_threshold: float = 0.8, consistency_threshold: float = 0.9):
+    def __init__(
+        self, similarity_threshold: float = 0.8, consistency_threshold: float = 0.9
+    ):
         """
         Initialize overall comparator.
 
@@ -50,9 +52,12 @@ class OverallComparator:
         self.consistency_threshold = consistency_threshold
 
     def calculate_overall_comparison(
-        self, basic_comparison: Dict[str, Any], interference_comparison: Dict[str, Any],
-        coupling_comparison: Dict[str, Any], phase_comparison: Dict[str, Any],
-        frequency_comparison: Dict[str, Any]
+        self,
+        basic_comparison: Dict[str, Any],
+        interference_comparison: Dict[str, Any],
+        coupling_comparison: Dict[str, Any],
+        phase_comparison: Dict[str, Any],
+        frequency_comparison: Dict[str, Any],
     ) -> Dict[str, Any]:
         """
         Calculate overall comparison.
@@ -72,18 +77,23 @@ class OverallComparator:
             Dict[str, Any]: Overall comparison.
         """
         # Calculate overall similarity
-        overall_similarity = np.mean([
-            basic_comparison["similarity"],
-            interference_comparison["overall_similarity"],
-            coupling_comparison["overall_similarity"],
-            phase_comparison["overall_similarity"],
-            frequency_comparison["overall_similarity"],
-        ])
+        overall_similarity = np.mean(
+            [
+                basic_comparison["similarity"],
+                interference_comparison["overall_similarity"],
+                coupling_comparison["overall_similarity"],
+                phase_comparison["overall_similarity"],
+                frequency_comparison["overall_similarity"],
+            ]
+        )
 
         # Calculate overall consistency
         overall_consistency = self._calculate_consistency(
-            basic_comparison, interference_comparison, coupling_comparison,
-            phase_comparison, frequency_comparison
+            basic_comparison,
+            interference_comparison,
+            coupling_comparison,
+            phase_comparison,
+            frequency_comparison,
         )
 
         # Determine comparison result
@@ -102,9 +112,12 @@ class OverallComparator:
         }
 
     def _calculate_consistency(
-        self, basic_comparison: Dict[str, Any], interference_comparison: Dict[str, Any],
-        coupling_comparison: Dict[str, Any], phase_comparison: Dict[str, Any],
-        frequency_comparison: Dict[str, Any]
+        self,
+        basic_comparison: Dict[str, Any],
+        interference_comparison: Dict[str, Any],
+        coupling_comparison: Dict[str, Any],
+        phase_comparison: Dict[str, Any],
+        frequency_comparison: Dict[str, Any],
     ) -> float:
         """
         Calculate consistency.

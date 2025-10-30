@@ -91,7 +91,9 @@ class TestAdvancedIntegrators:
         try:
             # Test envelope integrator
             time_steps = np.linspace(0, 0.1, 10)
-            source_field = np.zeros((len(time_steps),) + test_field.shape, dtype=test_field.dtype)
+            source_field = np.zeros(
+                (len(time_steps),) + test_field.shape, dtype=test_field.dtype
+            )
             exp_result = exp_integrator.integrate(test_field, source_field, time_steps)
             assert np.all(
                 np.isfinite(exp_result)
@@ -138,7 +140,12 @@ class TestAdvancedIntegrators:
 
     def test_quench_detector_advanced(self, domain_7d, parameters_basic):
         """Test advanced quench detector functionality."""
-        detector = QuenchDetector(domain_7d, energy_threshold=0.1, rate_threshold=0.01, magnitude_threshold=0.5)
+        detector = QuenchDetector(
+            domain_7d,
+            energy_threshold=0.1,
+            rate_threshold=0.01,
+            magnitude_threshold=0.5,
+        )
 
         # Test with different field configurations
         test_fields = [
@@ -171,7 +178,9 @@ class TestAdvancedIntegrators:
         resolutions = [4, 8, 16]
 
         for N in resolutions:
-            test_domain = Domain7DBVP(L_spatial=1.0, N_spatial=N, N_phase=4, T=1.0, N_t=8)
+            test_domain = Domain7DBVP(
+                L_spatial=1.0, N_spatial=N, N_phase=4, T=1.0, N_t=8
+            )
 
             # Test exponential integrator
             exp_integrator = BVPEnvelopeIntegrator(test_domain, parameters_basic)
@@ -196,7 +205,9 @@ class TestAdvancedIntegrators:
 
         try:
             time_steps = np.linspace(0, 0.1, 10)
-            source_field = np.zeros((len(time_steps),) + boundary_field.shape, dtype=boundary_field.dtype)
+            source_field = np.zeros(
+                (len(time_steps),) + boundary_field.shape, dtype=boundary_field.dtype
+            )
             result = integrator.integrate(boundary_field, source_field, time_steps)
             assert np.all(
                 np.isfinite(result)
@@ -215,7 +226,9 @@ class TestAdvancedIntegrators:
 
         try:
             time_steps = np.linspace(0, 0.1, 10)
-            source_field = np.zeros((len(time_steps),) + large_field.shape, dtype=large_field.dtype)
+            source_field = np.zeros(
+                (len(time_steps),) + large_field.shape, dtype=large_field.dtype
+            )
             result = integrator.integrate(large_field, source_field, time_steps)
             assert np.all(np.isfinite(result)), "Integrator should handle large values"
 
@@ -228,7 +241,9 @@ class TestAdvancedIntegrators:
 
         try:
             time_steps = np.linspace(0, 0.1, 10)
-            source_field = np.zeros((len(time_steps),) + small_field.shape, dtype=small_field.dtype)
+            source_field = np.zeros(
+                (len(time_steps),) + small_field.shape, dtype=small_field.dtype
+            )
             result = integrator.integrate(small_field, source_field, time_steps)
             assert np.all(np.isfinite(result)), "Integrator should handle small values"
 
@@ -246,7 +261,9 @@ class TestAdvancedIntegrators:
             results = []
             for i in range(3):
                 time_steps = np.linspace(0, 0.1, 10)
-                source_field = np.zeros((len(time_steps),) + test_field.shape, dtype=test_field.dtype)
+                source_field = np.zeros(
+                    (len(time_steps),) + test_field.shape, dtype=test_field.dtype
+                )
                 result = integrator.integrate(test_field, source_field, time_steps)
                 results.append(result)
 
@@ -291,7 +308,9 @@ class TestAdvancedIntegrators:
         # Test with invalid input
         with pytest.raises((ValueError, TypeError)):
             time_steps = np.linspace(0, 0.1, 10)
-            source_field = np.zeros((len(time_steps),) + domain_7d.shape, dtype=np.complex128)
+            source_field = np.zeros(
+                (len(time_steps),) + domain_7d.shape, dtype=np.complex128
+            )
             integrator.integrate("invalid_input", source_field, time_steps)
 
         # Test that integrator still works after error
@@ -299,7 +318,9 @@ class TestAdvancedIntegrators:
 
         try:
             time_steps = np.linspace(0, 0.1, 10)
-            source_field = np.zeros((len(time_steps),) + test_field.shape, dtype=test_field.dtype)
+            source_field = np.zeros(
+                (len(time_steps),) + test_field.shape, dtype=test_field.dtype
+            )
             result = integrator.integrate(test_field, source_field, time_steps)
             assert np.all(np.isfinite(result)), "Integrator should work after error"
 

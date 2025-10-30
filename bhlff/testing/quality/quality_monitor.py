@@ -12,7 +12,13 @@ import logging
 import numpy as np
 from typing import Dict, List, Any
 
-from .base import QualityMetrics, QualityStatus, DegradationReport, AlertSeverity, QualityAlert
+from .base import (
+    QualityMetrics,
+    QualityStatus,
+    DegradationReport,
+    AlertSeverity,
+    QualityAlert,
+)
 from .physics_constraints import PhysicsConstraints
 from .metric_history import MetricHistory
 from .trend_analyzer import TrendAnalyzer

@@ -70,7 +70,7 @@ class DefectInteractions:
         self.interaction_range = self.params.get("interaction_range", 1.0)
         self.screening_length = self.params.get("screening_length", 0.5)
         self.cutoff_radius = self.params.get("cutoff_radius", 0.1)
-        
+
         # Compute defect energy from field configuration instead of using mass
         self.defect_energy = self._compute_defect_energy_from_field()
 
@@ -437,73 +437,73 @@ class DefectInteractions:
         # Extract field parameters
         mu = self.params.get("mu", 1.0)
         beta = self.params.get("beta", 1.0)
-        
+
         # Compute field energy density components
         # Localization energy: μ|∇a|²
         localization_energy = mu * self.interaction_strength
-        
+
         # Phase gradient energy: |∇Θ|^(2β)
         phase_gradient_energy = self.interaction_strength ** (2 * beta)
-        
+
         # Total defect energy
         defect_energy = localization_energy + phase_gradient_energy
-        
+
         return defect_energy
-    
+
     def _step_resonator_screening(self, r: float) -> float:
         """
         Step resonator screening according to 7D BVP theory.
-        
+
         Physical Meaning:
             Implements step function screening instead of exponential screening
             according to 7D BVP theory principles where screening is determined
             by step functions rather than smooth transitions.
-            
+
         Mathematical Foundation:
             Screening = Θ(r_cutoff - r) where Θ is the Heaviside step function
             and r_cutoff is the cutoff radius for screening.
-            
+
         Args:
             r (float): Distance parameter.
-            
+
         Returns:
             float: Step function screening according to 7D BVP theory.
         """
         # Step function screening according to 7D BVP theory
         cutoff_radius = 1.0 / self.screening_factor
         screening_strength = 1.0
-        
+
         # Apply step function boundary condition
         if r < cutoff_radius:
             return screening_strength
         else:
             return 0.0
-    
+
     def _compute_7d_bvp_normalization(self, beta: float) -> float:
         """
         Compute 7D BVP normalization according to 7D BVP theory.
-        
+
         Physical Meaning:
             Computes normalization constant according to 7D BVP theory
             principles where the normalization is determined by the
             7D phase field structure rather than classical limits.
-            
+
         Mathematical Foundation:
             Normalization = 1/(4π) * (7D phase field factor)
             where the 7D phase field factor accounts for the
             additional dimensions in the 7D BVP theory.
-            
+
         Args:
             beta (float): Fractional order parameter.
-            
+
         Returns:
             float: 7D BVP normalization constant.
         """
         # 7D BVP normalization according to 7D BVP theory
         base_normalization = 1.0 / (4 * np.pi)
         phase_field_factor = 7.0  # 7D phase field factor
-        
+
         # Apply 7D BVP correction
         normalization = base_normalization * phase_field_factor
-        
+
         return normalization

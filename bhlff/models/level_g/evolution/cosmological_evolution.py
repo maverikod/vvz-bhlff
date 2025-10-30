@@ -69,13 +69,13 @@ class CosmologicalEvolution(ModelBase):
         self.cosmology_params = cosmology_params
         self.evolution_results = {}
         self.time_steps = None
-        
+
         # Initialize specialized components
         self.phase_field_evolution = PhaseFieldEvolution(cosmology_params)
         self.structure_formation = StructureFormation(cosmology_params)
         self.cosmological_parameters = CosmologicalParameters(cosmology_params)
         self.evolution_analysis = EvolutionAnalysis()
-        
+
         self._setup_evolution_parameters()
 
     def _setup_evolution_parameters(self) -> None:
@@ -159,14 +159,24 @@ class CosmologicalEvolution(ModelBase):
             # Evolve phase field
             if i == 0:
                 # Initial conditions
-                phase_field = self.phase_field_evolution.initialize_phase_field(self.initial_conditions)
+                phase_field = self.phase_field_evolution.initialize_phase_field(
+                    self.initial_conditions
+                )
             else:
                 # Evolution step
-                phase_field = self.phase_field_evolution.evolve_phase_field_step(t, self.dt, scale_factor)
+                phase_field = self.phase_field_evolution.evolve_phase_field_step(
+                    t, self.dt, scale_factor
+                )
 
             # Analyze structure
-            structure = self.structure_formation.analyze_structure_at_time(t, phase_field)
-            cosmological_params = self.cosmological_parameters.compute_cosmological_parameters(t, scale_factor)
+            structure = self.structure_formation.analyze_structure_at_time(
+                t, phase_field
+            )
+            cosmological_params = (
+                self.cosmological_parameters.compute_cosmological_parameters(
+                    t, scale_factor
+                )
+            )
 
             evolution_results["phase_field_evolution"].append(phase_field.copy())
             evolution_results["structure_formation"].append(structure)

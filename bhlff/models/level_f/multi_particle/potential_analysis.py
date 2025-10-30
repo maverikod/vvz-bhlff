@@ -42,7 +42,9 @@ class PotentialAnalyzer(AbstractModel):
         - Higher-order potential: Uᵢⱼₖ = U₂(xᵢ, xⱼ, xₖ)
     """
 
-    def __init__(self, domain, particles: List[Particle], system_params: SystemParameters):
+    def __init__(
+        self, domain, particles: List[Particle], system_params: SystemParameters
+    ):
         """
         Initialize potential analyzer.
 
@@ -59,11 +61,17 @@ class PotentialAnalyzer(AbstractModel):
         self.domain = domain
         self.particles = particles
         self.system_params = system_params
-        
+
         # Initialize analysis components
-        self._computation_analyzer = PotentialComputationAnalyzer(domain, particles, system_params)
-        self._landscape_analyzer = PotentialLandscapeAnalyzer(domain, particles, system_params)
-        self._optimization_analyzer = PotentialOptimizationAnalyzer(domain, particles, system_params)
+        self._computation_analyzer = PotentialComputationAnalyzer(
+            domain, particles, system_params
+        )
+        self._landscape_analyzer = PotentialLandscapeAnalyzer(
+            domain, particles, system_params
+        )
+        self._optimization_analyzer = PotentialOptimizationAnalyzer(
+            domain, particles, system_params
+        )
 
     def compute_effective_potential(self) -> np.ndarray:
         """

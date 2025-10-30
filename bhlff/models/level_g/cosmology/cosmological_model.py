@@ -66,13 +66,13 @@ class CosmologicalModel(ModelBase):
         super().__init__()
         self.initial_conditions = initial_conditions
         self.cosmology_params = cosmology_params
-        
+
         # Initialize specialized components
         self.metric = EnvelopeEffectiveMetric(cosmology_params)
         self.phase_field_evolution = PhaseFieldEvolution(cosmology_params)
         self.structure_formation = StructureFormation(cosmology_params)
         self.cosmological_parameters = CosmologicalParameters(cosmology_params)
-        
+
         self._setup_evolution_parameters()
 
     def _setup_evolution_parameters(self) -> None:
@@ -144,12 +144,16 @@ class CosmologicalModel(ModelBase):
             # Use envelope effective metric for scale factors
             a_t = self.metric.compute_scale_factor(t)
             self.scale_factor[i] = a_t
-            self.hubble_parameter[i] = self.cosmological_parameters.compute_hubble_parameter(t)
+            self.hubble_parameter[i] = (
+                self.cosmological_parameters.compute_hubble_parameter(t)
+            )
 
             # Evolve phase field
             if i == 0:
                 # Initial conditions
-                self.phase_field = self.phase_field_evolution.initialize_phase_field(self.initial_conditions)
+                self.phase_field = self.phase_field_evolution.initialize_phase_field(
+                    self.initial_conditions
+                )
             else:
                 # Evolution step
                 self.phase_field = self.phase_field_evolution.evolve_phase_field_step(
@@ -157,7 +161,9 @@ class CosmologicalModel(ModelBase):
                 )
 
             # Analyze structure
-            structure = self.structure_formation.analyze_structure_at_time(t, self.phase_field)
+            structure = self.structure_formation.analyze_structure_at_time(
+                t, self.phase_field
+            )
 
             evolution_results["phase_field_evolution"].append(self.phase_field.copy())
             evolution_results["structure_formation"].append(structure)
@@ -207,14 +213,14 @@ class CosmologicalModel(ModelBase):
             return 0.0
 
         # Use structure formation component
-        phase_field_evolution = getattr(self, 'phase_field_evolution', [])
-        if hasattr(self, 'phase_field') and self.phase_field is not None:
+        phase_field_evolution = getattr(self, "phase_field_evolution", [])
+        if hasattr(self, "phase_field") and self.phase_field is not None:
             phase_field_evolution = [self.phase_field]
-        
+
         growth_rate = self.structure_formation.compute_structure_growth_rate(
             self.scale_factor, phase_field_evolution
         )
-        
+
         return growth_rate
 
     def compute_cosmological_parameters(self) -> Dict[str, float]:

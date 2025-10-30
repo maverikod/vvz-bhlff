@@ -28,7 +28,10 @@ from .base_integrator import BaseTimeIntegrator
 from .memory_kernel import MemoryKernel
 from ..bvp.quench_detector import QuenchDetector
 from ..fft import SpectralOperations
-from ..bvp.boundary.step_resonator import FrequencyDependentResonator, CascadeResonatorFilter
+from ..bvp.boundary.step_resonator import (
+    FrequencyDependentResonator,
+    CascadeResonatorFilter,
+)
 
 
 class BVPEnvelopeIntegrator(BaseTimeIntegrator):
@@ -173,7 +176,10 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
             raise RuntimeError("Integrator not initialized")
 
         # Validate inputs
-        if not hasattr(initial_field, 'shape') or initial_field.shape != self.domain.shape:
+        if (
+            not hasattr(initial_field, "shape")
+            or initial_field.shape != self.domain.shape
+        ):
             raise ValueError(
                 f"Initial field shape {getattr(initial_field, 'shape', 'no shape')} incompatible with domain {self.domain.shape}"
             )
@@ -266,32 +272,35 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
 
         # Envelope modulation factor using frequency-dependent resonator model
         # No exponential attenuation - use step resonator transmission
-        if not hasattr(self, '_resonator'):
+        if not hasattr(self, "_resonator"):
             # Initialize frequency-dependent resonator
             self._resonator = FrequencyDependentResonator(R0=0.1, T0=0.9, omega0=1.0)
-        
+
         # Compute frequency-dependent coefficients
         # Use field magnitude as proxy for frequency content
         field_frequencies = np.abs(field_magnitude_squared)
         R, T = self._resonator.compute_coefficients(field_frequencies)
-        
+
         # Step resonator model: frequency-dependent T/R coefficients
         resonator_response = np.where(
-            self._envelope_coeffs * dt * nonlinear_stiffness * effective_susceptibility < 1.0,
+            self._envelope_coeffs * dt * nonlinear_stiffness * effective_susceptibility
+            < 1.0,
             T,  # Use frequency-dependent transmission
-            R   # Use frequency-dependent reflection
+            R,  # Use frequency-dependent reflection
         )
-        
+
         envelope_factor = resonator_response
 
         # Source contribution with envelope modulation
-        denominator = self._envelope_coeffs * nonlinear_stiffness * effective_susceptibility
+        denominator = (
+            self._envelope_coeffs * nonlinear_stiffness * effective_susceptibility
+        )
         # Avoid division by zero and underflow
         denominator = np.where(denominator == 0, 1e-12, denominator)
         denominator = np.maximum(denominator, 1e-12)  # Prevent underflow
-        
+
         # Prevent underflow in division
-        with np.errstate(divide='ignore', invalid='ignore', under='ignore'):
+        with np.errstate(divide="ignore", invalid="ignore", under="ignore"):
             source_factor = (1.0 - envelope_factor) / denominator
             source_factor = np.where(np.isfinite(source_factor), source_factor, dt)
         source_factor = np.where(
@@ -301,7 +310,7 @@ class BVPEnvelopeIntegrator(BaseTimeIntegrator):
         )
 
         # Prevent underflow in multiplication
-        with np.errstate(under='ignore', over='ignore'):
+        with np.errstate(under="ignore", over="ignore"):
             next_spectral = (
                 current_spectral * envelope_factor + source_spectral * source_factor
             )

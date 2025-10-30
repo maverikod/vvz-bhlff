@@ -32,7 +32,9 @@ class TestA01SimplePlaneWave:
         # Small domain for testing
         self.L = 1.0
         self.N = 8  # Very small for testing
-        self.domain = Domain7DBVP(L_spatial=self.L, N_spatial=self.N, N_phase=4, T=1.0, N_t=8)
+        self.domain = Domain7DBVP(
+            L_spatial=self.L, N_spatial=self.N, N_phase=4, T=1.0, N_t=8
+        )
 
         # Physics parameters
         self.mu = 1.0
@@ -41,7 +43,10 @@ class TestA01SimplePlaneWave:
 
         # Create parameters object
         self.parameters = Parameters7DBVP(
-            mu=self.mu, beta=self.beta, lambda_param=self.lambda_param, precision="float64"
+            mu=self.mu,
+            beta=self.beta,
+            lambda_param=self.lambda_param,
+            precision="float64",
         )
 
         # Initialize fractional Laplacian
@@ -279,7 +284,9 @@ class TestA01SimplePlaneWave:
 
         # Check that ratio is consistent
         ratio_std = np.std(ratio)
-        assert ratio_std <= 100.0, f"Ratio should be consistent, std: {ratio_std:.2e}"  # Relaxed for 7D
+        assert (
+            ratio_std <= 100.0
+        ), f"Ratio should be consistent, std: {ratio_std:.2e}"  # Relaxed for 7D
 
         print(
             f"Test A0.1.5: Operator properties - Constant field: {result_norm:.2e}, Ratio std: {ratio_std:.2e}"

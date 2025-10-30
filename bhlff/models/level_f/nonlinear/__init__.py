@@ -20,3 +20,14 @@ Example:
 from .basic_effects import BasicNonlinearEffects
 from .soliton_analysis import SingleSolitonSolver, MultiSolitonSolutions
 from .mode_analysis import NonlinearModeAnalyzer
+
+# Re-export facade class expected by tests from sibling module file
+from ..nonlinear import NonlinearEffects
+
+__all__ = [
+    "BasicNonlinearEffects",
+    "SingleSolitonSolver",
+    "MultiSolitonSolutions",
+    "NonlinearModeAnalyzer",
+    "NonlinearEffects",
+]

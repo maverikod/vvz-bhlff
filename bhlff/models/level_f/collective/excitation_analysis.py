@@ -44,7 +44,9 @@ class ExcitationAnalyzer(AbstractModel):
         excitation_type: Type of excitation
     """
 
-    def __init__(self, system: "MultiParticleSystem", excitation_params: Dict[str, Any]):
+    def __init__(
+        self, system: "MultiParticleSystem", excitation_params: Dict[str, Any]
+    ):
         """
         Initialize excitation analyzer.
 
@@ -311,38 +313,41 @@ class ExcitationAnalyzer(AbstractModel):
             "amplitudes": peak_amplitudes,
         }
 
-    def _analyze_step_resonator_transmission(self, response: np.ndarray) -> Dict[str, Any]:
+    def _analyze_step_resonator_transmission(
+        self, response: np.ndarray
+    ) -> Dict[str, Any]:
         """
         Analyze energy exchange through step resonator boundaries.
-        
+
         Physical Meaning:
             Computes transmission/reflection coefficients for collective modes
             through semi-transparent step resonator boundaries using frequency-dependent
             step resonator model.
         """
         # Initialize frequency-dependent resonator if not exists
-        if not hasattr(self, '_resonator'):
+        if not hasattr(self, "_resonator"):
             from ...core.bvp.boundary.step_resonator import FrequencyDependentResonator
+
             self._resonator = FrequencyDependentResonator(R0=0.1, T0=0.9, omega0=1.0)
-        
+
         # Analyze boundary transmission/reflection using step resonator model
         transmission_coeffs = []
         reflection_coeffs = []
-        
+
         for i in range(response.shape[0]):
             # Compute frequency content of the response
             field_frequencies = np.abs(response[i, :])
-            
+
             # Apply step resonator model
             R, T = self._resonator.compute_coefficients(field_frequencies)
-            
+
             # Compute boundary energy flux using resonator coefficients
             boundary_flux = self._compute_boundary_energy_flux(response[i, :])
-            
+
             # Apply resonator filtering
-            transmission_coeffs.append(np.mean(T) * boundary_flux['transmission'])
-            reflection_coeffs.append(np.mean(R) * boundary_flux['reflection'])
-        
+            transmission_coeffs.append(np.mean(T) * boundary_flux["transmission"])
+            reflection_coeffs.append(np.mean(R) * boundary_flux["reflection"])
+
         return {
             "transmission_coefficients": transmission_coeffs,
             "reflection_coefficients": reflection_coeffs,
@@ -355,38 +360,39 @@ class ExcitationAnalyzer(AbstractModel):
     def _compute_boundary_energy_flux(self, field: np.ndarray) -> Dict[str, float]:
         """
         Compute energy flux through step resonator boundaries.
-        
+
         Physical Meaning:
             Calculates energy exchange through semi-transparent
             step resonator boundaries using 7D BVP theory.
         """
         # For 1D time series, simulate step resonator behavior
         # by applying simple transmission/reflection coefficients
-        
+
         # Simple step resonator simulation for 1D field
         R = 0.1  # Reflection coefficient
         T = 0.9  # Transmission coefficient
-        
+
         # Apply boundary conditions to first and last points
         if len(field) > 1:
             # Simulate boundary effects
             transmitted_field = field.copy()
-            transmitted_field[0] = R * field[0] + T * field[1] if len(field) > 1 else field[0]
-            transmitted_field[-1] = R * field[-1] + T * field[-2] if len(field) > 1 else field[-1]
+            transmitted_field[0] = (
+                R * field[0] + T * field[1] if len(field) > 1 else field[0]
+            )
+            transmitted_field[-1] = (
+                R * field[-1] + T * field[-2] if len(field) > 1 else field[-1]
+            )
         else:
             transmitted_field = field.copy()
-        
+
         # Compute transmission/reflection coefficients
-        incident_energy = np.sum(np.abs(field)**2)
-        transmitted_energy = np.sum(np.abs(transmitted_field)**2)
-        
+        incident_energy = np.sum(np.abs(field) ** 2)
+        transmitted_energy = np.sum(np.abs(transmitted_field) ** 2)
+
         transmission = transmitted_energy / (incident_energy + 1e-10)
         reflection = 1.0 - transmission
-        
-        return {
-            "transmission": transmission,
-            "reflection": reflection
-        }
+
+        return {"transmission": transmission, "reflection": reflection}
 
     def _compute_participation_ratios(self, response: np.ndarray) -> np.ndarray:
         """

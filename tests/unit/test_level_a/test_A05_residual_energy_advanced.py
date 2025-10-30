@@ -46,7 +46,9 @@ class TestA05ResidualEnergyAdvanced:
         # Domain parameters
         self.L = 1.0
         self.N = 8  # Smaller for testing
-        self.domain = Domain7DBVP(L_spatial=self.L, N_spatial=self.N, N_phase=4, T=1.0, N_t=8)
+        self.domain = Domain7DBVP(
+            L_spatial=self.L, N_spatial=self.N, N_phase=4, T=1.0, N_t=8
+        )
 
         # Physics parameters
         self.mu = 1.0
@@ -86,12 +88,14 @@ class TestA05ResidualEnergyAdvanced:
         x = np.linspace(0, self.L, self.N, endpoint=False)
         y = np.linspace(0, self.L, self.N, endpoint=False)
         z = np.linspace(0, self.L, self.N, endpoint=False)
-        phi1 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
-        phi2 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
-        phi3 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
+        phi1 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
+        phi2 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
+        phi3 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
         t = np.linspace(0, self.domain.T, self.domain.N_t, endpoint=False)
 
-        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(x, y, z, phi1, phi2, phi3, t, indexing="ij")
+        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(
+            x, y, z, phi1, phi2, phi3, t, indexing="ij"
+        )
 
         # Create plane wave (spatial components only)
         kx, ky, kz = k_mode
@@ -122,12 +126,14 @@ class TestA05ResidualEnergyAdvanced:
         x = np.linspace(0, self.L, self.N, endpoint=False)
         y = np.linspace(0, self.L, self.N, endpoint=False)
         z = np.linspace(0, self.L, self.N, endpoint=False)
-        phi1 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
-        phi2 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
-        phi3 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
+        phi1 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
+        phi2 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
+        phi3 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
         t = np.linspace(0, self.domain.T, self.domain.N_t, endpoint=False)
 
-        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(x, y, z, phi1, phi2, phi3, t, indexing="ij")
+        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(
+            x, y, z, phi1, phi2, phi3, t, indexing="ij"
+        )
 
         # Initialize source
         source = np.zeros_like(X, dtype=complex)
@@ -217,8 +223,8 @@ class TestA05ResidualEnergyAdvanced:
         solution = self.solver.solve(source)
 
         # Compute energies
-        source_energy = np.sum(np.abs(source)**2)
-        solution_energy = np.sum(np.abs(solution)**2)
+        source_energy = np.sum(np.abs(source) ** 2)
+        solution_energy = np.sum(np.abs(solution) ** 2)
 
         # Check energy conservation
         energy_ratio = solution_energy / source_energy
@@ -397,7 +403,7 @@ class TestA05ResidualEnergyAdvanced:
 
         # Check that residuals are different
         for i in range(1, len(residuals)):
-            assert not np.allclose(residuals[i], residuals[i-1], rtol=1e-10)
+            assert not np.allclose(residuals[i], residuals[i - 1], rtol=1e-10)
 
     def test_residual_error_handling(self):
         """
@@ -450,12 +456,14 @@ class TestA05ResidualEnergyAdvanced:
             x = np.linspace(0, self.L, N, endpoint=False)
             y = np.linspace(0, self.L, N, endpoint=False)
             z = np.linspace(0, self.L, N, endpoint=False)
-            phi1 = np.linspace(0, 2*np.pi, domain.N_phase, endpoint=False)
-            phi2 = np.linspace(0, 2*np.pi, domain.N_phase, endpoint=False)
-            phi3 = np.linspace(0, 2*np.pi, domain.N_phase, endpoint=False)
+            phi1 = np.linspace(0, 2 * np.pi, domain.N_phase, endpoint=False)
+            phi2 = np.linspace(0, 2 * np.pi, domain.N_phase, endpoint=False)
+            phi3 = np.linspace(0, 2 * np.pi, domain.N_phase, endpoint=False)
             t = np.linspace(0, domain.T, domain.N_t, endpoint=False)
 
-            X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(x, y, z, phi1, phi2, phi3, t, indexing="ij")
+            X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(
+                x, y, z, phi1, phi2, phi3, t, indexing="ij"
+            )
 
             kx, ky, kz = k_mode
             k_dot_r = 2 * np.pi * (kx * X + ky * Y + kz * Z) / self.L
@@ -517,9 +525,9 @@ class TestA05ResidualEnergyAdvanced:
         solution = self.solver.solve(source)
 
         # For 7D case, just check that both energies are finite and positive
-        source_energy = np.sum(np.abs(source)**2)
-        solution_energy = np.sum(np.abs(solution)**2)
-        
+        source_energy = np.sum(np.abs(source) ** 2)
+        solution_energy = np.sum(np.abs(solution) ** 2)
+
         assert np.isfinite(source_energy)
         assert np.isfinite(solution_energy)
         assert source_energy > 1e-10

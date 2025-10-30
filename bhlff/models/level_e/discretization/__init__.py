@@ -34,6 +34,6 @@ from .time_stability import TimeStabilityAnalyzer
 __all__ = [
     "DiscretizationAnalyzer",
     "GridConvergenceAnalyzer",
-    "DomainEffectsAnalyzer", 
-    "TimeStabilityAnalyzer"
+    "DomainEffectsAnalyzer",
+    "TimeStabilityAnalyzer",
 ]

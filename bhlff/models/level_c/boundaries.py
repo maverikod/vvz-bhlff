@@ -63,7 +63,7 @@ class BoundaryAnalyzer:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize analysis components
         self._core_analyzer = BoundaryAnalysisCore(bvp_core)
         self._energy_analyzer = BoundaryEnergyAnalyzer(bvp_core)

@@ -44,12 +44,12 @@ class BeatingMLOptimization:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Optimization parameters
         self.optimization_enabled = True
         self.optimization_iterations = 100
         self.optimization_tolerance = 1e-6
-        
+
         # Initialize optimization components
         self._core_optimizer = BeatingMLOptimizationCore(bvp_core)
         self._classification_optimizer = BeatingMLClassificationOptimizer(bvp_core)
@@ -75,7 +75,9 @@ class BeatingMLOptimization:
         """
         return self._core_optimizer.optimize_ml_parameters(envelope)
 
-    def optimize_classification_parameters(self, envelope: np.ndarray) -> Dict[str, Any]:
+    def optimize_classification_parameters(
+        self, envelope: np.ndarray
+    ) -> Dict[str, Any]:
         """
         Optimize classification parameters.
 
@@ -93,7 +95,9 @@ class BeatingMLOptimization:
         Returns:
             Dict[str, Any]: Classification optimization results.
         """
-        return self._classification_optimizer.optimize_classification_parameters(envelope)
+        return self._classification_optimizer.optimize_classification_parameters(
+            envelope
+        )
 
     def optimize_prediction_parameters(self, envelope: np.ndarray) -> Dict[str, Any]:
         """

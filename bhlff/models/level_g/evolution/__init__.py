@@ -26,9 +26,9 @@ from .cosmological_parameters import CosmologicalParameters
 from .evolution_analysis import EvolutionAnalysis
 
 __all__ = [
-    'CosmologicalEvolution',
-    'PhaseFieldEvolution', 
-    'StructureFormation',
-    'CosmologicalParameters',
-    'EvolutionAnalysis'
+    "CosmologicalEvolution",
+    "PhaseFieldEvolution",
+    "StructureFormation",
+    "CosmologicalParameters",
+    "EvolutionAnalysis",
 ]

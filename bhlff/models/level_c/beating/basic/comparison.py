@@ -68,7 +68,9 @@ class BeatingComparator:
             self.similarity_threshold, self.consistency_threshold
         )
 
-    def compare_analyses(self, results1: Dict[str, Any], results2: Dict[str, Any]) -> Dict[str, Any]:
+    def compare_analyses(
+        self, results1: Dict[str, Any], results2: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Compare two beating analysis results.
 
@@ -89,20 +91,32 @@ class BeatingComparator:
         basic_comparison = self._compare_basic_analysis(results1, results2)
 
         # Compare interference patterns
-        interference_comparison = self._pattern_comparator.compare_interference_patterns(results1, results2)
+        interference_comparison = (
+            self._pattern_comparator.compare_interference_patterns(results1, results2)
+        )
 
         # Compare mode coupling
-        coupling_comparison = self._pattern_comparator.compare_mode_coupling(results1, results2)
+        coupling_comparison = self._pattern_comparator.compare_mode_coupling(
+            results1, results2
+        )
 
         # Compare phase coherence
-        phase_comparison = self._pattern_comparator.compare_phase_coherence(results1, results2)
+        phase_comparison = self._pattern_comparator.compare_phase_coherence(
+            results1, results2
+        )
 
         # Compare beating frequencies
-        frequency_comparison = self._pattern_comparator.compare_beating_frequencies(results1, results2)
+        frequency_comparison = self._pattern_comparator.compare_beating_frequencies(
+            results1, results2
+        )
 
         # Calculate overall comparison
         overall_comparison = self._overall_comparator.calculate_overall_comparison(
-            basic_comparison, interference_comparison, coupling_comparison, phase_comparison, frequency_comparison
+            basic_comparison,
+            interference_comparison,
+            coupling_comparison,
+            phase_comparison,
+            frequency_comparison,
         )
 
         # Combine all comparison results
@@ -119,7 +133,9 @@ class BeatingComparator:
         self.logger.info("Beating analysis comparison completed")
         return comparison_results
 
-    def _compare_basic_analysis(self, results1: Dict[str, Any], results2: Dict[str, Any]) -> Dict[str, Any]:
+    def _compare_basic_analysis(
+        self, results1: Dict[str, Any], results2: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Compare basic analysis results.
 
@@ -145,7 +161,9 @@ class BeatingComparator:
         similarity = self._metrics_comparator.calculate_similarity(comparison_metrics)
 
         # Calculate differences
-        differences = self._metrics_comparator.calculate_differences(comparison_metrics, self.difference_threshold)
+        differences = self._metrics_comparator.calculate_differences(
+            comparison_metrics, self.difference_threshold
+        )
 
         return {
             "comparison_metrics": comparison_metrics,

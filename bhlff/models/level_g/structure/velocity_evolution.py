@@ -57,7 +57,7 @@ class VelocityEvolution:
         """
         self.evolution_params = evolution_params
         self.cosmology_params = evolution_params.get("cosmology", {})
-        
+
         # Physical parameters
         self.G = self.cosmology_params.get("G", 6.67430e-11)  # Gravitational constant
 
@@ -94,7 +94,9 @@ class VelocityEvolution:
 
         return velocity_field_new
 
-    def _compute_gravitational_acceleration(self, potential_field: np.ndarray) -> np.ndarray:
+    def _compute_gravitational_acceleration(
+        self, potential_field: np.ndarray
+    ) -> np.ndarray:
         """
         Compute gravitational acceleration.
 

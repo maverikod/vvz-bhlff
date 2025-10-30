@@ -31,7 +31,9 @@ class TestA03SimpleZeroMode:
         # Small domain for testing
         self.L = 1.0
         self.N = 4
-        self.domain = Domain7DBVP(L_spatial=self.L, N_spatial=self.N, N_phase=2, T=1.0, N_t=4)
+        self.domain = Domain7DBVP(
+            L_spatial=self.L, N_spatial=self.N, N_phase=2, T=1.0, N_t=4
+        )
 
         # Physics parameters
         self.mu = 1.0
@@ -40,7 +42,10 @@ class TestA03SimpleZeroMode:
 
         # Create parameters object
         self.parameters = Parameters7DBVP(
-            mu=self.mu, beta=self.beta, lambda_param=self.lambda_param, precision="float64"
+            mu=self.mu,
+            beta=self.beta,
+            lambda_param=self.lambda_param,
+            precision="float64",
         )
 
         # Initialize fractional Laplacian

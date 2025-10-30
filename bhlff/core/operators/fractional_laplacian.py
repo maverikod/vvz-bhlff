@@ -69,19 +69,19 @@ class FractionalLaplacian:
             ValueError: If beta is not in valid range (0,2).
         """
         # Handle both float and Parameters object
-        if hasattr(beta, 'beta'):
+        if hasattr(beta, "beta"):
             # Parameters object
             self.beta = beta.beta
             # Use lambda_param from parameters object only if not explicitly provided
             if lambda_param == 0.0:  # Default value, use from parameters
-                self.lambda_param = getattr(beta, 'lambda_param', 0.0)
+                self.lambda_param = getattr(beta, "lambda_param", 0.0)
             else:  # Explicitly provided, use it
                 self.lambda_param = lambda_param
         else:
             # Direct float value
             self.beta = beta
             self.lambda_param = lambda_param
-        
+
         # Validate parameters
         if not (0 < self.beta < 2):
             raise ValueError("Fractional order beta must be in (0,2)")

@@ -61,7 +61,7 @@ class PhaseTransitions(AbstractModel):
         self.critical_points = []
         self.phase_diagram = {}
         self._setup_analysis_parameters()
-        
+
         # Initialize helper methods
         self.helpers = PhaseTransitionsHelpers({})
 

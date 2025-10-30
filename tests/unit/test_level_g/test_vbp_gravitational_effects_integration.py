@@ -137,6 +137,4 @@ class TestVBPGravitationalEffectsIntegration:
         g_eff = envelope_effects["effective_metric"]
         assert g_eff[0, 0] < 0, "Time component should be negative"
         for i in range(1, 7):
-            assert (
-                g_eff[i, i] > 0
-            ), f"Component g{i}{i} should be positive"
+            assert g_eff[i, i] > 0, f"Component g{i}{i} should be positive"

@@ -51,9 +51,7 @@ class BVP7DOperations:
         equation and its physical consequences in full 7D space-time.
     """
 
-    def __init__(
-        self, domain: Domain, config: Dict[str, Any], domain_7d: Domain7D
-    ):
+    def __init__(self, domain: Domain, config: Dict[str, Any], domain_7d: Domain7D):
         """
         Initialize BVP 7D operations.
 
@@ -186,34 +184,50 @@ class BVP7DOperations:
         validation_results = {}
 
         # Postulate 1: Envelope equation consistency
-        validation_results['postulate_1'] = self._validate_envelope_equation_consistency(envelope_7d)
+        validation_results["postulate_1"] = (
+            self._validate_envelope_equation_consistency(envelope_7d)
+        )
 
         # Postulate 2: Energy conservation
-        validation_results['postulate_2'] = self._validate_energy_conservation(envelope_7d)
+        validation_results["postulate_2"] = self._validate_energy_conservation(
+            envelope_7d
+        )
 
         # Postulate 3: Phase coherence
-        validation_results['postulate_3'] = self._validate_phase_coherence(envelope_7d)
+        validation_results["postulate_3"] = self._validate_phase_coherence(envelope_7d)
 
         # Postulate 4: Topological charge conservation
-        validation_results['postulate_4'] = self._validate_topological_charge_conservation(envelope_7d)
+        validation_results["postulate_4"] = (
+            self._validate_topological_charge_conservation(envelope_7d)
+        )
 
         # Postulate 5: Quench threshold validity
-        validation_results['postulate_5'] = self._validate_quench_threshold_validity(envelope_7d)
+        validation_results["postulate_5"] = self._validate_quench_threshold_validity(
+            envelope_7d
+        )
 
         # Postulate 6: Impedance boundary conditions
-        validation_results['postulate_6'] = self._validate_impedance_boundary_conditions(envelope_7d)
+        validation_results["postulate_6"] = (
+            self._validate_impedance_boundary_conditions(envelope_7d)
+        )
 
         # Postulate 7: U(1)³ phase structure
-        validation_results['postulate_7'] = self._validate_u1_phase_structure(envelope_7d)
+        validation_results["postulate_7"] = self._validate_u1_phase_structure(
+            envelope_7d
+        )
 
         # Postulate 8: 7D space-time consistency
-        validation_results['postulate_8'] = self._validate_7d_spacetime_consistency(envelope_7d)
+        validation_results["postulate_8"] = self._validate_7d_spacetime_consistency(
+            envelope_7d
+        )
 
         # Postulate 9: Physical observables
-        validation_results['postulate_9'] = self._validate_physical_observables(envelope_7d)
+        validation_results["postulate_9"] = self._validate_physical_observables(
+            envelope_7d
+        )
 
         # Overall validation result
-        validation_results['overall_valid'] = all(validation_results.values())
+        validation_results["overall_valid"] = all(validation_results.values())
 
         return validation_results
 
@@ -232,7 +246,9 @@ class BVP7DOperations:
         # Implementation for phase coherence validation
         return True
 
-    def _validate_topological_charge_conservation(self, envelope_7d: np.ndarray) -> bool:
+    def _validate_topological_charge_conservation(
+        self, envelope_7d: np.ndarray
+    ) -> bool:
         """Validate topological charge conservation."""
         # Implementation for topological charge conservation validation
         return True

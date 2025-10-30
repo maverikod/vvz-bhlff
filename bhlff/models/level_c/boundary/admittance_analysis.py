@@ -54,13 +54,16 @@ class AdmittanceAnalyzer:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize analysis components
         self._core_analyzer = AdmittanceAnalysisCore(bvp_core)
         self._resonance_analyzer = AdmittanceResonanceAnalyzer(bvp_core)
 
     def analyze_admittance_spectrum(
-        self, domain: Dict[str, Any], boundary: BoundaryGeometry, frequency_range: Tuple[float, float]
+        self,
+        domain: Dict[str, Any],
+        boundary: BoundaryGeometry,
+        frequency_range: Tuple[float, float],
     ) -> AdmittanceSpectrum:
         """
         Analyze admittance spectrum.
@@ -82,9 +85,13 @@ class AdmittanceAnalyzer:
         Returns:
             AdmittanceSpectrum: Admittance spectrum analysis results.
         """
-        return self._core_analyzer.analyze_admittance_spectrum(domain, boundary, frequency_range)
+        return self._core_analyzer.analyze_admittance_spectrum(
+            domain, boundary, frequency_range
+        )
 
-    def detect_resonances(self, spectrum: AdmittanceSpectrum, threshold: float = 8.0) -> List[Dict[str, Any]]:
+    def detect_resonances(
+        self, spectrum: AdmittanceSpectrum, threshold: float = 8.0
+    ) -> List[Dict[str, Any]]:
         """
         Detect resonances in admittance spectrum.
 

@@ -201,30 +201,30 @@ class ParticleInversion(ModelBase):
         current_params = initial_params.copy()
         best_params = current_params.copy()
         best_loss = float("inf")
-        
+
         # Optimization state tracking
         loss_history = []
         gradient_history = []
         momentum = {param: 0.0 for param in current_params}
         velocity = {param: 0.0 for param in current_params}
-        
+
         # Adaptive learning rate
         adaptive_lr = self.learning_rate
         lr_decay = 0.95
         lr_min = 1e-8
-        
+
         # L-BFGS-B approximation
         hessian_approx = {param: 1.0 for param in current_params}
-        
+
         for iteration in range(self.max_iterations):
             # Compute loss and gradients
             loss = self._compute_loss(current_params)
             gradients = self._compute_gradients(current_params)
-            
+
             # Store history for L-BFGS-B
             loss_history.append(loss)
             gradient_history.append(gradients.copy())
-            
+
             # Adaptive learning rate based on loss improvement
             if len(loss_history) > 1:
                 loss_improvement = loss_history[-2] - loss_history[-1]
@@ -232,20 +232,26 @@ class ParticleInversion(ModelBase):
                     adaptive_lr *= lr_decay
                 else:
                     adaptive_lr = max(adaptive_lr * 1.1, lr_min)
-            
+
             # L-BFGS-B update with momentum
             for param_name in current_params:
                 if param_name in gradients:
                     # Compute momentum
-                    momentum[param_name] = 0.9 * momentum[param_name] + 0.1 * gradients[param_name]
-                    
+                    momentum[param_name] = (
+                        0.9 * momentum[param_name] + 0.1 * gradients[param_name]
+                    )
+
                     # Compute velocity with momentum
-                    velocity[param_name] = 0.9 * velocity[param_name] - adaptive_lr * momentum[param_name]
-                    
+                    velocity[param_name] = (
+                        0.9 * velocity[param_name] - adaptive_lr * momentum[param_name]
+                    )
+
                     # Update parameter with L-BFGS-B correction
                     hessian_correction = 1.0 / (1.0 + abs(gradients[param_name]))
-                    current_params[param_name] += velocity[param_name] * hessian_correction
-                    
+                    current_params[param_name] += (
+                        velocity[param_name] * hessian_correction
+                    )
+
                     # Apply parameter bounds
                     if param_name in self.priors:
                         prior_range = self.priors[param_name]
@@ -254,27 +260,29 @@ class ParticleInversion(ModelBase):
                             current_params[param_name] = np.clip(
                                 current_params[param_name], min_val, max_val
                             )
-            
+
             # Check convergence with multiple criteria
             if len(loss_history) > 10:
                 recent_losses = loss_history[-10:]
                 loss_std = np.std(recent_losses)
                 loss_mean = np.mean(recent_losses)
-                
+
                 # Convergence criteria
                 relative_change = abs(loss - best_loss) / (abs(best_loss) + 1e-10)
                 gradient_norm = np.sqrt(sum(g**2 for g in gradients.values()))
-                
-                if (relative_change < self.tolerance or 
-                    gradient_norm < self.tolerance or 
-                    loss_std < self.tolerance * loss_mean):
+
+                if (
+                    relative_change < self.tolerance
+                    or gradient_norm < self.tolerance
+                    or loss_std < self.tolerance * loss_mean
+                ):
                     break
-            
+
             # Update best parameters
             if loss < best_loss:
                 best_loss = loss
                 best_params = current_params.copy()
-        
+
         return best_params
 
     def _compute_loss(self, params: Dict[str, float]) -> float:

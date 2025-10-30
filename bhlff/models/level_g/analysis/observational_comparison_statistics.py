@@ -26,7 +26,9 @@ Example:
 """
 
 from typing import Dict, Any
-from .observational_comparison_statistics_core import ObservationalComparisonStatisticsCore
+from .observational_comparison_statistics_core import (
+    ObservationalComparisonStatisticsCore,
+)
 
 
 class ObservationalComparisonStatistics:
@@ -52,7 +54,12 @@ class ObservationalComparisonStatistics:
         _core (ObservationalComparisonStatisticsCore): Core implementation
     """
 
-    def __init__(self, evolution_results: Dict[str, Any], observational_data: Dict[str, Any] = None, analysis_parameters: Dict[str, Any] = None):
+    def __init__(
+        self,
+        evolution_results: Dict[str, Any],
+        observational_data: Dict[str, Any] = None,
+        analysis_parameters: Dict[str, Any] = None,
+    ):
         """
         Initialize statistical comparison.
 
@@ -68,7 +75,9 @@ class ObservationalComparisonStatistics:
         self.evolution_results = evolution_results
         self.observational_data = observational_data or {}
         self.analysis_parameters = analysis_parameters or {}
-        self._core = ObservationalComparisonStatisticsCore(evolution_results, observational_data, analysis_parameters)
+        self._core = ObservationalComparisonStatisticsCore(
+            evolution_results, observational_data, analysis_parameters
+        )
 
     def compare_statistics(self) -> Dict[str, Any]:
         """
@@ -96,18 +105,20 @@ class ObservationalComparisonStatistics:
         """
         return self._core.compute_goodness_of_fit()
 
-    def compute_chi_squared(self, obs_data: Dict[str, Any], model_observables: Dict[str, Any]) -> float:
+    def compute_chi_squared(
+        self, obs_data: Dict[str, Any], model_observables: Dict[str, Any]
+    ) -> float:
         """
         Compute chi-squared statistic.
-        
+
         Physical Meaning:
             Computes chi-squared statistic for goodness of fit
             between observational data and 7D BVP theory predictions.
-            
+
         Args:
             obs_data: Observational data
             model_observables: Model observables
-            
+
         Returns:
             Chi-squared value
         """
@@ -116,16 +127,15 @@ class ObservationalComparisonStatistics:
     def compute_likelihood(self, chi_squared: float) -> float:
         """
         Compute likelihood from chi-squared.
-        
+
         Physical Meaning:
             Computes likelihood from chi-squared statistic
             for model comparison and selection.
-            
+
         Args:
             chi_squared: Chi-squared value
-            
+
         Returns:
             Likelihood value
         """
         return self._core.compute_likelihood(chi_squared)
-

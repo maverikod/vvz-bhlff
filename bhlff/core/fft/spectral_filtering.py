@@ -237,7 +237,9 @@ class SpectralFiltering:
         field_spectral = np.fft.fftn(field)
 
         # Compute transfer function
-        transfer_function = self._step_resonator_transfer_function(self._k_magnitude, sigma)
+        transfer_function = self._step_resonator_transfer_function(
+            self._k_magnitude, sigma
+        )
 
         # Apply filter
         filtered_spectral = transfer_function * field_spectral
@@ -346,18 +348,20 @@ class SpectralFiltering:
             k_magnitude_squared += k**2
 
             return np.sqrt(k_magnitude_squared)
-    
-    def _step_resonator_transfer_function(self, k_magnitude: np.ndarray, sigma: float) -> np.ndarray:
+
+    def _step_resonator_transfer_function(
+        self, k_magnitude: np.ndarray, sigma: float
+    ) -> np.ndarray:
         """
         Step resonator transfer function according to 7D BVP theory.
-        
+
         Physical Meaning:
             Implements step function transfer function instead of exponential decay
             according to 7D BVP theory principles.
         """
         cutoff_frequency = sigma * 0.8  # 80% of sigma
         return np.where(k_magnitude < cutoff_frequency, 1.0, 0.0)
-        
+
         # Old Domain structure
         # Compute wave vectors for all dimensions
         k_magnitude_squared = np.zeros(self.domain.shape)
@@ -383,11 +387,13 @@ class SpectralFiltering:
         k_magnitude_squared += k**2
 
         return np.sqrt(k_magnitude_squared)
-    
-    def _step_resonator_transfer_function(self, k_magnitude: np.ndarray, sigma: float) -> np.ndarray:
+
+    def _step_resonator_transfer_function(
+        self, k_magnitude: np.ndarray, sigma: float
+    ) -> np.ndarray:
         """
         Step resonator transfer function according to 7D BVP theory.
-        
+
         Physical Meaning:
             Implements step function transfer function instead of exponential decay
             according to 7D BVP theory principles.

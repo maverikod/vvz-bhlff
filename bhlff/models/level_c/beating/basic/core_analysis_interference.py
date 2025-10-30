@@ -74,7 +74,8 @@ class InterferencePatternAnalyzer:
             "interference_strength": interference_strength,
             "interference_regions": interference_regions,
             "interference_coherence": interference_coherence,
-            "interference_detected": interference_strength > self.interference_threshold,
+            "interference_detected": interference_strength
+            > self.interference_threshold,
         }
 
     def _calculate_interference_strength(self, envelope: np.ndarray) -> float:
@@ -102,7 +103,9 @@ class InterferencePatternAnalyzer:
 
         return float(interference_strength)
 
-    def _detect_interference_regions(self, envelope: np.ndarray) -> List[Dict[str, Any]]:
+    def _detect_interference_regions(
+        self, envelope: np.ndarray
+    ) -> List[Dict[str, Any]]:
         """
         Detect interference regions.
 
@@ -128,11 +131,13 @@ class InterferencePatternAnalyzer:
         if np.any(interference_mask):
             # Simplified region detection
             # In practice, this would involve proper connected component analysis
-            regions.append({
-                "center": [0.5, 0.5, 0.5],  # Placeholder
-                "size": np.sum(interference_mask),
-                "strength": np.mean(local_strength[interference_mask]),
-            })
+            regions.append(
+                {
+                    "center": [0.5, 0.5, 0.5],  # Placeholder
+                    "size": np.sum(interference_mask),
+                    "strength": np.mean(local_strength[interference_mask]),
+                }
+            )
 
         return regions
 
@@ -163,7 +168,11 @@ class InterferencePatternAnalyzer:
             "spatial_coherence": spatial_coherence,
             "temporal_coherence": temporal_coherence,
             "overall_coherence": overall_coherence,
-            "coherence_quality": "high" if overall_coherence > 0.8 else "medium" if overall_coherence > 0.5 else "low",
+            "coherence_quality": (
+                "high"
+                if overall_coherence > 0.8
+                else "medium" if overall_coherence > 0.5 else "low"
+            ),
         }
 
     def _calculate_spatial_coherence(self, envelope: np.ndarray) -> float:

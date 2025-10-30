@@ -41,7 +41,9 @@ class CollectiveModesAnalyzer(AbstractModel):
         - Mode interactions: coupling analysis
     """
 
-    def __init__(self, domain, particles: List[Particle], system_params: SystemParameters):
+    def __init__(
+        self, domain, particles: List[Particle], system_params: SystemParameters
+    ):
         """
         Initialize collective modes analyzer.
 
@@ -58,10 +60,12 @@ class CollectiveModesAnalyzer(AbstractModel):
         self.domain = domain
         self.particles = particles
         self.system_params = system_params
-        
+
         # Initialize analysis components
         self._modes_finder = CollectiveModesFinder(domain, particles, system_params)
-        self._spectrum_analyzer = CollectiveModesSpectrumAnalyzer(domain, particles, system_params)
+        self._spectrum_analyzer = CollectiveModesSpectrumAnalyzer(
+            domain, particles, system_params
+        )
 
     def find_collective_modes(self) -> Dict[str, Any]:
         """

@@ -25,6 +25,7 @@ import numpy as np
 
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except Exception:
     CUDA_AVAILABLE = False
@@ -106,6 +107,7 @@ class FractionalLaplacian7D:
         )
         self._coeffs = xp.power(k2 + 0.0, self.beta).astype(xp.float64)
 
+
 """
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
@@ -126,6 +128,7 @@ import numpy as np
 
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except Exception:
     CUDA_AVAILABLE = False
@@ -184,9 +187,18 @@ class FractionalLaplacian7D:
         P37 = P3[None, None, None, None, None, :, None]
         KT7 = kt[None, None, None, None, None, None, :]
 
-        k2 = KX7 * KX7 + KY7 * KY7 + KZ7 * KZ7 + P17 * P17 + P27 * P27 + P37 * P37 + KT7 * KT7
+        k2 = (
+            KX7 * KX7
+            + KY7 * KY7
+            + KZ7 * KZ7
+            + P17 * P17
+            + P27 * P27
+            + P37 * P37
+            + KT7 * KT7
+        )
         coeffs = xp.power(k2 + 0.0, self.beta)  # (|k|^2)^β
         self._coeffs = coeffs.astype(xp.float64)
+
 
 """
 Author: Vasiliy Zdanovskiy
@@ -204,6 +216,7 @@ import numpy as np
 
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except Exception:
     CUDA_AVAILABLE = False
@@ -260,7 +273,13 @@ class FractionalLaplacian7D:
         P37 = P3[None, None, None, None, None, :, None]
         KT7 = KT[None, None, None, None, None, None, :]
 
-        k2 = KX7 * KX7 + KY7 * KY7 + KZ7 * KZ7 + P17 * P17 + P27 * P27 + P37 * P37 + KT7 * KT7
+        k2 = (
+            KX7 * KX7
+            + KY7 * KY7
+            + KZ7 * KZ7
+            + P17 * P17
+            + P27 * P27
+            + P37 * P37
+            + KT7 * KT7
+        )
         self._coeffs = xp.power(k2 + 0.0, self.beta).astype(xp.float64)
-
-

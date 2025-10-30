@@ -48,7 +48,11 @@ class ParameterAnalysis:
         analysis_parameters (dict): Analysis parameters
     """
 
-    def __init__(self, evolution_results: Dict[str, Any], analysis_parameters: Dict[str, Any] = None):
+    def __init__(
+        self,
+        evolution_results: Dict[str, Any],
+        analysis_parameters: Dict[str, Any] = None,
+    ):
         """
         Initialize parameter analysis.
 
@@ -108,7 +112,9 @@ class ParameterAnalysis:
             "final_scale_factor": scale_factor[-1],
             "scale_factor_growth": scale_factor[-1] - scale_factor[0],
             "scale_factor_rate": self._compute_scale_factor_rate(scale_factor),
-            "scale_factor_acceleration": self._compute_scale_factor_acceleration(scale_factor),
+            "scale_factor_acceleration": self._compute_scale_factor_acceleration(
+                scale_factor
+            ),
         }
 
         return scale_analysis
@@ -175,8 +181,12 @@ class ParameterAnalysis:
             "initial_hubble_parameter": hubble_parameter[0],
             "final_hubble_parameter": hubble_parameter[-1],
             "hubble_parameter_change": hubble_parameter[-1] - hubble_parameter[0],
-            "hubble_parameter_rate": self._compute_hubble_parameter_rate(hubble_parameter),
-            "hubble_parameter_stability": self._compute_hubble_parameter_stability(hubble_parameter),
+            "hubble_parameter_rate": self._compute_hubble_parameter_rate(
+                hubble_parameter
+            ),
+            "hubble_parameter_stability": self._compute_hubble_parameter_stability(
+                hubble_parameter
+            ),
         }
 
         return hubble_analysis
@@ -202,7 +212,9 @@ class ParameterAnalysis:
         rate = np.mean(np.diff(hubble_parameter))
         return float(rate)
 
-    def _compute_hubble_parameter_stability(self, hubble_parameter: List[float]) -> float:
+    def _compute_hubble_parameter_stability(
+        self, hubble_parameter: List[float]
+    ) -> float:
         """
         Compute Hubble parameter stability.
 
@@ -240,7 +252,9 @@ class ParameterAnalysis:
         trends = {
             "scale_factor_trend": self._compute_trend(scale_factor),
             "hubble_parameter_trend": self._compute_trend(hubble_parameter),
-            "parameter_correlation": self._compute_parameter_correlation(scale_factor, hubble_parameter),
+            "parameter_correlation": self._compute_parameter_correlation(
+                scale_factor, hubble_parameter
+            ),
         }
 
         return trends
@@ -270,7 +284,9 @@ class ParameterAnalysis:
         else:
             return "stable"
 
-    def _compute_parameter_correlation(self, scale_factor: List[float], hubble_parameter: List[float]) -> float:
+    def _compute_parameter_correlation(
+        self, scale_factor: List[float], hubble_parameter: List[float]
+    ) -> float:
         """
         Compute correlation between parameters.
 
@@ -311,8 +327,12 @@ class ParameterAnalysis:
 
         stability_analysis = {
             "scale_factor_stability": self._compute_parameter_stability(scale_factor),
-            "hubble_parameter_stability": self._compute_parameter_stability(hubble_parameter),
-            "overall_stability": self._compute_overall_stability(scale_factor, hubble_parameter),
+            "hubble_parameter_stability": self._compute_parameter_stability(
+                hubble_parameter
+            ),
+            "overall_stability": self._compute_overall_stability(
+                scale_factor, hubble_parameter
+            ),
         }
 
         return stability_analysis
@@ -336,14 +356,16 @@ class ParameterAnalysis:
         # Compute stability as inverse of coefficient of variation
         mean_val = np.mean(values)
         std_val = np.std(values)
-        
+
         if mean_val == 0:
             return 0.0
 
         stability = mean_val / (std_val + 1e-10)
         return float(stability)
 
-    def _compute_overall_stability(self, scale_factor: List[float], hubble_parameter: List[float]) -> float:
+    def _compute_overall_stability(
+        self, scale_factor: List[float], hubble_parameter: List[float]
+    ) -> float:
         """
         Compute overall parameter stability.
 

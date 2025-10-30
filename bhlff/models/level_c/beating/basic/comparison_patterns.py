@@ -41,7 +41,9 @@ class PatternComparator:
         """Initialize pattern comparator."""
         self.logger = logging.getLogger(__name__)
 
-    def compare_interference_patterns(self, results1: Dict[str, Any], results2: Dict[str, Any]) -> Dict[str, Any]:
+    def compare_interference_patterns(
+        self, results1: Dict[str, Any], results2: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Compare interference patterns.
 
@@ -73,7 +75,9 @@ class PatternComparator:
         # Compare interference coherence
         coherence1 = interference1.get("interference_coherence", {})
         coherence2 = interference2.get("interference_coherence", {})
-        coherence_similarity = self._compare_interference_coherence(coherence1, coherence2)
+        coherence_similarity = self._compare_interference_coherence(
+            coherence1, coherence2
+        )
 
         return {
             "strength_difference": strength_diff,
@@ -82,7 +86,9 @@ class PatternComparator:
             "overall_similarity": np.mean([regions_similarity, coherence_similarity]),
         }
 
-    def _compare_interference_regions(self, regions1: List[Dict[str, Any]], regions2: List[Dict[str, Any]]) -> float:
+    def _compare_interference_regions(
+        self, regions1: List[Dict[str, Any]], regions2: List[Dict[str, Any]]
+    ) -> float:
         """
         Compare interference regions.
 
@@ -107,7 +113,9 @@ class PatternComparator:
             # In practice, this would involve proper region comparison
             return 0.8  # Placeholder value
 
-    def _compare_interference_coherence(self, coherence1: Dict[str, Any], coherence2: Dict[str, Any]) -> float:
+    def _compare_interference_coherence(
+        self, coherence1: Dict[str, Any], coherence2: Dict[str, Any]
+    ) -> float:
         """
         Compare interference coherence.
 
@@ -132,7 +140,9 @@ class PatternComparator:
 
         return float(similarity)
 
-    def compare_mode_coupling(self, results1: Dict[str, Any], results2: Dict[str, Any]) -> Dict[str, Any]:
+    def compare_mode_coupling(
+        self, results1: Dict[str, Any], results2: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Compare mode coupling.
 
@@ -170,7 +180,9 @@ class PatternComparator:
             "overall_similarity": overall_similarity,
         }
 
-    def compare_phase_coherence(self, results1: Dict[str, Any], results2: Dict[str, Any]) -> Dict[str, Any]:
+    def compare_phase_coherence(
+        self, results1: Dict[str, Any], results2: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Compare phase coherence.
 
@@ -208,7 +220,9 @@ class PatternComparator:
             "overall_similarity": overall_similarity,
         }
 
-    def compare_beating_frequencies(self, results1: Dict[str, Any], results2: Dict[str, Any]) -> Dict[str, Any]:
+    def compare_beating_frequencies(
+        self, results1: Dict[str, Any], results2: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Compare beating frequencies.
 
@@ -246,7 +260,9 @@ class PatternComparator:
             "overall_similarity": overall_similarity,
         }
 
-    def _compare_frequency_lists(self, frequencies1: List[float], frequencies2: List[float]) -> float:
+    def _compare_frequency_lists(
+        self, frequencies1: List[float], frequencies2: List[float]
+    ) -> float:
         """
         Compare frequency lists.
 

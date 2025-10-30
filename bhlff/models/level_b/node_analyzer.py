@@ -193,7 +193,9 @@ class LevelBNodeAnalyzer:
             # For 7D field, take slice at center of other dimensions
             center_phi = field.shape[3] // 2
             center_t = field.shape[6] // 2
-            amplitude = np.abs(field[:, :, :, center_phi, center_phi, center_phi, center_t])
+            amplitude = np.abs(
+                field[:, :, :, center_phi, center_phi, center_phi, center_t]
+            )
         else:
             amplitude = np.abs(field)
 
@@ -420,98 +422,101 @@ class LevelBNodeAnalyzer:
         plt.savefig(output_path, dpi=300, bbox_inches="tight")
         plt.close()
 
-    def check_stepwise_structure(self, field: np.ndarray, center: List[float]) -> Dict[str, Any]:
+    def check_stepwise_structure(
+        self, field: np.ndarray, center: List[float]
+    ) -> Dict[str, Any]:
         """
         Check for stepwise structure instead of simple monotonicity.
-        
+
         Physical Meaning:
             Verifies discrete layered structure with quantized transitions
             instead of simple monotonic decay.
-            
+
         Mathematical Foundation:
             In 7D BVP theory, the field exhibits stepwise structure with
             discrete layers and quantized transitions between layers.
-            
+
         Args:
             field (np.ndarray): Phase field solution
             center (List[float]): Center of the defect [x, y, z]
-            
+
         Returns:
             Dict[str, Any]: Stepwise structure analysis results
         """
         # 1. Detect stepwise pattern
         stepwise_pattern = self._detect_stepwise_pattern(field, center)
-        
+
         # 2. Check level quantization
         level_quantization = self._check_level_quantization(field, center)
-        
+
         # 3. Verify discrete layers
         discrete_layers = self._verify_discrete_layers(field, center)
-        
+
         # 4. Acceptance criteria (more lenient for testing)
         # For testing, accept if we have any stepwise pattern
         passed = stepwise_pattern or discrete_layers
-        
+
         return {
             "stepwise_structure": stepwise_pattern,
             "level_quantization": level_quantization,
             "discrete_layers": discrete_layers,
-            "passed": passed
+            "passed": passed,
         }
 
     def _detect_stepwise_pattern(self, field: np.ndarray, center: List[float]) -> bool:
         """
         Detect stepwise pattern in field structure.
-        
+
         Physical Meaning:
             Identifies discrete stepwise transitions instead of
             smooth monotonic decay.
-            
+
         Args:
             field (np.ndarray): Phase field solution
             center (List[float]): Center of the defect [x, y, z]
-            
+
         Returns:
             bool: True if stepwise pattern is detected
         """
         radial_profile = self._compute_radial_profile(field, center)
-        
+
         # Analyze gradient for stepwise transitions
         gradient = np.gradient(radial_profile["A"], radial_profile["r"])
         second_derivative = np.gradient(gradient, radial_profile["r"])
-        
+
         # Look for sharp transitions (steps)
         gradient_threshold = np.std(gradient) * 2
         sharp_transitions = np.abs(gradient) > gradient_threshold
-        
+
         # Count significant transitions
         num_transitions = np.sum(sharp_transitions)
-        
+
         # Stepwise pattern if we have discrete transitions
         return num_transitions > 0
 
     def _check_level_quantization(self, field: np.ndarray, center: List[float]) -> bool:
         """
         Check for level quantization in stepwise structure.
-        
+
         Physical Meaning:
             Verifies that field levels are quantized according to
             discrete layer structure.
-            
+
         Args:
             field (np.ndarray): Phase field solution
             center (List[float]): Center of the defect [x, y, z]
-            
+
         Returns:
             bool: True if level quantization is detected
         """
         radial_profile = self._compute_radial_profile(field, center)
-        
+
         # Find local extrema (quantized levels)
         from scipy.signal import find_peaks
+
         peaks, _ = find_peaks(radial_profile["A"])
         valleys, _ = find_peaks(-radial_profile["A"])
-        
+
         # Check if extrema follow quantized pattern
         if len(peaks) > 1:
             peak_values = radial_profile["A"][peaks]
@@ -526,40 +531,40 @@ class LevelBNodeAnalyzer:
                 quantized = False
         else:
             quantized = False
-        
+
         return quantized
 
     def _verify_discrete_layers(self, field: np.ndarray, center: List[float]) -> bool:
         """
         Verify discrete layered structure.
-        
+
         Physical Meaning:
             Confirms that field exhibits discrete layered structure
             with clear boundaries between layers.
-            
+
         Args:
             field (np.ndarray): Phase field solution
             center (List[float]): Center of the defect [x, y, z]
-            
+
         Returns:
             bool: True if discrete layers are verified
         """
         radial_profile = self._compute_radial_profile(field, center)
-        
+
         # Analyze field structure for discrete layers
         amplitude = radial_profile["A"]
         radius = radial_profile["r"]
-        
+
         # Look for clear layer boundaries
         gradient = np.gradient(amplitude, radius)
         second_derivative = np.gradient(gradient, radius)
-        
+
         # Find significant changes in gradient (layer boundaries)
         gradient_changes = np.abs(np.diff(gradient))
         threshold = np.std(gradient_changes) * 1.5
-        
+
         # Count significant layer boundaries
         significant_changes = np.sum(gradient_changes > threshold)
-        
+
         # Discrete layers if we have clear boundaries
         return significant_changes > 0

@@ -25,8 +25,8 @@ from .multi_soliton_solutions import MultiSolitonSolutions
 from .multi_soliton_core import MultiSolitonCore
 
 __all__ = [
-    'SolitonAnalysisBase',
-    'SingleSolitonSolver', 
-    'MultiSolitonSolutions',
-    'MultiSolitonCore'
+    "SolitonAnalysisBase",
+    "SingleSolitonSolver",
+    "MultiSolitonSolutions",
+    "MultiSolitonCore",
 ]

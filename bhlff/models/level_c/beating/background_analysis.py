@@ -136,20 +136,19 @@ class BackgroundBeatingAnalyzer:
         # First mode profile
         profile_1 = np.exp(
             -((X - center[0]) ** 2 + (Y - center[1]) ** 2 + (Z - center[2]) ** 2)
-            / (2 * sigma ** 2)
+            / (2 * sigma**2)
         )
 
         # Second mode profile
         profile_2 = np.exp(
             -((X - center[0]) ** 2 + (Y - center[1]) ** 2 + (Z - center[2]) ** 2)
-            / (2 * sigma ** 2)
+            / (2 * sigma**2)
         )
 
         # Create dual-mode field
-        field_dual = (
-            dual_mode.amplitude_1 * profile_1 * np.exp(1j * dual_mode.phase_1)
-            + dual_mode.amplitude_2 * profile_2 * np.exp(1j * dual_mode.phase_2)
-        )
+        field_dual = dual_mode.amplitude_1 * profile_1 * np.exp(
+            1j * dual_mode.phase_1
+        ) + dual_mode.amplitude_2 * profile_2 * np.exp(1j * dual_mode.phase_2)
 
         return field_dual
 
@@ -188,12 +187,8 @@ class BackgroundBeatingAnalyzer:
             t = step * dt
 
             # Update field with dual-mode source
-            source_1 = dual_mode.amplitude_1 * np.exp(
-                -1j * dual_mode.frequency_1 * t
-            )
-            source_2 = dual_mode.amplitude_2 * np.exp(
-                -1j * dual_mode.frequency_2 * t
-            )
+            source_1 = dual_mode.amplitude_1 * np.exp(-1j * dual_mode.frequency_1 * t)
+            source_2 = dual_mode.amplitude_2 * np.exp(-1j * dual_mode.frequency_2 * t)
 
             # Apply BVP evolution
             current_field = self.bvp_core.evolve_field(current_field, dt)
@@ -265,7 +260,9 @@ class BackgroundBeatingAnalyzer:
         max_amplitude = max(np.max(amp) for amp in amplitude_evolution)
         min_amplitude = min(np.min(amp) for amp in amplitude_evolution)
 
-        modulation_depth = (max_amplitude - min_amplitude) / (max_amplitude + min_amplitude)
+        modulation_depth = (max_amplitude - min_amplitude) / (
+            max_amplitude + min_amplitude
+        )
 
         # Compute modulation frequency
         modulation_frequency = self._compute_modulation_frequency(amplitude_evolution)
@@ -325,9 +322,7 @@ class BackgroundBeatingAnalyzer:
             "pattern_stability": True,
         }
 
-    def _compute_pattern_correlation(
-        self, time_evolution: List[np.ndarray]
-    ) -> float:
+    def _compute_pattern_correlation(self, time_evolution: List[np.ndarray]) -> float:
         """
         Compute pattern correlation.
 
@@ -363,7 +358,9 @@ class BackgroundBeatingAnalyzer:
         # In practice, this would involve proper drift analysis
         return 0.1  # Placeholder value
 
-    def _analyze_drift_velocity(self, time_evolution: List[np.ndarray]) -> Dict[str, Any]:
+    def _analyze_drift_velocity(
+        self, time_evolution: List[np.ndarray]
+    ) -> Dict[str, Any]:
         """
         Analyze drift velocity.
 

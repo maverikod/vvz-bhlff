@@ -33,7 +33,12 @@ import logging
 from dataclasses import dataclass
 
 from bhlff.core.bvp import BVPCore
-from .memory.data_structures import MemoryParameters, QuenchEvent, MemoryKernel, MemoryState
+from .memory.data_structures import (
+    MemoryParameters,
+    QuenchEvent,
+    MemoryKernel,
+    MemoryState,
+)
 from .memory.memory_evolution import MemoryEvolutionAnalyzer
 from .memory.pinning_analysis import PinningAnalyzer
 from .memory.correlation_analysis import CorrelationAnalyzer
@@ -65,7 +70,7 @@ class QuenchMemoryAnalysis:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize sub-analyzers
         self.memory_evolution_analyzer = MemoryEvolutionAnalyzer(bvp_core)
         self.pinning_analyzer = PinningAnalyzer(bvp_core)
@@ -111,7 +116,10 @@ class QuenchMemoryAnalysis:
 
         # Analyze pinning effects
         pinning_analysis = self.pinning_analyzer.analyze_pinning_effects(
-            domain, memory, memory_params.get("time_params", {}), memory_params.get("pinning_params", {})
+            domain,
+            memory,
+            memory_params.get("time_params", {}),
+            memory_params.get("pinning_params", {}),
         )
 
         # Analyze correlation effects
@@ -164,15 +172,24 @@ class QuenchMemoryAnalysis:
         correlation_effects = correlation_analysis.get("cross_correlation", {})
 
         # Compute summary statistics
-        memory_strength = memory_effects.get("memory_formation", {}).get("formation_strength", 0.0)
-        pinning_effectiveness = pinning_effects.get("pinning_effectiveness", {}).get("effectiveness", 0.0)
-        correlation_stability = correlation_effects.get("correlation_patterns", {}).get("pattern_strength", 0.0)
+        memory_strength = memory_effects.get("memory_formation", {}).get(
+            "formation_strength", 0.0
+        )
+        pinning_effectiveness = pinning_effects.get("pinning_effectiveness", {}).get(
+            "effectiveness", 0.0
+        )
+        correlation_stability = correlation_effects.get("correlation_patterns", {}).get(
+            "pattern_strength", 0.0
+        )
 
         return {
             "memory_strength": memory_strength,
             "pinning_effectiveness": pinning_effectiveness,
             "correlation_stability": correlation_stability,
-            "overall_stability": (memory_strength + pinning_effectiveness + correlation_stability) / 3.0,
+            "overall_stability": (
+                memory_strength + pinning_effectiveness + correlation_stability
+            )
+            / 3.0,
             "analysis_complete": True,
             "memory_effects_detected": True,
         }

@@ -48,7 +48,11 @@ class StructureAnalysis:
         analysis_parameters (dict): Analysis parameters
     """
 
-    def __init__(self, evolution_results: Dict[str, Any], analysis_parameters: Dict[str, Any] = None):
+    def __init__(
+        self,
+        evolution_results: Dict[str, Any],
+        analysis_parameters: Dict[str, Any] = None,
+    ):
         """
         Initialize structure analysis.
 
@@ -62,11 +66,17 @@ class StructureAnalysis:
         """
         self.evolution_results = evolution_results
         self.analysis_parameters = analysis_parameters or {}
-        
+
         # Analysis parameters
-        self.correlation_threshold = self.analysis_parameters.get("correlation_threshold", 0.1)
-        self.significance_level = self.analysis_parameters.get("significance_level", 0.05)
-        self.structure_threshold = self.analysis_parameters.get("structure_threshold", 0.5)
+        self.correlation_threshold = self.analysis_parameters.get(
+            "correlation_threshold", 0.1
+        )
+        self.significance_level = self.analysis_parameters.get(
+            "significance_level", 0.05
+        )
+        self.structure_threshold = self.analysis_parameters.get(
+            "structure_threshold", 0.5
+        )
 
     def analyze_structure_formation(self) -> Dict[str, Any]:
         """

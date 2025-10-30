@@ -27,9 +27,9 @@ from .structure_formation import StructureFormation
 from .cosmological_parameters import CosmologicalParameters
 
 __all__ = [
-    'CosmologicalModel',
-    'EnvelopeEffectiveMetric',
-    'PhaseFieldEvolution',
-    'StructureFormation',
-    'CosmologicalParameters'
+    "CosmologicalModel",
+    "EnvelopeEffectiveMetric",
+    "PhaseFieldEvolution",
+    "StructureFormation",
+    "CosmologicalParameters",
 ]

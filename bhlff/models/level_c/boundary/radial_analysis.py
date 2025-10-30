@@ -54,7 +54,7 @@ class RadialAnalyzer:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize analysis components
         self._core_analyzer = RadialAnalysisCore(bvp_core)
         self._concentration_analyzer = RadialConcentrationAnalyzer(bvp_core)
@@ -106,4 +106,6 @@ class RadialAnalyzer:
         Returns:
             Dict[str, Any]: Field concentration analysis results.
         """
-        return self._concentration_analyzer.analyze_field_concentration(domain, boundary, field)
+        return self._concentration_analyzer.analyze_field_concentration(
+            domain, boundary, field
+        )

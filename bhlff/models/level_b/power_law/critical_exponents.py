@@ -14,7 +14,7 @@ Physical Meaning:
 Mathematical Foundation:
     Implements full critical exponent analysis:
     - ν: correlation length exponent
-    - β: order parameter exponent  
+    - β: order parameter exponent
     - γ: susceptibility exponent
     - δ: critical isotherm exponent
     - η: anomalous dimension

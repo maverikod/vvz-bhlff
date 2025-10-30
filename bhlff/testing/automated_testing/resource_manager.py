@@ -106,7 +106,7 @@ class ResourceLimitError(Exception):
     def __init__(self, message: str = "Resource limit exceeded"):
         """
         Initialize resource limit error.
-        
+
         Args:
             message (str): Error message describing the resource limit violation.
         """

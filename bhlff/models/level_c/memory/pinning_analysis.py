@@ -55,14 +55,18 @@ class PinningAnalyzer:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize analysis components
         self._potential_creator = PinningPotentialCreator(bvp_core)
         self._evolution_analyzer = PinningEvolutionAnalyzer(bvp_core)
         self._effects_analyzer = PinningEffectsAnalyzer(bvp_core)
 
     def analyze_pinning_effects(
-        self, domain: Dict[str, Any], memory: MemoryState, time_params: Dict[str, Any], pinning_params: Dict[str, Any]
+        self,
+        domain: Dict[str, Any],
+        memory: MemoryState,
+        time_params: Dict[str, Any],
+        pinning_params: Dict[str, Any],
     ) -> Dict[str, Any]:
         """
         Analyze pinning effects.
@@ -90,9 +94,11 @@ class PinningAnalyzer:
                 - pinning_effects: Pinning effects analysis results
         """
         self.logger.info("Starting pinning effects analysis")
-        
+
         # Create pinning potential
-        pinning_potential = self._potential_creator.create_pinning_potential(domain, pinning_params)
+        pinning_potential = self._potential_creator.create_pinning_potential(
+            domain, pinning_params
+        )
 
         # Evolve field with pinning
         field_evolution = self._evolution_analyzer.evolve_with_pinning(
@@ -111,6 +117,6 @@ class PinningAnalyzer:
             "pinning_effects": pinning_effects,
             "analysis_complete": True,
         }
-        
+
         self.logger.info("Pinning effects analysis completed")
         return results

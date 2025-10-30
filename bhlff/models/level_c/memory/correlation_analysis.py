@@ -52,7 +52,7 @@ class CorrelationAnalyzer:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize analysis components
         self._core = CorrelationAnalysisCore(bvp_core)
         self._cross_correlation = CrossCorrelationAnalyzer()
@@ -92,13 +92,19 @@ class CorrelationAnalyzer:
         )
 
         # Analyze cross-correlation
-        cross_correlation = self._cross_correlation.analyze_cross_correlation(field_evolution)
+        cross_correlation = self._cross_correlation.analyze_cross_correlation(
+            field_evolution
+        )
 
         # Analyze temporal coherence
-        temporal_coherence = self._temporal_coherence.analyze_temporal_coherence(field_evolution)
+        temporal_coherence = self._temporal_coherence.analyze_temporal_coherence(
+            field_evolution
+        )
 
         # Analyze pattern stability
-        pattern_stability = self._pattern_stability.analyze_pattern_stability(field_evolution)
+        pattern_stability = self._pattern_stability.analyze_pattern_stability(
+            field_evolution
+        )
 
         return {
             "field_evolution": field_evolution,

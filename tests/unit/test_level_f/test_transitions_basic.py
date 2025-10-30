@@ -64,7 +64,7 @@ class TestPhaseTransitionsBasic:
             correctly initialized with proper parameters.
         """
         transitions = PhaseTransitions(system)
-        
+
         assert transitions.system == system
         assert transitions.order_parameters == {}
         assert transitions.critical_points == []
@@ -81,16 +81,16 @@ class TestPhaseTransitionsBasic:
         """
         parameter = "temperature"
         values = np.linspace(0.1, 2.0, 10)
-        
+
         phase_diagram = transitions.parameter_sweep(parameter, values)
-        
+
         assert phase_diagram is not None
         assert "parameter" in phase_diagram
         assert "values" in phase_diagram
         assert "order_parameters" in phase_diagram
         assert "phases" in phase_diagram
         assert "critical_points" in phase_diagram
-        
+
         assert phase_diagram["parameter"] == parameter
         assert len(phase_diagram["values"]) == len(values)
         assert len(phase_diagram["phases"]) == len(values)
@@ -104,13 +104,13 @@ class TestPhaseTransitionsBasic:
             computed for the current system state.
         """
         order_params = transitions.compute_order_parameters()
-        
+
         assert order_params is not None
         assert "topological_order" in order_params
         assert "phase_coherence" in order_params
         assert "spatial_order" in order_params
         assert "energy_density" in order_params
-        
+
         # Check that order parameters are reasonable
         assert order_params["topological_order"] >= 0
         assert 0 <= order_params["phase_coherence"] <= 1
@@ -132,19 +132,23 @@ class TestPhaseTransitionsBasic:
             "order_parameters": {
                 str(v): {
                     "topological_order": v,
-                    "phase_coherence": 1.0 - v/2.0,
-                    "spatial_order": v/2.0,
-                    "energy_density": v**2
-                } for v in np.linspace(0.1, 2.0, 10)
+                    "phase_coherence": 1.0 - v / 2.0,
+                    "spatial_order": v / 2.0,
+                    "energy_density": v**2,
+                }
+                for v in np.linspace(0.1, 2.0, 10)
             },
-            "phases": [{"parameter_value": v, "phase": "test", "stability": True} for v in np.linspace(0.1, 2.0, 10)]
+            "phases": [
+                {"parameter_value": v, "phase": "test", "stability": True}
+                for v in np.linspace(0.1, 2.0, 10)
+            ],
         }
-        
+
         critical_points = transitions.identify_critical_points(phase_diagram)
-        
+
         assert critical_points is not None
         assert isinstance(critical_points, list)
-        
+
         # Check that critical points have required fields
         for point in critical_points:
             assert "parameter_value" in point
@@ -161,10 +165,10 @@ class TestPhaseTransitionsBasic:
             computed as the total topological charge.
         """
         topological_order = transitions._compute_topological_order()
-        
+
         assert topological_order is not None
         assert topological_order >= 0
-        
+
         # For our test system with charges +1 and -1
         expected_order = 2.0  # |+1| + |-1| = 2
         assert abs(topological_order - expected_order) < 1e-10
@@ -178,10 +182,10 @@ class TestPhaseTransitionsBasic:
             computed as a measure of phase synchronization.
         """
         phase_coherence = transitions._compute_phase_coherence()
-        
+
         assert phase_coherence is not None
         assert 0 <= phase_coherence <= 1
-        
+
         # For our test system with phases 0 and π
         expected_coherence = 0.0  # |e^(i0) + e^(iπ)|/2 = |1 - 1|/2 = 0
         assert abs(phase_coherence - expected_coherence) < 1e-10
@@ -195,7 +199,7 @@ class TestPhaseTransitionsBasic:
             computed as a measure of spatial organization.
         """
         spatial_order = transitions._compute_spatial_order()
-        
+
         assert spatial_order is not None
         assert spatial_order >= 0
 
@@ -208,7 +212,7 @@ class TestPhaseTransitionsBasic:
             computed as the system's energy per unit volume.
         """
         energy_density = transitions._compute_energy_density()
-        
+
         assert energy_density is not None
         assert energy_density >= 0
 
@@ -221,12 +225,12 @@ class TestPhaseTransitionsBasic:
             analyzed to determine phase and stability.
         """
         state = transitions._analyze_system_state()
-        
+
         assert state is not None
         assert "order_parameters" in state
         assert "phase" in state
         assert "stability" in state
-        
+
         # Check that state analysis is reasonable
         assert state["order_parameters"] is not None
         assert state["phase"] is not None
@@ -246,18 +250,19 @@ class TestPhaseTransitionsBasic:
             "order_parameters": {
                 str(v): {
                     "topological_order": v,
-                    "phase_coherence": 1.0 - v/2.0,
-                    "spatial_order": v/2.0,
-                    "energy_density": v**2
-                } for v in np.linspace(0.1, 2.0, 10)
-            }
+                    "phase_coherence": 1.0 - v / 2.0,
+                    "spatial_order": v / 2.0,
+                    "energy_density": v**2,
+                }
+                for v in np.linspace(0.1, 2.0, 10)
+            },
         }
-        
+
         discontinuities = transitions._find_discontinuities(phase_diagram)
-        
+
         assert discontinuities is not None
         assert isinstance(discontinuities, list)
-        
+
         # Check that discontinuities have required fields
         for discontinuity in discontinuities:
             assert "parameter" in discontinuity
@@ -278,27 +283,26 @@ class TestPhaseTransitionsBasic:
             "order_parameters": {
                 str(v): {
                     "topological_order": v,
-                    "phase_coherence": 1.0 - v/2.0,
-                    "spatial_order": v/2.0,
-                    "energy_density": v**2
-                } for v in np.linspace(0.1, 2.0, 10)
-            }
+                    "phase_coherence": 1.0 - v / 2.0,
+                    "spatial_order": v / 2.0,
+                    "energy_density": v**2,
+                }
+                for v in np.linspace(0.1, 2.0, 10)
+            },
         }
-        
+
         discontinuities = [
-            {
-                "parameter": "topological_order",
-                "value": 1.0,
-                "discontinuity": 0.5
-            }
+            {"parameter": "topological_order", "value": 1.0, "discontinuity": 0.5}
         ]
-        
-        critical_points = transitions._find_critical_points(phase_diagram, discontinuities)
-        
+
+        critical_points = transitions._find_critical_points(
+            phase_diagram, discontinuities
+        )
+
         assert critical_points is not None
         assert isinstance(critical_points, list)
         assert len(critical_points) == len(discontinuities)
-        
+
         # Check that critical points have required fields
         for point in critical_points:
             assert "parameter_value" in point
@@ -320,28 +324,31 @@ class TestPhaseTransitionsBasic:
             "order_parameters": {
                 str(v): {
                     "topological_order": v,
-                    "phase_coherence": 1.0 - v/2.0,
-                    "spatial_order": v/2.0,
-                    "energy_density": v**2
-                } for v in np.linspace(0.1, 2.0, 10)
-            }
+                    "phase_coherence": 1.0 - v / 2.0,
+                    "spatial_order": v / 2.0,
+                    "energy_density": v**2,
+                }
+                for v in np.linspace(0.1, 2.0, 10)
+            },
         }
-        
+
         critical_point = {
             "parameter_value": 1.0,
             "transition_type": "first_order",
             "order_parameter": "topological_order",
-            "discontinuity_magnitude": 0.5
+            "discontinuity_magnitude": 0.5,
         }
-        
-        exponents = transitions._compute_critical_exponents(phase_diagram, critical_point)
-        
+
+        exponents = transitions._compute_critical_exponents(
+            phase_diagram, critical_point
+        )
+
         assert exponents is not None
         assert "beta" in exponents
         assert "gamma" in exponents
         assert "delta" in exponents
         assert "nu" in exponents
-        
+
         # Check that exponents are reasonable
         assert exponents["beta"] > 0
         assert exponents["gamma"] > 0

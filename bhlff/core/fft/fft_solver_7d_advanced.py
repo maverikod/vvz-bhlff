@@ -22,6 +22,7 @@ import numpy as np
 
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except Exception:
     CUDA_AVAILABLE = False
@@ -47,9 +48,10 @@ class FFTSolver7DAdvanced:
     def solve_stationary(self, source_field: np.ndarray) -> np.ndarray:
         xp = self._xp
         src = xp.asarray(source_field) if self.use_cuda else source_field
-        s_hat = self._fftn_batched(src, norm="ortho")
+        # Use direct n-D FFTs for numerical consistency
+        s_hat = self._xp.fft.fftn(src, norm="ortho")
         a_hat = s_hat / self._coeffs
-        a = self._ifftn_batched(a_hat, norm="ortho").real
+        a = self._xp.fft.ifftn(a_hat, norm="ortho").real
         return cp.asnumpy(a) if self.use_cuda else a
 
     def get_spectral_coefficients(self) -> np.ndarray:
@@ -60,21 +62,29 @@ class FFTSolver7DAdvanced:
         N = self.domain.N
         Np = self.domain.N_phi
         Nt = self.domain.N_t
-        kx = xp.fft.fftfreq(N)
-        ky = xp.fft.fftfreq(N)
-        kz = xp.fft.fftfreq(N)
-        p = xp.fft.fftfreq(Np) * (2 * xp.pi)
-        kt = xp.fft.fftfreq(Nt)
-        KX, KY, KZ = xp.meshgrid(kx, ky, kz, indexing="ij")
-        P1, P2, P3 = xp.meshgrid(p, p, p, indexing="ij")
-        KX7 = KX[:, :, :, None, None, None, None]
-        KY7 = KY[:, :, :, None, None, None, None]
-        KZ7 = KZ[:, :, :, None, None, None, None]
-        P17 = P1[None, None, None, :, None, None, None]
-        P27 = P2[None, None, None, None, :, None, None]
-        P37 = P3[None, None, None, None, None, :, None]
-        KT7 = kt[None, None, None, None, None, None, :]
-        k2 = KX7 * KX7 + KY7 * KY7 + KZ7 * KZ7 + P17 * P17 + P27 * P27 + P37 * P37 + KT7 * KT7
+        kx = xp.fft.fftfreq(N) * (2 * xp.pi)
+        ky = xp.fft.fftfreq(N) * (2 * xp.pi)
+        kz = xp.fft.fftfreq(N) * (2 * xp.pi)
+        kphi = xp.fft.fftfreq(Np) * (2 * xp.pi)
+        kt = xp.fft.fftfreq(Nt) * (2 * xp.pi)
+
+        # Explicit 7D broadcasting-safe shapes
+        KX7 = kx.reshape(N, 1, 1, 1, 1, 1, 1)
+        KY7 = ky.reshape(1, N, 1, 1, 1, 1, 1)
+        KZ7 = kz.reshape(1, 1, N, 1, 1, 1, 1)
+        P17 = kphi.reshape(1, 1, 1, Np, 1, 1, 1)
+        P27 = kphi.reshape(1, 1, 1, 1, Np, 1, 1)
+        P37 = kphi.reshape(1, 1, 1, 1, 1, Np, 1)
+        KT7 = kt.reshape(1, 1, 1, 1, 1, 1, Nt)
+        k2 = (
+            KX7 * KX7
+            + KY7 * KY7
+            + KZ7 * KZ7
+            + P17 * P17
+            + P27 * P27
+            + P37 * P37
+            + KT7 * KT7
+        )
         abs_k_2beta = xp.power(k2 + 0.0, self.beta)
         D = self.mu * abs_k_2beta + self.lmbda
         if self.lmbda == 0.0:
@@ -91,7 +101,9 @@ class FFTSolver7DAdvanced:
                 return 0
         return 4 * 1024**3  # assume 4GB free on CPU
 
-    def _estimate_batch(self, size_axis: int, other_product: int, dtype_bytes: int) -> int:
+    def _estimate_batch(
+        self, size_axis: int, other_product: int, dtype_bytes: int
+    ) -> int:
         # workspace ~ 4x input batch
         free_bytes = self._get_free_memory_bytes()
         if free_bytes <= 0:
@@ -141,5 +153,3 @@ class FFTSolver7DAdvanced:
             out[start:end] = xp.fft.ifft(a2[start:end], axis=1, norm=norm)
             start = end
         return xp.reshape(out, shape)
-
-

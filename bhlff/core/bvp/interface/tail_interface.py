@@ -118,5 +118,7 @@ class TailInterface:
         spectral_ops = UnifiedSpectralOperations(self.domain_7d, precision="float64")
         spectral_full = spectral_ops.forward_fft(envelope, normalization="physics")
         # Extract 1D spectral density along time axis by collapsing spatial/phase dims
-        spectral_data = np.sum(np.abs(spectral_full) ** 2, axis=tuple(range(envelope.ndim - 1)))
+        spectral_data = np.sum(
+            np.abs(spectral_full) ** 2, axis=tuple(range(envelope.ndim - 1))
+        )
         return spectral_data

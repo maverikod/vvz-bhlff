@@ -165,22 +165,22 @@ class ParticleValidation(ModelBase):
         """
         if not self.inversion_results:
             return {"error": "No inversion results available"}
-        
+
         optimized_params = self.inversion_results.get("optimized_parameters", {})
-        
+
         # Compute energy components from 7D BVP theory
         energy_components = self._compute_energy_components(optimized_params)
-        
+
         # Validate energy conservation
         total_energy = energy_components["total_energy"]
         energy_residual = abs(energy_components["energy_residual"])
         energy_tolerance = self.energy_balance_tolerance
-        
+
         # Validate energy positivity
         kinetic_energy = energy_components["kinetic_energy"]
         potential_energy = energy_components["potential_energy"]
         nonlinear_energy = energy_components["nonlinear_energy"]
-        
+
         energy_validation = {
             "total_energy_conserved": energy_residual < energy_tolerance,
             "kinetic_energy_positive": kinetic_energy >= 0,
@@ -192,11 +192,11 @@ class ParticleValidation(ModelBase):
         }
 
         return energy_validation
-    
+
     def _compute_energy_components(self, params: Dict[str, float]) -> Dict[str, float]:
         """
         Compute energy components from 7D BVP theory.
-        
+
         Physical Meaning:
             Computes the energy components of the 7D phase field
             configuration including kinetic, potential, and nonlinear
@@ -208,26 +208,28 @@ class ParticleValidation(ModelBase):
         lambda_param = params.get("lambda", 0.1)
         gamma = params.get("gamma", 0.5)
         q = params.get("q", 1)
-        
+
         # Kinetic energy: E_kinetic = μ|∇a|²
         # In 7D space-time, kinetic energy depends on phase field gradients
         kinetic_energy = mu * (1.0 + 0.1 * beta) * (1.0 + 0.05 * q)
-        
+
         # Potential energy: E_potential = λ|∇a|² (no mass term in 7D BVP theory)
         # Potential energy is gradient-based, not mass-based
         potential_energy = lambda_param * (1.0 + 0.1 * gamma) * (1.0 + 0.02 * beta)
-        
+
         # Nonlinear energy: E_nonlinear = nonlinear_interactions
         # Nonlinear energy from phase field interactions in 7D space-time
         nonlinear_energy = gamma * (1.0 + 0.1 * q) * (1.0 + 0.05 * mu)
-        
+
         # Total energy
         total_energy = kinetic_energy + potential_energy + nonlinear_energy
-        
+
         # Energy residual (should be zero for conservation)
         # In practice, there may be small numerical errors
-        energy_residual = abs(total_energy - (kinetic_energy + potential_energy + nonlinear_energy))
-        
+        energy_residual = abs(
+            total_energy - (kinetic_energy + potential_energy + nonlinear_energy)
+        )
+
         return {
             "kinetic_energy": kinetic_energy,
             "potential_energy": potential_energy,
@@ -258,42 +260,47 @@ class ParticleValidation(ModelBase):
         """
         if not self.inversion_results:
             return {"error": "No inversion results available"}
-        
+
         optimized_params = self.inversion_results.get("optimized_parameters", {})
-        
+
         # Validate passivity constraint
         passivity_valid = self._validate_passivity_constraint(optimized_params)
-        
+
         # Validate causality constraint
         causality_valid = self._validate_causality_constraint(optimized_params)
-        
+
         # Validate unitarity constraint
         unitarity_valid = self._validate_unitarity_constraint(optimized_params)
-        
+
         # Validate gauge invariance
         gauge_invariance_valid = self._validate_gauge_invariance(optimized_params)
-        
+
         # Validate 7D BVP specific constraints
         bvp_constraints_valid = self._validate_7d_bvp_constraints(optimized_params)
-        
+
         constraint_validation = {
             "passivity_constraint": passivity_valid,
             "causality_constraint": causality_valid,
             "unitarity_constraint": unitarity_valid,
             "gauge_invariance": gauge_invariance_valid,
             "bvp_7d_constraints": bvp_constraints_valid,
-            "overall_constraints": all([
-                passivity_valid, causality_valid, unitarity_valid,
-                gauge_invariance_valid, bvp_constraints_valid
-            ]),
+            "overall_constraints": all(
+                [
+                    passivity_valid,
+                    causality_valid,
+                    unitarity_valid,
+                    gauge_invariance_valid,
+                    bvp_constraints_valid,
+                ]
+            ),
         }
 
         return constraint_validation
-    
+
     def _validate_passivity_constraint(self, params: Dict[str, float]) -> bool:
         """
         Validate passivity constraint.
-        
+
         Physical Meaning:
             Validates that the system is passive, i.e., it cannot
             generate energy, which is a fundamental physical constraint.
@@ -302,15 +309,15 @@ class ParticleValidation(ModelBase):
         # In 7D BVP theory, this translates to energy dissipation
         mu = params.get("mu", 1.0)
         lambda_param = params.get("lambda", 0.1)
-        
+
         # Passivity requires positive dissipation
         dissipation = mu + lambda_param
         return dissipation > 0
-    
+
     def _validate_causality_constraint(self, params: Dict[str, float]) -> bool:
         """
         Validate causality constraint.
-        
+
         Physical Meaning:
             Validates that the system satisfies causality,
             i.e., effects cannot precede causes.
@@ -319,14 +326,14 @@ class ParticleValidation(ModelBase):
         # In 7D BVP theory, this means phase field evolution is causal
         beta = params.get("beta", 1.0)
         tau = params.get("tau", 1.0)
-        
+
         # Causality requires positive time constants
         return beta > 0 and tau > 0
-    
+
     def _validate_unitarity_constraint(self, params: Dict[str, float]) -> bool:
         """
         Validate unitarity constraint.
-        
+
         Physical Meaning:
             Validates that the system preserves unitarity,
             i.e., probability is conserved.
@@ -335,15 +342,15 @@ class ParticleValidation(ModelBase):
         # In 7D BVP theory, this means phase field normalization
         q = params.get("q", 1)
         gamma = params.get("gamma", 0.5)
-        
+
         # Unitarity requires proper normalization
         normalization = q * (1.0 + gamma)
         return 0.5 <= normalization <= 2.0
-    
+
     def _validate_gauge_invariance(self, params: Dict[str, float]) -> bool:
         """
         Validate gauge invariance.
-        
+
         Physical Meaning:
             Validates that the system preserves gauge invariance,
             i.e., U(1) symmetry is maintained.
@@ -352,15 +359,15 @@ class ParticleValidation(ModelBase):
         # In 7D BVP theory, this means phase field gauge freedom
         eta = params.get("eta", 0.1)
         gamma = params.get("gamma", 0.5)
-        
+
         # Gauge invariance requires proper phase structure
         phase_structure = eta * gamma
         return 0.01 <= phase_structure <= 1.0
-    
+
     def _validate_7d_bvp_constraints(self, params: Dict[str, float]) -> bool:
         """
         Validate 7D BVP specific constraints.
-        
+
         Physical Meaning:
             Validates that the parameters satisfy the specific
             constraints of 7D BVP theory including phase field
@@ -371,19 +378,19 @@ class ParticleValidation(ModelBase):
         mu = params.get("mu", 1.0)
         lambda_param = params.get("lambda", 0.1)
         q = params.get("q", 1)
-        
+
         # Fractional order constraint: 0 < β < 2
         beta_valid = 0 < beta < 2
-        
+
         # Diffusion coefficient constraint: μ > 0
         mu_valid = mu > 0
-        
+
         # Damping parameter constraint: λ ≥ 0
         lambda_valid = lambda_param >= 0
-        
+
         # Topological charge constraint: q ∈ ℤ
         q_valid = isinstance(q, int) and q != 0
-        
+
         return all([beta_valid, mu_valid, lambda_valid, q_valid])
 
     def _validate_experimental_data(self) -> Dict[str, bool]:
@@ -398,7 +405,7 @@ class ParticleValidation(ModelBase):
         Mathematical Foundation:
             Implements comprehensive experimental validation:
             - Mass spectrum: m_predicted vs m_experimental
-            - Charge spectrum: q_predicted vs q_experimental  
+            - Charge spectrum: q_predicted vs q_experimental
             - Magnetic moment: μ_predicted vs μ_experimental
             - Lifetime: τ_predicted vs τ_experimental
             - 7D BVP specific observables: Phase field properties
@@ -408,45 +415,50 @@ class ParticleValidation(ModelBase):
         """
         if not self.experimental_data:
             return {"error": "No experimental data available"}
-        
+
         if not self.inversion_results:
             return {"error": "No inversion results available"}
-        
+
         optimized_params = self.inversion_results.get("optimized_parameters", {})
-        
+
         # Validate mass spectrum agreement
         mass_agreement = self._validate_mass_spectrum(optimized_params)
-        
+
         # Validate charge spectrum agreement
         charge_agreement = self._validate_charge_spectrum(optimized_params)
-        
+
         # Validate magnetic moment agreement
         magnetic_moment_agreement = self._validate_magnetic_moment(optimized_params)
-        
+
         # Validate lifetime agreement
         lifetime_agreement = self._validate_lifetime(optimized_params)
-        
+
         # Validate 7D BVP specific observables
         bvp_observables_agreement = self._validate_7d_bvp_observables(optimized_params)
-        
+
         experimental_validation = {
             "mass_spectrum_agreement": mass_agreement,
             "charge_spectrum_agreement": charge_agreement,
             "magnetic_moment_agreement": magnetic_moment_agreement,
             "lifetime_agreement": lifetime_agreement,
             "bvp_observables_agreement": bvp_observables_agreement,
-            "overall_experimental_agreement": all([
-                mass_agreement, charge_agreement, magnetic_moment_agreement,
-                lifetime_agreement, bvp_observables_agreement
-            ]),
+            "overall_experimental_agreement": all(
+                [
+                    mass_agreement,
+                    charge_agreement,
+                    magnetic_moment_agreement,
+                    lifetime_agreement,
+                    bvp_observables_agreement,
+                ]
+            ),
         }
 
         return experimental_validation
-    
+
     def _validate_mass_spectrum(self, params: Dict[str, float]) -> bool:
         """
         Validate mass spectrum agreement.
-        
+
         Physical Meaning:
             Validates that the predicted mass spectrum agrees
             with experimental data within uncertainties.
@@ -456,10 +468,10 @@ class ParticleValidation(ModelBase):
         q = params.get("q", 1)
         tau = params.get("tau", 1.0)
         beta = params.get("beta", 1.0)
-        
+
         # Predicted mass from 7D BVP theory
         predicted_mass = q * tau * (1.0 + 0.1 * beta)
-        
+
         # Compare with experimental data (if available)
         if "mass_spectrum" in self.experimental_data:
             exp_mass = self.experimental_data["mass_spectrum"]
@@ -468,21 +480,21 @@ class ParticleValidation(ModelBase):
         else:
             # Default validation (mass should be positive)
             return predicted_mass > 0
-    
+
     def _validate_charge_spectrum(self, params: Dict[str, float]) -> bool:
         """
         Validate charge spectrum agreement.
-        
+
         Physical Meaning:
             Validates that the predicted charge spectrum agrees
             with experimental data within uncertainties.
         """
         # Charge spectrum depends on topological charge in 7D BVP theory
         q = params.get("q", 1)
-        
+
         # Predicted charge from 7D BVP theory
         predicted_charge = q
-        
+
         # Compare with experimental data (if available)
         if "charge_spectrum" in self.experimental_data:
             exp_charge = self.experimental_data["charge_spectrum"]
@@ -490,11 +502,11 @@ class ParticleValidation(ModelBase):
         else:
             # Default validation (charge should be integer)
             return isinstance(q, int)
-    
+
     def _validate_magnetic_moment(self, params: Dict[str, float]) -> bool:
         """
         Validate magnetic moment agreement.
-        
+
         Physical Meaning:
             Validates that the predicted magnetic moment agrees
             with experimental data within uncertainties.
@@ -503,10 +515,10 @@ class ParticleValidation(ModelBase):
         q = params.get("q", 1)
         gamma = params.get("gamma", 0.5)
         eta = params.get("eta", 0.1)
-        
+
         # Predicted magnetic moment from 7D BVP theory
         predicted_moment = q * gamma * eta * (1.0 + 0.1 * gamma)
-        
+
         # Compare with experimental data (if available)
         if "magnetic_moment" in self.experimental_data:
             exp_moment = self.experimental_data["magnetic_moment"]
@@ -515,11 +527,11 @@ class ParticleValidation(ModelBase):
         else:
             # Default validation (moment should be positive)
             return predicted_moment > 0
-    
+
     def _validate_lifetime(self, params: Dict[str, float]) -> bool:
         """
         Validate lifetime agreement.
-        
+
         Physical Meaning:
             Validates that the predicted lifetime agrees
             with experimental data within uncertainties.
@@ -528,23 +540,26 @@ class ParticleValidation(ModelBase):
         tau = params.get("tau", 1.0)
         mu = params.get("mu", 1.0)
         lambda_param = params.get("lambda", 0.1)
-        
+
         # Predicted lifetime from 7D BVP theory
         predicted_lifetime = tau / (mu + lambda_param)
-        
+
         # Compare with experimental data (if available)
         if "lifetime" in self.experimental_data:
             exp_lifetime = self.experimental_data["lifetime"]
             lifetime_tolerance = 0.2  # 20% tolerance
-            return abs(predicted_lifetime - exp_lifetime) / exp_lifetime < lifetime_tolerance
+            return (
+                abs(predicted_lifetime - exp_lifetime) / exp_lifetime
+                < lifetime_tolerance
+            )
         else:
             # Default validation (lifetime should be positive)
             return predicted_lifetime > 0
-    
+
     def _validate_7d_bvp_observables(self, params: Dict[str, float]) -> bool:
         """
         Validate 7D BVP specific observables.
-        
+
         Physical Meaning:
             Validates that the predicted 7D BVP observables
             agree with experimental data within uncertainties.
@@ -553,15 +568,18 @@ class ParticleValidation(ModelBase):
         beta = params.get("beta", 1.0)
         mu = params.get("mu", 1.0)
         lambda_param = params.get("lambda", 0.1)
-        
+
         # Predicted power law exponent from 7D BVP theory
         predicted_exponent = 2 * beta - 3
-        
+
         # Compare with experimental data (if available)
         if "power_law_exponent" in self.experimental_data:
             exp_exponent = self.experimental_data["power_law_exponent"]
             exponent_tolerance = 0.1  # 10% tolerance
-            return abs(predicted_exponent - exp_exponent) / abs(exp_exponent) < exponent_tolerance
+            return (
+                abs(predicted_exponent - exp_exponent) / abs(exp_exponent)
+                < exponent_tolerance
+            )
         else:
             # Default validation (exponent should be in reasonable range)
             return -1 <= predicted_exponent <= 1

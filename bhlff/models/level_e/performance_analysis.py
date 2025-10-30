@@ -25,4 +25,4 @@ Example:
 from .performance.performance_analyzer import PerformanceAnalyzer
 
 # Re-export the main class for backward compatibility
-__all__ = ['PerformanceAnalyzer']
+__all__ = ["PerformanceAnalyzer"]

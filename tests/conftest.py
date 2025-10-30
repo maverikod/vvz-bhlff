@@ -35,6 +35,7 @@ from bhlff.core.bvp.constants.bvp_constants_advanced import BVPConstantsAdvanced
 # Import CUDA utilities for memory management
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except ImportError:
     CUDA_AVAILABLE = False
@@ -302,7 +303,7 @@ def cleanup_cuda_memory():
         to prevent memory accumulation and out-of-memory errors.
     """
     yield
-    
+
     # Cleanup CUDA memory after each test
     if CUDA_AVAILABLE:
         try:

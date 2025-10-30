@@ -48,6 +48,7 @@ class LevelCResults:
         including individual test results and overall
         validation status.
     """
+
     c1_results: Dict[str, Any]
     c2_results: Dict[str, Any]
     c3_results: Dict[str, Any]
@@ -88,7 +89,7 @@ class LevelCIntegration:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize integration components
         self._tests = LevelCIntegrationTests(bvp_core)
         self._validation = LevelCIntegrationValidation()
@@ -116,18 +117,18 @@ class LevelCIntegration:
             LevelCResults: Complete Level C test results.
         """
         self.logger.info("Starting Level C integration tests")
-        
+
         # Run individual tests
         c1_results = self._tests.run_c1_test(test_config)
         c2_results = self._tests.run_c2_test(test_config)
         c3_results = self._tests.run_c3_test(test_config)
         c4_results = self._tests.run_c4_test(test_config)
-        
+
         # Validate overall results
         overall_validation = self._validation.validate_overall_results(
             c1_results, c2_results, c3_results, c4_results
         )
-        
+
         # Create results
         results = LevelCResults(
             c1_results=c1_results,
@@ -137,7 +138,7 @@ class LevelCIntegration:
             overall_validation=overall_validation,
             all_tests_complete=overall_validation.get("all_valid", False),
         )
-        
+
         self.logger.info("Level C integration tests completed")
         return results
 

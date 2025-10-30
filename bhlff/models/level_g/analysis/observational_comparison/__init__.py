@@ -25,8 +25,8 @@ from .observable_extractor import ObservableExtractor
 from .statistical_comparison import StatisticalComparison
 
 __all__ = [
-    'ObservationalComparisonCore',
-    'ObservationalDataLoader',
-    'ObservableExtractor', 
-    'StatisticalComparison'
+    "ObservationalComparisonCore",
+    "ObservationalDataLoader",
+    "ObservableExtractor",
+    "StatisticalComparison",
 ]

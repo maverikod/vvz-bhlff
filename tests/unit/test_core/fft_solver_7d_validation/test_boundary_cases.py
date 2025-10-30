@@ -154,8 +154,10 @@ class TestBoundaryCases:
                 # Some extreme cases may legitimately fail
                 # This is acceptable as long as the error is reasonable
                 assert (
-                    "invalid" in str(e).lower() or "out of range" in str(e).lower() or 
-                    "positive" in str(e).lower() or "must be" in str(e).lower()
+                    "invalid" in str(e).lower()
+                    or "out of range" in str(e).lower()
+                    or "positive" in str(e).lower()
+                    or "must be" in str(e).lower()
                 ), f"Unexpected error for case {case}: {e}"
 
     def test_C05_singular_conditions(self, domain_7d):

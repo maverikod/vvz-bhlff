@@ -57,7 +57,7 @@ class TestCollectiveExcitationsAdvanced:
             "frequency_range": (0.1, 2.0),
             "amplitude": 1.0,
             "duration": 5.0,
-            "excitation_type": "harmonic"
+            "excitation_type": "harmonic",
         }
 
     @pytest.fixture
@@ -78,20 +78,22 @@ class TestCollectiveExcitationsAdvanced:
         response_data = {
             "excitation_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
             "response_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
-            "time_points": np.linspace(0, 10, 16)
+            "time_points": np.linspace(0, 10, 16),
         }
-        
+
         solution = excitations.solve_dispersion_equation(response_data)
-        
+
         assert solution is not None
         assert "dispersion_roots" in solution
         assert "frequency_solutions" in solution
         assert "wave_vector_solutions" in solution
-        
+
         # Check that solution is reasonable
         assert len(solution["dispersion_roots"]) > 0
         assert len(solution["frequency_solutions"]) == len(solution["dispersion_roots"])
-        assert len(solution["wave_vector_solutions"]) == len(solution["dispersion_roots"])
+        assert len(solution["wave_vector_solutions"]) == len(
+            solution["dispersion_roots"]
+        )
 
     def test_group_velocity_computation(self, excitations):
         """
@@ -107,20 +109,24 @@ class TestCollectiveExcitationsAdvanced:
         response_data = {
             "excitation_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
             "response_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
-            "time_points": np.linspace(0, 10, 16)
+            "time_points": np.linspace(0, 10, 16),
         }
-        
+
         group_velocity = excitations.compute_group_velocity(response_data)
-        
+
         assert group_velocity is not None
         assert "group_velocities" in group_velocity
         assert "frequencies" in group_velocity
         assert "wave_vectors" in group_velocity
-        
+
         # Check that group velocities are reasonable
         assert len(group_velocity["group_velocities"]) > 0
-        assert len(group_velocity["frequencies"]) == len(group_velocity["group_velocities"])
-        assert len(group_velocity["wave_vectors"]) == len(group_velocity["group_velocities"])
+        assert len(group_velocity["frequencies"]) == len(
+            group_velocity["group_velocities"]
+        )
+        assert len(group_velocity["wave_vectors"]) == len(
+            group_velocity["group_velocities"]
+        )
 
     def test_dispersion_relation_fitting(self, excitations):
         """
@@ -135,16 +141,16 @@ class TestCollectiveExcitationsAdvanced:
         response_data = {
             "excitation_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
             "response_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
-            "time_points": np.linspace(0, 10, 16)
+            "time_points": np.linspace(0, 10, 16),
         }
-        
+
         fitting = excitations.fit_dispersion_relation(response_data)
-        
+
         assert fitting is not None
         assert "fitted_parameters" in fitting
         assert "fitting_error" in fitting
         assert "theoretical_model" in fitting
-        
+
         # Check that fitting is reasonable
         assert fitting["fitted_parameters"] is not None
         assert fitting["fitting_error"] >= 0
@@ -164,16 +170,16 @@ class TestCollectiveExcitationsAdvanced:
         response_data = {
             "excitation_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
             "response_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
-            "time_points": np.linspace(0, 10, 16)
+            "time_points": np.linspace(0, 10, 16),
         }
-        
+
         force = excitations.compute_external_force(response_data)
-        
+
         assert force is not None
         assert "force_field" in force
         assert "force_amplitude" in force
         assert "force_direction" in force
-        
+
         # Check that force is reasonable
         assert force["force_field"] is not None
         assert force["force_amplitude"] >= 0
@@ -193,19 +199,19 @@ class TestCollectiveExcitationsAdvanced:
             "frequency_range": (0.1, 1.0),
             "amplitude": 0.5,
             "duration": 3.0,
-            "excitation_type": "harmonic"
+            "excitation_type": "harmonic",
         }
-        
+
         params2 = {
             "frequency_range": (0.5, 2.0),
             "amplitude": 1.0,
             "duration": 5.0,
-            "excitation_type": "harmonic"
+            "excitation_type": "harmonic",
         }
-        
+
         excitations1 = CollectiveExcitations(system, params1)
         excitations2 = CollectiveExcitations(system, params2)
-        
+
         # Check that parameters are correctly set
         assert excitations1.frequency_range == params1["frequency_range"]
         assert excitations2.frequency_range == params2["frequency_range"]
@@ -226,27 +232,27 @@ class TestCollectiveExcitationsAdvanced:
             "frequency_range": (0.1, 2.0),
             "amplitude": 1.0,
             "duration": 5.0,
-            "excitation_type": "harmonic"
+            "excitation_type": "harmonic",
         }
         harmonic_excitations = CollectiveExcitations(system, harmonic_params)
         assert harmonic_excitations.excitation_type == "harmonic"
-        
+
         # Test impulse excitation
         impulse_params = {
             "frequency_range": (0.1, 2.0),
             "amplitude": 1.0,
             "duration": 0.1,
-            "excitation_type": "impulse"
+            "excitation_type": "impulse",
         }
         impulse_excitations = CollectiveExcitations(system, impulse_params)
         assert impulse_excitations.excitation_type == "impulse"
-        
+
         # Test frequency sweep excitation
         sweep_params = {
             "frequency_range": (0.1, 2.0),
             "amplitude": 1.0,
             "duration": 5.0,
-            "excitation_type": "frequency_sweep"
+            "excitation_type": "frequency_sweep",
         }
         sweep_excitations = CollectiveExcitations(system, sweep_params)
         assert sweep_excitations.excitation_type == "frequency_sweep"
@@ -265,24 +271,27 @@ class TestCollectiveExcitationsAdvanced:
             "frequency_range": (2.0, 0.1),  # Invalid range
             "amplitude": -1.0,  # Negative amplitude
             "duration": -1.0,  # Negative duration
-            "excitation_type": "invalid_type"
+            "excitation_type": "invalid_type",
         }
-        
+
         with pytest.raises(ValueError):
             CollectiveExcitations(system, invalid_params)
-        
+
         # Test with None system
         with pytest.raises(TypeError):
             CollectiveExcitations(None, {"frequency_range": (0.1, 2.0)})
-        
+
         # Test with invalid response data
-        excitations = CollectiveExcitations(system, {
-            "frequency_range": (0.1, 2.0),
-            "amplitude": 1.0,
-            "duration": 5.0,
-            "excitation_type": "harmonic"
-        })
-        
+        excitations = CollectiveExcitations(
+            system,
+            {
+                "frequency_range": (0.1, 2.0),
+                "amplitude": 1.0,
+                "duration": 5.0,
+                "excitation_type": "harmonic",
+            },
+        )
+
         with pytest.raises(ValueError):
             excitations.analyze_response(None)
 
@@ -299,16 +308,16 @@ class TestCollectiveExcitationsAdvanced:
         response_data = {
             "excitation_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
             "response_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
-            "time_points": np.linspace(0, 10, 16)
+            "time_points": np.linspace(0, 10, 16),
         }
-        
+
         transmission = excitations.analyze_step_resonator_transmission(response_data)
-        
+
         assert transmission is not None
         assert "transmission_coefficient" in transmission
         assert "reflection_coefficient" in transmission
         assert "resonance_frequencies" in transmission
-        
+
         # Check that transmission analysis is reasonable
         assert 0 <= transmission["transmission_coefficient"] <= 1
         assert 0 <= transmission["reflection_coefficient"] <= 1

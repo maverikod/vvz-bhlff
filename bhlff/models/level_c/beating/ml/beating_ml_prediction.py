@@ -43,12 +43,12 @@ class BeatingMLPrediction:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Prediction parameters
         self.frequency_prediction_enabled = True
         self.coupling_prediction_enabled = True
         self.prediction_confidence = 0.7
-        
+
         # Initialize prediction components
         self._core_predictor = BeatingMLPredictionCore(bvp_core)
         self._feature_extractor = BeatingMLPredictionFeatures(bvp_core)

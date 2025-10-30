@@ -27,6 +27,6 @@ from .black_hole_models import BlackHoleModel
 __all__ = [
     "AstrophysicalObjectModel",
     "StellarModel",
-    "GalacticModel", 
-    "BlackHoleModel"
+    "GalacticModel",
+    "BlackHoleModel",
 ]

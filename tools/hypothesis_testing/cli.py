@@ -14,7 +14,7 @@ import logging
 # Add project root to path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
-from .commands import TestStep0Command, TestStep1Command, TestAllCommand, TestStep2Command
+from .commands import TestStep0Command, TestStep1Command, TestAllCommand, TestStep2Command, TestStep3Command, TestStep3AdaptiveCommand
 
 
 def setup_logging(verbose: bool):
@@ -64,6 +64,14 @@ Examples:
     all_parser = subparsers.add_parser('test-all', help='Run all available tests')
     all_parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose logging')
     
+    # Test Step 3 command
+    step3_parser = subparsers.add_parser('test-step-3', help='Test Step 3: Time Integrators')
+    step3_parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose logging')
+    
+    # Test Step 3 Adaptive command
+    step3a_parser = subparsers.add_parser('test-step-3-adaptive', help='Test Step 3: Adaptive Integrator')
+    step3a_parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose logging')
+    
     args = parser.parse_args()
     
     if not args.command:
@@ -94,6 +102,18 @@ Examples:
         
         elif args.command == 'test-step-2':
             command = TestStep2Command(verbose=args.verbose)
+            result = command.execute()
+            command.print_result(result)
+            sys.exit(0 if result.get("success", False) else 1)
+        
+        elif args.command == 'test-step-3':
+            command = TestStep3Command(verbose=args.verbose)
+            result = command.execute()
+            command.print_result(result)
+            sys.exit(0 if result.get("success", False) else 1)
+        
+        elif args.command == 'test-step-3-adaptive':
+            command = TestStep3AdaptiveCommand(verbose=args.verbose)
             result = command.execute()
             command.print_result(result)
             sys.exit(0 if result.get("success", False) else 1)

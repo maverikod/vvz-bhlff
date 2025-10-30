@@ -43,43 +43,43 @@ class TestTimeStabilityFull:
             "mu": 1.0,
             "lambda": 0.0,
             "nu": 1.0,
-            "T": 1.0
+            "T": 1.0,
         }
-        
+
         # Create analyzer
         self.analyzer = TimeStabilityAnalyzer(self.reference_config)
-        
+
         # Test time steps
         self.time_steps = [0.001, 0.01, 0.1, 0.5, 1.0]
 
     def test_analyzer_initialization(self):
         """Test analyzer initialization."""
         assert self.analyzer.reference_config == self.reference_config
-        assert hasattr(self.analyzer, 'convergence_metrics')
+        assert hasattr(self.analyzer, "convergence_metrics")
         assert len(self.analyzer.convergence_metrics) > 0
 
     def test_time_step_stability_analysis_full_implementation(self):
         """Test full time step stability analysis implementation."""
         # Test analysis
         results = self.analyzer.analyze_time_step_stability(self.time_steps)
-        
+
         # Verify results structure
         assert "time_step_results" in results
         assert "stability_analysis" in results
-        
+
         # Verify time step results
         time_step_results = results["time_step_results"]
         assert len(time_step_results) == len(self.time_steps)
-        
+
         for dt in self.time_steps:
             assert dt in time_step_results
             time_step_result = time_step_results[dt]
-            
+
             # Verify time step result structure
             assert "config" in time_step_result
             assert "output" in time_step_result
             assert "metrics" in time_step_result
-            
+
             # Verify output structure
             output = time_step_result["output"]
             assert "power_law_exponent" in output
@@ -99,7 +99,7 @@ class TestTimeStabilityFull:
         """Test full simulation implementation."""
         # Test simulation with reference config
         output = self.analyzer._run_simulation(self.reference_config)
-        
+
         # Verify output structure
         assert "power_law_exponent" in output
         assert "topological_charge" in output
@@ -113,14 +113,14 @@ class TestTimeStabilityFull:
         assert "time_step_effects" in output
         assert "solution_field" in output
         assert "convergence_achieved" in output
-        
+
         # Verify physical quantities are reasonable
         assert isinstance(output["power_law_exponent"], (float, np.floating))
         assert isinstance(output["topological_charge"], (float, np.floating))
         assert isinstance(output["energy"], (float, np.floating))
         assert isinstance(output["quality_factor"], (float, np.floating))
         assert isinstance(output["stability"], (float, np.floating))
-        
+
         # Verify time step effects structure
         time_step_effects = output["time_step_effects"]
         assert "cfl_condition_satisfied" in time_step_effects
@@ -138,10 +138,12 @@ class TestTimeStabilityFull:
         beta = 1.0
         mu = 1.0
         lambda_param = 0.0
-        
+
         # Test initialization
-        phase_field = self.analyzer._initialize_7d_phase_field(x, beta, mu, lambda_param)
-        
+        phase_field = self.analyzer._initialize_7d_phase_field(
+            x, beta, mu, lambda_param
+        )
+
         # Verify result
         assert isinstance(phase_field, np.ndarray)
         assert len(phase_field) == len(x)
@@ -151,13 +153,13 @@ class TestTimeStabilityFull:
         """Test full 7D boundary conditions implementation."""
         # Create test field
         x = np.linspace(-10, 10, 256)
-        field = np.exp(-x**2 / 4.0)
+        field = np.exp(-(x**2) / 4.0)
         beta = 1.0
         mu = 1.0
-        
+
         # Test boundary conditions
         result = self.analyzer._apply_7d_boundary_conditions(field, x, beta, mu)
-        
+
         # Verify result
         assert isinstance(result, np.ndarray)
         assert len(result) == len(field)
@@ -167,19 +169,19 @@ class TestTimeStabilityFull:
         """Test full 7D time evolution integration implementation."""
         # Create test parameters
         x = np.linspace(-10, 10, 256)
-        initial_field = np.exp(-x**2 / 4.0)
+        initial_field = np.exp(-(x**2) / 4.0)
         dt = 0.01
         T = 0.1  # Short time for testing
         beta = 1.0
         mu = 1.0
         lambda_param = 0.0
         nu = 1.0
-        
+
         # Test integration
         solution = self.analyzer._integrate_7d_time_evolution(
             initial_field, x, dt, T, beta, mu, lambda_param, nu
         )
-        
+
         # Verify result
         assert isinstance(solution, np.ndarray)
         assert len(solution) == len(initial_field)
@@ -189,15 +191,17 @@ class TestTimeStabilityFull:
         """Test full 7D time derivative computation implementation."""
         # Create test parameters
         x = np.linspace(-10, 10, 256)
-        field = np.exp(-x**2 / 4.0)
+        field = np.exp(-(x**2) / 4.0)
         beta = 1.0
         mu = 1.0
         lambda_param = 0.0
         nu = 1.0
-        
+
         # Test computation
-        derivative = self.analyzer._compute_7d_time_derivative(field, x, beta, mu, lambda_param, nu)
-        
+        derivative = self.analyzer._compute_7d_time_derivative(
+            field, x, beta, mu, lambda_param, nu
+        )
+
         # Verify result
         assert isinstance(derivative, np.ndarray)
         assert len(derivative) == len(field)
@@ -207,12 +211,12 @@ class TestTimeStabilityFull:
         """Test full 7D power law exponent computation implementation."""
         # Create test solution
         x = np.linspace(0.1, 10.0, 100)
-        solution = np.exp(-x) * x**(-2.0)  # Known power law with exponent -2.0
+        solution = np.exp(-x) * x ** (-2.0)  # Known power law with exponent -2.0
         beta = 1.0
-        
+
         # Test computation
         exponent = self.analyzer._compute_7d_power_law_exponent(solution, x, beta)
-        
+
         # Verify result
         assert isinstance(exponent, (float, np.floating))
         assert exponent < 0  # Should be negative for decay
@@ -223,10 +227,10 @@ class TestTimeStabilityFull:
         # Create test solution
         x = np.linspace(-10, 10, 256)
         solution = np.exp(1j * x)  # Complex solution with winding
-        
+
         # Test computation
         charge = self.analyzer._compute_7d_topological_charge(solution, x)
-        
+
         # Verify result
         assert isinstance(charge, (float, np.floating))
         assert np.isfinite(charge)
@@ -235,14 +239,14 @@ class TestTimeStabilityFull:
         """Test full 7D energy computation implementation."""
         # Create test solution
         x = np.linspace(-10, 10, 256)
-        solution = np.exp(-x**2 / 4.0)
+        solution = np.exp(-(x**2) / 4.0)
         beta = 1.0
         mu = 1.0
         lambda_param = 0.0
-        
+
         # Test computation
         energy = self.analyzer._compute_7d_energy(solution, x, beta, mu, lambda_param)
-        
+
         # Verify result
         assert isinstance(energy, (float, np.floating))
         assert energy >= 0  # Energy should be non-negative
@@ -252,13 +256,13 @@ class TestTimeStabilityFull:
         """Test full 7D quality factor computation implementation."""
         # Create test solution
         x = np.linspace(-10, 10, 256)
-        solution = np.exp(-x**2 / 4.0)
+        solution = np.exp(-(x**2) / 4.0)
         mu = 1.0
         nu = 1.0
-        
+
         # Test computation
         quality_factor = self.analyzer._compute_7d_quality_factor(solution, x, mu, nu)
-        
+
         # Verify result
         assert isinstance(quality_factor, (float, np.floating))
         assert quality_factor > 0  # Quality factor should be positive
@@ -268,14 +272,14 @@ class TestTimeStabilityFull:
         """Test full 7D stability computation implementation."""
         # Create test solution
         x = np.linspace(-10, 10, 256)
-        solution = np.exp(-x**2 / 4.0)
+        solution = np.exp(-(x**2) / 4.0)
         beta = 1.0
         mu = 1.0
         dt = 0.01
-        
+
         # Test computation
         stability = self.analyzer._compute_7d_stability(solution, x, beta, mu, dt)
-        
+
         # Verify result
         assert isinstance(stability, (float, np.floating))
         assert 0.0 <= stability <= 1.0  # Stability should be between 0 and 1
@@ -285,13 +289,13 @@ class TestTimeStabilityFull:
         """Test full time step effects computation implementation."""
         # Create test solution
         x = np.linspace(-10, 10, 256)
-        solution = np.exp(-x**2 / 4.0)
+        solution = np.exp(-(x**2) / 4.0)
         dt = 0.01
         T = 1.0
-        
+
         # Test computation
         effects = self.analyzer._compute_time_step_effects(solution, x, dt, T)
-        
+
         # Verify result structure
         assert "cfl_condition_satisfied" in effects
         assert "cfl_ratio" in effects
@@ -300,7 +304,7 @@ class TestTimeStabilityFull:
         assert "time_step" in effects
         assert "total_time" in effects
         assert "n_steps" in effects
-        
+
         # Verify values are reasonable
         assert isinstance(effects["cfl_condition_satisfied"], bool)
         assert isinstance(effects["cfl_ratio"], (float, np.floating))
@@ -314,11 +318,11 @@ class TestTimeStabilityFull:
         """Test full energy conservation computation implementation."""
         # Create test solution
         x = np.linspace(-10, 10, 256)
-        solution = np.exp(-x**2 / 4.0)
-        
+        solution = np.exp(-(x**2) / 4.0)
+
         # Test computation
         conservation = self.analyzer._compute_energy_conservation(solution, x)
-        
+
         # Verify result
         assert isinstance(conservation, (float, np.floating))
         assert 0.0 <= conservation <= 1.0  # Conservation should be between 0 and 1
@@ -327,17 +331,11 @@ class TestTimeStabilityFull:
     def test_simplified_simulation_fallback(self):
         """Test simplified simulation fallback."""
         # Create config that might cause full simulation to fail
-        config = {
-            "N": 256,
-            "L": 20.0,
-            "beta": 1.0,
-            "mu": 1.0,
-            "dt": 0.01
-        }
-        
+        config = {"N": 256, "L": 20.0, "beta": 1.0, "mu": 1.0, "dt": 0.01}
+
         # Test simplified simulation
         output = self.analyzer._run_simplified_simulation(config)
-        
+
         # Verify output structure
         assert "power_law_exponent" in output
         assert "topological_charge" in output
@@ -349,7 +347,7 @@ class TestTimeStabilityFull:
         assert "time_step" in output
         assert "convergence_achieved" in output
         assert "simplified" in output
-        
+
         # Verify simplified flag
         assert output["simplified"] == True
         assert output["convergence_achieved"] == False
@@ -362,16 +360,16 @@ class TestTimeStabilityFull:
             "topological_charge": 1.0,
             "energy": 1.5,
             "quality_factor": 2.0,
-            "stability": 1.0
+            "stability": 1.0,
         }
-        
+
         # Test metrics computation
         metrics = self.analyzer._compute_metrics(output)
-        
+
         # Verify result
         assert isinstance(metrics, dict)
         assert len(metrics) > 0
-        
+
         # Verify all convergence metrics are present
         for metric in self.analyzer.convergence_metrics:
             assert metric in metrics
@@ -387,7 +385,7 @@ class TestTimeStabilityFull:
                     "topological_charge": 1.0,
                     "energy": 1.5,
                     "quality_factor": 2.0,
-                    "stability": 1.0
+                    "stability": 1.0,
                 }
             },
             0.1: {
@@ -396,19 +394,19 @@ class TestTimeStabilityFull:
                     "topological_charge": 1.1,
                     "energy": 1.6,
                     "quality_factor": 2.1,
-                    "stability": 0.9
+                    "stability": 0.9,
                 }
-            }
+            },
         }
-        
+
         # Test analysis
         analysis = self.analyzer._analyze_time_step_stability(results)
-        
+
         # Verify result structure
         assert "stability_metrics" in analysis
         assert "overall_stability" in analysis
         assert "time_steps" in analysis
-        
+
         # Verify stability metrics
         stability_metrics = analysis["stability_metrics"]
         for metric in self.analyzer.convergence_metrics:
@@ -425,16 +423,16 @@ class TestTimeStabilityFull:
         # Create test data
         time_steps = [0.01, 0.1, 1.0]
         values = [1.0, 1.1, 1.2]
-        
+
         # Test analysis
         result = self.analyzer._analyze_metric_stability(time_steps, values)
-        
+
         # Verify result structure
         assert "stability" in result
         assert "score" in result
         assert "max_change" in result
         assert "mean_change" in result
-        
+
         # Verify values are reasonable
         assert isinstance(result["stability"], str)
         assert isinstance(result["score"], (float, np.floating))
@@ -450,17 +448,17 @@ class TestTimeStabilityFull:
             "topological_charge": {"score": 0.8},
             "energy": {"score": 0.7},
             "quality_factor": {"score": 0.6},
-            "stability": {"score": 0.5}
+            "stability": {"score": 0.5},
         }
-        
+
         # Test analysis
         result = self.analyzer._analyze_overall_stability(stability_metrics)
-        
+
         # Verify result structure
         assert "overall_score" in result
         assert "stability" in result
         assert "individual_scores" in result
-        
+
         # Verify values are reasonable
         assert isinstance(result["overall_score"], (float, np.floating))
         assert 0.0 <= result["overall_score"] <= 1.0
@@ -475,12 +473,12 @@ class TestTimeStabilityFull:
             "L": 20.0,
             "beta": 1.0,
             "mu": 1.0,
-            "dt": 0.01
+            "dt": 0.01,
         }
-        
+
         # Should handle error gracefully
         output = self.analyzer._run_simulation(invalid_config)
-        
+
         # Verify error handling
         assert "convergence_achieved" in output
         # Should fall back to simplified simulation
@@ -489,16 +487,16 @@ class TestTimeStabilityFull:
     def test_performance_full_implementation(self):
         """Test performance of full implementation."""
         import time
-        
+
         # Measure analysis time
         start_time = time.time()
         results = self.analyzer.analyze_time_step_stability(self.time_steps)
         end_time = time.time()
-        
+
         # Verify analysis completed
         assert "time_step_results" in results
         assert "stability_analysis" in results
-        
+
         # Verify reasonable performance
         analysis_time = end_time - start_time
         assert analysis_time < 180.0  # Should complete within 3 minutes
@@ -507,18 +505,22 @@ class TestTimeStabilityFull:
         """Test CFL condition checking in stability computation."""
         # Create test parameters
         x = np.linspace(-10, 10, 256)
-        solution = np.exp(-x**2 / 4.0)
+        solution = np.exp(-(x**2) / 4.0)
         beta = 1.0
         mu = 1.0
-        
+
         # Test with stable time step
         dt_stable = 0.001
-        stability_stable = self.analyzer._compute_7d_stability(solution, x, beta, mu, dt_stable)
-        
+        stability_stable = self.analyzer._compute_7d_stability(
+            solution, x, beta, mu, dt_stable
+        )
+
         # Test with unstable time step
         dt_unstable = 1.0
-        stability_unstable = self.analyzer._compute_7d_stability(solution, x, beta, mu, dt_unstable)
-        
+        stability_unstable = self.analyzer._compute_7d_stability(
+            solution, x, beta, mu, dt_unstable
+        )
+
         # Verify stability differences
         assert isinstance(stability_stable, (float, np.floating))
         assert isinstance(stability_unstable, (float, np.floating))

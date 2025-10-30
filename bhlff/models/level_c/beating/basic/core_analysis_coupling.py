@@ -145,6 +145,8 @@ class ModeCouplingAnalyzer:
             float: Coupling efficiency.
         """
         # Calculate coupling efficiency
-        coupling_efficiency = np.mean(np.abs(envelope)) / (np.max(np.abs(envelope)) + 1e-12)
+        coupling_efficiency = np.mean(np.abs(envelope)) / (
+            np.max(np.abs(envelope)) + 1e-12
+        )
 
         return float(coupling_efficiency)

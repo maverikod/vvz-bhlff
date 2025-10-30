@@ -33,7 +33,7 @@ from .geometry_testing import GeometryRobustnessTester
 
 __all__ = [
     "RobustnessTester",
-    "NoiseRobustnessTester", 
+    "NoiseRobustnessTester",
     "ParameterRobustnessTester",
-    "GeometryRobustnessTester"
+    "GeometryRobustnessTester",
 ]

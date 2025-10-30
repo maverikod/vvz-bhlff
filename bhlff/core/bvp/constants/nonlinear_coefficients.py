@@ -56,7 +56,7 @@ class NonlinearCoefficients:
             constants: BVP constants instance.
         """
         self.constants = constants
-        
+
         # Initialize coefficient attributes from constants
         self.kappa_0 = constants.get_envelope_parameter("kappa_0")
         self.kappa_2 = constants.get_envelope_parameter("kappa_2")

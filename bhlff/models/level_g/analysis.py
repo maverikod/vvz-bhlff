@@ -22,4 +22,4 @@ from typing import Dict, Any
 from .analysis.cosmological_analysis import CosmologicalAnalysis
 
 # Re-export the main class for backward compatibility
-__all__ = ['CosmologicalAnalysis']
+__all__ = ["CosmologicalAnalysis"]

@@ -31,14 +31,14 @@ from .integration.test_integration import TestIntegration
 
 # Re-export all test classes for backward compatibility
 __all__ = [
-    'TestSensitivityAnalyzer',
-    'TestRobustnessTester',
-    'TestDiscretizationAnalyzer',
-    'TestFailureDetector',
-    'TestPhaseMapper',
-    'TestPerformanceAnalyzer',
-    'TestSolitonModels',
-    'TestDefectModels',
-    'TestLevelEExperiments',
-    'TestIntegration'
+    "TestSensitivityAnalyzer",
+    "TestRobustnessTester",
+    "TestDiscretizationAnalyzer",
+    "TestFailureDetector",
+    "TestPhaseMapper",
+    "TestPerformanceAnalyzer",
+    "TestSolitonModels",
+    "TestDefectModels",
+    "TestLevelEExperiments",
+    "TestIntegration",
 ]

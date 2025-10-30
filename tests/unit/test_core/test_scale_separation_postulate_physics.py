@@ -87,8 +87,10 @@ class TestScaleSeparationPostulatePhysics:
         x = np.linspace(0, domain_7d.L_spatial, domain_7d.N_spatial)
         y = np.linspace(0, domain_7d.L_spatial, domain_7d.N_spatial)
         z = np.linspace(0, domain_7d.L_spatial, domain_7d.N_spatial)
-        
-        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(x, y, z, phi1, phi2, phi3, t, indexing="ij")
+
+        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(
+            x, y, z, phi1, phi2, phi3, t, indexing="ij"
+        )
         phase_factor = np.exp(1j * (PHI1 + PHI2 + PHI3 + 0.1 * T))
 
         envelope = envelope * phase_factor
@@ -110,10 +112,7 @@ class TestScaleSeparationPostulatePhysics:
             Tests that λ_carrier << λ_envelope where λ are characteristic
             wavelengths of carrier and envelope components.
         """
-        config = {
-            "carrier_frequency": 1.85e43,
-            "max_epsilon": 0.1
-        }
+        config = {"carrier_frequency": 1.85e43, "max_epsilon": 0.1}
         postulate = BVPPostulate2_ScaleSeparation(domain_7d, config)
 
         # Apply postulate
@@ -136,4 +135,6 @@ class TestScaleSeparationPostulatePhysics:
 
         # Physical validation 4: Characteristic frequency should be finite
         char_freq = result["characteristic_frequency"]
-        assert np.isfinite(char_freq), f"Characteristic frequency not finite: {char_freq}"
+        assert np.isfinite(
+            char_freq
+        ), f"Characteristic frequency not finite: {char_freq}"

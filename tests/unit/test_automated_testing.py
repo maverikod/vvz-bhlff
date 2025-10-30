@@ -25,8 +25,8 @@ from .automated_testing.test_integration import TestIntegration
 
 # Re-export all test classes for backward compatibility
 __all__ = [
-    'TestAutomatedTestingSystem',
-    'TestQualityMonitor',
-    'TestAutomatedReportingSystem',
-    'TestIntegration'
+    "TestAutomatedTestingSystem",
+    "TestQualityMonitor",
+    "TestAutomatedReportingSystem",
+    "TestIntegration",
 ]

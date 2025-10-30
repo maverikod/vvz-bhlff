@@ -120,31 +120,37 @@ class StructureFormation:
         field_spectral = np.fft.fftn(phase_field)
         autocorr_spectral = np.conj(field_spectral) * field_spectral
         autocorr = np.fft.ifftn(autocorr_spectral).real
-        
+
         # Find correlation length from autocorrelation decay
         # Normalize autocorrelation
         autocorr_normalized = autocorr / autocorr[0, 0, 0]
-        
+
         # Find where autocorrelation drops to 1/e
         threshold = 1.0 / np.e
-        
+
         # Search for correlation length in each dimension
         correlation_lengths = []
         for axis in range(3):
             # Take central slice along axis
             if axis == 0:
-                slice_data = autocorr_normalized[:, self.resolution//2, self.resolution//2]
+                slice_data = autocorr_normalized[
+                    :, self.resolution // 2, self.resolution // 2
+                ]
             elif axis == 1:
-                slice_data = autocorr_normalized[self.resolution//2, :, self.resolution//2]
+                slice_data = autocorr_normalized[
+                    self.resolution // 2, :, self.resolution // 2
+                ]
             else:
-                slice_data = autocorr_normalized[self.resolution//2, self.resolution//2, :]
-            
+                slice_data = autocorr_normalized[
+                    self.resolution // 2, self.resolution // 2, :
+                ]
+
             # Find first point below threshold
             indices = np.where(slice_data < threshold)[0]
             if len(indices) > 0:
                 correlation_length = indices[0] * (self.domain_size / self.resolution)
                 correlation_lengths.append(correlation_length)
-        
+
         # Return average correlation length
         if correlation_lengths:
             return np.mean(correlation_lengths)
@@ -174,12 +180,12 @@ class StructureFormation:
 
         # Full topological defect counting using 7D phase field theory
         # Compute winding number and topological charge in 7D space
-        
+
         # Compute phase field gradient in 7D
         grad_x = np.gradient(phase_field, axis=0)
         grad_y = np.gradient(phase_field, axis=1)
         grad_z = np.gradient(phase_field, axis=2)
-        
+
         # Compute winding number for each 2D slice
         winding_numbers = []
         for i in range(phase_field.shape[0]):
@@ -188,15 +194,17 @@ class StructureFormation:
                 # Compute winding number for 2D slice
                 grad_slice_x = np.gradient(slice_2d, axis=0)
                 grad_slice_y = np.gradient(slice_2d, axis=1)
-                
+
                 # Compute curl for winding number
-                curl = np.gradient(grad_slice_y, axis=0) - np.gradient(grad_slice_x, axis=1)
+                curl = np.gradient(grad_slice_y, axis=0) - np.gradient(
+                    grad_slice_x, axis=1
+                )
                 winding = np.sum(curl) / (2 * np.pi)
                 winding_numbers.append(abs(winding))
-        
+
         # Count defects as integer winding numbers
         defect_count = sum(int(w) for w in winding_numbers if w > 0.5)
-        
+
         return defect_count
 
     def _compute_structure_growth_rate(self, phase_field: np.ndarray) -> float:
@@ -222,25 +230,25 @@ class StructureFormation:
 
         # Full 7D phase field growth rate computation
         # Based on 7D phase field evolution equation
-        
+
         # Compute phase field energy density
         field_energy_density = np.sum(phase_field**2)
-        
+
         # Compute phase field gradient energy
         grad_x = np.gradient(phase_field, axis=0)
         grad_y = np.gradient(phase_field, axis=1)
         grad_z = np.gradient(phase_field, axis=2)
         gradient_energy = np.sum(grad_x**2 + grad_y**2 + grad_z**2)
-        
+
         # Compute total energy
         total_energy = field_energy_density + gradient_energy
-        
+
         # Compute growth rate from energy evolution
         # Based on 7D phase field dynamics
         growth_rate = total_energy / (self.domain_size**3)
-        
+
         # Apply 7D phase field corrections
         phase_correction = 1.0 + 0.1 * np.sin(np.sum(phase_field))
         growth_rate *= phase_correction
-        
+
         return float(growth_rate)

@@ -23,4 +23,4 @@ Example:
 from .transitions.phase_transitions_core import PhaseTransitions
 
 # Re-export the main class for backward compatibility
-__all__ = ['PhaseTransitions']
+__all__ = ["PhaseTransitions"]

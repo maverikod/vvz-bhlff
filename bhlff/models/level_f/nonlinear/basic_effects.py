@@ -57,12 +57,12 @@ class BasicNonlinearEffects(AbstractModel):
         super().__init__()
         self.system = system
         self.nonlinear_params = nonlinear_params
-        
+
         # Nonlinear parameters
         self.nonlinear_strength = nonlinear_params.get("strength", 1.0)
         self.nonlinear_order = nonlinear_params.get("order", 3)
         self.nonlinear_type = nonlinear_params.get("type", "cubic")
-        
+
         # Initialize nonlinear terms
         self._initialize_nonlinear_terms()
 
@@ -76,7 +76,7 @@ class BasicNonlinearEffects(AbstractModel):
         """
         # Initialize nonlinear potential
         self._initialize_nonlinear_potential()
-        
+
         # Initialize nonlinear dynamics
         self._initialize_nonlinear_dynamics()
 
@@ -106,8 +106,12 @@ class BasicNonlinearEffects(AbstractModel):
             Sets up cubic nonlinear terms in the potential
             U_nonlinear = g * |ψ|^3
         """
-        self.nonlinear_potential = lambda psi: self.nonlinear_strength * self._step_resonator_potential_3d(psi)
-        self.nonlinear_force = lambda psi: -3 * self.nonlinear_strength * np.abs(psi) * np.sign(psi)
+        self.nonlinear_potential = (
+            lambda psi: self.nonlinear_strength * self._step_resonator_potential_3d(psi)
+        )
+        self.nonlinear_force = (
+            lambda psi: -3 * self.nonlinear_strength * np.abs(psi) * np.sign(psi)
+        )
 
     def _setup_quartic_nonlinearity(self) -> None:
         """
@@ -117,8 +121,12 @@ class BasicNonlinearEffects(AbstractModel):
             Sets up quartic nonlinear terms in the potential
             U_nonlinear = g * |ψ|^4
         """
-        self.nonlinear_potential = lambda psi: self.nonlinear_strength * self._step_resonator_potential_4d(psi)
-        self.nonlinear_force = lambda psi: -4 * self.nonlinear_strength * np.abs(psi) ** 2 * np.sign(psi)
+        self.nonlinear_potential = (
+            lambda psi: self.nonlinear_strength * self._step_resonator_potential_4d(psi)
+        )
+        self.nonlinear_force = (
+            lambda psi: -4 * self.nonlinear_strength * np.abs(psi) ** 2 * np.sign(psi)
+        )
 
     def _setup_sine_gordon_nonlinearity(self) -> None:
         """
@@ -128,7 +136,10 @@ class BasicNonlinearEffects(AbstractModel):
             Sets up sine-Gordon nonlinear terms in the potential
             U_nonlinear = g * sin(φ)
         """
-        self.nonlinear_potential = lambda psi: self.nonlinear_strength * self._step_resonator_potential_sine_gordon(psi)
+        self.nonlinear_potential = (
+            lambda psi: self.nonlinear_strength
+            * self._step_resonator_potential_sine_gordon(psi)
+        )
         self.nonlinear_force = lambda psi: -self.nonlinear_strength * np.sin(psi)
 
     def _initialize_nonlinear_dynamics(self) -> None:
@@ -141,7 +152,7 @@ class BasicNonlinearEffects(AbstractModel):
         """
         # Initialize nonlinear coupling
         self.nonlinear_coupling = self.nonlinear_strength
-        
+
         # Initialize nonlinear damping
         self.nonlinear_damping = 0.1 * self.nonlinear_strength
 
@@ -176,7 +187,7 @@ class BasicNonlinearEffects(AbstractModel):
             potential energy.
         """
         # Add nonlinear potential to system
-        if hasattr(self.system, 'add_potential'):
+        if hasattr(self.system, "add_potential"):
             self.system.add_potential(self.nonlinear_potential)
 
     def _add_nonlinear_dynamics(self) -> None:
@@ -188,7 +199,7 @@ class BasicNonlinearEffects(AbstractModel):
             equations of motion.
         """
         # Add nonlinear force to system
-        if hasattr(self.system, 'add_force'):
+        if hasattr(self.system, "add_force"):
             self.system.add_force(self.nonlinear_force)
 
     def compute_nonlinear_energy(self, field: np.ndarray) -> float:
@@ -268,7 +279,9 @@ class BasicNonlinearEffects(AbstractModel):
             "nonlinear_strength": self.nonlinear_strength,
         }
 
-    def compute_nonlinear_corrections(self, linear_modes: Dict[str, Any]) -> Dict[str, Any]:
+    def compute_nonlinear_corrections(
+        self, linear_modes: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Compute nonlinear corrections to linear modes.
 
@@ -289,7 +302,7 @@ class BasicNonlinearEffects(AbstractModel):
         nonlinear_frequencies = []
         for freq in linear_frequencies:
             # Nonlinear frequency shift
-            shift = self.nonlinear_strength * freq ** 2
+            shift = self.nonlinear_strength * freq**2
             nonlinear_freq = freq + shift
             nonlinear_frequencies.append(nonlinear_freq)
 
@@ -298,15 +311,19 @@ class BasicNonlinearEffects(AbstractModel):
         nonlinear_amplitudes = []
         for amp in linear_amplitudes:
             # Nonlinear amplitude correction
-            correction = self.nonlinear_strength * amp ** 2
+            correction = self.nonlinear_strength * amp**2
             nonlinear_amp = amp + correction
             nonlinear_amplitudes.append(nonlinear_amp)
 
         return {
             "frequencies": nonlinear_frequencies,
             "amplitudes": nonlinear_amplitudes,
-            "frequency_shifts": [nf - lf for nf, lf in zip(nonlinear_frequencies, linear_frequencies)],
-            "amplitude_corrections": [na - la for na, la in zip(nonlinear_amplitudes, linear_amplitudes)],
+            "frequency_shifts": [
+                nf - lf for nf, lf in zip(nonlinear_frequencies, linear_frequencies)
+            ],
+            "amplitude_corrections": [
+                na - la for na, la in zip(nonlinear_amplitudes, linear_amplitudes)
+            ],
         }
 
     def find_bifurcation_points(self) -> List[Dict[str, Any]]:
@@ -328,12 +345,14 @@ class BasicNonlinearEffects(AbstractModel):
         critical_strength = 1.0 / self.nonlinear_strength
 
         # Add bifurcation point
-        bifurcations.append({
-            "parameter": "nonlinear_strength",
-            "critical_value": critical_strength,
-            "type": "pitchfork",
-            "stability": "unstable",
-        })
+        bifurcations.append(
+            {
+                "parameter": "nonlinear_strength",
+                "critical_value": critical_strength,
+                "type": "pitchfork",
+                "stability": "unstable",
+            }
+        )
 
         return bifurcations
 
@@ -393,60 +412,61 @@ class BasicNonlinearEffects(AbstractModel):
         stability_matrix = np.random.rand(n_modes, n_modes) - 0.5
 
         return stability_matrix
-    
+
     def _step_resonator_potential_3d(self, psi: np.ndarray) -> np.ndarray:
         """
         Step resonator potential for 3D nonlinearity according to 7D BVP theory.
-        
+
         Physical Meaning:
             Implements step function potential for 3D nonlinearity
             instead of classical |ψ|^3 potential according to 7D BVP theory.
-            
+
         Args:
             psi (np.ndarray): Field values.
-            
+
         Returns:
             np.ndarray: Step function potential values.
         """
         cutoff_amplitude = 1.0
         potential_coeff = 1.0
-        return potential_coeff * np.where(np.abs(psi) < cutoff_amplitude, 
-                                         np.abs(psi), 0.0)
-    
+        return potential_coeff * np.where(
+            np.abs(psi) < cutoff_amplitude, np.abs(psi), 0.0
+        )
+
     def _step_resonator_potential_4d(self, psi: np.ndarray) -> np.ndarray:
         """
         Step resonator potential for 4D nonlinearity according to 7D BVP theory.
-        
+
         Physical Meaning:
             Implements step function potential for 4D nonlinearity
             instead of classical |ψ|^4 potential according to 7D BVP theory.
-            
+
         Args:
             psi (np.ndarray): Field values.
-            
+
         Returns:
             np.ndarray: Step function potential values.
         """
         cutoff_amplitude = 1.0
         potential_coeff = 1.0
-        return potential_coeff * np.where(np.abs(psi) < cutoff_amplitude, 
-                                         np.abs(psi)**2, 0.0)
-    
+        return potential_coeff * np.where(
+            np.abs(psi) < cutoff_amplitude, np.abs(psi) ** 2, 0.0
+        )
+
     def _step_resonator_potential_sine_gordon(self, psi: np.ndarray) -> np.ndarray:
         """
         Step resonator potential for sine-Gordon nonlinearity according to 7D BVP theory.
-        
+
         Physical Meaning:
             Implements step function potential for sine-Gordon nonlinearity
             instead of classical (1 - cos(ψ)) potential according to 7D BVP theory.
-            
+
         Args:
             psi (np.ndarray): Field values.
-            
+
         Returns:
             np.ndarray: Step function potential values.
         """
-        cutoff_phase = np.pi/2
+        cutoff_phase = np.pi / 2
         potential_coeff = 1.0
-        return potential_coeff * np.where(np.abs(psi) < cutoff_phase, 
-                                         np.abs(psi), 0.0)
+        return potential_coeff * np.where(np.abs(psi) < cutoff_phase, np.abs(psi), 0.0)

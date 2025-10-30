@@ -13,7 +13,7 @@ Theoretical Background:
     effective potentials that include single-particle, pair-wise, and
     higher-order interactions:
     U_eff = Σᵢ Uᵢ + Σᵢ<ⱼ Uᵢⱼ + Σᵢ<ⱼ<ₖ Uᵢⱼₖ + ...
-    
+
     Collective modes arise from the diagonalization of the dynamics matrix
     E⁻¹K, where E is the energy matrix and K is the stiffness matrix.
 
@@ -51,8 +51,13 @@ class MultiParticleSystem(AbstractModel):
         - Correlation functions: G(x,t) = ⟨ψ*(x,t)ψ(0,0)⟩
     """
 
-    def __init__(self, domain, particles: List[Particle], interaction_range: float = 2.0, 
-                 system_params: Optional[SystemParameters] = None):
+    def __init__(
+        self,
+        domain,
+        particles: List[Particle],
+        interaction_range: float = 2.0,
+        system_params: Optional[SystemParameters] = None,
+    ):
         """
         Initialize multi-particle system.
 
@@ -71,11 +76,17 @@ class MultiParticleSystem(AbstractModel):
         self.particles = particles
         self.interaction_range = interaction_range
         self.system_params = system_params or SystemParameters()
-        
+
         # Initialize analysis components
-        self._potential_analyzer = MultiParticlePotentialAnalyzer(domain, particles, interaction_range)
-        self._modes_analyzer = MultiParticleModesAnalyzer(domain, particles, interaction_range)
-        self._system_analyzer = MultiParticleSystemAnalyzer(domain, particles, interaction_range)
+        self._potential_analyzer = MultiParticlePotentialAnalyzer(
+            domain, particles, interaction_range
+        )
+        self._modes_analyzer = MultiParticleModesAnalyzer(
+            domain, particles, interaction_range
+        )
+        self._system_analyzer = MultiParticleSystemAnalyzer(
+            domain, particles, interaction_range
+        )
 
     def compute_effective_potential(self) -> np.ndarray:
         """
@@ -110,7 +121,9 @@ class MultiParticleSystem(AbstractModel):
         """
         return self._modes_analyzer.find_collective_modes()
 
-    def compute_correlation_function(self, field: np.ndarray, time_points: np.ndarray) -> np.ndarray:
+    def compute_correlation_function(
+        self, field: np.ndarray, time_points: np.ndarray
+    ) -> np.ndarray:
         """
         Compute correlation function.
 

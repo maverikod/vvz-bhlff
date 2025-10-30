@@ -39,7 +39,13 @@ from .physics_validator import PhysicsValidator
 from .test_scheduler import TestScheduler
 from .resource_manager import ResourceManager, ResourceContext, ResourceLimitError
 from .results_database import ResultsDatabase
-from .test_results import TestResult, LevelTestResults, TestResults, TestPriority, TestStatus
+from .test_results import (
+    TestResult,
+    LevelTestResults,
+    TestResults,
+    TestPriority,
+    TestStatus,
+)
 
 
 class AutomatedTestingSystem:
@@ -350,13 +356,13 @@ class AutomatedTestingSystem:
         # Mark level as failed
         level_results.status = "FAILED"
         level_results.failure_reason = "Critical physics failure"
-        
+
         # Stop all active tests for this level
         self._stop_level_tests(level)
-        
+
         # Notify monitoring systems
         self._notify_critical_failure(level, level_results)
-        
+
         # Update failure statistics
         self.failure_stats.critical_failures += 1
         self.failure_stats.failed_levels.add(level)

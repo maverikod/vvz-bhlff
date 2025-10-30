@@ -132,7 +132,9 @@ class SensitivityAnalyzer:
         ranking = self.sobol_analyzer._rank_parameters(sobol_indices)
 
         # Compute stability metrics
-        stability_metrics = self.sobol_analyzer._compute_stability_metrics(sobol_indices)
+        stability_metrics = self.sobol_analyzer._compute_stability_metrics(
+            sobol_indices
+        )
 
         return {
             "samples": samples,
@@ -155,7 +157,9 @@ class SensitivityAnalyzer:
             the correlation between particle energy and field complexity
             in the 7D phase field theory.
         """
-        return self.energy_complexity_analyzer.analyze_energy_complexity_correlation(samples, outputs)
+        return self.energy_complexity_analyzer.analyze_energy_complexity_correlation(
+            samples, outputs
+        )
 
     def save_results(self, results: Dict[str, Any], filename: str) -> None:
         """

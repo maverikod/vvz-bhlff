@@ -26,6 +26,7 @@ Example:
 from .fft_backend import FFTBackend
 from .spectral_operations import SpectralOperations
 from .fft_solver_7d import FFTSolver7D
+
 # Note: FractionalLaplacian is provided by operators package
 from bhlff.core.operators.fractional_laplacian import FractionalLaplacian
 from .memory_manager_7d import MemoryManager7D

@@ -42,7 +42,14 @@ class TestQuenchDetector:
     def domain_7d(self):
         """Create 7D domain for testing."""
         spatial_config = SpatialConfig(L_x=1.0, L_y=1.0, L_z=1.0, N_x=8, N_y=8, N_z=8)
-        phase_config = PhaseConfig(phi_1_max=2*np.pi, phi_2_max=2*np.pi, phi_3_max=2*np.pi, N_phi_1=4, N_phi_2=4, N_phi_3=4)
+        phase_config = PhaseConfig(
+            phi_1_max=2 * np.pi,
+            phi_2_max=2 * np.pi,
+            phi_3_max=2 * np.pi,
+            N_phi_1=4,
+            N_phi_2=4,
+            N_phi_3=4,
+        )
         temporal_config = TemporalConfig(T_max=1.0, N_t=8, dt=0.125)
         return Domain7D(spatial_config, phase_config, temporal_config)
 
@@ -53,7 +60,7 @@ class TestQuenchDetector:
             "amplitude_threshold": 10.0,
             "detuning_threshold": 1e-2,
             "gradient_threshold": 1e-3,
-            "use_cuda": False
+            "use_cuda": False,
         }
         return QuenchDetector(domain_7d, config)
 
@@ -139,7 +146,7 @@ class TestQuenchDetector:
         # Test multiple times with same field
         quenches1 = quench_detector.detect_quenches(field)
         quenches2 = quench_detector.detect_quenches(field)
-        
+
         # Results should be consistent
         assert isinstance(quenches1, dict)
         assert isinstance(quenches2, dict)
@@ -177,7 +184,7 @@ class TestQuenchDetector:
             "amplitude_threshold": 10.0,
             "detuning_threshold": 1e-2,
             "gradient_threshold": 1e-3,
-            "use_cuda": False
+            "use_cuda": False,
         }
         detector = QuenchDetector(domain_7d, config)
         assert detector.amplitude_threshold == 10.0
@@ -191,8 +198,8 @@ class TestQuenchDetector:
                     "amplitude_threshold": 10.0,
                     "detuning_threshold": -1e-2,
                     "gradient_threshold": 1e-3,
-                    "use_cuda": False
-                }
+                    "use_cuda": False,
+                },
             )
 
         with pytest.raises(ValueError, match="Amplitude threshold must be positive"):
@@ -202,8 +209,8 @@ class TestQuenchDetector:
                     "amplitude_threshold": -10.0,
                     "detuning_threshold": 1e-2,
                     "gradient_threshold": 1e-3,
-                    "use_cuda": False
-                }
+                    "use_cuda": False,
+                },
             )
 
     def test_quench_field_validation(self, quench_detector, domain_7d):
@@ -250,7 +257,7 @@ class TestQuenchDetector:
         for i in range(5):
             field = np.ones(domain_7d.shape, dtype=np.complex128) * (20.0 + i)
             result = quench_detector.detect_quenches(field)
-            
+
             # Check that result is a valid dictionary
             assert isinstance(result, dict)
             assert "quenches_detected" in result
@@ -272,7 +279,7 @@ class TestQuenchDetector:
 
         # Test that detect_quenches returns valid results
         result = quench_detector.detect_quenches(field)
-        
+
         # Check that result is a valid dictionary with expected keys
         assert isinstance(result, dict)
         assert "quenches_detected" in result

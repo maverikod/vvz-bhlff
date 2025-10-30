@@ -159,7 +159,7 @@ class TemporalCoherenceAnalyzer:
 
         # Compute cross-correlation
         correlation = np.sum(intensity1 * intensity2) / (
-            np.sqrt(np.sum(intensity1 ** 2) * np.sum(intensity2 ** 2)) + 1e-12
+            np.sqrt(np.sum(intensity1**2) * np.sum(intensity2**2)) + 1e-12
         )
 
         return correlation

@@ -81,7 +81,12 @@ class TestBasicIntegrators:
 
     def test_quench_detector_creation(self, domain_7d, parameters_basic):
         """Test quench detector creation."""
-        detector = QuenchDetector(domain_7d, energy_threshold=0.1, rate_threshold=0.01, magnitude_threshold=0.5)
+        detector = QuenchDetector(
+            domain_7d,
+            energy_threshold=0.1,
+            rate_threshold=0.01,
+            magnitude_threshold=0.5,
+        )
 
         # Check that detector is created successfully
         assert detector is not None, "Quench detector should be created"
@@ -126,7 +131,9 @@ class TestBasicIntegrators:
 
         # Test with invalid domain (negative L)
         with pytest.raises(ValueError):
-            invalid_domain = Domain7DBVP(L_spatial=-1.0, N_spatial=8, N_phase=4, T=1.0, N_t=8)
+            invalid_domain = Domain7DBVP(
+                L_spatial=-1.0, N_spatial=8, N_phase=4, T=1.0, N_t=8
+            )
             BVPEnvelopeIntegrator(invalid_domain, parameters_basic)
 
     def test_integrator_basic_functionality(self, domain_7d, parameters_basic):
@@ -161,13 +168,16 @@ class TestBasicIntegrators:
         assert hasattr(
             kernel, "get_memory_contribution"
         ), "Memory kernel should have get_memory_contribution method"
-        assert hasattr(
-            kernel, "evolve"
-        ), "Memory kernel should have evolve method"
+        assert hasattr(kernel, "evolve"), "Memory kernel should have evolve method"
 
     def test_quench_detector_functionality(self, domain_7d, parameters_basic):
         """Test quench detector functionality."""
-        detector = QuenchDetector(domain_7d, energy_threshold=0.1, rate_threshold=0.01, magnitude_threshold=0.5)
+        detector = QuenchDetector(
+            domain_7d,
+            energy_threshold=0.1,
+            rate_threshold=0.01,
+            magnitude_threshold=0.5,
+        )
 
         # Check that detector has required methods
         assert hasattr(
@@ -217,7 +227,9 @@ class TestBasicIntegrators:
         start_time = time.time()
         try:
             time_steps = np.linspace(0, 0.1, 10)
-            source_field = np.zeros((len(time_steps),) + test_field.shape, dtype=test_field.dtype)
+            source_field = np.zeros(
+                (len(time_steps),) + test_field.shape, dtype=test_field.dtype
+            )
             result = integrator.integrate(test_field, source_field, time_steps)
             end_time = time.time()
 

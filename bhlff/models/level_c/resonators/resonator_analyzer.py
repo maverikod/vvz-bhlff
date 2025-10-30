@@ -306,18 +306,18 @@ class ResonatorAnalyzer:
         """Convert array index to frequency."""
         # Full 7D phase field frequency conversion
         # Based on 7D phase field theory frequency analysis
-        
+
         # Compute 7D phase field frequency
         base_frequency = float(index) / float(shape[0])
-        
+
         # Apply 7D phase field corrections
         phase_correction = 1.0 + 0.1 * np.sin(index)
         frequency = base_frequency * phase_correction
-        
+
         # Apply 7D phase field damping using step resonator model
         damping_factor = self._step_resonator_damping(index, shape[0])
         frequency *= damping_factor
-        
+
         return frequency
 
     def _calculate_peak_width(
@@ -382,30 +382,30 @@ class ResonatorAnalyzer:
 
         energy_transfer = field_energy * resonance_energy
         return float(energy_transfer)
-    
+
     def _step_resonator_damping(self, index: int, shape_length: int) -> float:
         """
         Step function resonator damping.
-        
+
         Physical Meaning:
             Implements step resonator model for frequency damping instead of
             exponential decay. This follows 7D BVP theory principles where
             energy exchange occurs through semi-transparent boundaries.
-            
+
         Mathematical Foundation:
             D(index) = D₀ * Θ(index_cutoff - index) where Θ is the Heaviside step function
             and index_cutoff is the cutoff index for the resonator.
-            
+
         Args:
             index (int): Array index
             shape_length (int): Length of the array shape
-            
+
         Returns:
             float: Step function damping factor
         """
         # Step resonator parameters
         damping_strength = 1.0
         cutoff_ratio = 0.8  # 80% of array length
-        
+
         # Step function damping: 1.0 below cutoff, 0.0 above
         return damping_strength if index < shape_length * cutoff_ratio else 0.0

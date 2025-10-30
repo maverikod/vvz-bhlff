@@ -21,4 +21,4 @@ Example:
 from .observational_comparison import ObservationalComparisonCore
 
 # Maintain backward compatibility
-__all__ = ['ObservationalComparisonCore']
+__all__ = ["ObservationalComparisonCore"]

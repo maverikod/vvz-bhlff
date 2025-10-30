@@ -116,36 +116,42 @@ class StructureFormation:
 
         # Full 7D phase field correlation length computation
         # Based on 7D phase field theory correlation analysis
-        
+
         # Compute autocorrelation function using FFT
         field_spectral = np.fft.fftn(phase_field)
         autocorr_spectral = np.conj(field_spectral) * field_spectral
         autocorr = np.fft.ifftn(autocorr_spectral).real
-        
+
         # Find correlation length from autocorrelation decay
         # Normalize autocorrelation
         autocorr_normalized = autocorr / autocorr[0, 0, 0]
-        
+
         # Find where autocorrelation drops to 1/e
         threshold = 1.0 / np.e
-        
+
         # Search for correlation length in each dimension
         correlation_lengths = []
         for axis in range(3):
             # Take central slice along axis
             if axis == 0:
-                slice_data = autocorr_normalized[:, self.resolution//2, self.resolution//2]
+                slice_data = autocorr_normalized[
+                    :, self.resolution // 2, self.resolution // 2
+                ]
             elif axis == 1:
-                slice_data = autocorr_normalized[self.resolution//2, :, self.resolution//2]
+                slice_data = autocorr_normalized[
+                    self.resolution // 2, :, self.resolution // 2
+                ]
             else:
-                slice_data = autocorr_normalized[self.resolution//2, self.resolution//2, :]
-            
+                slice_data = autocorr_normalized[
+                    self.resolution // 2, self.resolution // 2, :
+                ]
+
             # Find first point below threshold
             indices = np.where(slice_data < threshold)[0]
             if len(indices) > 0:
                 correlation_length = indices[0] * (self.domain_size / self.resolution)
                 correlation_lengths.append(correlation_length)
-        
+
         # Return average correlation length
         if correlation_lengths:
             return np.mean(correlation_lengths)
@@ -175,12 +181,12 @@ class StructureFormation:
 
         # Full 7D phase field topological defect counting
         # Based on 7D phase field theory topological analysis
-        
+
         # Compute phase field gradient in 7D
         grad_x = np.gradient(phase_field, axis=0)
         grad_y = np.gradient(phase_field, axis=1)
         grad_z = np.gradient(phase_field, axis=2)
-        
+
         # Compute winding number for each 2D slice
         winding_numbers = []
         for i in range(phase_field.shape[0]):
@@ -189,18 +195,22 @@ class StructureFormation:
                 # Compute winding number for 2D slice
                 grad_slice_x = np.gradient(slice_2d, axis=0)
                 grad_slice_y = np.gradient(slice_2d, axis=1)
-                
+
                 # Compute curl for winding number
-                curl = np.gradient(grad_slice_y, axis=0) - np.gradient(grad_slice_x, axis=1)
+                curl = np.gradient(grad_slice_y, axis=0) - np.gradient(
+                    grad_slice_x, axis=1
+                )
                 winding = np.sum(curl) / (2 * np.pi)
                 winding_numbers.append(abs(winding))
-        
+
         # Count defects as integer winding numbers
         defect_count = sum(int(w) for w in winding_numbers if w > 0.5)
-        
+
         return defect_count
 
-    def compute_structure_growth_rate(self, scale_factor: np.ndarray, phase_field_evolution: list) -> float:
+    def compute_structure_growth_rate(
+        self, scale_factor: np.ndarray, phase_field_evolution: list
+    ) -> float:
         """
         Compute structure growth rate.
 
@@ -224,10 +234,10 @@ class StructureFormation:
 
         # Full 7D phase field structure growth rate computation
         # Based on 7D phase field theory structure formation
-        
+
         # Compute scale factor evolution
         scale_growth = np.diff(scale_factor)
-        
+
         # Compute 7D phase field structure growth
         if len(scale_growth) > 0:
             # Compute phase field correlation with scale factor
@@ -237,17 +247,17 @@ class StructureFormation:
                     phase_field_evolution_values.append(np.std(phase_field))
                 else:
                     phase_field_evolution_values.append(0.0)
-            
+
             # Compute growth rate from phase field evolution
             if len(phase_field_evolution_values) > 1:
                 phase_growth = np.diff(phase_field_evolution_values)
                 avg_phase_growth = np.mean(phase_growth)
             else:
                 avg_phase_growth = 0.0
-            
+
             # Combine scale factor and phase field growth
             total_growth = np.mean(scale_growth) + 0.1 * avg_phase_growth
         else:
             total_growth = 0.0
-        
+
         return total_growth

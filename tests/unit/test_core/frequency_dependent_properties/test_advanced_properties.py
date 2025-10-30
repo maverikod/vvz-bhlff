@@ -39,7 +39,12 @@ class TestAdvancedProperties:
                 "k0_squared": 4.0,
                 "carrier_frequency": 1.85e43,
             },
-            "material_properties": {"mu": 1.0, "beta": 1.5, "lambda_param": 0.1, "nu": 1.0},
+            "material_properties": {
+                "mu": 1.0,
+                "beta": 1.5,
+                "lambda_param": 0.1,
+                "nu": 1.0,
+            },
         }
         return BVPConstantsAdvanced(config)
 

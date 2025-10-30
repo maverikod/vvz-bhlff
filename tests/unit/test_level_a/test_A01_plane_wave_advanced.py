@@ -47,8 +47,10 @@ class TestA01PlaneWaveAdvanced:
         # Domain parameters (smaller for testing)
         self.L = 1.0
         self.N = 8  # Much smaller for testing
-        self.domain = Domain7DBVP(L_spatial=self.L, N_spatial=self.N, N_phase=4, T=1.0, N_t=8)
-        
+        self.domain = Domain7DBVP(
+            L_spatial=self.L, N_spatial=self.N, N_phase=4, T=1.0, N_t=8
+        )
+
         # Physics parameters
         self.mu = 1.0
         self.beta = 1.0
@@ -56,10 +58,7 @@ class TestA01PlaneWaveAdvanced:
 
         # Create parameters object
         self.parameters = Parameters7DBVP(
-            mu=self.mu,
-            beta=self.beta,
-            lambda_param=self.lambda_param,
-            nu=1.0
+            mu=self.mu, beta=self.beta, lambda_param=self.lambda_param, nu=1.0
         )
 
         # Create solver
@@ -67,21 +66,23 @@ class TestA01PlaneWaveAdvanced:
 
         # Create fractional Laplacian operator
         self.frac_lap = FractionalLaplacian(self.domain, self.parameters)
-        
+
         # Test tolerance
         self.tolerance = 1e-10
-    
+
     def _create_7d_source(self, k_test):
         """Create proper 7D source for testing."""
         x = np.linspace(0, self.L, self.N, endpoint=False)
         # Create 7D meshgrid for proper source shape
         X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(
-            x, x, x, 
-            np.linspace(0, 2*np.pi, 4, endpoint=False),
-            np.linspace(0, 2*np.pi, 4, endpoint=False), 
-            np.linspace(0, 2*np.pi, 4, endpoint=False),
+            x,
+            x,
+            x,
+            np.linspace(0, 2 * np.pi, 4, endpoint=False),
+            np.linspace(0, 2 * np.pi, 4, endpoint=False),
+            np.linspace(0, 2 * np.pi, 4, endpoint=False),
             np.linspace(0, 1.0, 8, endpoint=False),
-            indexing='ij'
+            indexing="ij",
         )
         return np.exp(1j * k_test * X)
 
@@ -136,7 +137,7 @@ class TestA01PlaneWaveAdvanced:
                 mu=params["mu"],
                 beta=params["beta"],
                 lambda_param=params["lambda_param"],
-                nu=1.0
+                nu=1.0,
             )
 
             # Create solver
@@ -228,10 +229,7 @@ class TestA01PlaneWaveAdvanced:
         for mu in mu_values:
             # Create parameters with different mu
             test_parameters = Parameters7DBVP(
-                mu=mu,
-                beta=self.beta,
-                lambda_param=self.lambda_param,
-                nu=1.0
+                mu=mu, beta=self.beta, lambda_param=self.lambda_param, nu=1.0
             )
 
             # Create solver
@@ -243,7 +241,7 @@ class TestA01PlaneWaveAdvanced:
 
         # Check that solutions are different
         for i in range(1, len(solutions)):
-            assert not np.allclose(solutions[i], solutions[i-1], rtol=1e-10)
+            assert not np.allclose(solutions[i], solutions[i - 1], rtol=1e-10)
 
     def test_error_handling(self):
         """
@@ -295,12 +293,14 @@ class TestA01PlaneWaveAdvanced:
             # Create 7D source for this domain size
             x = np.linspace(0, self.L, N, endpoint=False)
             X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(
-                x, x, x, 
-                np.linspace(0, 2*np.pi, 4, endpoint=False),
-                np.linspace(0, 2*np.pi, 4, endpoint=False), 
-                np.linspace(0, 2*np.pi, 4, endpoint=False),
+                x,
+                x,
+                x,
+                np.linspace(0, 2 * np.pi, 4, endpoint=False),
+                np.linspace(0, 2 * np.pi, 4, endpoint=False),
+                np.linspace(0, 2 * np.pi, 4, endpoint=False),
                 np.linspace(0, 1.0, 8, endpoint=False),
-                indexing='ij'
+                indexing="ij",
             )
             source = np.exp(1j * k_test * X)
 
@@ -339,7 +339,7 @@ class TestA01PlaneWaveAdvanced:
         # Check that solution is finite and has correct shape
         assert np.all(np.isfinite(solution))
         assert solution.shape == self.domain.shape
-        
+
         # Check that solution is not zero (has meaningful content)
         assert np.linalg.norm(solution) > 1e-10
 
@@ -363,15 +363,15 @@ class TestA01PlaneWaveAdvanced:
         solution = self.solver.solve(source)
 
         # Calculate energy
-        source_energy = np.sum(np.abs(source)**2)
-        solution_energy = np.sum(np.abs(solution)**2)
+        source_energy = np.sum(np.abs(source) ** 2)
+        solution_energy = np.sum(np.abs(solution) ** 2)
 
         # Check that both energies are finite and positive
         assert np.isfinite(source_energy)
         assert np.isfinite(solution_energy)
         assert source_energy > 1e-10
         assert solution_energy > 1e-10
-        
+
         # For 7D case, we just check that energy is reasonable (not too small or too large)
         energy_ratio = solution_energy / source_energy
         assert 0.1 < energy_ratio < 10.0  # More relaxed bounds for 7D case

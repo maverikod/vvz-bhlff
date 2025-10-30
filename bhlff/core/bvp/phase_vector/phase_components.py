@@ -32,6 +32,7 @@ from bhlff.core.domain import Domain
 # CUDA optimization
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
     logging.info("CUDA support enabled with CuPy")
 except ImportError:
@@ -74,17 +75,17 @@ class PhaseComponents:
         self.domain = domain
         self.config = config
         self.theta_components = []
-        
+
         # CUDA optimization setup
         self.cuda_available = CUDA_AVAILABLE
         self.use_cuda = config.get("use_cuda", True) and self.cuda_available
         self.logger = logging.getLogger(__name__)
-        
+
         if self.use_cuda:
             self.logger.info("PhaseComponents: CUDA optimization enabled")
         else:
             self.logger.info("PhaseComponents: Using CPU computation")
-        
+
         self._setup_phase_components()
 
     def _setup_phase_components(self) -> None:
@@ -111,12 +112,14 @@ class PhaseComponents:
                 # 7D structure: ℝ³ₓ × 𝕋³_φ × ℝₜ
                 # Use domain shape for proper 7D structure
                 theta_a = np.zeros(self.domain.shape, dtype=complex)
-                
+
                 # Create simple 7D phase distribution
                 # For testing purposes, create a simple phase pattern
                 indices = np.indices(self.domain.shape)
                 phase_sum = np.sum(indices, axis=0)
-                theta_a = amplitude * np.exp(1j * frequency * phase_sum / np.max(phase_sum))
+                theta_a = amplitude * np.exp(
+                    1j * frequency * phase_sum / np.max(phase_sum)
+                )
             elif self.domain.dimensions == 1:
                 x = np.linspace(-self.domain.L / 2, self.domain.L / 2, self.domain.N)
                 theta_a = amplitude * np.exp(1j * frequency * x)
@@ -238,102 +241,102 @@ class PhaseComponents:
 
         return self._to_cpu(coherence)
 
-    def _to_gpu(self, array: np.ndarray) -> 'cp.ndarray':
+    def _to_gpu(self, array: np.ndarray) -> "cp.ndarray":
         """
         Convert numpy array to GPU array.
-        
+
         Physical Meaning:
             Transfers array to GPU memory for CUDA computation.
-            
+
         Args:
             array (np.ndarray): Input array.
-            
+
         Returns:
             cp.ndarray: GPU array.
         """
         if self.use_cuda and CUDA_AVAILABLE:
             return cp.asarray(array)
         return array
-    
+
     def _to_cpu(self, array) -> np.ndarray:
         """
         Convert GPU array to numpy array.
-        
+
         Physical Meaning:
             Transfers array from GPU memory to CPU memory.
-            
+
         Args:
             array: Input array (GPU or CPU).
-            
+
         Returns:
             np.ndarray: CPU array.
         """
-        if self.use_cuda and CUDA_AVAILABLE and hasattr(array, 'get'):
+        if self.use_cuda and CUDA_AVAILABLE and hasattr(array, "get"):
             return array.get()
         return array
-    
-    def _cuda_exp(self, array) -> 'cp.ndarray':
+
+    def _cuda_exp(self, array) -> "cp.ndarray":
         """
         Compute exponential using CUDA.
-        
+
         Physical Meaning:
             Computes exponential using CUDA for optimal performance.
-            
+
         Args:
             array: Input array.
-            
+
         Returns:
             cp.ndarray: Exponential array.
         """
         if self.use_cuda and CUDA_AVAILABLE:
             return cp.exp(array)
         return np.exp(array)
-    
-    def _cuda_abs(self, array) -> 'cp.ndarray':
+
+    def _cuda_abs(self, array) -> "cp.ndarray":
         """
         Compute absolute value using CUDA.
-        
+
         Physical Meaning:
             Computes absolute value using CUDA for optimal performance.
-            
+
         Args:
             array: Input array.
-            
+
         Returns:
             cp.ndarray: Absolute value array.
         """
         if self.use_cuda and CUDA_AVAILABLE:
             return cp.abs(array)
         return np.abs(array)
-    
-    def _cuda_angle(self, array) -> 'cp.ndarray':
+
+    def _cuda_angle(self, array) -> "cp.ndarray":
         """
         Compute angle using CUDA.
-        
+
         Physical Meaning:
             Computes angle using CUDA for optimal performance.
-            
+
         Args:
             array: Input array.
-            
+
         Returns:
             cp.ndarray: Angle array.
         """
         if self.use_cuda and CUDA_AVAILABLE:
             return cp.angle(array)
         return np.angle(array)
-    
-    def _cuda_mean(self, array, axis=None) -> 'cp.ndarray':
+
+    def _cuda_mean(self, array, axis=None) -> "cp.ndarray":
         """
         Compute mean using CUDA.
-        
+
         Physical Meaning:
             Computes mean using CUDA for optimal performance.
-            
+
         Args:
             array: Input array.
             axis: Axis along which to compute mean.
-            
+
         Returns:
             cp.ndarray: Mean array.
         """

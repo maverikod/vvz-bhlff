@@ -66,9 +66,7 @@ class TestBaseTimeIntegrator:
         assert integrator.is_initialized
 
         # Test invalid nu (negative) - this will fail in Parameters7DBVP constructor
-        with pytest.raises(
-            ValueError, match="nu must be positive"
-        ):
+        with pytest.raises(ValueError, match="nu must be positive"):
             invalid_params = Parameters7DBVP(
                 mu=1.0,
                 beta=1.0,
@@ -90,9 +88,7 @@ class TestBaseTimeIntegrator:
             )
 
         # Test invalid lambda (negative) - this will fail in Parameters7DBVP constructor
-        with pytest.raises(
-            ValueError, match="lambda_param must be non-negative"
-        ):
+        with pytest.raises(ValueError, match="lambda_param must be non-negative"):
             invalid_params = Parameters7DBVP(
                 mu=1.0,
                 beta=1.0,
@@ -124,11 +120,15 @@ class TestBaseTimeIntegrator:
         """
         # Test invalid domain (negative L_spatial) - this will fail in Domain7DBVP constructor
         with pytest.raises(ValueError, match="L_spatial must be positive"):
-            invalid_domain = Domain7DBVP(L_spatial=-1.0, N_spatial=8, N_phase=4, T=1.0, N_t=8)
+            invalid_domain = Domain7DBVP(
+                L_spatial=-1.0, N_spatial=8, N_phase=4, T=1.0, N_t=8
+            )
 
         # Test invalid domain (N_spatial zero) - this will fail in Domain7DBVP constructor
         with pytest.raises(ValueError, match="N_spatial must be positive"):
-            invalid_domain = Domain7DBVP(L_spatial=1.0, N_spatial=0, N_phase=4, T=1.0, N_t=8)
+            invalid_domain = Domain7DBVP(
+                L_spatial=1.0, N_spatial=0, N_phase=4, T=1.0, N_t=8
+            )
 
     def test_initialization_state(self, domain_7d, parameters_basic):
         """

@@ -114,9 +114,7 @@ class TestPowerLawCoreFixesBasic:
             are computed according to the 7D theory, not simplified versions.
         """
         # Test the corrected critical exponents
-        critical_exponents = power_law_core.compute_critical_exponents(
-            test_envelope_3d
-        )
+        critical_exponents = power_law_core.compute_critical_exponents(test_envelope_3d)
 
         # Verify all critical exponents are present
         required_exponents = ["nu", "beta", "gamma", "delta", "eta", "alpha", "z"]
@@ -126,7 +124,9 @@ class TestPowerLawCoreFixesBasic:
         # Verify exponents are computed (not None)
         for exp in required_exponents:
             assert critical_exponents[exp] is not None, f"Exponent {exp} not computed"
-            assert isinstance(critical_exponents[exp], (int, float)), f"Invalid type for {exp}"
+            assert isinstance(
+                critical_exponents[exp], (int, float)
+            ), f"Invalid type for {exp}"
 
         # Verify scaling relations are satisfied
         scaling_relations = critical_exponents.get("scaling_relations", {})
@@ -149,9 +149,7 @@ class TestPowerLawCoreFixesBasic:
             full multi-scale analysis, not simplified versions.
         """
         # Test the corrected scaling regions
-        scaling_regions = power_law_core.identify_scaling_regions(
-            test_envelope_3d
-        )
+        scaling_regions = power_law_core.identify_scaling_regions(test_envelope_3d)
 
         # Verify all scaling regions are present
         assert "critical_region" in scaling_regions, "Missing critical region"
@@ -162,8 +160,12 @@ class TestPowerLawCoreFixesBasic:
         for region_name, region_data in scaling_regions.items():
             assert isinstance(region_data, dict), f"Invalid format for {region_name}"
             assert "boundaries" in region_data, f"Missing boundaries for {region_name}"
-            assert "scaling_exponents" in region_data, f"Missing exponents for {region_name}"
-            assert "universality_class" in region_data, f"Missing class for {region_name}"
+            assert (
+                "scaling_exponents" in region_data
+            ), f"Missing exponents for {region_name}"
+            assert (
+                "universality_class" in region_data
+            ), f"Missing class for {region_name}"
 
         # Verify multi-scale decomposition
         multiscale = scaling_regions.get("multiscale_decomposition", {})
@@ -216,9 +218,7 @@ class TestPowerLawCoreFixesBasic:
             mathematical scaling relations.
         """
         # Compute critical exponents
-        critical_exponents = power_law_core.compute_critical_exponents(
-            test_envelope_3d
-        )
+        critical_exponents = power_law_core.compute_critical_exponents(test_envelope_3d)
 
         # Test scaling relations
         nu = critical_exponents["nu"]
@@ -262,12 +262,12 @@ class TestPowerLawCoreFixesBasic:
         # Verify physical interpretation
         correlation_lengths = correlation_results["correlation_lengths"]
         for length in correlation_lengths:
-            assert length > 0, "Correlation length must be positive (physical requirement)"
+            assert (
+                length > 0
+            ), "Correlation length must be positive (physical requirement)"
 
         # Test critical exponents preserve physical meaning
-        critical_exponents = power_law_core.compute_critical_exponents(
-            test_envelope_3d
-        )
+        critical_exponents = power_law_core.compute_critical_exponents(test_envelope_3d)
 
         # Verify physical bounds
         nu = critical_exponents["nu"]
@@ -277,9 +277,7 @@ class TestPowerLawCoreFixesBasic:
         assert beta > 0, "Critical exponent β must be positive (physical requirement)"
 
         # Test scaling regions preserve physical meaning
-        scaling_regions = power_law_core.identify_scaling_regions(
-            test_envelope_3d
-        )
+        scaling_regions = power_law_core.identify_scaling_regions(test_envelope_3d)
 
         # Verify physical regions exist
         assert "critical_region" in scaling_regions, "Critical region must exist"
@@ -289,7 +287,9 @@ class TestPowerLawCoreFixesBasic:
         for region_name, region_data in scaling_regions.items():
             boundaries = region_data.get("boundaries", {})
             if "lower" in boundaries and "upper" in boundaries:
-                assert boundaries["lower"] < boundaries["upper"], f"Invalid boundaries for {region_name}"
+                assert (
+                    boundaries["lower"] < boundaries["upper"]
+                ), f"Invalid boundaries for {region_name}"
 
 
 if __name__ == "__main__":

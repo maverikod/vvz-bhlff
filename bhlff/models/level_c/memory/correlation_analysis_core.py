@@ -191,37 +191,39 @@ class CorrelationAnalysisCore:
 
         for i, field in enumerate(field_history):
             if i < len(field_history):
-                weight = self._step_memory_weight(i, memory.tau) if memory.tau > 0 else 1.0
+                weight = (
+                    self._step_memory_weight(i, memory.tau) if memory.tau > 0 else 1.0
+                )
                 memory_term += weight * field
 
         # Apply memory strength
         memory_term *= -memory.gamma
 
         return memory_term
-    
+
     def _step_memory_weight(self, index: int, tau: float) -> float:
         """
         Step function memory weight.
-        
+
         Physical Meaning:
             Implements step resonator model for memory weights instead of
             exponential decay. This follows 7D BVP theory principles where
             memory effects occur through semi-transparent boundaries.
-            
+
         Mathematical Foundation:
             W(i) = W₀ * Θ(i_cutoff - i) where Θ is the Heaviside step function
             and i_cutoff is the cutoff index for the memory.
-            
+
         Args:
             index: Memory index
             tau: Memory time constant
-            
+
         Returns:
             Step function memory weight
         """
         # Step resonator parameters
         cutoff_index = int(tau) if tau > 0 else 1
         weight_strength = 1.0
-        
+
         # Step function weight: 1.0 below cutoff, 0.0 above
         return weight_strength if index < cutoff_index else 0.0

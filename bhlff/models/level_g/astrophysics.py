@@ -22,4 +22,4 @@ from typing import Dict, Any
 from .astrophysics.astrophysical_object_model import AstrophysicalObjectModel
 
 # Re-export the main class for backward compatibility
-__all__ = ['AstrophysicalObjectModel']
+__all__ = ["AstrophysicalObjectModel"]

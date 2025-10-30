@@ -52,7 +52,7 @@ class PinnedBeatingAnalyzer:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize analysis components
         self._field_creator = PinnedFieldCreator()
         self._field_evolution = PinnedFieldEvolution()
@@ -89,7 +89,7 @@ class PinnedBeatingAnalyzer:
             Dict[str, Any]: Pinned beating analysis results.
         """
         self.logger.info("Starting pinned beating analysis")
-        
+
         # Create pinned dual-mode field
         field_pinned = self._field_creator.create_pinned_dual_mode_field(
             domain, dual_mode, pinning_params

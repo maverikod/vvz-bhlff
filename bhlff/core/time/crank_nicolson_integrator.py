@@ -25,8 +25,8 @@ import logging
 
 from .base_integrator import BaseTimeIntegrator
 from .memory_kernel import MemoryKernel
-from .quench_detector import QuenchDetector
-from ..fft import SpectralOperations
+from bhlff.core.bvp.quench_detector import QuenchDetector
+from ..fft.unified_spectral_operations import UnifiedSpectralOperations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -73,8 +73,8 @@ class CrankNicolsonIntegrator(BaseTimeIntegrator):
         """
         super().__init__(domain, parameters)
 
-        # Initialize spectral operations
-        self._spectral_ops = SpectralOperations(domain, parameters.precision)
+        # Initialize unified spectral operations (CUDA-aware, blocked)
+        self._spectral_ops = UnifiedSpectralOperations(domain, parameters.precision)
 
         # Initialize fractional Laplacian
         from ..fft import FractionalLaplacian
@@ -86,6 +86,13 @@ class CrankNicolsonIntegrator(BaseTimeIntegrator):
         # Pre-compute spectral coefficients
         self._spectral_coeffs = None
         self._setup_spectral_coefficients()
+
+        # Select complex dtype based on precision
+        self._complex_dtype = (
+            np.complex64
+            if str(self.parameters.precision).lower() in ("float32", "single")
+            else np.complex128
+        )
 
         self._initialized = True
         self.logger.info("Crank-Nicolson integrator initialized")
@@ -147,11 +154,16 @@ class CrankNicolsonIntegrator(BaseTimeIntegrator):
             )
 
         # Initialize result array
-        result = np.zeros((len(time_steps),) + self.domain.shape, dtype=np.complex128)
-        result[0] = initial_field.copy()
+        result = np.empty(
+            (len(time_steps),) + self.domain.shape, dtype=self._complex_dtype
+        )
+        # Ensure initial on correct dtype (avoid extra copies later)
+        if initial_field.dtype != self._complex_dtype:
+            initial_field = initial_field.astype(self._complex_dtype, copy=False)
+        result[0] = initial_field
 
-        # Current field state
-        current_field = initial_field.copy()
+        # Current field state (no extra copy if already new array)
+        current_field = result[0]
 
         # Integrate over time steps
         for i in range(1, len(time_steps)):
@@ -205,6 +217,19 @@ class CrankNicolsonIntegrator(BaseTimeIntegrator):
         if not self._initialized:
             raise RuntimeError("Integrator not initialized")
 
+        if dt <= 0:
+            raise ValueError("Time step must be positive")
+
+        if current_field.shape != self.domain.shape:
+            raise ValueError("Field shape must match domain")
+        if not np.iscomplexobj(current_field):
+            raise ValueError("Field must be complex")
+        if (
+            current_source.shape != self.domain.shape
+            or next_source.shape != self.domain.shape
+        ):
+            raise ValueError("Source shape must match domain")
+
         # Transform to spectral space
         current_spectral = self._spectral_ops.forward_fft(current_field, "ortho")
         current_source_spectral = self._spectral_ops.forward_fft(
@@ -239,7 +264,9 @@ class CrankNicolsonIntegrator(BaseTimeIntegrator):
         next_spectral = (current_contribution + source_contribution) / denominator
 
         # Transform back to real space
-        next_field = self._spectral_ops.inverse_fft(next_spectral, "ortho")
+        next_field = self._spectral_ops.inverse_fft(next_spectral, "ortho").astype(
+            self._complex_dtype
+        )
 
         # Evolve memory kernel if present
         if self._memory_kernel is not None:
@@ -273,6 +300,16 @@ class CrankNicolsonIntegrator(BaseTimeIntegrator):
         if not self._initialized:
             raise RuntimeError("Integrator not initialized")
 
+        if dt <= 0:
+            raise ValueError("Time step must be positive")
+
+        if current_field.shape != self.domain.shape:
+            raise ValueError("Field shape must match domain")
+        if not np.iscomplexobj(current_field):
+            raise ValueError("Field must be complex")
+        if source_field.shape != self.domain.shape:
+            raise ValueError("Source shape must match domain")
+
         # Transform to spectral space
         current_spectral = self._spectral_ops.forward_fft(current_field, "ortho")
         source_spectral = self._spectral_ops.forward_fft(source_field, "ortho")
@@ -293,7 +330,9 @@ class CrankNicolsonIntegrator(BaseTimeIntegrator):
         next_spectral = numerator / denominator
 
         # Transform back to real space
-        next_field = self._spectral_ops.inverse_fft(next_spectral, "ortho")
+        next_field = self._spectral_ops.inverse_fft(next_spectral, "ortho").astype(
+            self._complex_dtype
+        )
 
         # Evolve memory kernel if present
         if self._memory_kernel is not None:

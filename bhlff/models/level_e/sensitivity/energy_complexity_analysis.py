@@ -94,47 +94,49 @@ class EnergyComplexityAnalyzer:
     ) -> np.ndarray:
         """
         Compute energy-related metrics from parameters using 7D BVP theory.
-        
+
         Physical Meaning:
             In 7D BVP theory, energy emerges from field configuration and
             phase gradient contributions. Energy metrics include:
             - Field localization energy (μ|∇a|²)
             - Phase gradient energy (β-dependent terms)
             - Topological stability (winding numbers)
-        
+
         Mathematical Foundation:
             E_eff ~ ∫ [μ|∇a|² + |∇Θ|^(2β)] d³x d³φ dt
         """
         from ...models.level_b.power_law_tails import PowerLawAnalyzer
-        
+
         energy_values = []
 
         for sample in samples:
             # Create parameter dictionary
             params = dict(zip(self.param_names, sample))
-            
+
             # Extract parameters
             beta = params.get("beta", 1.0)
             mu = params.get("mu", 1.0)
             eta = params.get("eta", 0.1)
-            
+
             # Compute effective energy from field energy density
             # Energy ~ integral of energy density over field configuration
-            
+
             # Localization energy contribution (scales with μ)
             localization_energy = mu * (1.0 + eta)
-            
+
             # Phase gradient energy (scales with β)
             # Higher β → stronger gradients → higher effective energy
             phase_gradient_energy = beta * (2.0 + 0.5 * eta**2)
-            
+
             # Topological contribution (winding number energy)
             # Stable topological configurations have discrete energy values
             topological_energy = np.sqrt(mu * beta) * (1.0 + 0.1 * eta)
-            
+
             # Total effective energy
-            energy_metric = localization_energy + phase_gradient_energy + topological_energy
-            
+            energy_metric = (
+                localization_energy + phase_gradient_energy + topological_energy
+            )
+
             energy_values.append(energy_metric)
 
         return np.array(energy_values)
@@ -144,7 +146,7 @@ class EnergyComplexityAnalyzer:
     ) -> np.ndarray:
         """
         Compute complexity-related metrics from parameters using 7D BVP theory.
-        
+
         Physical Meaning:
             Field complexity in 7D BVP theory measures the structural richness
             of the phase field configuration, including:
@@ -152,7 +154,7 @@ class EnergyComplexityAnalyzer:
             - Phase winding complexity (higher-order harmonics)
             - Spatial-phase correlation structure
             - Degree of phase coherence
-            
+
         Mathematical Foundation:
             C ~ ∫ |∇Θ|^(2β) d³x d³φ dt + ∑_defects W_i
             where W_i are winding numbers of topological defects
@@ -162,37 +164,41 @@ class EnergyComplexityAnalyzer:
         for sample in samples:
             # Create parameter dictionary
             params = dict(zip(self.param_names, sample))
-            
+
             # Extract parameters
             beta = params.get("beta", 1.0)
             eta = params.get("eta", 0.1)
             gamma = params.get("gamma", 0.1)
-            
+
             # Phase gradient complexity (scales with β)
             # Higher β → more complex phase structure
             phase_complexity = beta * (1.0 + 0.5 * np.log(1.0 + beta))
-            
+
             # Topological complexity (number of defects)
             # More eta → more defects → higher complexity
             topological_complexity = eta * (3.0 + 2.0 * eta)
-            
+
             # Coherence complexity (phase correlations)
             # gamma controls phase coherence length
             coherence_complexity = gamma * (1.0 + np.sqrt(eta * beta))
-            
+
             # Spatial-phase coupling complexity
             # Measures entanglement between spatial and phase degrees of freedom
             coupling_complexity = np.sqrt(beta * eta * gamma) * (1.0 + 0.2 * beta)
-            
+
             # Nonlinear interaction complexity
             # Higher-order terms in field equations
             nonlinear_complexity = (eta * gamma) * (1.0 + beta**2)
-            
+
             # Total complexity
-            complexity_metric = (phase_complexity + topological_complexity + 
-                               coherence_complexity + coupling_complexity + 
-                               nonlinear_complexity)
-            
+            complexity_metric = (
+                phase_complexity
+                + topological_complexity
+                + coherence_complexity
+                + coupling_complexity
+                + nonlinear_complexity
+            )
+
             complexity_values.append(complexity_metric)
 
         return np.array(complexity_values)

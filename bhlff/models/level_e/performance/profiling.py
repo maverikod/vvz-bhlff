@@ -76,12 +76,14 @@ class Profiler:
         # Analyze optimization opportunities
         optimization_analysis = self._analyze_optimization_opportunities()
 
-        profiling_results.update({
-            "function_profiling": function_profiling,
-            "memory_profiling": memory_profiling,
-            "hotspot_analysis": hotspot_analysis,
-            "optimization_analysis": optimization_analysis,
-        })
+        profiling_results.update(
+            {
+                "function_profiling": function_profiling,
+                "memory_profiling": memory_profiling,
+                "hotspot_analysis": hotspot_analysis,
+                "optimization_analysis": optimization_analysis,
+            }
+        )
 
         return profiling_results
 
@@ -122,8 +124,16 @@ class Profiler:
         # Placeholder implementation
         return {
             "hotspots": [
-                {"function": "solve_phase_field", "time_fraction": 0.4, "optimization_potential": 0.3},
-                {"function": "analyze_topology", "time_fraction": 0.3, "optimization_potential": 0.2},
+                {
+                    "function": "solve_phase_field",
+                    "time_fraction": 0.4,
+                    "optimization_potential": 0.3,
+                },
+                {
+                    "function": "analyze_topology",
+                    "time_fraction": 0.3,
+                    "optimization_potential": 0.2,
+                },
             ],
             "total_optimization_potential": 0.5,
         }

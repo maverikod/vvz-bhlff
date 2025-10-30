@@ -24,7 +24,6 @@ import psutil
 from typing import Dict, Any, List, Optional, Tuple
 
 from bhlff.models.level_e.performance.benchmark_tests import BenchmarkTests
-from bhlff.models.level_e.performance.performance_analyzer import PerformanceAnalyzer
 from bhlff.models.level_e.performance.profiling import Profiler
 from bhlff.models.level_e.performance.optimization import Optimizer
 from bhlff.models.level_e.performance.resource_analysis import ResourceAnalyzer
@@ -61,6 +60,11 @@ class PerformanceAnalysis:
     def _setup_performance_modules(self) -> None:
         """Setup performance analysis modules."""
         self.benchmark_tests = BenchmarkTests(self.config)
+        # Lazy import to avoid circular dependency with performance_analyzer
+        from bhlff.models.level_e.performance.performance_analyzer import (
+            PerformanceAnalyzer,
+        )
+
         self.performance_analyzer = PerformanceAnalyzer(self.config)
         self.profiler = Profiler(self.config)
         self.optimizer = Optimizer(self.config)
@@ -89,14 +93,16 @@ class PerformanceAnalysis:
         # Analyze scalability
         scalability_analysis = self.scalability_analyzer.analyze_scalability()
 
-        performance_results.update({
-            "benchmark_results": benchmark_results,
-            "performance_analysis": performance_analysis,
-            "profiling_results": profiling_results,
-            "optimization_results": optimization_results,
-            "resource_analysis": resource_analysis,
-            "scalability_analysis": scalability_analysis,
-        })
+        performance_results.update(
+            {
+                "benchmark_results": benchmark_results,
+                "performance_analysis": performance_analysis,
+                "profiling_results": profiling_results,
+                "optimization_results": optimization_results,
+                "resource_analysis": resource_analysis,
+                "scalability_analysis": scalability_analysis,
+            }
+        )
 
         return performance_results
 

@@ -176,22 +176,22 @@ class TestReporterAdvanced:
             List of paths to generated visualization files
         """
         visualization_paths = []
-        
+
         # Create error trend plot
         error_plot_path = self._create_error_trend_plot()
         if error_plot_path:
             visualization_paths.append(error_plot_path)
-        
+
         # Create performance plot
         performance_plot_path = self._create_performance_plot()
         if performance_plot_path:
             visualization_paths.append(performance_plot_path)
-        
+
         # Create metrics summary plot
         metrics_plot_path = self._create_metrics_summary_plot()
         if metrics_plot_path:
             visualization_paths.append(metrics_plot_path)
-        
+
         return visualization_paths
 
     def _create_error_trend_plot(self) -> str:
@@ -207,30 +207,30 @@ class TestReporterAdvanced:
         """
         if not self.results:
             return None
-        
+
         # Extract error data
         test_ids = list(self.results.keys())
         errors = []
-        
+
         for result in self.results.values():
             if "error" in result["metrics"]:
                 errors.append(result["metrics"]["error"])
             else:
                 errors.append(0.0)
-        
+
         # Create plot
         plt.figure(figsize=(10, 6))
-        plt.plot(test_ids, errors, 'b-o', linewidth=2, markersize=6)
-        plt.xlabel('Test ID')
-        plt.ylabel('Error')
-        plt.title('Error Trends Across Tests')
+        plt.plot(test_ids, errors, "b-o", linewidth=2, markersize=6)
+        plt.xlabel("Test ID")
+        plt.ylabel("Error")
+        plt.title("Error Trends Across Tests")
         plt.grid(True, alpha=0.3)
         plt.xticks(rotation=45)
-        
+
         plot_path = os.path.join(self.output_dir, "error_trends.png")
-        plt.savefig(plot_path, dpi=300, bbox_inches='tight')
+        plt.savefig(plot_path, dpi=300, bbox_inches="tight")
         plt.close()
-        
+
         return plot_path
 
     def _create_performance_plot(self) -> str:
@@ -246,37 +246,37 @@ class TestReporterAdvanced:
         """
         if not self.results:
             return None
-        
+
         # Extract performance data
         test_ids = list(self.results.keys())
         execution_times = [r["execution_time"] for r in self.results.values()]
         memory_usage = [r["memory_usage"] for r in self.results.values()]
-        
+
         # Create subplots
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
-        
+
         # Execution time plot
-        ax1.plot(test_ids, execution_times, 'g-o', linewidth=2, markersize=6)
-        ax1.set_xlabel('Test ID')
-        ax1.set_ylabel('Execution Time (s)')
-        ax1.set_title('Execution Time Trends')
+        ax1.plot(test_ids, execution_times, "g-o", linewidth=2, markersize=6)
+        ax1.set_xlabel("Test ID")
+        ax1.set_ylabel("Execution Time (s)")
+        ax1.set_title("Execution Time Trends")
         ax1.grid(True, alpha=0.3)
-        ax1.tick_params(axis='x', rotation=45)
-        
+        ax1.tick_params(axis="x", rotation=45)
+
         # Memory usage plot
-        ax2.plot(test_ids, memory_usage, 'r-o', linewidth=2, markersize=6)
-        ax2.set_xlabel('Test ID')
-        ax2.set_ylabel('Memory Usage (MB)')
-        ax2.set_title('Memory Usage Trends')
+        ax2.plot(test_ids, memory_usage, "r-o", linewidth=2, markersize=6)
+        ax2.set_xlabel("Test ID")
+        ax2.set_ylabel("Memory Usage (MB)")
+        ax2.set_title("Memory Usage Trends")
         ax2.grid(True, alpha=0.3)
-        ax2.tick_params(axis='x', rotation=45)
-        
+        ax2.tick_params(axis="x", rotation=45)
+
         plt.tight_layout()
-        
+
         plot_path = os.path.join(self.output_dir, "performance_trends.png")
-        plt.savefig(plot_path, dpi=300, bbox_inches='tight')
+        plt.savefig(plot_path, dpi=300, bbox_inches="tight")
         plt.close()
-        
+
         return plot_path
 
     def _create_metrics_summary_plot(self) -> str:
@@ -292,25 +292,25 @@ class TestReporterAdvanced:
         """
         if not self.results:
             return None
-        
+
         # Extract summary metrics
         total_tests = len(self.results)
         passed_tests = sum(1 for r in self.results.values() if r["status"] == "PASS")
         failed_tests = sum(1 for r in self.results.values() if r["status"] == "FAIL")
-        
+
         # Create pie chart
         plt.figure(figsize=(8, 6))
-        labels = ['Passed', 'Failed']
+        labels = ["Passed", "Failed"]
         sizes = [passed_tests, failed_tests]
-        colors = ['#28a745', '#dc3545']
-        
-        plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
-        plt.title('Test Results Summary')
-        
+        colors = ["#28a745", "#dc3545"]
+
+        plt.pie(sizes, labels=labels, colors=colors, autopct="%1.1f%%", startangle=90)
+        plt.title("Test Results Summary")
+
         plot_path = os.path.join(self.output_dir, "metrics_summary.png")
-        plt.savefig(plot_path, dpi=300, bbox_inches='tight')
+        plt.savefig(plot_path, dpi=300, bbox_inches="tight")
         plt.close()
-        
+
         return plot_path
 
     def generate_summary_report(self) -> str:
@@ -326,25 +326,29 @@ class TestReporterAdvanced:
         """
         # Generate HTML report
         html_report_path = self.generate_html_report()
-        
+
         # Create visualizations
         visualization_paths = self.create_visualizations()
-        
+
         # Generate summary text
         summary_path = os.path.join(self.output_dir, "summary_report.txt")
         with open(summary_path, "w") as f:
             f.write("Level A Test Results Summary\n")
             f.write("=" * 50 + "\n\n")
-            
+
             f.write(f"Total Tests: {len(self.results)}\n")
-            f.write(f"Passed: {sum(1 for r in self.results.values() if r['status'] == 'PASS')}\n")
-            f.write(f"Failed: {sum(1 for r in self.results.values() if r['status'] == 'FAIL')}\n\n")
-            
+            f.write(
+                f"Passed: {sum(1 for r in self.results.values() if r['status'] == 'PASS')}\n"
+            )
+            f.write(
+                f"Failed: {sum(1 for r in self.results.values() if r['status'] == 'FAIL')}\n\n"
+            )
+
             f.write("Generated Files:\n")
             f.write(f"- HTML Report: {html_report_path}\n")
             for viz_path in visualization_paths:
                 f.write(f"- Visualization: {viz_path}\n")
-        
+
         self.logger.info(f"Generated summary report: {summary_path}")
         return summary_path
 
@@ -361,20 +365,26 @@ class TestReporterAdvanced:
         """
         if not self.results:
             return {}
-        
+
         # Calculate trends
         execution_times = [r["execution_time"] for r in self.results.values()]
         memory_usage = [r["memory_usage"] for r in self.results.values()]
-        
+
         trends = {
-            "execution_time_trend": "increasing" if execution_times[-1] > execution_times[0] else "decreasing",
-            "memory_usage_trend": "increasing" if memory_usage[-1] > memory_usage[0] else "decreasing",
+            "execution_time_trend": (
+                "increasing"
+                if execution_times[-1] > execution_times[0]
+                else "decreasing"
+            ),
+            "memory_usage_trend": (
+                "increasing" if memory_usage[-1] > memory_usage[0] else "decreasing"
+            ),
             "average_execution_time": np.mean(execution_times),
             "average_memory_usage": np.mean(memory_usage),
             "execution_time_std": np.std(execution_times),
             "memory_usage_std": np.std(memory_usage),
         }
-        
+
         return trends
 
     def get_performance_metrics(self) -> Dict[str, Any]:
@@ -390,10 +400,10 @@ class TestReporterAdvanced:
         """
         if not self.results:
             return {}
-        
+
         execution_times = [r["execution_time"] for r in self.results.values()]
         memory_usage = [r["memory_usage"] for r in self.results.values()]
-        
+
         return {
             "total_execution_time": sum(execution_times),
             "total_memory_usage": sum(memory_usage),
@@ -409,7 +419,7 @@ class TestReporterAdvanced:
 if __name__ == "__main__":
     # Example usage
     reporter = TestReporterAdvanced()
-    
+
     # Record some test results
     reporter.record_test_result(
         test_id="test_001",
@@ -418,14 +428,14 @@ if __name__ == "__main__":
         metrics={"accuracy": 0.99, "speed": 1.5, "error": 0.01},
         parameters={"N": 64, "L": 1.0},
         execution_time=0.1,
-        memory_usage=10.5
+        memory_usage=10.5,
     )
-    
+
     # Generate reports and visualizations
     html_report = reporter.generate_html_report()
     visualizations = reporter.create_visualizations()
     summary_report = reporter.generate_summary_report()
-    
+
     print(f"Generated reports: {html_report}, {summary_report}")
     print(f"Generated visualizations: {visualizations}")
     print(f"Trend analysis: {reporter.analyze_trends()}")

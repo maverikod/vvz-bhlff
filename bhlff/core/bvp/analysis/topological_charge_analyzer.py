@@ -16,6 +16,7 @@ from scipy.ndimage import label, center_of_mass
 # CUDA optimization imports
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except ImportError:
     CUDA_AVAILABLE = False
@@ -91,9 +92,7 @@ class TopologicalChargeAnalyzer:
         self.charge_computation = ChargeComputation(
             self.domain, self.config, self.constants
         )
-        self.phase_analysis = PhaseAnalysis(
-            self.domain, self.config, self.constants
-        )
+        self.phase_analysis = PhaseAnalysis(self.domain, self.config, self.constants)
 
     def compute_topological_charge(self, field: np.ndarray) -> Dict[str, Any]:
         """
@@ -198,7 +197,9 @@ class TopologicalChargeAnalyzer:
         for i, (location, charge) in enumerate(zip(charge_locations, charges)):
             # Classify defect type
             if abs(charge) > self.charge_threshold:
-                defect_type = "strong" if abs(charge) > 2 * self.charge_threshold else "weak"
+                defect_type = (
+                    "strong" if abs(charge) > 2 * self.charge_threshold else "weak"
+                )
             else:
                 defect_type = "weak"
 
@@ -206,14 +207,20 @@ class TopologicalChargeAnalyzer:
             defect_strengths.append(abs(charge))
 
             # Analyze interactions with other defects
-            for j, (other_location, other_charge) in enumerate(zip(charge_locations, charges)):
+            for j, (other_location, other_charge) in enumerate(
+                zip(charge_locations, charges)
+            ):
                 if i != j:
                     # Calculate distance between defects
-                    distance = np.sqrt(sum((a - b) ** 2 for a, b in zip(location, other_location)))
-                    
+                    distance = np.sqrt(
+                        sum((a - b) ** 2 for a, b in zip(location, other_location))
+                    )
+
                     # Calculate interaction strength
-                    interaction_strength = (charge * other_charge) / (distance ** 2 + 1e-10)
-                    
+                    interaction_strength = (charge * other_charge) / (
+                        distance**2 + 1e-10
+                    )
+
                     # Determine interaction type
                     if charge * other_charge > 0:
                         interaction_type = "repulsive"
@@ -282,5 +289,5 @@ class TopologicalChargeAnalyzer:
         charge_mean = np.mean(np.abs(charges))
 
         # Normalize stability measure
-        stability = 1.0 / (1.0 + charge_variance / (charge_mean ** 2 + 1e-10))
+        stability = 1.0 / (1.0 + charge_variance / (charge_mean**2 + 1e-10))
         return float(stability)

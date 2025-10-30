@@ -65,7 +65,7 @@ class ModeBeatingAnalysis:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize sub-analyzers
         self.background_analyzer = BackgroundBeatingAnalyzer(bvp_core)
         self.pinned_analyzer = PinnedBeatingAnalyzer(bvp_core)
@@ -114,12 +114,15 @@ class ModeBeatingAnalysis:
 
             # Analyze pinned beating
             pinned_results = self.pinned_analyzer.analyze_pinned_beating(
-                domain, dual_mode, beating_params.get("time_params", {}), beating_params.get("pinning_params", {})
+                domain,
+                dual_mode,
+                beating_params.get("time_params", {}),
+                beating_params.get("pinning_params", {}),
             )
 
             # Perform theoretical analysis
-            theoretical_analysis = self.theoretical_analyzer.analyze_theoretical_beating(
-                dual_mode, domain
+            theoretical_analysis = (
+                self.theoretical_analyzer.analyze_theoretical_beating(dual_mode, domain)
             )
 
             # Perform error analysis
@@ -198,10 +201,14 @@ class ModeBeatingAnalysis:
             Dict[str, Any]: Error analysis results.
         """
         # Compute background error
-        background_error = self._compute_background_error(background_results, theoretical_analysis)
+        background_error = self._compute_background_error(
+            background_results, theoretical_analysis
+        )
 
         # Compute suppression factor
-        suppression_factor = self._compute_suppression_factor(background_results, pinned_results)
+        suppression_factor = self._compute_suppression_factor(
+            background_results, pinned_results
+        )
 
         return {
             "background_error": background_error,
@@ -251,7 +258,9 @@ class ModeBeatingAnalysis:
         # In practice, this would involve proper suppression analysis
         return 0.01  # Placeholder value
 
-    def _create_beating_summary(self, beating_results: Dict[str, Any]) -> Dict[str, Any]:
+    def _create_beating_summary(
+        self, beating_results: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Create beating analysis summary.
 
@@ -266,9 +275,17 @@ class ModeBeatingAnalysis:
             Dict[str, Any]: Beating analysis summary.
         """
         # Compute summary statistics
-        delta_omega_ratios = [result["delta_omega_ratio"] for result in beating_results.values()]
-        background_errors = [result["error_analysis"]["background_error"] for result in beating_results.values()]
-        suppression_factors = [result["error_analysis"]["suppression_factor"] for result in beating_results.values()]
+        delta_omega_ratios = [
+            result["delta_omega_ratio"] for result in beating_results.values()
+        ]
+        background_errors = [
+            result["error_analysis"]["background_error"]
+            for result in beating_results.values()
+        ]
+        suppression_factors = [
+            result["error_analysis"]["suppression_factor"]
+            for result in beating_results.values()
+        ]
 
         return {
             "delta_omega_ratios": delta_omega_ratios,
@@ -276,7 +293,9 @@ class ModeBeatingAnalysis:
             "suppression_factors": suppression_factors,
             "average_background_error": np.mean(background_errors),
             "average_suppression_factor": np.mean(suppression_factors),
-            "min_suppression_factor": min(suppression_factors) if suppression_factors else 1.0,
+            "min_suppression_factor": (
+                min(suppression_factors) if suppression_factors else 1.0
+            ),
             "analysis_complete": True,
             "beating_effects_detected": True,
         }

@@ -60,11 +60,11 @@ class BeatingMLPatterns:
         # Pattern classification parameters
         self.pattern_classification_enabled = True
         self.classification_confidence = 0.8
-        
+
         # Initialize components
         self.feature_extractor = BeatingMLPatternFeatureExtractor(bvp_core)
         self.pattern_classifier = BeatingMLPatternClassifier(bvp_core)
-        
+
         # Initialize vectorized processor for pattern analysis
         self._setup_vectorized_processor()
 
@@ -100,7 +100,7 @@ class BeatingMLPatterns:
     def _setup_vectorized_processor(self) -> None:
         """
         Setup vectorized processor for pattern analysis.
-        
+
         Physical Meaning:
             Initializes vectorized processor for 7D phase field computations
             to optimize pattern analysis performance using CUDA acceleration.
@@ -109,18 +109,14 @@ class BeatingMLPatterns:
             # Get domain and config from BVP core
             domain = self.bvp_core.domain
             config = self.bvp_core.config
-            
+
             # Initialize vectorized BVP processor
             self.vectorized_processor = BVPVectorizedProcessor(
-                domain=domain,
-                config=config,
-                block_size=8,
-                overlap=2,
-                use_cuda=True
+                domain=domain, config=config, block_size=8, overlap=2, use_cuda=True
             )
-            
+
             self.logger.info("Vectorized processor initialized for pattern analysis")
-            
+
         except Exception as e:
             self.logger.warning(f"Failed to initialize vectorized processor: {e}")
             self.vectorized_processor = None

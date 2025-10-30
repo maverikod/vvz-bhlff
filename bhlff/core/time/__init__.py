@@ -28,7 +28,9 @@ from .bvp_envelope_integrator import BVPEnvelopeIntegrator
 from .crank_nicolson_integrator import CrankNicolsonIntegrator
 from .adaptive_integrator import AdaptiveIntegrator
 from .memory_kernel import MemoryKernel
-from .quench_detector import QuenchDetector
+
+# Quench detector lives in core.bvp, re-export here for convenience
+from bhlff.core.bvp.quench_detector import QuenchDetector
 
 __all__ = [
     "BaseTimeIntegrator",

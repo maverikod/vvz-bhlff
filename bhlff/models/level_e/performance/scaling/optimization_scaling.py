@@ -69,7 +69,9 @@ class OptimizationScalingAnalyzer:
 
         return optimization_results
 
-    def _analyze_algorithm_optimization(self, problem_sizes: List[int]) -> Dict[str, Any]:
+    def _analyze_algorithm_optimization(
+        self, problem_sizes: List[int]
+    ) -> Dict[str, Any]:
         """Analyze algorithm optimization opportunities."""
         execution_times = []
         memory_usage = []
@@ -79,17 +81,17 @@ class OptimizationScalingAnalyzer:
             # Simulate unoptimized computation
             start_time = time.time()
             test_data = np.random.rand(size, size, size)
-            
+
             # Unoptimized FFT
             result = np.fft.fftn(test_data)
             result = np.fft.ifftn(result)
-            
+
             end_time = time.time()
             execution_times.append(end_time - start_time)
-            
+
             # Simulate memory usage
             memory_usage.append(test_data.nbytes / 1024 / 1024)  # MB
-            
+
             # Compute optimization potential
             theoretical_min_time = size * 0.001  # Theoretical minimum
             actual_time = end_time - start_time
@@ -98,7 +100,9 @@ class OptimizationScalingAnalyzer:
 
         # Analyze optimization opportunities
         avg_optimization_potential = np.mean(optimization_potential)
-        optimization_strategies = self._identify_optimization_strategies(problem_sizes, execution_times)
+        optimization_strategies = self._identify_optimization_strategies(
+            problem_sizes, execution_times
+        )
 
         return {
             "problem_sizes": problem_sizes,
@@ -107,7 +111,9 @@ class OptimizationScalingAnalyzer:
             "optimization_potential": optimization_potential,
             "avg_optimization_potential": float(avg_optimization_potential),
             "optimization_strategies": optimization_strategies,
-            "optimization_grade": self._compute_optimization_grade(avg_optimization_potential)
+            "optimization_grade": self._compute_optimization_grade(
+                avg_optimization_potential
+            ),
         }
 
     def _analyze_memory_optimization(self, problem_sizes: List[int]) -> Dict[str, Any]:
@@ -119,17 +125,17 @@ class OptimizationScalingAnalyzer:
         for size in problem_sizes:
             # Simulate memory allocation
             initial_memory = 0  # Simplified for simulation
-            
+
             # Allocate test data
             test_data = np.random.rand(size, size, size)
             memory_used = test_data.nbytes / 1024 / 1024  # MB
             memory_usage.append(memory_used)
-            
+
             # Compute memory efficiency
-            theoretical_memory = (size ** 3) * 8 / 1024 / 1024  # 8 bytes per float64
+            theoretical_memory = (size**3) * 8 / 1024 / 1024  # 8 bytes per float64
             efficiency = theoretical_memory / memory_used if memory_used > 0 else 0.0
             memory_efficiency.append(efficiency)
-            
+
             # Identify optimization opportunities
             if efficiency < 0.8:
                 optimization_opportunities.append("memory_fragmentation")
@@ -138,7 +144,9 @@ class OptimizationScalingAnalyzer:
 
         # Analyze memory optimization
         avg_memory_efficiency = np.mean(memory_efficiency)
-        memory_optimization_strategies = self._identify_memory_optimization_strategies(optimization_opportunities)
+        memory_optimization_strategies = self._identify_memory_optimization_strategies(
+            optimization_opportunities
+        )
 
         return {
             "problem_sizes": problem_sizes,
@@ -147,10 +155,14 @@ class OptimizationScalingAnalyzer:
             "avg_memory_efficiency": float(avg_memory_efficiency),
             "optimization_opportunities": optimization_opportunities,
             "memory_optimization_strategies": memory_optimization_strategies,
-            "memory_optimization_grade": self._compute_optimization_grade(avg_memory_efficiency)
+            "memory_optimization_grade": self._compute_optimization_grade(
+                avg_memory_efficiency
+            ),
         }
 
-    def _analyze_parallel_optimization(self, optimization_levels: List[int]) -> Dict[str, Any]:
+    def _analyze_parallel_optimization(
+        self, optimization_levels: List[int]
+    ) -> Dict[str, Any]:
         """Analyze parallel optimization opportunities."""
         execution_times = []
         parallel_efficiency = []
@@ -159,23 +171,25 @@ class OptimizationScalingAnalyzer:
         for level in optimization_levels:
             # Simulate parallel computation
             start_time = time.time()
-            
+
             # Simulate parallel processing
-            num_threads = 2 ** level  # 1, 2, 4, 8, 16 threads
+            num_threads = 2**level  # 1, 2, 4, 8, 16 threads
             test_data = np.random.rand(128, 128, 128)
-            
+
             # Simulate parallel FFT
             for _ in range(num_threads):
                 result = np.fft.fftn(test_data)
                 result = np.fft.ifftn(result)
-            
+
             end_time = time.time()
             execution_times.append(end_time - start_time)
-            
+
             # Compute parallel efficiency
             sequential_time = execution_times[0] if execution_times else 1.0
-            parallel_efficiency.append(sequential_time / (execution_times[-1] * num_threads))
-            
+            parallel_efficiency.append(
+                sequential_time / (execution_times[-1] * num_threads)
+            )
+
             # Compute scalability factor
             if level > 0:
                 scalability_factor = execution_times[0] / execution_times[-1]
@@ -183,8 +197,14 @@ class OptimizationScalingAnalyzer:
 
         # Analyze parallel optimization
         avg_parallel_efficiency = np.mean(parallel_efficiency)
-        avg_scalability_factor = np.mean(scalability_factors) if scalability_factors else 1.0
-        parallel_optimization_strategies = self._identify_parallel_optimization_strategies(optimization_levels, parallel_efficiency)
+        avg_scalability_factor = (
+            np.mean(scalability_factors) if scalability_factors else 1.0
+        )
+        parallel_optimization_strategies = (
+            self._identify_parallel_optimization_strategies(
+                optimization_levels, parallel_efficiency
+            )
+        )
 
         return {
             "optimization_levels": optimization_levels,
@@ -194,10 +214,14 @@ class OptimizationScalingAnalyzer:
             "avg_parallel_efficiency": float(avg_parallel_efficiency),
             "avg_scalability_factor": float(avg_scalability_factor),
             "parallel_optimization_strategies": parallel_optimization_strategies,
-            "parallel_optimization_grade": self._compute_optimization_grade(avg_parallel_efficiency)
+            "parallel_optimization_grade": self._compute_optimization_grade(
+                avg_parallel_efficiency
+            ),
         }
 
-    def _analyze_overall_optimization(self, optimization_results: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_overall_optimization(
+        self, optimization_results: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Analyze overall optimization opportunities."""
         algorithm_opt = optimization_results["algorithm_optimization"]
         memory_opt = optimization_results["memory_optimization"]
@@ -205,9 +229,9 @@ class OptimizationScalingAnalyzer:
 
         # Compute overall optimization potential
         overall_potential = (
-            algorithm_opt["avg_optimization_potential"] +
-            memory_opt["avg_memory_efficiency"] +
-            parallel_opt["avg_parallel_efficiency"]
+            algorithm_opt["avg_optimization_potential"]
+            + memory_opt["avg_memory_efficiency"]
+            + parallel_opt["avg_parallel_efficiency"]
         ) / 3.0
 
         # Identify priority optimizations
@@ -226,14 +250,20 @@ class OptimizationScalingAnalyzer:
             "overall_potential": float(overall_potential),
             "priority_optimizations": priority_optimizations,
             "optimization_roi": optimization_roi,
-            "optimization_roadmap": self._create_optimization_roadmap(priority_optimizations),
-            "overall_optimization_grade": self._compute_optimization_grade(overall_potential)
+            "optimization_roadmap": self._create_optimization_roadmap(
+                priority_optimizations
+            ),
+            "overall_optimization_grade": self._compute_optimization_grade(
+                overall_potential
+            ),
         }
 
-    def _identify_optimization_strategies(self, sizes: List[int], times: List[float]) -> List[str]:
+    def _identify_optimization_strategies(
+        self, sizes: List[int], times: List[float]
+    ) -> List[str]:
         """Identify optimization strategies based on performance data."""
         strategies = []
-        
+
         # Analyze scaling behavior
         if len(times) > 1:
             scaling_exponent = self._compute_scaling_exponent(sizes, times)
@@ -241,28 +271,32 @@ class OptimizationScalingAnalyzer:
                 strategies.append("algorithm_optimization")
             if scaling_exponent > 3.0:
                 strategies.append("data_structure_optimization")
-        
+
         # Analyze absolute performance
         if max(times) > 1.0:  # More than 1 second
             strategies.append("performance_optimization")
-        
+
         return strategies
 
-    def _identify_memory_optimization_strategies(self, opportunities: List[str]) -> List[str]:
+    def _identify_memory_optimization_strategies(
+        self, opportunities: List[str]
+    ) -> List[str]:
         """Identify memory optimization strategies."""
         strategies = []
-        
+
         if "memory_fragmentation" in opportunities:
             strategies.append("memory_pool_optimization")
         if "memory_leak" in opportunities:
             strategies.append("memory_management_optimization")
-        
+
         return strategies
 
-    def _identify_parallel_optimization_strategies(self, levels: List[int], efficiency: List[float]) -> List[str]:
+    def _identify_parallel_optimization_strategies(
+        self, levels: List[int], efficiency: List[float]
+    ) -> List[str]:
         """Identify parallel optimization strategies."""
         strategies = []
-        
+
         # Analyze efficiency trends
         if len(efficiency) > 1:
             efficiency_trend = np.polyfit(levels, efficiency, 1)[0]
@@ -270,49 +304,63 @@ class OptimizationScalingAnalyzer:
                 strategies.append("load_balancing_optimization")
             if max(efficiency) < 0.8:
                 strategies.append("parallel_algorithm_optimization")
-        
+
         return strategies
 
     def _compute_optimization_roi(self, optimization_results: Dict[str, Any]) -> float:
         """Compute optimization return on investment."""
         # Simplified ROI calculation
-        algorithm_potential = optimization_results["algorithm_optimization"]["avg_optimization_potential"]
-        memory_efficiency = optimization_results["memory_optimization"]["avg_memory_efficiency"]
-        parallel_efficiency = optimization_results["parallel_optimization"]["avg_parallel_efficiency"]
-        
+        algorithm_potential = optimization_results["algorithm_optimization"][
+            "avg_optimization_potential"
+        ]
+        memory_efficiency = optimization_results["memory_optimization"][
+            "avg_memory_efficiency"
+        ]
+        parallel_efficiency = optimization_results["parallel_optimization"][
+            "avg_parallel_efficiency"
+        ]
+
         # ROI is proportional to optimization potential
         roi = (algorithm_potential + memory_efficiency + parallel_efficiency) / 3.0
         return float(roi)
 
-    def _create_optimization_roadmap(self, priorities: List[str]) -> List[Dict[str, Any]]:
+    def _create_optimization_roadmap(
+        self, priorities: List[str]
+    ) -> List[Dict[str, Any]]:
         """Create optimization roadmap based on priorities."""
         roadmap = []
-        
+
         for i, priority in enumerate(priorities):
-            roadmap.append({
-                "phase": i + 1,
-                "priority": priority,
-                "estimated_effort": "medium",
-                "expected_improvement": "20-40%"
-            })
-        
+            roadmap.append(
+                {
+                    "phase": i + 1,
+                    "priority": priority,
+                    "estimated_effort": "medium",
+                    "expected_improvement": "20-40%",
+                }
+            )
+
         return roadmap
 
-    def _compute_scaling_exponent(self, sizes: List[float], times: List[float]) -> float:
+    def _compute_scaling_exponent(
+        self, sizes: List[float], times: List[float]
+    ) -> float:
         """Compute scaling exponent from size-time relationship."""
         if len(sizes) < 2 or len(times) < 2:
             return 1.0
-        
+
         # Fit power law: T(n) = a * n^b
         log_sizes = np.log(sizes)
         log_times = np.log(times)
-        
+
         # Linear regression in log space
         if len(log_sizes) == 2:
-            scaling_exponent = (log_times[1] - log_times[0]) / (log_sizes[1] - log_sizes[0])
+            scaling_exponent = (log_times[1] - log_times[0]) / (
+                log_sizes[1] - log_sizes[0]
+            )
         else:
             scaling_exponent = np.polyfit(log_sizes, log_times, 1)[0]
-        
+
         return float(scaling_exponent)
 
     def _compute_optimization_grade(self, efficiency: float) -> str:

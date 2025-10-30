@@ -31,7 +31,7 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
         assert model.H0 == 70.0
         assert model.omega_m == 0.3
@@ -46,9 +46,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Test at different redshifts
         z_values = [0.0, 1.0, 2.0, 5.0]
         for z in z_values:
@@ -64,9 +64,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Test at different redshifts
         z_values = [0.0, 1.0, 2.0]
         for z in z_values:
@@ -82,13 +82,13 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Test at z=0
         omega_m_z0 = model.density_parameter_matter(0.0)
         omega_lambda_z0 = model.density_parameter_lambda(0.0)
-        
+
         assert abs(omega_m_z0 - 0.3) < 1e-6
         assert abs(omega_lambda_z0 - 0.7) < 1e-6
 
@@ -100,9 +100,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         age = model.age_of_universe()
         assert age > 0
         assert age < 20.0  # Age should be reasonable in Gyr
@@ -115,9 +115,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Test at different redshifts
         z_values = [0.0, 1.0, 2.0]
         for z in z_values:
@@ -133,9 +133,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Test at different redshifts
         z_values = [0.0, 1.0, 2.0]
         for z in z_values:
@@ -150,9 +150,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Test at different redshifts
         z_values = [0.0, 1.0, 2.0]
         for z in z_values:
@@ -168,9 +168,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Test at different redshifts
         z_values = [0.0, 1.0, 2.0]
         for z in z_values:
@@ -186,9 +186,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Test at different redshifts
         z_values = [0.0, 1.0, 2.0]
         for z in z_values:
@@ -203,9 +203,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Test at different redshifts
         z_values = [0.0, 1.0, 2.0]
         for z in z_values:
@@ -221,9 +221,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Test at different redshifts
         z_values = [0.0, 1.0, 2.0]
         for z in z_values:
@@ -239,9 +239,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         rho_crit = model.critical_density()
         assert rho_crit > 0
 
@@ -253,9 +253,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Test at different redshifts
         z_values = [0.0, 1.0, 2.0]
         for z in z_values:
@@ -270,9 +270,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Test at different redshifts
         z_values = [0.0, 1.0, 2.0]
         for z in z_values:
@@ -287,9 +287,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Test at different redshifts
         z_values = [0.0, 1.0, 2.0]
         for z in z_values:
@@ -304,9 +304,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Test at different redshifts
         z_values = [0.0, 1.0, 2.0]
         for z in z_values:
@@ -321,9 +321,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         r_s = model.sound_horizon()
         assert r_s > 0
 
@@ -335,9 +335,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         r_photon = model.photon_horizon()
         assert r_photon > 0
 
@@ -349,9 +349,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Check that omega_m + omega_lambda + omega_k = 1
         total_omega = model.omega_m + model.omega_lambda + model.omega_k
         assert abs(total_omega - 1.0) < 1e-10
@@ -365,7 +365,7 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         with pytest.raises(ValueError):
             CosmologicalModel(invalid_params)
 
@@ -377,9 +377,9 @@ class TestCosmologicalModel:
             "omega_lambda": 0.7,
             "omega_k": 0.0,
         }
-        
+
         model = CosmologicalModel(cosmology_params)
-        
+
         # Test with extreme redshifts
         z_extreme = [0.0, 1000.0]
         for z in z_extreme:

@@ -83,7 +83,7 @@ class Test7DBVPPhysics:
                 "tolerance": parameters_7d.tolerance,
                 "damping_factor": parameters_7d.damping_factor,
                 "memory_threshold": 0.8,  # Allow up to 80% memory usage for tests
-            }
+            },
         }
         return BVPEnvelopeSolver(domain_7d, config)
 
@@ -187,7 +187,9 @@ class Test7DBVPPhysics:
         # Basic validation - check that solution is finite and has reasonable magnitude
         assert np.all(np.isfinite(solution))
         assert np.linalg.norm(solution) > 1e-10  # Solution should not be zero
-        assert np.linalg.norm(solution) < 1e12  # Relaxed upper bound for numerical precision
+        assert (
+            np.linalg.norm(solution) < 1e12
+        )  # Relaxed upper bound for numerical precision
 
         # Check solution shape
         assert solution.shape == solver_7d.domain.shape
@@ -205,7 +207,9 @@ class Test7DBVPPhysics:
 
         # For now, skip the full envelope solver test due to missing method
         # TODO: Implement compute_residual_with_coefficients in EnvelopeSolverCore
-        pytest.skip("Full envelope solver test skipped - missing compute_residual_with_coefficients method")
+        pytest.skip(
+            "Full envelope solver test skipped - missing compute_residual_with_coefficients method"
+        )
 
     def test_nonlinear_coefficients(self, solver_7d: BVPEnvelopeSolver):
         """
@@ -251,7 +255,9 @@ class Test7DBVPPhysics:
         # Basic validation - check that solution is finite and has reasonable magnitude
         assert np.all(np.isfinite(solution))
         assert np.linalg.norm(solution) > 1e-10  # Solution should not be zero
-        assert np.linalg.norm(solution) < 1e12  # Relaxed upper bound for numerical precision
+        assert (
+            np.linalg.norm(solution) < 1e12
+        )  # Relaxed upper bound for numerical precision
 
         # Check solution shape
         assert solution.shape == solver_7d.domain.shape

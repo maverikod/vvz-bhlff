@@ -79,21 +79,23 @@ class PerformanceScalingAnalyzer:
             # Simulate CPU-intensive computation
             start_time = time.time()
             test_data = np.random.rand(size, size, size)
-            
+
             # FFT computation (CPU intensive)
             result = np.fft.fftn(test_data)
             result = np.fft.ifftn(result)
-            
+
             end_time = time.time()
             execution_times.append(end_time - start_time)
-            
+
             # Simulate CPU usage measurement
             cpu_percent = min(100.0, size * 0.1)
             cpu_usage.append(cpu_percent)
 
         # Analyze CPU scaling
         cpu_scaling_exponent = self._compute_scaling_exponent(problem_sizes, cpu_usage)
-        time_scaling_exponent = self._compute_scaling_exponent(problem_sizes, execution_times)
+        time_scaling_exponent = self._compute_scaling_exponent(
+            problem_sizes, execution_times
+        )
 
         return {
             "problem_sizes": problem_sizes,
@@ -102,7 +104,7 @@ class PerformanceScalingAnalyzer:
             "cpu_scaling_exponent": cpu_scaling_exponent,
             "time_scaling_exponent": time_scaling_exponent,
             "cpu_efficiency": self._compute_cpu_efficiency(cpu_usage),
-            "scaling_type": self._classify_scaling(cpu_scaling_exponent)
+            "scaling_type": self._classify_scaling(cpu_scaling_exponent),
         }
 
     def _analyze_memory_scaling(self, problem_sizes: List[int]) -> Dict[str, Any]:
@@ -113,22 +115,28 @@ class PerformanceScalingAnalyzer:
         for size in problem_sizes:
             # Simulate memory allocation
             initial_memory = psutil.Process().memory_info().rss / 1024 / 1024  # MB
-            
+
             # Allocate test data
             test_data = np.random.rand(size, size, size)
             final_memory = psutil.Process().memory_info().rss / 1024 / 1024  # MB
-            
+
             memory_usage.append(final_memory - initial_memory)
-            
+
             # Compute memory efficiency
-            theoretical_memory = (size ** 3) * 8 / 1024 / 1024  # 8 bytes per float64
+            theoretical_memory = (size**3) * 8 / 1024 / 1024  # 8 bytes per float64
             actual_memory = final_memory - initial_memory
-            efficiency = theoretical_memory / actual_memory if actual_memory > 0 else 0.0
+            efficiency = (
+                theoretical_memory / actual_memory if actual_memory > 0 else 0.0
+            )
             memory_efficiency.append(efficiency)
 
         # Analyze memory scaling
-        memory_scaling_exponent = self._compute_scaling_exponent(problem_sizes, memory_usage)
-        efficiency_trend = self._compute_efficiency_trend(problem_sizes, memory_efficiency)
+        memory_scaling_exponent = self._compute_scaling_exponent(
+            problem_sizes, memory_usage
+        )
+        efficiency_trend = self._compute_efficiency_trend(
+            problem_sizes, memory_efficiency
+        )
 
         return {
             "problem_sizes": problem_sizes,
@@ -136,10 +144,12 @@ class PerformanceScalingAnalyzer:
             "memory_efficiency": memory_efficiency,
             "memory_scaling_exponent": memory_scaling_exponent,
             "efficiency_trend": efficiency_trend,
-            "scaling_type": self._classify_scaling(memory_scaling_exponent)
+            "scaling_type": self._classify_scaling(memory_scaling_exponent),
         }
 
-    def _analyze_complexity_scaling(self, complexity_levels: List[int]) -> Dict[str, Any]:
+    def _analyze_complexity_scaling(
+        self, complexity_levels: List[int]
+    ) -> Dict[str, Any]:
         """Analyze complexity scaling behavior."""
         execution_times = []
         resource_usage = []
@@ -147,22 +157,26 @@ class PerformanceScalingAnalyzer:
         for complexity in complexity_levels:
             # Simulate computation with different complexity
             start_time = time.time()
-            
+
             # Simulate nested loops based on complexity
             for _ in range(complexity):
                 test_data = np.random.rand(64, 64, 64)
                 result = np.fft.fftn(test_data)
                 result = np.fft.ifftn(result)
-            
+
             end_time = time.time()
             execution_times.append(end_time - start_time)
-            
+
             # Simulate resource usage
             resource_usage.append(complexity * 20.0)  # 20% per complexity level
 
         # Analyze complexity scaling
-        complexity_scaling_exponent = self._compute_scaling_exponent(complexity_levels, execution_times)
-        resource_scaling_exponent = self._compute_scaling_exponent(complexity_levels, resource_usage)
+        complexity_scaling_exponent = self._compute_scaling_exponent(
+            complexity_levels, execution_times
+        )
+        resource_scaling_exponent = self._compute_scaling_exponent(
+            complexity_levels, resource_usage
+        )
 
         return {
             "complexity_levels": complexity_levels,
@@ -170,10 +184,12 @@ class PerformanceScalingAnalyzer:
             "resource_usage": resource_usage,
             "complexity_scaling_exponent": complexity_scaling_exponent,
             "resource_scaling_exponent": resource_scaling_exponent,
-            "scaling_type": self._classify_scaling(complexity_scaling_exponent)
+            "scaling_type": self._classify_scaling(complexity_scaling_exponent),
         }
 
-    def _analyze_overall_performance(self, performance_results: Dict[str, Any]) -> Dict[str, Any]:
+    def _analyze_overall_performance(
+        self, performance_results: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Analyze overall performance characteristics."""
         cpu_scaling = performance_results["cpu_scaling"]
         memory_scaling = performance_results["memory_scaling"]
@@ -202,44 +218,50 @@ class PerformanceScalingAnalyzer:
             "memory_efficiency": float(memory_efficiency),
             "bottlenecks": bottlenecks,
             "optimization_potential": float(optimization_potential),
-            "performance_grade": self._compute_performance_grade(overall_efficiency)
+            "performance_grade": self._compute_performance_grade(overall_efficiency),
         }
 
-    def _compute_scaling_exponent(self, sizes: List[float], times: List[float]) -> float:
+    def _compute_scaling_exponent(
+        self, sizes: List[float], times: List[float]
+    ) -> float:
         """Compute scaling exponent from size-time relationship."""
         if len(sizes) < 2 or len(times) < 2:
             return 1.0
-        
+
         # Fit power law: T(n) = a * n^b
         log_sizes = np.log(sizes)
         log_times = np.log(times)
-        
+
         # Linear regression in log space
         if len(log_sizes) == 2:
-            scaling_exponent = (log_times[1] - log_times[0]) / (log_sizes[1] - log_sizes[0])
+            scaling_exponent = (log_times[1] - log_times[0]) / (
+                log_sizes[1] - log_sizes[0]
+            )
         else:
             scaling_exponent = np.polyfit(log_sizes, log_times, 1)[0]
-        
+
         return float(scaling_exponent)
 
     def _compute_cpu_efficiency(self, cpu_usage: List[float]) -> float:
         """Compute CPU efficiency from usage data."""
         if not cpu_usage:
             return 0.0
-        
+
         # Efficiency is inversely related to CPU usage
         avg_cpu_usage = np.mean(cpu_usage)
         efficiency = 1.0 / (1.0 + avg_cpu_usage / 100.0)
         return float(efficiency)
 
-    def _compute_efficiency_trend(self, sizes: List[int], efficiencies: List[float]) -> str:
+    def _compute_efficiency_trend(
+        self, sizes: List[int], efficiencies: List[float]
+    ) -> str:
         """Compute efficiency trend from size-efficiency data."""
         if len(efficiencies) < 2:
             return "stable"
-        
+
         # Compute trend
         trend = np.polyfit(sizes, efficiencies, 1)[0]
-        
+
         if trend > 0.01:
             return "improving"
         elif trend < -0.01:

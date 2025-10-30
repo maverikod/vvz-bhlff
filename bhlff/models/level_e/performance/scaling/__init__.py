@@ -58,39 +58,44 @@ class ScalingAnalyzer:
         """Analyze comprehensive scaling behavior."""
         # Base scaling analysis
         base_results = self.base_analyzer.analyze_base_scaling()
-        
+
         # Performance scaling analysis
         performance_results = self.performance_analyzer.analyze_performance_scaling()
-        
+
         # Optimization scaling analysis
         optimization_results = self.optimization_analyzer.analyze_optimization_scaling()
-        
+
         # Combine results
         comprehensive_results = {
             "base_scaling": base_results,
             "performance_scaling": performance_results,
             "optimization_scaling": optimization_results,
-            "summary": self._create_scaling_summary(base_results, performance_results, optimization_results)
+            "summary": self._create_scaling_summary(
+                base_results, performance_results, optimization_results
+            ),
         }
-        
+
         return comprehensive_results
 
-    def _create_scaling_summary(self, base_results: Dict[str, Any], 
-                               performance_results: Dict[str, Any], 
-                               optimization_results: Dict[str, Any]) -> Dict[str, Any]:
+    def _create_scaling_summary(
+        self,
+        base_results: Dict[str, Any],
+        performance_results: Dict[str, Any],
+        optimization_results: Dict[str, Any],
+    ) -> Dict[str, Any]:
         """Create comprehensive scaling summary."""
         # Extract key metrics
         grid_scaling = base_results.get("grid_scaling", {})
         cpu_scaling = performance_results.get("cpu_scaling", {})
         overall_optimization = optimization_results.get("overall_optimization", {})
-        
+
         # Compute overall scaling grade
         scaling_exponents = [
             grid_scaling.get("scaling_exponent", 1.0),
-            cpu_scaling.get("cpu_scaling_exponent", 1.0)
+            cpu_scaling.get("cpu_scaling_exponent", 1.0),
         ]
         avg_scaling_exponent = np.mean(scaling_exponents)
-        
+
         # Determine scaling grade
         if avg_scaling_exponent < 1.5:
             scaling_grade = "A"
@@ -100,11 +105,15 @@ class ScalingAnalyzer:
             scaling_grade = "C"
         else:
             scaling_grade = "D"
-        
+
         return {
             "scaling_grade": scaling_grade,
             "avg_scaling_exponent": float(avg_scaling_exponent),
-            "optimization_potential": overall_optimization.get("overall_potential", 0.0),
-            "priority_optimizations": overall_optimization.get("priority_optimizations", []),
-            "analysis_complete": True
+            "optimization_potential": overall_optimization.get(
+                "overall_potential", 0.0
+            ),
+            "priority_optimizations": overall_optimization.get(
+                "priority_optimizations", []
+            ),
+            "analysis_complete": True,
         }

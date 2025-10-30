@@ -141,26 +141,26 @@ class SolitonStabilityAnalyzer:
         """
         # Full 7D phase field energy calculation for Hessian
         # Based on 7D phase field theory energy functional
-        
+
         # Compute 7D phase field energy density
         field_energy_density = np.sum(np.abs(field) ** 2)
-        
+
         # Compute 7D phase field gradient energy
         grad_x = np.gradient(field, axis=0)
         grad_y = np.gradient(field, axis=1)
         grad_z = np.gradient(field, axis=2)
         gradient_energy = np.sum(grad_x**2 + grad_y**2 + grad_z**2)
-        
+
         # Compute 7D phase field potential energy using step resonator model
         potential_energy = np.sum(self._step_resonator_potential_7d(field))
-        
+
         # Total energy with 7D phase field corrections
         total_energy = field_energy_density + gradient_energy + potential_energy
-        
+
         # Apply 7D phase field corrections
         phase_correction = 1.0 + 0.1 * np.sin(np.sum(field))
         total_energy *= phase_correction
-        
+
         return total_energy
 
     def _analyze_eigenmodes(
@@ -225,57 +225,60 @@ class SolitonStabilityAnalyzer:
         """Check for translational mode."""
         # Full 7D phase field translational mode analysis
         # Based on 7D phase field theory mode analysis
-        
+
         # Compute 7D phase field gradient
         grad_x = np.gradient(eigenvector, axis=0)
         grad_y = np.gradient(eigenvector, axis=1)
         grad_z = np.gradient(eigenvector, axis=2)
-        
+
         # Check for translational mode characteristics
         # Translational modes have constant gradient
         gradient_variation = np.std(grad_x) + np.std(grad_y) + np.std(grad_z)
-        
+
         # Apply 7D phase field corrections
         phase_correction = 1.0 + 0.1 * np.cos(np.sum(eigenvector))
         gradient_variation *= phase_correction
-        
+
         # Check if mode is translational
         is_translational = gradient_variation < 0.1
-        
+
         return is_translational
 
     def _is_rotational_mode(self, eigenvector: np.ndarray) -> bool:
         """Check for rotational mode."""
         # Full 7D phase field rotational mode analysis
         # Based on 7D phase field theory mode analysis
-        
+
         # Compute 7D phase field curl
         grad_x = np.gradient(eigenvector, axis=0)
         grad_y = np.gradient(eigenvector, axis=1)
         grad_z = np.gradient(eigenvector, axis=2)
-        
+
         # Check for rotational mode characteristics
         # Rotational modes have non-zero curl
-        curl_magnitude = np.sum(np.abs(grad_x)) + np.sum(np.abs(grad_y)) + np.sum(np.abs(grad_z))
-        
+        curl_magnitude = (
+            np.sum(np.abs(grad_x)) + np.sum(np.abs(grad_y)) + np.sum(np.abs(grad_z))
+        )
+
         # Apply 7D phase field corrections
         phase_correction = 1.0 + 0.1 * np.sin(np.sum(eigenvector))
         curl_magnitude *= phase_correction
-        
+
         # Check if mode is rotational
         is_rotational = curl_magnitude > 0.1
-        
+
         return is_rotational
-    
+
     def _step_resonator_potential_7d(self, field: np.ndarray) -> np.ndarray:
         """
         Step resonator potential for 7D BVP theory.
-        
+
         Physical Meaning:
             Implements step function potential instead of classical quartic potential
             according to 7D BVP theory principles.
         """
         cutoff_amplitude = 1.0
         potential_coeff = 1.0
-        return potential_coeff * np.where(np.abs(field) < cutoff_amplitude, 
-                                        np.abs(field)**2, 0.0)
+        return potential_coeff * np.where(
+            np.abs(field) < cutoff_amplitude, np.abs(field) ** 2, 0.0
+        )

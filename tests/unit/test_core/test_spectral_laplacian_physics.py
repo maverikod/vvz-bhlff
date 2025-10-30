@@ -43,6 +43,7 @@ class TestSpectralLaplacianPhysics:
     def spectral_ops(self, domain_7d):
         """Create spectral operations for testing."""
         from bhlff.core.fft.spectral_derivatives_impl import SpectralDerivatives
+
         return SpectralDerivatives(domain_7d, precision="float64")
 
     @pytest.fixture

@@ -56,12 +56,12 @@ class StatisticalBeatingAnalyzer:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Statistical analysis parameters
         self.significance_level = 0.05
         self.confidence_level = 0.95
         self.minimum_samples = 30
-        
+
         # Initialize analysis components
         self._significance_tester = StatisticalSignificanceTester(bvp_core)
         self._pattern_recognizer = StatisticalPatternRecognizer(bvp_core)
@@ -95,16 +95,22 @@ class StatisticalBeatingAnalyzer:
                 - confidence_analysis: Confidence interval analysis results
         """
         self.logger.info("Starting statistical analysis")
-        
+
         # Test statistical significance
-        significance_testing = self._significance_tester.test_statistical_significance(envelope)
-        
+        significance_testing = self._significance_tester.test_statistical_significance(
+            envelope
+        )
+
         # Recognize beating patterns
-        pattern_recognition = self._pattern_recognizer.recognize_beating_patterns(envelope)
-        
+        pattern_recognition = self._pattern_recognizer.recognize_beating_patterns(
+            envelope
+        )
+
         # Analyze confidence intervals
-        confidence_analysis = self._confidence_analyzer.analyze_confidence_intervals(envelope)
-        
+        confidence_analysis = self._confidence_analyzer.analyze_confidence_intervals(
+            envelope
+        )
+
         # Combine all results
         statistical_results = {
             "significance_testing": significance_testing,
@@ -112,6 +118,6 @@ class StatisticalBeatingAnalyzer:
             "confidence_analysis": confidence_analysis,
             "analysis_complete": True,
         }
-        
+
         self.logger.info("Statistical analysis completed")
         return statistical_results

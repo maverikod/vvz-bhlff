@@ -55,19 +55,21 @@ class BeatingOptimizer:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Optimization parameters
         self.optimization_enabled = True
         self.optimization_method = "L-BFGS-B"
         self.max_iterations = 1000
         self.tolerance = 1e-8
-        
+
         # Initialize optimization components
         self._parameter_optimizer = BeatingParameterOptimizer(bvp_core)
         self._threshold_optimizer = BeatingThresholdOptimizer(bvp_core)
         self._method_optimizer = BeatingMethodOptimizer(bvp_core)
 
-    def optimize_analysis(self, envelope: np.ndarray, results: Dict[str, Any]) -> Dict[str, Any]:
+    def optimize_analysis(
+        self, envelope: np.ndarray, results: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Optimize analysis.
 
@@ -93,16 +95,20 @@ class BeatingOptimizer:
                 - method_optimization: Method optimization results
         """
         self.logger.info("Starting comprehensive optimization")
-        
+
         # Optimize parameters
-        parameter_optimization = self._parameter_optimizer.optimize_parameters(envelope, results)
-        
+        parameter_optimization = self._parameter_optimizer.optimize_parameters(
+            envelope, results
+        )
+
         # Optimize thresholds
-        threshold_optimization = self._threshold_optimizer.optimize_thresholds(envelope, results)
-        
+        threshold_optimization = self._threshold_optimizer.optimize_thresholds(
+            envelope, results
+        )
+
         # Optimize methods
         method_optimization = self._method_optimizer.optimize_methods(envelope, results)
-        
+
         # Combine all optimization results
         optimization_results = {
             "parameter_optimization": parameter_optimization,
@@ -110,6 +116,6 @@ class BeatingOptimizer:
             "method_optimization": method_optimization,
             "optimization_complete": True,
         }
-        
+
         self.logger.info("Comprehensive optimization completed")
         return optimization_results

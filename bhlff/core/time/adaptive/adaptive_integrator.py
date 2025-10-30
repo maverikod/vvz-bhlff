@@ -23,8 +23,8 @@ import logging
 
 from ..base_integrator import BaseTimeIntegrator
 from ..memory_kernel import MemoryKernel
-from ..quench_detector import QuenchDetector
-from ...fft import SpectralOperations
+from bhlff.core.bvp.quench_detector import QuenchDetector
+from ...fft.unified_spectral_operations import UnifiedSpectralOperations
 from .error_estimation import ErrorEstimation
 from .runge_kutta import RungeKuttaMethods
 from typing import TYPE_CHECKING
@@ -92,8 +92,8 @@ class AdaptiveIntegrator(BaseTimeIntegrator):
         """
         super().__init__(domain, parameters)
 
-        # Initialize spectral operations
-        self._spectral_ops = SpectralOperations(domain, parameters.precision)
+        # Initialize unified spectral operations (CUDA-aware, blocked)
+        self._spectral_ops = UnifiedSpectralOperations(domain, parameters.precision)
 
         # Initialize fractional Laplacian
         from ...fft import FractionalLaplacian
@@ -105,6 +105,13 @@ class AdaptiveIntegrator(BaseTimeIntegrator):
         # Pre-compute spectral coefficients
         self._spectral_coeffs = None
         self._setup_spectral_coefficients()
+
+        # Select complex dtype based on precision
+        self._complex_dtype = (
+            np.complex64
+            if str(self.parameters.precision).lower() in ("float32", "single")
+            else np.complex128
+        )
 
         # Initialize specialized components
         self._error_estimator = ErrorEstimation(tolerance, safety_factor)
@@ -180,11 +187,16 @@ class AdaptiveIntegrator(BaseTimeIntegrator):
             )
 
         # Initialize result array
-        result = np.zeros((len(time_steps),) + self.domain.shape, dtype=np.complex128)
-        result[0] = initial_field.copy()
+        result = np.empty(
+            (len(time_steps),) + self.domain.shape, dtype=self._complex_dtype
+        )
+        # Ensure initial on correct dtype
+        if initial_field.dtype != self._complex_dtype:
+            initial_field = initial_field.astype(self._complex_dtype, copy=False)
+        result[0] = initial_field
 
         # Current field state
-        current_field = initial_field.copy()
+        current_field = result[0]
         current_time = time_steps[0]
 
         # Adaptive integration
@@ -282,18 +294,22 @@ class AdaptiveIntegrator(BaseTimeIntegrator):
             Computes the right-hand side of the dynamic phase field equation:
             RHS = -ν(-Δ)^β a - λa + s(x,φ,t)
         """
-        # Transform to spectral space
-        field_spectral = self._spectral_ops.forward_fft(field)
+        # Transform to spectral space (CUDA-aware, blocked)
+        field_spectral = self._spectral_ops.forward_fft(field, "ortho")
 
         # Apply spectral operator: -ν|k|^(2β) - λ
         rhs_spectral = -self._spectral_coeffs * field_spectral
 
         # Add source term
-        source_spectral = self._spectral_ops.forward_fft(source)
+        source_spectral = self._spectral_ops.forward_fft(source, "ortho")
         rhs_spectral += source_spectral
 
         # Transform back to real space
-        rhs = self._spectral_ops.inverse_fft(rhs_spectral)
+        rhs = self._spectral_ops.inverse_fft(rhs_spectral, "ortho")
+
+        # Ensure dtype
+        if rhs.dtype != self._complex_dtype:
+            rhs = rhs.astype(self._complex_dtype, copy=False)
 
         return rhs
 
@@ -341,30 +357,16 @@ class AdaptiveIntegrator(BaseTimeIntegrator):
             Applies stability constraints including CFL conditions
             and spectral stability requirements to ensure numerical stability.
         """
-        # CFL condition for diffusion equation
-        # For fractional Laplacian, CFL condition is: dt <= C * dx^(2*beta) / nu
-        if hasattr(self.parameters, "beta") and hasattr(self.parameters, "nu"):
-            beta = self.parameters.beta
-            nu = self.parameters.nu
+        # Delegate to adaptive stability helper to keep this file concise
+        from .stability import apply_stability_constraints
 
-            # Estimate grid spacing
-            if hasattr(self.domain, "dx"):
-                dx = self.domain.dx
-            else:
-                dx = self.domain.L / self.domain.N
-
-            # CFL condition for fractional diffusion
-            cfl_dt = 0.1 * (dx ** (2 * beta)) / nu
-            proposed_dt = min(proposed_dt, cfl_dt)
-
-        # Spectral stability constraint
-        # Ensure time step doesn't cause high-frequency instabilities
-        if (
-            error_estimate > self._tolerance * 10
-        ):  # Large error indicates potential instability
-            proposed_dt *= 0.5  # Reduce step size more aggressively
-
-        return proposed_dt
+        return apply_stability_constraints(
+            proposed_dt=proposed_dt,
+            error_estimate=error_estimate,
+            tolerance=self._tolerance,
+            domain=self.domain,
+            parameters=self.parameters,
+        )
 
     def get_current_time_step(self) -> float:
         """Get current adaptive time step."""

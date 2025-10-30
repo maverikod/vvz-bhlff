@@ -52,7 +52,12 @@ class ObservationalComparison:
         _core (ObservationalComparisonCore): Core implementation
     """
 
-    def __init__(self, evolution_results: Dict[str, Any], observational_data: Dict[str, Any] = None, analysis_parameters: Dict[str, Any] = None):
+    def __init__(
+        self,
+        evolution_results: Dict[str, Any],
+        observational_data: Dict[str, Any] = None,
+        analysis_parameters: Dict[str, Any] = None,
+    ):
         """
         Initialize observational comparison.
 
@@ -68,7 +73,9 @@ class ObservationalComparison:
         self.evolution_results = evolution_results
         self.observational_data = observational_data or {}
         self.analysis_parameters = analysis_parameters or {}
-        self._core = ObservationalComparisonCore(evolution_results, observational_data, analysis_parameters)
+        self._core = ObservationalComparisonCore(
+            evolution_results, observational_data, analysis_parameters
+        )
 
     def compare_with_observations(self) -> Dict[str, Any]:
         """

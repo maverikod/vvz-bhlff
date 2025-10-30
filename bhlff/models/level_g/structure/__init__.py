@@ -28,10 +28,10 @@ from .structure_analysis import StructureAnalysis
 from .galaxy_formation import GalaxyFormation
 
 __all__ = [
-    'LargeScaleStructureModel',
-    'DensityEvolution',
-    'VelocityEvolution', 
-    'PotentialEvolution',
-    'StructureAnalysis',
-    'GalaxyFormation'
+    "LargeScaleStructureModel",
+    "DensityEvolution",
+    "VelocityEvolution",
+    "PotentialEvolution",
+    "StructureAnalysis",
+    "GalaxyFormation",
 ]

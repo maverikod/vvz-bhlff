@@ -265,7 +265,9 @@ class FFTPlan7D:
 
         self.logger.info(f"FFT plans setup complete: {len(self.plans)} plans created")
 
-    def setup_optimized_plans(self, precision: str = "float64", plan_type: str = "MEASURE") -> None:
+    def setup_optimized_plans(
+        self, precision: str = "float64", plan_type: str = "MEASURE"
+    ) -> None:
         """
         Setup or reconfigure optimized FFT plans.
 

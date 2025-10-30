@@ -26,7 +26,10 @@ import numpy as np
 from typing import Dict, Any, Optional
 
 from ..domain import Domain
-from ..bvp.boundary.step_resonator import FrequencyDependentResonator, CascadeResonatorFilter
+from ..bvp.boundary.step_resonator import (
+    FrequencyDependentResonator,
+    CascadeResonatorFilter,
+)
 
 
 class MemoryKernel:
@@ -183,11 +186,11 @@ class MemoryKernel:
             r = np.sqrt(X**2 + Y**2 + Z**2)
 
         # Initialize frequency-dependent resonator
-        if not hasattr(self, '_resonator'):
+        if not hasattr(self, "_resonator"):
             self._resonator = FrequencyDependentResonator(
                 R0=self.parameters.get("R0", 0.1),
                 T0=self.parameters.get("T0", 0.9),
-                omega0=self.parameters.get("omega0", 1.0)
+                omega0=self.parameters.get("omega0", 1.0),
             )
 
         # Compute frequency-dependent coefficients
@@ -199,7 +202,7 @@ class MemoryKernel:
         self._kernel_data = amplitude * np.where(
             r < length_scale,
             T,  # Use frequency-dependent transmission
-            R   # Use frequency-dependent reflection
+            R,  # Use frequency-dependent reflection
         )
 
     def _setup_gaussian_kernel(self) -> None:

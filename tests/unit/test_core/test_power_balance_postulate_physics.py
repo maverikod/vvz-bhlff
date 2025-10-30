@@ -86,8 +86,10 @@ class TestPowerBalancePostulatePhysics:
         x = np.linspace(0, domain_7d.L_spatial, domain_7d.N_spatial)
         y = np.linspace(0, domain_7d.L_spatial, domain_7d.N_spatial)
         z = np.linspace(0, domain_7d.L_spatial, domain_7d.N_spatial)
-        
-        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(x, y, z, phi1, phi2, phi3, t, indexing="ij")
+
+        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(
+            x, y, z, phi1, phi2, phi3, t, indexing="ij"
+        )
         phase_factor = np.exp(1j * (PHI1 + PHI2 + PHI3 + 0.1 * T))
 
         envelope = envelope * phase_factor
@@ -114,7 +116,9 @@ class TestPowerBalancePostulatePhysics:
         result = postulate.apply(test_envelope)
 
         # Physical validation 1: Postulate result should be boolean-like
-        assert isinstance(result["postulate_satisfied"], (bool, np.bool_)), "Postulate result should be boolean"
+        assert isinstance(
+            result["postulate_satisfied"], (bool, np.bool_)
+        ), "Postulate result should be boolean"
 
         # Physical validation 2: BVP flux should be finite
         bvp_flux = result["bvp_flux"]
@@ -122,7 +126,9 @@ class TestPowerBalancePostulatePhysics:
 
         # Physical validation 3: Core energy growth should be finite
         core_energy_growth = result["core_energy_growth"]
-        assert np.isfinite(core_energy_growth), f"Core energy growth not finite: {core_energy_growth}"
+        assert np.isfinite(
+            core_energy_growth
+        ), f"Core energy growth not finite: {core_energy_growth}"
 
         # Physical validation 4: Radiation losses should be non-negative
         radiation_losses = result["radiation_losses"]

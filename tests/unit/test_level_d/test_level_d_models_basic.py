@@ -57,7 +57,7 @@ class TestLevelDModels:
     def test_initialization(self, domain, parameters):
         """Test Level D models initialization."""
         models = LevelDModels(domain, parameters)
-        
+
         assert models.domain == domain
         assert models.parameters == parameters
         assert isinstance(models, AbstractLevelModels)
@@ -71,10 +71,10 @@ class TestLevelDModels:
             "mode_threshold": 0.1,
             "stability_threshold": 0.9,
         }
-        
+
         models = LevelDModels(domain, valid_params)
         assert models.parameters == valid_params
-        
+
         # Test with invalid parameters
         invalid_params = {
             "jaccard_threshold": -0.1,  # Invalid negative value
@@ -82,7 +82,7 @@ class TestLevelDModels:
             "mode_threshold": 0.1,
             "stability_threshold": 0.9,
         }
-        
+
         with pytest.raises(ValueError):
             LevelDModels(domain, invalid_params)
 
@@ -92,7 +92,7 @@ class TestLevelDModels:
         compatible_domain = Domain(L=10.0, N=16, dimensions=7, N_phi=8, N_t=16, T=1.0)
         models = LevelDModels(compatible_domain, parameters)
         assert models.domain == compatible_domain
-        
+
         # Test with incompatible domain
         incompatible_domain = Domain(L=10.0, N=16, dimensions=3)  # Wrong dimensions
         with pytest.raises(ValueError):
@@ -112,7 +112,7 @@ class TestLevelDModels:
         model = level_d_models.create_model("basic")
         is_valid = level_d_models.validate_model(model)
         assert is_valid
-        
+
         # Test invalid model
         invalid_model = None
         is_valid = level_d_models.validate_model(invalid_model)
@@ -121,13 +121,13 @@ class TestLevelDModels:
     def test_model_serialization(self, level_d_models):
         """Test model serialization."""
         model = level_d_models.create_model("basic")
-        
+
         # Test serialization
         serialized = level_d_models.serialize_model(model)
         assert isinstance(serialized, dict)
         assert "model_type" in serialized
         assert "parameters" in serialized
-        
+
         # Test deserialization
         deserialized = level_d_models.deserialize_model(serialized)
         assert deserialized is not None
@@ -138,11 +138,11 @@ class TestLevelDModels:
         """Test model comparison."""
         model1 = level_d_models.create_model("basic")
         model2 = level_d_models.create_model("basic")
-        
+
         # Test equality
         are_equal = level_d_models.compare_models(model1, model2)
         assert are_equal
-        
+
         # Test with different models
         model3 = level_d_models.create_model("advanced")
         are_equal = level_d_models.compare_models(model1, model3)
@@ -151,7 +151,7 @@ class TestLevelDModels:
     def test_model_optimization(self, level_d_models):
         """Test model optimization."""
         model = level_d_models.create_model("basic")
-        
+
         # Test optimization
         optimized_model = level_d_models.optimize_model(model)
         assert optimized_model is not None
@@ -161,7 +161,7 @@ class TestLevelDModels:
     def test_model_analysis(self, level_d_models):
         """Test model analysis."""
         model = level_d_models.create_model("basic")
-        
+
         # Test analysis
         analysis = level_d_models.analyze_model(model)
         assert isinstance(analysis, dict)
@@ -172,21 +172,21 @@ class TestLevelDModels:
     def test_model_export(self, level_d_models):
         """Test model export."""
         model = level_d_models.create_model("basic")
-        
+
         # Test export to file
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             filename = f.name
-        
+
         try:
             level_d_models.export_model(model, filename)
             assert os.path.exists(filename)
-            
+
             # Verify file content
-            with open(filename, 'r') as f:
+            with open(filename, "r") as f:
                 data = json.load(f)
             assert "model_type" in data
             assert "parameters" in data
-            
+
         finally:
             if os.path.exists(filename):
                 os.unlink(filename)
@@ -195,19 +195,19 @@ class TestLevelDModels:
         """Test model import."""
         # Create and export a model
         model = level_d_models.create_model("basic")
-        
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             filename = f.name
-        
+
         try:
             level_d_models.export_model(model, filename)
-            
+
             # Test import
             imported_model = level_d_models.import_model(filename)
             assert imported_model is not None
             assert hasattr(imported_model, "domain")
             assert hasattr(imported_model, "parameters")
-            
+
         finally:
             if os.path.exists(filename):
                 os.unlink(filename)
@@ -238,7 +238,7 @@ class TestMultiModeModel:
     def test_initialization(self, domain, parameters):
         """Test MultiModeModel initialization."""
         model = MultiModeModel(domain, parameters)
-        
+
         assert model.domain == domain
         assert model.parameters == parameters
 
@@ -260,7 +260,7 @@ class TestMultiModeModel:
             multi_mode_model.create_mode(frequency=1.0, amplitude=0.5),
             multi_mode_model.create_mode(frequency=1.5, amplitude=0.3),
         ]
-        
+
         # Test superposition
         superposition = multi_mode_model.compute_superposition(modes)
         assert superposition is not None
@@ -275,7 +275,7 @@ class TestMultiModeModel:
             multi_mode_model.create_mode(frequency=0.5, amplitude=1.0),
             multi_mode_model.create_mode(frequency=1.0, amplitude=0.5),
         ]
-        
+
         # Test stability analysis
         stability = multi_mode_model.analyze_frame_stability(modes)
         assert isinstance(stability, dict)
@@ -288,10 +288,12 @@ class TestMultiModeModel:
         # Create modes with different amplitudes
         modes = [
             multi_mode_model.create_mode(frequency=0.5, amplitude=1.0),
-            multi_mode_model.create_mode(frequency=1.0, amplitude=0.05),  # Below threshold
+            multi_mode_model.create_mode(
+                frequency=1.0, amplitude=0.05
+            ),  # Below threshold
             multi_mode_model.create_mode(frequency=1.5, amplitude=0.3),
         ]
-        
+
         # Test filtering
         filtered_modes = multi_mode_model.filter_modes(modes, threshold=0.1)
         assert len(filtered_modes) == 2  # Should filter out the low amplitude mode
@@ -304,7 +306,7 @@ class TestMultiModeModel:
             multi_mode_model.create_mode(frequency=1.0, amplitude=0.5),
             multi_mode_model.create_mode(frequency=1.5, amplitude=0.3),
         ]
-        
+
         # Test frequency analysis
         freq_analysis = multi_mode_model.analyze_frequencies(modes)
         assert isinstance(freq_analysis, dict)
@@ -320,7 +322,7 @@ class TestMultiModeModel:
             multi_mode_model.create_mode(frequency=1.0, amplitude=0.5),
             multi_mode_model.create_mode(frequency=1.5, amplitude=0.3),
         ]
-        
+
         # Test amplitude analysis
         amp_analysis = multi_mode_model.analyze_amplitudes(modes)
         assert isinstance(amp_analysis, dict)
@@ -335,7 +337,7 @@ class TestMultiModeModel:
             multi_mode_model.create_mode(frequency=0.5, amplitude=1.0),
             multi_mode_model.create_mode(frequency=1.0, amplitude=0.5),
         ]
-        
+
         # Test interaction analysis
         interaction = multi_mode_model.analyze_mode_interactions(modes)
         assert isinstance(interaction, dict)
@@ -350,7 +352,7 @@ class TestMultiModeModel:
             multi_mode_model.create_mode(frequency=0.5, amplitude=1.0),
             multi_mode_model.create_mode(frequency=1.0, amplitude=0.5),
         ]
-        
+
         # Test optimization
         optimized_modes = multi_mode_model.optimize_modes(modes)
         assert optimized_modes is not None

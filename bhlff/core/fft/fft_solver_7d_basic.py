@@ -26,6 +26,7 @@ import numpy as np
 
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except Exception:
     CUDA_AVAILABLE = False
@@ -75,10 +76,17 @@ class FFTSolver7DBasic:
         P27 = P2[None, None, None, None, :, None, None]
         P37 = P3[None, None, None, None, None, :, None]
         KT7 = kt[None, None, None, None, None, None, :]
-        k2 = KX7 * KX7 + KY7 * KY7 + KZ7 * KZ7 + P17 * P17 + P27 * P27 + P37 * P37 + KT7 * KT7
+        k2 = (
+            KX7 * KX7
+            + KY7 * KY7
+            + KZ7 * KZ7
+            + P17 * P17
+            + P27 * P27
+            + P37 * P37
+            + KT7 * KT7
+        )
         abs_k_2beta = xp.power(k2 + 0.0, self.beta)
         D = self.mu * abs_k_2beta + self.lmbda
         if self.lmbda == 0.0:
             D[(k2 == 0)] = 1.0
         self._coeffs = D.astype(xp.float64)
-

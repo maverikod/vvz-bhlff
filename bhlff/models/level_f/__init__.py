@@ -30,7 +30,7 @@ from .nonlinear import BasicNonlinearEffects
 __all__ = [
     "MultiParticleSystem",
     "ExcitationAnalyzer",
-    "DispersionAnalyzer", 
+    "DispersionAnalyzer",
     "PhaseTransitions",
     "BasicNonlinearEffects",
 ]

@@ -53,7 +53,7 @@ class PhaseMapper:
             config: Configuration dictionary
         """
         self.config = config
-        
+
         # Initialize analysis components
         self.regime_classifier = RegimeClassifier(config)
         self.boundary_analyzer = BoundaryAnalyzer()
@@ -78,7 +78,9 @@ class PhaseMapper:
         classifications = self._classify_parameter_space(parameter_grid)
 
         # Analyze regime boundaries
-        boundaries = self.boundary_analyzer.analyze_regime_boundaries(parameter_grid, classifications)
+        boundaries = self.boundary_analyzer.analyze_regime_boundaries(
+            parameter_grid, classifications
+        )
 
         # Compute regime statistics
         statistics = self._compute_regime_statistics(classifications)
@@ -135,7 +137,9 @@ class PhaseMapper:
                     }
 
                     # Classify this parameter combination
-                    classification = self.regime_classifier.classify_single_point(params)
+                    classification = self.regime_classifier.classify_single_point(
+                        params
+                    )
 
                     classifications[f"({i},{j},{k})"] = {
                         "parameters": params,

@@ -41,7 +41,9 @@ class MetricsComparator:
         """Initialize metrics comparator."""
         self.logger = logging.getLogger(__name__)
 
-    def compare_metrics(self, metrics1: Dict[str, Any], metrics2: Dict[str, Any]) -> Dict[str, Any]:
+    def compare_metrics(
+        self, metrics1: Dict[str, Any], metrics2: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Compare metrics between two analyses.
 
@@ -71,7 +73,9 @@ class MetricsComparator:
             "variance_comparison": variance_comparison,
         }
 
-    def _compare_amplitude_metrics(self, metrics1: Dict[str, Any], metrics2: Dict[str, Any]) -> Dict[str, Any]:
+    def _compare_amplitude_metrics(
+        self, metrics1: Dict[str, Any], metrics2: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Compare amplitude metrics.
 
@@ -113,7 +117,9 @@ class MetricsComparator:
             "min_relative_difference": min_rel_diff,
         }
 
-    def _compare_energy_metrics(self, metrics1: Dict[str, Any], metrics2: Dict[str, Any]) -> Dict[str, Any]:
+    def _compare_energy_metrics(
+        self, metrics1: Dict[str, Any], metrics2: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Compare energy metrics.
 
@@ -141,7 +147,9 @@ class MetricsComparator:
             "energy_relative_difference": energy_rel_diff,
         }
 
-    def _compare_variance_metrics(self, metrics1: Dict[str, Any], metrics2: Dict[str, Any]) -> Dict[str, Any]:
+    def _compare_variance_metrics(
+        self, metrics1: Dict[str, Any], metrics2: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Compare variance metrics.
 
@@ -184,16 +192,25 @@ class MetricsComparator:
             float: Similarity score.
         """
         # Calculate similarity based on relative differences
-        amplitude_sim = 1.0 - comparison_metrics["amplitude_comparison"]["mean_relative_difference"]
-        energy_sim = 1.0 - comparison_metrics["energy_comparison"]["energy_relative_difference"]
-        variance_sim = 1.0 - comparison_metrics["variance_comparison"]["variance_relative_difference"]
+        amplitude_sim = (
+            1.0 - comparison_metrics["amplitude_comparison"]["mean_relative_difference"]
+        )
+        energy_sim = (
+            1.0 - comparison_metrics["energy_comparison"]["energy_relative_difference"]
+        )
+        variance_sim = (
+            1.0
+            - comparison_metrics["variance_comparison"]["variance_relative_difference"]
+        )
 
         # Calculate overall similarity
         overall_similarity = np.mean([amplitude_sim, energy_sim, variance_sim])
 
         return float(overall_similarity)
 
-    def calculate_differences(self, comparison_metrics: Dict[str, Any], difference_threshold: float = 0.2) -> Dict[str, Any]:
+    def calculate_differences(
+        self, comparison_metrics: Dict[str, Any], difference_threshold: float = 0.2
+    ) -> Dict[str, Any]:
         """
         Calculate differences between analyses.
 
@@ -209,11 +226,15 @@ class MetricsComparator:
             Dict[str, Any]: Differences analysis.
         """
         # Calculate overall differences
-        overall_difference = np.mean([
-            comparison_metrics["amplitude_comparison"]["mean_relative_difference"],
-            comparison_metrics["energy_comparison"]["energy_relative_difference"],
-            comparison_metrics["variance_comparison"]["variance_relative_difference"],
-        ])
+        overall_difference = np.mean(
+            [
+                comparison_metrics["amplitude_comparison"]["mean_relative_difference"],
+                comparison_metrics["energy_comparison"]["energy_relative_difference"],
+                comparison_metrics["variance_comparison"][
+                    "variance_relative_difference"
+                ],
+            ]
+        )
 
         # Determine difference level
         if overall_difference < 0.1:

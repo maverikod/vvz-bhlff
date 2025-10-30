@@ -49,7 +49,10 @@ class TestNumericalValidation:
         return FFTSolver7DBasic(domain_7d, parameters_basic)
 
     def _create_gaussian_source(
-        self, domain: Domain7DBVP, center: Tuple[float, float, float], width: float = 0.1
+        self,
+        domain: Domain7DBVP,
+        center: Tuple[float, float, float],
+        width: float = 0.1,
     ) -> np.ndarray:
         """Create a Gaussian source for testing."""
         # Create coordinate arrays
@@ -88,7 +91,9 @@ class TestNumericalValidation:
 
         for N in resolutions:
             # Create domain with different resolution
-            test_domain = Domain7DBVP(L_spatial=1.0, N_spatial=N, N_phase=4, T=1.0, N_t=8)
+            test_domain = Domain7DBVP(
+                L_spatial=1.0, N_spatial=N, N_phase=4, T=1.0, N_t=8
+            )
             test_params = Parameters7DBVP(
                 mu=1.0,
                 beta=1.0,

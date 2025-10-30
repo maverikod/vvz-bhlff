@@ -4,73 +4,73 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 904
+Total files analyzed: 915
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 775
+Total classes: 777
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 6856
+Total functions: 6880
 
 ISSUES SUMMARY:
 ----------------------------------------
 methods_with_pass: 0
 not_implemented_in_non_abstract: 0
-methods_without_docstrings: 192
+methods_without_docstrings: 220
 files_without_docstrings: 4
 classes_without_docstrings: 14
-imports_in_middle: 663
-files_too_large: 108
+imports_in_middle: 666
+files_too_large: 122
 
 METHODS_WITHOUT_DOCSTRINGS:
 ----------------------------------------
   File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 77
+  Line: 86
   Method: __init__
 
   File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 77
+  Line: 86
   Class: MockDomain
   Method: __init__
 
   File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 146
+  Line: 160
   Method: __init__
 
   File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 146
+  Line: 160
   Class: MockDomain
   Method: __init__
 
   File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 77
+  Line: 86
   Method: __init__
 
   File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 146
+  Line: 160
   Method: __init__
 
   File: ./tests/unit/test_power_law_7d_bvp_compliance.py
-  Line: 168
+  Line: 170
   Method: __init__
 
   File: ./tests/unit/test_power_law_7d_bvp_compliance.py
-  Line: 168
+  Line: 170
   Class: MockBVPCore
   Method: __init__
 
   File: ./tests/unit/test_power_law_7d_bvp_compliance.py
-  Line: 213
+  Line: 216
   Method: __init__
 
   File: ./tests/unit/test_power_law_7d_bvp_compliance.py
-  Line: 213
+  Line: 216
   Class: MockBVPCore
   Method: __init__
 
-  ... and 182 more
+  ... and 210 more
 
 FILES_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -90,19 +90,19 @@ FILES_WITHOUT_DOCSTRINGS:
 CLASSES_WITHOUT_DOCSTRINGS:
 ----------------------------------------
   File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 76
+  Line: 85
   Class: MockDomain
 
   File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 145
+  Line: 159
   Class: MockDomain
 
   File: ./tests/unit/test_power_law_7d_bvp_compliance.py
-  Line: 167
+  Line: 169
   Class: MockBVPCore
 
   File: ./tests/unit/test_power_law_7d_bvp_compliance.py
-  Line: 212
+  Line: 215
   Class: MockBVPCore
 
   File: ./tests/unit/test_level_g/test_gravity_physics.py
@@ -118,15 +118,15 @@ CLASSES_WITHOUT_DOCSTRINGS:
   Class: DummyDomain
 
   File: ./tests/unit/test_core/test_enhanced_block_processing.py
-  Line: 202
+  Line: 220
   Class: MockBlockInfo
 
   File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
-  Line: 101
+  Line: 104
   Class: MockParameters
 
   File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
-  Line: 177
+  Line: 183
   Class: MockInvalidParameters
 
   ... and 4 more
@@ -163,15 +163,23 @@ IMPORTS_IN_MIDDLE:
   File: ./scripts/demo_block_processing.py
   Line: 306
 
-  ... and 653 more
+  ... and 656 more
 
 FILES_TOO_LARGE:
 ----------------------------------------
   File: ./test_quench_detector_optimized.py
 
+  File: ./tests/integration/automated_testing/test_quality_monitoring_integration.py
+
   File: ./tests/unit/test_ml_prediction_vectorized_implementations.py
 
+  File: ./tests/unit/test_ml_prediction_physics_validation.py
+
+  File: ./tests/unit/test_ml_prediction_full_implementation.py
+
   File: ./tests/unit/test_soliton_analysis_optimization.py
+
+  File: ./tests/unit/test_full_algorithm_implementations.py
 
   File: ./tests/unit/test_ml_prediction_vectorized_implementation.py
 
@@ -179,12 +187,4 @@ FILES_TOO_LARGE:
 
   File: ./tests/unit/test_base_models.py
 
-  File: ./tests/unit/test_soliton_optimization_algorithms.py
-
-  File: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
-
-  File: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
-
-  File: ./tests/unit/automated_testing/test_integration.py
-
-  ... and 98 more
+  ... and 112 more

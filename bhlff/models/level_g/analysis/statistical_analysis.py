@@ -48,7 +48,11 @@ class StatisticalAnalysis:
         analysis_parameters (dict): Analysis parameters
     """
 
-    def __init__(self, evolution_results: Dict[str, Any], analysis_parameters: Dict[str, Any] = None):
+    def __init__(
+        self,
+        evolution_results: Dict[str, Any],
+        analysis_parameters: Dict[str, Any] = None,
+    ):
         """
         Initialize statistical analysis.
 

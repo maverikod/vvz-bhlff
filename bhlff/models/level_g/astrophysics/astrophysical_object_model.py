@@ -76,11 +76,11 @@ class AstrophysicalObjectModel(ModelBase):
         self.phase_profile = None
         self.topological_charge = 0
         self.physical_params = {}
-        
+
         # Initialize specialized components
         self.phase_analyzer = PhaseAnalyzer()
         self.properties_calculator = ObservablePropertiesCalculator()
-        
+
         # Setup specialized model
         self._setup_specialized_model()
 
@@ -109,7 +109,9 @@ class AstrophysicalObjectModel(ModelBase):
         self.topological_charge = self.specialized_model.topological_charge
         self.physical_params = self.specialized_model.physical_params
 
-    def create_star_model(self, stellar_params: Dict[str, Any]) -> "AstrophysicalObjectModel":
+    def create_star_model(
+        self, stellar_params: Dict[str, Any]
+    ) -> "AstrophysicalObjectModel":
         """
         Create star model with given parameters.
 
@@ -128,7 +130,9 @@ class AstrophysicalObjectModel(ModelBase):
         self._setup_specialized_model()
         return self
 
-    def create_galaxy_model(self, galactic_params: Dict[str, Any]) -> "AstrophysicalObjectModel":
+    def create_galaxy_model(
+        self, galactic_params: Dict[str, Any]
+    ) -> "AstrophysicalObjectModel":
         """
         Create galaxy model with given parameters.
 
@@ -147,7 +151,9 @@ class AstrophysicalObjectModel(ModelBase):
         self._setup_specialized_model()
         return self
 
-    def create_black_hole_model(self, bh_params: Dict[str, Any]) -> "AstrophysicalObjectModel":
+    def create_black_hole_model(
+        self, bh_params: Dict[str, Any]
+    ) -> "AstrophysicalObjectModel":
         """
         Create black hole model with given parameters.
 
@@ -182,12 +188,14 @@ class AstrophysicalObjectModel(ModelBase):
 
         # Use phase analyzer to compute properties
         properties = self.phase_analyzer.analyze_phase_properties(self.phase_profile)
-        
+
         # Add object-specific properties
-        properties.update({
-            "object_type": self.object_type,
-            "topological_charge": self.topological_charge,
-        })
+        properties.update(
+            {
+                "object_type": self.object_type,
+                "topological_charge": self.topological_charge,
+            }
+        )
 
         return properties
 

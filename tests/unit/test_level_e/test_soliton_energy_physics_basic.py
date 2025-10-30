@@ -59,9 +59,7 @@ class TestSolitonEnergyPhysicsBasic:
             "wzw_coefficient": 1.0,
         }
 
-    def test_kinetic_energy_physical_properties(
-        self, domain_3d, physics_params
-    ):
+    def test_kinetic_energy_physical_properties(self, domain_3d, physics_params):
         """
         Test kinetic energy physical properties.
 
@@ -75,27 +73,25 @@ class TestSolitonEnergyPhysicsBasic:
         """
         # Create soliton
         soliton = BaryonSoliton(domain_3d, physics_params)
-        
+
         # Create field configuration
         field = soliton.create_b1_configuration()
-        
+
         # Calculate kinetic energy
         kinetic_energy = soliton.compute_kinetic_energy(field)
-        
+
         # Verify energy is positive
         assert kinetic_energy > 0
-        
+
         # Verify energy is finite
         assert np.isfinite(kinetic_energy)
-        
+
         # Verify energy scales with field amplitude
         field_scaled = 2.0 * field
         kinetic_energy_scaled = soliton.compute_kinetic_energy(field_scaled)
         assert kinetic_energy_scaled > kinetic_energy
 
-    def test_skyrme_energy_physical_properties(
-        self, domain_3d, physics_params
-    ):
+    def test_skyrme_energy_physical_properties(self, domain_3d, physics_params):
         """
         Test Skyrme energy physical properties.
 
@@ -109,27 +105,25 @@ class TestSolitonEnergyPhysicsBasic:
         """
         # Create soliton
         soliton = BaryonSoliton(domain_3d, physics_params)
-        
+
         # Create field configuration
         field = soliton.create_b1_configuration()
-        
+
         # Calculate Skyrme energy
         skyrme_energy = soliton.compute_skyrme_energy(field)
-        
+
         # Verify energy is positive
         assert skyrme_energy > 0
-        
+
         # Verify energy is finite
         assert np.isfinite(skyrme_energy)
-        
+
         # Verify energy scales with field amplitude
         field_scaled = 2.0 * field
         skyrme_energy_scaled = soliton.compute_skyrme_energy(field_scaled)
         assert skyrme_energy_scaled > skyrme_energy
 
-    def test_wzw_energy_physical_properties(
-        self, domain_3d, physics_params
-    ):
+    def test_wzw_energy_physical_properties(self, domain_3d, physics_params):
         """
         Test WZW energy physical properties.
 
@@ -143,16 +137,16 @@ class TestSolitonEnergyPhysicsBasic:
         """
         # Create soliton
         soliton = BaryonSoliton(domain_3d, physics_params)
-        
+
         # Create field configuration
         field = soliton.create_b1_configuration()
-        
+
         # Calculate WZW energy
         wzw_energy = soliton.compute_wzw_energy(field)
-        
+
         # Verify energy is finite
         assert np.isfinite(wzw_energy)
-        
+
         # Verify energy is related to topological charge
         topological_charge = soliton.compute_topological_charge(field)
         assert abs(wzw_energy) > 0 or abs(topological_charge) < 1e-10
@@ -172,23 +166,21 @@ class TestSolitonEnergyPhysicsBasic:
         # Test different domain sizes
         domain_sizes = [2.0, 4.0, 8.0]
         energies = []
-        
+
         for L in domain_sizes:
             domain = Domain(L=L, N=32, dimensions=7)
             soliton = BaryonSoliton(domain, physics_params)
             field = soliton.create_b1_configuration()
             energy = soliton.compute_total_energy(field)
             energies.append(energy)
-        
+
         # Verify energy scaling (should be approximately proportional to domain volume)
         for i in range(1, len(energies)):
             volume_ratio = (domain_sizes[i] / domain_sizes[0]) ** 7
             energy_ratio = energies[i] / energies[0]
             assert abs(energy_ratio - volume_ratio) < 0.5  # Allow some tolerance
 
-    def test_energy_conservation_under_rotation(
-        self, domain_3d, physics_params
-    ):
+    def test_energy_conservation_under_rotation(self, domain_3d, physics_params):
         """
         Test energy conservation under rotation.
 
@@ -202,19 +194,19 @@ class TestSolitonEnergyPhysicsBasic:
         """
         # Create soliton
         soliton = BaryonSoliton(domain_3d, physics_params)
-        
+
         # Create initial field
         field_initial = soliton.create_b1_configuration()
-        
+
         # Calculate initial energy
         energy_initial = soliton.compute_total_energy(field_initial)
-        
+
         # Apply rotation (simulate by phase shift)
         field_rotated = np.roll(field_initial, shift=1, axis=0)
-        
+
         # Calculate rotated energy
         energy_rotated = soliton.compute_total_energy(field_rotated)
-        
+
         # Verify energy conservation
         assert abs(energy_rotated - energy_initial) < physics_params["energy_tolerance"]
 
@@ -232,19 +224,19 @@ class TestSolitonEnergyPhysicsBasic:
         """
         # Create soliton
         soliton = BaryonSoliton(domain_3d, physics_params)
-        
+
         # Create field configuration
         field = soliton.create_b1_configuration()
-        
+
         # Calculate total energy
         total_energy = soliton.compute_total_energy(field)
-        
+
         # Verify energy is positive
         assert total_energy > 0
-        
+
         # Verify energy is finite
         assert np.isfinite(total_energy)
-        
+
         # Verify energy is reasonable (not too large)
         assert total_energy < 1e6  # Reasonable upper bound
 

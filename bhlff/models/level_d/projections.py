@@ -371,31 +371,33 @@ class StrongProjector:
         # Step resonator Q-factor filter
         q_filter = self._step_q_factor_filter(frequencies, q_factor)
         return q_filter
-    
-    def _step_q_factor_filter(self, frequencies: np.ndarray, q_factor: float) -> np.ndarray:
+
+    def _step_q_factor_filter(
+        self, frequencies: np.ndarray, q_factor: float
+    ) -> np.ndarray:
         """
         Step function Q-factor filter.
-        
+
         Physical Meaning:
             Implements step resonator model for Q-factor filtering instead of
             exponential decay. This follows 7D BVP theory principles where
             filtering occurs through semi-transparent boundaries.
-            
+
         Mathematical Foundation:
             F(f) = F₀ * Θ(f_cutoff - f) where Θ is the Heaviside step function
             and f_cutoff is the cutoff frequency for the resonator.
-            
+
         Args:
             frequencies: Frequency array
             q_factor: Q-factor parameter
-            
+
         Returns:
             Step function Q-factor filter
         """
         # Step resonator parameters
         cutoff_frequency = q_factor
         filter_strength = 1.0
-        
+
         # Step function filter: 1.0 below cutoff, 0.0 above
         return filter_strength * np.where(frequencies < cutoff_frequency, 1.0, 0.0)
 

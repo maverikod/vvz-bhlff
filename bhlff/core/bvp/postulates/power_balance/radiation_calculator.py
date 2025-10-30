@@ -80,7 +80,9 @@ class RadiationCalculator:
 
         # Get material properties for radiation calculations
         em_conductivity = self.constants.get_basic_material_property("em_conductivity")
-        weak_conductivity = self.constants.get_basic_material_property("weak_conductivity")
+        weak_conductivity = self.constants.get_basic_material_property(
+            "weak_conductivity"
+        )
         speed_of_light = self.constants.get_physical_constant("speed_of_light")
 
         # Compute EM radiation losses using full electromagnetic theory

@@ -44,7 +44,9 @@ def compute_scale_factor_from_phase_field(phase_field: np.ndarray) -> np.ndarray
         return np.array([1.0])
 
     if phase_field.ndim > 1:
-        amplitude_evolution = np.mean(np.abs(phase_field), axis=tuple(range(1, phase_field.ndim)))
+        amplitude_evolution = np.mean(
+            np.abs(phase_field), axis=tuple(range(1, phase_field.ndim))
+        )
     else:
         amplitude_evolution = np.abs(phase_field)
 
@@ -76,7 +78,7 @@ def compute_matter_density_from_phase_field(phase_field: np.ndarray) -> float:
     if mean_density == 0:
         return 0.3
     density_contrast = (phase_field - mean_density) / mean_density
-    variance_proxy = float(np.mean(density_contrast ** 2))
+    variance_proxy = float(np.mean(density_contrast**2))
     return float(np.clip(variance_proxy, 0.1, 0.5))
 
 
@@ -102,9 +104,9 @@ def compute_curvature_from_phase_field(phase_field: np.ndarray) -> float:
         if phase_field.ndim > 2:
             grad_y = np.gradient(phase_field, axis=1)
             grad_z = np.gradient(phase_field, axis=2)
-            curvature = float(np.mean(grad_x ** 2 + grad_y ** 2 + grad_z ** 2))
+            curvature = float(np.mean(grad_x**2 + grad_y**2 + grad_z**2))
         else:
-            curvature = float(np.mean(grad_x ** 2))
+            curvature = float(np.mean(grad_x**2))
     else:
         curvature = 0.0
 
@@ -132,5 +134,3 @@ def compute_dark_energy_from_phase_field(phase_field: np.ndarray) -> float:
     curvature = compute_curvature_from_phase_field(phase_field)
     dark_energy = 1.0 - matter_density - curvature
     return float(max(0.1, dark_energy))
-
-

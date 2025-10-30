@@ -47,7 +47,9 @@ class TestA01PlaneWaveBasic:
         # Domain parameters (smaller for testing)
         self.L = 1.0
         self.N = 8  # Much smaller for testing
-        self.domain = Domain7DBVP(L_spatial=self.L, N_spatial=self.N, N_phase=4, T=1.0, N_t=8)
+        self.domain = Domain7DBVP(
+            L_spatial=self.L, N_spatial=self.N, N_phase=4, T=1.0, N_t=8
+        )
 
         # Physics parameters
         self.mu = 1.0
@@ -56,10 +58,7 @@ class TestA01PlaneWaveBasic:
 
         # Create parameters object
         self.parameters = Parameters7DBVP(
-            mu=self.mu,
-            beta=self.beta,
-            lambda_param=self.lambda_param,
-            nu=1.0
+            mu=self.mu, beta=self.beta, lambda_param=self.lambda_param, nu=1.0
         )
 
         # Create solver
@@ -86,7 +85,7 @@ class TestA01PlaneWaveBasic:
         # Create single mode source in 7D space
         k_test = 2 * np.pi / self.L  # Test wavenumber
         x = np.linspace(0, self.L, self.N, endpoint=False)
-        
+
         # Create 7D source field with plane wave in x-direction
         source = np.zeros(self.domain.shape, dtype=complex)
         for i in range(self.N):
@@ -98,10 +97,10 @@ class TestA01PlaneWaveBasic:
         # Check solution - in 7D space, we check basic properties
         assert solution.shape == source.shape
         assert np.any(np.abs(solution) > 1e-10)
-        
+
         # Check that the solution is finite
         assert np.all(np.isfinite(solution))
-        
+
         # Check that the solution is not identically zero
         assert np.any(np.abs(solution) > 1e-10)
 
@@ -121,12 +120,13 @@ class TestA01PlaneWaveBasic:
         k1 = 2 * np.pi / self.L
         k2 = 4 * np.pi / self.L
         x = np.linspace(0, self.L, self.N, endpoint=False)
-        
+
         # Create 7D source field with multiple modes in x-direction
         source = np.zeros(self.domain.shape, dtype=complex)
         for i in range(self.N):
-            source[i, 0, 0, 0, 0, 0, 0] = (np.exp(1j * k1 * x[i]) + 
-                                          0.5 * np.exp(1j * k2 * x[i]))
+            source[i, 0, 0, 0, 0, 0, 0] = np.exp(1j * k1 * x[i]) + 0.5 * np.exp(
+                1j * k2 * x[i]
+            )
 
         # Solve using spectral method
         solution = self.solver.solve(source)
@@ -134,10 +134,10 @@ class TestA01PlaneWaveBasic:
         # Check solution - in 7D space, we check basic properties
         assert solution.shape == source.shape
         assert np.any(np.abs(solution) > 1e-10)
-        
+
         # Check that the solution is finite
         assert np.all(np.isfinite(solution))
-        
+
         # Check that the solution is not identically zero
         assert np.any(np.abs(solution) > 1e-10)
 
@@ -156,8 +156,8 @@ class TestA01PlaneWaveBasic:
         # Create isotropic source in 7D space
         x = np.linspace(0, self.L, self.N, endpoint=False)
         y = np.linspace(0, self.L, self.N, endpoint=False)
-        X, Y = np.meshgrid(x, y, indexing='ij')
-        
+        X, Y = np.meshgrid(x, y, indexing="ij")
+
         # Create 7D source field with 2D pattern in x-y plane
         source = np.zeros(self.domain.shape, dtype=complex)
         for i in range(self.N):
@@ -197,7 +197,7 @@ class TestA01PlaneWaveBasic:
             # Create test source in 7D space
             k_test = 2 * np.pi / self.L
             x = np.linspace(0, self.L, N, endpoint=False)
-            
+
             # Create 7D source field with plane wave in x-direction
             source = np.zeros(domain.shape, dtype=complex)
             for i in range(N):
@@ -215,7 +215,7 @@ class TestA01PlaneWaveBasic:
         # Check convergence (errors should generally decrease)
         for i in range(1, len(errors)):
             # Allow some tolerance for numerical errors
-            assert errors[i] <= errors[i-1] * 1.1
+            assert errors[i] <= errors[i - 1] * 1.1
 
     def test_fractional_laplacian_operator(self):
         """
@@ -232,7 +232,7 @@ class TestA01PlaneWaveBasic:
         # Create test field in 7D space
         k_test = 2 * np.pi / self.L
         x = np.linspace(0, self.L, self.N, endpoint=False)
-        
+
         # Create 7D field with plane wave in x-direction
         field = np.zeros(self.domain.shape, dtype=complex)
         for i in range(self.N):
@@ -244,10 +244,10 @@ class TestA01PlaneWaveBasic:
         # Check result - in 7D space, we check basic properties
         assert result.shape == field.shape
         assert np.any(np.abs(result) > 1e-10)
-        
+
         # Check that the result is finite
         assert np.all(np.isfinite(result))
-        
+
         # Check that the fractional Laplacian produces a non-zero result
         assert np.any(np.abs(result) > 1e-10)
 
@@ -292,7 +292,7 @@ class TestA01PlaneWaveBasic:
         # Create test source in 7D space
         k_test = 2 * np.pi / self.L
         x = np.linspace(0, self.L, self.N, endpoint=False)
-        
+
         # Create 7D source field with plane wave in x-direction
         source = np.zeros(self.domain.shape, dtype=complex)
         for i in range(self.N):

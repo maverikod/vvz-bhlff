@@ -80,13 +80,13 @@ class TestPowerLawCoreFixesAdvanced:
         correlation_time = time.time() - start_time
 
         # Check performance (should be reasonable)
-        assert correlation_time < 10.0, f"Correlation function too slow: {correlation_time}s"
+        assert (
+            correlation_time < 10.0
+        ), f"Correlation function too slow: {correlation_time}s"
 
         # Test critical exponents performance
         start_time = time.time()
-        critical_exponents = power_law_core.compute_critical_exponents(
-            test_envelope_3d
-        )
+        critical_exponents = power_law_core.compute_critical_exponents(test_envelope_3d)
         exponents_time = time.time() - start_time
 
         # Check performance (should be reasonable)
@@ -94,9 +94,7 @@ class TestPowerLawCoreFixesAdvanced:
 
         # Test scaling regions performance
         start_time = time.time()
-        scaling_regions = power_law_core.identify_scaling_regions(
-            test_envelope_3d
-        )
+        scaling_regions = power_law_core.identify_scaling_regions(test_envelope_3d)
         regions_time = time.time() - start_time
 
         # Check performance (should be reasonable)
@@ -111,9 +109,7 @@ class TestPowerLawCoreFixesAdvanced:
             critical_exponents = power_law_core.compute_critical_exponents(
                 test_envelope_3d
             )
-            scaling_regions = power_law_core.identify_scaling_regions(
-                test_envelope_3d
-            )
+            scaling_regions = power_law_core.identify_scaling_regions(test_envelope_3d)
 
             # Check that results are finite
             assert np.all(np.isfinite(correlation_results["spatial_correlation_7d"]))
@@ -137,12 +133,12 @@ class TestPowerLawCoreFixesAdvanced:
         # Verify backward compatibility
         assert isinstance(correlation_results, dict), "Results must be dictionary"
         assert "spatial_correlation_7d" in correlation_results, "Missing 7D correlation"
-        assert "correlation_lengths" in correlation_results, "Missing correlation lengths"
+        assert (
+            "correlation_lengths" in correlation_results
+        ), "Missing correlation lengths"
 
         # Test that critical exponents return expected structure
-        critical_exponents = power_law_core.compute_critical_exponents(
-            test_envelope_3d
-        )
+        critical_exponents = power_law_core.compute_critical_exponents(test_envelope_3d)
 
         # Verify backward compatibility
         assert isinstance(critical_exponents, dict), "Results must be dictionary"
@@ -151,9 +147,7 @@ class TestPowerLawCoreFixesAdvanced:
             assert exp in critical_exponents, f"Missing exponent: {exp}"
 
         # Test that scaling regions return expected structure
-        scaling_regions = power_law_core.identify_scaling_regions(
-            test_envelope_3d
-        )
+        scaling_regions = power_law_core.identify_scaling_regions(test_envelope_3d)
 
         # Verify backward compatibility
         assert isinstance(scaling_regions, dict), "Results must be dictionary"
@@ -208,9 +202,7 @@ class TestPowerLawCoreFixesAdvanced:
             critical_exponents = power_law_core.compute_critical_exponents(
                 test_envelope_3d
             )
-            scaling_regions = power_law_core.identify_scaling_regions(
-                test_envelope_3d
-            )
+            scaling_regions = power_law_core.identify_scaling_regions(test_envelope_3d)
 
             # Check that results are not None
             assert correlation_results is not None
@@ -239,25 +231,33 @@ class TestPowerLawCoreFixesAdvanced:
             critical_exponents = power_law_core.compute_critical_exponents(field)
             scaling_regions = power_law_core.identify_scaling_regions(field)
 
-            results.append({
-                "correlation": correlation_results,
-                "exponents": critical_exponents,
-                "regions": scaling_regions,
-            })
+            results.append(
+                {
+                    "correlation": correlation_results,
+                    "exponents": critical_exponents,
+                    "regions": scaling_regions,
+                }
+            )
 
         # Check that results are different for different inputs
         for i in range(1, len(results)):
             # Correlation results should be different
-            corr1 = results[i-1]["correlation"]["spatial_correlation_7d"]
+            corr1 = results[i - 1]["correlation"]["spatial_correlation_7d"]
             corr2 = results[i]["correlation"]["spatial_correlation_7d"]
-            assert not np.allclose(corr1, corr2, rtol=1e-10), "Results should be different"
+            assert not np.allclose(
+                corr1, corr2, rtol=1e-10
+            ), "Results should be different"
 
             # Critical exponents should be different
-            exp1 = results[i-1]["exponents"]
+            exp1 = results[i - 1]["exponents"]
             exp2 = results[i]["exponents"]
             for exp_name in exp1:
-                if isinstance(exp1[exp_name], (int, float)) and isinstance(exp2[exp_name], (int, float)):
-                    assert not np.allclose(exp1[exp_name], exp2[exp_name], rtol=1e-10), f"Exponent {exp_name} should be different"
+                if isinstance(exp1[exp_name], (int, float)) and isinstance(
+                    exp2[exp_name], (int, float)
+                ):
+                    assert not np.allclose(
+                        exp1[exp_name], exp2[exp_name], rtol=1e-10
+                    ), f"Exponent {exp_name} should be different"
 
     def test_convergence_analysis(self, power_law_core):
         """
@@ -288,19 +288,23 @@ class TestPowerLawCoreFixesAdvanced:
             correlation_results = power_law_core.compute_correlation_functions(envelope)
             critical_exponents = power_law_core.compute_critical_exponents(envelope)
 
-            results.append({
-                "N": N,
-                "correlation": correlation_results,
-                "exponents": critical_exponents,
-            })
+            results.append(
+                {
+                    "N": N,
+                    "correlation": correlation_results,
+                    "exponents": critical_exponents,
+                }
+            )
 
         # Check convergence (results should be consistent)
         for i in range(1, len(results)):
             # Correlation lengths should be consistent
-            lengths1 = results[i-1]["correlation"]["correlation_lengths"]
+            lengths1 = results[i - 1]["correlation"]["correlation_lengths"]
             lengths2 = results[i]["correlation"]["correlation_lengths"]
             for j in range(len(lengths1)):
-                assert abs(lengths1[j] - lengths2[j]) < 0.1, f"Correlation lengths not converging: {lengths1[j]} vs {lengths2[j]}"
+                assert (
+                    abs(lengths1[j] - lengths2[j]) < 0.1
+                ), f"Correlation lengths not converging: {lengths1[j]} vs {lengths2[j]}"
 
     def test_robustness_analysis(self, power_law_core, test_envelope_3d):
         """
@@ -320,7 +324,9 @@ class TestPowerLawCoreFixesAdvanced:
 
         for test_input in test_inputs:
             # Test correlation function
-            correlation_results = power_law_core.compute_correlation_functions(test_input)
+            correlation_results = power_law_core.compute_correlation_functions(
+                test_input
+            )
             assert correlation_results is not None, "Correlation function failed"
 
             # Test critical exponents
@@ -340,7 +346,9 @@ class TestPowerLawCoreFixesAdvanced:
             and provide consistent results.
         """
         # Compute all results
-        correlation_results = power_law_core.compute_correlation_functions(test_envelope_3d)
+        correlation_results = power_law_core.compute_correlation_functions(
+            test_envelope_3d
+        )
         critical_exponents = power_law_core.compute_critical_exponents(test_envelope_3d)
         scaling_regions = power_law_core.identify_scaling_regions(test_envelope_3d)
 
@@ -356,14 +364,22 @@ class TestPowerLawCoreFixesAdvanced:
         # Check that critical exponents are consistent
         for exp_name, exp_value in critical_exponents.items():
             if isinstance(exp_value, (int, float)):
-                assert np.isfinite(exp_value), f"Critical exponent {exp_name} must be finite"
+                assert np.isfinite(
+                    exp_value
+                ), f"Critical exponent {exp_name} must be finite"
                 assert exp_value > 0, f"Critical exponent {exp_name} must be positive"
 
         # Check that scaling regions are consistent
         for region_name, region_data in scaling_regions.items():
-            assert isinstance(region_data, dict), f"Region {region_name} must be dictionary"
-            assert "boundaries" in region_data, f"Region {region_name} must have boundaries"
-            assert "scaling_exponents" in region_data, f"Region {region_name} must have exponents"
+            assert isinstance(
+                region_data, dict
+            ), f"Region {region_name} must be dictionary"
+            assert (
+                "boundaries" in region_data
+            ), f"Region {region_name} must have boundaries"
+            assert (
+                "scaling_exponents" in region_data
+            ), f"Region {region_name} must have exponents"
 
 
 if __name__ == "__main__":

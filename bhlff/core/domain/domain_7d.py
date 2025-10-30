@@ -69,7 +69,7 @@ class Domain7D:
         self.spatial_config = spatial_config
         self.phase_config = phase_config
         self.temporal_config = temporal_config
-        
+
         # Set dimensions for 7D BVP theory
         self.dimensions = 7
 

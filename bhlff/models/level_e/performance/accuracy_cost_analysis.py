@@ -185,7 +185,7 @@ class AccuracyCostAnalyzer:
         from bhlff.core.bvp.power_law.power_law_core import PowerLawAnalyzer
         from bhlff.core.bvp.bvp_constants import BVPConstants
         from bhlff.core.sources.bvp_source import BVPSource
-        
+
         # Extract simulation parameters
         N = config.get("N", 256)
         L = config.get("L", 20.0)
@@ -194,61 +194,56 @@ class AccuracyCostAnalyzer:
         beta = config.get("beta", 1.0)
         mu = config.get("mu", 1.0)
         lambda_param = config.get("lambda", 0.0)
-        
+
         # Create 7D BVP domain
-        domain_config = {
-            "N": N,
-            "L": L,
-            "dimensions": 7,
-            "precision": "float64"
-        }
+        domain_config = {"N": N, "L": L, "dimensions": 7, "precision": "float64"}
         domain = Domain7DBVP(domain_config)
-        
+
         # Create BVP constants
         bvp_config = {
             "mu": mu,
             "beta": beta,
             "lambda": lambda_param,
-            "tolerance": tolerance
+            "tolerance": tolerance,
         }
         constants = BVPConstants(bvp_config)
-        
+
         # Create FFT solver for 7D phase field
         solver = FFTSolver7D(domain, constants)
-        
+
         # Create source field for 7D phase field
         source_config = {
             "type": "localized",
             "amplitude": 1.0,
             "width": L / 10.0,
-            "center": [L/2, L/2, L/2, 0, 0, 0, 0]  # 7D coordinates
+            "center": [L / 2, L / 2, L / 2, 0, 0, 0, 0],  # 7D coordinates
         }
         source = BVPSource(domain, source_config)
-        
+
         # Generate source field
         source_field = source.generate_source()
-        
+
         # Solve 7D phase field equation
         start_time = time.time()
         solution = solver.solve(source_field)
         solve_time = time.time() - start_time
-        
+
         # Analyze power law properties
         power_law_analyzer = PowerLawAnalyzer(domain, constants)
         power_law_results = power_law_analyzer.analyze_power_law(solution)
-        
+
         # Compute energy functional
         energy = self._compute_energy_functional(solution, domain, constants)
-        
+
         # Compute topological charge
         topological_charge = self._compute_topological_charge(solution, domain)
-        
+
         # Compute convergence metrics
         convergence_rate = self._compute_convergence_rate(solution, tolerance)
-        
+
         # Compute accuracy metrics
         accuracy = self._compute_accuracy_metrics(solution, domain, constants)
-        
+
         return {
             "accuracy": accuracy,
             "energy": energy,
@@ -259,25 +254,31 @@ class AccuracyCostAnalyzer:
             "power_law_quality": power_law_results.get("quality", 0.0),
             "grid_size": N,
             "time_step": dt,
-            "tolerance": tolerance
+            "tolerance": tolerance,
         }
 
-    def _compute_energy_functional(self, solution: np.ndarray, domain: Any, constants: Any) -> float:
+    def _compute_energy_functional(
+        self, solution: np.ndarray, domain: Any, constants: Any
+    ) -> float:
         """Compute energy functional for the solution."""
         # Placeholder implementation
-        return np.sum(np.abs(solution)**2)
+        return np.sum(np.abs(solution) ** 2)
 
     def _compute_topological_charge(self, solution: np.ndarray, domain: Any) -> float:
         """Compute topological charge for the solution."""
         # Placeholder implementation
         return np.sum(np.angle(solution)) / (2 * np.pi)
 
-    def _compute_convergence_rate(self, solution: np.ndarray, tolerance: float) -> float:
+    def _compute_convergence_rate(
+        self, solution: np.ndarray, tolerance: float
+    ) -> float:
         """Compute convergence rate for the solution."""
         # Placeholder implementation
         return 1.0 / (1.0 + tolerance)
 
-    def _compute_accuracy_metrics(self, solution: np.ndarray, domain: Any, constants: Any) -> float:
+    def _compute_accuracy_metrics(
+        self, solution: np.ndarray, domain: Any, constants: Any
+    ) -> float:
         """Compute accuracy metrics for the solution."""
         # Placeholder implementation
         return tolerance * np.random.uniform(0.5, 1.5)

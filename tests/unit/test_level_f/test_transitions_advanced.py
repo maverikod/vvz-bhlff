@@ -65,12 +65,12 @@ class TestPhaseTransitionsAdvanced:
             regions.
         """
         stability = transitions.analyze_phase_stability()
-        
+
         assert stability is not None
         assert "phase_boundaries" in stability
         assert "stability_regions" in stability
         assert "current_stability" in stability
-        
+
         # Check that stability analysis is reasonable
         assert stability["phase_boundaries"] is not None
         assert stability["stability_regions"] is not None
@@ -86,10 +86,10 @@ class TestPhaseTransitionsAdvanced:
         """
         # Test updating a valid parameter
         transitions._update_system_parameter("temperature", 1.5)
-        
+
         # Test updating system_params
         transitions._update_system_parameter("interaction_strength", 2.0)
-        
+
         # Verify that parameters were updated
         assert transitions.system.temperature == 1.5
         assert transitions.system.system_params.interaction_strength == 2.0
@@ -104,7 +104,7 @@ class TestPhaseTransitionsAdvanced:
         """
         # Test updating a non-existent parameter
         transitions._update_system_parameter("non_existent_param", 1.0)
-        
+
         # This should not raise an error, but the parameter
         # should not be set
 
@@ -118,7 +118,7 @@ class TestPhaseTransitionsAdvanced:
         """
         # Test equilibration
         transitions._equilibrate_system()
-        
+
         # This should not raise an error
         assert True
 
@@ -131,12 +131,12 @@ class TestPhaseTransitionsAdvanced:
             analyzed to identify transition regions.
         """
         boundaries = transitions._analyze_phase_boundaries()
-        
+
         assert boundaries is not None
         assert "boundary_count" in boundaries
         assert "boundary_types" in boundaries
         assert "boundary_stability" in boundaries
-        
+
         # Check that boundary analysis is reasonable
         assert boundaries["boundary_count"] >= 0
         assert len(boundaries["boundary_types"]) == boundaries["boundary_count"]
@@ -151,12 +151,12 @@ class TestPhaseTransitionsAdvanced:
             identified in parameter space.
         """
         regions = transitions._identify_stability_regions()
-        
+
         assert regions is not None
         assert "stable_regions" in regions
         assert "region_boundaries" in regions
         assert "region_stability" in regions
-        
+
         # Check that region identification is reasonable
         assert regions["stable_regions"] >= 0
         assert len(regions["region_boundaries"]) == regions["stable_regions"] - 1
@@ -176,16 +176,16 @@ class TestPhaseTransitionsAdvanced:
                 "topological_order": 1.0,
                 "phase_coherence": 0.8,
                 "spatial_order": 0.5,
-                "energy_density": 0.1
+                "energy_density": 0.1,
             }
         }
-        
+
         stability = transitions._check_phase_stability(state)
-        
+
         assert stability is not None
         assert "is_stable" in stability
         assert "stability_indicators" in stability
-        
+
         # Check that stability check is reasonable
         assert isinstance(stability["is_stable"], bool)
         assert stability["stability_indicators"] is not None
@@ -199,12 +199,17 @@ class TestPhaseTransitionsAdvanced:
             are correctly handled during parameter sweeps.
         """
         # Test with different parameter types
-        parameters = ["temperature", "pressure", "magnetic_field", "interaction_strength"]
+        parameters = [
+            "temperature",
+            "pressure",
+            "magnetic_field",
+            "interaction_strength",
+        ]
         values = np.linspace(0.1, 2.0, 5)
-        
+
         for param in parameters:
             phase_diagram = transitions.parameter_sweep(param, values)
-            
+
             assert phase_diagram is not None
             assert phase_diagram["parameter"] == param
             assert len(phase_diagram["values"]) == len(values)
@@ -220,21 +225,36 @@ class TestPhaseTransitionsAdvanced:
         """
         # Test different order parameter combinations
         test_cases = [
-            {"topological_order": 2.0, "phase_coherence": 0.9, "spatial_order": 0.8, "expected": "coherent"},
-            {"topological_order": 1.5, "phase_coherence": 0.5, "spatial_order": 0.9, "expected": "spatial"},
-            {"topological_order": 0.5, "phase_coherence": 0.3, "spatial_order": 0.2, "expected": "disordered"}
+            {
+                "topological_order": 2.0,
+                "phase_coherence": 0.9,
+                "spatial_order": 0.8,
+                "expected": "coherent",
+            },
+            {
+                "topological_order": 1.5,
+                "phase_coherence": 0.5,
+                "spatial_order": 0.9,
+                "expected": "spatial",
+            },
+            {
+                "topological_order": 0.5,
+                "phase_coherence": 0.3,
+                "spatial_order": 0.2,
+                "expected": "disordered",
+            },
         ]
-        
+
         for case in test_cases:
             order_params = {
                 "topological_order": case["topological_order"],
                 "phase_coherence": case["phase_coherence"],
                 "spatial_order": case["spatial_order"],
-                "energy_density": 1.0
+                "energy_density": 1.0,
             }
-            
+
             phase = transitions._classify_phase(order_params)
-            
+
             assert phase is not None
             assert phase in ["topological", "coherent", "spatial", "disordered"]
 
@@ -250,11 +270,11 @@ class TestPhaseTransitionsAdvanced:
         # Test with invalid parameter values
         with pytest.raises(ValueError):
             transitions.parameter_sweep("", np.array([]))
-        
+
         # Test with None system
         with pytest.raises(AttributeError):
             transitions._update_system_parameter("temperature", 1.0)
-        
+
         # Test with invalid phase diagram
         with pytest.raises(KeyError):
             transitions.identify_critical_points({})
@@ -269,12 +289,12 @@ class TestPhaseTransitionsAdvanced:
         """
         # Perform comprehensive analysis
         analysis = transitions.analyze(None)
-        
+
         assert analysis is not None
         assert "order_parameters" in analysis
         assert "phase_stability" in analysis
         assert "analysis_complete" in analysis
-        
+
         # Check that analysis is complete
         assert analysis["analysis_complete"] == True
         assert analysis["order_parameters"] is not None

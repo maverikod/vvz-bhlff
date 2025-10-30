@@ -64,12 +64,12 @@ class CosmologicalParameters:
             cosmology_params: Cosmological parameters
         """
         self.cosmology_params = cosmology_params
-        
+
         # Cosmological parameters
         self.H0 = cosmology_params.get("H0", 70.0)  # Hubble constant km/s/Mpc
         self.omega_m = cosmology_params.get("omega_m", 0.3)  # Matter density
         self.omega_lambda = cosmology_params.get("omega_lambda", 0.7)  # Dark energy
-        
+
         # Physical parameters
         self.c_phi = cosmology_params.get("c_phi", 1e10)  # Phase velocity
 

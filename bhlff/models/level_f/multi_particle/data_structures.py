@@ -54,14 +54,14 @@ class Particle:
         # Ensure position is numpy array
         if not isinstance(self.position, np.ndarray):
             self.position = np.array(self.position)
-        
+
         # Ensure position is 3D
         if len(self.position) != 3:
             raise ValueError("Position must be 3D")
-        
+
         # Normalize phase to [0, 2π)
         self.phase = self.phase % (2 * np.pi)
-        
+
         # Ensure energy is positive
         if self.energy <= 0:
             raise ValueError("Energy must be positive")
@@ -144,7 +144,7 @@ class Particle:
         """
         return self.charge == 0
 
-    def distance_to(self, other: 'Particle') -> float:
+    def distance_to(self, other: "Particle") -> float:
         """
         Calculate distance to another particle.
 
@@ -160,7 +160,7 @@ class Particle:
         """
         return float(np.linalg.norm(self.position - other.position))
 
-    def angle_to(self, other: 'Particle') -> float:
+    def angle_to(self, other: "Particle") -> float:
         """
         Calculate angle to another particle.
 
@@ -177,17 +177,17 @@ class Particle:
         # Calculate angle between position vectors
         dot_product = np.dot(self.position, other.position)
         norm_product = np.linalg.norm(self.position) * np.linalg.norm(other.position)
-        
+
         if norm_product == 0:
             return 0.0
-        
+
         # Clamp to avoid numerical errors
         cos_angle = np.clip(dot_product / norm_product, -1.0, 1.0)
         angle = np.arccos(cos_angle)
-        
+
         return float(angle)
 
-    def phase_difference(self, other: 'Particle') -> float:
+    def phase_difference(self, other: "Particle") -> float:
         """
         Calculate phase difference with another particle.
 
@@ -202,16 +202,18 @@ class Particle:
             float: Phase difference in radians.
         """
         phase_diff = self.phase - other.phase
-        
+
         # Normalize to [-π, π]
         while phase_diff > np.pi:
             phase_diff -= 2 * np.pi
         while phase_diff < -np.pi:
             phase_diff += 2 * np.pi
-        
+
         return float(phase_diff)
 
-    def interaction_strength(self, other: 'Particle', interaction_range: float) -> float:
+    def interaction_strength(
+        self, other: "Particle", interaction_range: float
+    ) -> float:
         """
         Calculate interaction strength with another particle.
 
@@ -228,17 +230,17 @@ class Particle:
             float: Interaction strength.
         """
         distance = self.distance_to(other)
-        
+
         # Calculate interaction strength
         if distance > interaction_range:
             return 0.0
-        
+
         # Interaction strength decreases with distance
         strength = (1.0 - distance / interaction_range) ** 2
-        
+
         # Charge-dependent interaction
         charge_factor = self.charge * other.charge
-        
+
         return float(strength * charge_factor)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -260,7 +262,7 @@ class Particle:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Particle':
+    def from_dict(cls, data: Dict[str, Any]) -> "Particle":
         """
         Create particle from dictionary.
 
@@ -423,7 +425,7 @@ class SystemParameters:
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'SystemParameters':
+    def from_dict(cls, data: Dict[str, Any]) -> "SystemParameters":
         """
         Create system parameters from dictionary.
 

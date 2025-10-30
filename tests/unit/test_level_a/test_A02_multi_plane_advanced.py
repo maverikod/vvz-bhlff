@@ -45,7 +45,9 @@ class TestA02MultiPlaneAdvanced:
         # Domain parameters
         self.L = 1.0
         self.N = 8  # Smaller for testing
-        self.domain = Domain7DBVP(L_spatial=self.L, N_spatial=self.N, N_phase=4, T=1.0, N_t=8)
+        self.domain = Domain7DBVP(
+            L_spatial=self.L, N_spatial=self.N, N_phase=4, T=1.0, N_t=8
+        )
 
         # Physics parameters
         self.mu = 1.0
@@ -124,12 +126,14 @@ class TestA02MultiPlaneAdvanced:
         x = np.linspace(0, self.L, self.N, endpoint=False)
         y = np.linspace(0, self.L, self.N, endpoint=False)
         z = np.linspace(0, self.L, self.N, endpoint=False)
-        phi1 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
-        phi2 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
-        phi3 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
+        phi1 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
+        phi2 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
+        phi3 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
         t = np.linspace(0, self.domain.T, self.domain.N_t, endpoint=False)
 
-        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(x, y, z, phi1, phi2, phi3, t, indexing="ij")
+        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(
+            x, y, z, phi1, phi2, phi3, t, indexing="ij"
+        )
 
         # Initialize source
         source = np.zeros_like(X, dtype=complex)
@@ -164,12 +168,14 @@ class TestA02MultiPlaneAdvanced:
         x = np.linspace(0, self.L, self.N, endpoint=False)
         y = np.linspace(0, self.L, self.N, endpoint=False)
         z = np.linspace(0, self.L, self.N, endpoint=False)
-        phi1 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
-        phi2 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
-        phi3 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
+        phi1 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
+        phi2 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
+        phi3 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
         t = np.linspace(0, self.domain.T, self.domain.N_t, endpoint=False)
 
-        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(x, y, z, phi1, phi2, phi3, t, indexing="ij")
+        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(
+            x, y, z, phi1, phi2, phi3, t, indexing="ij"
+        )
 
         # Initialize solution
         solution = np.zeros_like(X, dtype=complex)
@@ -228,7 +234,7 @@ class TestA02MultiPlaneAdvanced:
 
         # Check that responses are different for different frequencies
         for i in range(1, len(responses)):
-            assert not np.allclose(responses[i], responses[i-1], rtol=1e-10)
+            assert not np.allclose(responses[i], responses[i - 1], rtol=1e-10)
 
     def test_phase_preservation(self):
         """
@@ -275,9 +281,7 @@ class TestA02MultiPlaneAdvanced:
         """
         # Create multi-frequency source
         modes = self.generate_random_modes(5)
-        amplitudes = [
-            complex(np.random.randn(), np.random.randn()) for _ in range(5)
-        ]
+        amplitudes = [complex(np.random.randn(), np.random.randn()) for _ in range(5)]
 
         # Normalize amplitudes
         norm = np.sqrt(sum(abs(a) ** 2 for a in amplitudes))
@@ -289,15 +293,15 @@ class TestA02MultiPlaneAdvanced:
         solution = self.solver.solve(source)
 
         # Calculate energy
-        source_energy = np.sum(np.abs(source)**2)
-        solution_energy = np.sum(np.abs(solution)**2)
+        source_energy = np.sum(np.abs(source) ** 2)
+        solution_energy = np.sum(np.abs(solution) ** 2)
 
         # Check that both energies are finite and positive
         assert np.isfinite(source_energy)
         assert np.isfinite(solution_energy)
         assert source_energy > 1e-10
         assert solution_energy > 1e-10
-        
+
         # For 7D case, we just check that energy is reasonable (not too small or too large)
         energy_ratio = solution_energy / source_energy
         assert 0.01 < energy_ratio < 100.0  # More relaxed bounds for 7D case
@@ -412,7 +416,7 @@ class TestA02MultiPlaneAdvanced:
 
         # Check that solutions are different
         for i in range(1, len(solutions)):
-            assert not np.allclose(solutions[i], solutions[i-1], rtol=1e-10)
+            assert not np.allclose(solutions[i], solutions[i - 1], rtol=1e-10)
 
     def test_stability_analysis(self):
         """

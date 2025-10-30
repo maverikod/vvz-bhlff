@@ -53,7 +53,7 @@ class TestMultiParticleSystemBasic:
     def test_initialization(self, domain, particles):
         """Test system initialization."""
         system = MultiParticleSystem(domain, particles, interaction_range=5.0)
-        
+
         assert system.domain == domain
         assert system.particles == particles
         assert system.interaction_range == 5.0
@@ -62,15 +62,17 @@ class TestMultiParticleSystemBasic:
     def test_effective_potential_computation(self, system):
         """Test effective potential computation."""
         # Mock the potential analysis
-        with patch.object(system.potential_analyzer, 'compute_effective_potential') as mock_compute:
+        with patch.object(
+            system.potential_analyzer, "compute_effective_potential"
+        ) as mock_compute:
             mock_compute.return_value = {
                 "potential_energy": 100.0,
                 "interaction_energy": 50.0,
-                "total_energy": 150.0
+                "total_energy": 150.0,
             }
-            
+
             potential = system.compute_effective_potential()
-            
+
             mock_compute.assert_called_once_with(system.particles)
             assert "potential_energy" in potential
             assert "interaction_energy" in potential
@@ -79,14 +81,14 @@ class TestMultiParticleSystemBasic:
     def test_collective_modes_analysis(self, system):
         """Test collective modes analysis."""
         # Mock the collective modes analysis
-        with patch.object(system.collective_modes, 'analyze_modes') as mock_analyze:
+        with patch.object(system.collective_modes, "analyze_modes") as mock_analyze:
             mock_analyze.return_value = {
                 "modes": [{"frequency": 0.5, "amplitude": 0.8}],
-                "participation_ratios": [0.6, 0.4]
+                "participation_ratios": [0.6, 0.4],
             }
-            
+
             modes = system.analyze_collective_modes()
-            
+
             mock_analyze.assert_called_once_with(system.particles)
             assert "modes" in modes
             assert "participation_ratios" in modes
@@ -94,15 +96,15 @@ class TestMultiParticleSystemBasic:
     def test_correlation_analysis(self, system):
         """Test correlation analysis."""
         # Mock the correlation analysis
-        with patch.object(system, '_compute_correlations') as mock_correlations:
+        with patch.object(system, "_compute_correlations") as mock_correlations:
             mock_correlations.return_value = {
                 "spatial_correlation": 0.7,
                 "phase_correlation": 0.3,
-                "charge_correlation": -0.5
+                "charge_correlation": -0.5,
             }
-            
+
             correlations = system.compute_correlations()
-            
+
             mock_correlations.assert_called_once()
             assert "spatial_correlation" in correlations
             assert "phase_correlation" in correlations
@@ -111,15 +113,15 @@ class TestMultiParticleSystemBasic:
     def test_stability_check(self, system):
         """Test stability check."""
         # Mock the stability check
-        with patch.object(system, '_check_stability') as mock_stability:
+        with patch.object(system, "_check_stability") as mock_stability:
             mock_stability.return_value = {
                 "is_stable": True,
                 "stability_energy": 0.1,
-                "unstable_modes": []
+                "unstable_modes": [],
             }
-            
+
             stability = system.check_stability()
-            
+
             mock_stability.assert_called_once()
             assert "is_stable" in stability
             assert "stability_energy" in stability
@@ -128,13 +130,15 @@ class TestMultiParticleSystemBasic:
     def test_single_particle_potential(self, system):
         """Test single particle potential."""
         particle = system.particles[0]
-        
+
         # Mock the single particle potential
-        with patch.object(system.potential_analyzer, 'compute_single_particle_potential') as mock_single:
+        with patch.object(
+            system.potential_analyzer, "compute_single_particle_potential"
+        ) as mock_single:
             mock_single.return_value = 25.0
-            
+
             potential = system.compute_single_particle_potential(particle)
-            
+
             mock_single.assert_called_once_with(particle, system.particles)
             assert potential == 25.0
 
@@ -142,13 +146,15 @@ class TestMultiParticleSystemBasic:
         """Test pair interaction."""
         particle1 = system.particles[0]
         particle2 = system.particles[1]
-        
+
         # Mock the pair interaction
-        with patch.object(system.potential_analyzer, 'compute_pair_interaction') as mock_pair:
+        with patch.object(
+            system.potential_analyzer, "compute_pair_interaction"
+        ) as mock_pair:
             mock_pair.return_value = 10.0
-            
+
             interaction = system.compute_pair_interaction(particle1, particle2)
-            
+
             mock_pair.assert_called_once_with(particle1, particle2)
             assert interaction == 10.0
 
@@ -157,24 +163,28 @@ class TestMultiParticleSystemBasic:
         particle1 = system.particles[0]
         particle2 = system.particles[1]
         particle3 = system.particles[0]  # Use same particle for simplicity
-        
+
         # Mock the three-body interaction
-        with patch.object(system.potential_analyzer, 'compute_three_body_interaction') as mock_three:
+        with patch.object(
+            system.potential_analyzer, "compute_three_body_interaction"
+        ) as mock_three:
             mock_three.return_value = 5.0
-            
-            interaction = system.compute_three_body_interaction(particle1, particle2, particle3)
-            
+
+            interaction = system.compute_three_body_interaction(
+                particle1, particle2, particle3
+            )
+
             mock_three.assert_called_once_with(particle1, particle2, particle3)
             assert interaction == 5.0
 
     def test_dynamics_matrix(self, system):
         """Test dynamics matrix computation."""
         # Mock the dynamics matrix
-        with patch.object(system, '_compute_dynamics_matrix') as mock_dynamics:
+        with patch.object(system, "_compute_dynamics_matrix") as mock_dynamics:
             mock_dynamics.return_value = np.array([[1.0, 0.5], [0.5, 1.0]])
-            
+
             matrix = system.compute_dynamics_matrix()
-            
+
             mock_dynamics.assert_called_once()
             assert matrix.shape == (2, 2)
             assert np.allclose(matrix, matrix.T)  # Should be symmetric
@@ -182,11 +192,13 @@ class TestMultiParticleSystemBasic:
     def test_participation_ratios(self, system):
         """Test participation ratios computation."""
         # Mock the participation ratios
-        with patch.object(system.collective_modes, 'compute_participation_ratios') as mock_ratios:
+        with patch.object(
+            system.collective_modes, "compute_participation_ratios"
+        ) as mock_ratios:
             mock_ratios.return_value = [0.6, 0.4]
-            
+
             ratios = system.compute_participation_ratios()
-            
+
             mock_ratios.assert_called_once_with(system.particles)
             assert len(ratios) == len(system.particles)
             assert all(0 <= ratio <= 1 for ratio in ratios)
@@ -194,14 +206,14 @@ class TestMultiParticleSystemBasic:
     def test_spatial_correlations(self, system):
         """Test spatial correlations."""
         # Mock the spatial correlations
-        with patch.object(system, '_compute_spatial_correlations') as mock_spatial:
+        with patch.object(system, "_compute_spatial_correlations") as mock_spatial:
             mock_spatial.return_value = {
                 "correlation_length": 2.0,
-                "correlation_strength": 0.8
+                "correlation_strength": 0.8,
             }
-            
+
             correlations = system.compute_spatial_correlations()
-            
+
             mock_spatial.assert_called_once()
             assert "correlation_length" in correlations
             assert "correlation_strength" in correlations
@@ -209,14 +221,14 @@ class TestMultiParticleSystemBasic:
     def test_phase_correlations(self, system):
         """Test phase correlations."""
         # Mock the phase correlations
-        with patch.object(system, '_compute_phase_correlations') as mock_phase:
+        with patch.object(system, "_compute_phase_correlations") as mock_phase:
             mock_phase.return_value = {
                 "phase_coherence": 0.7,
-                "phase_synchronization": 0.5
+                "phase_synchronization": 0.5,
             }
-            
+
             correlations = system.compute_phase_correlations()
-            
+
             mock_phase.assert_called_once()
             assert "phase_coherence" in correlations
             assert "phase_synchronization" in correlations
@@ -226,34 +238,42 @@ class TestMultiParticleSystemBasic:
         # Test different interaction strengths
         strengths = [0.1, 0.5, 1.0, 2.0]
         energies = []
-        
+
         for strength in strengths:
-            system = MultiParticleSystem(domain, particles, interaction_strength=strength)
-            with patch.object(system.potential_analyzer, 'compute_effective_potential') as mock_compute:
+            system = MultiParticleSystem(
+                domain, particles, interaction_strength=strength
+            )
+            with patch.object(
+                system.potential_analyzer, "compute_effective_potential"
+            ) as mock_compute:
                 mock_compute.return_value = {"total_energy": 100.0 * strength}
                 potential = system.compute_effective_potential()
                 energies.append(potential["total_energy"])
-        
+
         # Verify energy scales with interaction strength
         for i in range(1, len(energies)):
-            assert energies[i] > energies[i-1]
+            assert energies[i] > energies[i - 1]
 
     def test_interaction_range_dependence(self, domain, particles):
         """Test interaction range dependence."""
         # Test different interaction ranges
         ranges = [1.0, 2.0, 5.0, 10.0]
         energies = []
-        
+
         for interaction_range in ranges:
-            system = MultiParticleSystem(domain, particles, interaction_range=interaction_range)
-            with patch.object(system.potential_analyzer, 'compute_effective_potential') as mock_compute:
+            system = MultiParticleSystem(
+                domain, particles, interaction_range=interaction_range
+            )
+            with patch.object(
+                system.potential_analyzer, "compute_effective_potential"
+            ) as mock_compute:
                 mock_compute.return_value = {"total_energy": 100.0 / interaction_range}
                 potential = system.compute_effective_potential()
                 energies.append(potential["total_energy"])
-        
+
         # Verify energy decreases with interaction range
         for i in range(1, len(energies)):
-            assert energies[i] < energies[i-1]
+            assert energies[i] < energies[i - 1]
 
 
 if __name__ == "__main__":

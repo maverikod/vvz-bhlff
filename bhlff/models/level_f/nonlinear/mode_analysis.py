@@ -19,6 +19,8 @@ Example:
 import numpy as np
 from typing import Dict, Any, List, Optional, Tuple
 from scipy.optimize import minimize
+
+
 class NonlinearModeAnalyzer:
     """
     Nonlinear mode analysis for collective systems.
@@ -50,12 +52,12 @@ class NonlinearModeAnalyzer:
         # Initialize base class
         self.system = system
         self.nonlinear_params = nonlinear_params
-        
+
         # Mode analysis parameters
         self.mode_tolerance = nonlinear_params.get("mode_tolerance", 1e-6)
         self.max_modes = nonlinear_params.get("max_modes", 10)
         self.stability_threshold = nonlinear_params.get("stability_threshold", 0.1)
-        
+
         # Initialize mode analysis methods
         self._initialize_mode_methods()
 
@@ -69,7 +71,7 @@ class NonlinearModeAnalyzer:
         """
         # Set up mode analysis based on nonlinear type
         nonlinear_type = self.nonlinear_params.get("type", "cubic")
-        
+
         if nonlinear_type == "cubic":
             self._setup_cubic_mode_analysis()
         elif nonlinear_type == "quartic":
@@ -147,7 +149,9 @@ class NonlinearModeAnalyzer:
             "bifurcations": bifurcations,
         }
 
-    def _compute_nonlinear_corrections(self, linear_modes: Dict[str, Any]) -> Dict[str, Any]:
+    def _compute_nonlinear_corrections(
+        self, linear_modes: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Compute nonlinear corrections to linear modes.
 
@@ -168,7 +172,7 @@ class NonlinearModeAnalyzer:
         nonlinear_frequencies = []
         for freq in linear_frequencies:
             # Nonlinear frequency shift
-            shift = self.nonlinear_params.get("strength", 1.0) * freq ** 2
+            shift = self.nonlinear_params.get("strength", 1.0) * freq**2
             nonlinear_freq = freq + shift
             nonlinear_frequencies.append(nonlinear_freq)
 
@@ -177,15 +181,19 @@ class NonlinearModeAnalyzer:
         nonlinear_amplitudes = []
         for amp in linear_amplitudes:
             # Nonlinear amplitude correction
-            correction = self.nonlinear_params.get("strength", 1.0) * amp ** 2
+            correction = self.nonlinear_params.get("strength", 1.0) * amp**2
             nonlinear_amp = amp + correction
             nonlinear_amplitudes.append(nonlinear_amp)
 
         return {
             "frequencies": nonlinear_frequencies,
             "amplitudes": nonlinear_amplitudes,
-            "frequency_shifts": [nf - lf for nf, lf in zip(nonlinear_frequencies, linear_frequencies)],
-            "amplitude_corrections": [na - la for na, la in zip(nonlinear_amplitudes, linear_amplitudes)],
+            "frequency_shifts": [
+                nf - lf for nf, lf in zip(nonlinear_frequencies, linear_frequencies)
+            ],
+            "amplitude_corrections": [
+                na - la for na, la in zip(nonlinear_amplitudes, linear_amplitudes)
+            ],
         }
 
     def _find_bifurcation_points(self) -> List[Dict[str, Any]]:
@@ -207,12 +215,14 @@ class NonlinearModeAnalyzer:
         critical_strength = 1.0 / self.nonlinear_params.get("strength", 1.0)
 
         # Add bifurcation point
-        bifurcations.append({
-            "parameter": "nonlinear_strength",
-            "critical_value": critical_strength,
-            "type": "pitchfork",
-            "stability": "unstable",
-        })
+        bifurcations.append(
+            {
+                "parameter": "nonlinear_strength",
+                "critical_value": critical_strength,
+                "type": "pitchfork",
+                "stability": "unstable",
+            }
+        )
 
         return bifurcations
 
@@ -362,7 +372,9 @@ class NonlinearModeAnalyzer:
         return modes
 
     # Mode stability analysis methods for different nonlinear types
-    def _analyze_cubic_mode_stability(self, modes: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_cubic_mode_stability(
+        self, modes: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """
         Analyze cubic mode stability.
 
@@ -378,7 +390,7 @@ class NonlinearModeAnalyzer:
         # Simplified cubic stability analysis
         # In practice, this would involve proper stability analysis
         stability_scores = [0.8, 0.9]  # Placeholder values
-        
+
         return {
             "stability_scores": stability_scores,
             "overall_stability": np.mean(stability_scores),
@@ -386,7 +398,9 @@ class NonlinearModeAnalyzer:
             "total_modes": len(stability_scores),
         }
 
-    def _analyze_quartic_mode_stability(self, modes: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_quartic_mode_stability(
+        self, modes: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """
         Analyze quartic mode stability.
 
@@ -402,7 +416,7 @@ class NonlinearModeAnalyzer:
         # Simplified quartic stability analysis
         # In practice, this would involve proper stability analysis
         stability_scores = [0.9, 0.95]  # Placeholder values
-        
+
         return {
             "stability_scores": stability_scores,
             "overall_stability": np.mean(stability_scores),
@@ -410,7 +424,9 @@ class NonlinearModeAnalyzer:
             "total_modes": len(stability_scores),
         }
 
-    def _analyze_sine_gordon_mode_stability(self, modes: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_sine_gordon_mode_stability(
+        self, modes: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """
         Analyze sine-Gordon mode stability.
 
@@ -426,7 +442,7 @@ class NonlinearModeAnalyzer:
         # Simplified sine-Gordon stability analysis
         # In practice, this would involve proper stability analysis
         stability_scores = [0.95, 0.98]  # Placeholder values
-        
+
         return {
             "stability_scores": stability_scores,
             "overall_stability": np.mean(stability_scores),
@@ -435,7 +451,9 @@ class NonlinearModeAnalyzer:
         }
 
     # Mode interaction analysis methods for different nonlinear types
-    def _analyze_cubic_mode_interactions(self, modes: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_cubic_mode_interactions(
+        self, modes: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """
         Analyze cubic mode interactions.
 
@@ -451,7 +469,7 @@ class NonlinearModeAnalyzer:
         # Simplified cubic interaction analysis
         # In practice, this would involve proper interaction analysis
         interaction_strength = 0.3  # Placeholder value
-        
+
         return {
             "interaction_strength": interaction_strength,
             "interaction_type": "cubic",
@@ -459,7 +477,9 @@ class NonlinearModeAnalyzer:
             "interactions_detected": len(modes) > 1,
         }
 
-    def _analyze_quartic_mode_interactions(self, modes: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_quartic_mode_interactions(
+        self, modes: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """
         Analyze quartic mode interactions.
 
@@ -475,7 +495,7 @@ class NonlinearModeAnalyzer:
         # Simplified quartic interaction analysis
         # In practice, this would involve proper interaction analysis
         interaction_strength = 0.4  # Placeholder value
-        
+
         return {
             "interaction_strength": interaction_strength,
             "interaction_type": "quartic",
@@ -483,7 +503,9 @@ class NonlinearModeAnalyzer:
             "interactions_detected": len(modes) > 1,
         }
 
-    def _analyze_sine_gordon_mode_interactions(self, modes: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_sine_gordon_mode_interactions(
+        self, modes: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """
         Analyze sine-Gordon mode interactions.
 
@@ -499,7 +521,7 @@ class NonlinearModeAnalyzer:
         # Simplified sine-Gordon interaction analysis
         # In practice, this would involve proper interaction analysis
         interaction_strength = 0.5  # Placeholder value
-        
+
         return {
             "interaction_strength": interaction_strength,
             "interaction_type": "sine_gordon",

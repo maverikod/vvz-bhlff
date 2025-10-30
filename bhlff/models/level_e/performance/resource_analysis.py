@@ -76,12 +76,14 @@ class ResourceAnalyzer:
         # Analyze network usage
         network_analysis = self._analyze_network_usage()
 
-        resource_results.update({
-            "cpu_analysis": cpu_analysis,
-            "memory_analysis": memory_analysis,
-            "io_analysis": io_analysis,
-            "network_analysis": network_analysis,
-        })
+        resource_results.update(
+            {
+                "cpu_analysis": cpu_analysis,
+                "memory_analysis": memory_analysis,
+                "io_analysis": io_analysis,
+                "network_analysis": network_analysis,
+            }
+        )
 
         return resource_results
 

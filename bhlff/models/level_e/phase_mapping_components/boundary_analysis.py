@@ -21,4 +21,4 @@ Example:
 from .boundary_analysis import BoundaryAnalyzer
 
 # Maintain backward compatibility
-__all__ = ['BoundaryAnalyzer']
+__all__ = ["BoundaryAnalyzer"]

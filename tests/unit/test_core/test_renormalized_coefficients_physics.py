@@ -68,7 +68,9 @@ class TestRenormalizedCoefficientsPhysics:
         # Test renormalized coefficients computation
         amplitude = 1.0
         gradient_magnitude_squared = 0.5
-        coeffs = renormalized_coeffs.compute_renormalized_coefficients(amplitude, gradient_magnitude_squared)
+        coeffs = renormalized_coeffs.compute_renormalized_coefficients(
+            amplitude, gradient_magnitude_squared
+        )
 
         # Physical validation: Should be finite and reasonable
         assert isinstance(
@@ -102,7 +104,9 @@ class TestRenormalizedCoefficientsPhysics:
         # Test renormalized coefficients computation
         amplitude = 1.0
         gradient_magnitude_squared = 0.5
-        coeffs = renormalized_coeffs.compute_renormalized_coefficients(amplitude, gradient_magnitude_squared)
+        coeffs = renormalized_coeffs.compute_renormalized_coefficients(
+            amplitude, gradient_magnitude_squared
+        )
 
         # Physical validation: Energy conservation requires finite coefficients
         for key, value in coeffs.items():
@@ -126,7 +130,9 @@ class TestRenormalizedCoefficientsPhysics:
         # Test renormalized coefficients computation
         amplitude = 1.0
         gradient_magnitude_squared = 0.5
-        coeffs = renormalized_coeffs.compute_renormalized_coefficients(amplitude, gradient_magnitude_squared)
+        coeffs = renormalized_coeffs.compute_renormalized_coefficients(
+            amplitude, gradient_magnitude_squared
+        )
 
         # Physical validation: Causality requires finite coefficients
         for key, value in coeffs.items():
@@ -150,7 +156,9 @@ class TestRenormalizedCoefficientsPhysics:
         # Test renormalized coefficients computation
         amplitude = 1.0
         gradient_magnitude_squared = 0.5
-        coeffs = renormalized_coeffs.compute_renormalized_coefficients(amplitude, gradient_magnitude_squared)
+        coeffs = renormalized_coeffs.compute_renormalized_coefficients(
+            amplitude, gradient_magnitude_squared
+        )
 
         # Physical validation: Thermodynamics requires finite coefficients
         for key, value in coeffs.items():
@@ -172,7 +180,9 @@ class TestRenormalizedCoefficientsPhysics:
         # Test renormalized coefficients computation
         amplitude = 1.0
         gradient_magnitude_squared = 0.5
-        coeffs = renormalized_coeffs.compute_renormalized_coefficients(amplitude, gradient_magnitude_squared)
+        coeffs = renormalized_coeffs.compute_renormalized_coefficients(
+            amplitude, gradient_magnitude_squared
+        )
 
         # Physical validation: 7D structure requires finite coefficients
         for key, value in coeffs.items():
@@ -196,7 +206,9 @@ class TestRenormalizedCoefficientsPhysics:
         # Test renormalized coefficients computation
         amplitude = 1.0
         gradient_magnitude_squared = 0.5
-        coeffs = renormalized_coeffs.compute_renormalized_coefficients(amplitude, gradient_magnitude_squared)
+        coeffs = renormalized_coeffs.compute_renormalized_coefficients(
+            amplitude, gradient_magnitude_squared
+        )
 
         # Physical validation: Numerical stability requires finite coefficients
         for key, value in coeffs.items():
@@ -218,7 +230,9 @@ class TestRenormalizedCoefficientsPhysics:
         # Test renormalized coefficients computation
         amplitude = 1.0
         gradient_magnitude_squared = 0.5
-        coeffs = renormalized_coeffs.compute_renormalized_coefficients(amplitude, gradient_magnitude_squared)
+        coeffs = renormalized_coeffs.compute_renormalized_coefficients(
+            amplitude, gradient_magnitude_squared
+        )
 
         # Physical validation: Precision requires finite coefficients
         for key, value in coeffs.items():
@@ -240,7 +254,9 @@ class TestRenormalizedCoefficientsPhysics:
         # Test renormalized coefficients computation
         amplitude = 1.0
         gradient_magnitude_squared = 0.5
-        coeffs = renormalized_coeffs.compute_renormalized_coefficients(amplitude, gradient_magnitude_squared)
+        coeffs = renormalized_coeffs.compute_renormalized_coefficients(
+            amplitude, gradient_magnitude_squared
+        )
 
         # Physical validation: Validation requires finite coefficients
         for key, value in coeffs.items():
@@ -262,7 +278,9 @@ class TestRenormalizedCoefficientsPhysics:
         # Test renormalized coefficients computation
         amplitude = 1.0
         gradient_magnitude_squared = 0.5
-        coeffs = renormalized_coeffs.compute_renormalized_coefficients(amplitude, gradient_magnitude_squared)
+        coeffs = renormalized_coeffs.compute_renormalized_coefficients(
+            amplitude, gradient_magnitude_squared
+        )
 
         # Physical validation: Consistency requires finite coefficients
         for key, value in coeffs.items():
@@ -286,7 +304,9 @@ class TestRenormalizedCoefficientsPhysics:
         # Test renormalized coefficients computation
         amplitude = 1.0
         gradient_magnitude_squared = 0.5
-        coeffs = renormalized_coeffs.compute_renormalized_coefficients(amplitude, gradient_magnitude_squared)
+        coeffs = renormalized_coeffs.compute_renormalized_coefficients(
+            amplitude, gradient_magnitude_squared
+        )
 
         # Physical validation: Physical meaning requires finite coefficients
         for key, value in coeffs.items():
@@ -310,7 +330,9 @@ class TestRenormalizedCoefficientsPhysics:
         # Test renormalized coefficients computation
         amplitude = 1.0
         gradient_magnitude_squared = 0.5
-        coeffs = renormalized_coeffs.compute_renormalized_coefficients(amplitude, gradient_magnitude_squared)
+        coeffs = renormalized_coeffs.compute_renormalized_coefficients(
+            amplitude, gradient_magnitude_squared
+        )
 
         # Physical validation: Renormalization group flow requires finite coefficients
         for key, value in coeffs.items():
@@ -334,7 +356,9 @@ class TestRenormalizedCoefficientsPhysics:
         # Test renormalized coefficients computation
         amplitude = 1.0
         gradient_magnitude_squared = 0.5
-        coeffs = renormalized_coeffs.compute_renormalized_coefficients(amplitude, gradient_magnitude_squared)
+        coeffs = renormalized_coeffs.compute_renormalized_coefficients(
+            amplitude, gradient_magnitude_squared
+        )
 
         # Physical validation: Scale dependence requires finite coefficients
         for key, value in coeffs.items():
@@ -358,7 +382,9 @@ class TestRenormalizedCoefficientsPhysics:
         # Test renormalized coefficients computation
         amplitude = 1.0
         gradient_magnitude_squared = 0.5
-        coeffs = renormalized_coeffs.compute_renormalized_coefficients(amplitude, gradient_magnitude_squared)
+        coeffs = renormalized_coeffs.compute_renormalized_coefficients(
+            amplitude, gradient_magnitude_squared
+        )
 
         # Physical validation: Flow equations require finite coefficients
         for key, value in coeffs.items():

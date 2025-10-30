@@ -52,7 +52,7 @@ class TestBVPImpedanceCalculatorSimple:
     def test_impedance_calculator_creation(self, domain_7d, config, constants):
         """Test impedance calculator creation."""
         calculator = BVPImpedanceCalculator(domain_7d, config, constants)
-        
+
         assert calculator.domain == domain_7d
         assert calculator.config == config
         assert calculator.constants == constants
@@ -61,7 +61,7 @@ class TestBVPImpedanceCalculatorSimple:
         """Test impedance calculator parameters."""
         calculator = BVPImpedanceCalculator(domain_7d, config, constants)
         parameters = calculator.get_parameters()
-        
+
         assert "frequency_range" in parameters
         assert "frequency_points" in parameters
         assert "boundary_conditions" in parameters
@@ -70,38 +70,38 @@ class TestBVPImpedanceCalculatorSimple:
     def test_impedance_calculation_simple(self, domain_7d, config, constants):
         """Test simple impedance calculation."""
         calculator = BVPImpedanceCalculator(domain_7d, config, constants)
-        
+
         # Create simple envelope
         envelope = np.ones(domain_7d.shape, dtype=complex)
-        
+
         # Calculate impedance
         impedance = calculator.compute_impedance(envelope)
-        
+
         # Check results
         assert isinstance(impedance, dict)
         assert "admittance" in impedance
         assert "reflection" in impedance
         assert "transmission" in impedance
         assert "peaks" in impedance
-        
+
         # Check admittance
         admittance = impedance["admittance"]
         assert isinstance(admittance, np.ndarray)
         assert len(admittance) > 0  # Should have some frequency points
         assert np.all(np.isfinite(admittance))
-        
+
         # Check reflection
         reflection = impedance["reflection"]
         assert isinstance(reflection, np.ndarray)
         assert len(reflection) > 0  # Should have some frequency points
         assert np.all(np.isfinite(reflection))
-        
+
         # Check transmission
         transmission = impedance["transmission"]
         assert isinstance(transmission, np.ndarray)
         assert len(transmission) > 0  # Should have some frequency points
         assert np.all(np.isfinite(transmission))
-        
+
         # Check peaks
         peaks = impedance["peaks"]
         assert isinstance(peaks, dict)
@@ -111,11 +111,11 @@ class TestBVPImpedanceCalculatorSimple:
     def test_impedance_calculator_components(self, domain_7d, config, constants):
         """Test impedance calculator components."""
         calculator = BVPImpedanceCalculator(domain_7d, config, constants)
-        
+
         # Test impedance core
         impedance_core = calculator.get_impedance_core()
         assert impedance_core is not None
-        
+
         # Test resonance detector
         resonance_detector = calculator.get_resonance_detector()
         assert resonance_detector is not None
@@ -123,11 +123,11 @@ class TestBVPImpedanceCalculatorSimple:
     def test_quality_factor_threshold(self, domain_7d, config, constants):
         """Test quality factor threshold setting."""
         calculator = BVPImpedanceCalculator(domain_7d, config, constants)
-        
+
         # Set new threshold
         new_threshold = 0.5
         calculator.set_quality_factor_threshold(new_threshold)
-        
+
         # Check if threshold was set
         detector = calculator.get_resonance_detector()
         assert detector.get_quality_factor_threshold() == new_threshold

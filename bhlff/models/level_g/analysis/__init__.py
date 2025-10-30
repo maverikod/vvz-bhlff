@@ -26,9 +26,9 @@ from .observational_comparison import ObservationalComparisonCore
 from .statistical_analysis import StatisticalAnalysis
 
 __all__ = [
-    'CosmologicalAnalysis',
-    'StructureAnalysis',
-    'ParameterAnalysis',
-    'ObservationalComparisonCore',
-    'StatisticalAnalysis'
+    "CosmologicalAnalysis",
+    "StructureAnalysis",
+    "ParameterAnalysis",
+    "ObservationalComparisonCore",
+    "StatisticalAnalysis",
 ]

@@ -47,7 +47,9 @@ class TestA02MultiPlaneBasic:
         # Domain parameters
         self.L = 1.0
         self.N = 8  # Smaller for testing
-        self.domain = Domain7DBVP(L_spatial=self.L, N_spatial=self.N, N_phase=4, T=1.0, N_t=8)
+        self.domain = Domain7DBVP(
+            L_spatial=self.L, N_spatial=self.N, N_phase=4, T=1.0, N_t=8
+        )
 
         # Physics parameters
         self.mu = 1.0
@@ -126,12 +128,14 @@ class TestA02MultiPlaneBasic:
         x = np.linspace(0, self.L, self.N, endpoint=False)
         y = np.linspace(0, self.L, self.N, endpoint=False)
         z = np.linspace(0, self.L, self.N, endpoint=False)
-        phi1 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
-        phi2 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
-        phi3 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
+        phi1 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
+        phi2 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
+        phi3 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
         t = np.linspace(0, self.domain.T, self.domain.N_t, endpoint=False)
 
-        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(x, y, z, phi1, phi2, phi3, t, indexing="ij")
+        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(
+            x, y, z, phi1, phi2, phi3, t, indexing="ij"
+        )
 
         # Initialize source
         source = np.zeros_like(X, dtype=complex)
@@ -166,12 +170,14 @@ class TestA02MultiPlaneBasic:
         x = np.linspace(0, self.L, self.N, endpoint=False)
         y = np.linspace(0, self.L, self.N, endpoint=False)
         z = np.linspace(0, self.L, self.N, endpoint=False)
-        phi1 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
-        phi2 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
-        phi3 = np.linspace(0, 2*np.pi, self.domain.N_phase, endpoint=False)
+        phi1 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
+        phi2 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
+        phi3 = np.linspace(0, 2 * np.pi, self.domain.N_phase, endpoint=False)
         t = np.linspace(0, self.domain.T, self.domain.N_t, endpoint=False)
 
-        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(x, y, z, phi1, phi2, phi3, t, indexing="ij")
+        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(
+            x, y, z, phi1, phi2, phi3, t, indexing="ij"
+        )
 
         # Initialize solution
         solution = np.zeros_like(X, dtype=complex)

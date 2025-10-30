@@ -254,16 +254,17 @@ class ConvergenceError(Exception):
         """
         self.message = message
         super().__init__(self.message)
-    
+
     def _step_resonator_potential_7d(self, field: np.ndarray) -> np.ndarray:
         """
         Step resonator potential for 7D BVP theory.
-        
+
         Physical Meaning:
             Implements step function potential instead of classical quartic potential
             according to 7D BVP theory principles.
         """
         cutoff_amplitude = 1.0
         potential_coeff = 1.0
-        return potential_coeff * np.where(np.abs(field) < cutoff_amplitude, 
-                                        np.abs(field)**2, 0.0)
+        return potential_coeff * np.where(
+            np.abs(field) < cutoff_amplitude, np.abs(field) ** 2, 0.0
+        )

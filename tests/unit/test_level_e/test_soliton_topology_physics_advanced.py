@@ -72,23 +72,21 @@ class TestSolitonTopologyPhysicsAdvanced:
         """
         # Test different domain sizes and positions
         domain_sizes = [2.0, 4.0, 8.0]
-        
+
         for L in domain_sizes:
             domain = Domain(L=L, N=32, dimensions=7)
             soliton = BaryonSoliton(domain, physics_params)
-            
+
             # Create field with soliton at different positions
             field = soliton.create_b1_configuration()
-            
+
             # Calculate charge
             charge = soliton.compute_topological_charge(field)
-            
+
             # Verify charge is approximately 1
             assert abs(charge - 1.0) < physics_params["topological_charge_tolerance"]
 
-    def test_topological_charge_integration_radius(
-        self, domain_3d, physics_params
-    ):
+    def test_topological_charge_integration_radius(self, domain_3d, physics_params):
         """
         Test topological charge calculation with different integration radii.
 
@@ -102,21 +100,24 @@ class TestSolitonTopologyPhysicsAdvanced:
         """
         # Create soliton
         soliton = BaryonSoliton(domain_3d, physics_params)
-        
+
         # Create field
         field = soliton.create_b1_configuration()
-        
+
         # Test different integration radii
         integration_radii = [0.5, 1.0, 2.0, 4.0]
         charges = []
-        
+
         for radius in integration_radii:
             charge = soliton.compute_topological_charge_with_radius(field, radius)
             charges.append(charge)
-        
+
         # Verify charges are approximately equal for large radii
         for i in range(2, len(charges)):  # Skip small radii
-            assert abs(charges[i] - charges[-1]) < physics_params["topological_charge_tolerance"]
+            assert (
+                abs(charges[i] - charges[-1])
+                < physics_params["topological_charge_tolerance"]
+            )
 
     def test_topological_charge_charge_specific_terms(self, domain_3d, physics_params):
         """
@@ -133,23 +134,24 @@ class TestSolitonTopologyPhysicsAdvanced:
         """
         # Create soliton
         soliton = BaryonSoliton(domain_3d, physics_params)
-        
+
         # Test different charge configurations
         charge_configs = [1, 2, 3, -1, -2]
-        
+
         for target_charge in charge_configs:
             # Create field with specific charge
             field = soliton.create_charge_configuration(target_charge)
-            
+
             # Calculate charge
             computed_charge = soliton.compute_topological_charge(field)
-            
-            # Verify charge matches target
-            assert abs(computed_charge - target_charge) < physics_params["topological_charge_tolerance"]
 
-    def test_topological_charge_skyrmion_model(
-        self, domain_3d, physics_params
-    ):
+            # Verify charge matches target
+            assert (
+                abs(computed_charge - target_charge)
+                < physics_params["topological_charge_tolerance"]
+            )
+
+    def test_topological_charge_skyrmion_model(self, domain_3d, physics_params):
         """
         Test topological charge calculation for Skyrmion model.
 
@@ -163,22 +165,20 @@ class TestSolitonTopologyPhysicsAdvanced:
         """
         # Create Skyrmion soliton
         skyrmion = SkyrmionSoliton(domain_3d, physics_params)
-        
+
         # Create Skyrmion field
         field = skyrmion.create_skyrmion_configuration()
-        
+
         # Calculate charge
         charge = skyrmion.compute_topological_charge(field)
-        
+
         # Verify charge is integer
         assert abs(charge - round(charge)) < 1e-10
-        
+
         # Verify charge is positive
         assert charge > 0
 
-    def test_topological_charge_multiple_solitons(
-        self, domain_3d, physics_params
-    ):
+    def test_topological_charge_multiple_solitons(self, domain_3d, physics_params):
         """
         Test topological charge calculation for multiple solitons.
 
@@ -192,19 +192,17 @@ class TestSolitonTopologyPhysicsAdvanced:
         """
         # Create soliton
         soliton = BaryonSoliton(domain_3d, physics_params)
-        
+
         # Create field with multiple solitons
         field = soliton.create_multi_soliton_configuration([1, 1, -1])
-        
+
         # Calculate total charge
         total_charge = soliton.compute_topological_charge(field)
-        
+
         # Verify total charge is 1 (1 + 1 - 1 = 1)
         assert abs(total_charge - 1.0) < physics_params["topological_charge_tolerance"]
 
-    def test_topological_charge_energy_relation(
-        self, domain_3d, physics_params
-    ):
+    def test_topological_charge_energy_relation(self, domain_3d, physics_params):
         """
         Test relationship between topological charge and energy.
 
@@ -218,23 +216,21 @@ class TestSolitonTopologyPhysicsAdvanced:
         """
         # Create soliton
         soliton = BaryonSoliton(domain_3d, physics_params)
-        
+
         # Test different charge configurations
         charges = [1, 2, 3]
         energies = []
-        
+
         for charge in charges:
             field = soliton.create_charge_configuration(charge)
             energy = soliton.compute_energy(field)
             energies.append(energy)
-        
+
         # Verify energy increases with charge
         for i in range(1, len(energies)):
-            assert energies[i] > energies[i-1]
+            assert energies[i] > energies[i - 1]
 
-    def test_topological_charge_stability(
-        self, domain_3d, physics_params
-    ):
+    def test_topological_charge_stability(self, domain_3d, physics_params):
         """
         Test topological charge stability under perturbations.
 
@@ -248,26 +244,28 @@ class TestSolitonTopologyPhysicsAdvanced:
         """
         # Create soliton
         soliton = BaryonSoliton(domain_3d, physics_params)
-        
+
         # Create field
         field = soliton.create_b1_configuration()
-        
+
         # Calculate initial charge
         charge_initial = soliton.compute_topological_charge(field)
-        
+
         # Add small perturbation
-        perturbation = 0.01 * np.random.random(field.shape) + 1j * 0.01 * np.random.random(field.shape)
+        perturbation = 0.01 * np.random.random(
+            field.shape
+        ) + 1j * 0.01 * np.random.random(field.shape)
         field_perturbed = field + perturbation
-        
+
         # Calculate perturbed charge
         charge_perturbed = soliton.compute_topological_charge(field_perturbed)
-        
-        # Verify charge stability
-        assert abs(charge_perturbed - charge_initial) < 0.1  # Allow some tolerance for perturbations
 
-    def test_topological_charge_convergence(
-        self, physics_params
-    ):
+        # Verify charge stability
+        assert (
+            abs(charge_perturbed - charge_initial) < 0.1
+        )  # Allow some tolerance for perturbations
+
+    def test_topological_charge_convergence(self, physics_params):
         """
         Test topological charge convergence with grid resolution.
 
@@ -282,21 +280,21 @@ class TestSolitonTopologyPhysicsAdvanced:
         # Test different grid resolutions
         grid_sizes = [16, 32, 64, 128]
         charges = []
-        
+
         for N in grid_sizes:
             domain = Domain(L=4.0, N=N, dimensions=7)
             soliton = BaryonSoliton(domain, physics_params)
             field = soliton.create_b1_configuration()
             charge = soliton.compute_topological_charge(field)
             charges.append(charge)
-        
+
         # Verify convergence (charges should approach 1.0)
         for i in range(1, len(charges)):
-            assert abs(charges[i] - 1.0) < abs(charges[i-1] - 1.0)  # Should get closer to 1.0
+            assert abs(charges[i] - 1.0) < abs(
+                charges[i - 1] - 1.0
+            )  # Should get closer to 1.0
 
-    def test_topological_charge_phase_continuity(
-        self, domain_3d, physics_params
-    ):
+    def test_topological_charge_phase_continuity(self, domain_3d, physics_params):
         """
         Test topological charge calculation with phase continuity.
 
@@ -310,20 +308,18 @@ class TestSolitonTopologyPhysicsAdvanced:
         """
         # Create soliton
         soliton = BaryonSoliton(domain_3d, physics_params)
-        
+
         # Create field with phase continuity
         field = soliton.create_continuous_phase_field()
-        
+
         # Calculate charge
         charge = soliton.compute_topological_charge(field)
-        
+
         # Verify charge is finite and reasonable
         assert np.isfinite(charge)
         assert abs(charge) < 10.0  # Reasonable upper bound
 
-    def test_topological_charge_symmetry(
-        self, domain_3d, physics_params
-    ):
+    def test_topological_charge_symmetry(self, domain_3d, physics_params):
         """
         Test topological charge calculation with symmetry.
 
@@ -337,13 +333,13 @@ class TestSolitonTopologyPhysicsAdvanced:
         """
         # Create soliton
         soliton = BaryonSoliton(domain_3d, physics_params)
-        
+
         # Create symmetric field
         field = soliton.create_symmetric_field()
-        
+
         # Calculate charge
         charge = soliton.compute_topological_charge(field)
-        
+
         # Verify charge is integer (symmetric fields should have integer charge)
         assert abs(charge - round(charge)) < 1e-10
 

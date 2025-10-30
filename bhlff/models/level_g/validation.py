@@ -23,4 +23,4 @@ Example:
 from .particle_inversion import ParticleInversion
 from .particle_validation import ParticleValidation
 
-__all__ = ['ParticleInversion', 'ParticleValidation']
+__all__ = ["ParticleInversion", "ParticleValidation"]

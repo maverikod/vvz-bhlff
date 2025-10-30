@@ -158,46 +158,46 @@ class SobolAnalyzer:
     ) -> float:
         """
         Compute total-order Sobol index for parameter using Monte Carlo estimation.
-        
+
         Physical Meaning:
             Calculates the total contribution of a parameter to output variance,
             including all interactions with other parameters, using Saltelli's
             Monte Carlo method for robust estimation.
-            
+
         Mathematical Foundation:
             S_Ti = 1 - Var[E[Y|X_{~i}]]/Var[Y]
             where X_{~i} are all parameters except i
         """
         n_samples = len(samples)
         param_values = samples[:, param_idx]
-        
+
         # Split samples into two independent sets for Monte Carlo estimation
         n_half = n_samples // 2
         samples_A = samples[:n_half]
-        samples_B = samples[n_half:2*n_half]
+        samples_B = samples[n_half : 2 * n_half]
         outputs_A = outputs[:n_half]
-        outputs_B = outputs[n_half:2*n_half]
-        
+        outputs_B = outputs[n_half : 2 * n_half]
+
         # Create resampled set: all parameters from A except param_idx from B
         samples_AB = samples_A.copy()
         samples_AB[:, param_idx] = samples_B[:, param_idx]
-        
+
         # Compute outputs for resampled set
         outputs_AB = self._run_simulations(samples_AB)
-        
+
         # Calculate total-order index using Saltelli's formula
         # E_Ti = 0.5 * E[(f(A) - f(AB))^2]
         numerator = 0.5 * np.mean((outputs_A - outputs_AB) ** 2)
         denominator = np.var(outputs)
-        
+
         if denominator == 0:
             return 0.0
-            
+
         total_order = numerator / denominator
-        
+
         # Ensure index is in valid range [0, 1]
         total_order = np.clip(total_order, 0.0, 1.0)
-        
+
         return total_order
 
     def _run_simulations(self, samples: np.ndarray) -> np.ndarray:
@@ -233,7 +233,7 @@ class SobolAnalyzer:
         Physical Meaning:
             Runs a complete 7D phase field simulation with given parameters
             and returns a key observable (power law exponent for tail behavior).
-            
+
         Mathematical Foundation:
             Solves the 7D phase field equation with fractional Laplacian:
             L_β a = μ(-Δ)^β a = s(x,t)
@@ -242,13 +242,13 @@ class SobolAnalyzer:
         from ...core.domain.domain_7d import Domain7D
         from ...solvers.spectral.fft_solver_7d import FFTSolver7D
         from ...models.level_b.power_law_tails import PowerLawAnalyzer
-        
+
         # Extract key parameters
         beta = params.get("beta", 1.0)
         mu = params.get("mu", 1.0)
         eta = params.get("eta", 0.1)
         lambda_param = params.get("lambda", 0.0)
-        
+
         # Create compact 7D domain for efficiency
         domain_size = 32  # Reduced for sensitivity analysis
         domain = Domain7D(
@@ -257,72 +257,78 @@ class SobolAnalyzer:
             L_phase=2 * np.pi,
             N_phase=domain_size,
             L_temporal=1.0,
-            N_temporal=domain_size
+            N_temporal=domain_size,
         )
-        
+
         # Setup solver with parameters
         solver_params = {
             "beta": beta,
             "mu": mu,
             "lambda": lambda_param,
             "eta": eta,
-            "precision": "float64"
+            "precision": "float64",
         }
-        
+
         try:
             solver = FFTSolver7D(domain, solver_params)
-            
+
             # Create localized source term
             source = self._create_source_field(domain, eta)
-            
+
             # Solve for phase field
             solution = solver.solve(source)
-            
+
             # Analyze power law tail
             analyzer = PowerLawAnalyzer(domain, solver_params)
             power_law_results = analyzer.analyze_power_law_tail(solution)
-            
+
             # Extract observable: power law exponent
             observable = power_law_results.get("exponent", 2 * beta - 3)
-            
+
             # Add complexity metric: topological charge
             if "topological_charge" in power_law_results:
                 complexity = abs(power_law_results["topological_charge"])
                 observable += 0.1 * complexity
-            
+
             return observable
-            
+
         except Exception as e:
             # Fallback to analytical estimate if simulation fails
             print(f"Simulation failed: {e}. Using analytical estimate.")
             return 2 * beta - 3
-    
+
     def _create_source_field(self, domain: "Domain7D", eta: float) -> np.ndarray:
         """
         Create localized source field for 7D simulation.
-        
+
         Physical Meaning:
             Generates a localized excitation in the 7D phase space-time
             that serves as the initial condition for the phase field evolution.
         """
-        shape = (domain.N_spatial, domain.N_spatial, domain.N_spatial,
-                domain.N_phase, domain.N_phase, domain.N_phase,
-                domain.N_temporal)
-        
+        shape = (
+            domain.N_spatial,
+            domain.N_spatial,
+            domain.N_spatial,
+            domain.N_phase,
+            domain.N_phase,
+            domain.N_phase,
+            domain.N_temporal,
+        )
+
         # Create Gaussian source in spatial dimensions
-        x = np.linspace(-domain.L_spatial/2, domain.L_spatial/2, domain.N_spatial)
-        X, Y, Z = np.meshgrid(x, x, x, indexing='ij')
+        x = np.linspace(-domain.L_spatial / 2, domain.L_spatial / 2, domain.N_spatial)
+        X, Y, Z = np.meshgrid(x, x, x, indexing="ij")
         r_squared = X**2 + Y**2 + Z**2
-        
+
         # Localization width controlled by eta
         width = 1.0 / (1.0 + eta)
-        
+
         # Create 7D source with spatial localization
         source = np.zeros(shape, dtype=complex)
-        
+
         # Apply spatial step function envelope
         spatial_envelope = self._step_resonator_spatial_envelope(r_squared, width)
-        
+
         # Broadcast to 7D
         for phi1 in range(domain.N_phase):
             for phi2 in range(domain.N_phase):
@@ -330,8 +336,10 @@ class SobolAnalyzer:
                     for t in range(domain.N_temporal):
                         # Add phase modulation
                         phase = phi1 + phi2 + phi3
-                        source[:, :, :, phi1, phi2, phi3, t] = spatial_envelope * np.exp(1j * phase)
-        
+                        source[:, :, :, phi1, phi2, phi3, t] = (
+                            spatial_envelope * np.exp(1j * phase)
+                        )
+
         return source
 
     def _rank_parameters(
@@ -392,32 +400,36 @@ class SobolAnalyzer:
             "is_converged": convergence_metric < 0.1,
             "is_balanced": dominance_ratio < 10.0,
         }
-    
-    def _step_resonator_spatial_envelope(self, r_squared: np.ndarray, width: float) -> np.ndarray:
+
+    def _step_resonator_spatial_envelope(
+        self, r_squared: np.ndarray, width: float
+    ) -> np.ndarray:
         """
         Step resonator spatial envelope according to 7D BVP theory.
-        
+
         Physical Meaning:
             Implements step function spatial envelope instead of Gaussian envelope
             according to 7D BVP theory principles where spatial boundaries
             are determined by step functions rather than smooth transitions.
-            
+
         Mathematical Foundation:
             Envelope = Θ(width_cutoff - r) where Θ is the Heaviside step function
             and width_cutoff is the cutoff radius for the spatial envelope.
-            
+
         Args:
             r_squared (np.ndarray): Squared radial distance.
             width (float): Spatial width parameter.
-            
+
         Returns:
             np.ndarray: Step function spatial envelope according to 7D BVP theory.
         """
         # Step function spatial envelope according to 7D BVP theory
         cutoff_radius_squared = width**2
         transmission_coeff = 1.0
-        
+
         # Apply step function boundary condition
-        envelope = transmission_coeff * np.where(r_squared < cutoff_radius_squared, 1.0, 0.0)
-        
+        envelope = transmission_coeff * np.where(
+            r_squared < cutoff_radius_squared, 1.0, 0.0
+        )
+
         return envelope

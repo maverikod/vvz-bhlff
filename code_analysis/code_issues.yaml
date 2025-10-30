@@ -2,16 +2,16 @@ issues:
   classes_without_docstrings:
   - class: MockDomain
     file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-    line: 76
+    line: 85
   - class: MockDomain
     file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-    line: 145
+    line: 159
   - class: MockBVPCore
     file: ./tests/unit/test_power_law_7d_bvp_compliance.py
-    line: 167
+    line: 169
   - class: MockBVPCore
     file: ./tests/unit/test_power_law_7d_bvp_compliance.py
-    line: 212
+    line: 215
   - class: MockSystem
     file: ./tests/unit/test_level_g/test_gravity_physics.py
     line: 60
@@ -23,13 +23,13 @@ issues:
     line: 13
   - class: MockBlockInfo
     file: ./tests/unit/test_core/test_enhanced_block_processing.py
-    line: 202
+    line: 220
   - class: MockParameters
     file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
-    line: 101
+    line: 104
   - class: MockInvalidParameters
     file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
-    line: 177
+    line: 183
   - class: DummyCuPy
     file: ./bhlff/core/bvp/quench_detector.py
     line: 37
@@ -47,234 +47,258 @@ issues:
     file: ./test_quench_detector_optimized.py
     limit: 400
     lines: 417
-  - exceeds_limit: 294
+  - exceeds_limit: 8
+    file: ./tests/integration/automated_testing/test_quality_monitoring_integration.py
+    limit: 400
+    lines: 408
+  - exceeds_limit: 368
     file: ./tests/unit/test_ml_prediction_vectorized_implementations.py
     limit: 400
-    lines: 694
-  - exceeds_limit: 22
+    lines: 768
+  - exceeds_limit: 4
+    file: ./tests/unit/test_ml_prediction_physics_validation.py
+    limit: 400
+    lines: 404
+  - exceeds_limit: 107
+    file: ./tests/unit/test_ml_prediction_full_implementation.py
+    limit: 400
+    lines: 507
+  - exceeds_limit: 34
     file: ./tests/unit/test_soliton_analysis_optimization.py
     limit: 400
+    lines: 434
+  - exceeds_limit: 22
+    file: ./tests/unit/test_full_algorithm_implementations.py
+    limit: 400
     lines: 422
-  - exceeds_limit: 192
+  - exceeds_limit: 292
     file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
     limit: 400
-    lines: 592
-  - exceeds_limit: 73
+    lines: 692
+  - exceeds_limit: 170
     file: ./tests/unit/test_physics_validation_step_2_1_1.py
     limit: 400
-    lines: 473
-  - exceeds_limit: 31
+    lines: 570
+  - exceeds_limit: 37
     file: ./tests/unit/test_base_models.py
     limit: 400
-    lines: 431
-  - exceeds_limit: 60
+    lines: 437
+  - exceeds_limit: 112
     file: ./tests/unit/test_soliton_optimization_algorithms.py
     limit: 400
-    lines: 460
-  - exceeds_limit: 126
+    lines: 512
+  - exceeds_limit: 128
     file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
     limit: 400
-    lines: 526
-  - exceeds_limit: 59
+    lines: 528
+  - exceeds_limit: 56
     file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
     limit: 400
-    lines: 459
-  - exceeds_limit: 48
+    lines: 456
+  - exceeds_limit: 60
+    file: ./tests/unit/test_level_e/integration/test_integration.py
+    limit: 400
+    lines: 460
+  - exceeds_limit: 42
     file: ./tests/unit/automated_testing/test_integration.py
     limit: 400
-    lines: 448
-  - exceeds_limit: 47
+    lines: 442
+  - exceeds_limit: 96
     file: ./tests/unit/automated_testing/test_quality_monitor.py
     limit: 400
-    lines: 447
+    lines: 496
   - exceeds_limit: 41
     file: ./tests/unit/test_core/test_7d_physics.py
     limit: 400
     lines: 441
-  - exceeds_limit: 4
+  - exceeds_limit: 8
     file: ./tests/unit/test_core/test_power_law_optimization_full.py
     limit: 400
-    lines: 404
-  - exceeds_limit: 118
+    lines: 408
+  - exceeds_limit: 130
     file: ./tests/unit/test_core/test_phase_vector_u1_structure.py
     limit: 400
-    lines: 518
+    lines: 530
   - exceeds_limit: 37
     file: ./tests/unit/test_core/test_bvp_constants_comprehensive.py
     limit: 400
     lines: 437
-  - exceeds_limit: 70
+  - exceeds_limit: 69
     file: ./tests/unit/test_core/test_phase_vector_cuda.py
     limit: 400
-    lines: 470
-  - exceeds_limit: 131
+    lines: 469
+  - exceeds_limit: 139
     file: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
     limit: 400
-    lines: 531
-  - exceeds_limit: 32
+    lines: 539
+  - exceeds_limit: 42
     file: ./tests/unit/test_level_a/test_reporting_advanced.py
     limit: 400
-    lines: 432
-  - exceeds_limit: 27
+    lines: 442
+  - exceeds_limit: 33
     file: ./tests/unit/test_level_a/test_A03_zero_mode.py
     limit: 400
-    lines: 427
-  - exceeds_limit: 65
+    lines: 433
+  - exceeds_limit: 69
     file: ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
     limit: 400
-    lines: 465
-  - exceeds_limit: 98
+    lines: 469
+  - exceeds_limit: 124
     file: ./bhlff/models/level_c/boundaries_core.py
     limit: 400
-    lines: 498
+    lines: 524
   - exceeds_limit: 66
     file: ./bhlff/models/level_c/abcd_model.py
     limit: 400
     lines: 466
-  - exceeds_limit: 44
+  - exceeds_limit: 68
     file: ./bhlff/models/level_c/beating/theoretical_analysis.py
     limit: 400
-    lines: 444
+    lines: 468
   - exceeds_limit: 59
     file: ./bhlff/models/level_c/beating/beating_core_basic.py
     limit: 400
     lines: 459
-  - exceeds_limit: 52
+  - exceeds_limit: 49
     file: ./bhlff/models/level_c/beating/background_analysis.py
     limit: 400
-    lines: 452
-  - exceeds_limit: 440
+    lines: 449
+  - exceeds_limit: 457
     file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py
     limit: 400
-    lines: 840
-  - exceeds_limit: 289
+    lines: 857
+  - exceeds_limit: 382
     file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
     limit: 400
-    lines: 689
-  - exceeds_limit: 212
+    lines: 782
+  - exceeds_limit: 240
     file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
     limit: 400
-    lines: 612
-  - exceeds_limit: 530
+    lines: 640
+  - exceeds_limit: 605
     file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
     limit: 400
-    lines: 930
-  - exceeds_limit: 94
+    lines: 1005
+  - exceeds_limit: 106
     file: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py
     limit: 400
-    lines: 494
-  - exceeds_limit: 80
+    lines: 506
+  - exceeds_limit: 107
     file: ./bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
     limit: 400
-    lines: 480
-  - exceeds_limit: 112
+    lines: 507
+  - exceeds_limit: 120
     file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
     limit: 400
-    lines: 512
-  - exceeds_limit: 84
+    lines: 520
+  - exceeds_limit: 118
     file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
     limit: 400
-    lines: 484
+    lines: 518
   - exceeds_limit: 4
     file: ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
     limit: 400
     lines: 404
-  - exceeds_limit: 88
+  - exceeds_limit: 109
     file: ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
     limit: 400
-    lines: 488
-  - exceeds_limit: 59
+    lines: 509
+  - exceeds_limit: 88
     file: ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
     limit: 400
-    lines: 459
-  - exceeds_limit: 98
+    lines: 488
+  - exceeds_limit: 156
     file: ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
     limit: 400
-    lines: 498
-  - exceeds_limit: 50
+    lines: 556
+  - exceeds_limit: 84
     file: ./bhlff/models/level_c/beating/basic/optimization_methods.py
     limit: 400
-    lines: 450
+    lines: 484
   - exceeds_limit: 39
     file: ./bhlff/models/level_c/memory/memory_analyzer.py
     limit: 400
     lines: 439
-  - exceeds_limit: 92
+  - exceeds_limit: 107
     file: ./bhlff/models/level_c/memory/memory_evolution.py
     limit: 400
-    lines: 492
+    lines: 507
   - exceeds_limit: 11
     file: ./bhlff/models/level_c/resonators/resonator_analyzer.py
     limit: 400
     lines: 411
-  - exceeds_limit: 39
+  - exceeds_limit: 42
     file: ./bhlff/models/level_c/resonators/resonator_analysis.py
     limit: 400
-    lines: 439
-  - exceeds_limit: 79
+    lines: 442
+  - exceeds_limit: 102
     file: ./bhlff/models/level_f/multi_particle_analysis.py
     limit: 400
-    lines: 479
+    lines: 502
   - exceeds_limit: 40
     file: ./bhlff/models/level_f/bvp_integration.py
     limit: 400
     lines: 440
-  - exceeds_limit: 11
+  - exceeds_limit: 29
     file: ./bhlff/models/level_f/multi_particle_modes.py
     limit: 400
-    lines: 411
-  - exceeds_limit: 118
+    lines: 429
+  - exceeds_limit: 143
     file: ./bhlff/models/level_f/nonlinear.py
     limit: 400
-    lines: 518
-  - exceeds_limit: 52
+    lines: 543
+  - exceeds_limit: 72
     file: ./bhlff/models/level_f/nonlinear/basic_effects.py
     limit: 400
-    lines: 452
-  - exceeds_limit: 108
+    lines: 472
+  - exceeds_limit: 130
     file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
     limit: 400
-    lines: 508
-  - exceeds_limit: 11
+    lines: 530
+  - exceeds_limit: 53
     file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
     limit: 400
-    lines: 411
-  - exceeds_limit: 100
+    lines: 453
+  - exceeds_limit: 256
     file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
     limit: 400
-    lines: 500
-  - exceeds_limit: 176
+    lines: 656
+  - exceeds_limit: 6
+    file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py
+    limit: 400
+    lines: 406
+  - exceeds_limit: 352
     file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
     limit: 400
-    lines: 576
-  - exceeds_limit: 37
+    lines: 752
+  - exceeds_limit: 43
     file: ./bhlff/models/level_f/collective/excitation_analysis.py
     limit: 400
-    lines: 437
-  - exceeds_limit: 70
+    lines: 443
+  - exceeds_limit: 90
     file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
     limit: 400
-    lines: 470
-  - exceeds_limit: 74
+    lines: 490
+  - exceeds_limit: 107
     file: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py
     limit: 400
-    lines: 474
-  - exceeds_limit: 71
+    lines: 507
+  - exceeds_limit: 73
     file: ./bhlff/models/level_f/multi_particle/data_structures.py
     limit: 400
-    lines: 471
-  - exceeds_limit: 559
+    lines: 473
+  - exceeds_limit: 618
     file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
     limit: 400
-    lines: 959
-  - exceeds_limit: 36
+    lines: 1018
+  - exceeds_limit: 61
     file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
     limit: 400
-    lines: 436
-  - exceeds_limit: 214
+    lines: 461
+  - exceeds_limit: 216
     file: ./bhlff/models/level_d/projections.py
     limit: 400
-    lines: 614
+    lines: 616
   - exceeds_limit: 177
     file: ./bhlff/models/level_d/streamlines.py
     limit: 400
@@ -287,14 +311,14 @@ issues:
     file: ./bhlff/models/level_b/visualization.py
     limit: 400
     lines: 529
-  - exceeds_limit: 364
+  - exceeds_limit: 394
     file: ./bhlff/models/level_b/power_law_analyzer.py
     limit: 400
-    lines: 764
-  - exceeds_limit: 165
+    lines: 794
+  - exceeds_limit: 170
     file: ./bhlff/models/level_b/node_analyzer.py
     limit: 400
-    lines: 565
+    lines: 570
   - exceeds_limit: 35
     file: ./bhlff/models/level_b/power_law/critical_exponents.py
     limit: 400
@@ -303,10 +327,10 @@ issues:
     file: ./bhlff/models/level_b/node_analysis/topological_analysis.py
     limit: 400
     lines: 407
-  - exceeds_limit: 57
+  - exceeds_limit: 62
     file: ./bhlff/models/level_e/defect_dynamics.py
     limit: 400
-    lines: 457
+    lines: 462
   - exceeds_limit: 4
     file: ./bhlff/models/level_e/defect_implementations.py
     limit: 400
@@ -323,30 +347,34 @@ issues:
     file: ./bhlff/models/level_e/failure_detection.py
     limit: 400
     lines: 582
-  - exceeds_limit: 23
+  - exceeds_limit: 39
+    file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
+    limit: 400
+    lines: 439
+  - exceeds_limit: 35
     file: ./bhlff/models/level_e/sensitivity/sobol_analysis.py
     limit: 400
-    lines: 423
-  - exceeds_limit: 143
+    lines: 435
+  - exceeds_limit: 186
     file: ./bhlff/models/level_e/discretization/domain_effects.py
     limit: 400
-    lines: 543
-  - exceeds_limit: 236
+    lines: 586
+  - exceeds_limit: 291
     file: ./bhlff/models/level_e/discretization/time_stability.py
     limit: 400
-    lines: 636
+    lines: 691
   - exceeds_limit: 55
     file: ./bhlff/models/level_e/experiments/experiment_runner.py
     limit: 400
     lines: 455
-  - exceeds_limit: 100
+  - exceeds_limit: 104
     file: ./bhlff/models/level_g/gravity_curvature.py
     limit: 400
-    lines: 500
-  - exceeds_limit: 189
+    lines: 504
+  - exceeds_limit: 207
     file: ./bhlff/models/level_g/particle_validation.py
     limit: 400
-    lines: 589
+    lines: 607
   - exceeds_limit: 22
     file: ./bhlff/models/level_g/bvp_integration.py
     limit: 400
@@ -355,42 +383,54 @@ issues:
     file: ./bhlff/models/level_g/gravity_waves.py
     limit: 400
     lines: 509
-  - exceeds_limit: 7
+  - exceeds_limit: 27
     file: ./bhlff/models/level_g/particle_inversion_computations.py
     limit: 400
-    lines: 407
-  - exceeds_limit: 194
+    lines: 427
+  - exceeds_limit: 208
     file: ./bhlff/models/level_g/gravity_einstein.py
     limit: 400
-    lines: 594
-  - exceeds_limit: 4
+    lines: 608
+  - exceeds_limit: 9
+    file: ./bhlff/models/level_g/astrophysics/observable_properties.py
+    limit: 400
+    lines: 409
+  - exceeds_limit: 10
     file: ./bhlff/models/level_g/astrophysics/galactic_models.py
     limit: 400
-    lines: 404
+    lines: 410
+  - exceeds_limit: 5
+    file: ./bhlff/models/level_g/astrophysics/black_hole_models.py
+    limit: 400
+    lines: 405
+  - exceeds_limit: 2
+    file: ./bhlff/models/level_g/astrophysics/stellar_models.py
+    limit: 400
+    lines: 402
   - exceeds_limit: 3
     file: ./bhlff/testing/reporting/physics_interpreter.py
     limit: 400
     lines: 403
-  - exceeds_limit: 164
+  - exceeds_limit: 170
     file: ./bhlff/testing/quality/quality_monitor.py
     limit: 400
-    lines: 564
-  - exceeds_limit: 4
+    lines: 570
+  - exceeds_limit: 13
     file: ./bhlff/core/time/bvp_envelope_integrator.py
     limit: 400
-    lines: 404
+    lines: 413
   - exceeds_limit: 160
     file: ./bhlff/core/bvp/quench_morphology.py
     limit: 400
     lines: 560
-  - exceeds_limit: 449
+  - exceeds_limit: 490
     file: ./bhlff/core/bvp/quench_detector.py
     limit: 400
-    lines: 849
-  - exceeds_limit: 53
+    lines: 890
+  - exceeds_limit: 109
     file: ./bhlff/core/bvp/bvp_block_processing_system.py
     limit: 400
-    lines: 453
+    lines: 509
   - exceeds_limit: 50
     file: ./bhlff/core/bvp/physical_validation_decorator.py
     limit: 400
@@ -399,30 +439,30 @@ issues:
     file: ./bhlff/core/bvp/quench_characteristics.py
     limit: 400
     lines: 576
-  - exceeds_limit: 13
+  - exceeds_limit: 16
     file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
     limit: 400
-    lines: 413
-  - exceeds_limit: 370
+    lines: 416
+  - exceeds_limit: 380
     file: ./bhlff/core/bvp/phase_vector/phase_vector.py
     limit: 400
-    lines: 770
-  - exceeds_limit: 17
+    lines: 780
+  - exceeds_limit: 59
     file: ./bhlff/core/bvp/validation/physical_constraints.py
     limit: 400
-    lines: 417
-  - exceeds_limit: 383
+    lines: 459
+  - exceeds_limit: 448
     file: ./bhlff/core/bvp/power_law/power_law_optimization.py
     limit: 400
-    lines: 783
-  - exceeds_limit: 245
+    lines: 848
+  - exceeds_limit: 262
     file: ./bhlff/core/bvp/power_law/power_law_core.py
     limit: 400
-    lines: 645
-  - exceeds_limit: 10
+    lines: 662
+  - exceeds_limit: 28
     file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
     limit: 400
-    lines: 410
+    lines: 428
   - exceeds_limit: 41
     file: ./bhlff/core/bvp/envelope_equation/solver_core_basic.py
     limit: 400
@@ -431,46 +471,62 @@ issues:
     file: ./bhlff/core/bvp/envelope_equation/advanced/solver_advanced_core.py
     limit: 400
     lines: 401
-  - exceeds_limit: 54
+  - exceeds_limit: 8
+    file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
+    limit: 400
+    lines: 408
+  - exceeds_limit: 112
     file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
     limit: 400
-    lines: 454
-  - exceeds_limit: 4
+    lines: 512
+  - exceeds_limit: 81
     file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
     limit: 400
-    lines: 404
-  - exceeds_limit: 4
+    lines: 481
+  - exceeds_limit: 22
+    file: ./bhlff/core/domain/cuda_block_processor.py
+    limit: 400
+    lines: 422
+  - exceeds_limit: 62
     file: ./bhlff/core/domain/vectorized_block_processor.py
     limit: 400
-    lines: 404
-  - exceeds_limit: 56
+    lines: 462
+  - exceeds_limit: 80
     file: ./bhlff/core/domain/7d_vectorized_processor.py
     limit: 400
-    lines: 456
-  - exceeds_limit: 56
+    lines: 480
+  - exceeds_limit: 8
+    file: ./bhlff/core/domain/optimized_block_processor.py
+    limit: 400
+    lines: 408
+  - exceeds_limit: 80
     file: ./bhlff/core/domain/vectorized_7d_processor.py
     limit: 400
-    lines: 456
-  - exceeds_limit: 12
+    lines: 480
+  - exceeds_limit: 58
     file: ./bhlff/core/domain/enhanced_block_processor.py
     limit: 400
-    lines: 412
-  - exceeds_limit: 117
+    lines: 458
+  - exceeds_limit: 172
     file: ./bhlff/core/sources/bvp_source_generators.py
     limit: 400
-    lines: 517
-  - exceeds_limit: 135
+    lines: 572
+  - exceeds_limit: 139
     file: ./bhlff/core/fft/spectral_derivatives_impl.py
     limit: 400
-    lines: 535
-  - exceeds_limit: 139
+    lines: 539
+  - exceeds_limit: 240
     file: ./bhlff/core/fft/unified_spectral_operations.py
     limit: 400
-    lines: 539
-  - exceeds_limit: 19
+    lines: 640
+  - exceeds_limit: 2
+    file: ./bhlff/core/fft/spectral_filtering.py
+    limit: 400
+    lines: 402
+  - exceeds_limit: 21
     file: ./bhlff/core/fft/fft_plan_7d.py
     limit: 400
-    lines: 419
+    lines: 421
   - exceeds_limit: 27
     file: ./examples/level_g_example.py
     limit: 400
@@ -540,7 +596,7 @@ issues:
   - file: ./tests/integration/test_bvp_phase_vector_physics.py
     line: 32
   - file: ./tests/integration/test_automated_testing_integration.py
-    line: 26
+    line: 34
   - file: ./tests/integration/test_bvp_interface_pipeline_physics.py
     line: 34
   - file: ./tests/integration/test_bvp_core_pipeline_physics.py
@@ -558,33 +614,33 @@ issues:
   - file: ./tests/integration/automated_testing/test_basic_integration.py
     line: 45
   - file: ./tests/integration/automated_testing/test_performance_integration.py
-    line: 217
+    line: 205
   - file: ./tests/unit/test_ml_prediction_vectorized_implementations.py
-    line: 397
+    line: 449
   - file: ./tests/unit/test_ml_prediction_physics_validation.py
-    line: 25
+    line: 29
   - file: ./tests/unit/test_acceptance_criteria.py
     line: 23
   - file: ./tests/unit/test_soliton_analysis_optimization.py
-    line: 345
+    line: 349
   - file: ./tests/unit/test_full_algorithm_implementations.py
-    line: 345
+    line: 381
   - file: ./tests/unit/test_ml_prediction_vectorized_implementation.py
-    line: 42
+    line: 48
   - file: ./tests/unit/test_soliton_optimization_compliance.py
-    line: 24
+    line: 28
   - file: ./tests/unit/test_7d_vectorized_processing.py
     line: 26
   - file: ./tests/unit/test_7d_bvp_physics.py
     line: 33
   - file: ./tests/unit/test_physics_validation_step_2_1_1.py
-    line: 168
+    line: 206
   - file: ./tests/unit/test_ml_prediction_models.py
-    line: 247
+    line: 259
   - file: ./tests/unit/test_base_models.py
-    line: 422
+    line: 427
   - file: ./tests/unit/test_soliton_optimization_algorithms.py
-    line: 24
+    line: 28
   - file: ./tests/unit/test_automated_testing.py
     line: 24
   - file: ./tests/unit/test_classical_patterns_compliance.py
@@ -618,9 +674,9 @@ issues:
   - file: ./tests/unit/test_models/test_level_b_power_law_core_fixes_basic.py
     line: 30
   - file: ./tests/unit/test_models/test_level_e/test_time_stability_full.py
-    line: 491
+    line: 489
   - file: ./tests/unit/test_models/test_level_e/test_domain_effects_full.py
-    line: 446
+    line: 443
   - file: ./tests/unit/test_level_e/test_soliton_physics_advanced.py
     line: 30
   - file: ./tests/unit/test_level_e/test_defect_physics.py
@@ -688,19 +744,19 @@ issues:
   - file: ./tests/unit/automated_testing/test_quality_monitor.py
     line: 34
   - file: ./tests/unit/automated_testing/test_automated_testing_system_advanced.py
-    line: 152
+    line: 165
   - file: ./tests/unit/test_core/test_7d_physics.py
     line: 39
   - file: ./tests/unit/test_core/test_quenches_postulate_physics.py
     line: 29
   - file: ./tests/unit/test_core/test_power_law_optimization_full.py
-    line: 368
+    line: 372
   - file: ./tests/unit/test_core/test_enhanced_block_processing.py
-    line: 21
+    line: 25
   - file: ./tests/unit/test_core/test_base_time_integrator.py
     line: 27
   - file: ./tests/unit/test_core/test_legacy_code_absence.py
-    line: 84
+    line: 86
   - file: ./tests/unit/test_core/test_scale_separation_postulate_physics.py
     line: 30
   - file: ./tests/unit/test_core/test_ultra_simple_block_processing.py
@@ -712,31 +768,33 @@ issues:
   - file: ./tests/unit/test_core/test_bvp_constants_coverage.py
     line: 21
   - file: ./tests/unit/test_core/test_step_resonator_no_exponential.py
-    line: 132
+    line: 145
   - file: ./tests/unit/test_core/test_simple_block_processing.py
-    line: 21
+    line: 25
   - file: ./tests/unit/test_core/test_transition_zone_postulate_physics.py
     line: 29
   - file: ./tests/unit/test_core/test_core_renormalization_postulate_physics.py
     line: 29
   - file: ./tests/unit/test_core/test_crank_nicolson_integrator.py
     line: 26
+  - file: ./tests/unit/test_core/test_block_processing_simple.py
+    line: 24
   - file: ./tests/unit/test_core/test_spectral_laplacian_physics.py
     line: 45
   - file: ./tests/unit/test_core/test_quench_detector.py
     line: 29
   - file: ./tests/unit/test_core/test_bvp_postulate_coverage.py
-    line: 132
+    line: 139
   - file: ./tests/unit/test_core/test_bvp_rigidity_postulate_physics.py
     line: 29
   - file: ./tests/unit/test_core/test_spectral_convergence_physics.py
     line: 325
   - file: ./tests/unit/test_core/test_optimized_block_processing.py
-    line: 21
+    line: 25
   - file: ./tests/unit/test_core/test_fft_physics.py
     line: 37
   - file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
-    line: 242
+    line: 256
   - file: ./tests/unit/test_core/test_u1_phase_structure_postulate_physics.py
     line: 29
   - file: ./tests/unit/test_core/test_bvp_postulates_integration_physics.py
@@ -766,11 +824,11 @@ issues:
   - file: ./tests/unit/test_core/test_spectral_energy_spectrum_physics.py
     line: 262
   - file: ./tests/unit/test_core/fft_solver_7d_validation/test_boundary_cases.py
-    line: 262
+    line: 264
   - file: ./tests/unit/test_core/time_integrators/test_basic_integrators.py
-    line: 209
+    line: 219
   - file: ./tests/unit/test_core/time_integrators/test_advanced_integrators.py
-    line: 266
+    line: 283
   - file: ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py
     line: 28
   - file: ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
@@ -792,7 +850,7 @@ issues:
   - file: ./bhlff/__init__.py
     line: 47
   - file: ./bhlff/utils/cuda_utils.py
-    line: 223
+    line: 225
   - file: ./bhlff/utils/memory_monitor.py
     line: 36
   - file: ./bhlff/models/base/abstract_models.py
@@ -812,11 +870,11 @@ issues:
   - file: ./bhlff/models/level_c/level_c_integration_config.py
     line: 22
   - file: ./bhlff/models/level_c/quench_memory_analysis.py
-    line: 39
+    line: 44
   - file: ./bhlff/models/level_c/level_c_integration_tests.py
     line: 27
   - file: ./bhlff/models/level_c/boundary_analysis.py
-    line: 38
+    line: 42
   - file: ./bhlff/models/level_c/level_c_integration.py
     line: 38
   - file: ./bhlff/models/level_c/level_c_integration_validation.py
@@ -866,13 +924,13 @@ issues:
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_refactored.py
     line: 31
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py
-    line: 370
+    line: 388
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
-    line: 268
+    line: 296
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py
-    line: 278
+    line: 280
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
-    line: 246
+    line: 256
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
     line: 25
   - file: ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py
@@ -1000,7 +1058,7 @@ issues:
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis.py
     line: 25
   - file: ./bhlff/models/level_f/nonlinear/__init__.py
-    line: 22
+    line: 25
   - file: ./bhlff/models/level_f/nonlinear/mode_analysis.py
     line: 21
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
@@ -1028,7 +1086,7 @@ issues:
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/base.py
     line: 22
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation_core.py
-    line: 125
+    line: 144
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/mode_analysis.py
     line: 25
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_validation.py
@@ -1050,7 +1108,7 @@ issues:
   - file: ./bhlff/models/level_f/collective/dispersion_analysis.py
     line: 22
   - file: ./bhlff/models/level_f/collective/excitation_analysis.py
-    line: 325
+    line: 329
   - file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
     line: 24
   - file: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py
@@ -1088,13 +1146,13 @@ issues:
   - file: ./bhlff/models/level_b/visualization.py
     line: 25
   - file: ./bhlff/models/level_b/power_law_analyzer.py
-    line: 42
+    line: 43
   - file: ./bhlff/models/level_b/zone_analyzer_utils.py
     line: 31
   - file: ./bhlff/models/level_b/__init__.py
     line: 30
   - file: ./bhlff/models/level_b/node_analyzer.py
-    line: 511
+    line: 515
   - file: ./bhlff/models/level_b/power_law_core.py
     line: 27
   - file: ./bhlff/models/level_b/zone_analyzer.py
@@ -1124,7 +1182,7 @@ issues:
   - file: ./bhlff/models/level_e/defect_models.py
     line: 31
   - file: ./bhlff/models/level_e/defect_dynamics.py
-    line: 330
+    line: 332
   - file: ./bhlff/models/level_e/defect_implementations.py
     line: 30
   - file: ./bhlff/models/level_e/sensitivity_analysis.py
@@ -1158,11 +1216,11 @@ issues:
   - file: ./bhlff/models/level_e/performance/accuracy_cost_analysis.py
     line: 187
   - file: ./bhlff/models/level_e/performance/performance_analyzer.py
-    line: 31
+    line: 59
   - file: ./bhlff/models/level_e/performance/profiling.py
     line: 24
   - file: ./bhlff/models/level_e/performance/performance_analysis.py
-    line: 31
+    line: 64
   - file: ./bhlff/models/level_e/performance/scalability_analysis.py
     line: 24
   - file: ./bhlff/models/level_e/performance/__init__.py
@@ -1186,7 +1244,7 @@ issues:
   - file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis.py
     line: 21
   - file: ./bhlff/models/level_e/phase_mapping_components/regime_classification.py
-    line: 164
+    line: 169
   - file: ./bhlff/models/level_e/phase_mapping_components/resonance_analysis.py
     line: 22
   - file: ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/phase_coherence_analysis.py
@@ -1216,13 +1274,13 @@ issues:
   - file: ./bhlff/models/level_e/discretization/grid_convergence.py
     line: 24
   - file: ./bhlff/models/level_e/discretization/domain_effects.py
-    line: 422
+    line: 444
   - file: ./bhlff/models/level_e/discretization/discretization_analyzer.py
     line: 32
   - file: ./bhlff/models/level_e/discretization/__init__.py
     line: 32
   - file: ./bhlff/models/level_e/discretization/time_stability.py
-    line: 459
+    line: 503
   - file: ./bhlff/models/level_e/experiments/specialized_experiments.py
     line: 26
   - file: ./bhlff/models/level_e/experiments/experiment_runner.py
@@ -1358,7 +1416,7 @@ issues:
   - file: ./bhlff/geometry/layers/layer_stack.py
     line: 28
   - file: ./bhlff/testing/automated_testing.py
-    line: 29
+    line: 33
   - file: ./bhlff/testing/automated_reporting.py
     line: 32
   - file: ./bhlff/testing/reporting/template_engine.py
@@ -1380,6 +1438,8 @@ issues:
   - file: ./bhlff/testing/quality/__init__.py
     line: 22
   - file: ./bhlff/testing/quality/base.py
+    line: 26
+  - file: ./bhlff/testing/quality/quality_monitor.py
     line: 26
   - file: ./bhlff/testing/quality/metric_history.py
     line: 26
@@ -1420,7 +1480,7 @@ issues:
   - file: ./bhlff/core/time/crank_nicolson_integrator.py
     line: 80
   - file: ./bhlff/core/time/__init__.py
-    line: 31
+    line: 33
   - file: ./bhlff/core/time/base_integrator.py
     line: 28
   - file: ./bhlff/core/time/adaptive/error_estimation.py
@@ -1428,7 +1488,9 @@ issues:
   - file: ./bhlff/core/time/adaptive/runge_kutta.py
     line: 27
   - file: ./bhlff/core/time/adaptive/adaptive_integrator.py
-    line: 99
+    line: 361
+  - file: ./bhlff/core/time/adaptive/stability.py
+    line: 27
   - file: ./bhlff/core/base/__init__.py
     line: 22
   - file: ./bhlff/core/bvp/level_b_interface_facade.py
@@ -1450,7 +1512,7 @@ issues:
   - file: ./bhlff/core/bvp/bvp_postulate_base.py
     line: 24
   - file: ./bhlff/core/bvp/quench_detector.py
-    line: 401
+    line: 442
   - file: ./bhlff/core/bvp/bvp_impedance_calculator.py
     line: 34
   - file: ./bhlff/core/bvp/envelope_linear_solver.py
@@ -1468,7 +1530,7 @@ issues:
   - file: ./bhlff/core/bvp/topological_defect_analyzer.py
     line: 41
   - file: ./bhlff/core/bvp/bvp_block_processing_system.py
-    line: 413
+    line: 468
   - file: ./bhlff/core/bvp/impedance_core.py
     line: 29
   - file: ./bhlff/core/bvp/memory_decorator.py
@@ -1536,9 +1598,9 @@ issues:
   - file: ./bhlff/core/bvp/resonance_peak_detector.py
     line: 28
   - file: ./bhlff/core/bvp/analysis/topological_charge_analyzer.py
-    line: 29
+    line: 30
   - file: ./bhlff/core/bvp/analysis/charge_computation.py
-    line: 23
+    line: 24
   - file: ./bhlff/core/bvp/u1_phase_structure/coherence_analysis.py
     line: 27
   - file: ./bhlff/core/bvp/u1_phase_structure/phase_analysis.py
@@ -1554,13 +1616,13 @@ issues:
   - file: ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
     line: 34
   - file: ./bhlff/core/bvp/phase_vector/phase_vector.py
-    line: 49
+    line: 50
   - file: ./bhlff/core/bvp/level_integration/__init__.py
     line: 35
   - file: ./bhlff/core/bvp/boundary/step_resonator.py
     line: 24
   - file: ./bhlff/core/bvp/power_law/power_law_optimization.py
-    line: 621
+    line: 675
   - file: ./bhlff/core/bvp/power_law/power_law_core.py
     line: 322
   - file: ./bhlff/core/bvp/constants/frequency_dependent_properties.py
@@ -1668,7 +1730,7 @@ issues:
   - file: ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
     line: 27
   - file: ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-    line: 420
+    line: 470
   - file: ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
     line: 37
   - file: ./bhlff/core/bvp/bvp_core/bvp_block_processor_helpers.py
@@ -1688,11 +1750,11 @@ issues:
   - file: ./bhlff/core/bvp/bvp_core/bvp_7d_interface.py
     line: 32
   - file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
-    line: 39
+    line: 40
   - file: ./bhlff/core/domain/cuda_block_processor.py
-    line: 36
+    line: 37
   - file: ./bhlff/core/domain/block_processor.py
-    line: 233
+    line: 261
   - file: ./bhlff/core/domain/simple_block_processor.py
     line: 33
   - file: ./bhlff/core/domain/domain_7d.py
@@ -1700,15 +1762,15 @@ issues:
   - file: ./bhlff/core/domain/field.py
     line: 26
   - file: ./bhlff/core/domain/vectorized_block_processor.py
-    line: 34
+    line: 35
   - file: ./bhlff/core/domain/config.py
     line: 28
   - file: ./bhlff/core/domain/7d_vectorized_processor.py
-    line: 439
+    line: 462
   - file: ./bhlff/core/domain/optimized_block_processor.py
-    line: 40
+    line: 41
   - file: ./bhlff/core/domain/vectorized_7d_processor.py
-    line: 439
+    line: 462
   - file: ./bhlff/core/domain/__init__.py
     line: 24
   - file: ./bhlff/core/domain/parameters.py
@@ -1740,7 +1802,7 @@ issues:
   - file: ./bhlff/core/sources/bvp_source_envelope.py
     line: 28
   - file: ./bhlff/core/sources/bvp_source_generators.py
-    line: 493
+    line: 544
   - file: ./bhlff/core/sources/bvp_source_core.py
     line: 32
   - file: ./bhlff/core/sources/bvp_source.py
@@ -1748,7 +1810,7 @@ issues:
   - file: ./bhlff/core/fft/fft_plan_manager.py
     line: 28
   - file: ./bhlff/core/fft/frac_laplacian.py
-    line: 206
+    line: 218
   - file: ./bhlff/core/fft/fft_twiddle_computer.py
     line: 26
   - file: ./bhlff/core/fft/spectral_derivatives_impl.py
@@ -1756,7 +1818,7 @@ issues:
   - file: ./bhlff/core/fft/spectral_operations.py
     line: 40
   - file: ./bhlff/core/fft/unified_spectral_operations.py
-    line: 231
+    line: 243
   - file: ./bhlff/core/fft/memory_manager_7d.py
     line: 27
   - file: ./bhlff/core/fft/bvp_solver_validation.py
@@ -1768,7 +1830,7 @@ issues:
   - file: ./bhlff/core/fft/fft_solver_7d_basic.py
     line: 28
   - file: ./bhlff/core/fft/fft_solver_time.py
-    line: 257
+    line: 259
   - file: ./bhlff/core/fft/spectral_derivatives.py
     line: 31
   - file: ./bhlff/core/fft/fft_backend_core.py
@@ -1778,7 +1840,7 @@ issues:
   - file: ./bhlff/core/fft/spectral_filtering.py
     line: 36
   - file: ./bhlff/core/fft/__init__.py
-    line: 33
+    line: 34
   - file: ./bhlff/core/fft/fft_plan_7d.py
     line: 23
   - file: ./bhlff/core/fft/spectral_coefficient_cache.py
@@ -1815,51 +1877,51 @@ issues:
   methods_without_docstrings:
   - class: null
     file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-    line: 77
+    line: 86
     method: __init__
   - class: MockDomain
     file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-    line: 77
+    line: 86
     method: __init__
   - class: null
     file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-    line: 146
+    line: 160
     method: __init__
   - class: MockDomain
     file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-    line: 146
+    line: 160
     method: __init__
   - class: null
     file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-    line: 77
+    line: 86
     method: __init__
   - class: null
     file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-    line: 146
+    line: 160
     method: __init__
   - class: null
     file: ./tests/unit/test_power_law_7d_bvp_compliance.py
-    line: 168
+    line: 170
     method: __init__
   - class: MockBVPCore
     file: ./tests/unit/test_power_law_7d_bvp_compliance.py
-    line: 168
+    line: 170
     method: __init__
   - class: null
     file: ./tests/unit/test_power_law_7d_bvp_compliance.py
-    line: 213
+    line: 216
     method: __init__
   - class: MockBVPCore
     file: ./tests/unit/test_power_law_7d_bvp_compliance.py
-    line: 213
+    line: 216
     method: __init__
   - class: null
     file: ./tests/unit/test_power_law_7d_bvp_compliance.py
-    line: 168
+    line: 170
     method: __init__
   - class: null
     file: ./tests/unit/test_power_law_7d_bvp_compliance.py
-    line: 213
+    line: 216
     method: __init__
   - class: null
     file: ./tests/unit/test_level_g/test_gravity_physics.py
@@ -2019,7 +2081,7 @@ issues:
     method: test_zone_indicators_7d_axes
   - class: null
     file: ./tests/unit/automated_testing/test_automated_testing_system_advanced.py
-    line: 151
+    line: 164
     method: long_running_test
   - class: null
     file: ./tests/unit/test_core/test_cuda_fft_backend_parity.py
@@ -2039,19 +2101,19 @@ issues:
     method: __init__
   - class: null
     file: ./tests/unit/test_core/test_power_law_optimization_full.py
-    line: 304
+    line: 302
     method: test_func
   - class: null
     file: ./tests/unit/test_core/test_enhanced_block_processing.py
-    line: 203
+    line: 221
     method: __init__
   - class: MockBlockInfo
     file: ./tests/unit/test_core/test_enhanced_block_processing.py
-    line: 203
+    line: 221
     method: __init__
   - class: null
     file: ./tests/unit/test_core/test_enhanced_block_processing.py
-    line: 203
+    line: 221
     method: __init__
   - class: null
     file: ./tests/unit/test_core/test_step_resonator_boundary.py
@@ -2083,47 +2145,111 @@ issues:
     method: test_admittance_scales_with_conductivity
   - class: null
     file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
-    line: 102
+    line: 105
     method: __init__
   - class: MockParameters
     file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
-    line: 102
+    line: 105
     method: __init__
   - class: null
     file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
-    line: 178
+    line: 184
     method: __init__
   - class: MockInvalidParameters
     file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
-    line: 178
+    line: 184
     method: __init__
   - class: null
     file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
-    line: 102
+    line: 105
     method: __init__
   - class: null
     file: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
-    line: 178
+    line: 184
     method: __init__
   - class: null
     file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
-    line: 100
+    line: 102
     method: bc
   - class: null
     file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
-    line: 127
+    line: 129
     method: bc
   - class: null
     file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
-    line: 259
+    line: 334
     method: bc
+  - class: null
+    file: ./bhlff/cli/main.py
+    line: 23
+    method: _load_json_config
+  - class: null
+    file: ./bhlff/cli/main.py
+    line: 29
+    method: build_parser
+  - class: null
+    file: ./bhlff/cli/main.py
+    line: 101
+    method: main
+  - class: null
+    file: ./bhlff/cli/run.py
+    line: 16
+    method: build_parser
+  - class: null
+    file: ./bhlff/cli/run.py
+    line: 22
+    method: main
+  - class: null
+    file: ./bhlff/cli/report.py
+    line: 16
+    method: build_parser
+  - class: null
+    file: ./bhlff/cli/report.py
+    line: 22
+    method: main
+  - class: null
+    file: ./bhlff/cli/analyze.py
+    line: 16
+    method: build_parser
+  - class: null
+    file: ./bhlff/cli/analyze.py
+    line: 22
+    method: main
+  - class: null
+    file: ./bhlff/cli/step03.py
+    line: 22
+    method: _load_config
+  - class: null
+    file: ./bhlff/cli/step03.py
+    line: 28
+    method: build_parser
+  - class: null
+    file: ./bhlff/cli/step03.py
+    line: 49
+    method: _make_domain
+  - class: null
+    file: ./bhlff/cli/step03.py
+    line: 53
+    method: _make_parameters
+  - class: null
+    file: ./bhlff/cli/step03.py
+    line: 62
+    method: _build_integrator
+  - class: null
+    file: ./bhlff/cli/step03.py
+    line: 68
+    method: _prepare_fields
+  - class: null
+    file: ./bhlff/cli/step03.py
+    line: 106
+    method: main
   - class: null
     file: ./bhlff/core/bvp/quench_detector.py
-    line: 270
+    line: 277
     method: _gpu_mem_info
   - class: null
     file: ./bhlff/core/bvp/quench_detector.py
-    line: 316
+    line: 339
     method: _offset_events
   - class: null
     file: ./bhlff/core/bvp/memory_decorator.py
@@ -2243,23 +2369,23 @@ issues:
     method: __init__
   - class: null
     file: ./bhlff/core/bvp/power_law/power_law_optimization.py
-    line: 148
+    line: 158
     method: objective_function
   - class: null
     file: ./bhlff/core/bvp/power_law/power_law_optimization.py
-    line: 250
+    line: 271
     method: refinement_objective
   - class: null
     file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
-    line: 64
+    line: 66
     method: power_law_func
   - class: null
     file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
-    line: 121
+    line: 123
     method: objective_function
   - class: null
     file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
-    line: 104
+    line: 103
     method: power_law_func
   - class: null
     file: ./bhlff/core/bvp/envelope_equation/bvp_envelope_equation_7d_facade.py
@@ -2271,99 +2397,99 @@ issues:
     method: jacobian_func
   - class: null
     file: ./bhlff/core/sources/substrate_generators.py
-    line: 44
+    line: 45
     method: __init__
   - class: TopologicalSubstrateGenerator
     file: ./bhlff/core/sources/substrate_generators.py
-    line: 44
+    line: 45
     method: __init__
   - class: null
     file: ./bhlff/core/sources/substrate_generators.py
-    line: 148
+    line: 166
     method: _block_ranges
   - class: TopologicalSubstrateGenerator
     file: ./bhlff/core/sources/substrate_generators.py
-    line: 148
+    line: 166
     method: _block_ranges
   - class: null
     file: ./bhlff/core/sources/substrate_generators.py
-    line: 156
+    line: 174
     method: _layer_wall
   - class: TopologicalSubstrateGenerator
     file: ./bhlff/core/sources/substrate_generators.py
-    line: 156
+    line: 174
     method: _layer_wall
   - class: null
     file: ./bhlff/core/sources/substrate_generators.py
-    line: 44
+    line: 45
     method: __init__
   - class: null
     file: ./bhlff/core/sources/substrate_generators.py
-    line: 148
+    line: 166
     method: _block_ranges
   - class: null
     file: ./bhlff/core/sources/substrate_generators.py
-    line: 156
+    line: 174
     method: _layer_wall
   - class: null
     file: ./bhlff/core/fft/frac_laplacian.py
-    line: 43
+    line: 44
     method: __init__
   - class: FractionalLaplacian7D
     file: ./bhlff/core/fft/frac_laplacian.py
-    line: 43
+    line: 44
     method: __init__
   - class: null
     file: ./bhlff/core/fft/frac_laplacian.py
-    line: 73
+    line: 74
     method: _build_coefficients
   - class: FractionalLaplacian7D
     file: ./bhlff/core/fft/frac_laplacian.py
-    line: 73
+    line: 74
     method: _build_coefficients
   - class: null
     file: ./bhlff/core/fft/frac_laplacian.py
-    line: 165
-    method: _build_coefficients
-  - class: FractionalLaplacian7D
-    file: ./bhlff/core/fft/frac_laplacian.py
-    line: 165
-    method: _build_coefficients
-  - class: null
-    file: ./bhlff/core/fft/frac_laplacian.py
-    line: 216
-    method: __init__
-  - class: FractionalLaplacian7D
-    file: ./bhlff/core/fft/frac_laplacian.py
-    line: 216
-    method: __init__
-  - class: null
-    file: ./bhlff/core/fft/frac_laplacian.py
-    line: 237
+    line: 168
     method: _build_coefficients
   - class: FractionalLaplacian7D
     file: ./bhlff/core/fft/frac_laplacian.py
-    line: 237
+    line: 168
     method: _build_coefficients
   - class: null
     file: ./bhlff/core/fft/frac_laplacian.py
-    line: 43
+    line: 229
+    method: __init__
+  - class: FractionalLaplacian7D
+    file: ./bhlff/core/fft/frac_laplacian.py
+    line: 229
     method: __init__
   - class: null
     file: ./bhlff/core/fft/frac_laplacian.py
-    line: 73
+    line: 250
+    method: _build_coefficients
+  - class: FractionalLaplacian7D
+    file: ./bhlff/core/fft/frac_laplacian.py
+    line: 250
     method: _build_coefficients
   - class: null
     file: ./bhlff/core/fft/frac_laplacian.py
-    line: 165
-    method: _build_coefficients
-  - class: null
-    file: ./bhlff/core/fft/frac_laplacian.py
-    line: 216
+    line: 44
     method: __init__
   - class: null
     file: ./bhlff/core/fft/frac_laplacian.py
-    line: 237
+    line: 74
+    method: _build_coefficients
+  - class: null
+    file: ./bhlff/core/fft/frac_laplacian.py
+    line: 168
+    method: _build_coefficients
+  - class: null
+    file: ./bhlff/core/fft/frac_laplacian.py
+    line: 229
+    method: __init__
+  - class: null
+    file: ./bhlff/core/fft/frac_laplacian.py
+    line: 250
     method: _build_coefficients
   - class: null
     file: ./bhlff/core/fft/spectral_derivatives_impl.py
@@ -2378,172 +2504,196 @@ issues:
     line: 135
     method: compute_mixed_derivative
   - class: null
+    file: ./bhlff/core/fft/unified_spectral_operations.py
+    line: 564
+    method: _forward_fft_gpu
+  - class: UnifiedSpectralOperations
+    file: ./bhlff/core/fft/unified_spectral_operations.py
+    line: 564
+    method: _forward_fft_gpu
+  - class: null
+    file: ./bhlff/core/fft/unified_spectral_operations.py
+    line: 579
+    method: _inverse_fft_gpu
+  - class: UnifiedSpectralOperations
+    file: ./bhlff/core/fft/unified_spectral_operations.py
+    line: 579
+    method: _inverse_fft_gpu
+  - class: null
+    file: ./bhlff/core/fft/unified_spectral_operations.py
+    line: 564
+    method: _forward_fft_gpu
+  - class: null
+    file: ./bhlff/core/fft/unified_spectral_operations.py
+    line: 579
+    method: _inverse_fft_gpu
+  - class: null
     file: ./bhlff/core/fft/fft_solver_7d_basic.py
-    line: 38
+    line: 39
     method: __init__
   - class: FFTSolver7DBasic
     file: ./bhlff/core/fft/fft_solver_7d_basic.py
-    line: 38
+    line: 39
     method: __init__
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_basic.py
+    line: 49
+    method: solve_stationary
+  - class: FFTSolver7DBasic
+    file: ./bhlff/core/fft/fft_solver_7d_basic.py
+    line: 49
+    method: solve_stationary
+  - class: null
+    file: ./bhlff/core/fft/fft_solver_7d_basic.py
+    line: 57
+    method: get_spectral_coefficients
+  - class: FFTSolver7DBasic
+    file: ./bhlff/core/fft/fft_solver_7d_basic.py
+    line: 57
+    method: get_spectral_coefficients
+  - class: null
+    file: ./bhlff/core/fft/fft_solver_7d_basic.py
+    line: 60
+    method: _build_spectral_coefficients
+  - class: FFTSolver7DBasic
+    file: ./bhlff/core/fft/fft_solver_7d_basic.py
+    line: 60
+    method: _build_spectral_coefficients
+  - class: null
+    file: ./bhlff/core/fft/fft_solver_7d_basic.py
+    line: 39
+    method: __init__
+  - class: null
+    file: ./bhlff/core/fft/fft_solver_7d_basic.py
+    line: 49
+    method: solve_stationary
+  - class: null
+    file: ./bhlff/core/fft/fft_solver_7d_basic.py
+    line: 57
+    method: get_spectral_coefficients
+  - class: null
+    file: ./bhlff/core/fft/fft_solver_7d_basic.py
+    line: 60
+    method: _build_spectral_coefficients
+  - class: null
+    file: ./bhlff/core/fft/fft_solver_7d_advanced.py
+    line: 35
+    method: __init__
+  - class: FFTSolver7DAdvanced
+    file: ./bhlff/core/fft/fft_solver_7d_advanced.py
+    line: 35
+    method: __init__
+  - class: null
+    file: ./bhlff/core/fft/fft_solver_7d_advanced.py
     line: 48
     method: solve_stationary
-  - class: FFTSolver7DBasic
-    file: ./bhlff/core/fft/fft_solver_7d_basic.py
+  - class: FFTSolver7DAdvanced
+    file: ./bhlff/core/fft/fft_solver_7d_advanced.py
     line: 48
     method: solve_stationary
   - class: null
-    file: ./bhlff/core/fft/fft_solver_7d_basic.py
-    line: 56
-    method: get_spectral_coefficients
-  - class: FFTSolver7DBasic
-    file: ./bhlff/core/fft/fft_solver_7d_basic.py
-    line: 56
-    method: get_spectral_coefficients
-  - class: null
-    file: ./bhlff/core/fft/fft_solver_7d_basic.py
-    line: 59
-    method: _build_spectral_coefficients
-  - class: FFTSolver7DBasic
-    file: ./bhlff/core/fft/fft_solver_7d_basic.py
-    line: 59
-    method: _build_spectral_coefficients
-  - class: null
-    file: ./bhlff/core/fft/fft_solver_7d_basic.py
-    line: 38
-    method: __init__
-  - class: null
-    file: ./bhlff/core/fft/fft_solver_7d_basic.py
-    line: 48
-    method: solve_stationary
-  - class: null
-    file: ./bhlff/core/fft/fft_solver_7d_basic.py
-    line: 56
-    method: get_spectral_coefficients
-  - class: null
-    file: ./bhlff/core/fft/fft_solver_7d_basic.py
-    line: 59
-    method: _build_spectral_coefficients
-  - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 34
-    method: __init__
-  - class: FFTSolver7DAdvanced
-    file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 34
-    method: __init__
-  - class: null
-    file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 47
-    method: solve_stationary
-  - class: FFTSolver7DAdvanced
-    file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 47
-    method: solve_stationary
-  - class: null
-    file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 55
+    line: 57
     method: get_spectral_coefficients
   - class: FFTSolver7DAdvanced
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 55
+    line: 57
     method: get_spectral_coefficients
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 58
+    line: 60
     method: _build_spectral_coefficients
   - class: FFTSolver7DAdvanced
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 58
+    line: 60
     method: _build_spectral_coefficients
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 85
+    line: 95
     method: _get_free_memory_bytes
   - class: FFTSolver7DAdvanced
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 85
+    line: 95
     method: _get_free_memory_bytes
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 94
+    line: 104
     method: _estimate_batch
   - class: FFTSolver7DAdvanced
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 94
+    line: 104
     method: _estimate_batch
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 103
+    line: 115
     method: _fftn_batched
   - class: FFTSolver7DAdvanced
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 103
+    line: 115
     method: _fftn_batched
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 109
+    line: 121
     method: _ifftn_batched
   - class: FFTSolver7DAdvanced
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 109
+    line: 121
     method: _ifftn_batched
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 115
+    line: 127
     method: _fft_axis_batched
   - class: FFTSolver7DAdvanced
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 115
+    line: 127
     method: _fft_axis_batched
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 130
+    line: 142
     method: _ifft_axis_batched
   - class: FFTSolver7DAdvanced
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 130
+    line: 142
     method: _ifft_axis_batched
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 34
+    line: 35
     method: __init__
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 47
+    line: 48
     method: solve_stationary
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 55
+    line: 57
     method: get_spectral_coefficients
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 58
+    line: 60
     method: _build_spectral_coefficients
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 85
+    line: 95
     method: _get_free_memory_bytes
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 94
+    line: 104
     method: _estimate_batch
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 103
+    line: 115
     method: _fftn_batched
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 109
+    line: 121
     method: _ifftn_batched
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 115
+    line: 127
     method: _fft_axis_batched
   - class: null
     file: ./bhlff/core/fft/fft_solver_7d_advanced.py
-    line: 130
+    line: 142
     method: _ifft_axis_batched
   - class: null
     file: ./examples/level_g_example.py
@@ -2557,6 +2707,30 @@ issues:
     file: ./examples/level_g_example.py
     line: 175
     method: __init__
+  - class: null
+    file: ./tools/hypothesis_testing/commands/test_step_3.py
+    line: 25
+    method: execute
+  - class: TestStep3Command
+    file: ./tools/hypothesis_testing/commands/test_step_3.py
+    line: 25
+    method: execute
+  - class: null
+    file: ./tools/hypothesis_testing/commands/test_step_3.py
+    line: 25
+    method: execute
+  - class: null
+    file: ./tools/hypothesis_testing/commands/test_step_3_adaptive.py
+    line: 24
+    method: execute
+  - class: TestStep3AdaptiveCommand
+    file: ./tools/hypothesis_testing/commands/test_step_3_adaptive.py
+    line: 24
+    method: execute
+  - class: null
+    file: ./tools/hypothesis_testing/commands/test_step_3_adaptive.py
+    line: 24
+    method: execute
   - class: null
     file: ./tools/hypothesis_testing/commands/test_step_2.py
     line: 12
@@ -2584,9 +2758,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 14
-  files_too_large: 108
+  files_too_large: 122
   files_without_docstrings: 4
-  imports_in_middle: 663
+  imports_in_middle: 666
   methods_with_pass: 0
-  methods_without_docstrings: 192
+  methods_without_docstrings: 220
   not_implemented_in_non_abstract: 0

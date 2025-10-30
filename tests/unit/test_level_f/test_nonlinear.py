@@ -23,8 +23,4 @@ from .nonlinear.test_soliton_analysis import TestSolitonAnalysis
 from .nonlinear.test_nonlinear_types import TestNonlinearTypes
 
 # Re-export all test classes for backward compatibility
-__all__ = [
-    'TestNonlinearInitialization',
-    'TestSolitonAnalysis',
-    'TestNonlinearTypes'
-]
+__all__ = ["TestNonlinearInitialization", "TestSolitonAnalysis", "TestNonlinearTypes"]

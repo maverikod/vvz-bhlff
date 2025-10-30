@@ -83,9 +83,7 @@ class TheoreticalBeatingAnalyzer:
         )
 
         # Perform error analysis
-        error_analysis = self._perform_error_analysis(
-            dual_mode, domain_params
-        )
+        error_analysis = self._perform_error_analysis(dual_mode, domain_params)
 
         return {
             "theoretical_drift": theoretical_drift,
@@ -143,7 +141,9 @@ class TheoreticalBeatingAnalyzer:
             "theoretical_drift_magnitude": abs(theoretical_drift_velocity),
         }
 
-    def _compute_wave_vector(self, frequency: float, domain_params: Dict[str, Any]) -> np.ndarray:
+    def _compute_wave_vector(
+        self, frequency: float, domain_params: Dict[str, Any]
+    ) -> np.ndarray:
         """
         Compute wave vector for given frequency.
 
@@ -219,7 +219,9 @@ class TheoreticalBeatingAnalyzer:
         beating_frequency = dual_mode.beating_frequency
 
         # Compute beating period
-        beating_period = 2 * np.pi / beating_frequency if beating_frequency > 0 else float('inf')
+        beating_period = (
+            2 * np.pi / beating_frequency if beating_frequency > 0 else float("inf")
+        )
 
         # Compute beating wavelength
         beating_wavelength = self._compute_beating_wavelength(dual_mode)
@@ -252,7 +254,11 @@ class TheoreticalBeatingAnalyzer:
         # Simplified beating wavelength computation
         # In practice, this would involve proper wavelength analysis
         frequency_ratio = dual_mode.frequency_2 / dual_mode.frequency_1
-        return 2 * np.pi / abs(frequency_ratio - 1.0) if frequency_ratio != 1.0 else float('inf')
+        return (
+            2 * np.pi / abs(frequency_ratio - 1.0)
+            if frequency_ratio != 1.0
+            else float("inf")
+        )
 
     def _compute_theoretical_suppression_factors(
         self, dual_mode: DualModeSource, domain_params: Dict[str, Any]
@@ -277,7 +283,9 @@ class TheoreticalBeatingAnalyzer:
             Dict[str, Any]: Theoretical suppression factors.
         """
         # Compute base suppression factor
-        base_suppression = self._compute_base_suppression_factor(dual_mode, domain_params)
+        base_suppression = self._compute_base_suppression_factor(
+            dual_mode, domain_params
+        )
 
         # Compute frequency-dependent suppression
         frequency_suppression = self._compute_frequency_dependent_suppression(dual_mode)
@@ -286,7 +294,9 @@ class TheoreticalBeatingAnalyzer:
         amplitude_suppression = self._compute_amplitude_dependent_suppression(dual_mode)
 
         # Compute combined suppression
-        combined_suppression = base_suppression * frequency_suppression * amplitude_suppression
+        combined_suppression = (
+            base_suppression * frequency_suppression * amplitude_suppression
+        )
 
         return {
             "base_suppression": base_suppression,
@@ -318,7 +328,9 @@ class TheoreticalBeatingAnalyzer:
         frequency_difference = dual_mode.frequency_difference
         return 1.0 / (1.0 + frequency_difference)
 
-    def _compute_frequency_dependent_suppression(self, dual_mode: DualModeSource) -> float:
+    def _compute_frequency_dependent_suppression(
+        self, dual_mode: DualModeSource
+    ) -> float:
         """
         Compute frequency-dependent suppression.
 
@@ -337,7 +349,9 @@ class TheoreticalBeatingAnalyzer:
         frequency_ratio = dual_mode.frequency_2 / dual_mode.frequency_1
         return 1.0 / (1.0 + abs(frequency_ratio - 1.0))
 
-    def _compute_amplitude_dependent_suppression(self, dual_mode: DualModeSource) -> float:
+    def _compute_amplitude_dependent_suppression(
+        self, dual_mode: DualModeSource
+    ) -> float:
         """
         Compute amplitude-dependent suppression.
 
@@ -380,7 +394,9 @@ class TheoreticalBeatingAnalyzer:
             Dict[str, Any]: Error analysis results.
         """
         # Compute theoretical predictions
-        theoretical_drift = self._compute_theoretical_drift_velocity(dual_mode, domain_params)
+        theoretical_drift = self._compute_theoretical_drift_velocity(
+            dual_mode, domain_params
+        )
         theoretical_beating = self._compute_theoretical_beating_frequency(dual_mode)
 
         # Compute expected values (simplified)
@@ -388,12 +404,18 @@ class TheoreticalBeatingAnalyzer:
         expected_beating = dual_mode.beating_frequency
 
         # Compute errors
-        drift_error = abs(theoretical_drift["theoretical_drift_velocity"] - expected_drift)
+        drift_error = abs(
+            theoretical_drift["theoretical_drift_velocity"] - expected_drift
+        )
         beating_error = abs(theoretical_beating["beating_frequency"] - expected_beating)
 
         # Compute relative errors
-        drift_relative_error = drift_error / abs(expected_drift) if expected_drift != 0 else 0.0
-        beating_relative_error = beating_error / abs(expected_beating) if expected_beating != 0 else 0.0
+        drift_relative_error = (
+            drift_error / abs(expected_drift) if expected_drift != 0 else 0.0
+        )
+        beating_relative_error = (
+            beating_error / abs(expected_beating) if expected_beating != 0 else 0.0
+        )
 
         # Compute error bounds
         error_bounds = self._compute_error_bounds(dual_mode, domain_params)
@@ -440,5 +462,7 @@ class TheoreticalBeatingAnalyzer:
             "numerical_precision": numerical_precision,
             "discretization_error": discretization_error,
             "frequency_resolution": frequency_resolution,
-            "total_error_bound": numerical_precision + discretization_error + frequency_resolution,
+            "total_error_bound": numerical_precision
+            + discretization_error
+            + frequency_resolution,
         }

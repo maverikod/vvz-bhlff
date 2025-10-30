@@ -84,8 +84,10 @@ class TestQuenchesPostulatePhysics:
         x = np.linspace(0, domain_7d.L_spatial, domain_7d.N_spatial)
         y = np.linspace(0, domain_7d.L_spatial, domain_7d.N_spatial)
         z = np.linspace(0, domain_7d.L_spatial, domain_7d.N_spatial)
-        
-        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(x, y, z, phi1, phi2, phi3, t, indexing="ij")
+
+        X, Y, Z, PHI1, PHI2, PHI3, T = np.meshgrid(
+            x, y, z, phi1, phi2, phi3, t, indexing="ij"
+        )
         phase_factor = np.exp(1j * (PHI1 + PHI2 + PHI3 + 0.1 * T))
 
         envelope = envelope * phase_factor
@@ -107,7 +109,7 @@ class TestQuenchesPostulatePhysics:
         config = {
             "amplitude_threshold": 0.8,
             "gradient_threshold": 0.1,
-            "quench_memory_time": 0.5
+            "quench_memory_time": 0.5,
         }
         postulate = BVPPostulate5_Quenches(domain_7d, config)
 
@@ -123,10 +125,16 @@ class TestQuenchesPostulatePhysics:
 
         # Physical validation 3: Energy dissipated should be non-negative
         energy_dissipated = result["energy_dissipated"]
-        assert energy_dissipated >= 0, f"Negative energy dissipated: {energy_dissipated}"
+        assert (
+            energy_dissipated >= 0
+        ), f"Negative energy dissipated: {energy_dissipated}"
 
         # Physical validation 4: Thresholds should be positive
         amplitude_threshold = result["amplitude_threshold"]
         gradient_threshold = result["gradient_threshold"]
-        assert amplitude_threshold > 0, f"Non-positive amplitude threshold: {amplitude_threshold}"
-        assert gradient_threshold > 0, f"Non-positive gradient threshold: {gradient_threshold}"
+        assert (
+            amplitude_threshold > 0
+        ), f"Non-positive amplitude threshold: {amplitude_threshold}"
+        assert (
+            gradient_threshold > 0
+        ), f"Non-positive gradient threshold: {gradient_threshold}"

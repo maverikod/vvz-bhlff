@@ -32,6 +32,7 @@ from bhlff.core.domain import Domain
 # CUDA optimization
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
     logging.info("CUDA support enabled with CuPy")
 except ImportError:
@@ -73,17 +74,17 @@ class ElectroweakCoupling:
                 - gauge_coupling: Gauge coupling strength
         """
         self.config = config
-        
+
         # CUDA optimization setup
         self.cuda_available = CUDA_AVAILABLE
         self.use_cuda = config.get("use_cuda", True) and self.cuda_available
         self.logger = logging.getLogger(__name__)
-        
+
         if self.use_cuda:
             self.logger.info("ElectroweakCoupling: CUDA optimization enabled")
         else:
             self.logger.info("ElectroweakCoupling: Using CPU computation")
-        
+
         self._setup_electroweak_coefficients()
 
     def _setup_electroweak_coefficients(self) -> None:
@@ -137,7 +138,7 @@ class ElectroweakCoupling:
         for theta_a in phase_components:
             # Transfer to GPU
             theta_a_gpu = self._to_gpu(theta_a)
-            
+
             # Compute gradients in all 7 dimensions
             gradients = []
 
@@ -168,7 +169,7 @@ class ElectroweakCoupling:
 
         # Transfer envelope to GPU
         envelope_gpu = self._to_gpu(envelope)
-        
+
         # Electromagnetic current (primarily from Θ₁)
         em_gradient = phase_gradients[0]  # Primary EM component
         em_current = (
@@ -178,7 +179,9 @@ class ElectroweakCoupling:
         # Weak current (primarily from Θ₂ and Θ₃)
         weak_gradient = phase_gradients[1] + phase_gradients[2]  # Weak components
         weak_current = (
-            self.electroweak_coefficients["weak_coupling"] * envelope_gpu**4 * weak_gradient
+            self.electroweak_coefficients["weak_coupling"]
+            * envelope_gpu**4
+            * weak_gradient
         )
 
         # Mixed electroweak current (Weinberg mixing)
@@ -251,86 +254,86 @@ class ElectroweakCoupling:
         """
         self.electroweak_coefficients["mixing_angle"] = angle
 
-    def _to_gpu(self, array: np.ndarray) -> 'cp.ndarray':
+    def _to_gpu(self, array: np.ndarray) -> "cp.ndarray":
         """
         Convert numpy array to GPU array.
-        
+
         Physical Meaning:
             Transfers array to GPU memory for CUDA computation.
-            
+
         Args:
             array (np.ndarray): Input array.
-            
+
         Returns:
             cp.ndarray: GPU array.
         """
         if self.use_cuda and CUDA_AVAILABLE:
             return cp.asarray(array)
         return array
-    
+
     def _to_cpu(self, array) -> np.ndarray:
         """
         Convert GPU array to numpy array.
-        
+
         Physical Meaning:
             Transfers array from GPU memory to CPU memory.
-            
+
         Args:
             array: Input array (GPU or CPU).
-            
+
         Returns:
             np.ndarray: CPU array.
         """
-        if self.use_cuda and CUDA_AVAILABLE and hasattr(array, 'get'):
+        if self.use_cuda and CUDA_AVAILABLE and hasattr(array, "get"):
             return array.get()
         return array
-    
-    def _cuda_gradient(self, array, axis: int = 0) -> 'cp.ndarray':
+
+    def _cuda_gradient(self, array, axis: int = 0) -> "cp.ndarray":
         """
         Compute gradient using CUDA.
-        
+
         Physical Meaning:
             Computes gradient using CUDA for optimal performance.
-            
+
         Args:
             array: Input array.
             axis (int): Axis along which to compute gradient.
-            
+
         Returns:
             cp.ndarray: Gradient array.
         """
         if self.use_cuda and CUDA_AVAILABLE:
             return cp.gradient(array, axis=axis)
         return np.gradient(array, axis=axis)
-    
-    def _cuda_sqrt(self, array) -> 'cp.ndarray':
+
+    def _cuda_sqrt(self, array) -> "cp.ndarray":
         """
         Compute square root using CUDA.
-        
+
         Physical Meaning:
             Computes square root using CUDA for optimal performance.
-            
+
         Args:
             array: Input array.
-            
+
         Returns:
             cp.ndarray: Square root array.
         """
         if self.use_cuda and CUDA_AVAILABLE:
             return cp.sqrt(array)
         return np.sqrt(array)
-    
-    def _cuda_sum(self, array, axis=None) -> 'cp.ndarray':
+
+    def _cuda_sum(self, array, axis=None) -> "cp.ndarray":
         """
         Compute sum using CUDA.
-        
+
         Physical Meaning:
             Computes sum using CUDA for optimal performance.
-            
+
         Args:
             array: Input array or list of arrays.
             axis: Axis along which to sum.
-            
+
         Returns:
             cp.ndarray: Sum array.
         """
@@ -349,51 +352,51 @@ class ElectroweakCoupling:
                 result = result + arr
             return result
         return np.sum(array, axis=axis)
-    
-    def _cuda_sin(self, array) -> 'cp.ndarray':
+
+    def _cuda_sin(self, array) -> "cp.ndarray":
         """
         Compute sine using CUDA.
-        
+
         Physical Meaning:
             Computes sine using CUDA for optimal performance.
-            
+
         Args:
             array: Input array.
-            
+
         Returns:
             cp.ndarray: Sine array.
         """
         if self.use_cuda and CUDA_AVAILABLE:
             return cp.sin(array)
         return np.sin(array)
-    
-    def _cuda_cos(self, array) -> 'cp.ndarray':
+
+    def _cuda_cos(self, array) -> "cp.ndarray":
         """
         Compute cosine using CUDA.
-        
+
         Physical Meaning:
             Computes cosine using CUDA for optimal performance.
-            
+
         Args:
             array: Input array.
-            
+
         Returns:
             cp.ndarray: Cosine array.
         """
         if self.use_cuda and CUDA_AVAILABLE:
             return cp.cos(array)
         return np.cos(array)
-    
-    def _cuda_abs(self, array) -> 'cp.ndarray':
+
+    def _cuda_abs(self, array) -> "cp.ndarray":
         """
         Compute absolute value using CUDA.
-        
+
         Physical Meaning:
             Computes absolute value using CUDA for optimal performance.
-            
+
         Args:
             array: Input array.
-            
+
         Returns:
             cp.ndarray: Absolute value array.
         """

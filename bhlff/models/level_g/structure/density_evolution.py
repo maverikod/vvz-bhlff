@@ -58,7 +58,7 @@ class DensityEvolution:
         """
         self.evolution_params = evolution_params
         self.cosmology_params = evolution_params.get("cosmology", {})
-        
+
         # Physical parameters
         self.G = self.cosmology_params.get("G", 6.67430e-11)  # Gravitational constant
         self.rho_m = self.cosmology_params.get("rho_m", 2.7e-27)  # Matter density kg/m³

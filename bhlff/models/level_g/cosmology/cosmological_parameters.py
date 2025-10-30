@@ -63,11 +63,11 @@ class CosmologicalParameters:
             cosmology_params: Cosmological parameters
         """
         self.cosmology_params = cosmology_params
-        
+
         # Cosmological parameters
         self.H0 = cosmology_params.get("H0", 70.0)  # Hubble constant km/s/Mpc
         self.omega_lambda = cosmology_params.get("omega_lambda", 0.7)  # Dark energy
-        
+
         # Physical parameters
         self.c_phi = cosmology_params.get("c_phi", 1e10)  # Phase velocity
 
@@ -127,7 +127,9 @@ class CosmologicalParameters:
             "current_scale_factor": scale_factor[-1],
             "current_hubble_parameter": hubble_parameter[-1],
             "age_universe": time_end,
-            "expansion_rate": np.mean(np.diff(scale_factor)) if len(scale_factor) > 1 else 0.0,
+            "expansion_rate": (
+                np.mean(np.diff(scale_factor)) if len(scale_factor) > 1 else 0.0
+            ),
             "phase_velocity": self.c_phi,
         }
 

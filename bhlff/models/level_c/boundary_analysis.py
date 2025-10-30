@@ -33,7 +33,11 @@ import logging
 from dataclasses import dataclass
 
 from bhlff.core.bvp import BVPCore
-from .boundary.data_structures import BoundaryGeometry, AdmittanceSpectrum, RadialProfile
+from .boundary.data_structures import (
+    BoundaryGeometry,
+    AdmittanceSpectrum,
+    RadialProfile,
+)
 from .boundary.admittance_analysis import AdmittanceAnalyzer
 from .boundary.radial_analysis import RadialAnalyzer
 
@@ -64,7 +68,7 @@ class BoundaryAnalysis:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize sub-analyzers
         self.admittance_analyzer = AdmittanceAnalyzer(bvp_core)
         self.radial_analyzer = RadialAnalyzer(bvp_core)
@@ -181,7 +185,9 @@ class BoundaryAnalysis:
             geometry_type="spherical",
         )
 
-    def _create_test_field(self, domain: Dict[str, Any], boundary: BoundaryGeometry) -> np.ndarray:
+    def _create_test_field(
+        self, domain: Dict[str, Any], boundary: BoundaryGeometry
+    ) -> np.ndarray:
         """
         Create test field for radial analysis.
 
@@ -211,7 +217,9 @@ class BoundaryAnalysis:
 
         return field
 
-    def _create_boundary_summary(self, contrast_results: Dict[str, Any]) -> Dict[str, Any]:
+    def _create_boundary_summary(
+        self, contrast_results: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Create boundary analysis summary.
 
@@ -227,8 +235,13 @@ class BoundaryAnalysis:
         """
         # Extract key metrics
         contrast_values = [result["contrast"] for result in contrast_results.values()]
-        resonance_counts = [len(result["resonances"]) for result in contrast_results.values()]
-        max_amplitudes = [result["radial_profile"].max_amplitude for result in contrast_results.values()]
+        resonance_counts = [
+            len(result["resonances"]) for result in contrast_results.values()
+        ]
+        max_amplitudes = [
+            result["radial_profile"].max_amplitude
+            for result in contrast_results.values()
+        ]
 
         # Compute summary statistics
         total_resonances = sum(resonance_counts)

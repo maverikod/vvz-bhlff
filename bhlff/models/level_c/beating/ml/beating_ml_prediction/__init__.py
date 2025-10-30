@@ -24,9 +24,9 @@ from .prediction_engine import PredictionEngine
 from .ml_trainer import MLTrainer
 
 __all__ = [
-    'BeatingMLPredictionCore',
-    'MLModelManager',
-    'FeatureExtractor', 
-    'PredictionEngine',
-    'MLTrainer'
+    "BeatingMLPredictionCore",
+    "MLModelManager",
+    "FeatureExtractor",
+    "PredictionEngine",
+    "MLTrainer",
 ]

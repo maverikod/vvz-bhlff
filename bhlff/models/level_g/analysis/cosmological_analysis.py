@@ -70,13 +70,15 @@ class CosmologicalAnalysis(ModelBase):
         self.evolution_results = evolution_results
         self.observational_data = observational_data or {}
         self.analysis_results = {}
-        
+
         # Initialize specialized components
         self.structure_analysis = StructureAnalysis(evolution_results)
         self.parameter_analysis = ParameterAnalysis(evolution_results)
         self.statistical_analysis = StatisticalAnalysis(evolution_results)
-        self.observational_comparison = ObservationalComparison(evolution_results, observational_data)
-        
+        self.observational_comparison = ObservationalComparison(
+            evolution_results, observational_data
+        )
+
         self._setup_analysis_parameters()
 
     def _setup_analysis_parameters(self) -> None:

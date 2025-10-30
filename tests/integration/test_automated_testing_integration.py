@@ -19,18 +19,26 @@ Example:
 
 # Import all test classes from the automated_testing package
 from .automated_testing.test_basic_integration import TestBasicIntegration
-from .automated_testing.test_physics_validation_integration import TestPhysicsValidationIntegration
-from .automated_testing.test_quality_monitoring_integration import TestQualityMonitoringIntegration
-from .automated_testing.test_automated_reporting_integration import TestAutomatedReportingIntegration
-from .automated_testing.test_error_handling_integration import TestErrorHandlingIntegration
+from .automated_testing.test_physics_validation_integration import (
+    TestPhysicsValidationIntegration,
+)
+from .automated_testing.test_quality_monitoring_integration import (
+    TestQualityMonitoringIntegration,
+)
+from .automated_testing.test_automated_reporting_integration import (
+    TestAutomatedReportingIntegration,
+)
+from .automated_testing.test_error_handling_integration import (
+    TestErrorHandlingIntegration,
+)
 from .automated_testing.test_performance_integration import TestPerformanceIntegration
 
 # Re-export all test classes for backward compatibility
 __all__ = [
-    'TestBasicIntegration',
-    'TestPhysicsValidationIntegration', 
-    'TestQualityMonitoringIntegration',
-    'TestAutomatedReportingIntegration',
-    'TestErrorHandlingIntegration',
-    'TestPerformanceIntegration'
+    "TestBasicIntegration",
+    "TestPhysicsValidationIntegration",
+    "TestQualityMonitoringIntegration",
+    "TestAutomatedReportingIntegration",
+    "TestErrorHandlingIntegration",
+    "TestPerformanceIntegration",
 ]

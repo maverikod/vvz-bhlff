@@ -480,13 +480,17 @@ class SpectralDerivatives(SpectralDerivativesBase):
                 # Legacy fallback: assume first 3 spatial (L,N), next 3 phase (2π,N_phi), last time (T,N_t)
                 if axis < 3 and hasattr(self.domain, "N") and hasattr(self.domain, "L"):
                     N_axis = getattr(self.domain, "N", axis_size)
-                    d_axis = getattr(self.domain, "L", float(axis_size)) / max(1, N_axis)
+                    d_axis = getattr(self.domain, "L", float(axis_size)) / max(
+                        1, N_axis
+                    )
                 elif axis < 6 and hasattr(self.domain, "N_phi"):
                     N_axis = getattr(self.domain, "N_phi", axis_size)
                     d_axis = 2 * np.pi / max(1, N_axis)
                 elif hasattr(self.domain, "N_t") and hasattr(self.domain, "T"):
                     N_axis = getattr(self.domain, "N_t", axis_size)
-                    d_axis = getattr(self.domain, "T", float(axis_size)) / max(1, N_axis)
+                    d_axis = getattr(self.domain, "T", float(axis_size)) / max(
+                        1, N_axis
+                    )
                 else:
                     # As a last resort, assume unit spacing scaled to axis length
                     N_axis = axis_size

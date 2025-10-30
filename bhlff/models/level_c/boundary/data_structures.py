@@ -64,7 +64,7 @@ class BoundaryGeometry:
             float: Boundary volume.
         """
         if self.geometry_type == "spherical":
-            return (4.0 / 3.0) * np.pi * self.radius ** 3
+            return (4.0 / 3.0) * np.pi * self.radius**3
         else:
             return 0.0
 
@@ -81,7 +81,7 @@ class BoundaryGeometry:
             float: Boundary surface area.
         """
         if self.geometry_type == "spherical":
-            return 4.0 * np.pi * self.radius ** 2
+            return 4.0 * np.pi * self.radius**2
         else:
             return 0.0
 
@@ -180,7 +180,7 @@ class AdmittanceSpectrum:
         """
         if len(self.frequencies) < 2:
             return 0.0
-        
+
         # Simplified quality factor computation
         # In practice, this would involve proper Q-factor analysis
         frequency_range = np.max(self.frequencies) - np.min(self.frequencies)
@@ -231,8 +231,10 @@ class RadialProfile:
         maxima = []
 
         for i in range(1, len(self.amplitudes) - 1):
-            if (self.amplitudes[i] > self.amplitudes[i - 1] and 
-                self.amplitudes[i] > self.amplitudes[i + 1]):
+            if (
+                self.amplitudes[i] > self.amplitudes[i - 1]
+                and self.amplitudes[i] > self.amplitudes[i + 1]
+            ):
                 maxima.append((self.radii[i], self.amplitudes[i]))
 
         return maxima
@@ -280,7 +282,7 @@ class RadialProfile:
         """
         if len(self.radii) < 2:
             return 0.0
-        
+
         return np.max(self.radii) - np.min(self.radii)
 
     @property
@@ -295,4 +297,4 @@ class RadialProfile:
         Returns:
             float: Profile energy.
         """
-        return np.trapz(self.amplitudes ** 2, self.radii)
+        return np.trapz(self.amplitudes**2, self.radii)

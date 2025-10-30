@@ -25,19 +25,19 @@ from typing import Dict, Any, List, Optional, Tuple
 class ParticleInversionComputations:
     """
     Computational methods for particle parameter inversion.
-    
+
     Physical Meaning:
         Implements the computational aspects of particle inversion
         including model predictions, distance metrics, and uncertainty
         analysis for 7D phase field theory.
-        
+
     Mathematical Foundation:
         Provides computational methods for:
         - Model predictions using 7D BVP theory
         - Distance metrics between observed and predicted values
         - Uncertainty quantification methods
     """
-    
+
     def compute_model_predictions(self, params: Dict[str, float]) -> Dict[str, float]:
         """
         Compute model predictions using full 7D BVP framework.
@@ -69,43 +69,45 @@ class ParticleInversionComputations:
         q = params.get("q", 1)
         mu = params.get("mu", 1.0)  # Diffusion coefficient
         lambda_param = params.get("lambda", 0.1)  # Damping parameter
-        
+
         predictions = {}
-        
+
         # Power law tail from 7D BVP theory
         # In 7D space-time, power law exponent depends on fractional order β
         predictions["tail"] = self._compute_power_law_exponent(beta, mu, lambda_param)
-        
+
         # Radial current from phase field dynamics
         # j_r = q * η * phase_velocity where phase_velocity depends on 7D dynamics
         phase_velocity = self._compute_phase_velocity(eta, gamma, mu)
         predictions["jr"] = q * eta * phase_velocity
-        
+
         # Chirality from topological analysis
         # A_chi = q * γ * topological_invariant where topological_invariant depends on 7D structure
         topological_invariant = self._compute_topological_invariant(gamma, layers_count)
         predictions["Achi"] = q * gamma * topological_invariant
-        
+
         # Number of peaks from 7D phase field structure
         # Peaks correspond to topological defects in 7D space-time
         predictions["peaks"] = self._compute_topological_defects(layers_count, beta, q)
-        
+
         # Mobility from 7D phase field dynamics
         # Mobility = 1/(1 + γ + phase_resistance) where phase_resistance depends on 7D structure
         phase_resistance = self._compute_phase_resistance(gamma, mu, lambda_param)
         predictions["mobility"] = 1.0 / (1.0 + gamma + phase_resistance)
-        
+
         # Effective mass from 7D BVP theory
         # In 7D theory, mass is resistance to phase state rearrangement
         mass_resistance = self._compute_mass_resistance(tau, q, beta)
         predictions["Meff"] = q * tau * mass_resistance
-        
+
         return predictions
-    
-    def _compute_power_law_exponent(self, beta: float, mu: float, lambda_param: float) -> float:
+
+    def _compute_power_law_exponent(
+        self, beta: float, mu: float, lambda_param: float
+    ) -> float:
         """
         Compute power law exponent from 7D BVP theory.
-        
+
         Physical Meaning:
             Computes the power law exponent α for the tail behavior
             in 7D phase space-time using the fractional Laplacian operator.
@@ -113,17 +115,17 @@ class ParticleInversionComputations:
         # Power law exponent: α = 2β - 3 + corrections
         # Corrections depend on 7D structure and nonlinear terms
         base_exponent = 2 * beta - 3
-        
+
         # 7D corrections
         mu_correction = 0.1 * mu / (1.0 + mu)
         lambda_correction = 0.05 * lambda_param / (1.0 + lambda_param)
-        
+
         return base_exponent + mu_correction + lambda_correction
-    
+
     def _compute_phase_velocity(self, eta: float, gamma: float, mu: float) -> float:
         """
         Compute phase velocity from 7D phase field dynamics.
-        
+
         Physical Meaning:
             Computes the phase velocity in 7D space-time based on
             the phase field evolution and topological structure.
@@ -132,11 +134,11 @@ class ParticleInversionComputations:
         # v_phase = η * sqrt(μ) * (1 + γ * topological_correction)
         topological_correction = 1.0 + 0.1 * gamma * mu
         return eta * np.sqrt(mu) * topological_correction
-    
+
     def _compute_topological_invariant(self, gamma: float, layers_count: int) -> float:
         """
         Compute topological invariant from 7D structure.
-        
+
         Physical Meaning:
             Computes the topological invariant that characterizes
             the 7D phase field structure and defect configuration.
@@ -145,11 +147,13 @@ class ParticleInversionComputations:
         # I_top = γ * (1 + layers_count * structural_correction)
         structural_correction = 0.1 * layers_count / (1.0 + layers_count)
         return gamma * (1.0 + structural_correction)
-    
-    def _compute_topological_defects(self, layers_count: int, beta: float, q: int) -> int:
+
+    def _compute_topological_defects(
+        self, layers_count: int, beta: float, q: int
+    ) -> int:
         """
         Compute number of topological defects from 7D analysis.
-        
+
         Physical Meaning:
             Computes the number of topological defects in 7D space-time
             based on the phase field structure and topological charge.
@@ -158,11 +162,13 @@ class ParticleInversionComputations:
         # N_defects = layers_count * (1 + β * q * defect_correction)
         defect_correction = 0.1 * beta * q / (1.0 + beta * q)
         return int(layers_count * (1.0 + defect_correction))
-    
-    def _compute_phase_resistance(self, gamma: float, mu: float, lambda_param: float) -> float:
+
+    def _compute_phase_resistance(
+        self, gamma: float, mu: float, lambda_param: float
+    ) -> float:
         """
         Compute phase resistance from 7D dynamics.
-        
+
         Physical Meaning:
             Computes the resistance to phase changes in 7D space-time
             based on the phase field dynamics and energy landscape.
@@ -170,11 +176,11 @@ class ParticleInversionComputations:
         # Phase resistance depends on 7D dynamics
         # R_phase = γ * (μ + λ) / (1 + μ * λ)
         return gamma * (mu + lambda_param) / (1.0 + mu * lambda_param)
-    
+
     def _compute_mass_resistance(self, tau: float, q: int, beta: float) -> float:
         """
         Compute mass resistance from 7D BVP theory.
-        
+
         Physical Meaning:
             Computes the resistance to phase state rearrangement
             in 7D space-time, which defines the effective mass.
@@ -240,7 +246,7 @@ class ParticleInversionComputations:
 
         for param_name, param_value in params.items():
             # L2 regularization
-            regularization += param_value ** 2
+            regularization += param_value**2
 
         return regularization
 
@@ -279,7 +285,9 @@ class ParticleInversionComputations:
 
         return gradients
 
-    def compute_parameter_uncertainties(self, params: Dict[str, float]) -> Dict[str, float]:
+    def compute_parameter_uncertainties(
+        self, params: Dict[str, float]
+    ) -> Dict[str, float]:
         """
         Compute parameter uncertainties.
 
@@ -299,26 +307,32 @@ class ParticleInversionComputations:
         for param_name in params:
             # Combine multiple uncertainty sources
             hessian_uncertainty = self._compute_hessian_uncertainty(param_name, params)
-            bootstrap_uncertainty = self._compute_bootstrap_uncertainty(param_name, params)
+            bootstrap_uncertainty = self._compute_bootstrap_uncertainty(
+                param_name, params
+            )
             prior_uncertainty = self._compute_prior_uncertainty(param_name)
-            sensitivity_uncertainty = self._compute_sensitivity_uncertainty(param_name, params)
+            sensitivity_uncertainty = self._compute_sensitivity_uncertainty(
+                param_name, params
+            )
 
             # Combine uncertainties (weighted average)
             total_uncertainty = (
-                0.4 * hessian_uncertainty +
-                0.3 * bootstrap_uncertainty +
-                0.2 * prior_uncertainty +
-                0.1 * sensitivity_uncertainty
+                0.4 * hessian_uncertainty
+                + 0.3 * bootstrap_uncertainty
+                + 0.2 * prior_uncertainty
+                + 0.1 * sensitivity_uncertainty
             )
 
             uncertainties[param_name] = total_uncertainty
 
         return uncertainties
 
-    def _compute_hessian_uncertainty(self, param_name: str, params: Dict[str, float]) -> float:
+    def _compute_hessian_uncertainty(
+        self, param_name: str, params: Dict[str, float]
+    ) -> float:
         """
         Compute uncertainty from Hessian matrix.
-        
+
         Physical Meaning:
             Computes parameter uncertainty using the second
             derivative of the loss function (Hessian matrix).
@@ -329,20 +343,22 @@ class ParticleInversionComputations:
             params_plus[param_name] += epsilon
             params_minus = params.copy()
             params_minus[param_name] -= epsilon
-            
+
             # This would need access to loss function
             # For now, return a default uncertainty
             hessian_uncertainty = abs(params[param_name]) * 0.1
-            
+
         except:
             hessian_uncertainty = abs(params[param_name]) * 0.1
-            
+
         return hessian_uncertainty
-    
-    def _compute_bootstrap_uncertainty(self, param_name: str, params: Dict[str, float]) -> float:
+
+    def _compute_bootstrap_uncertainty(
+        self, param_name: str, params: Dict[str, float]
+    ) -> float:
         """
         Compute uncertainty from bootstrap sampling.
-        
+
         Physical Meaning:
             Computes parameter uncertainty using bootstrap
             resampling to estimate the sampling distribution.
@@ -351,42 +367,46 @@ class ParticleInversionComputations:
             # Bootstrap sampling (simplified version)
             n_bootstrap = 10  # Reduced for efficiency
             bootstrap_values = []
-            
+
             for _ in range(n_bootstrap):
                 # Add noise to parameters
                 noisy_params = params.copy()
                 for pname in noisy_params:
                     noise_scale = abs(noisy_params[pname]) * 0.01
                     noisy_params[pname] += np.random.normal(0, noise_scale)
-                
-                bootstrap_values.append(noisy_params.get(param_name, params[param_name]))
-            
+
+                bootstrap_values.append(
+                    noisy_params.get(param_name, params[param_name])
+                )
+
             # Compute standard deviation
             if len(bootstrap_values) > 1:
                 bootstrap_uncertainty = np.std(bootstrap_values)
             else:
                 bootstrap_uncertainty = abs(params[param_name]) * 0.1
-                
+
         except:
             bootstrap_uncertainty = abs(params[param_name]) * 0.1
-            
+
         return bootstrap_uncertainty
-    
+
     def _compute_prior_uncertainty(self, param_name: str) -> float:
         """
         Compute uncertainty from prior distribution.
-        
+
         Physical Meaning:
             Computes parameter uncertainty based on the
             prior distribution and its variance.
         """
         # Default uncertainty
         return 1.0
-    
-    def _compute_sensitivity_uncertainty(self, param_name: str, params: Dict[str, float]) -> float:
+
+    def _compute_sensitivity_uncertainty(
+        self, param_name: str, params: Dict[str, float]
+    ) -> float:
         """
         Compute uncertainty from parameter sensitivity.
-        
+
         Physical Meaning:
             Computes parameter uncertainty based on the
             sensitivity of the loss function to parameter changes.
@@ -396,12 +416,12 @@ class ParticleInversionComputations:
             epsilon = 1e-6
             params_plus = params.copy()
             params_plus[param_name] += epsilon
-            
+
             # This would need access to loss function
             # For now, return a default uncertainty
             sensitivity_uncertainty = 1.0
-                
+
         except:
             sensitivity_uncertainty = 1.0
-            
+
         return sensitivity_uncertainty

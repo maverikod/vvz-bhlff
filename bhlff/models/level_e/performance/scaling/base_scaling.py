@@ -76,7 +76,7 @@ class BaseScalingAnalyzer:
             test_data = np.random.rand(size, size, size)
             result = np.fft.fftn(test_data)
             end_time = time.time()
-            
+
             execution_times.append(end_time - start_time)
             memory_usage.append(test_data.nbytes / 1024 / 1024)  # MB
 
@@ -90,7 +90,7 @@ class BaseScalingAnalyzer:
             "memory_usage": memory_usage,
             "scaling_exponent": scaling_exponent,
             "memory_scaling": memory_scaling,
-            "scaling_type": self._classify_scaling(scaling_exponent)
+            "scaling_type": self._classify_scaling(scaling_exponent),
         }
 
     def _test_domain_scaling(self, domain_sizes: List[float]) -> Dict[str, Any]:
@@ -105,7 +105,7 @@ class BaseScalingAnalyzer:
             test_data = np.random.rand(grid_size, grid_size, grid_size)
             result = np.fft.fftn(test_data)
             end_time = time.time()
-            
+
             execution_times.append(end_time - start_time)
             memory_usage.append(test_data.nbytes / 1024 / 1024)  # MB
 
@@ -119,7 +119,7 @@ class BaseScalingAnalyzer:
             "memory_usage": memory_usage,
             "scaling_exponent": scaling_exponent,
             "memory_scaling": memory_scaling,
-            "scaling_type": self._classify_scaling(scaling_exponent)
+            "scaling_type": self._classify_scaling(scaling_exponent),
         }
 
     def _test_time_scaling(self, time_ranges: List[float]) -> Dict[str, Any]:
@@ -131,13 +131,13 @@ class BaseScalingAnalyzer:
             # Simulate computation based on time range
             time_steps = int(time_range * 100)  # 100 steps per unit time
             grid_size = 128
-            
+
             start_time = time.time()
             for _ in range(time_steps):
                 test_data = np.random.rand(grid_size, grid_size, grid_size)
                 result = np.fft.fftn(test_data)
             end_time = time.time()
-            
+
             execution_times.append(end_time - start_time)
             memory_usage.append(test_data.nbytes / 1024 / 1024)  # MB
 
@@ -151,24 +151,28 @@ class BaseScalingAnalyzer:
             "memory_usage": memory_usage,
             "scaling_exponent": scaling_exponent,
             "memory_scaling": memory_scaling,
-            "scaling_type": self._classify_scaling(scaling_exponent)
+            "scaling_type": self._classify_scaling(scaling_exponent),
         }
 
-    def _compute_scaling_exponent(self, sizes: List[float], times: List[float]) -> float:
+    def _compute_scaling_exponent(
+        self, sizes: List[float], times: List[float]
+    ) -> float:
         """Compute scaling exponent from size-time relationship."""
         if len(sizes) < 2 or len(times) < 2:
             return 1.0
-        
+
         # Fit power law: T(n) = a * n^b
         log_sizes = np.log(sizes)
         log_times = np.log(times)
-        
+
         # Linear regression in log space
         if len(log_sizes) == 2:
-            scaling_exponent = (log_times[1] - log_times[0]) / (log_sizes[1] - log_sizes[0])
+            scaling_exponent = (log_times[1] - log_times[0]) / (
+                log_sizes[1] - log_sizes[0]
+            )
         else:
             scaling_exponent = np.polyfit(log_sizes, log_times, 1)[0]
-        
+
         return float(scaling_exponent)
 
     def _classify_scaling(self, exponent: float) -> str:
@@ -183,4 +187,3 @@ class BaseScalingAnalyzer:
             return "cubic"
         else:
             return "supercubic"
-

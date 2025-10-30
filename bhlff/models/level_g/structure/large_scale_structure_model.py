@@ -76,14 +76,14 @@ class LargeScaleStructureModel(ModelBase):
         self.evolution_params = evolution_params
         self.structure_evolution = []
         self.cosmology_params = evolution_params.get("cosmology", {})
-        
+
         # Initialize specialized components
         self.density_evolution = DensityEvolution(evolution_params)
         self.velocity_evolution = VelocityEvolution(evolution_params)
         self.potential_evolution = PotentialEvolution(evolution_params)
         self.structure_analysis = StructureAnalysis(evolution_params)
         self.galaxy_formation = GalaxyFormation(evolution_params)
-        
+
         self._setup_structure_parameters()
 
     def _setup_structure_parameters(self) -> None:
@@ -107,7 +107,9 @@ class LargeScaleStructureModel(ModelBase):
         # Structure parameters
         self.domain_size = self.evolution_params.get("domain_size", 1000.0)  # Mpc
         self.resolution = self.evolution_params.get("resolution", 256)
-        self.structure_analysis_enabled = self.evolution_params.get("structure_analysis", True)
+        self.structure_analysis_enabled = self.evolution_params.get(
+            "structure_analysis", True
+        )
 
         # Initialize arrays
         self.time_steps = np.arange(self.time_start, self.time_end + self.dt, self.dt)
@@ -165,7 +167,9 @@ class LargeScaleStructureModel(ModelBase):
                 self._evolve_potential_field(t, self.dt)
 
             # Analyze structure
-            structure_metrics = self.structure_analysis.analyze_structure_at_time(t, self.density_field)
+            structure_metrics = self.structure_analysis.analyze_structure_at_time(
+                t, self.density_field
+            )
             self.structure_evolution.append(structure_metrics)
 
             evolution_results["density_evolution"].append(self.density_field.copy())
@@ -240,7 +244,9 @@ class LargeScaleStructureModel(ModelBase):
             return
 
         # Use potential evolution component
-        self.potential_field = self.potential_evolution.solve_poisson_equation(self.density_field)
+        self.potential_field = self.potential_evolution.solve_poisson_equation(
+            self.density_field
+        )
 
     def analyze_galaxy_formation(self) -> Dict[str, Any]:
         """
@@ -255,6 +261,6 @@ class LargeScaleStructureModel(ModelBase):
         """
         # Set structure evolution in galaxy formation component
         self.galaxy_formation.structure_evolution = self.structure_evolution
-        
+
         # Use galaxy formation component
         return self.galaxy_formation.analyze_galaxy_formation()

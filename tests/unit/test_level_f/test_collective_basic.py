@@ -57,7 +57,7 @@ class TestCollectiveExcitationsBasic:
             "frequency_range": (0.1, 2.0),
             "amplitude": 1.0,
             "duration": 5.0,
-            "excitation_type": "harmonic"
+            "excitation_type": "harmonic",
         }
 
     @pytest.fixture
@@ -74,7 +74,7 @@ class TestCollectiveExcitationsBasic:
             correctly initialized with proper parameters.
         """
         excitations = CollectiveExcitations(system, excitation_params)
-        
+
         assert excitations.system == system
         assert excitations.excitation_params == excitation_params
         assert excitations.frequency_range == excitation_params["frequency_range"]
@@ -92,9 +92,11 @@ class TestCollectiveExcitationsBasic:
         frequency = 1.0
         amplitude = 0.5
         duration = 3.0
-        
-        excitation = excitations.apply_harmonic_excitation(frequency, amplitude, duration)
-        
+
+        excitation = excitations.apply_harmonic_excitation(
+            frequency, amplitude, duration
+        )
+
         assert excitation is not None
         assert "frequency" in excitation
         assert "amplitude" in excitation
@@ -114,9 +116,9 @@ class TestCollectiveExcitationsBasic:
         """
         amplitude = 1.0
         duration = 0.1
-        
+
         excitation = excitations.apply_impulse_excitation(amplitude, duration)
-        
+
         assert excitation is not None
         assert "amplitude" in excitation
         assert "duration" in excitation
@@ -135,9 +137,9 @@ class TestCollectiveExcitationsBasic:
         start_freq = 0.1
         end_freq = 2.0
         sweep_time = 5.0
-        
+
         excitation = excitations.apply_frequency_sweep(start_freq, end_freq, sweep_time)
-        
+
         assert excitation is not None
         assert "start_frequency" in excitation
         assert "end_frequency" in excitation
@@ -157,9 +159,9 @@ class TestCollectiveExcitationsBasic:
         """
         external_field = np.random.random((16, 16, 16, 8, 8, 8, 16))
         time_points = np.linspace(0, 10, 16)
-        
+
         response = excitations.excite_system(external_field, time_points)
-        
+
         assert response is not None
         assert "excitation_field" in response
         assert "response_field" in response
@@ -181,17 +183,17 @@ class TestCollectiveExcitationsBasic:
         response_data = {
             "excitation_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
             "response_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
-            "time_points": np.linspace(0, 10, 16)
+            "time_points": np.linspace(0, 10, 16),
         }
-        
+
         analysis = excitations.analyze_response(response_data)
-        
+
         assert analysis is not None
         assert "response_spectrum" in analysis
         assert "dominant_frequencies" in analysis
         assert "response_amplitude" in analysis
         assert "phase_shift" in analysis
-        
+
         # Check that analysis results are reasonable
         assert len(analysis["dominant_frequencies"]) > 0
         assert analysis["response_amplitude"] > 0
@@ -210,16 +212,16 @@ class TestCollectiveExcitationsBasic:
         response_data = {
             "excitation_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
             "response_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
-            "time_points": np.linspace(0, 10, 16)
+            "time_points": np.linspace(0, 10, 16),
         }
-        
+
         dispersion = excitations.compute_dispersion_relations(response_data)
-        
+
         assert dispersion is not None
         assert "frequencies" in dispersion
         assert "wave_vectors" in dispersion
         assert "dispersion_relation" in dispersion
-        
+
         # Check that dispersion relation is reasonable
         assert len(dispersion["frequencies"]) > 0
         assert len(dispersion["wave_vectors"]) > 0
@@ -239,16 +241,16 @@ class TestCollectiveExcitationsBasic:
         response_data = {
             "excitation_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
             "response_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
-            "time_points": np.linspace(0, 10, 16)
+            "time_points": np.linspace(0, 10, 16),
         }
-        
+
         susceptibility = excitations.compute_susceptibility(response_data)
-        
+
         assert susceptibility is not None
         assert "frequencies" in susceptibility
         assert "susceptibility" in susceptibility
         assert "phase" in susceptibility
-        
+
         # Check that susceptibility is reasonable
         assert len(susceptibility["frequencies"]) > 0
         assert susceptibility["susceptibility"] is not None
@@ -267,16 +269,16 @@ class TestCollectiveExcitationsBasic:
         response_data = {
             "excitation_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
             "response_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
-            "time_points": np.linspace(0, 10, 16)
+            "time_points": np.linspace(0, 10, 16),
         }
-        
+
         peaks = excitations.detect_spectral_peaks(response_data)
-        
+
         assert peaks is not None
         assert "peak_frequencies" in peaks
         assert "peak_amplitudes" in peaks
         assert "peak_quality_factors" in peaks
-        
+
         # Check that peaks are reasonable
         assert len(peaks["peak_frequencies"]) >= 0
         assert len(peaks["peak_amplitudes"]) == len(peaks["peak_frequencies"])
@@ -295,16 +297,16 @@ class TestCollectiveExcitationsBasic:
         response_data = {
             "excitation_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
             "response_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
-            "time_points": np.linspace(0, 10, 16)
+            "time_points": np.linspace(0, 10, 16),
         }
-        
+
         transmission = excitations.analyze_step_resonator_transmission(response_data)
-        
+
         assert transmission is not None
         assert "transmission_coefficient" in transmission
         assert "reflection_coefficient" in transmission
         assert "resonance_frequencies" in transmission
-        
+
         # Check that transmission analysis is reasonable
         assert 0 <= transmission["transmission_coefficient"] <= 1
         assert 0 <= transmission["reflection_coefficient"] <= 1
@@ -323,18 +325,20 @@ class TestCollectiveExcitationsBasic:
         response_data = {
             "excitation_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
             "response_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
-            "time_points": np.linspace(0, 10, 16)
+            "time_points": np.linspace(0, 10, 16),
         }
-        
+
         participation = excitations.compute_participation_ratios(response_data)
-        
+
         assert participation is not None
         assert "participation_ratios" in participation
         assert "mode_indices" in participation
-        
+
         # Check that participation ratios are reasonable
         assert len(participation["participation_ratios"]) > 0
-        assert len(participation["mode_indices"]) == len(participation["participation_ratios"])
+        assert len(participation["mode_indices"]) == len(
+            participation["participation_ratios"]
+        )
         assert all(0 <= ratio <= 1 for ratio in participation["participation_ratios"])
 
     def test_quality_factors(self, excitations):
@@ -350,18 +354,20 @@ class TestCollectiveExcitationsBasic:
         response_data = {
             "excitation_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
             "response_field": np.random.random((16, 16, 16, 8, 8, 8, 16)),
-            "time_points": np.linspace(0, 10, 16)
+            "time_points": np.linspace(0, 10, 16),
         }
-        
+
         quality_factors = excitations.compute_quality_factors(response_data)
-        
+
         assert quality_factors is not None
         assert "quality_factors" in quality_factors
         assert "mode_frequencies" in quality_factors
-        
+
         # Check that quality factors are reasonable
         assert len(quality_factors["quality_factors"]) > 0
-        assert len(quality_factors["mode_frequencies"]) == len(quality_factors["quality_factors"])
+        assert len(quality_factors["mode_frequencies"]) == len(
+            quality_factors["quality_factors"]
+        )
         assert all(qf > 0 for qf in quality_factors["quality_factors"])
 
 

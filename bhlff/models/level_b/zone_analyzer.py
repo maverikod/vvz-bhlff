@@ -118,9 +118,11 @@ class LevelBZoneAnalyzer:
 
         # Determine if separation passed (very lenient for testing)
         passed = (
-            r_core >= 0 and r_tail >= 0 and  # Both zones exist (allow zero)
-            r_core <= r_tail and  # Core is inside or equal to tail
-            quality_metrics.get("separation_quality", 0) >= 0.0  # Any separation quality
+            r_core >= 0
+            and r_tail >= 0  # Both zones exist (allow zero)
+            and r_core <= r_tail  # Core is inside or equal to tail
+            and quality_metrics.get("separation_quality", 0)
+            >= 0.0  # Any separation quality
         )
 
         return {
@@ -160,7 +162,9 @@ class LevelBZoneAnalyzer:
         if len(field.shape) == 7:
             # 7D field: use all axes
             N = self._compute_norm_gradient(field, spatial_axes, phase_axes, time_axis)
-            S = self._compute_second_derivative(field, spatial_axes, phase_axes, time_axis)
+            S = self._compute_second_derivative(
+                field, spatial_axes, phase_axes, time_axis
+            )
             C = self._compute_coherence(field, spatial_axes, phase_axes, time_axis)
         else:
             # 3D field: use only spatial axes
@@ -180,7 +184,11 @@ class LevelBZoneAnalyzer:
         """Compute norm of field gradient across axes."""
         grads = []
         # Only use axes that exist in the field
-        all_axes = [ax for ax in (*spatial_axes, *phase_axes, time_axis) if ax < len(field.shape)]
+        all_axes = [
+            ax
+            for ax in (*spatial_axes, *phase_axes, time_axis)
+            if ax < len(field.shape)
+        ]
         for ax in all_axes:
             grads.append(np.gradient(field, axis=ax))
         # Sum of squares over all gradient components
@@ -212,7 +220,11 @@ class LevelBZoneAnalyzer:
         acc_dtype = complex if np.iscomplexobj(field) else field.dtype
         lap = np.zeros_like(field, dtype=acc_dtype)
         # Only use axes that exist in the field
-        all_axes = [ax for ax in (*spatial_axes, *phase_axes, time_axis) if ax < len(field.shape)]
+        all_axes = [
+            ax
+            for ax in (*spatial_axes, *phase_axes, time_axis)
+            if ax < len(field.shape)
+        ]
         for ax in all_axes:
             lap += np.gradient(np.gradient(field, axis=ax), axis=ax)
         # Return magnitude for complex inputs to produce real-valued indicator
@@ -229,7 +241,11 @@ class LevelBZoneAnalyzer:
         amplitude = np.abs(field)
         grads = []
         # Only use axes that exist in the field
-        all_axes = [ax for ax in (*spatial_axes, *phase_axes, time_axis) if ax < len(field.shape)]
+        all_axes = [
+            ax
+            for ax in (*spatial_axes, *phase_axes, time_axis)
+            if ax < len(field.shape)
+        ]
         for ax in all_axes:
             grads.append(np.gradient(amplitude, axis=ax))
         sq_sum = np.zeros_like(amplitude, dtype=float)

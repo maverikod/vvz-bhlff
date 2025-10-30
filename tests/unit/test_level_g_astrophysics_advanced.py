@@ -45,8 +45,12 @@ class TestAstrophysicalObjectModelAdvanced:
         # Test physical properties
         assert properties["topological_charge"] == 1
         assert properties["phase_coherence"] > 0.5  # Stars should have high coherence
-        assert properties["defect_density"] < 0.1  # Stars should have low defect density
-        assert properties["correlation_length"] > 0.1  # Stars should have significant correlation
+        assert (
+            properties["defect_density"] < 0.1
+        )  # Stars should have low defect density
+        assert (
+            properties["correlation_length"] > 0.1
+        )  # Stars should have significant correlation
 
     def test_galaxy_spiral_structure(self):
         """Test galaxy spiral structure."""
@@ -65,9 +69,15 @@ class TestAstrophysicalObjectModelAdvanced:
 
         # Test spiral structure properties
         assert properties["topological_charge"] == 2  # Two spiral arms
-        assert properties["phase_coherence"] > 0.3  # Galaxies should have moderate coherence
-        assert properties["defect_density"] > 0.1  # Galaxies should have more defects than stars
-        assert properties["correlation_length"] > 1.0  # Galaxies should have large correlation length
+        assert (
+            properties["phase_coherence"] > 0.3
+        )  # Galaxies should have moderate coherence
+        assert (
+            properties["defect_density"] > 0.1
+        )  # Galaxies should have more defects than stars
+        assert (
+            properties["correlation_length"] > 1.0
+        )  # Galaxies should have large correlation length
 
     def test_black_hole_singularity_behavior(self):
         """Test black hole singularity behavior."""
@@ -85,10 +95,18 @@ class TestAstrophysicalObjectModelAdvanced:
         properties = model.analyze_phase_properties(phase_profile)
 
         # Test black hole properties
-        assert properties["topological_charge"] == 0  # Black holes have zero topological charge
-        assert properties["phase_coherence"] < 0.5  # Black holes should have low coherence
-        assert properties["defect_density"] > 0.5  # Black holes should have high defect density
-        assert properties["correlation_length"] < 0.5  # Black holes should have small correlation length
+        assert (
+            properties["topological_charge"] == 0
+        )  # Black holes have zero topological charge
+        assert (
+            properties["phase_coherence"] < 0.5
+        )  # Black holes should have low coherence
+        assert (
+            properties["defect_density"] > 0.5
+        )  # Black holes should have high defect density
+        assert (
+            properties["correlation_length"] < 0.5
+        )  # Black holes should have small correlation length
 
     def test_phase_field_energy_conservation(self):
         """Test phase field energy conservation."""
@@ -103,14 +121,14 @@ class TestAstrophysicalObjectModelAdvanced:
 
         model = AstrophysicalObjectModel("star", stellar_params)
         phase_profile = model.create_phase_profile()
-        
+
         # Test energy conservation
         initial_energy = model.compute_phase_energy(phase_profile)
-        
+
         # Simulate time evolution (phase rotation)
         evolved_profile = phase_profile + 0.1
         evolved_energy = model.compute_phase_energy(evolved_profile)
-        
+
         # Energy should be conserved (within numerical precision)
         assert abs(evolved_energy - initial_energy) < 1e-10
 
@@ -127,14 +145,14 @@ class TestAstrophysicalObjectModelAdvanced:
 
         model = AstrophysicalObjectModel("star", stellar_params)
         phase_profile = model.create_phase_profile()
-        
+
         # Test topological charge conservation
         initial_charge = model.compute_topological_charge(phase_profile)
-        
+
         # Simulate time evolution (phase rotation)
         evolved_profile = phase_profile + 0.1
         evolved_charge = model.compute_topological_charge(evolved_profile)
-        
+
         # Topological charge should be conserved
         assert evolved_charge == initial_charge
 
@@ -151,15 +169,24 @@ class TestAstrophysicalObjectModelAdvanced:
 
         model = AstrophysicalObjectModel("star", stellar_params)
         phase_profile = model.create_phase_profile()
-        
+
         # Test boundary conditions
         # Phase should be periodic in angular coordinates
-        assert np.allclose(phase_profile[:, :, :, 0, :, :, :], 
-                         phase_profile[:, :, :, -1, :, :, :], atol=1e-10)
-        assert np.allclose(phase_profile[:, :, :, :, 0, :, :], 
-                         phase_profile[:, :, :, :, -1, :, :], atol=1e-10)
-        assert np.allclose(phase_profile[:, :, :, :, :, 0, :], 
-                         phase_profile[:, :, :, :, :, -1, :], atol=1e-10)
+        assert np.allclose(
+            phase_profile[:, :, :, 0, :, :, :],
+            phase_profile[:, :, :, -1, :, :, :],
+            atol=1e-10,
+        )
+        assert np.allclose(
+            phase_profile[:, :, :, :, 0, :, :],
+            phase_profile[:, :, :, :, -1, :, :],
+            atol=1e-10,
+        )
+        assert np.allclose(
+            phase_profile[:, :, :, :, :, 0, :],
+            phase_profile[:, :, :, :, :, -1, :],
+            atol=1e-10,
+        )
 
     def test_phase_field_symmetry(self):
         """Test phase field symmetry properties."""
@@ -174,19 +201,25 @@ class TestAstrophysicalObjectModelAdvanced:
 
         model = AstrophysicalObjectModel("star", stellar_params)
         phase_profile = model.create_phase_profile()
-        
+
         # Test spherical symmetry for stars
         center = np.array([32, 32, 32, 4, 4, 4, 32])
         radius = 10
-        
+
         # Check spherical symmetry
         for i in range(phase_profile.shape[0]):
             for j in range(phase_profile.shape[1]):
                 for k in range(phase_profile.shape[2]):
-                    r = np.sqrt((i - center[0])**2 + (j - center[1])**2 + (k - center[2])**2)
+                    r = np.sqrt(
+                        (i - center[0]) ** 2
+                        + (j - center[1]) ** 2
+                        + (k - center[2]) ** 2
+                    )
                     if r <= radius:
                         # Phase should be approximately constant on spheres
-                        phase_value = phase_profile[i, j, k, center[3], center[4], center[5], center[6]]
+                        phase_value = phase_profile[
+                            i, j, k, center[3], center[4], center[5], center[6]
+                        ]
                         assert np.isfinite(phase_value)
 
     def test_phase_field_regularity(self):
@@ -202,7 +235,7 @@ class TestAstrophysicalObjectModelAdvanced:
 
         model = AstrophysicalObjectModel("star", stellar_params)
         phase_profile = model.create_phase_profile()
-        
+
         # Test regularity
         assert np.all(np.isfinite(phase_profile))
         assert not np.any(np.isnan(phase_profile))
@@ -222,7 +255,7 @@ class TestAstrophysicalObjectModelAdvanced:
 
         model = AstrophysicalObjectModel("star", stellar_params)
         phase_profile = model.create_phase_profile()
-        
+
         # Test continuity
         # Phase differences between adjacent points should be small
         for axis in range(7):
@@ -243,12 +276,12 @@ class TestAstrophysicalObjectModelAdvanced:
 
         model = AstrophysicalObjectModel("star", stellar_params)
         phase_profile = model.create_phase_profile()
-        
+
         # Test physical meaning
         # Phase should represent the U(1) phase of the field
         assert np.all(np.isfinite(phase_profile))
         assert np.all(np.abs(phase_profile) <= 2 * np.pi)
-        
+
         # Phase should be continuous (no 2π jumps)
         phase_diff = np.diff(phase_profile, axis=0)
         assert np.all(np.abs(phase_diff) < np.pi)
@@ -266,12 +299,12 @@ class TestAstrophysicalObjectModelAdvanced:
 
         model = AstrophysicalObjectModel("star", stellar_params)
         phase_profile = model.create_phase_profile()
-        
+
         # Test topology
         # Topological charge should be conserved
         charge = model.compute_topological_charge(phase_profile)
         assert charge == 1  # Stars should have unit topological charge
-        
+
         # Phase should be single-valued
         assert np.all(np.isfinite(phase_profile))
         assert not np.any(np.isnan(phase_profile))
@@ -289,7 +322,7 @@ class TestAstrophysicalObjectModelAdvanced:
 
         model = AstrophysicalObjectModel("star", stellar_params)
         phase_profile = model.create_phase_profile()
-        
+
         # Test energy density
         energy_density = model.compute_energy_density(phase_profile)
         assert np.all(energy_density >= 0)
@@ -310,7 +343,7 @@ class TestAstrophysicalObjectModelAdvanced:
 
         model = AstrophysicalObjectModel("star", stellar_params)
         phase_profile = model.create_phase_profile()
-        
+
         # Test momentum density
         momentum_density = model.compute_momentum_density(phase_profile)
         assert np.all(np.isfinite(momentum_density))
@@ -330,7 +363,7 @@ class TestAstrophysicalObjectModelAdvanced:
 
         model = AstrophysicalObjectModel("star", stellar_params)
         phase_profile = model.create_phase_profile()
-        
+
         # Test stress tensor
         stress_tensor = model.compute_stress_tensor(phase_profile)
         assert stress_tensor.shape == (7, 7) + phase_profile.shape

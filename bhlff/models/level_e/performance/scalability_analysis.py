@@ -75,12 +75,14 @@ class ScalabilityAnalyzer:
         # Analyze scalability limits
         scalability_limits = self._analyze_scalability_limits()
 
-        scalability_results.update({
-            "strong_scaling": strong_scaling,
-            "weak_scaling": weak_scaling,
-            "efficiency_analysis": efficiency_analysis,
-            "scalability_limits": scalability_limits,
-        })
+        scalability_results.update(
+            {
+                "strong_scaling": strong_scaling,
+                "weak_scaling": weak_scaling,
+                "efficiency_analysis": efficiency_analysis,
+                "scalability_limits": scalability_limits,
+            }
+        )
 
         return scalability_results
 

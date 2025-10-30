@@ -128,10 +128,15 @@ class RegimeClassifier:
                                     r = np.sqrt(x[i] ** 2 + x[j] ** 2 + x[k] ** 2)
                                     if r > 0:
                                         # Step resonator model instead of exponential
-                                        amplitude = transmission_coeff if r < 2.0 else 0.1
+                                        amplitude = (
+                                            transmission_coeff if r < 2.0 else 0.1
+                                        )
                                         # Generate random phase without using exp
                                         random_phase = np.random.uniform(0, 2 * np.pi)
-                                        field[i, j, k, l, m, n, o] = amplitude * (np.cos(random_phase) + 1j * np.sin(random_phase))
+                                        field[i, j, k, l, m, n, o] = amplitude * (
+                                            np.cos(random_phase)
+                                            + 1j * np.sin(random_phase)
+                                        )
 
         # Time evolution
         for t in range(int(T / dt)):

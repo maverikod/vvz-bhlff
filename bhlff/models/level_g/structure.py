@@ -23,4 +23,4 @@ from typing import Dict, Any
 from .structure.large_scale_structure_model import LargeScaleStructureModel
 
 # Re-export the main class for backward compatibility
-__all__ = ['LargeScaleStructureModel']
+__all__ = ["LargeScaleStructureModel"]

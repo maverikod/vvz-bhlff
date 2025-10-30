@@ -30,6 +30,7 @@ import logging
 try:
     import cupy as cp
     import cupyx.scipy.ndimage as cp_ndimage
+
     CUDA_AVAILABLE = True
 except ImportError:
     CUDA_AVAILABLE = False
@@ -64,36 +65,36 @@ class LevelBPowerLawAnalyzer:
     def __init__(self, use_cuda: bool = True):
         """
         Initialize stepwise power law analyzer.
-        
+
         Physical Meaning:
             Sets up analyzer for stepwise structure analysis with CUDA
             acceleration for 7D phase field computations.
-            
+
         Args:
             use_cuda (bool): Whether to use CUDA acceleration if available.
         """
         # CUDA setup
         self.use_cuda = use_cuda and CUDA_AVAILABLE
         self.logger = logging.getLogger(__name__)
-        
+
         if self.use_cuda:
             self.xp = cp
             self.logger.info("Stepwise analyzer initialized with CUDA acceleration")
         else:
             self.xp = np
             self.logger.info("Stepwise analyzer initialized with CPU processing")
-        
+
         # Stepwise analysis defaults
         self.min_layers_required: int = 3
         self.q_factor_threshold: float = 0.8
         self.quantization_tolerance: float = 0.1
         self.stepwise_structure_required: bool = True
-        
+
         # Visualization defaults
         self.figure_size: Tuple[int, int] = (10, 8)
         self.line_color: str = "#1f77b4"
         self.stepwise_color: str = "#d62728"
-        
+
         # Numerical stability epsilon
         self.eps: float = 1e-15
 
@@ -128,21 +129,21 @@ class LevelBPowerLawAnalyzer:
         """
         # 1. Detect discrete layers R₀ < R₁ < R₂ < ... in substrate
         layers = self._detect_stepwise_layers_substrate(field, center)
-        
+
         # 2. Analyze geometric decay between layers
         q_factors = self._compute_geometric_decay(layers)
-        
+
         # 3. Check radius quantization
         quantization = self._check_radius_quantization(layers)
-        
+
         # 4. Verify stepwise structure
         stepwise_structure = len(layers) >= min_layers
-        
+
         # 5. Acceptance criteria for stepwise structure
         # More lenient criteria for testing
         geometric_decay_ok = len(q_factors) > 0 and all(q < 1.0 for q in q_factors)
         quantization_ok = quantization.get("quantized", False)
-        
+
         # For testing purposes, accept if we have layers and some q-factors
         passed = (
             stepwise_structure
@@ -201,7 +202,9 @@ class LevelBPowerLawAnalyzer:
             # For 7D field, take slice at center of other dimensions
             center_phi = field.shape[3] // 2
             center_t = field.shape[6] // 2
-            amplitude = np.abs(field[:, :, :, center_phi, center_phi, center_phi, center_t])
+            amplitude = np.abs(
+                field[:, :, :, center_phi, center_phi, center_phi, center_t]
+            )
         else:
             amplitude = np.abs(field)
 
@@ -360,22 +363,24 @@ class LevelBPowerLawAnalyzer:
 
         return results
 
-    def _detect_stepwise_layers(self, field: np.ndarray, center: List[float]) -> List[Dict[str, Any]]:
+    def _detect_stepwise_layers(
+        self, field: np.ndarray, center: List[float]
+    ) -> List[Dict[str, Any]]:
         """
         Detect discrete layers R₀ < R₁ < R₂ < ... in stepwise structure.
-        
+
         Physical Meaning:
             Identifies discrete layers with quantized radii according to
             7D BVP theory: Θ(r) = Σₙ≥₀ θₙ(r), θₙ поддержана в [Rₙ,Rₙ₊₁]
-            
+
         Mathematical Foundation:
             Detects layer boundaries using gradient analysis and identifies
             discrete layers with quantized spacing.
-            
+
         Args:
             field (np.ndarray): Phase field solution
             center (List[float]): Center of the defect [x, y, z]
-            
+
         Returns:
             List[Dict[str, Any]]: List of detected layers with boundaries and data
         """
@@ -386,28 +391,32 @@ class LevelBPowerLawAnalyzer:
         else:
             field_gpu = field
             center_gpu = center
-        
+
         # Compute radial profile with CUDA acceleration
         radial_profile = self._compute_radial_profile_cuda(field_gpu, center_gpu)
-        
+
         # Detect layer boundaries using gradient analysis
         gradient = self.xp.gradient(radial_profile["A"], radial_profile["r"])
         second_derivative = self.xp.gradient(gradient, radial_profile["r"])
-        
+
         # Find layer boundaries as significant changes in gradient
-        layer_boundary_indices = self._find_layer_boundaries_cuda(gradient, second_derivative)
-        
+        layer_boundary_indices = self._find_layer_boundaries_cuda(
+            gradient, second_derivative
+        )
+
         # Convert indices to radii
         layer_boundaries = radial_profile["r"][layer_boundary_indices]
-        
+
         # Extract layers
         layers = []
         for i in range(len(layer_boundaries) - 1):
             r_start = layer_boundaries[i]
             r_end = layer_boundaries[i + 1]
-            
-            layer_mask = (radial_profile["r"] >= r_start) & (radial_profile["r"] < r_end)
-            
+
+            layer_mask = (radial_profile["r"] >= r_start) & (
+                radial_profile["r"] < r_end
+            )
+
             # Convert back to CPU for return
             if self.use_cuda:
                 layer_data = {
@@ -415,7 +424,7 @@ class LevelBPowerLawAnalyzer:
                     "r_end": float(self.xp.asnumpy(r_end)),
                     "amplitude": self.xp.asnumpy(radial_profile["A"][layer_mask]),
                     "radius": self.xp.asnumpy(radial_profile["r"][layer_mask]),
-                    "layer_index": i
+                    "layer_index": i,
                 }
             else:
                 layer_data = {
@@ -423,83 +432,90 @@ class LevelBPowerLawAnalyzer:
                     "r_end": float(r_end),
                     "amplitude": radial_profile["A"][layer_mask],
                     "radius": radial_profile["r"][layer_mask],
-                    "layer_index": i
+                    "layer_index": i,
                 }
             layers.append(layer_data)
-        
+
         return layers
 
     def _compute_geometric_decay(self, layers: List[Dict[str, Any]]) -> List[float]:
         """
         Compute geometric decay factors q between layers.
-        
+
         Physical Meaning:
             Computes ||∇θₙ₊₁|| ≤ q ||∇θₙ|| for geometric decay
             between discrete layers in stepwise structure.
-            
+
         Mathematical Foundation:
             Geometric decay ensures that each layer has smaller
             gradient norm than the previous layer by factor q ∈ (0,1).
-            
+
         Args:
             layers (List[Dict[str, Any]]): List of detected layers
-            
+
         Returns:
             List[float]: Geometric decay factors q between adjacent layers
         """
         q_factors = []
-        
+
         for i in range(len(layers) - 1):
             current_layer = layers[i]
             next_layer = layers[i + 1]
-            
+
             # Skip empty layers
-            if len(current_layer["amplitude"]) == 0 or len(next_layer["amplitude"]) == 0:
+            if (
+                len(current_layer["amplitude"]) == 0
+                or len(next_layer["amplitude"]) == 0
+            ):
                 continue
-                
+
             # Compute amplitude decay (not gradient decay for simplicity)
             current_amp = np.mean(current_layer["amplitude"])
             next_amp = np.mean(next_layer["amplitude"])
-            
+
             # Geometric decay factor (amplitude-based)
             if current_amp > self.eps:
                 q_factor = next_amp / current_amp
                 q_factors.append(q_factor)
-        
+
         return q_factors
 
-    def _check_radius_quantization(self, layers: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _check_radius_quantization(
+        self, layers: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """
         Check radius quantization in discrete layers.
-        
+
         Physical Meaning:
             Verifies that layer boundaries follow quantized pattern
             R₀ < R₁ < R₂ < ... with discrete spacing.
-            
+
         Mathematical Foundation:
             Quantized spacing ensures that layer boundaries follow
             discrete pattern with approximately constant ratios.
-            
+
         Args:
             layers (List[Dict[str, Any]]): List of detected layers
-            
+
         Returns:
             Dict[str, Any]: Quantization analysis results
         """
         if len(layers) < 2:
             return {"quantized": False, "spacing_ratio": None}
-        
+
         # Extract layer boundaries
         boundaries = [layer["r_start"] for layer in layers]
         boundaries.append(layers[-1]["r_end"])
-        
+
         # Check for geometric spacing
         spacing_ratios = []
         for i in range(len(boundaries) - 2):
             if boundaries[i + 1] - boundaries[i] > self.eps:
-                ratio = (boundaries[i + 2] - boundaries[i + 1]) / (boundaries[i + 1] - boundaries[i])
+                ratio = (boundaries[i + 2] - boundaries[i + 1]) / (
+                    boundaries[i + 1] - boundaries[i]
+                )
                 spacing_ratios.append(ratio)
-        
+
         # Check if ratios are approximately constant (quantized)
         if len(spacing_ratios) > 0:
             mean_ratio = np.mean(spacing_ratios)
@@ -508,26 +524,28 @@ class LevelBPowerLawAnalyzer:
         else:
             quantized = False
             mean_ratio = None
-        
+
         return {
             "quantized": quantized,
             "spacing_ratio": mean_ratio,
             "spacing_ratios": spacing_ratios,
-            "tolerance": self.quantization_tolerance
+            "tolerance": self.quantization_tolerance,
         }
 
-    def _compute_radial_profile_cuda(self, field: np.ndarray, center: List[float]) -> Dict[str, np.ndarray]:
+    def _compute_radial_profile_cuda(
+        self, field: np.ndarray, center: List[float]
+    ) -> Dict[str, np.ndarray]:
         """
         Compute radial profile with CUDA acceleration.
-        
+
         Physical Meaning:
             Computes radial profile A(r) by averaging the field
             over spherical shells centered at the defect using CUDA.
-            
+
         Args:
             field (np.ndarray): Field array (GPU or CPU)
             center (List[float]): Center coordinates [x, y, z]
-            
+
         Returns:
             Dict[str, np.ndarray]: Radial profile with 'r' and 'A' arrays
         """
@@ -553,7 +571,9 @@ class LevelBPowerLawAnalyzer:
             # For 7D field, take slice at center of other dimensions
             center_phi = field.shape[3] // 2
             center_t = field.shape[6] // 2
-            amplitude = self.xp.abs(field[:, :, :, center_phi, center_phi, center_phi, center_t])
+            amplitude = self.xp.abs(
+                field[:, :, :, center_phi, center_phi, center_phi, center_t]
+            )
         else:
             amplitude = self.xp.abs(field)
 
@@ -573,56 +593,58 @@ class LevelBPowerLawAnalyzer:
 
         return {"r": r_centers, "A": self.xp.array(A_radial)}
 
-    def _find_layer_boundaries_cuda(self, gradient: np.ndarray, second_derivative: np.ndarray) -> np.ndarray:
+    def _find_layer_boundaries_cuda(
+        self, gradient: np.ndarray, second_derivative: np.ndarray
+    ) -> np.ndarray:
         """
         Find layer boundaries using CUDA-accelerated analysis.
-        
+
         Physical Meaning:
             Identifies significant transitions in gradient that correspond
             to layer boundaries in stepwise structure.
-            
+
         Args:
             gradient (np.ndarray): Gradient of radial profile
             second_derivative (np.ndarray): Second derivative of radial profile
-            
+
         Returns:
             np.ndarray: Array of layer boundary positions
         """
         # Find significant changes in gradient
         gradient_changes = self.xp.abs(self.xp.diff(gradient))
         threshold = self.xp.std(gradient_changes) * 1.5
-        
+
         # Find peaks in gradient changes
         significant_changes = gradient_changes > threshold
-        
+
         # Get boundary positions
         boundary_indices = self.xp.where(significant_changes)[0]
-        
+
         # Add start and end boundaries
-        boundaries = self.xp.concatenate([
-            self.xp.array([0]),
-            boundary_indices,
-            self.xp.array([len(gradient) - 1])
-        ])
-        
+        boundaries = self.xp.concatenate(
+            [self.xp.array([0]), boundary_indices, self.xp.array([len(gradient) - 1])]
+        )
+
         # Convert to CPU if using CUDA
         if self.use_cuda:
             return self.xp.asnumpy(boundaries)
         else:
             return boundaries
 
-    def _detect_stepwise_layers_substrate(self, substrate: np.ndarray, center: List[float]) -> List[Dict[str, Any]]:
+    def _detect_stepwise_layers_substrate(
+        self, substrate: np.ndarray, center: List[float]
+    ) -> List[Dict[str, Any]]:
         """
         Detect discrete layers in substrate based on transparency changes.
-        
+
         Physical Meaning:
             Identifies discrete layers in the substrate where transparency
             changes significantly, representing resonator walls and boundaries.
-            
+
         Args:
             substrate (np.ndarray): 7D substrate field (transparency/permeability)
             center (List[float]): Center coordinates [x, y, z]
-            
+
         Returns:
             List[Dict[str, Any]]: List of detected layers with radii and properties
         """
@@ -630,23 +652,23 @@ class LevelBPowerLawAnalyzer:
         radial_profile = self._compute_radial_profile_substrate(substrate, center)
         r = radial_profile["r"]
         T = radial_profile["A"]  # Transparency values
-        
+
         if len(r) < 3:
             return []
-        
+
         # For small domains, use simpler approach: detect significant transparency changes
         # Find where transparency changes significantly
         T_diff = np.abs(np.diff(T))
         if len(T_diff) == 0:
             return []
-        
+
         # Use adaptive threshold based on data
         threshold = np.mean(T_diff) + 0.5 * np.std(T_diff)
-        
+
         # Find significant changes
         significant_changes = T_diff > threshold
         change_indices = np.where(significant_changes)[0]
-        
+
         # If no significant changes found, create layers based on transparency levels
         if len(change_indices) == 0:
             # Create layers based on transparency quantiles
@@ -661,62 +683,68 @@ class LevelBPowerLawAnalyzer:
                         r_start = np.min(r_values)
                         r_end = np.max(r_values)
                         layer_radius = (r_start + r_end) / 2
-                        
-                        layers.append({
-                            "r_start": r_start,
-                            "r_end": r_end,
-                            "radius": np.array([layer_radius]),
-                            "amplitude": np.array([transparency]),
-                            "layer_index": i
-                        })
+
+                        layers.append(
+                            {
+                                "r_start": r_start,
+                                "r_end": r_end,
+                                "radius": np.array([layer_radius]),
+                                "amplitude": np.array([transparency]),
+                                "layer_index": i,
+                            }
+                        )
                 return layers
             else:
                 return []
-        
+
         # Convert change indices to radii
         layer_boundaries = r[change_indices]
-        
+
         # Create layer information
         layers = []
         for i, boundary in enumerate(layer_boundaries):
             if i == 0:
                 r_start = 0.0
             else:
-                r_start = layer_boundaries[i-1]
-            
+                r_start = layer_boundaries[i - 1]
+
             if i == len(layer_boundaries) - 1:
                 r_end = r[-1]
             else:
-                r_end = layer_boundaries[i+1]
-            
+                r_end = layer_boundaries[i + 1]
+
             # Get average transparency in this layer
             mask = (r >= r_start) & (r < r_end)
             if np.any(mask):
                 avg_transparency = np.mean(T[mask])
                 layer_radius = (r_start + r_end) / 2
-                
-                layers.append({
-                    "r_start": r_start,
-                    "r_end": r_end,
-                    "radius": np.array([layer_radius]),
-                    "amplitude": np.array([avg_transparency]),
-                    "layer_index": i
-                })
-        
+
+                layers.append(
+                    {
+                        "r_start": r_start,
+                        "r_end": r_end,
+                        "radius": np.array([layer_radius]),
+                        "amplitude": np.array([avg_transparency]),
+                        "layer_index": i,
+                    }
+                )
+
         return layers
 
-    def _compute_radial_profile_substrate(self, substrate: np.ndarray, center: List[float]) -> Dict[str, np.ndarray]:
+    def _compute_radial_profile_substrate(
+        self, substrate: np.ndarray, center: List[float]
+    ) -> Dict[str, np.ndarray]:
         """
         Compute radial profile of substrate transparency.
-        
+
         Physical Meaning:
             Computes the radial profile T(r) by averaging the substrate
             transparency over spherical shells centered at the defect.
-            
+
         Args:
             substrate (np.ndarray): 7D substrate field
             center (List[float]): Center coordinates [x, y, z]
-            
+
         Returns:
             Dict[str, np.ndarray]: Radial profile with 'r' and 'A' arrays
         """
@@ -742,7 +770,9 @@ class LevelBPowerLawAnalyzer:
             # For 7D field, take slice at center of other dimensions
             center_phi = substrate.shape[3] // 2
             center_t = substrate.shape[6] // 2
-            transparency = substrate[:, :, :, center_phi, center_phi, center_phi, center_t]
+            transparency = substrate[
+                :, :, :, center_phi, center_phi, center_phi, center_t
+            ]
         else:
             transparency = substrate
 

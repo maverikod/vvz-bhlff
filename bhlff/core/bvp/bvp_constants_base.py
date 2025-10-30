@@ -122,7 +122,7 @@ class BVPConstantsBase:
         self.WEAK_COUPLING = material_config.get("weak_coupling", 0.1)
         self.MIXING_ANGLE = material_config.get("mixing_angle", 0.23)
         self.GAUGE_COUPLING = material_config.get("gauge_coupling", 0.65)
-        
+
         # Basic material properties for fractional Laplacian
         self.MU = material_config.get("mu", 1.0)
         self.BETA = material_config.get("beta", 1.5)

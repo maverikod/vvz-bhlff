@@ -181,7 +181,7 @@ class QuenchEvent:
         Returns:
             float: Event energy.
         """
-        return 0.5 * self.intensity ** 2
+        return 0.5 * self.intensity**2
 
 
 @dataclass

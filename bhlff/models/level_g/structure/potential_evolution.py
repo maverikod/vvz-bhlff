@@ -57,7 +57,7 @@ class PotentialEvolution:
         """
         self.evolution_params = evolution_params
         self.cosmology_params = evolution_params.get("cosmology", {})
-        
+
         # Physical parameters
         self.G = self.cosmology_params.get("G", 6.67430e-11)  # Gravitational constant
 
@@ -86,11 +86,11 @@ class PotentialEvolution:
 
         # Compute source term
         source = 4 * np.pi * self.G * density
-        
+
         # FFT-based Poisson solver for 7D phase field theory
         # Transform to spectral space
         source_spectral = np.fft.fftn(source)
-        
+
         # Compute wave vectors for 3D spatial coordinates
         # In 7D phase space-time, we use 3D spatial coordinates (x,y,z)
         # and 3D phase coordinates (φ1,φ2,φ3) plus time t
@@ -98,24 +98,24 @@ class PotentialEvolution:
         kx = np.fft.fftfreq(shape[0], d=1.0)
         ky = np.fft.fftfreq(shape[1], d=1.0) if len(shape) > 1 else np.array([0])
         kz = np.fft.fftfreq(shape[2], d=1.0) if len(shape) > 2 else np.array([0])
-        
+
         # Create wave vector grid
         if len(shape) == 3:
-            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing='ij')
+            KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
             k_squared = KX**2 + KY**2 + KZ**2
         elif len(shape) == 2:
-            KX, KY = np.meshgrid(kx, ky, indexing='ij')
+            KX, KY = np.meshgrid(kx, ky, indexing="ij")
             k_squared = KX**2 + KY**2
         else:
             k_squared = kx**2
-        
+
         # Avoid division by zero at k=0
         k_squared[k_squared == 0] = 1.0
-        
+
         # Solve in spectral space: Φ̂ = -4πGρ̂/k²
         potential_spectral = -source_spectral / k_squared
-        
+
         # Transform back to real space
         potential = np.fft.ifftn(potential_spectral).real
-        
+
         return potential

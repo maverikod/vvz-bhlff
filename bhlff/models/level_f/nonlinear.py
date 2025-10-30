@@ -13,7 +13,7 @@ Theoretical Background:
     higher-order terms in the effective potential. These include
     cubic, quartic, and sine-Gordon type nonlinearities that
     lead to solitonic solutions and nonlinear collective modes.
-    
+
     The nonlinear potential is given by:
     U_nonlinear = g * |ψ|^n + λ * sin(φ) + ...
     where g is the nonlinear strength and n is the order.
@@ -69,12 +69,12 @@ class NonlinearEffects(AbstractModel):
         super().__init__()
         self.system = system
         self.nonlinear_params = nonlinear_params
-        
+
         # Nonlinear parameters
         self.nonlinear_strength = nonlinear_params.get("strength", 1.0)
         self.nonlinear_order = nonlinear_params.get("order", 3)
         self.nonlinear_type = nonlinear_params.get("type", "cubic")
-        
+
         # Initialize analysis components
         self.basic_effects = BasicNonlinearEffects(system, nonlinear_params)
         self.soliton_analyzer = SolitonAnalyzer(system, nonlinear_params)
@@ -111,7 +111,7 @@ class NonlinearEffects(AbstractModel):
             potential energy.
         """
         # Add nonlinear potential to system
-        if hasattr(self.system, 'add_potential'):
+        if hasattr(self.system, "add_potential"):
             self.system.add_potential(self._nonlinear_potential)
 
     def _add_nonlinear_dynamics(self) -> None:
@@ -123,7 +123,7 @@ class NonlinearEffects(AbstractModel):
             equations of motion.
         """
         # Add nonlinear force to system
-        if hasattr(self.system, 'add_force'):
+        if hasattr(self.system, "add_force"):
             self.system.add_force(self._nonlinear_force)
 
     def _nonlinear_potential(self, psi: np.ndarray) -> np.ndarray:
@@ -287,7 +287,9 @@ class NonlinearEffects(AbstractModel):
         # Use mode analyzer
         return self.mode_analyzer._find_bifurcation_points()
 
-    def compute_nonlinear_corrections(self, linear_modes: Dict[str, Any]) -> Dict[str, Any]:
+    def compute_nonlinear_corrections(
+        self, linear_modes: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Compute nonlinear corrections to linear modes.
 
@@ -304,7 +306,9 @@ class NonlinearEffects(AbstractModel):
         # Use mode analyzer
         return self.mode_analyzer._compute_nonlinear_corrections(linear_modes)
 
-    def analyze_soliton_stability(self, soliton_profiles: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def analyze_soliton_stability(
+        self, soliton_profiles: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """
         Analyze soliton stability.
 
@@ -320,7 +324,9 @@ class NonlinearEffects(AbstractModel):
         # Use soliton analyzer
         return self.soliton_analyzer._analyze_soliton_stability(soliton_profiles)
 
-    def analyze_soliton_interactions(self, soliton_profiles: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def analyze_soliton_interactions(
+        self, soliton_profiles: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """
         Analyze soliton interactions.
 
@@ -336,7 +342,9 @@ class NonlinearEffects(AbstractModel):
         # Use soliton analyzer
         return self.soliton_analyzer._analyze_soliton_interactions(soliton_profiles)
 
-    def compute_soliton_energies(self, soliton_profiles: List[Dict[str, Any]]) -> List[float]:
+    def compute_soliton_energies(
+        self, soliton_profiles: List[Dict[str, Any]]
+    ) -> List[float]:
         """
         Compute soliton energies.
 
@@ -367,10 +375,14 @@ class NonlinearEffects(AbstractModel):
             Dict[str, Any]: Validation results.
         """
         # Validate basic effects
-        basic_validation = self._validate_basic_effects(results.get("basic_effects", {}))
+        basic_validation = self._validate_basic_effects(
+            results.get("basic_effects", {})
+        )
 
         # Validate soliton analysis
-        soliton_validation = self._validate_soliton_analysis(results.get("soliton_analysis", {}))
+        soliton_validation = self._validate_soliton_analysis(
+            results.get("soliton_analysis", {})
+        )
 
         # Validate mode analysis
         mode_validation = self._validate_mode_analysis(results.get("mode_analysis", {}))
@@ -414,7 +426,9 @@ class NonlinearEffects(AbstractModel):
             "validation_passed": is_present and quality_score > 0.7,
         }
 
-    def _validate_soliton_analysis(self, soliton_analysis: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_soliton_analysis(
+        self, soliton_analysis: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Validate soliton analysis results.
 
@@ -442,7 +456,9 @@ class NonlinearEffects(AbstractModel):
             "is_present": is_present,
             "num_profiles": num_profiles,
             "stability_score": stability_score,
-            "validation_passed": is_present and num_profiles > 0 and stability_score > 0.5,
+            "validation_passed": is_present
+            and num_profiles > 0
+            and stability_score > 0.5,
         }
 
     def _validate_mode_analysis(self, mode_analysis: Dict[str, Any]) -> Dict[str, Any]:
@@ -473,11 +489,16 @@ class NonlinearEffects(AbstractModel):
             "is_present": is_present,
             "num_frequencies": num_frequencies,
             "stability_score": stability_score,
-            "validation_passed": is_present and num_frequencies > 0 and stability_score > 0.5,
+            "validation_passed": is_present
+            and num_frequencies > 0
+            and stability_score > 0.5,
         }
 
     def _calculate_overall_validation(
-        self, basic_validation: Dict[str, Any], soliton_validation: Dict[str, Any], mode_validation: Dict[str, Any]
+        self,
+        basic_validation: Dict[str, Any],
+        soliton_validation: Dict[str, Any],
+        mode_validation: Dict[str, Any],
     ) -> Dict[str, Any]:
         """
         Calculate overall validation.
@@ -494,18 +515,22 @@ class NonlinearEffects(AbstractModel):
             Dict[str, Any]: Overall validation results.
         """
         # Calculate overall quality
-        overall_quality = np.mean([
-            basic_validation["quality_score"],
-            soliton_validation["stability_score"],
-            mode_validation["stability_score"],
-        ])
+        overall_quality = np.mean(
+            [
+                basic_validation["quality_score"],
+                soliton_validation["stability_score"],
+                mode_validation["stability_score"],
+            ]
+        )
 
         # Calculate overall validation status
-        overall_passed = all([
-            basic_validation["validation_passed"],
-            soliton_validation["validation_passed"],
-            mode_validation["validation_passed"],
-        ])
+        overall_passed = all(
+            [
+                basic_validation["validation_passed"],
+                soliton_validation["validation_passed"],
+                mode_validation["validation_passed"],
+            ]
+        )
 
         return {
             "overall_quality": overall_quality,

@@ -56,7 +56,7 @@ class SolitonAnalyzer(AbstractModel):
         self.system = system
         self.nonlinear_params = nonlinear_params
         self.logger = logging.getLogger(__name__)
-        
+
         # Initialize analysis components
         self._initialization = SolitonAnalysisInitialization(system, nonlinear_params)
         self._solutions = SolitonAnalysisSolutions(system, nonlinear_params)
@@ -82,9 +82,9 @@ class SolitonAnalyzer(AbstractModel):
                 - solution_quality: Solution quality metrics
         """
         self.logger.info("Starting soliton solution finding")
-        
+
         # Find soliton solutions
         solutions = self._solutions.find_soliton_solutions()
-        
+
         self.logger.info("Soliton solution finding completed")
         return solutions

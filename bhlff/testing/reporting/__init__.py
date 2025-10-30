@@ -24,13 +24,13 @@ from .data_aggregator import DataAggregator
 from .distribution_manager import DistributionManager
 
 __all__ = [
-    'DailyReport',
-    'WeeklyReport', 
-    'MonthlyReport',
-    'ReportType',
-    'ReportFormat',
-    'PhysicsInterpreter',
-    'TemplateEngine',
-    'DataAggregator',
-    'DistributionManager'
+    "DailyReport",
+    "WeeklyReport",
+    "MonthlyReport",
+    "ReportType",
+    "ReportFormat",
+    "PhysicsInterpreter",
+    "TemplateEngine",
+    "DataAggregator",
+    "DistributionManager",
 ]

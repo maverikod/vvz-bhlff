@@ -25,8 +25,8 @@ from .mode_analysis import SolitonModeAnalyzer
 from .binding_analysis import SolitonBindingAnalyzer
 
 __all__ = [
-    'SolitonInteractionAnalyzer',
-    'SolitonStabilityAnalyzer', 
-    'SolitonModeAnalyzer',
-    'SolitonBindingAnalyzer'
+    "SolitonInteractionAnalyzer",
+    "SolitonStabilityAnalyzer",
+    "SolitonModeAnalyzer",
+    "SolitonBindingAnalyzer",
 ]

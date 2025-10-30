@@ -60,10 +60,10 @@ class PhaseEnvelopeBalanceSolver:
         self.domain = domain
         self.params = params
         self.curvature_calc = VBPEnvelopeCurvatureCalculator(domain, params)
-        
+
         # Initialize EnvelopeEffectiveMetric for integration
         self.envelope_metric = EnvelopeEffectiveMetric(params)
-        
+
         self._setup_envelope_parameters()
 
     def _setup_envelope_parameters(self) -> None:
@@ -179,33 +179,33 @@ class PhaseEnvelopeBalanceSolver:
         # 7D phase field memory kernel construction
         # Based on 7D phase field theory, not Einstein equations
         # Memory kernels describe phase field evolution in 7D space-time
-        
+
         # 7D wave vectors for phase field
         kx = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
         ky = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
         kz = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
-        
-        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing='ij')
+
+        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
         k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
-        
+
         # 7D phase field parameters
         mu = self.mu  # Phase field diffusion coefficient
         beta = self.beta  # Fractional order for Riesz operator
         lambda_param = self.lambda_param  # Phase field damping
-        
+
         # Gamma kernel: 7D phase field temporal response
         # Based on fractional Laplacian operator (-Δ)^β in 7D
         gamma_kernel = mu * (k_magnitude ** (2 * beta)) + lambda_param
-        
+
         # K kernel: 7D phase field memory decay
         # Describes phase coherence decay in 7D space-time
         # Using step resonator model instead of exponential decay
         k_kernel = 0.1 * k_magnitude * self._step_resonator_transmission(k_magnitude)
-        
+
         # Transform to real space for 7D phase field operations
         gamma_kernel_real = np.fft.ifftn(gamma_kernel).real
         k_kernel_real = np.fft.ifftn(k_kernel).real
-        
+
         return {"gamma": gamma_kernel_real, "k": k_kernel_real}
 
     def _build_spatial_operator(self, phase_field: np.ndarray) -> Dict[str, Any]:
@@ -245,7 +245,7 @@ class PhaseEnvelopeBalanceSolver:
     def _compute_phase_field_gradient(self) -> np.ndarray:
         """
         Compute phase field gradient for 7D BVP theory.
-        
+
         Physical Meaning:
             Computes the gradient of the phase field in 7D space-time,
             which is essential for the fractional Laplacian operator.
@@ -259,7 +259,7 @@ class PhaseEnvelopeBalanceSolver:
     def _compute_spectral_representation(self) -> Dict[str, Any]:
         """
         Compute spectral representation of the operator.
-        
+
         Physical Meaning:
             Computes the spectral representation of the fractional
             Laplacian operator in 7D space-time.
@@ -350,40 +350,40 @@ class PhaseEnvelopeBalanceSolver:
         # Full application of balance operator with FFT operations
         # Transform solution to spectral space for efficient computation
         solution_spectral = np.fft.fftn(solution)
-        
+
         # Apply spatial fractional Laplacian operator in spectral space
         kx = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
         ky = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
         kz = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
-        
-        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing='ij')
+
+        KX, KY, KZ = np.meshgrid(kx, ky, kz, indexing="ij")
         k_magnitude = np.sqrt(KX**2 + KY**2 + KZ**2)
-        
+
         # Spatial operator: μ(-Δ)^β in spectral space
         spatial_operator = self.mu * (k_magnitude ** (2 * self.beta))
         spatial_residual_spectral = spatial_operator * solution_spectral
-        
+
         # Apply memory kernel convolution in spectral space
         memory_kernels = self._construct_memory_kernels(solution)
         gamma_spectral = np.fft.fftn(memory_kernels["gamma"])
         k_spectral = np.fft.fftn(memory_kernels["k"])
-        
+
         # Memory response: Γ * solution
         memory_residual_spectral = gamma_spectral * solution_spectral
-        
+
         # Bridge terms: K * solution (memory decay)
         bridge_residual_spectral = k_spectral * solution_spectral
-        
+
         # Total residual in spectral space
         total_residual_spectral = (
-            spatial_residual_spectral + 
-            memory_residual_spectral + 
-            bridge_residual_spectral
+            spatial_residual_spectral
+            + memory_residual_spectral
+            + bridge_residual_spectral
         )
-        
+
         # Transform back to real space
         total_residual = np.fft.ifftn(total_residual_spectral).real
-        
+
         return total_residual
 
     def _compute_effective_metric_from_solution(
@@ -428,167 +428,181 @@ class PhaseEnvelopeBalanceSolver:
             g_eff[i, i] *= correction_factor
 
         return g_eff
-    
-    def solve_with_envelope_effective_metric(self, source: np.ndarray) -> Dict[str, Any]:
+
+    def solve_with_envelope_effective_metric(
+        self, source: np.ndarray
+    ) -> Dict[str, Any]:
         """
         Solve phase envelope balance equation using integrated EnvelopeEffectiveMetric.
-        
+
         Physical Meaning:
             Solves the phase envelope balance equation D[Θ] = source using
             the integrated EnvelopeEffectiveMetric class for computing
             the effective metric from envelope dynamics.
-            
+
         Mathematical Foundation:
             Combines PhaseEnvelopeBalanceSolver with EnvelopeEffectiveMetric
             to solve D[Θ] = source where the effective metric g_eff[Θ] is
             computed from envelope curvature and phase field dynamics.
-            
+
         Args:
             source: Source term for the phase envelope balance equation
-            
+
         Returns:
             Dictionary containing solution and effective metric from envelope dynamics
         """
         # Solve the phase envelope balance equation
         solution = self.solve_phase_envelope_balance(source)
-        
+
         # Compute effective metric using integrated EnvelopeEffectiveMetric
         g_eff = self.envelope_metric.compute_envelope_curvature_metric(solution)
-        
+
         # Compute envelope invariants
         envelope_invariants = self.curvature_calc.compute_envelope_invariants(solution)
-        
+
         return {
             "solution": solution,
             "effective_metric": g_eff,
             "envelope_invariants": envelope_invariants,
-            "envelope_curvature": self.curvature_calc.compute_envelope_curvature(solution)
+            "envelope_curvature": self.curvature_calc.compute_envelope_curvature(
+                solution
+            ),
         }
-    
-    def compute_anisotropic_envelope_solution(self, source: np.ndarray) -> Dict[str, Any]:
+
+    def compute_anisotropic_envelope_solution(
+        self, source: np.ndarray
+    ) -> Dict[str, Any]:
         """
         Solve phase envelope balance equation with anisotropic envelope metric.
-        
+
         Physical Meaning:
             Solves the phase envelope balance equation using an anisotropic
             effective metric computed from envelope dynamics, allowing for
             different spatial components reflecting anisotropic envelope behavior.
-            
+
         Mathematical Foundation:
             Uses EnvelopeEffectiveMetric.compute_anisotropic_metric() to
             compute g_eff[Θ] with different spatial components A^{ij},
             then solves D[Θ] = source with this anisotropic metric.
-            
+
         Args:
             source: Source term for the phase envelope balance equation
-            
+
         Returns:
             Dictionary containing solution and anisotropic effective metric
         """
         # Solve the phase envelope balance equation
         solution = self.solve_phase_envelope_balance(source)
-        
+
         # Compute anisotropic effective metric using integrated EnvelopeEffectiveMetric
-        g_eff_anisotropic = self.curvature_calc.compute_anisotropic_envelope_metric(solution)
-        
+        g_eff_anisotropic = self.curvature_calc.compute_anisotropic_envelope_metric(
+            solution
+        )
+
         # Compute envelope invariants
         envelope_invariants = self.curvature_calc.compute_envelope_invariants(solution)
-        
+
         return {
             "solution": solution,
             "anisotropic_effective_metric": g_eff_anisotropic,
             "envelope_invariants": envelope_invariants,
-            "anisotropy_measure": envelope_invariants.get("anisotropy", 0.0)
+            "anisotropy_measure": envelope_invariants.get("anisotropy", 0.0),
         }
-    
-    def compute_cosmological_envelope_evolution(self, source: np.ndarray, t: float) -> Dict[str, Any]:
+
+    def compute_cosmological_envelope_evolution(
+        self, source: np.ndarray, t: float
+    ) -> Dict[str, Any]:
         """
         Solve phase envelope balance equation with cosmological evolution.
-        
+
         Physical Meaning:
             Solves the phase envelope balance equation including cosmological
             evolution effects using the integrated EnvelopeEffectiveMetric
             for scale factor computation.
-            
+
         Mathematical Foundation:
             Combines phase envelope balance solution with cosmological
             scale factor evolution using VBP envelope dynamics rather
             than classical spacetime expansion.
-            
+
         Args:
             source: Source term for the phase envelope balance equation
             t: Cosmological time
-            
+
         Returns:
             Dictionary containing solution, effective metric, and cosmological evolution
         """
         # Solve the phase envelope balance equation
         solution = self.solve_phase_envelope_balance(source)
-        
+
         # Compute effective metric
         g_eff = self.envelope_metric.compute_envelope_curvature_metric(solution)
-        
+
         # Compute cosmological scale factor using VBP envelope dynamics
         scale_factor = self.envelope_metric.compute_scale_factor(t)
-        
+
         # Apply cosmological evolution to solution
         evolved_solution = solution * scale_factor
-        
+
         return {
             "solution": solution,
             "evolved_solution": evolved_solution,
             "effective_metric": g_eff,
             "scale_factor": scale_factor,
-            "cosmological_time": t
+            "cosmological_time": t,
         }
-    
-    def solve_with_envelope_effective_metric(self, source: np.ndarray) -> Dict[str, Any]:
+
+    def solve_with_envelope_effective_metric(
+        self, source: np.ndarray
+    ) -> Dict[str, Any]:
         """
         Solve phase envelope balance equation using integrated EnvelopeEffectiveMetric.
-        
+
         Physical Meaning:
             Solves the phase envelope balance equation using the integrated
             EnvelopeEffectiveMetric for VBP envelope dynamics.
-            
+
         Args:
             source: Source term for the phase envelope balance equation
-            
+
         Returns:
             Dictionary containing solution, effective metric, and envelope invariants
         """
         solution = self.solve_phase_envelope_balance(source)
         g_eff = self.envelope_metric.compute_envelope_curvature_metric(solution)
         envelope_invariants = self.curvature_calc.compute_envelope_invariants(solution)
-        
+
         return {
             "solution": solution,
             "effective_metric": g_eff,
             "envelope_invariants": envelope_invariants,
-            "envelope_curvature": self.curvature_calc.compute_envelope_curvature(solution)
+            "envelope_curvature": self.curvature_calc.compute_envelope_curvature(
+                solution
+            ),
         }
-    
+
     def _step_resonator_transmission(self, k_magnitude: np.ndarray) -> np.ndarray:
         """
         Step resonator transmission coefficient.
-        
+
         Physical Meaning:
             Implements step resonator model for energy exchange instead of
             exponential decay. This follows 7D BVP theory principles where
             energy exchange occurs through semi-transparent boundaries.
-            
+
         Mathematical Foundation:
             T(k) = T₀ * Θ(k_cutoff - |k|) where Θ is the Heaviside step function
             and k_cutoff is the cutoff frequency for the resonator.
-            
+
         Args:
             k_magnitude: Wave vector magnitude
-            
+
         Returns:
             Step function transmission coefficient
         """
         # Step resonator parameters
         cutoff_frequency = self.params.get("resonator_cutoff_frequency", 10.0)
         transmission_coeff = self.params.get("transmission_coefficient", 0.9)
-        
+
         # Step function transmission: 1.0 below cutoff, 0.0 above
         return transmission_coeff * np.where(k_magnitude < cutoff_frequency, 1.0, 0.0)

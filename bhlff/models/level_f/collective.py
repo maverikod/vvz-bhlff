@@ -12,7 +12,7 @@ Theoretical Background:
     Collective excitations in multi-particle systems are described by
     linear response theory. The system response to external fields
     reveals collective modes and their dispersion relations.
-    
+
     The response function is given by:
     R(ω) = χ(ω) F(ω)
     where χ(ω) is the susceptibility and F(ω) is the external field.

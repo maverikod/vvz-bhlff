@@ -28,7 +28,7 @@ import json
 from typing import Dict, Any, List, Optional, Tuple
 from scipy.optimize import curve_fit
 
-from .performance_analysis import PerformanceAnalysis as CorePerformanceAnalysis
+# Lazy import inside method to avoid circular dependency
 
 
 class PerformanceAnalyzer:
@@ -56,6 +56,8 @@ class PerformanceAnalyzer:
 
     def _setup_performance_modules(self) -> None:
         """Setup performance analysis modules."""
+        from .performance_analysis import PerformanceAnalysis as CorePerformanceAnalysis
+
         self.core_analyzer = CorePerformanceAnalysis(self.config)
 
     def analyze_performance(self) -> Dict[str, Any]:
@@ -79,20 +81,25 @@ class PerformanceAnalyzer:
             "execution_statistics": {
                 "mean_time": results.get("average_time", 0.0),
                 "std_time": results.get("time_std", 0.0),
-                "max_time": results.get("total_time", 0.0)
+                "max_time": results.get("total_time", 0.0),
             },
             "performance_trends": {
                 "trend": "stable",
                 "trend_direction": "stable",
                 "trend_magnitude": 0.1,
-                "efficiency": results.get("time_efficiency", 0.0)
+                "efficiency": results.get("time_efficiency", 0.0),
             },
             "bottleneck_analysis": {
-                "bottlenecks": ["cpu_bound"] if results.get("time_efficiency", 0.0) < 0.5 else [],
+                "bottlenecks": (
+                    ["cpu_bound"] if results.get("time_efficiency", 0.0) < 0.5 else []
+                ),
                 "bottleneck_operations": ["fft", "matrix_multiply"],
                 "optimization_potential": 1.0 - results.get("time_efficiency", 0.0),
-                "optimization_recommendations": ["Use parallel processing", "Optimize FFT algorithms"]
-            }
+                "optimization_recommendations": [
+                    "Use parallel processing",
+                    "Optimize FFT algorithms",
+                ],
+            },
         }
 
     def analyze_memory_usage(self, test_data: Any) -> Dict[str, Any]:
@@ -102,18 +109,21 @@ class PerformanceAnalyzer:
             "memory_statistics": {
                 "peak_memory": results.get("peak_memory", 0.0),
                 "average_memory": results.get("average_memory", 0.0),
-                "memory_efficiency": results.get("memory_efficiency", 0.0)
+                "memory_efficiency": results.get("memory_efficiency", 0.0),
             },
             "memory_trends": {
                 "trend": "stable",
                 "trend_direction": "stable",
                 "trend_magnitude": 0.1,
-                "efficiency": results.get("memory_efficiency", 0.0)
+                "efficiency": results.get("memory_efficiency", 0.0),
             },
             "memory_optimization": {
                 "optimization_potential": 1.0 - results.get("memory_efficiency", 0.0),
-                "optimization_recommendations": ["Use memory mapping", "Optimize data structures"]
-            }
+                "optimization_recommendations": [
+                    "Use memory mapping",
+                    "Optimize data structures",
+                ],
+            },
         }
 
     def analyze_cpu_usage(self, test_data: Any) -> Dict[str, Any]:
@@ -123,18 +133,21 @@ class PerformanceAnalyzer:
             "cpu_statistics": {
                 "peak_cpu": results.get("peak_cpu", 0.0),
                 "average_cpu": results.get("average_cpu", 0.0),
-                "cpu_efficiency": results.get("cpu_efficiency", 0.0)
+                "cpu_efficiency": results.get("cpu_efficiency", 0.0),
             },
             "cpu_trends": {
                 "trend": "stable",
                 "trend_direction": "stable",
                 "trend_magnitude": 0.1,
-                "efficiency": results.get("cpu_efficiency", 0.0)
+                "efficiency": results.get("cpu_efficiency", 0.0),
             },
             "cpu_optimization": {
                 "optimization_potential": 1.0 - results.get("cpu_efficiency", 0.0),
-                "optimization_recommendations": ["Use parallel processing", "Optimize algorithms"]
-            }
+                "optimization_recommendations": [
+                    "Use parallel processing",
+                    "Optimize algorithms",
+                ],
+            },
         }
 
     def analyze_gpu_usage(self, test_data: Any) -> Dict[str, Any]:
@@ -144,34 +157,43 @@ class PerformanceAnalyzer:
             "gpu_statistics": {
                 "peak_gpu": results.get("peak_gpu", 0.0),
                 "average_gpu": results.get("average_gpu", 0.0),
-                "gpu_efficiency": results.get("gpu_efficiency", 0.0)
+                "gpu_efficiency": results.get("gpu_efficiency", 0.0),
             },
             "gpu_trends": {
                 "trend": "stable",
                 "trend_direction": "stable",
                 "trend_magnitude": 0.1,
-                "efficiency": results.get("gpu_efficiency", 0.0)
+                "efficiency": results.get("gpu_efficiency", 0.0),
             },
             "gpu_optimization": {
                 "optimization_potential": 1.0 - results.get("gpu_efficiency", 0.0),
-                "optimization_recommendations": ["Use GPU acceleration", "Optimize GPU kernels"]
-            }
+                "optimization_recommendations": [
+                    "Use GPU acceleration",
+                    "Optimize GPU kernels",
+                ],
+            },
         }
 
     def analyze_performance_optimization(self, test_data: Any) -> Dict[str, Any]:
         """Analyze performance optimization opportunities."""
-        results = self.core_analyzer.performance_analyzer._analyze_performance_optimization()
+        results = (
+            self.core_analyzer.performance_analyzer._analyze_performance_optimization()
+        )
         return {
             "optimization_analysis": {
                 "optimization_potential": results.get("optimization_potential", 0.0),
-                "optimization_recommendations": results.get("optimization_recommendations", []),
-                "optimization_impact": results.get("optimization_impact", 0.0)
+                "optimization_recommendations": results.get(
+                    "optimization_recommendations", []
+                ),
+                "optimization_impact": results.get("optimization_impact", 0.0),
             },
             "performance_improvements": {
                 "improvement_potential": results.get("improvement_potential", 0.0),
-                "improvement_recommendations": results.get("improvement_recommendations", []),
-                "improvement_impact": results.get("improvement_impact", 0.0)
-            }
+                "improvement_recommendations": results.get(
+                    "improvement_recommendations", []
+                ),
+                "improvement_impact": results.get("improvement_impact", 0.0),
+            },
         }
 
     def generate_performance_report(self, test_data: Any) -> Dict[str, Any]:
@@ -181,12 +203,14 @@ class PerformanceAnalyzer:
             "performance_summary": {
                 "overall_performance": results.get("overall_performance", 0.0),
                 "performance_grade": results.get("performance_grade", "B"),
-                "performance_recommendations": results.get("performance_recommendations", [])
+                "performance_recommendations": results.get(
+                    "performance_recommendations", []
+                ),
             },
             "performance_details": {
                 "execution_time": results.get("execution_time", {}),
                 "memory_usage": results.get("memory_usage", {}),
                 "cpu_usage": results.get("cpu_usage", {}),
-                "gpu_usage": results.get("gpu_usage", {})
-            }
+                "gpu_usage": results.get("gpu_usage", {}),
+            },
         }

@@ -24,8 +24,8 @@ from .quality_analysis import QualityAnalyzer
 from .optimization_methods import OptimizationMethods
 
 __all__ = [
-    'PowerLawFitting',
-    'AdvancedPowerLawFitting',
-    'QualityAnalyzer',
-    'OptimizationMethods'
+    "PowerLawFitting",
+    "AdvancedPowerLawFitting",
+    "QualityAnalyzer",
+    "OptimizationMethods",
 ]

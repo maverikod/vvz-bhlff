@@ -22,6 +22,7 @@ import logging
 
 from bhlff.core.bvp import BVPCore
 from .data_structures import BoundaryGeometry, AdmittanceSpectrum
+from ..cuda import LevelCCUDAProcessor
 
 
 class AdmittanceAnalysisCore:
@@ -52,6 +53,15 @@ class AdmittanceAnalysisCore:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
+
+        # Initialize CUDA processor for vectorized operations
+        try:
+            self.cuda_processor = LevelCCUDAProcessor(bvp_core, use_cuda=True)
+            self.use_cuda = self.cuda_processor.cuda_available
+        except Exception as e:
+            self.logger.warning(f"CUDA processor initialization failed: {e}, using CPU")
+            self.cuda_processor = None
+            self.use_cuda = False
 
     def analyze_admittance_spectrum(
         self,
@@ -86,14 +96,34 @@ class AdmittanceAnalysisCore:
         num_frequencies = 100
         frequencies = np.linspace(f_min, f_max, num_frequencies)
 
-        # Initialize admittance array
-        admittances = np.zeros(num_frequencies, dtype=complex)
+        # Use CUDA vectorized computation if available
+        if self.use_cuda and self.cuda_processor is not None:
+            # Create field and source for vectorized computation
+            field = self._create_test_field_for_admittance(domain, boundary)
+            source = self._create_source_field_for_admittance(domain, frequencies[0])
 
-        # Compute admittance at each frequency
-        for i, omega in enumerate(frequencies):
-            admittances[i] = self._compute_admittance_at_frequency(
-                domain, boundary, omega
-            )
+            # Compute admittance using CUDA vectorized operations
+            try:
+                admittances = self.cuda_processor.compute_admittance_vectorized(
+                    field, source, frequencies, domain
+                )
+            except Exception as e:
+                self.logger.warning(
+                    f"CUDA admittance computation failed: {e}, falling back to CPU"
+                )
+                # Fallback to CPU
+                admittances = np.zeros(num_frequencies, dtype=complex)
+                for i, omega in enumerate(frequencies):
+                    admittances[i] = self._compute_admittance_at_frequency(
+                        domain, boundary, omega
+                    )
+        else:
+            # CPU computation
+            admittances = np.zeros(num_frequencies, dtype=complex)
+            for i, omega in enumerate(frequencies):
+                admittances[i] = self._compute_admittance_at_frequency(
+                    domain, boundary, omega
+                )
 
         # Create admittance spectrum
         spectrum = AdmittanceSpectrum(
@@ -326,3 +356,25 @@ class AdmittanceAnalysisCore:
         voltage = np.mean(solution_field) * 1e-3  # Simplified scaling
 
         return voltage
+
+    def _create_test_field_for_admittance(
+        self, domain: Dict[str, Any], boundary: BoundaryGeometry
+    ) -> np.ndarray:
+        """Create test field for admittance computation."""
+        N = domain.get("N", 64)
+        field = np.random.rand(N, N, N) + 1j * np.random.rand(N, N, N)
+        field *= 0.1
+        return field
+
+    def _create_source_field_for_admittance(
+        self, domain: Dict[str, Any], omega: float
+    ) -> np.ndarray:
+        """Create source field for admittance computation."""
+        N = domain.get("N", 64)
+        L = domain.get("L", 1.0)
+        x = np.linspace(0, L, N)
+        y = np.linspace(0, L, N)
+        z = np.linspace(0, L, N)
+        X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
+        source = np.exp(1j * omega * X / L) * np.exp(-((X - L / 2) ** 2) / (L / 4) ** 2)
+        return source

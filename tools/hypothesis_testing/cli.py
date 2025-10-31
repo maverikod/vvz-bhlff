@@ -12,9 +12,16 @@ import os
 import logging
 
 # Add project root to path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
-from .commands import TestStep0Command, TestStep1Command, TestAllCommand, TestStep2Command, TestStep3Command, TestStep3AdaptiveCommand
+from .commands import (
+    TestStep0Command,
+    TestStep1Command,
+    TestAllCommand,
+    TestStep2Command,
+    TestStep3Command,
+    TestStep3AdaptiveCommand,
+)
 
 
 def setup_logging(verbose: bool):
@@ -22,8 +29,8 @@ def setup_logging(verbose: bool):
     level = logging.INFO if verbose else logging.WARNING
     logging.basicConfig(
         level=level,
-        format='[%(levelname)s] %(message)s',
-        handlers=[logging.StreamHandler(sys.stdout)]
+        format="[%(levelname)s] %(message)s",
+        handlers=[logging.StreamHandler(sys.stdout)],
     )
 
 
@@ -43,85 +50,107 @@ Examples:
   python cli.py test-step-0 --verbose
   python cli.py test-step-1
   python cli.py test-all
-        """
+        """,
     )
-    
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
-    
+
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
+
     # Test Step 0 command
-    step0_parser = subparsers.add_parser('test-step-0', help='Test Step 0: 7D BVP Structure')
-    step0_parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose logging')
-    
+    step0_parser = subparsers.add_parser(
+        "test-step-0", help="Test Step 0: 7D BVP Structure"
+    )
+    step0_parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Enable verbose logging"
+    )
+
     # Test Step 1 command
-    step1_parser = subparsers.add_parser('test-step-1', help='Test Step 1: Power Law Analyzer')
-    step1_parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose logging')
-    
+    step1_parser = subparsers.add_parser(
+        "test-step-1", help="Test Step 1: Power Law Analyzer"
+    )
+    step1_parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Enable verbose logging"
+    )
+
     # Test Step 2 command
-    step2_parser = subparsers.add_parser('test-step-2', help='Test Step 2: 7D FFT Solver')
-    step2_parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose logging')
+    step2_parser = subparsers.add_parser(
+        "test-step-2", help="Test Step 2: 7D FFT Solver"
+    )
+    step2_parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Enable verbose logging"
+    )
 
     # Test All command
-    all_parser = subparsers.add_parser('test-all', help='Run all available tests')
-    all_parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose logging')
-    
+    all_parser = subparsers.add_parser("test-all", help="Run all available tests")
+    all_parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Enable verbose logging"
+    )
+
     # Test Step 3 command
-    step3_parser = subparsers.add_parser('test-step-3', help='Test Step 3: Time Integrators')
-    step3_parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose logging')
-    
+    step3_parser = subparsers.add_parser(
+        "test-step-3", help="Test Step 3: Time Integrators"
+    )
+    step3_parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Enable verbose logging"
+    )
+
     # Test Step 3 Adaptive command
-    step3a_parser = subparsers.add_parser('test-step-3-adaptive', help='Test Step 3: Adaptive Integrator')
-    step3a_parser.add_argument('--verbose', '-v', action='store_true', help='Enable verbose logging')
-    
+    step3a_parser = subparsers.add_parser(
+        "test-step-3-adaptive", help="Test Step 3: Adaptive Integrator"
+    )
+    step3a_parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Enable verbose logging"
+    )
+
     args = parser.parse_args()
-    
+
     if not args.command:
         parser.print_help()
         sys.exit(1)
-    
+
     # Setup logging
     setup_logging(args.verbose)
-    
+
     # Execute command
     try:
-        if args.command == 'test-step-0':
+        if args.command == "test-step-0":
             command = TestStep0Command(verbose=args.verbose)
             result = command.execute()
             command.print_result(result)
             sys.exit(0 if result.get("success", False) else 1)
-            
-        elif args.command == 'test-step-1':
+
+        elif args.command == "test-step-1":
             command = TestStep1Command(verbose=args.verbose)
             result = command.execute()
             command.print_result(result)
             sys.exit(0 if result.get("success", False) else 1)
-            
-        elif args.command == 'test-all':
+
+        elif args.command == "test-all":
             command = TestAllCommand(verbose=args.verbose)
             result = command.execute()
             sys.exit(0 if result.get("success", False) else 1)
-        
-        elif args.command == 'test-step-2':
+
+        elif args.command == "test-step-2":
             command = TestStep2Command(verbose=args.verbose)
             result = command.execute()
             command.print_result(result)
             sys.exit(0 if result.get("success", False) else 1)
-        
-        elif args.command == 'test-step-3':
+
+        elif args.command == "test-step-3":
             command = TestStep3Command(verbose=args.verbose)
             result = command.execute()
             command.print_result(result)
             sys.exit(0 if result.get("success", False) else 1)
-        
-        elif args.command == 'test-step-3-adaptive':
+
+        elif args.command == "test-step-3-adaptive":
             command = TestStep3AdaptiveCommand(verbose=args.verbose)
             result = command.execute()
             command.print_result(result)
             sys.exit(0 if result.get("success", False) else 1)
-            
+
         else:
             print(f"Unknown command: {args.command}")
             sys.exit(1)
-            
+
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)

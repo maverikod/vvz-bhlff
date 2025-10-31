@@ -44,23 +44,27 @@ class CodeMapperMethods:
                         class_name = class_key.split("::", 1)[1]
                         if class_name not in class_methods:
                             class_methods[class_name] = []
-                        class_methods[class_name].append({
-                            "name": method_name,
-                            "file": func_info["file"],
-                            "line": func_info["line"],
-                            "args": func_info["args"],
-                            "returns": func_info["returns"]
-                        })
+                        class_methods[class_name].append(
+                            {
+                                "name": method_name,
+                                "file": func_info["file"],
+                                "line": func_info["line"],
+                                "args": func_info["args"],
+                                "returns": func_info["returns"],
+                            }
+                        )
                         break
             else:
                 # Standalone function
-                standalone_functions.append({
-                    "name": func_info["name"],
-                    "file": func_info["file"],
-                    "line": func_info["line"],
-                    "args": func_info["args"],
-                    "returns": func_info["returns"]
-                })
+                standalone_functions.append(
+                    {
+                        "name": func_info["name"],
+                        "file": func_info["file"],
+                        "line": func_info["line"],
+                        "args": func_info["args"],
+                        "returns": func_info["returns"],
+                    }
+                )
 
         # Report class methods
         if class_methods:
@@ -70,7 +74,9 @@ class CodeMapperMethods:
                 report.append(f"Class: {class_name}")
                 for method in methods:
                     args_str = ", ".join(method["args"]) if method["args"] else "()"
-                    returns_str = f" -> {method['returns']}" if method["returns"] else ""
+                    returns_str = (
+                        f" -> {method['returns']}" if method["returns"] else ""
+                    )
                     report.append(f"  {method['name']}({args_str}){returns_str}")
                     report.append(f"    File: {method['file']}, Line: {method['line']}")
                 report.append("")
@@ -109,36 +115,44 @@ class CodeMapperMethods:
                         class_name = class_key.split("::", 1)[1]
                         if class_name not in class_methods:
                             class_methods[class_name] = []
-                        class_methods[class_name].append({
-                            "name": method_name,
-                            "file": func_info["file"],
-                            "line": func_info["line"],
-                            "args": func_info["args"],
-                            "returns": func_info["returns"]
-                        })
+                        class_methods[class_name].append(
+                            {
+                                "name": method_name,
+                                "file": func_info["file"],
+                                "line": func_info["line"],
+                                "args": func_info["args"],
+                                "returns": func_info["returns"],
+                            }
+                        )
                         break
             else:
                 # Standalone function
-                standalone_functions.append({
-                    "name": func_info["name"],
-                    "file": func_info["file"],
-                    "line": func_info["line"],
-                    "args": func_info["args"],
-                    "returns": func_info["returns"]
-                })
+                standalone_functions.append(
+                    {
+                        "name": func_info["name"],
+                        "file": func_info["file"],
+                        "line": func_info["line"],
+                        "args": func_info["args"],
+                        "returns": func_info["returns"],
+                    }
+                )
 
         yaml_data = {
             "method_index": {
                 "class_methods": class_methods,
                 "standalone_functions": standalone_functions,
                 "summary": {
-                    "total_class_methods": sum(len(methods) for methods in class_methods.values()),
+                    "total_class_methods": sum(
+                        len(methods) for methods in class_methods.values()
+                    ),
                     "total_standalone_functions": len(standalone_functions),
-                    "total_classes": len(class_methods)
-                }
+                    "total_classes": len(class_methods),
+                },
             }
         }
-        return yaml.dump(yaml_data, default_flow_style=False, allow_unicode=True, sort_keys=True)
+        return yaml.dump(
+            yaml_data, default_flow_style=False, allow_unicode=True, sort_keys=True
+        )
 
     def save_yaml_method_index(self, output_dir: str) -> None:
         """Save YAML method index to file."""

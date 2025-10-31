@@ -101,7 +101,7 @@ def test_A02_multi_plane() -> None:
     for idx, m in enumerate(modes):
         k = tuple((mi % n) for mi, n in zip(m, shape))
         ksq = (2.0 * np.pi / L) ** 2 * float(sum(mi * mi for mi in m))
-        denom = mu * (ksq ** beta) + lam
+        denom = mu * (ksq**beta) + lam
         a_hat[k] = s_hat[k] / denom
 
     # Transform back to real space and compute forward to check aliasing

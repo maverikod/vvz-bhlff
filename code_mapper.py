@@ -25,7 +25,12 @@ logger = logging.getLogger(__name__)
 class CodeMapper:
     """Code mapper for analyzing Python codebase."""
 
-    def __init__(self, root_dir: str = ".", output_dir: str = "code_analysis", max_lines: int = 400):
+    def __init__(
+        self,
+        root_dir: str = ".",
+        output_dir: str = "code_analysis",
+        max_lines: int = 400,
+    ):
         """Initialize code mapper."""
         self.core = CodeMapperCore(root_dir, output_dir, max_lines)
         self.reports = None
@@ -34,7 +39,7 @@ class CodeMapper:
     def scan_directory(self, directory: str = ".") -> None:
         """Scan directory for Python files."""
         self.core.scan_directory(directory)
-        
+
         # Initialize reports and methods after scanning
         self.reports = CodeMapperReports(self.core.code_map, self.core.issues)
         self.methods = CodeMapperMethods(self.core.code_map)
@@ -120,17 +125,24 @@ def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(description="BHLFF Code Mapper")
     parser.add_argument("--root-dir", default=".", help="Root directory to scan")
-    parser.add_argument("--output-dir", default="code_analysis", help="Output directory for reports")
-    parser.add_argument("--max-lines", type=int, default=400, help="Maximum lines per file (default: 400)")
-    
+    parser.add_argument(
+        "--output-dir", default="code_analysis", help="Output directory for reports"
+    )
+    parser.add_argument(
+        "--max-lines",
+        type=int,
+        default=400,
+        help="Maximum lines per file (default: 400)",
+    )
+
     args = parser.parse_args()
-    
+
     # Create code mapper
     mapper = CodeMapper(args.root_dir, args.output_dir, args.max_lines)
-    
+
     # Scan directory
     mapper.scan_directory(args.root_dir)
-    
+
     # Generate all reports
     mapper.save_report()
     mapper.save_issues_report()
@@ -138,13 +150,13 @@ def main():
     mapper.save_yaml_issues_report()
     mapper.save_method_index()
     mapper.save_yaml_method_index()
-    
+
     # Print summary
     total_files = len(mapper.core.code_map["files"])
     total_classes = len(mapper.core.code_map["classes"])
     total_functions = len(mapper.core.code_map["functions"])
     total_issues = sum(len(issues) for issues in mapper.core.issues.values())
-    
+
     print(f"\nАнализ завершен!")
     print(f"Созданы YAML отчеты в каталоге: {args.output_dir}")
     print(f"- code_map.yaml - карта кода")
@@ -152,13 +164,15 @@ def main():
     print(f"- method_index.yaml - индекс методов")
     print(f"Лимит строк на файл: {args.max_lines}")
     print(f"Всего найдено проблем: {total_issues}")
-    
+
     # Files exceeding limit
     files_too_large = mapper.core.issues["files_too_large"]
     if files_too_large:
         print(f"Файлов, превышающих лимит: {len(files_too_large)}")
         for file_info in files_too_large[:10]:  # Show first 10
-            print(f"  - {file_info['file']}: {file_info['lines']} строк (превышение на {file_info['exceeds_limit']})")
+            print(
+                f"  - {file_info['file']}: {file_info['lines']} строк (превышение на {file_info['exceeds_limit']})"
+            )
         if len(files_too_large) > 10:
             print(f"  ... и еще {len(files_too_large) - 10} файлов")
 

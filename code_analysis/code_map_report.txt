@@ -4,24 +4,24 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 921
+Total files analyzed: 952
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 783
+Total classes: 804
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 6907
+Total functions: 7025
 
 ISSUES SUMMARY:
 ----------------------------------------
 methods_with_pass: 0
 not_implemented_in_non_abstract: 0
-methods_without_docstrings: 271
+methods_without_docstrings: 318
 files_without_docstrings: 4
 classes_without_docstrings: 21
-imports_in_middle: 673
+imports_in_middle: 686
 files_too_large: 121
 
 METHODS_WITHOUT_DOCSTRINGS:
@@ -70,7 +70,7 @@ METHODS_WITHOUT_DOCSTRINGS:
   Class: MockBVPCore
   Method: __init__
 
-  ... and 261 more
+  ... and 308 more
 
 FILES_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -134,25 +134,25 @@ CLASSES_WITHOUT_DOCSTRINGS:
 IMPORTS_IN_MIDDLE:
 ----------------------------------------
   File: ./test_quench_detector_minimal.py
-  Line: 30
+  Line: 31
 
   File: ./test_quench_detector_light.py
-  Line: 36
+  Line: 37
 
   File: ./debug_block_processing.py
-  Line: 244
+  Line: 253
 
   File: ./test_quench_detector_cuda.py
-  Line: 30
+  Line: 31
 
   File: ./setup.py
   Line: 28
 
   File: ./test_quench_detector_optimized.py
-  Line: 261
+  Line: 284
 
   File: ./scripts/demo_vectorized_power_law.py
-  Line: 203
+  Line: 206
 
   File: ./scripts/demo_7d_vectorized_processing.py
   Line: 30
@@ -161,9 +161,9 @@ IMPORTS_IN_MIDDLE:
   Line: 22
 
   File: ./scripts/demo_block_processing.py
-  Line: 306
+  Line: 317
 
-  ... and 663 more
+  ... and 676 more
 
 FILES_TOO_LARGE:
 ----------------------------------------

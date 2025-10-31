@@ -16,79 +16,79 @@ Class: CodeMapperReports
   generate_yaml_code_map(self) -> str
     File: ./code_mapper_reports.py, Line: 120
   save_yaml_code_map(self, output_dir) -> None
-    File: ./code_mapper_reports.py, Line: 138
+    File: ./code_mapper_reports.py, Line: 140
   save_issues_report(self, output_dir) -> None
-    File: ./code_mapper_reports.py, Line: 144
+    File: ./code_mapper_reports.py, Line: 146
   generate_yaml_issues_report(self) -> str
-    File: ./code_mapper_reports.py, Line: 150
+    File: ./code_mapper_reports.py, Line: 152
   save_yaml_issues_report(self, output_dir) -> None
-    File: ./code_mapper_reports.py, Line: 161
+    File: ./code_mapper_reports.py, Line: 165
 
 Class: CodeMapperCore
   __init__(self, root_dir, output_dir, max_lines)
     File: ./code_mapper_core.py, Line: 25
   scan_directory(self, directory) -> None
-    File: ./code_mapper_core.py, Line: 52
+    File: ./code_mapper_core.py, Line: 57
   analyze_file(self, file_path) -> None
-    File: ./code_mapper_core.py, Line: 66
+    File: ./code_mapper_core.py, Line: 71
   extract_class_info(self, node, file_path, import_lines) -> Dict[str, Any]
-    File: ./code_mapper_core.py, Line: 136
+    File: ./code_mapper_core.py, Line: 147
   extract_function_info(self, node, file_path, import_lines) -> Dict[str, Any]
-    File: ./code_mapper_core.py, Line: 166
+    File: ./code_mapper_core.py, Line: 180
   _check_method_issues(self, node, file_path, class_name) -> None
-    File: ./code_mapper_core.py, Line: 188
+    File: ./code_mapper_core.py, Line: 206
   _has_only_pass(self, node) -> bool
-    File: ./code_mapper_core.py, Line: 217
+    File: ./code_mapper_core.py, Line: 243
   _has_not_implemented(self, node) -> bool
-    File: ./code_mapper_core.py, Line: 223
+    File: ./code_mapper_core.py, Line: 249
   _is_abstract_method(self, node) -> bool
-    File: ./code_mapper_core.py, Line: 230
+    File: ./code_mapper_core.py, Line: 260
   extract_import_info(self, node) -> Dict[str, Any]
-    File: ./code_mapper_core.py, Line: 235
+    File: ./code_mapper_core.py, Line: 267
 
 Class: CodeMapper
   main(())
-    File: ./code_mapper.py, Line: 119
+    File: ./code_mapper.py, Line: 124
   __init__(self, root_dir, output_dir, max_lines)
     File: ./code_mapper.py, Line: 28
   scan_directory(self, directory) -> None
-    File: ./code_mapper.py, Line: 34
+    File: ./code_mapper.py, Line: 39
   analyze_file(self, file_path) -> None
-    File: ./code_mapper.py, Line: 42
+    File: ./code_mapper.py, Line: 47
   generate_report(self) -> str
-    File: ./code_mapper.py, Line: 46
+    File: ./code_mapper.py, Line: 51
   generate_issues_report(self) -> str
-    File: ./code_mapper.py, Line: 52
+    File: ./code_mapper.py, Line: 57
   save_report(self) -> None
-    File: ./code_mapper.py, Line: 58
+    File: ./code_mapper.py, Line: 63
   generate_yaml_code_map(self) -> str
-    File: ./code_mapper.py, Line: 64
+    File: ./code_mapper.py, Line: 69
   save_yaml_code_map(self) -> None
-    File: ./code_mapper.py, Line: 70
+    File: ./code_mapper.py, Line: 75
   save_issues_report(self) -> None
-    File: ./code_mapper.py, Line: 76
+    File: ./code_mapper.py, Line: 81
   generate_yaml_issues_report(self) -> str
-    File: ./code_mapper.py, Line: 82
+    File: ./code_mapper.py, Line: 87
   save_yaml_issues_report(self) -> None
-    File: ./code_mapper.py, Line: 88
+    File: ./code_mapper.py, Line: 93
   generate_method_index(self) -> str
-    File: ./code_mapper.py, Line: 94
+    File: ./code_mapper.py, Line: 99
   save_method_index(self) -> None
-    File: ./code_mapper.py, Line: 100
+    File: ./code_mapper.py, Line: 105
   generate_yaml_method_index(self) -> str
-    File: ./code_mapper.py, Line: 106
+    File: ./code_mapper.py, Line: 111
   save_yaml_method_index(self) -> None
-    File: ./code_mapper.py, Line: 112
+    File: ./code_mapper.py, Line: 117
   main(())
-    File: ./code_mapper_main.py, Line: 81
+    File: ./code_mapper_main.py, Line: 88
   __init__(self, root_dir, output_dir, max_lines)
     File: ./code_mapper_main.py, Line: 28
   scan_directory(self, directory) -> None
-    File: ./code_mapper_main.py, Line: 34
+    File: ./code_mapper_main.py, Line: 39
   generate_all_reports(self) -> None
-    File: ./code_mapper_main.py, Line: 42
+    File: ./code_mapper_main.py, Line: 47
   print_summary(self) -> None
-    File: ./code_mapper_main.py, Line: 56
+    File: ./code_mapper_main.py, Line: 61
 
 Class: CodeMapperMethods
   __init__(self, code_map)
@@ -96,11 +96,29 @@ Class: CodeMapperMethods
   generate_method_index(self) -> str
     File: ./code_mapper_methods.py, Line: 26
   save_method_index(self, output_dir) -> None
-    File: ./code_mapper_methods.py, Line: 91
-  generate_yaml_method_index(self) -> str
     File: ./code_mapper_methods.py, Line: 97
+  generate_yaml_method_index(self) -> str
+    File: ./code_mapper_methods.py, Line: 103
   save_yaml_method_index(self, output_dir) -> None
-    File: ./code_mapper_methods.py, Line: 143
+    File: ./code_mapper_methods.py, Line: 157
+
+Class: LevelAExperimentRunner
+  main(()) -> int
+    File: ./scripts/run_level_a_experiments.py, Line: 354
+  __init__(self, output_dir)
+    File: ./scripts/run_level_a_experiments.py, Line: 45
+  run_all_tests(self) -> Dict[str, Any]
+    File: ./scripts/run_level_a_experiments.py, Line: 65
+  _run_single_test(self, test_id, tests_root, test_pattern) -> Dict[str, Any]
+    File: ./scripts/run_level_a_experiments.py, Line: 109
+  _load_test_metrics(self, test_id) -> Dict[str, Any]
+    File: ./scripts/run_level_a_experiments.py, Line: 170
+  _check_acceptance(self, test_id, metrics) -> bool
+    File: ./scripts/run_level_a_experiments.py, Line: 203
+  _collect_system_info(self) -> Dict[str, str]
+    File: ./scripts/run_level_a_experiments.py, Line: 259
+  generate_report(self) -> None
+    File: ./scripts/run_level_a_experiments.py, Line: 283
 
 Class: TestBVPLevelCIntegration
   domain(self)
@@ -4858,71 +4876,71 @@ Class: TestAdvancedProperties
 
 Class: _Domain
   _load_config(()) -> dict
-    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 26
+    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 25
   _make_domain_shape(N) -> Tuple[int, int, int]
-    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 34
+    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 33
   _rand_modes(N, J, seed) -> List[Tuple[int, int, int]]
-    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 38
+    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 37
   _build_spectral_source(shape, modes, amplitudes) -> np.ndarray
-    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 50
+    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 49
   test_A02_multi_plane(()) -> None
-    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 66
+    File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 65
   __init__(self, shape)
     File: ./tests/unit/test_level_a/test_A02_multi_plane.py, Line: 80
   _load_config(()) -> dict
-    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 25
+    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 24
   _make_domain_shape(N) -> Tuple[int, int, int]
-    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 33
+    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 32
   _ensure_output_dir(out_dir) -> None
-    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 37
+    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 36
   _solve_stationary(domain, mu, beta, lam, source) -> np.ndarray
-    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 41
+    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 40
   test_A03_zero_mode(()) -> None
-    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 67
+    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 66
   __init__(self, shape)
-    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 76
+    File: ./tests/unit/test_level_a/test_A03_zero_mode.py, Line: 75
   _load_config(()) -> dict
-    File: ./tests/unit/test_level_a/test_A04_time_harmonic.py, Line: 24
+    File: ./tests/unit/test_level_a/test_A04_time_harmonic.py, Line: 23
   _make_domain_shape(N) -> Tuple[int, int, int]
-    File: ./tests/unit/test_level_a/test_A04_time_harmonic.py, Line: 32
+    File: ./tests/unit/test_level_a/test_A04_time_harmonic.py, Line: 31
   test_A04_time_harmonic_steady_state(()) -> None
-    File: ./tests/unit/test_level_a/test_A04_time_harmonic.py, Line: 36
+    File: ./tests/unit/test_level_a/test_A04_time_harmonic.py, Line: 35
   __init__(self, shape)
-    File: ./tests/unit/test_level_a/test_A04_time_harmonic.py, Line: 51
+    File: ./tests/unit/test_level_a/test_A04_time_harmonic.py, Line: 50
   _load_config(()) -> dict
-    File: ./tests/unit/test_level_a/test_A12_units_invariance.py, Line: 24
+    File: ./tests/unit/test_level_a/test_A12_units_invariance.py, Line: 23
   _make_domain_shape(N) -> Tuple[int, int, int]
-    File: ./tests/unit/test_level_a/test_A12_units_invariance.py, Line: 32
+    File: ./tests/unit/test_level_a/test_A12_units_invariance.py, Line: 31
   _solve_with_units(L, N, nu_dimless, beta, lam_dimless, mode, L0, T0, A0) -> np.ndarray
-    File: ./tests/unit/test_level_a/test_A12_units_invariance.py, Line: 36
+    File: ./tests/unit/test_level_a/test_A12_units_invariance.py, Line: 35
   test_A12_units_invariance(()) -> None
-    File: ./tests/unit/test_level_a/test_A12_units_invariance.py, Line: 82
+    File: ./tests/unit/test_level_a/test_A12_units_invariance.py, Line: 88
   __init__(self, shape, L, N)
-    File: ./tests/unit/test_level_a/test_A12_units_invariance.py, Line: 55
+    File: ./tests/unit/test_level_a/test_A12_units_invariance.py, Line: 56
   _load_config(()) -> dict
-    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 27
+    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 24
   _make_domain_shape(N) -> Tuple[int, int, int]
-    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 35
+    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 32
   _generate_plane_wave(shape, mode) -> np.ndarray
-    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 39
+    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 36
   _compute_reference_amplitude(mu, beta, lam, mode, L, N) -> float
-    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 48
+    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 45
   _ensure_output_dir(out_dir) -> None
-    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 57
+    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 54
   test_A01_plane_wave(()) -> None
-    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 61
+    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 58
   __init__(self, shape)
-    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 74
+    File: ./tests/unit/test_level_a/test_A01_plane_wave.py, Line: 71
   _load_config(()) -> dict
-    File: ./tests/unit/test_level_a/test_A11_scale_length.py, Line: 25
+    File: ./tests/unit/test_level_a/test_A11_scale_length.py, Line: 24
   _make_domain_shape(N) -> Tuple[int, int, int]
-    File: ./tests/unit/test_level_a/test_A11_scale_length.py, Line: 33
+    File: ./tests/unit/test_level_a/test_A11_scale_length.py, Line: 32
   _solve_stationary(L, N, mu, beta, lam, mode) -> np.ndarray
-    File: ./tests/unit/test_level_a/test_A11_scale_length.py, Line: 37
+    File: ./tests/unit/test_level_a/test_A11_scale_length.py, Line: 36
   test_A11_scale_length(()) -> None
-    File: ./tests/unit/test_level_a/test_A11_scale_length.py, Line: 65
+    File: ./tests/unit/test_level_a/test_A11_scale_length.py, Line: 64
   __init__(self, shape, L, N)
-    File: ./tests/unit/test_level_a/test_A11_scale_length.py, Line: 43
+    File: ./tests/unit/test_level_a/test_A11_scale_length.py, Line: 42
   _load_config(()) -> dict
     File: ./tests/unit/test_level_a/test_A05_residual_energy.py, Line: 24
   _make_domain_shape(N) -> Tuple[int, int, int]
@@ -5590,17 +5608,17 @@ Class: ResonatorLayer
 
 Class: RadialAnalysisCore
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 42
+    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 43
   analyze_radial_profile(self, domain, boundary, field) -> RadialProfile
-    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 56
+    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 66
   _compute_radial_profile(self, domain, boundary, field) -> Dict[str, Any]
-    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 96
+    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 139
   _compute_amplitude_at_radius(self, domain, field, radius) -> float
-    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 138
+    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 181
   _create_spherical_shell_mask(self, domain, radius) -> np.ndarray
-    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 167
+    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 210
   _find_local_maxima(self, radial_profile) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 206
+    File: ./bhlff/models/level_c/boundary/radial_analysis_core.py, Line: 249
 
 Class: RadialConcentrationAnalyzer
   __init__(self, bvp_core)
@@ -5650,23 +5668,27 @@ Class: BoundaryGeometry
 
 Class: AdmittanceAnalysisCore
   __init__(self, bvp_core)
-    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 42
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 43
   analyze_admittance_spectrum(self, domain, boundary, frequency_range) -> AdmittanceSpectrum
-    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 56
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 66
   _compute_admittance_at_frequency(self, domain, boundary, omega) -> complex
-    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 109
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 139
   _create_source_field(self, domain, omega) -> np.ndarray
-    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 149
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 179
   _solve_bvp_with_boundary(self, domain, boundary, source_field, omega) -> np.ndarray
-    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 182
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 212
   _apply_boundary_conditions(self, source_field, boundary_mask) -> np.ndarray
-    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 217
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 247
   _create_boundary_mask(self, domain, boundary) -> np.ndarray
-    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 239
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 269
   _compute_current(self, solution_field, domain, boundary) -> complex
-    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 280
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 310
   _compute_voltage(self, solution_field, domain) -> complex
-    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 307
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 337
+  _create_test_field_for_admittance(self, domain, boundary) -> np.ndarray
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 360
+  _create_source_field_for_admittance(self, domain, omega) -> np.ndarray
+    File: ./bhlff/models/level_c/boundary/admittance_analysis_core.py, Line: 369
 
 Class: AdmittanceAnalyzer
   __init__(self, bvp_core)
@@ -5703,6 +5725,32 @@ Class: RadialAnalyzer
     File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 62
   analyze_field_concentration(self, domain, boundary, field) -> Dict[str, Any]
     File: ./bhlff/models/level_c/boundary/radial_analysis.py, Line: 85
+
+Class: LevelCCUDAProcessor
+  __init__(self, bvp_core, use_cuda)
+    File: ./bhlff/models/level_c/cuda/cuda_compute_processor.py, Line: 62
+  _compute_optimal_block_size(self) -> int
+    File: ./bhlff/models/level_c/cuda/cuda_compute_processor.py, Line: 98
+  compute_admittance_vectorized(self, field, source, frequencies, domain) -> np.ndarray
+    File: ./bhlff/models/level_c/cuda/cuda_compute_processor.py, Line: 159
+  _compute_admittance_cuda(self, field, source, frequencies, domain) -> np.ndarray
+    File: ./bhlff/models/level_c/cuda/cuda_compute_processor.py, Line: 191
+  _compute_admittance_blocked_cuda(self, field_gpu, source_gpu, omega, domain) -> 'cp.ndarray'
+    File: ./bhlff/models/level_c/cuda/cuda_compute_processor.py, Line: 224
+  _compute_admittance_all_freqs_cuda(self, field_gpu, source_gpu, frequencies, domain) -> 'cp.ndarray'
+    File: ./bhlff/models/level_c/cuda/cuda_compute_processor.py, Line: 250
+  _compute_admittance_cpu(self, field, source, frequencies, domain) -> np.ndarray
+    File: ./bhlff/models/level_c/cuda/cuda_compute_processor.py, Line: 282
+  compute_radial_profile_vectorized(self, field, center, radii, domain) -> np.ndarray
+    File: ./bhlff/models/level_c/cuda/cuda_compute_processor.py, Line: 307
+  _compute_radial_profile_cuda(self, field, center, domain, radii) -> np.ndarray
+    File: ./bhlff/models/level_c/cuda/cuda_compute_processor.py, Line: 339
+  _compute_radial_profile_cpu(self, field, center, radii, domain) -> np.ndarray
+    File: ./bhlff/models/level_c/cuda/cuda_compute_processor.py, Line: 390
+  _block_reduce_sum(self, array, block_size) -> 'cp.ndarray'
+    File: ./bhlff/models/level_c/cuda/cuda_compute_processor.py, Line: 428
+  cleanup(self) -> None
+    File: ./bhlff/models/level_c/cuda/cuda_compute_processor.py, Line: 460
 
 Class: PinnedFieldEvolution
   __init__(self)
@@ -8478,23 +8526,23 @@ Class: PhaseTransitionsHelpers
 
 Class: LevelDModels
   __init__(self, domain, parameters)
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 63
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 80
   create_multi_mode_field(self, base_field, modes) -> np.ndarray
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 89
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 117
   analyze_mode_superposition(self, field, new_modes) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 118
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 146
   project_field_windows(self, field, window_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 148
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 176
   trace_phase_streamlines(self, field, center) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 180
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 208
   analyze_multimode_field(self, field) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 209
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 237
   _get_default_window_params(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 259
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 287
   validate_field(self, field) -> bool
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 284
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 312
   analyze_field(self, field) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 318
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 346
 
 Class: FieldProjection
   __init__(self)
@@ -8638,6 +8686,98 @@ Class: MultiModeModel
   compute_stability_metrics(self, frame_before, frame_after) -> Dict[str, Any]
     File: ./bhlff/models/level_d/superposition.py, Line: 445
 
+Class: EMProjectorCUDA
+  __init__(self, params, cuda_available, backend)
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 198
+  project(self, field) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 207
+  _create_em_filter_cuda(self, shape) -> 'cp.ndarray'
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 59
+  _create_em_filter_cpu(self, shape) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 69
+  _create_frequency_grid_cuda(self, shape) -> 'cp.ndarray'
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 247
+  _create_frequency_grid_cpu(self, shape) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 259
+  _create_strong_filter_cuda(self, shape) -> 'cp.ndarray'
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 132
+  _create_strong_filter_cpu(self, shape) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 143
+  _apply_q_factor_filter_cuda(self, frequencies, q_factor) -> 'cp.ndarray'
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 178
+  _apply_q_factor_filter_cpu(self, frequencies, q_factor) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 186
+  _create_weak_filter_cuda(self, shape) -> 'cp.ndarray'
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 223
+  _create_weak_filter_cpu(self, shape) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 235
+  _apply_chiral_filter_cuda(self, chiral_factor, shape) -> 'cp.ndarray'
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 271
+  _apply_chiral_filter_cpu(self, chiral_factor, shape) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 277
+
+Class: FrameExtractorCUDA
+  __init__(self, domain, cuda_available)
+    File: ./bhlff/models/level_d/cuda/superposition_utils_cuda.py, Line: 69
+  extract_frame(self, field) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/superposition_utils_cuda.py, Line: 41
+  compute_stability_metrics(self, frame_before, frame_after) -> Dict[str, Any]
+    File: ./bhlff/models/level_d/cuda/superposition_utils_cuda.py, Line: 80
+
+Class: SignatureAnalyzerCUDA
+  __init__(self, cuda_available, backend)
+    File: ./bhlff/models/level_d/cuda/signature_analyzer_cuda.py, Line: 30
+  analyze_field_signatures(self, projections) -> Dict[str, Any]
+    File: ./bhlff/models/level_d/cuda/signature_analyzer_cuda.py, Line: 39
+  _analyze_single_field_signature(self, field, field_type) -> Dict[str, Any]
+    File: ./bhlff/models/level_d/cuda/signature_analyzer_cuda.py, Line: 62
+
+Class: StreamlineAnalyzerCUDA
+  __init__(self, domain, cuda_available)
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 305
+  trace_phase_streamlines(self, field, center) -> Dict[str, Any]
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 65
+  compute_phase_gradient(self, phase) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 121
+  trace_streamlines(self, gradient_field, center) -> List[np.ndarray]
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 181
+  _create_initial_points(self, center, num_points) -> List[np.ndarray]
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 216
+  _trace_single_streamline(self, gradient_field, initial_point, integration_steps, step_size) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 246
+  _interpolate_gradient(self, gradient_field, point) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 268
+  _is_out_of_bounds(self, point) -> bool
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 294
+  analyze_streamline_topology(self, streamlines) -> Dict[str, Any]
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 310
+  _compute_winding_numbers(self, streamlines) -> List[float]
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 342
+  _compute_single_winding_number(self, streamline) -> float
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 353
+  _compute_topology_class(self, streamlines) -> str
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 370
+  _compute_stability_index(self, streamlines) -> float
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 379
+
+Class: SuperpositionAnalyzerCUDA
+  __init__(self, domain, parameters)
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 43
+  analyze_superposition(self, field, threshold) -> Dict[str, Any]
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 57
+  _extract_dominant_frequencies_cuda(self, fft_field, mask) -> List[float]
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 152
+  _extract_dominant_frequencies_cpu(self, fft_field, mask) -> List[float]
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 163
+  _extract_mode_amplitudes_cuda(self, fft_field, mask) -> List[float]
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 174
+  _extract_mode_amplitudes_cpu(self, fft_field, mask) -> List[float]
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 181
+  _extract_mode_phases_cuda(self, fft_field, mask) -> List[float]
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 188
+  _extract_mode_phases_cpu(self, fft_field, mask) -> List[float]
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 195
+
 Class: LevelBVisualizer
   __init__(self, style)
     File: ./bhlff/models/level_b/visualization.py, Line: 42
@@ -8655,34 +8795,6 @@ Class: LevelBVisualizer
     File: ./bhlff/models/level_b/visualization.py, Line: 399
   create_3d_visualization(self, field, center, output_path) -> None
     File: ./bhlff/models/level_b/visualization.py, Line: 476
-
-Class: LevelBPowerLawAnalyzer
-  __init__(self, use_cuda)
-    File: ./bhlff/models/level_b/power_law_analyzer.py, Line: 65
-  analyze_stepwise_tail(self, field, beta, center, min_layers) -> Dict[str, Any]
-    File: ./bhlff/models/level_b/power_law_analyzer.py, Line: 101
-  _compute_radial_profile(self, field, center) -> Dict[str, np.ndarray]
-    File: ./bhlff/models/level_b/power_law_analyzer.py, Line: 165
-  _estimate_core_radius(self, radial_profile) -> float
-    File: ./bhlff/models/level_b/power_law_analyzer.py, Line: 227
-  visualize_power_law_analysis(self, analysis_result, output_path) -> None
-    File: ./bhlff/models/level_b/power_law_analyzer.py, Line: 261
-  run_power_law_variations(self, field, center, beta_range) -> Dict[str, Any]
-    File: ./bhlff/models/level_b/power_law_analyzer.py, Line: 337
-  _detect_stepwise_layers(self, field, center) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_b/power_law_analyzer.py, Line: 366
-  _compute_geometric_decay(self, layers) -> List[float]
-    File: ./bhlff/models/level_b/power_law_analyzer.py, Line: 441
-  _check_radius_quantization(self, layers) -> Dict[str, Any]
-    File: ./bhlff/models/level_b/power_law_analyzer.py, Line: 483
-  _compute_radial_profile_cuda(self, field, center) -> Dict[str, np.ndarray]
-    File: ./bhlff/models/level_b/power_law_analyzer.py, Line: 535
-  _find_layer_boundaries_cuda(self, gradient, second_derivative) -> np.ndarray
-    File: ./bhlff/models/level_b/power_law_analyzer.py, Line: 596
-  _detect_stepwise_layers_substrate(self, substrate, center) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_b/power_law_analyzer.py, Line: 634
-  _compute_radial_profile_substrate(self, substrate, center) -> Dict[str, np.ndarray]
-    File: ./bhlff/models/level_b/power_law_analyzer.py, Line: 734
 
 Class: LevelBNodeAnalyzer
   __init__(self, use_cuda)
@@ -8881,6 +8993,70 @@ Class: CriticalExponents
     File: ./bhlff/models/level_b/power_law/critical_exponents.py, Line: 407
   _compute_order_parameter_scaling_function(self, amplitude, critical_exponents) -> Dict[str, Any]
     File: ./bhlff/models/level_b/power_law/critical_exponents.py, Line: 423
+
+Class: StepwiseVisualizer
+  __init__(self, figure_size, line_color, stepwise_color)
+    File: ./bhlff/models/level_b/stepwise/visualization.py, Line: 29
+  visualize_power_law_analysis(self, analysis_result, output_path) -> None
+    File: ./bhlff/models/level_b/stepwise/visualization.py, Line: 51
+
+Class: GeometricDecayAnalyzer
+  __init__(self, eps, quantization_tolerance)
+    File: ./bhlff/models/level_b/stepwise/geometric_decay.py, Line: 39
+  compute_decay_factors(self, layers) -> List[float]
+    File: ./bhlff/models/level_b/stepwise/geometric_decay.py, Line: 54
+  check_quantization(self, layers) -> Dict[str, Any]
+    File: ./bhlff/models/level_b/stepwise/geometric_decay.py, Line: 93
+
+Class: PowerLawTailAnalyzer
+  __init__(self, eps)
+    File: ./bhlff/models/level_b/stepwise/power_law_tail.py, Line: 38
+  analyze(self, field, beta, center, radial_profile, min_decades) -> Dict[str, Any]
+    File: ./bhlff/models/level_b/stepwise/power_law_tail.py, Line: 51
+  _estimate_core_radius(self, radial_profile) -> float
+    File: ./bhlff/models/level_b/stepwise/power_law_tail.py, Line: 124
+
+Class: RadialProfileComputer
+  __init__(self, use_cuda, gpu_memory_ratio)
+    File: ./bhlff/models/level_b/stepwise/radial_profile.py, Line: 49
+  compute(self, field, center) -> Dict[str, np.ndarray]
+    File: ./bhlff/models/level_b/stepwise/radial_profile.py, Line: 77
+  compute_substrate(self, substrate, center) -> Dict[str, np.ndarray]
+    File: ./bhlff/models/level_b/stepwise/radial_profile.py, Line: 97
+  _compute_cuda(self, field, center) -> Dict[str, np.ndarray]
+    File: ./bhlff/models/level_b/stepwise/radial_profile.py, Line: 176
+  _compute_cpu(self, field, center) -> Dict[str, np.ndarray]
+    File: ./bhlff/models/level_b/stepwise/radial_profile.py, Line: 252
+
+Class: LevelBPowerLawAnalyzer
+  __init__(self, use_cuda)
+    File: ./bhlff/models/level_b/stepwise/analyzer.py, Line: 56
+  analyze_stepwise_tail(self, field, beta, center, min_layers) -> Dict[str, Any]
+    File: ./bhlff/models/level_b/stepwise/analyzer.py, Line: 112
+  analyze_power_law_tail(self, field, beta, center, min_decades) -> Dict[str, Any]
+    File: ./bhlff/models/level_b/stepwise/analyzer.py, Line: 191
+  visualize_power_law_analysis(self, analysis_result, output_path) -> None
+    File: ./bhlff/models/level_b/stepwise/analyzer.py, Line: 219
+  run_power_law_variations(self, field, center, beta_range) -> Dict[str, Any]
+    File: ./bhlff/models/level_b/stepwise/analyzer.py, Line: 233
+  _compute_radial_profile(self, field, center) -> Dict[str, np.ndarray]
+    File: ./bhlff/models/level_b/stepwise/analyzer.py, Line: 256
+
+Class: LayerDetector
+  __init__(self, use_cuda)
+    File: ./bhlff/models/level_b/stepwise/layer_detection.py, Line: 48
+  detect_layers(self, field, center, radial_profile) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_b/stepwise/layer_detection.py, Line: 67
+  detect_substrate_layers(self, substrate, center, radial_profile) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_b/stepwise/layer_detection.py, Line: 128
+  build_quantile_layers(self, radial_profile, target_layers) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_b/stepwise/layer_detection.py, Line: 196
+  build_uniform_layers(self, radial_profile, segments) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_b/stepwise/layer_detection.py, Line: 242
+  _find_layer_boundaries(self, gradient, second_derivative) -> np.ndarray
+    File: ./bhlff/models/level_b/stepwise/layer_detection.py, Line: 287
+  _build_quantile_layers(self, r, T) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_b/stepwise/layer_detection.py, Line: 318
 
 Class: NodeAnalysis
   __init__(self, bvp_core)
@@ -9965,6 +10141,78 @@ Class: TimeStabilityAnalyzer
     File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 635
   _step_resonator_time_evolution(self, T) -> float
     File: ./bhlff/models/level_e/discretization/time_stability.py, Line: 664
+
+Class: SolitonOptimizerCUDA
+  __init__(self, domain, physics_params, use_cuda)
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 46
+  _compute_optimal_block_size(self) -> int
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 76
+  find_solution(self, initial_guess) -> np.ndarray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 94
+  _solve_stationary_equation_cuda(self, initial_guess) -> np.ndarray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 107
+  _compute_energy_gradient_cuda(self, field) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 144
+  _compute_energy_hessian_cuda(self, field) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 156
+  _compute_hessian_block_cuda(self, field, i_start, i_end, j_start, j_end) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 178
+  _update_with_line_search_cuda(self, U, delta_U, F) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 213
+  _compute_kinetic_gradient_cuda(self, field) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 232
+  _compute_skyrme_gradient_cuda(self, field) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 236
+  _compute_wzw_gradient_cuda(self, field) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 240
+  _solve_stationary_equation_cpu(self, initial_guess) -> np.ndarray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 244
+
+Class: DefectDynamicsCUDA
+  __init__(self, domain, physics_params, use_cuda)
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 53
+  _compute_optimal_block_size(self) -> int
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 103
+  simulate_defect_motion(self, initial_position, time_steps, field) -> Dict[str, np.ndarray]
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 141
+  _simulate_defect_motion_cuda(self, initial_position, time_steps, field) -> Dict[str, np.ndarray]
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 164
+  _compute_energy_landscape_cuda(self, field) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 194
+  _compute_energy_gradients_cuda(self, energy_landscape) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 221
+  _integrate_energy_dynamics_cuda(self, initial_position, energy_gradients, time_steps) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 243
+  _interpolate_gradient_cuda(self, position, gradients) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 277
+  _simulate_defect_motion_cpu(self, initial_position, time_steps, field) -> Dict[str, np.ndarray]
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 298
+
+Class: SolitonEnergyCalculatorCUDA
+  __init__(self, domain, physics_params, use_cuda)
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 57
+  _compute_optimal_block_size(self) -> int
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 108
+  compute_total_energy(self, field) -> float
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 164
+  _compute_total_energy_cuda(self, field) -> float
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 186
+  _compute_block_energy_cuda(self, block) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 212
+  _compute_kinetic_energy_cuda(self, field) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 234
+  _compute_skyrme_energy_cuda(self, field) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 259
+  _compute_wzw_energy_cuda(self, field) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 304
+  _compute_total_energy_cpu(self, field) -> float
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 340
+  _compute_kinetic_energy_cpu(self, field) -> float
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 350
+  _compute_skyrme_energy_cpu(self, field) -> float
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 364
+  _compute_wzw_energy_cpu(self, field) -> float
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 398
 
 Class: SpecializedExperiments
   __init__(self)
@@ -14064,13 +14312,13 @@ Class: FractionalLaplacian
   apply(self, field) -> np.ndarray
     File: ./bhlff/core/operators/fractional_laplacian.py, Line: 119
   get_spectral_coefficients(self) -> np.ndarray
-    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 159
+    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 152
   get_fractional_order(self) -> float
-    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 172
+    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 171
   _compute_k_magnitude(self) -> np.ndarray
-    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 185
+    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 184
   __repr__(self) -> str
-    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 220
+    File: ./bhlff/core/operators/fractional_laplacian.py, Line: 219
 
 Class: OperatorRiesz
   __init__(self, domain, parameters) -> None
@@ -14282,54 +14530,6 @@ Class: SpectralOperations
   __init__(self, domain, precision)
     File: ./bhlff/core/fft/spectral_operations.py, Line: 66
 
-Class: UnifiedSpectralOperations
-  __init__(self, domain, precision)
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 62
-  forward_fft(self, field, normalization) -> np.ndarray
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 100
-  _is_field_too_large(self, field) -> bool
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 156
-  _forward_fft_cpu(self, field, normalization) -> np.ndarray
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 193
-  _inverse_fft_cpu(self, spectral_field, normalization) -> np.ndarray
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 226
-  inverse_fft(self, spectral_field, normalization) -> np.ndarray
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 268
-  compute_spectral_derivatives(self, field, order) -> Dict[str, np.ndarray]
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 326
-  apply_spectral_filter(self, field, filter_type) -> np.ndarray
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 370
-  compute_spectral_energy(self, field) -> np.ndarray
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 411
-  _setup_fft_plans(self) -> None
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 431
-  _compute_volume_element(self) -> float
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 447
-  _get_wave_vectors(self) -> list
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 469
-  _create_wave_vector_grid(self, k_vec, axis, shape) -> np.ndarray
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 487
-  _create_lowpass_filter(self, cutoff) -> np.ndarray
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 512
-  _create_highpass_filter(self, cutoff) -> np.ndarray
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 519
-  _create_bandpass_filter(self, low_cutoff, high_cutoff) -> np.ndarray
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 526
-  get_spectral_info(self) -> Dict[str, Any]
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 537
-  __repr__(self) -> str
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 556
-  _forward_fft_gpu(self, field, normalization) -> np.ndarray
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 564
-  _inverse_fft_gpu(self, spectral_field, normalization) -> np.ndarray
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 579
-  _compute_block_size(self, array) -> int
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 599
-  _forward_fft_blocked(self, field, normalization) -> np.ndarray
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 614
-  _inverse_fft_blocked(self, spectral_field, normalization) -> np.ndarray
-    File: ./bhlff/core/fft/unified_spectral_operations.py, Line: 627
-
 Class: MemoryManager7D
   __init__(self, domain_shape, max_memory_gb)
     File: ./bhlff/core/fft/memory_manager_7d.py, Line: 54
@@ -14388,11 +14588,15 @@ Class: FFTSolver7DBasic
   __init__(self, domain, parameters)
     File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 39
   solve_stationary(self, source_field) -> np.ndarray
-    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 49
+    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 65
+  solve(self, source_field) -> np.ndarray
+    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 81
   get_spectral_coefficients(self) -> np.ndarray
-    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 57
+    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 84
+  get_info(self) -> dict
+    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 87
   _build_spectral_coefficients(self) -> None
-    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 60
+    File: ./bhlff/core/fft/fft_solver_7d_basic.py, Line: 103
 
 Class: FFTSolverTimeMethods
   __init__(self, domain, parameters)
@@ -14742,6 +14946,32 @@ Class: FFTAdvancedCore
   _setup_adaptive_methods(self) -> None
     File: ./bhlff/core/fft/advanced/fft_advanced_core.py, Line: 292
 
+Class: UnifiedSpectralOperations
+  __init__(self, domain, precision)
+    File: ./bhlff/core/fft/unified/facade.py, Line: 32
+  forward_fft(self, field, normalization) -> np.ndarray
+    File: ./bhlff/core/fft/unified/facade.py, Line: 50
+  inverse_fft(self, spectral_field, normalization) -> np.ndarray
+    File: ./bhlff/core/fft/unified/facade.py, Line: 75
+  compute_spectral_derivatives(self, field, order) -> Dict[str, np.ndarray]
+    File: ./bhlff/core/fft/unified/facade.py, Line: 101
+  apply_spectral_filter(self, field, filter_type) -> np.ndarray
+    File: ./bhlff/core/fft/unified/facade.py, Line: 116
+  compute_spectral_energy(self, field) -> np.ndarray
+    File: ./bhlff/core/fft/unified/facade.py, Line: 136
+  get_spectral_info(self) -> Dict[str, Any]
+    File: ./bhlff/core/fft/unified/facade.py, Line: 140
+  __repr__(self) -> str
+    File: ./bhlff/core/fft/unified/facade.py, Line: 149
+  _validate_shape(self, shape) -> None
+    File: ./bhlff/core/fft/unified/facade.py, Line: 153
+  _is_field_too_large(self, field) -> bool
+    File: ./bhlff/core/fft/unified/facade.py, Line: 159
+  _forward_backend(self, field, normalization) -> np.ndarray
+    File: ./bhlff/core/fft/unified/facade.py, Line: 172
+  _inverse_backend(self, spectral_field, normalization) -> np.ndarray
+    File: ./bhlff/core/fft/unified/facade.py, Line: 177
+
 Class: MockSystem
   example_cosmological_evolution(())
     File: ./examples/level_g_example.py, Line: 33
@@ -14780,13 +15010,13 @@ Class: BaseCommand
   create_test_field(self, domain) -> np.ndarray
     File: ./tools/hypothesis_testing/commands/base.py, Line: 24
   create_test_substrate(self, domain) -> np.ndarray
-    File: ./tools/hypothesis_testing/commands/base.py, Line: 59
+    File: ./tools/hypothesis_testing/commands/base.py, Line: 63
   _create_layer_wall(self, r, radius, thickness) -> np.ndarray
-    File: ./tools/hypothesis_testing/commands/base.py, Line: 77
+    File: ./tools/hypothesis_testing/commands/base.py, Line: 85
   execute(self) -> Dict[str, Any]
-    File: ./tools/hypothesis_testing/commands/base.py, Line: 90
+    File: ./tools/hypothesis_testing/commands/base.py, Line: 100
   print_result(self, result)
-    File: ./tools/hypothesis_testing/commands/base.py, Line: 94
+    File: ./tools/hypothesis_testing/commands/base.py, Line: 104
 
 Class: TestAllCommand
   execute(self) -> Dict[str, Any]

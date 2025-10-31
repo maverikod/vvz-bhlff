@@ -13,9 +13,4 @@ from .test_all import TestAllCommand
 from .test_step_3 import TestStep3Command
 from .test_step_3_adaptive import TestStep3AdaptiveCommand
 
-__all__ = [
-    'BaseCommand',
-    'TestStep0Command', 
-    'TestStep1Command',
-    'TestAllCommand'
-]
+__all__ = ["BaseCommand", "TestStep0Command", "TestStep1Command", "TestAllCommand"]

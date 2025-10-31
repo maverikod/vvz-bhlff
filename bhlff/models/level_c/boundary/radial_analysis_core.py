@@ -22,6 +22,7 @@ import logging
 
 from bhlff.core.bvp import BVPCore
 from .data_structures import BoundaryGeometry, RadialProfile
+from ..cuda import LevelCCUDAProcessor
 
 
 class RadialAnalysisCore:
@@ -53,6 +54,15 @@ class RadialAnalysisCore:
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
 
+        # Initialize CUDA processor for vectorized operations
+        try:
+            self.cuda_processor = LevelCCUDAProcessor(bvp_core, use_cuda=True)
+            self.use_cuda = self.cuda_processor.cuda_available
+        except Exception as e:
+            self.logger.warning(f"CUDA processor initialization failed: {e}, using CPU")
+            self.cuda_processor = None
+            self.use_cuda = False
+
     def analyze_radial_profile(
         self, domain: Dict[str, Any], boundary: BoundaryGeometry, field: np.ndarray
     ) -> RadialProfile:
@@ -76,16 +86,49 @@ class RadialAnalysisCore:
         """
         self.logger.info("Starting radial profile analysis")
 
-        # Compute radial profile
-        radial_profile = self._compute_radial_profile(domain, boundary, field)
+        # Use CUDA vectorized computation if available
+        if self.use_cuda and self.cuda_processor is not None:
+            # Extract center from boundary
+            center = (
+                boundary.center
+                if hasattr(boundary, "center")
+                else np.array([domain.get("L", 1.0) / 2] * 3)
+            )
+
+            # Define radial range
+            r_max = domain.get("L", 1.0) / 2
+            num_radii = 50
+            radii = np.linspace(0, r_max, num_radii)
+
+            try:
+                # Compute radial profile using CUDA vectorized operations
+                amplitudes = self.cuda_processor.compute_radial_profile_vectorized(
+                    field, center, radii, domain
+                )
+
+                # Create radial profile data structure
+                radial_profile_data = {
+                    "radii": radii,
+                    "amplitudes": amplitudes,
+                }
+            except Exception as e:
+                self.logger.warning(
+                    f"CUDA radial profile computation failed: {e}, falling back to CPU"
+                )
+                radial_profile_data = self._compute_radial_profile(
+                    domain, boundary, field
+                )
+        else:
+            # CPU computation
+            radial_profile_data = self._compute_radial_profile(domain, boundary, field)
 
         # Find local maxima
-        local_maxima = self._find_local_maxima(radial_profile)
+        local_maxima = self._find_local_maxima(radial_profile_data)
 
         # Create radial profile object
         profile = RadialProfile(
-            radii=radial_profile["radii"],
-            amplitudes=radial_profile["amplitudes"],
+            radii=radial_profile_data["radii"],
+            amplitudes=radial_profile_data["amplitudes"],
             local_maxima=local_maxima,
             analysis_complete=True,
         )

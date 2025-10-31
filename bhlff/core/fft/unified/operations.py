@@ -8,6 +8,6 @@ This module contains the full implementation of `UnifiedSpectralOperations`.
 It is imported by the public facade `bhlff.core.fft.unified_spectral_operations`.
 """
 
-from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations  # re-export for internal imports
-
-
+from bhlff.core.fft.unified_spectral_operations import (
+    UnifiedSpectralOperations,
+)  # re-export for internal imports

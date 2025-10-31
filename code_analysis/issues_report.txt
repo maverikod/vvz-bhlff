@@ -2,9 +2,9 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 1090
+Total issues found: 1150
 
-METHODS_WITHOUT_DOCSTRINGS: 271 issues
+METHODS_WITHOUT_DOCSTRINGS: 318 issues
 ----------------------------------------
   ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
     Line 86
@@ -319,23 +319,23 @@ METHODS_WITHOUT_DOCSTRINGS: 271 issues
     Method: __init__
 
   ./tests/unit/test_level_a/test_A02_multi_plane.py
-    Line 26
+    Line 25
     Method: _load_config
 
   ./tests/unit/test_level_a/test_A02_multi_plane.py
-    Line 34
+    Line 33
     Method: _make_domain_shape
 
   ./tests/unit/test_level_a/test_A02_multi_plane.py
-    Line 38
+    Line 37
     Method: _rand_modes
 
   ./tests/unit/test_level_a/test_A02_multi_plane.py
-    Line 50
+    Line 49
     Method: _build_spectral_source
 
   ./tests/unit/test_level_a/test_A02_multi_plane.py
-    Line 66
+    Line 65
     Method: test_A02_multi_plane
 
   ./tests/unit/test_level_a/test_A02_multi_plane.py
@@ -352,148 +352,148 @@ METHODS_WITHOUT_DOCSTRINGS: 271 issues
     Method: __init__
 
   ./tests/unit/test_level_a/test_A03_zero_mode.py
-    Line 25
+    Line 24
     Method: _load_config
 
   ./tests/unit/test_level_a/test_A03_zero_mode.py
-    Line 33
+    Line 32
     Method: _make_domain_shape
 
   ./tests/unit/test_level_a/test_A03_zero_mode.py
-    Line 37
+    Line 36
     Method: _ensure_output_dir
 
   ./tests/unit/test_level_a/test_A03_zero_mode.py
-    Line 67
+    Line 66
     Method: test_A03_zero_mode
 
   ./tests/unit/test_level_a/test_A03_zero_mode.py
-    Line 76
+    Line 75
     Method: __init__
 
   ./tests/unit/test_level_a/test_A03_zero_mode.py
-    Line 76
+    Line 75
     Class: _Domain
     Method: __init__
 
   ./tests/unit/test_level_a/test_A03_zero_mode.py
-    Line 76
+    Line 75
     Method: __init__
 
   ./tests/unit/test_level_a/test_A04_time_harmonic.py
-    Line 24
+    Line 23
     Method: _load_config
 
   ./tests/unit/test_level_a/test_A04_time_harmonic.py
-    Line 32
+    Line 31
     Method: _make_domain_shape
 
   ./tests/unit/test_level_a/test_A04_time_harmonic.py
-    Line 36
+    Line 35
     Method: test_A04_time_harmonic_steady_state
 
   ./tests/unit/test_level_a/test_A04_time_harmonic.py
-    Line 51
+    Line 50
     Method: __init__
 
   ./tests/unit/test_level_a/test_A04_time_harmonic.py
-    Line 51
+    Line 50
     Class: _Domain
     Method: __init__
 
   ./tests/unit/test_level_a/test_A04_time_harmonic.py
-    Line 51
+    Line 50
     Method: __init__
 
   ./tests/unit/test_level_a/test_A12_units_invariance.py
-    Line 24
+    Line 23
     Method: _load_config
 
   ./tests/unit/test_level_a/test_A12_units_invariance.py
-    Line 32
+    Line 31
     Method: _make_domain_shape
 
   ./tests/unit/test_level_a/test_A12_units_invariance.py
-    Line 82
+    Line 88
     Method: test_A12_units_invariance
 
   ./tests/unit/test_level_a/test_A12_units_invariance.py
-    Line 55
+    Line 56
     Method: __init__
 
   ./tests/unit/test_level_a/test_A12_units_invariance.py
-    Line 55
+    Line 56
     Class: _Domain
     Method: __init__
 
   ./tests/unit/test_level_a/test_A12_units_invariance.py
-    Line 55
+    Line 56
     Method: __init__
 
   ./tests/unit/test_level_a/test_A01_plane_wave.py
-    Line 27
+    Line 24
     Method: _load_config
 
   ./tests/unit/test_level_a/test_A01_plane_wave.py
-    Line 35
+    Line 32
     Method: _make_domain_shape
 
   ./tests/unit/test_level_a/test_A01_plane_wave.py
-    Line 39
+    Line 36
     Method: _generate_plane_wave
 
   ./tests/unit/test_level_a/test_A01_plane_wave.py
-    Line 48
+    Line 45
     Method: _compute_reference_amplitude
 
   ./tests/unit/test_level_a/test_A01_plane_wave.py
-    Line 57
+    Line 54
     Method: _ensure_output_dir
 
   ./tests/unit/test_level_a/test_A01_plane_wave.py
-    Line 61
+    Line 58
     Method: test_A01_plane_wave
 
   ./tests/unit/test_level_a/test_A01_plane_wave.py
-    Line 74
+    Line 71
     Method: __init__
 
   ./tests/unit/test_level_a/test_A01_plane_wave.py
-    Line 74
+    Line 71
     Class: _Domain
     Method: __init__
 
   ./tests/unit/test_level_a/test_A01_plane_wave.py
-    Line 74
+    Line 71
     Method: __init__
 
   ./tests/unit/test_level_a/test_A11_scale_length.py
-    Line 25
+    Line 24
     Method: _load_config
 
   ./tests/unit/test_level_a/test_A11_scale_length.py
-    Line 33
+    Line 32
     Method: _make_domain_shape
 
   ./tests/unit/test_level_a/test_A11_scale_length.py
-    Line 37
+    Line 36
     Method: _solve_stationary
 
   ./tests/unit/test_level_a/test_A11_scale_length.py
-    Line 65
+    Line 64
     Method: test_A11_scale_length
 
   ./tests/unit/test_level_a/test_A11_scale_length.py
-    Line 43
+    Line 42
     Method: __init__
 
   ./tests/unit/test_level_a/test_A11_scale_length.py
-    Line 43
+    Line 42
     Class: _Domain
     Method: __init__
 
   ./tests/unit/test_level_a/test_A11_scale_length.py
-    Line 43
+    Line 42
     Method: __init__
 
   ./tests/unit/test_level_a/test_A05_residual_energy.py
@@ -542,15 +542,15 @@ METHODS_WITHOUT_DOCSTRINGS: 271 issues
     Method: bc
 
   ./bhlff/cli/main.py
-    Line 23
+    Line 24
     Method: _load_json_config
 
   ./bhlff/cli/main.py
-    Line 29
+    Line 30
     Method: build_parser
 
   ./bhlff/cli/main.py
-    Line 101
+    Line 131
     Method: main
 
   ./bhlff/cli/run.py
@@ -575,6 +575,18 @@ METHODS_WITHOUT_DOCSTRINGS: 271 issues
 
   ./bhlff/cli/analyze.py
     Line 22
+    Method: main
+
+  ./bhlff/cli/step04_level_a.py
+    Line 18
+    Method: _run_pytests
+
+  ./bhlff/cli/step04_level_a.py
+    Line 24
+    Method: build_parser
+
+  ./bhlff/cli/step04_level_a.py
+    Line 45
     Method: main
 
   ./bhlff/cli/step03.py
@@ -877,213 +889,400 @@ METHODS_WITHOUT_DOCSTRINGS: 271 issues
     Line 135
     Method: compute_mixed_derivative
 
-  ./bhlff/core/fft/unified_spectral_operations.py
-    Line 564
-    Method: _forward_fft_gpu
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 39
+    Method: __init__
 
-  ./bhlff/core/fft/unified_spectral_operations.py
-    Line 564
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 39
+    Class: FFTSolver7DBasic
+    Method: __init__
+
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 65
+    Method: solve_stationary
+
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 65
+    Class: FFTSolver7DBasic
+    Method: solve_stationary
+
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 81
+    Method: solve
+
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 81
+    Class: FFTSolver7DBasic
+    Method: solve
+
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 84
+    Method: get_spectral_coefficients
+
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 84
+    Class: FFTSolver7DBasic
+    Method: get_spectral_coefficients
+
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 103
+    Method: _build_spectral_coefficients
+
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 103
+    Class: FFTSolver7DBasic
+    Method: _build_spectral_coefficients
+
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 39
+    Method: __init__
+
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 65
+    Method: solve_stationary
+
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 81
+    Method: solve
+
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 84
+    Method: get_spectral_coefficients
+
+  ./bhlff/core/fft/fft_solver_7d_basic.py
+    Line 103
+    Method: _build_spectral_coefficients
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 35
+    Method: __init__
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 35
+    Class: FFTSolver7DAdvanced
+    Method: __init__
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 48
+    Method: solve_stationary
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 48
+    Class: FFTSolver7DAdvanced
+    Method: solve_stationary
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 57
+    Method: get_spectral_coefficients
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 57
+    Class: FFTSolver7DAdvanced
+    Method: get_spectral_coefficients
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 60
+    Method: _build_spectral_coefficients
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 60
+    Class: FFTSolver7DAdvanced
+    Method: _build_spectral_coefficients
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 95
+    Method: _get_free_memory_bytes
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 95
+    Class: FFTSolver7DAdvanced
+    Method: _get_free_memory_bytes
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 104
+    Method: _estimate_batch
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 104
+    Class: FFTSolver7DAdvanced
+    Method: _estimate_batch
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 115
+    Method: _fftn_batched
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 115
+    Class: FFTSolver7DAdvanced
+    Method: _fftn_batched
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 121
+    Method: _ifftn_batched
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 121
+    Class: FFTSolver7DAdvanced
+    Method: _ifftn_batched
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 127
+    Method: _fft_axis_batched
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 127
+    Class: FFTSolver7DAdvanced
+    Method: _fft_axis_batched
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 142
+    Method: _ifft_axis_batched
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 142
+    Class: FFTSolver7DAdvanced
+    Method: _ifft_axis_batched
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 35
+    Method: __init__
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 48
+    Method: solve_stationary
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 57
+    Method: get_spectral_coefficients
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 60
+    Method: _build_spectral_coefficients
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 95
+    Method: _get_free_memory_bytes
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 104
+    Method: _estimate_batch
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 115
+    Method: _fftn_batched
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 121
+    Method: _ifftn_batched
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 127
+    Method: _fft_axis_batched
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 142
+    Method: _ifft_axis_batched
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 32
+    Method: __init__
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 32
     Class: UnifiedSpectralOperations
-    Method: _forward_fft_gpu
+    Method: __init__
 
-  ./bhlff/core/fft/unified_spectral_operations.py
-    Line 579
-    Method: _inverse_fft_gpu
+  ./bhlff/core/fft/unified/facade.py
+    Line 50
+    Method: forward_fft
 
-  ./bhlff/core/fft/unified_spectral_operations.py
-    Line 579
+  ./bhlff/core/fft/unified/facade.py
+    Line 50
     Class: UnifiedSpectralOperations
-    Method: _inverse_fft_gpu
+    Method: forward_fft
 
-  ./bhlff/core/fft/unified_spectral_operations.py
-    Line 564
-    Method: _forward_fft_gpu
+  ./bhlff/core/fft/unified/facade.py
+    Line 75
+    Method: inverse_fft
 
-  ./bhlff/core/fft/unified_spectral_operations.py
-    Line 579
-    Method: _inverse_fft_gpu
+  ./bhlff/core/fft/unified/facade.py
+    Line 75
+    Class: UnifiedSpectralOperations
+    Method: inverse_fft
 
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 39
+  ./bhlff/core/fft/unified/facade.py
+    Line 101
+    Method: compute_spectral_derivatives
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 101
+    Class: UnifiedSpectralOperations
+    Method: compute_spectral_derivatives
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 116
+    Method: apply_spectral_filter
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 116
+    Class: UnifiedSpectralOperations
+    Method: apply_spectral_filter
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 136
+    Method: compute_spectral_energy
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 136
+    Class: UnifiedSpectralOperations
+    Method: compute_spectral_energy
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 140
+    Method: get_spectral_info
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 140
+    Class: UnifiedSpectralOperations
+    Method: get_spectral_info
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 149
+    Method: __repr__
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 149
+    Class: UnifiedSpectralOperations
+    Method: __repr__
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 153
+    Method: _validate_shape
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 153
+    Class: UnifiedSpectralOperations
+    Method: _validate_shape
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 159
+    Method: _is_field_too_large
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 159
+    Class: UnifiedSpectralOperations
+    Method: _is_field_too_large
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 172
+    Method: _forward_backend
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 172
+    Class: UnifiedSpectralOperations
+    Method: _forward_backend
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 177
+    Method: _inverse_backend
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 177
+    Class: UnifiedSpectralOperations
+    Method: _inverse_backend
+
+  ./bhlff/core/fft/unified/facade.py
+    Line 32
     Method: __init__
 
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 39
-    Class: FFTSolver7DBasic
-    Method: __init__
+  ./bhlff/core/fft/unified/facade.py
+    Line 50
+    Method: forward_fft
 
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 49
-    Method: solve_stationary
+  ./bhlff/core/fft/unified/facade.py
+    Line 75
+    Method: inverse_fft
 
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 49
-    Class: FFTSolver7DBasic
-    Method: solve_stationary
+  ./bhlff/core/fft/unified/facade.py
+    Line 101
+    Method: compute_spectral_derivatives
 
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 57
-    Method: get_spectral_coefficients
+  ./bhlff/core/fft/unified/facade.py
+    Line 116
+    Method: apply_spectral_filter
 
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 57
-    Class: FFTSolver7DBasic
-    Method: get_spectral_coefficients
+  ./bhlff/core/fft/unified/facade.py
+    Line 136
+    Method: compute_spectral_energy
 
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 60
-    Method: _build_spectral_coefficients
+  ./bhlff/core/fft/unified/facade.py
+    Line 140
+    Method: get_spectral_info
 
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 60
-    Class: FFTSolver7DBasic
-    Method: _build_spectral_coefficients
+  ./bhlff/core/fft/unified/facade.py
+    Line 149
+    Method: __repr__
 
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 39
-    Method: __init__
+  ./bhlff/core/fft/unified/facade.py
+    Line 153
+    Method: _validate_shape
 
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 49
-    Method: solve_stationary
+  ./bhlff/core/fft/unified/facade.py
+    Line 159
+    Method: _is_field_too_large
 
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 57
-    Method: get_spectral_coefficients
+  ./bhlff/core/fft/unified/facade.py
+    Line 172
+    Method: _forward_backend
 
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 60
-    Method: _build_spectral_coefficients
+  ./bhlff/core/fft/unified/facade.py
+    Line 177
+    Method: _inverse_backend
 
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 35
-    Method: __init__
+  ./bhlff/core/fft/unified/fft_gpu.py
+    Line 14
+    Method: forward_fft_gpu
 
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 35
-    Class: FFTSolver7DAdvanced
-    Method: __init__
+  ./bhlff/core/fft/unified/fft_gpu.py
+    Line 30
+    Method: inverse_fft_gpu
 
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
+  ./bhlff/core/fft/unified/fft_cpu.py
+    Line 14
+    Method: forward_fft_cpu
+
+  ./bhlff/core/fft/unified/fft_cpu.py
+    Line 27
+    Method: inverse_fft_cpu
+
+  ./bhlff/core/fft/unified/filters.py
+    Line 13
+    Method: _k_magnitude
+
+  ./bhlff/core/fft/unified/filters.py
+    Line 38
+    Method: create_lowpass_filter
+
+  ./bhlff/core/fft/unified/filters.py
+    Line 43
+    Method: create_highpass_filter
+
+  ./bhlff/core/fft/unified/filters.py
     Line 48
-    Method: solve_stationary
+    Method: create_bandpass_filter
 
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 48
-    Class: FFTSolver7DAdvanced
-    Method: solve_stationary
+  ./bhlff/core/fft/unified/blocked.py
+    Line 14
+    Method: compute_block_size
 
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 57
-    Method: get_spectral_coefficients
+  ./bhlff/core/fft/unified/blocked.py
+    Line 27
+    Method: forward_fft_blocked
 
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 57
-    Class: FFTSolver7DAdvanced
-    Method: get_spectral_coefficients
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 60
-    Method: _build_spectral_coefficients
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 60
-    Class: FFTSolver7DAdvanced
-    Method: _build_spectral_coefficients
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 95
-    Method: _get_free_memory_bytes
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 95
-    Class: FFTSolver7DAdvanced
-    Method: _get_free_memory_bytes
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 104
-    Method: _estimate_batch
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 104
-    Class: FFTSolver7DAdvanced
-    Method: _estimate_batch
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 115
-    Method: _fftn_batched
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 115
-    Class: FFTSolver7DAdvanced
-    Method: _fftn_batched
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 121
-    Method: _ifftn_batched
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 121
-    Class: FFTSolver7DAdvanced
-    Method: _ifftn_batched
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 127
-    Method: _fft_axis_batched
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 127
-    Class: FFTSolver7DAdvanced
-    Method: _fft_axis_batched
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 142
-    Method: _ifft_axis_batched
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 142
-    Class: FFTSolver7DAdvanced
-    Method: _ifft_axis_batched
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 35
-    Method: __init__
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 48
-    Method: solve_stationary
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 57
-    Method: get_spectral_coefficients
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 60
-    Method: _build_spectral_coefficients
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 95
-    Method: _get_free_memory_bytes
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 104
-    Method: _estimate_batch
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 115
-    Method: _fftn_batched
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 121
-    Method: _ifftn_batched
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 127
-    Method: _fft_axis_batched
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 142
-    Method: _ifft_axis_batched
+  ./bhlff/core/fft/unified/blocked.py
+    Line 45
+    Method: inverse_fft_blocked
 
   ./examples/level_g_example.py
     Line 175
@@ -1213,23 +1412,23 @@ CLASSES_WITHOUT_DOCSTRINGS: 21 issues
     Class: _Domain
 
   ./tests/unit/test_level_a/test_A03_zero_mode.py
-    Line 75
+    Line 74
     Class: _Domain
 
   ./tests/unit/test_level_a/test_A04_time_harmonic.py
-    Line 50
+    Line 49
     Class: _Domain
 
   ./tests/unit/test_level_a/test_A12_units_invariance.py
-    Line 54
+    Line 55
     Class: _Domain
 
   ./tests/unit/test_level_a/test_A01_plane_wave.py
-    Line 73
+    Line 70
     Class: _Domain
 
   ./tests/unit/test_level_a/test_A11_scale_length.py
-    Line 42
+    Line 41
     Class: _Domain
 
   ./tests/unit/test_level_a/test_A05_residual_energy.py
@@ -1253,28 +1452,28 @@ CLASSES_WITHOUT_DOCSTRINGS: 21 issues
     Class: TestStep2Command
 
 
-IMPORTS_IN_MIDDLE: 673 issues
+IMPORTS_IN_MIDDLE: 686 issues
 ----------------------------------------
   ./test_quench_detector_minimal.py
-    Line 30
+    Line 31
 
   ./test_quench_detector_light.py
-    Line 36
+    Line 37
 
   ./debug_block_processing.py
-    Line 244
+    Line 253
 
   ./test_quench_detector_cuda.py
-    Line 30
+    Line 31
 
   ./setup.py
     Line 28
 
   ./test_quench_detector_optimized.py
-    Line 261
+    Line 284
 
   ./scripts/demo_vectorized_power_law.py
-    Line 203
+    Line 206
 
   ./scripts/demo_7d_vectorized_processing.py
     Line 30
@@ -1283,19 +1482,22 @@ IMPORTS_IN_MIDDLE: 673 issues
     Line 22
 
   ./scripts/demo_block_processing.py
-    Line 306
+    Line 317
 
   ./scripts/demo_vectorized_ml_methods.py
-    Line 205
+    Line 204
 
   ./scripts/demo_enhanced_block_processing.py
-    Line 320
+    Line 336
 
   ./scripts/demo_ml_prediction_simple.py
-    Line 24
+    Line 26
+
+  ./scripts/run_level_a_experiments.py
+    Line 32
 
   ./scripts/demo_ml_prediction_models.py
-    Line 22
+    Line 24
 
   ./tests/test_bvp_level_c_integration.py
     Line 30
@@ -1688,7 +1890,7 @@ IMPORTS_IN_MIDDLE: 673 issues
     Line 283
 
   ./tests/unit/test_level_a/test_A02_multi_plane.py
-    Line 23
+    Line 22
 
   ./tests/unit/test_level_a/test_A01_plane_wave_advanced.py
     Line 28
@@ -1703,7 +1905,7 @@ IMPORTS_IN_MIDDLE: 673 issues
     Line 28
 
   ./tests/unit/test_level_a/test_A03_zero_mode.py
-    Line 22
+    Line 21
 
   ./tests/unit/test_level_a/test_A01_plane_wave_basic.py
     Line 28
@@ -1714,20 +1916,14 @@ IMPORTS_IN_MIDDLE: 673 issues
   ./tests/unit/test_level_a/test_reporting_basic.py
     Line 25
 
-  ./tests/unit/test_level_a/test_A04_time_harmonic.py
-    Line 21
-
-  ./tests/unit/test_level_a/test_A12_units_invariance.py
-    Line 21
-
   ./tests/unit/test_level_a/test_A01_plane_wave.py
-    Line 24
+    Line 21
 
   ./tests/unit/test_level_a/test_A05_residual_energy_basic.py
     Line 29
 
   ./tests/unit/test_level_a/test_A11_scale_length.py
-    Line 22
+    Line 21
 
   ./tests/unit/test_level_a/test_A05_residual_energy.py
     Line 21
@@ -1793,7 +1989,7 @@ IMPORTS_IN_MIDDLE: 673 issues
     Line 35
 
   ./bhlff/models/level_c/boundary/radial_analysis_core.py
-    Line 24
+    Line 25
 
   ./bhlff/models/level_c/boundary/radial_analysis_concentration.py
     Line 24
@@ -1802,7 +1998,7 @@ IMPORTS_IN_MIDDLE: 673 issues
     Line 21
 
   ./bhlff/models/level_c/boundary/admittance_analysis_core.py
-    Line 24
+    Line 25
 
   ./bhlff/models/level_c/boundary/__init__.py
     Line 23
@@ -1815,6 +2011,9 @@ IMPORTS_IN_MIDDLE: 673 issues
 
   ./bhlff/models/level_c/boundary/radial_analysis.py
     Line 26
+
+  ./bhlff/models/level_c/cuda/cuda_compute_processor.py
+    Line 43
 
   ./bhlff/models/level_c/beating/pinned_analysis_evolution.py
     Line 23
@@ -2162,7 +2361,7 @@ IMPORTS_IN_MIDDLE: 673 issues
     Line 28
 
   ./bhlff/models/level_d/level_d_models.py
-    Line 37
+    Line 54
 
   ./bhlff/models/level_d/projections.py
     Line 34
@@ -2179,11 +2378,20 @@ IMPORTS_IN_MIDDLE: 673 issues
   ./bhlff/models/level_d/superposition.py
     Line 32
 
+  ./bhlff/models/level_d/cuda/projectors_cuda.py
+    Line 24
+
+  ./bhlff/models/level_d/cuda/superposition_utils_cuda.py
+    Line 75
+
+  ./bhlff/models/level_d/cuda/streamlines_cuda.py
+    Line 32
+
+  ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py
+    Line 31
+
   ./bhlff/models/level_b/visualization.py
     Line 25
-
-  ./bhlff/models/level_b/power_law_analyzer.py
-    Line 43
 
   ./bhlff/models/level_b/zone_analyzer_utils.py
     Line 31
@@ -2211,6 +2419,21 @@ IMPORTS_IN_MIDDLE: 673 issues
 
   ./bhlff/models/level_b/power_law/critical_exponents.py
     Line 390
+
+  ./bhlff/models/level_b/stepwise/geometric_decay.py
+    Line 22
+
+  ./bhlff/models/level_b/stepwise/power_law_tail.py
+    Line 22
+
+  ./bhlff/models/level_b/stepwise/radial_profile.py
+    Line 68
+
+  ./bhlff/models/level_b/stepwise/analyzer.py
+    Line 86
+
+  ./bhlff/models/level_b/stepwise/layer_detection.py
+    Line 26
 
   ./bhlff/models/level_b/node_analysis/node_analysis.py
     Line 33
@@ -2385,6 +2608,15 @@ IMPORTS_IN_MIDDLE: 673 issues
 
   ./bhlff/models/level_e/discretization/time_stability.py
     Line 503
+
+  ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
+    Line 34
+
+  ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py
+    Line 36
+
+  ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
+    Line 40
 
   ./bhlff/models/level_e/experiments/specialized_experiments.py
     Line 26
@@ -2649,6 +2881,9 @@ IMPORTS_IN_MIDDLE: 673 issues
 
   ./bhlff/testing/automated_testing/resource_manager.py
     Line 32
+
+  ./bhlff/cli/main.py
+    Line 21
 
   ./bhlff/solvers/__init__.py
     Line 22
@@ -3190,9 +3425,6 @@ IMPORTS_IN_MIDDLE: 673 issues
   ./bhlff/core/fft/spectral_operations.py
     Line 40
 
-  ./bhlff/core/fft/unified_spectral_operations.py
-    Line 243
-
   ./bhlff/core/fft/memory_manager_7d.py
     Line 27
 
@@ -3253,6 +3485,12 @@ IMPORTS_IN_MIDDLE: 673 issues
   ./bhlff/core/fft/advanced/fft_advanced_core.py
     Line 30
 
+  ./bhlff/core/fft/unified/facade.py
+    Line 24
+
+  ./bhlff/core/fft/unified/__init__.py
+    Line 23
+
   ./examples/level_c_example.py
     Line 30
 
@@ -3272,7 +3510,7 @@ IMPORTS_IN_MIDDLE: 673 issues
     Line 23
 
   ./tools/hypothesis_testing/commands/base.py
-    Line 61
+    Line 65
 
 
 FILES_TOO_LARGE: 121 issues
@@ -3328,6 +3566,8 @@ FILES_TOO_LARGE: 121 issues
   ./bhlff/models/level_c/boundaries_core.py
 
   ./bhlff/models/level_c/abcd_model.py
+
+  ./bhlff/models/level_c/cuda/cuda_compute_processor.py
 
   ./bhlff/models/level_c/beating/theoretical_analysis.py
 
@@ -3409,8 +3649,6 @@ FILES_TOO_LARGE: 121 issues
 
   ./bhlff/models/level_b/visualization.py
 
-  ./bhlff/models/level_b/power_law_analyzer.py
-
   ./bhlff/models/level_b/node_analyzer.py
 
   ./bhlff/models/level_b/power_law/critical_exponents.py
@@ -3434,6 +3672,8 @@ FILES_TOO_LARGE: 121 issues
   ./bhlff/models/level_e/discretization/domain_effects.py
 
   ./bhlff/models/level_e/discretization/time_stability.py
+
+  ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
 
   ./bhlff/models/level_e/experiments/experiment_runner.py
 
@@ -3510,8 +3750,6 @@ FILES_TOO_LARGE: 121 issues
   ./bhlff/core/sources/bvp_source_generators.py
 
   ./bhlff/core/fft/spectral_derivatives_impl.py
-
-  ./bhlff/core/fft/unified_spectral_operations.py
 
   ./bhlff/core/fft/spectral_filtering.py
 

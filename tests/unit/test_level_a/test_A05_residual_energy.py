@@ -93,7 +93,7 @@ def test_A05_residual_energy() -> None:
     for m in modes:
         k = tuple((mi % n) for mi, n in zip(m, shape))
         ksq = (2.0 * np.pi / L) ** 2 * float(sum(mi * mi for mi in m))
-        denom = mu * (ksq ** beta) + lam
+        denom = mu * (ksq**beta) + lam
         a_hat[k] = s_hat[k] / denom
 
     # Residual in spectral space
@@ -102,7 +102,7 @@ def test_A05_residual_energy() -> None:
     for m in modes:
         k = tuple((mi % n) for mi, n in zip(m, shape))
         ksq = (2.0 * np.pi / L) ** 2 * float(sum(mi * mi for mi in m))
-        denom = mu * (ksq ** beta) + lam
+        denom = mu * (ksq**beta) + lam
         r_hat[k] = denom * a_hat[k] - s_hat[k]
     res_norm = float(
         np.linalg.norm(r_hat) / max(np.linalg.norm(s_hat), np.finfo(float).eps)

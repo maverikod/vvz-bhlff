@@ -63,8 +63,10 @@ def test_A04_time_harmonic_steady_state() -> None:
 
     # Steady-state spectral solution at k*
     # Compute denominator at mode only
-    ksq = (2.0 * np.pi / L) ** 2 * float(np.dot(np.array(k_star, dtype=float), np.array(k_star, dtype=float)))
-    Dk = nu * (ksq ** beta) + lam + 1j * omega
+    ksq = (2.0 * np.pi / L) ** 2 * float(
+        np.dot(np.array(k_star, dtype=float), np.array(k_star, dtype=float))
+    )
+    Dk = nu * (ksq**beta) + lam + 1j * omega
     a_hat = np.zeros_like(s_hat)
     a_hat[idx] = s0 / Dk
 

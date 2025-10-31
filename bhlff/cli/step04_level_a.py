@@ -31,9 +31,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--k",
         default="",
-        help=(
-            "Pytest -k expression to filter tests (overrides --minimal)"
-        ),
+        help=("Pytest -k expression to filter tests (overrides --minimal)"),
     )
     parser.add_argument(
         "--maxfail",

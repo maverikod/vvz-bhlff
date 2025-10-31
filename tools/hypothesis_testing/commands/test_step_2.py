@@ -19,9 +19,25 @@ class TestStep2Command(BaseCommand):
             domain = self.create_minimal_domain()
             print(f"Domain: N={domain.N}, N_phi={domain.N_phi}, N_t={domain.N_t}")
             # Create a simple source: delta-like at center in spatial, zeros elsewhere
-            shape = (domain.N, domain.N, domain.N, domain.N_phi, domain.N_phi, domain.N_phi, domain.N_t)
+            shape = (
+                domain.N,
+                domain.N,
+                domain.N,
+                domain.N_phi,
+                domain.N_phi,
+                domain.N_phi,
+                domain.N_t,
+            )
             source = np.zeros(shape, dtype=np.float64)
-            c = (domain.N // 2, domain.N // 2, domain.N // 2, domain.N_phi // 2, domain.N_phi // 2, domain.N_phi // 2, domain.N_t // 2)
+            c = (
+                domain.N // 2,
+                domain.N // 2,
+                domain.N // 2,
+                domain.N_phi // 2,
+                domain.N_phi // 2,
+                domain.N_phi // 2,
+                domain.N_t // 2,
+            )
             source[c] = 1.0
 
             params = {"mu": 1.0, "beta": 1.0, "lambda": 0.0, "use_cuda": True}
@@ -36,7 +52,9 @@ class TestStep2Command(BaseCommand):
             a_hat = np.fft.fftn(solution, norm="ortho")
             D = solver.get_spectral_coefficients()
             residual_hat = s_hat - D * a_hat
-            residual = np.linalg.norm(residual_hat.ravel()) / (np.linalg.norm(s_hat.ravel()) + 1e-12)
+            residual = np.linalg.norm(residual_hat.ravel()) / (
+                np.linalg.norm(s_hat.ravel()) + 1e-12
+            )
 
             success = residual < 1e-6
             print(f"Residual (spectral): {residual:.3e}")
@@ -53,5 +71,3 @@ class TestStep2Command(BaseCommand):
         except Exception as e:
             self.logger.error(f"❌ Step 2 failed: {e}")
             return {"step": 2, "name": self.name, "success": False, "error": str(e)}
-
-

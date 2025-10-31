@@ -46,6 +46,35 @@ $$A(r) \sim r^{2\beta-3}$$
 
 ## Структура экспериментов уровня E
 
+### Обновление (финальная реализация CUDA/векторизации/блочной обработки)
+
+- CUDA-модули уровня E разделены на термы энергии и фасад:
+  - `bhlff/models/level_e/cuda/energy/kinetic.py` — KineticEnergyCUDA
+  - `bhlff/models/level_e/cuda/energy/skyrme.py` — SkyrmeEnergyCUDA
+  - `bhlff/models/level_e/cuda/energy/wzw.py` — WZWEnergyCUDA
+  - `bhlff/models/level_e/cuda/energy/blocks.py` — EnergyBlockComputerCUDA (агрегация блока)
+  - фасад: `bhlff/models/level_e/cuda/soliton_energy_cuda.py` (делегирование термам)
+
+- Блочная обработка с использованием 80% свободной памяти GPU — `bhlff/core/domain/cuda_block_processor.py`.
+  - Логи по блокам: номер, границы, суммарное число блоков.
+  - Векторизация: CuPy/np.einsum/gradient без упрощений.
+
+- Оптимизация: `SolitonOptimizerCUDA` — добавлены логи итераций (невязка, норма шага).
+- Динамика дефектов: `DefectDynamicsCUDA` — логи по времени (норма градиента, позиция).
+
+### CLI для быстрой проверки CUDA
+
+- Команда: `bhlff-cuda-smoke`
+  - Установка (в venv): `pip install -e .`
+  - Запуск: `. .venv/bin/activate && bhlff-cuda-smoke -v --N 8 --phi 8 --t 8`
+  - Печатает: версию CuPy, доступность CUDA, конфигурацию блоков, итоговую энергию.
+
+### Требования проекта и соответствие
+
+- CPU fallback восстановлен полностью (без упрощений).
+- Каждый файл < 400 строк; большой фасад разделён на пакет.
+- Логи прогресса обеспечивают прозрачность долгих вычислений.
+
 ### Интеграция теоретических концепций из 7d-00-18.md
 
 **Теоретические основы**:
@@ -1715,6 +1744,28 @@ logs/level_e/
 ├── performance_logs/                  # Журналы производительности
 └── validation_logs/                   # Журналы валидации
 ```
+
+## Optimizer and Tests (Step 08)
+
+The Level E CUDA optimizer and its validation tests are implemented and wired for smoke and consistency checks. This section will be finalized after gradient computation is completed and stabilized.
+
+- Optimizer
+  - CUDA energy terms: `bhlff/models/level_e/cuda/energy/{kinetic,skyrme,wzw,blocks}.py`
+  - Energy facade: `bhlff/models/level_e/cuda/soliton_energy_cuda.py`
+  - Optimizer runner (CUDA): `bhlff/models/level_e/cuda/soliton_optimization_cuda.py`
+  - Block processing: `bhlff/core/domain/cuda_block_processor.py` (≈80% GPU memory targeting)
+
+- CLI smoke
+  - Command: `bhlff-cuda-smoke -v --N 8 --phi 8 --t 8`
+  - Prints CUDA/CuPy availability, block plan, final energy
+
+- Tests (core Step 08 coverage)
+  - `tests/unit/test_level_e/test_cuda_optimizer_smoke.py` — optimizer smoke
+  - `tests/unit/test_level_e/test_cuda_energy_consistency.py` — CPU/CUDA energy parity
+  - `tests/unit/test_models/test_level_e/test_time_stability_full.py` — time stability
+  - `tests/unit/test_models/test_level_e/test_domain_effects_full.py` — discretization/domain effects
+
+Note: Gradient-related assertions will be added after final gradients are stabilized.
 
 ## Критерии готовности
 

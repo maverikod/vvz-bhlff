@@ -65,13 +65,13 @@ class CodeMapperReports:
                 report.append("-" * 40)
                 for issue in issues_list[:10]:  # Show first 10 issues
                     if isinstance(issue, dict):
-                        if 'file' in issue:
+                        if "file" in issue:
                             report.append(f"  File: {issue['file']}")
-                        if 'line' in issue:
+                        if "line" in issue:
                             report.append(f"  Line: {issue['line']}")
-                        if 'class' in issue and issue['class']:
+                        if "class" in issue and issue["class"]:
                             report.append(f"  Class: {issue['class']}")
-                        if 'method' in issue:
+                        if "method" in issue:
                             report.append(f"  Method: {issue['method']}")
                         report.append("")
                 if len(issues_list) > 10:
@@ -98,13 +98,13 @@ class CodeMapperReports:
                 report.append("-" * 40)
                 for issue in issues_list:
                     if isinstance(issue, dict):
-                        if 'file' in issue:
+                        if "file" in issue:
                             report.append(f"  {issue['file']}")
-                        if 'line' in issue:
+                        if "line" in issue:
                             report.append(f"    Line {issue['line']}")
-                        if 'class' in issue and issue['class']:
+                        if "class" in issue and issue["class"]:
                             report.append(f"    Class: {issue['class']}")
-                        if 'method' in issue:
+                        if "method" in issue:
                             report.append(f"    Method: {issue['method']}")
                         report.append("")
                 report.append("")
@@ -131,9 +131,11 @@ class CodeMapperReports:
                 "total_files": len(self.code_map["files"]),
                 "total_classes": len(self.code_map["classes"]),
                 "total_functions": len(self.code_map["functions"]),
-            }
+            },
         }
-        return yaml.dump(yaml_data, default_flow_style=False, allow_unicode=True, sort_keys=True)
+        return yaml.dump(
+            yaml_data, default_flow_style=False, allow_unicode=True, sort_keys=True
+        )
 
     def save_yaml_code_map(self, output_dir: str) -> None:
         """Save YAML code map to file."""
@@ -152,11 +154,13 @@ class CodeMapperReports:
         yaml_data = {
             "issues": self.issues,
             "summary": {
-                issue_type: len(issues_list) 
+                issue_type: len(issues_list)
                 for issue_type, issues_list in self.issues.items()
-            }
+            },
         }
-        return yaml.dump(yaml_data, default_flow_style=False, allow_unicode=True, sort_keys=True)
+        return yaml.dump(
+            yaml_data, default_flow_style=False, allow_unicode=True, sort_keys=True
+        )
 
     def save_yaml_issues_report(self, output_dir: str) -> None:
         """Save YAML issues report to file."""

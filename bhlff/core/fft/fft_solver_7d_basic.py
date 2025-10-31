@@ -49,7 +49,9 @@ class FFTSolver7DBasic:
             # Fallback to attribute extraction
             mu = getattr(parameters, "mu", 1.0)
             beta = getattr(parameters, "beta", 1.0)
-            lambda_param = getattr(parameters, "lambda_param", getattr(parameters, "lambda", 0.0))
+            lambda_param = getattr(
+                parameters, "lambda_param", getattr(parameters, "lambda", 0.0)
+            )
             use_cuda_flag = getattr(parameters, "use_cuda", True)
 
         self.mu = float(mu)

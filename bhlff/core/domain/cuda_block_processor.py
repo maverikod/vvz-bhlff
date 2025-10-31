@@ -19,7 +19,7 @@ Example:
 """
 
 import numpy as np
-from typing import Iterator, Tuple, Dict, Any, Optional, List
+from typing import Iterator, Tuple, Dict, Any, Optional, List, TYPE_CHECKING
 import logging
 from dataclasses import dataclass
 
@@ -32,6 +32,14 @@ except ImportError:
     CUDA_AVAILABLE = False
     cp = None
     cp_ndimage = None
+
+if TYPE_CHECKING:
+    if CUDA_AVAILABLE and cp is not None:
+        CpArray = cp.ndarray
+    else:
+        CpArray = Any
+else:
+    CpArray = Any
 
 from .domain import Domain
 from .block_processor import BlockProcessor, BlockInfo
@@ -103,7 +111,7 @@ class CUDABlockProcessor(BlockProcessor):
             self.logger.error(f"CUDA initialization failed: {e}")
             self.cuda_available = False
 
-    def iterate_blocks_cuda(self) -> Iterator[Tuple[cp.ndarray, BlockInfo]]:
+    def iterate_blocks_cuda(self) -> Iterator[Tuple[CpArray, BlockInfo]]:
         """
         Iterate over all blocks in the 7D domain using CUDA.
 
@@ -112,7 +120,7 @@ class CUDABlockProcessor(BlockProcessor):
             ensuring GPU memory efficiency and proper overlap handling.
 
         Yields:
-            Tuple[cp.ndarray, BlockInfo]: CUDA block data and block information.
+            Tuple[CpArray, BlockInfo]: CUDA block data and block information.
         """
         if not self.cuda_available:
             # Fallback to CPU processing
@@ -142,12 +150,18 @@ class CUDABlockProcessor(BlockProcessor):
             # Extract block data to GPU
             block_data = self._extract_block_data_cuda(start_indices, end_indices)
 
+            if block_id % 10 == 0 or block_id == self.total_blocks - 1:
+                self.logger.info(
+                    f"[BlockProcessorCUDA] block {block_id+1}/{self.total_blocks} "
+                    f"start={start_indices} end={end_indices}"
+                )
+
             yield block_data, block_info
             block_id += 1
 
     def _extract_block_data_cuda(
         self, start_indices: Tuple[int, ...], end_indices: Tuple[int, ...]
-    ) -> cp.ndarray:
+    ) -> CpArray:
         """Extract block data to GPU memory."""
         # Create slice object
         slices = tuple(
@@ -166,8 +180,8 @@ class CUDABlockProcessor(BlockProcessor):
         return gpu_data
 
     def process_block_cuda(
-        self, block_data: cp.ndarray, block_info: BlockInfo, operation: str = "fft"
-    ) -> cp.ndarray:
+        self, block_data: CpArray, block_info: BlockInfo, operation: str = "fft"
+    ) -> CpArray:
         """
         Process a single block with CUDA acceleration.
 
@@ -176,12 +190,12 @@ class CUDABlockProcessor(BlockProcessor):
             CUDA-accelerated operations for maximum performance.
 
         Args:
-            block_data (cp.ndarray): CUDA block data to process.
+            block_data (CpArray): CUDA block data to process.
             block_info (BlockInfo): Block information.
             operation (str): Operation to perform on block.
 
         Returns:
-            cp.ndarray: CUDA-processed block data.
+            CpArray: CUDA-processed block data.
         """
         if not self.cuda_available:
             # Fallback to CPU processing
@@ -201,8 +215,8 @@ class CUDABlockProcessor(BlockProcessor):
             raise ValueError(f"Unknown operation: {operation}")
 
     def _process_block_fft_cuda(
-        self, block_data: cp.ndarray, block_info: BlockInfo
-    ) -> cp.ndarray:
+        self, block_data: CpArray, block_info: BlockInfo
+    ) -> CpArray:
         """Process block with CUDA FFT operation."""
         # Apply CUDA FFT to block
         fft_result = cp.fft.fftn(block_data)
@@ -214,8 +228,8 @@ class CUDABlockProcessor(BlockProcessor):
         return processed_result
 
     def _process_block_convolution_cuda(
-        self, block_data: cp.ndarray, block_info: BlockInfo
-    ) -> cp.ndarray:
+        self, block_data: CpArray, block_info: BlockInfo
+    ) -> CpArray:
         """Process block with CUDA convolution operation."""
         # Create convolution kernel for 7D phase field
         kernel_shape = tuple(min(3, size) for size in block_data.shape)
@@ -227,8 +241,8 @@ class CUDABlockProcessor(BlockProcessor):
         return convolved.astype(cp.complex128)
 
     def _process_block_gradient_cuda(
-        self, block_data: cp.ndarray, block_info: BlockInfo
-    ) -> cp.ndarray:
+        self, block_data: CpArray, block_info: BlockInfo
+    ) -> CpArray:
         """Process block with CUDA gradient operation."""
         # Compute gradient in 7D space using CUDA
         gradient = cp.gradient(block_data.real)
@@ -239,8 +253,8 @@ class CUDABlockProcessor(BlockProcessor):
         return gradient_magnitude.astype(cp.complex128)
 
     def _process_block_bvp_cuda(
-        self, block_data: cp.ndarray, block_info: BlockInfo
-    ) -> cp.ndarray:
+        self, block_data: CpArray, block_info: BlockInfo
+    ) -> CpArray:
         """Process block with CUDA BVP solving."""
         # CUDA-accelerated BVP solving
         # This would implement the full BVP equation on GPU
@@ -255,8 +269,8 @@ class CUDABlockProcessor(BlockProcessor):
         return result
 
     def merge_blocks_cuda(
-        self, processed_blocks: List[Tuple[cp.ndarray, BlockInfo]]
-    ) -> cp.ndarray:
+        self, processed_blocks: List[Tuple[CpArray, BlockInfo]]
+    ) -> CpArray:
         """
         Merge processed blocks back into full domain using CUDA.
 
@@ -265,10 +279,10 @@ class CUDABlockProcessor(BlockProcessor):
             handling overlaps and ensuring continuity.
 
         Args:
-            processed_blocks (List[Tuple[cp.ndarray, BlockInfo]]): List of CUDA-processed blocks.
+            processed_blocks (List[Tuple[CpArray, BlockInfo]]): List of CUDA-processed blocks.
 
         Returns:
-            cp.ndarray: Merged full domain data on GPU.
+            CpArray: Merged full domain data on GPU.
         """
         if not self.cuda_available:
             # Fallback to CPU processing
@@ -307,7 +321,7 @@ class CUDABlockProcessor(BlockProcessor):
 
         return result
 
-    def _create_weight_mask_cuda(self, block_info: BlockInfo) -> cp.ndarray:
+    def _create_weight_mask_cuda(self, block_info: BlockInfo) -> CpArray:
         """Create weight mask for overlap handling on GPU."""
         block_shape = block_info.shape
         weight_mask = cp.ones(block_shape, dtype=cp.float64)

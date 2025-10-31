@@ -36,6 +36,23 @@ from .superposition import MultiModeModel, SuperpositionAnalyzer
 from .projections import FieldProjection, ProjectionAnalyzer
 from .streamlines import StreamlineAnalyzer
 
+# Try to import CUDA-optimized versions
+try:
+    from .cuda.superposition_cuda import (
+        MultiModeModelCUDA,
+        SuperpositionAnalyzerCUDA,
+    )
+    from .cuda.projections_cuda import (
+        FieldProjectionCUDA,
+        ProjectionAnalyzerCUDA,
+    )
+    from .cuda.streamlines_cuda import StreamlineAnalyzerCUDA
+    CUDA_MODULES_AVAILABLE = True
+except ImportError:
+    CUDA_MODULES_AVAILABLE = False
+
+from bhlff.utils.cuda_utils import CUDA_AVAILABLE
+
 
 class LevelDModels(AbstractLevelModels):
     """
@@ -76,15 +93,26 @@ class LevelDModels(AbstractLevelModels):
         super().__init__(domain, parameters)
         self.logger = logging.getLogger(__name__)
 
-        # Initialize specialized analyzers
-        self._superposition_analyzer = SuperpositionAnalyzer(domain, parameters)
-        self._projection_analyzer = ProjectionAnalyzer(domain, parameters)
-        self._streamline_analyzer = StreamlineAnalyzer(domain, parameters)
+        # Use CUDA versions if available, otherwise fall back to CPU
+        use_cuda = CUDA_MODULES_AVAILABLE and CUDA_AVAILABLE
+        if use_cuda:
+            try:
+                self._superposition_analyzer = SuperpositionAnalyzerCUDA(domain, parameters)
+                self._projection_analyzer = ProjectionAnalyzerCUDA(domain, parameters)
+                self._streamline_analyzer = StreamlineAnalyzerCUDA(domain, parameters)
+                self._multimode_model = MultiModeModelCUDA(domain, parameters)
+                self.logger.info("Level D models initialized with CUDA acceleration")
+            except Exception as e:
+                self.logger.warning(f"CUDA initialization failed: {e}, falling back to CPU")
+                use_cuda = False
 
-        # Initialize multimode model
-        self._multimode_model = MultiModeModel(domain, parameters)
-
-        self.logger.info("Level D models initialized")
+        if not use_cuda:
+            # Initialize CPU versions
+            self._superposition_analyzer = SuperpositionAnalyzer(domain, parameters)
+            self._projection_analyzer = ProjectionAnalyzer(domain, parameters)
+            self._streamline_analyzer = StreamlineAnalyzer(domain, parameters)
+            self._multimode_model = MultiModeModel(domain, parameters)
+            self.logger.info("Level D models initialized with CPU processing")
 
     def create_multi_mode_field(
         self, base_field: np.ndarray, modes: List[Dict[str, Any]]

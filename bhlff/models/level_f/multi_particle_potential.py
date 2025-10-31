@@ -82,8 +82,9 @@ class MultiParticlePotentialAnalyzer:
         """
         self.logger.info("Computing effective potential")
 
-        # Initialize potential
-        potential = np.zeros(self.domain.shape)
+        # Initialize potential on spatial 3D grid only
+        spatial_shape = (int(self.domain.N), int(self.domain.N), int(self.domain.N))
+        potential = np.zeros(spatial_shape)
 
         # Add single-particle potentials
         for particle in self.particles:
@@ -178,7 +179,8 @@ class MultiParticlePotentialAnalyzer:
         interaction_strength = self._calculate_interaction_strength(distance)
 
         # Create potential field
-        potential = np.zeros(self.domain.shape)
+        spatial_shape = (int(self.domain.N), int(self.domain.N), int(self.domain.N))
+        potential = np.zeros(spatial_shape)
 
         # Add interaction contribution
         if distance < self.interaction_range:
@@ -198,7 +200,8 @@ class MultiParticlePotentialAnalyzer:
             np.ndarray: Higher-order interaction potential field.
         """
         # Initialize potential
-        potential = np.zeros(self.domain.shape)
+        spatial_shape = (int(self.domain.N), int(self.domain.N), int(self.domain.N))
+        potential = np.zeros(spatial_shape)
 
         # Compute three-body interactions
         for i, particle1 in enumerate(self.particles):
@@ -301,7 +304,7 @@ class MultiParticlePotentialAnalyzer:
         else:
             return 0.0
 
-    def _step_interaction_potential(self, distance: float) -> float:
+    def _step_interaction_potential(self, distance):
         """
         Step function interaction potential.
 
@@ -323,8 +326,9 @@ class MultiParticlePotentialAnalyzer:
         # Step resonator parameters
         interaction_strength = self.params.get("interaction_strength", 1.0)
 
-        # Step function interaction: 1.0 below cutoff, 0.0 above
-        return interaction_strength if distance < self.interaction_range else 0.0
+        # Support scalar or ndarray distance: return array mask or float
+        mask = distance < self.interaction_range
+        return interaction_strength * (mask.astype(float) if hasattr(mask, "astype") else float(mask))
 
     def _step_three_body_interaction_potential(
         self, distance_12: float, distance_13: float, distance_23: float

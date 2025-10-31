@@ -121,8 +121,10 @@ class DispersionAnalyzer(AbstractModel):
         """
         # Get collective modes
         modes = self.system.find_collective_modes()
-        mode_frequencies = modes["frequencies"]
-        mode_amplitudes = modes["amplitudes"]
+        mode_frequencies = modes.get("frequencies", modes.get("mode_frequencies", []))
+        mode_amplitudes = modes.get("amplitudes", modes.get("mode_amplitudes", []))
+        mode_frequencies = np.asarray(mode_frequencies, dtype=float)
+        mode_amplitudes = np.asarray(mode_amplitudes, dtype=float)
 
         # Compute susceptibility
         susceptibility = np.zeros_like(frequencies, dtype=complex)
@@ -154,7 +156,11 @@ class DispersionAnalyzer(AbstractModel):
         """
         # Get system parameters
         modes = self.system.find_collective_modes()
-        base_frequency = np.mean(modes["frequencies"])
+        freqs = modes.get("frequencies")
+        if freqs is None:
+            freqs = modes.get("mode_frequencies", [])
+        freqs = np.asarray(freqs, dtype=float)
+        base_frequency = float(np.mean(freqs)) if freqs.size > 0 else 0.0
 
         # Dispersion relation: ω² = ω₀² + c²k²
         c = 1.0  # Sound speed
@@ -198,13 +204,26 @@ class DispersionAnalyzer(AbstractModel):
         omega_0_squared = p[1]  # Intercept
         c_squared = p[0]  # Slope
 
-        omega_0 = np.sqrt(omega_0_squared) / (2 * np.pi)
-        c = np.sqrt(c_squared)
+        # Clamp numerical artifacts to avoid invalid sqrt
+        omega_0 = np.sqrt(max(0.0, float(omega_0_squared))) / (2 * np.pi)
+        c = np.sqrt(max(0.0, float(c_squared)))
 
         # Compute R²
-        omega_fit = np.sqrt(omega_0_squared + c_squared * k_values) / (2 * np.pi)
+        omega_fit = np.sqrt(np.maximum(0.0, omega_0_squared + c_squared * k_values)) / (2 * np.pi)
         r_squared = 1 - np.sum((frequencies - omega_fit) ** 2) / np.sum(
             (frequencies - np.mean(frequencies)) ** 2
         )
 
         return {"omega_0": omega_0, "c": c, "r_squared": r_squared, "coefficients": p}
+
+    def analyze(self, data: Any) -> Dict[str, Any]:
+        """
+        Analyze dispersion by computing ω(k) relations.
+
+        Args:
+            data (Any): Unused placeholder for interface compliance.
+
+        Returns:
+            Dict[str, Any]: Dispersion analysis results.
+        """
+        return self.compute_dispersion_relations()

@@ -27,6 +27,7 @@ Example:
 
 import numpy as np
 from typing import List, Dict, Any, Optional, cast
+import os
 from ..base.abstract_model import AbstractModel
 from .multi_particle.data_structures import Particle, SystemParameters
 from .multi_particle_potential import MultiParticlePotentialAnalyzer
@@ -71,7 +72,7 @@ class MultiParticleSystem(AbstractModel):
             interaction_range (float): Interaction range parameter.
             system_params (Optional[SystemParameters]): System parameters.
         """
-        super().__init__()
+        super().__init__(domain)
         self.domain = domain
         self.particles = particles
         self.interaction_range = interaction_range
@@ -99,14 +100,30 @@ class MultiParticleSystem(AbstractModel):
                     MultiParticlePotentialAnalyzerCUDA,
                 )
 
-                self._potential_analyzer_cuda = (
-                    MultiParticlePotentialAnalyzerCUDA(
-                        domain,
-                        particles,
-                        interaction_range=interaction_range,
-                        params={},
-                        system_params=self.system_params,
-                    )
+                # Optional CUDA tuning via environment (minimal impact path)
+                cuda_params: Dict[str, Any] = {}
+                dev = os.getenv("BHLFF_DEVICE_ID")
+                prec = os.getenv("BHLFF_PRECISION")
+                memf = os.getenv("BHLFF_MEMORY_FRACTION")
+                if dev is not None:
+                    try:
+                        cuda_params["device_id"] = int(dev)
+                    except Exception:
+                        pass
+                if prec is not None:
+                    cuda_params["precision"] = prec
+                if memf is not None:
+                    try:
+                        cuda_params["memory_fraction"] = float(memf)
+                    except Exception:
+                        pass
+
+                self._potential_analyzer_cuda = MultiParticlePotentialAnalyzerCUDA(
+                    domain,
+                    particles,
+                    interaction_range=interaction_range,
+                    params=cuda_params,
+                    system_params=self.system_params,
                 )
             except Exception:
                 self._potential_analyzer_cuda = None
@@ -169,6 +186,67 @@ class MultiParticleSystem(AbstractModel):
         return self._modes_analyzer.compute_correlation_function(
             field, time_points
         )
+
+    def analyze(self, data: Any) -> Dict[str, Any]:
+        """
+        Analyze multi-particle system properties.
+
+        Physical Meaning:
+            Provides a concise analysis bundle for the multi-particle system,
+            including effective potential and collective modes. If a field and
+            time grid are provided in `data`, computes correlation function.
+
+        Args:
+            data (Any): Optional dict with keys 'field' (np.ndarray) and
+                'time_points' (np.ndarray) to compute correlations.
+
+        Returns:
+            Dict[str, Any]: Combined analysis results.
+        """
+        self.log_analysis_start("multi_particle_system")
+
+        results: Dict[str, Any] = {}
+        # Effective potential (CUDA path used automatically if available)
+        results["effective_potential"] = self.compute_effective_potential()
+
+        # Collective modes
+        results["collective_modes"] = self.find_collective_modes()
+
+        # Optional correlation function
+        if isinstance(data, dict) and "field" in data and "time_points" in data:
+            try:
+                results["correlation_function"] = self.compute_correlation_function(
+                    data["field"], data["time_points"]
+                )
+            except Exception as exc:
+                results["correlation_error"] = str(exc)
+
+        self.log_analysis_complete("multi_particle_system", results)
+        return results
+
+    # --- Internal utilities ---
+    def _compute_dynamics_matrix(self) -> np.ndarray:
+        """
+        Construct a simple symmetric positive-definite dynamics matrix.
+
+        Physical Meaning:
+            Provides a minimal stiffness-like matrix for linear response
+            in excitation analysis. Diagonal terms represent self-stiffness;
+            off-diagonal couplings are small for close pairs.
+
+        Returns:
+            np.ndarray: (n_particles, n_particles) SPD matrix.
+        """
+        n = len(self.particles)
+        K = np.eye(n, dtype=float) * 2.0
+        if n <= 1:
+            return K
+        for i in range(n):
+            for j in range(i + 1, n):
+                d = float(np.linalg.norm(self.particles[i].position - self.particles[j].position))
+                if d < self.interaction_range:
+                    K[i, j] = K[j, i] = 0.1
+        return K
 
     def analyze_system_properties(self) -> Dict[str, Any]:
         """

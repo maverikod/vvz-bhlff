@@ -25,6 +25,7 @@ Example:
 
 import numpy as np
 from typing import Dict, Any
+import os
 from ..base.abstract_model import AbstractModel
 from .collective.excitation_analysis import ExcitationAnalyzer
 from .collective.dispersion_analysis import DispersionAnalyzer
@@ -68,7 +69,25 @@ class CollectiveExcitations(AbstractModel):
         """
         super().__init__(system.domain)
         self.system = system
-        self.excitation_params = excitation_params
+        # Enrich excitation params with optional CUDA tuning from env (non-invasive)
+        enriched = dict(excitation_params)
+        dev = os.getenv("BHLFF_DEVICE_ID")
+        prec = os.getenv("BHLFF_PRECISION")
+        memf = os.getenv("BHLFF_MEMORY_FRACTION")
+        if "device_id" not in enriched and dev is not None:
+            try:
+                enriched["device_id"] = int(dev)
+            except Exception:
+                pass
+        if "precision" not in enriched and prec is not None:
+            enriched["precision"] = prec
+        if "memory_fraction" not in enriched and memf is not None:
+            try:
+                enriched["memory_fraction"] = float(memf)
+            except Exception:
+                pass
+
+        self.excitation_params = enriched
 
         # Extract parameters
         self.frequency_range = excitation_params.get("frequency_range", [0.1, 10.0])

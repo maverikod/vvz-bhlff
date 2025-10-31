@@ -382,11 +382,12 @@ class MultiParticleModesAnalyzer:
         beta = self.params.get("beta", 1.0)
 
         # Compute field energy density components
-        # Localization energy: μ|∇a|²
-        localization_energy = mu * self.interaction_strength
+        # Localization energy: μ|∇a|² (proxy via interaction strength)
+        interaction_strength = self.params.get("interaction_strength", 1.0)
+        localization_energy = mu * interaction_strength
 
-        # Phase gradient energy: |∇Θ|^(2β)
-        phase_gradient_energy = self.interaction_strength ** (2 * beta)
+        # Phase gradient energy: |∇Θ|^(2β) (proxy)
+        phase_gradient_energy = interaction_strength ** (2 * beta)
 
         # Position-dependent energy modulation
         position_factor = 1.0 + 0.1 * np.linalg.norm(particle.position)

@@ -244,6 +244,24 @@ def analyze_nonlinear_effects(system, nonlinear_params):
 
 ## Критерии приёмки
 
+### CUDA execution parameters
+
+The CUDA pipeline supports tuning via:
+
+- `device_id` (int)
+- `precision` (`float32` | `float64`)
+- `memory_fraction` (float in (0,1], typical 0.8)
+
+You can provide them via model parameters or environment variables:
+
+```bash
+export BHLFF_DEVICE_ID=0
+export BHLFF_PRECISION=float32
+export BHLFF_MEMORY_FRACTION=0.8
+```
+
+When set via environment, values are automatically propagated to `CollectiveExcitations` and Level-F CUDA analyzers without changes to user code.
+
 ### Численные допуски
 - F1: Стабильность многочастичной системы
 - F2: Соответствие дисперсионных соотношений теоретическим предсказаниям

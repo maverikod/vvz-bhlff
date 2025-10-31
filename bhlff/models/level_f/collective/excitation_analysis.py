@@ -250,6 +250,23 @@ class ExcitationAnalyzer(AbstractModel):
 
         return response
 
+    def analyze(self, data: Any) -> Dict[str, Any]:
+        """
+        Analyze given external field by exciting the system and parsing response.
+
+        Args:
+            data (Any): External field array used to excite the system.
+
+        Returns:
+            Dict[str, Any]: Analysis including spectrum, peaks, participation, Q.
+        """
+        self.log_analysis_start("collective_excitations")
+        external_field = data
+        response = self.excite_system(external_field)
+        results = self.analyze_response(response)
+        self.log_analysis_complete("collective_excitations", results)
+        return results
+
     def _compute_external_force(
         self, external_field: np.ndarray, excitation_amplitude: float
     ) -> np.ndarray:
@@ -326,7 +343,9 @@ class ExcitationAnalyzer(AbstractModel):
         """
         # Initialize frequency-dependent resonator if not exists
         if not hasattr(self, "_resonator"):
-            from ...core.bvp.boundary.step_resonator import FrequencyDependentResonator
+            from bhlff.core.bvp.boundary.step_resonator import (
+                FrequencyDependentResonator,
+            )
 
             self._resonator = FrequencyDependentResonator(R0=0.1, T0=0.9, omega0=1.0)
 

@@ -183,9 +183,7 @@ class MultiParticleSystem(AbstractModel):
         Returns:
             np.ndarray: Correlation function.
         """
-        return self._modes_analyzer.compute_correlation_function(
-            field, time_points
-        )
+        return self._modes_analyzer.compute_correlation_function(field, time_points)
 
     def analyze(self, data: Any) -> Dict[str, Any]:
         """
@@ -243,7 +241,11 @@ class MultiParticleSystem(AbstractModel):
             return K
         for i in range(n):
             for j in range(i + 1, n):
-                d = float(np.linalg.norm(self.particles[i].position - self.particles[j].position))
+                d = float(
+                    np.linalg.norm(
+                        self.particles[i].position - self.particles[j].position
+                    )
+                )
                 if d < self.interaction_range:
                     K[i, j] = K[j, i] = 0.1
         return K

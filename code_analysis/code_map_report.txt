@@ -4,7 +4,7 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 968
+Total files analyzed: 971
 
 CLASSES SUMMARY:
 ----------------------------------------
@@ -12,17 +12,17 @@ Total classes: 811
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 7074
+Total functions: 7085
 
 ISSUES SUMMARY:
 ----------------------------------------
 methods_with_pass: 0
 not_implemented_in_non_abstract: 0
-methods_without_docstrings: 349
+methods_without_docstrings: 409
 files_without_docstrings: 4
 classes_without_docstrings: 21
-imports_in_middle: 702
-files_too_large: 122
+imports_in_middle: 703
+files_too_large: 120
 
 METHODS_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -69,7 +69,7 @@ METHODS_WITHOUT_DOCSTRINGS:
   Class: MockBVPCore
   Method: __init__
 
-  ... and 339 more
+  ... and 399 more
 
 FILES_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -162,7 +162,7 @@ IMPORTS_IN_MIDDLE:
   File: ./scripts/demo_block_processing.py
   Line: 317
 
-  ... and 692 more
+  ... and 693 more
 
 FILES_TOO_LARGE:
 ----------------------------------------
@@ -186,4 +186,4 @@ FILES_TOO_LARGE:
 
   File: ./tests/unit/test_base_models.py
 
-  ... and 112 more
+  ... and 110 more

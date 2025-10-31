@@ -138,12 +138,22 @@ class NonlinearEffects(AbstractModel):
         self, soliton_profiles: List[Dict[str, Any]]
     ) -> Dict[str, Any]:
         try:
-            if soliton_profiles and isinstance(soliton_profiles, list) and len(soliton_profiles) >= 3:
+            if (
+                soliton_profiles
+                and isinstance(soliton_profiles, list)
+                and len(soliton_profiles) >= 3
+            ):
                 s1, s2, s3 = soliton_profiles[:3]
                 return self._soliton_interactions.analyze_three_soliton_interactions(
-                    s1.get("amplitude", 1.0), s1.get("width", 1.0), s1.get("position", 0.0),
-                    s2.get("amplitude", 1.0), s2.get("width", 1.0), s2.get("position", 0.0),
-                    s3.get("amplitude", 1.0), s3.get("width", 1.0), s3.get("position", 0.0),
+                    s1.get("amplitude", 1.0),
+                    s1.get("width", 1.0),
+                    s1.get("position", 0.0),
+                    s2.get("amplitude", 1.0),
+                    s2.get("width", 1.0),
+                    s2.get("position", 0.0),
+                    s3.get("amplitude", 1.0),
+                    s3.get("width", 1.0),
+                    s3.get("position", 0.0),
                 )
         except Exception:
             pass

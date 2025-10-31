@@ -8776,19 +8776,19 @@ method_index:
       - block_size
       - overlap
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 62
+      line: 77
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 88
+      line: 103
       name: _initialize_cuda
       returns: None
     - args:
       - self
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 114
+      line: 129
       name: iterate_blocks_cuda
       returns: Iterator[Tuple[CpArray, BlockInfo]]
     - args:
@@ -8796,7 +8796,7 @@ method_index:
       - start_indices
       - end_indices
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 162
+      line: 177
       name: _extract_block_data_cuda
       returns: CpArray
     - args:
@@ -8805,7 +8805,7 @@ method_index:
       - block_info
       - operation
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 182
+      line: 183
       name: process_block_cuda
       returns: CpArray
     - args:
@@ -8813,7 +8813,7 @@ method_index:
       - block_data
       - block_info
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 217
+      line: 218
       name: _process_block_fft_cuda
       returns: CpArray
     - args:
@@ -8821,7 +8821,7 @@ method_index:
       - block_data
       - block_info
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 230
+      line: 224
       name: _process_block_convolution_cuda
       returns: CpArray
     - args:
@@ -8829,7 +8829,7 @@ method_index:
       - block_data
       - block_info
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 243
+      line: 230
       name: _process_block_gradient_cuda
       returns: CpArray
     - args:
@@ -8837,52 +8837,52 @@ method_index:
       - block_data
       - block_info
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 255
+      line: 236
       name: _process_block_bvp_cuda
       returns: CpArray
     - args:
       - self
       - processed_blocks
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 271
+      line: 242
       name: merge_blocks_cuda
       returns: CpArray
     - args:
       - self
       - block_info
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 324
+      line: 257
       name: _create_weight_mask_cuda
       returns: CpArray
     - args:
       - self
       - available_memory_gb
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 353
+      line: 268
       name: optimize_block_size_cuda
       returns: int
     - args:
       - self
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 389
+      line: 296
       name: get_cuda_info
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 402
+      line: 304
       name: get_memory_usage_cuda
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 414
+      line: 316
       name: cleanup_cuda_memory
       returns: None
     - args:
       - self
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 433
+      line: 326
       name: __del__
       returns: null
     CarrierPrimacyPostulate:
@@ -9442,48 +9442,48 @@ method_index:
       - self
       - system
       - excitation_params
-      file: ./bhlff/models/level_f/collective.py
-      line: 54
+      file: ./bhlff/models/level_f/collective_facade.py
+      line: 55
       name: __init__
       returns: None
     - args:
       - self
       - external_field
-      file: ./bhlff/models/level_f/collective.py
-      line: 102
+      file: ./bhlff/models/level_f/collective_facade.py
+      line: 117
       name: excite_system
       returns: np.ndarray
     - args:
       - self
       - response
-      file: ./bhlff/models/level_f/collective.py
-      line: 120
+      file: ./bhlff/models/level_f/collective_facade.py
+      line: 135
       name: analyze_response
       returns: Dict[str, Any]
     - args:
       - self
-      file: ./bhlff/models/level_f/collective.py
-      line: 147
+      file: ./bhlff/models/level_f/collective_facade.py
+      line: 160
       name: compute_dispersion_relations
       returns: Dict[str, Any]
     - args:
       - self
       - frequencies
-      file: ./bhlff/models/level_f/collective.py
-      line: 169
+      file: ./bhlff/models/level_f/collective_facade.py
+      line: 182
       name: compute_susceptibility
       returns: np.ndarray
     - args:
       - self
-      file: ./bhlff/models/level_f/collective.py
-      line: 185
+      file: ./bhlff/models/level_f/collective_facade.py
+      line: 198
       name: _setup_analysis_parameters
       returns: None
     - args:
       - self
       - data
-      file: ./bhlff/models/level_f/collective.py
-      line: 199
+      file: ./bhlff/models/level_f/collective_facade.py
+      line: 212
       name: analyze
       returns: Dict[str, Any]
     CollectiveExcitationsCUDA:
@@ -9492,33 +9492,33 @@ method_index:
       - system
       - excitation_params
       file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
-      line: 49
+      line: 57
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
-      line: 75
+      line: 105
       name: _setup_time_blocks
       returns: None
     - args:
       - self
       - external_field
       file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
-      line: 98
+      line: 128
       name: excite_system
       returns: np.ndarray
     - args:
       - self
       - response
       file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
-      line: 152
+      line: 179
       name: analyze_response
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
-      line: 198
+      line: 248
       name: compute_dispersion_relations
       returns: Dict[str, Any]
     - args:
@@ -9526,7 +9526,7 @@ method_index:
       - external_field
       - excitation_gpu
       file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
-      line: 221
+      line: 271
       name: _compute_external_force_gpu
       returns: '''cp.ndarray'''
     CollectiveModesAnalyzer:
@@ -11769,14 +11769,14 @@ method_index:
     - args:
       - self
       file: ./bhlff/models/level_f/collective/dispersion_analysis.py
-      line: 136
+      line: 138
       name: _setup_analysis_parameters
       returns: None
     - args:
       - self
       - k
       file: ./bhlff/models/level_f/collective/dispersion_analysis.py
-      line: 147
+      line: 149
       name: _solve_dispersion_equation
       returns: float
     - args:
@@ -11784,7 +11784,7 @@ method_index:
       - k
       - omega
       file: ./bhlff/models/level_f/collective/dispersion_analysis.py
-      line: 165
+      line: 171
       name: _compute_group_velocity
       returns: float
     - args:
@@ -11792,8 +11792,15 @@ method_index:
       - k_values
       - frequencies
       file: ./bhlff/models/level_f/collective/dispersion_analysis.py
-      line: 182
+      line: 188
       name: _fit_dispersion_relation
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - data
+      file: ./bhlff/models/level_f/collective/dispersion_analysis.py
+      line: 219
+      name: analyze
       returns: Dict[str, Any]
     DistributionManager:
     - args:
@@ -13277,10 +13284,17 @@ method_index:
       returns: np.ndarray
     - args:
       - self
+      - data
+      file: ./bhlff/models/level_f/collective/excitation_analysis.py
+      line: 253
+      name: analyze
+      returns: Dict[str, Any]
+    - args:
+      - self
       - external_field
       - excitation_amplitude
       file: ./bhlff/models/level_f/collective/excitation_analysis.py
-      line: 253
+      line: 270
       name: _compute_external_force
       returns: np.ndarray
     - args:
@@ -13288,28 +13302,28 @@ method_index:
       - spectrum
       - frequencies
       file: ./bhlff/models/level_f/collective/excitation_analysis.py
-      line: 285
+      line: 302
       name: _find_spectral_peaks
       returns: Dict[str, Any]
     - args:
       - self
       - response
       file: ./bhlff/models/level_f/collective/excitation_analysis.py
-      line: 316
+      line: 333
       name: _analyze_step_resonator_transmission
       returns: Dict[str, Any]
     - args:
       - self
       - field
       file: ./bhlff/models/level_f/collective/excitation_analysis.py
-      line: 360
+      line: 379
       name: _compute_boundary_energy_flux
       returns: Dict[str, float]
     - args:
       - self
       - response
       file: ./bhlff/models/level_f/collective/excitation_analysis.py
-      line: 397
+      line: 416
       name: _compute_participation_ratios
       returns: np.ndarray
     - args:
@@ -13317,7 +13331,7 @@ method_index:
       - peaks
       - transmission_analysis
       file: ./bhlff/models/level_f/collective/excitation_analysis.py
-      line: 419
+      line: 438
       name: _compute_quality_factors
       returns: np.ndarray
     ExperimentRunner:
@@ -18737,7 +18751,7 @@ method_index:
       - self
       - energy_matrix
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 401
+      line: 402
       name: _compute_energy_matrix_inverse
       returns: np.ndarray
     MultiParticlePotentialAnalyzer:
@@ -18760,14 +18774,14 @@ method_index:
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 103
+      line: 104
       name: _setup_interaction_matrices
       returns: None
     - args:
       - self
       - particle
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 125
+      line: 126
       name: _compute_single_particle_potential
       returns: np.ndarray
     - args:
@@ -18775,13 +18789,13 @@ method_index:
       - particle1
       - particle2
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 157
+      line: 158
       name: _compute_pair_interaction
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 189
+      line: 191
       name: _compute_higher_order_interactions
       returns: np.ndarray
     - args:
@@ -18790,14 +18804,14 @@ method_index:
       - particle2
       - particle3
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 214
+      line: 217
       name: _compute_three_body_interaction
       returns: np.ndarray
     - args:
       - self
       - distance
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 255
+      line: 258
       name: _calculate_interaction_strength
       returns: float
     - args:
@@ -18806,23 +18820,23 @@ method_index:
       - distance_13
       - distance_23
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 273
+      line: 276
       name: _calculate_three_body_strength
       returns: float
     - args:
       - self
       - distance
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 304
+      line: 307
       name: _step_interaction_potential
-      returns: float
+      returns: null
     - args:
       - self
       - distance_12
       - distance_13
       - distance_23
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 329
+      line: 333
       name: _step_three_body_interaction_potential
       returns: float
     MultiParticlePotentialAnalyzerCUDA:
@@ -18840,13 +18854,13 @@ method_index:
     - args:
       - self
       file: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
-      line: 124
+      line: 164
       name: compute_effective_potential
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
-      line: 234
+      line: 259
       name: _compute_optimal_block_size_7d
       returns: int
     MultiParticleSystem:
@@ -18858,19 +18872,19 @@ method_index:
       - system_params
       - use_cuda
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 53
+      line: 54
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 114
+      line: 131
       name: compute_effective_potential
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 132
+      line: 149
       name: find_collective_modes
       returns: Dict[str, Any]
     - args:
@@ -18878,13 +18892,26 @@ method_index:
       - field
       - time_points
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 149
+      line: 166
       name: compute_correlation_function
       returns: np.ndarray
     - args:
       - self
+      - data
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 173
+      line: 190
+      name: analyze
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 228
+      name: _compute_dynamics_matrix
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 251
       name: analyze_system_properties
       returns: Dict[str, Any]
     - args:
@@ -20042,142 +20069,130 @@ method_index:
       - self
       - system
       - nonlinear_params
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 57
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 44
       name: __init__
       returns: null
     - args:
       - self
       - nonlinear_params
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 83
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 60
       name: add_nonlinear_interactions
       returns: None
     - args:
       - self
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 105
-      name: _add_nonlinear_potential
-      returns: None
-    - args:
-      - self
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 117
-      name: _add_nonlinear_dynamics
-      returns: None
-    - args:
-      - self
       - psi
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 129
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 71
       name: _nonlinear_potential
       returns: np.ndarray
     - args:
       - self
       - psi
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 152
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 80
       name: _nonlinear_force
       returns: np.ndarray
     - args:
       - self
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 175
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 89
       name: find_nonlinear_modes
       returns: Dict[str, Any]
     - args:
       - self
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 193
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 92
       name: find_soliton_solutions
       returns: Dict[str, Any]
     - args:
       - self
       - field
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 211
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 95
       name: analyze_nonlinear_strength
       returns: Dict[str, Any]
     - args:
       - self
       - field
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 228
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 98
       name: compute_nonlinear_energy
       returns: float
     - args:
       - self
       - field
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 245
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 101
       name: compute_nonlinear_force
       returns: np.ndarray
     - args:
       - self
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 262
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 104
       name: analyze_nonlinear_stability
       returns: Dict[str, Any]
     - args:
       - self
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 276
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 107
       name: find_bifurcation_points
       returns: List[Dict[str, Any]]
     - args:
       - self
       - linear_modes
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 290
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 110
       name: compute_nonlinear_corrections
       returns: Dict[str, Any]
     - args:
       - self
       - soliton_profiles
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 309
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 115
       name: analyze_soliton_stability
       returns: Dict[str, Any]
     - args:
       - self
       - soliton_profiles
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 327
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 137
       name: analyze_soliton_interactions
       returns: Dict[str, Any]
     - args:
       - self
       - soliton_profiles
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 345
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 152
       name: compute_soliton_energies
       returns: List[float]
     - args:
       - self
       - results
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 363
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 163
       name: validate_nonlinear_analysis
       returns: Dict[str, Any]
     - args:
       - self
       - basic_effects
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 403
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 182
       name: _validate_basic_effects
       returns: Dict[str, Any]
     - args:
       - self
       - soliton_analysis
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 429
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 192
       name: _validate_soliton_analysis
       returns: Dict[str, Any]
     - args:
       - self
       - mode_analysis
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 464
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 209
       name: _validate_mode_analysis
       returns: Dict[str, Any]
     - args:
@@ -20185,8 +20200,8 @@ method_index:
       - basic_validation
       - soliton_validation
       - mode_validation
-      file: ./bhlff/models/level_f/nonlinear.py
-      line: 497
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 224
       name: _calculate_overall_validation
       returns: Dict[str, Any]
     NonlinearModeAnalyzer:
@@ -49706,6 +49721,6 @@ method_index:
       returns: null
   standalone_functions: []
   summary:
-    total_class_methods: 6876
+    total_class_methods: 6878
     total_classes: 672
     total_standalone_functions: 0

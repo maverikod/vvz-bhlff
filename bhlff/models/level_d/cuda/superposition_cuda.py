@@ -31,13 +31,17 @@ import logging
 try:
     import cupy as cp
     import cupyx.scipy.fft as cp_fft
+
     CUDA_AVAILABLE = True
 except ImportError:
     CUDA_AVAILABLE = False
     cp = None
     cp_fft = None
 
-from bhlff.utils.cuda_utils import get_optimal_backend, CUDA_AVAILABLE as UTILS_CUDA_AVAILABLE
+from bhlff.utils.cuda_utils import (
+    get_optimal_backend,
+    CUDA_AVAILABLE as UTILS_CUDA_AVAILABLE,
+)
 from .superposition_utils_cuda import FrameExtractorCUDA, StabilityAnalyzerCUDA
 
 
@@ -77,7 +81,7 @@ class MultiModeModelCUDA:
         if self.cuda_available:
             try:
                 self.backend = get_optimal_backend()
-                if hasattr(self.backend, 'device'):
+                if hasattr(self.backend, "device"):
                     self.device = self.backend.device
                     self._compute_optimal_block_size()
                 else:
@@ -248,9 +252,13 @@ class MultiModeModelCUDA:
         """Create single mode field on CPU."""
         coords = self._create_coordinate_grids_cpu(shape)
         if spatial_mode == "bvp_envelope_modulation":
-            spatial_field = self._create_bvp_envelope_modulation_cpu(coords, frequency, shape)
+            spatial_field = self._create_bvp_envelope_modulation_cpu(
+                coords, frequency, shape
+            )
         else:
-            spatial_field = self._create_default_spatial_mode_cpu(coords, frequency, shape)
+            spatial_field = self._create_default_spatial_mode_cpu(
+                coords, frequency, shape
+            )
         mode_field = amplitude * np.exp(1j * phase) * spatial_field
         return mode_field.real
 
@@ -264,9 +272,7 @@ class MultiModeModelCUDA:
             coords.append(coord)
         return coords
 
-    def _create_coordinate_grids_cpu(
-        self, shape: Tuple[int, ...]
-    ) -> List[np.ndarray]:
+    def _create_coordinate_grids_cpu(self, shape: Tuple[int, ...]) -> List[np.ndarray]:
         """Create coordinate grids on CPU."""
         coords = []
         for i, size in enumerate(shape):
@@ -406,4 +412,19 @@ class MultiModeModelCUDA:
 
 
 class SuperpositionAnalyzerCUDA:
+    """
+    Facade analyzer for multimode superposition using CUDA.
 
+    Physical Meaning:
+        Provides a simple interface to analyze frame stability after
+        multimode superposition, delegating to the CUDA-optimized model.
+    """
+
+    def __init__(self, domain: "Domain", parameters: Dict[str, Any]):
+        """Initialize superposition analyzer with underlying CUDA model."""
+        self._model = MultiModeModelCUDA(domain, parameters)
+        self.logger = logging.getLogger(__name__)
+
+    def analyze(self, before: np.ndarray, after: np.ndarray) -> Dict[str, Any]:
+        """Run frame stability analysis for before/after fields."""
+        return self._model.analyze_frame_stability(before, after)

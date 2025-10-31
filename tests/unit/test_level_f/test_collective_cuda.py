@@ -32,9 +32,7 @@ def domain() -> Domain:
 def particles():
     return [
         Particle(position=np.array([5.0, 10.0, 10.0]), charge=1, phase=0.0),
-        Particle(
-            position=np.array([15.0, 10.0, 10.0]), charge=-1, phase=np.pi
-        ),
+        Particle(position=np.array([15.0, 10.0, 10.0]), charge=-1, phase=np.pi),
     ]
 
 

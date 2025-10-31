@@ -7632,19 +7632,23 @@ Class: MultiParticleModesAnalyzer
   _compute_particle_energy_from_field(self, particle) -> float
     File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 361
   _compute_energy_matrix_inverse(self, energy_matrix) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 401
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 402
 
 Class: MultiParticleSystem
   __init__(self, domain, particles, interaction_range, system_params, use_cuda)
-    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 53
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 54
   compute_effective_potential(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 114
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 131
   find_collective_modes(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 132
-  compute_correlation_function(self, field, time_points) -> np.ndarray
     File: ./bhlff/models/level_f/multi_particle_system.py, Line: 149
+  compute_correlation_function(self, field, time_points) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 166
+  analyze(self, data) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 190
+  _compute_dynamics_matrix(self) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 228
   analyze_system_properties(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 173
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 251
   __init__(self, domain, particles, interaction_range, system_params)
     File: ./bhlff/models/level_f/multi_particle.py, Line: 54
   compute_effective_potential(self) -> np.ndarray
@@ -7656,51 +7660,21 @@ Class: MultiParticleSystem
   analyze_system_properties(self) -> Dict[str, Any]
     File: ./bhlff/models/level_f/multi_particle.py, Line: 146
 
-Class: NonlinearEffects
-  __init__(self, system, nonlinear_params)
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 57
-  add_nonlinear_interactions(self, nonlinear_params) -> None
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 83
-  _add_nonlinear_potential(self) -> None
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 105
-  _add_nonlinear_dynamics(self) -> None
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 117
-  _nonlinear_potential(self, psi) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 129
-  _nonlinear_force(self, psi) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 152
-  find_nonlinear_modes(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 175
-  find_soliton_solutions(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 193
-  analyze_nonlinear_strength(self, field) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 211
-  compute_nonlinear_energy(self, field) -> float
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 228
-  compute_nonlinear_force(self, field) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 245
-  analyze_nonlinear_stability(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 262
-  find_bifurcation_points(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 276
-  compute_nonlinear_corrections(self, linear_modes) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 290
-  analyze_soliton_stability(self, soliton_profiles) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 309
-  analyze_soliton_interactions(self, soliton_profiles) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 327
-  compute_soliton_energies(self, soliton_profiles) -> List[float]
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 345
-  validate_nonlinear_analysis(self, results) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 363
-  _validate_basic_effects(self, basic_effects) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 403
-  _validate_soliton_analysis(self, soliton_analysis) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 429
-  _validate_mode_analysis(self, mode_analysis) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 464
-  _calculate_overall_validation(self, basic_validation, soliton_validation, mode_validation) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear.py, Line: 497
+Class: CollectiveExcitations
+  __init__(self, system, excitation_params) -> None
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 55
+  excite_system(self, external_field) -> np.ndarray
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 117
+  analyze_response(self, response) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 135
+  compute_dispersion_relations(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 160
+  compute_susceptibility(self, frequencies) -> np.ndarray
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 182
+  _setup_analysis_parameters(self) -> None
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 198
+  analyze(self, data) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 212
 
 Class: MultiParticlePotentialAnalyzer
   __init__(self, domain, particles, interaction_range, params)
@@ -7708,39 +7682,65 @@ Class: MultiParticlePotentialAnalyzer
   compute_effective_potential(self) -> np.ndarray
     File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 69
   _setup_interaction_matrices(self) -> None
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 103
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 104
   _compute_single_particle_potential(self, particle) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 125
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 126
   _compute_pair_interaction(self, particle1, particle2) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 157
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 158
   _compute_higher_order_interactions(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 189
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 191
   _compute_three_body_interaction(self, particle1, particle2, particle3) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 214
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 217
   _calculate_interaction_strength(self, distance) -> float
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 255
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 258
   _calculate_three_body_strength(self, distance_12, distance_13, distance_23) -> float
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 273
-  _step_interaction_potential(self, distance) -> float
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 304
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 276
+  _step_interaction_potential(self, distance)
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 307
   _step_three_body_interaction_potential(self, distance_12, distance_13, distance_23) -> float
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 329
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 333
 
-Class: CollectiveExcitations
-  __init__(self, system, excitation_params) -> None
-    File: ./bhlff/models/level_f/collective.py, Line: 54
-  excite_system(self, external_field) -> np.ndarray
-    File: ./bhlff/models/level_f/collective.py, Line: 102
-  analyze_response(self, response) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/collective.py, Line: 120
-  compute_dispersion_relations(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/collective.py, Line: 147
-  compute_susceptibility(self, frequencies) -> np.ndarray
-    File: ./bhlff/models/level_f/collective.py, Line: 169
-  _setup_analysis_parameters(self) -> None
-    File: ./bhlff/models/level_f/collective.py, Line: 185
-  analyze(self, data) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/collective.py, Line: 199
+Class: NonlinearEffects
+  __init__(self, system, nonlinear_params)
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 44
+  add_nonlinear_interactions(self, nonlinear_params) -> None
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 60
+  _nonlinear_potential(self, psi) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 71
+  _nonlinear_force(self, psi) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 80
+  find_nonlinear_modes(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 89
+  find_soliton_solutions(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 92
+  analyze_nonlinear_strength(self, field) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 95
+  compute_nonlinear_energy(self, field) -> float
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 98
+  compute_nonlinear_force(self, field) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 101
+  analyze_nonlinear_stability(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 104
+  find_bifurcation_points(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 107
+  compute_nonlinear_corrections(self, linear_modes) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 110
+  analyze_soliton_stability(self, soliton_profiles) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 115
+  analyze_soliton_interactions(self, soliton_profiles) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 137
+  compute_soliton_energies(self, soliton_profiles) -> List[float]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 152
+  validate_nonlinear_analysis(self, results) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 163
+  _validate_basic_effects(self, basic_effects) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 182
+  _validate_soliton_analysis(self, soliton_analysis) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 192
+  _validate_mode_analysis(self, mode_analysis) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 209
+  _calculate_overall_validation(self, basic_validation, soliton_validation, mode_validation) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 224
 
 Class: SolitonAnalysisInitialization
   __init__(self, system, nonlinear_params)
@@ -8230,13 +8230,15 @@ Class: DispersionAnalyzer
   compute_susceptibility(self, frequencies) -> np.ndarray
     File: ./bhlff/models/level_f/collective/dispersion_analysis.py, Line: 108
   _setup_analysis_parameters(self) -> None
-    File: ./bhlff/models/level_f/collective/dispersion_analysis.py, Line: 136
+    File: ./bhlff/models/level_f/collective/dispersion_analysis.py, Line: 138
   _solve_dispersion_equation(self, k) -> float
-    File: ./bhlff/models/level_f/collective/dispersion_analysis.py, Line: 147
+    File: ./bhlff/models/level_f/collective/dispersion_analysis.py, Line: 149
   _compute_group_velocity(self, k, omega) -> float
-    File: ./bhlff/models/level_f/collective/dispersion_analysis.py, Line: 165
+    File: ./bhlff/models/level_f/collective/dispersion_analysis.py, Line: 171
   _fit_dispersion_relation(self, k_values, frequencies) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/collective/dispersion_analysis.py, Line: 182
+    File: ./bhlff/models/level_f/collective/dispersion_analysis.py, Line: 188
+  analyze(self, data) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/collective/dispersion_analysis.py, Line: 219
 
 Class: ExcitationAnalyzer
   __init__(self, system, excitation_params)
@@ -8255,40 +8257,42 @@ Class: ExcitationAnalyzer
     File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 194
   _apply_excitation(self, external_field, excitation) -> np.ndarray
     File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 217
-  _compute_external_force(self, external_field, excitation_amplitude) -> np.ndarray
+  analyze(self, data) -> Dict[str, Any]
     File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 253
+  _compute_external_force(self, external_field, excitation_amplitude) -> np.ndarray
+    File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 270
   _find_spectral_peaks(self, spectrum, frequencies) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 285
+    File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 302
   _analyze_step_resonator_transmission(self, response) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 316
+    File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 333
   _compute_boundary_energy_flux(self, field) -> Dict[str, float]
-    File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 360
+    File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 379
   _compute_participation_ratios(self, response) -> np.ndarray
-    File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 397
+    File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 416
   _compute_quality_factors(self, peaks, transmission_analysis) -> np.ndarray
-    File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 419
+    File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 438
 
 Class: CollectiveExcitationsCUDA
   __init__(self, system, excitation_params)
-    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 49
+    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 57
   _setup_time_blocks(self) -> None
-    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 75
+    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 105
   excite_system(self, external_field) -> np.ndarray
-    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 98
+    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 128
   analyze_response(self, response) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 152
+    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 179
   compute_dispersion_relations(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 198
+    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 248
   _compute_external_force_gpu(self, external_field, excitation_gpu) -> 'cp.ndarray'
-    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 221
+    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 271
 
 Class: MultiParticlePotentialAnalyzerCUDA
   __init__(self, domain, particles, interaction_range, params, system_params) -> None
     File: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 72
   compute_effective_potential(self) -> np.ndarray
-    File: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 124
+    File: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 164
   _compute_optimal_block_size_7d(self) -> int
-    File: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 234
+    File: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 259
 
 Class: PotentialLandscapeAnalyzer
   __init__(self, domain, particles, system_params)
@@ -13912,37 +13916,37 @@ Class: BVPVectorizedProcessor
 
 Class: CUDABlockProcessor
   __init__(self, domain, block_size, overlap)
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 62
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 77
   _initialize_cuda(self) -> None
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 88
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 103
   iterate_blocks_cuda(self) -> Iterator[Tuple[CpArray, BlockInfo]]
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 114
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 129
   _extract_block_data_cuda(self, start_indices, end_indices) -> CpArray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 162
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 177
   process_block_cuda(self, block_data, block_info, operation) -> CpArray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 182
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 183
   _process_block_fft_cuda(self, block_data, block_info) -> CpArray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 217
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 218
   _process_block_convolution_cuda(self, block_data, block_info) -> CpArray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 230
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 224
   _process_block_gradient_cuda(self, block_data, block_info) -> CpArray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 243
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 230
   _process_block_bvp_cuda(self, block_data, block_info) -> CpArray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 255
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 236
   merge_blocks_cuda(self, processed_blocks) -> CpArray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 271
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 242
   _create_weight_mask_cuda(self, block_info) -> CpArray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 324
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 257
   optimize_block_size_cuda(self, available_memory_gb) -> int
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 353
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 268
   get_cuda_info(self) -> Dict[str, Any]
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 389
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 296
   get_memory_usage_cuda(self) -> Dict[str, Any]
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 402
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 304
   cleanup_cuda_memory(self) -> None
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 414
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 316
   __del__(self)
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 433
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 326
 
 Class: BlockInfo
   __init__(self, domain, block_size, overlap)

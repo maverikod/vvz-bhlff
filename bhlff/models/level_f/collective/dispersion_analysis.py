@@ -209,7 +209,9 @@ class DispersionAnalyzer(AbstractModel):
         c = np.sqrt(max(0.0, float(c_squared)))
 
         # Compute R²
-        omega_fit = np.sqrt(np.maximum(0.0, omega_0_squared + c_squared * k_values)) / (2 * np.pi)
+        omega_fit = np.sqrt(np.maximum(0.0, omega_0_squared + c_squared * k_values)) / (
+            2 * np.pi
+        )
         r_squared = 1 - np.sum((frequencies - omega_fit) ** 2) / np.sum(
             (frequencies - np.mean(frequencies)) ** 2
         )

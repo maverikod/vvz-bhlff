@@ -33,13 +33,17 @@ import logging
 try:
     import cupy as cp
     import cupyx.scipy.fft as cp_fft
+
     CUDA_AVAILABLE = True
 except ImportError:
     CUDA_AVAILABLE = False
     cp = None
     cp_fft = None
 
-from bhlff.utils.cuda_utils import get_optimal_backend, CUDA_AVAILABLE as UTILS_CUDA_AVAILABLE
+from bhlff.utils.cuda_utils import (
+    get_optimal_backend,
+    CUDA_AVAILABLE as UTILS_CUDA_AVAILABLE,
+)
 from .projectors_cuda import EMProjectorCUDA, StrongProjectorCUDA, WeakProjectorCUDA
 from .signature_analyzer_cuda import SignatureAnalyzerCUDA
 
@@ -87,13 +91,19 @@ class FieldProjectionCUDA:
 
         # Initialize projectors
         self._em_projector = EMProjectorCUDA(
-            projection_params.get("em", {}), self.cuda_available, self.backend if self.cuda_available else None
+            projection_params.get("em", {}),
+            self.cuda_available,
+            self.backend if self.cuda_available else None,
         )
         self._strong_projector = StrongProjectorCUDA(
-            projection_params.get("strong", {}), self.cuda_available, self.backend if self.cuda_available else None
+            projection_params.get("strong", {}),
+            self.cuda_available,
+            self.backend if self.cuda_available else None,
         )
         self._weak_projector = WeakProjectorCUDA(
-            projection_params.get("weak", {}), self.cuda_available, self.backend if self.cuda_available else None
+            projection_params.get("weak", {}),
+            self.cuda_available,
+            self.backend if self.cuda_available else None,
         )
 
         # Initialize signature analyzer
@@ -126,9 +136,8 @@ class FieldProjectionCUDA:
             max_elements = available_memory_bytes // (
                 bytes_per_element * overhead_factor
             )
-اوى overhead_factor = 4
 
-            n_dims = len(self.field.shape) if hasattr(self.field, 'shape') else 3
+            n_dims = len(self.field.shape) if hasattr(self.field, "shape") else 3
             elements_per_dim = int(max_elements ** (1.0 / n_dims))
             block_size = max(4, min(elements_per_dim, 128))
 

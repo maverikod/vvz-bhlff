@@ -328,7 +328,9 @@ class MultiParticlePotentialAnalyzer:
 
         # Support scalar or ndarray distance: return array mask or float
         mask = distance < self.interaction_range
-        return interaction_strength * (mask.astype(float) if hasattr(mask, "astype") else float(mask))
+        return interaction_strength * (
+            mask.astype(float) if hasattr(mask, "astype") else float(mask)
+        )
 
     def _step_three_body_interaction_potential(
         self, distance_12: float, distance_13: float, distance_23: float

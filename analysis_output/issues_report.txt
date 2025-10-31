@@ -19,16 +19,16 @@ METHODS_WITHOUT_DOCSTRINGS: 190 issues
     Method: bc
 
   bhlff/models/level_f/cuda/collective_excitations_cuda.py
-    Line 49
+    Line 57
     Method: __init__
 
   bhlff/models/level_f/cuda/collective_excitations_cuda.py
-    Line 49
+    Line 57
     Class: CollectiveExcitationsCUDA
     Method: __init__
 
   bhlff/models/level_f/cuda/collective_excitations_cuda.py
-    Line 49
+    Line 57
     Method: __init__
 
   bhlff/models/level_e/cuda/energy/blocks.py
@@ -1234,7 +1234,7 @@ IMPORTS_IN_MIDDLE: 528 issues
     Line 329
 
   bhlff/models/level_f/cuda/collective_excitations_cuda.py
-    Line 34
+    Line 42
 
   bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
     Line 47

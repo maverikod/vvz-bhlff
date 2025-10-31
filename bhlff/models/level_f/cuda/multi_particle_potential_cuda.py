@@ -113,20 +113,27 @@ class MultiParticlePotentialAnalyzerCUDA:
             )
         self.backend = backend
 
+        # Optional tuning parameters
+        self.memory_fraction = float(self.params.get("memory_fraction", 0.8))
+        self.device_id = int(self.params.get("device_id", cp.cuda.Device().id))
+        self.precision = str(self.params.get("precision", "float64")).lower()
+        self._dtype = cp.float32 if self.precision == "float32" else cp.float64
+
+        # Select target device (if provided)
+        cp.cuda.Device(self.device_id).use()
+
         # Determine optimal block size targeting ~80% free GPU memory
         self.block_size = self._compute_optimal_block_size_7d()
 
         # Initialize CUDA block processor with computed block size
-        self.block_processor = CUDABlockProcessor(
-            domain, block_size=self.block_size
-        )
+        self.block_processor = CUDABlockProcessor(domain, block_size=self.block_size)
 
         # Cache particle data on GPU
         self._positions_gpu = cp.asarray(
-            [p.position for p in self.particles], dtype=cp.float64
+            [p.position for p in self.particles], dtype=self._dtype
         )
         self._charges_gpu = cp.asarray(
-            [float(p.charge) for p in self.particles], dtype=cp.float64
+            [float(p.charge) for p in self.particles], dtype=self._dtype
         )
 
         # Precompute close pairs and triples once to avoid per-block checks
@@ -191,7 +198,7 @@ class MultiParticlePotentialAnalyzerCUDA:
             )
 
             # Accumulate block potential on GPU
-            block_potential = cp.zeros(Xb.shape, dtype=cp.float64)
+            block_potential = cp.zeros(Xb.shape, dtype=self._dtype)
 
             # Single-particle contributions via sub-batching (vectorized)
             strength = float(self.params.get("interaction_strength", 1.0))
@@ -205,7 +212,7 @@ class MultiParticlePotentialAnalyzerCUDA:
                 subbatch = min(n, 32)
             else:
                 elements_per_block = int(Xb.size)
-                bytes_per_element = 8
+                bytes_per_element = 4 if self._dtype == cp.float32 else 8
                 budget = max(1, int(0.1 * free_bytes))
                 est_per_particle = elements_per_block * bytes_per_element * 6
                 subbatch = max(1, min(n, budget // max(1, est_per_particle)))
@@ -223,7 +230,7 @@ class MultiParticlePotentialAnalyzerCUDA:
                 dz = Zb[..., None] - pz[None, None, None, :]
                 r2 = dx * dx + dy * dy + dz * dz
                 mask = r2 <= rc2  # (..., s)
-                weighted = mask.astype(cp.float64) * cq[None, None, None, :]
+                weighted = mask.astype(self._dtype) * cq[None, None, None, :]
                 contrib = weighted.sum(axis=-1)
                 block_potential += strength * contrib
 
@@ -236,9 +243,7 @@ class MultiParticlePotentialAnalyzerCUDA:
                 block_potential += strength
 
             # Bring block result to CPU and insert
-            result[slices[0], slices[1], slices[2]] = cp.asnumpy(
-                block_potential
-            )
+            result[slices[0], slices[1], slices[2]] = cp.asnumpy(block_potential)
 
             # Periodic cleanup to respect memory budget
             if block_id % 8 == 0:
@@ -264,29 +269,18 @@ class MultiParticlePotentialAnalyzerCUDA:
         """
         mem = self.backend.get_memory_info()
         free_bytes = int(mem.get("free_memory", 0))
-        usable = int(free_bytes * 0.8)  # target 80%
+        usable = int(free_bytes * self.memory_fraction)  # target fraction
 
-        # Memory model per element: we keep several temporaries
-        # on GPU simultaneously.
-        # For single-particle contributions we use Xb, Yb, Zb (3 arrays),
-        # r2 (1), mask (1), block_potential (1) → ~6 arrays; additional
-        # temporaries for pair/three-body are tiny. Use a conservative
-        # factor of 8 arrays of float64 (8 bytes) per element.
         arrays_per_element = 8
-        bytes_per_element = 8  # float64
+        bytes_per_element = 8  # conservative upper bound
         budget_per_element = arrays_per_element * bytes_per_element
 
-        # 7D domain here effectively uses 3D spatial for potential;
-        # other dims are not used.
-        # We compute block size for 3D spatial grid.
         max_elements = usable // budget_per_element
         if max_elements <= 0:
             return 4
 
-        # Compute cubic block side for 3D
         side = int(max_elements ** (1.0 / 3.0))
 
-        # Clamp to domain dimensions and reasonable bounds
         side = max(4, min(side, 256))
         side = min(
             side,

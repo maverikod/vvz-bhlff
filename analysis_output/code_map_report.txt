@@ -39,16 +39,16 @@ METHODS_WITHOUT_DOCSTRINGS:
   Method: bc
 
   File: bhlff/models/level_f/cuda/collective_excitations_cuda.py
-  Line: 49
+  Line: 57
   Method: __init__
 
   File: bhlff/models/level_f/cuda/collective_excitations_cuda.py
-  Line: 49
+  Line: 57
   Class: CollectiveExcitationsCUDA
   Method: __init__
 
   File: bhlff/models/level_f/cuda/collective_excitations_cuda.py
-  Line: 49
+  Line: 57
   Method: __init__
 
   File: bhlff/models/level_e/cuda/energy/blocks.py

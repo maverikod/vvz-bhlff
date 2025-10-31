@@ -9134,33 +9134,33 @@ method_index:
       - system
       - excitation_params
       file: bhlff/models/level_f/cuda/collective_excitations_cuda.py
-      line: 49
+      line: 57
       name: __init__
       returns: null
     - args:
       - self
       file: bhlff/models/level_f/cuda/collective_excitations_cuda.py
-      line: 73
+      line: 105
       name: _setup_time_blocks
       returns: None
     - args:
       - self
       - external_field
       file: bhlff/models/level_f/cuda/collective_excitations_cuda.py
-      line: 96
+      line: 128
       name: excite_system
       returns: np.ndarray
     - args:
       - self
       - response
       file: bhlff/models/level_f/cuda/collective_excitations_cuda.py
-      line: 141
+      line: 179
       name: analyze_response
       returns: Dict[str, Any]
     - args:
       - self
       file: bhlff/models/level_f/cuda/collective_excitations_cuda.py
-      line: 185
+      line: 248
       name: compute_dispersion_relations
       returns: Dict[str, Any]
     - args:
@@ -9168,7 +9168,7 @@ method_index:
       - external_field
       - excitation_gpu
       file: bhlff/models/level_f/cuda/collective_excitations_cuda.py
-      line: 208
+      line: 271
       name: _compute_external_force_gpu
       returns: '''cp.ndarray'''
     CollectiveModesAnalyzer:
@@ -17698,13 +17698,13 @@ method_index:
     - args:
       - self
       file: bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
-      line: 124
+      line: 164
       name: compute_effective_potential
       returns: np.ndarray
     - args:
       - self
       file: bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
-      line: 234
+      line: 259
       name: _compute_optimal_block_size_7d
       returns: int
     MultiParticleSystem:

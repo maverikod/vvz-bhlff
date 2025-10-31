@@ -3000,25 +3000,25 @@ Class: ExcitationAnalyzer
 
 Class: CollectiveExcitationsCUDA
   __init__(self, system, excitation_params)
-    File: bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 49
+    File: bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 57
   _setup_time_blocks(self) -> None
-    File: bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 73
+    File: bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 105
   excite_system(self, external_field) -> np.ndarray
-    File: bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 96
+    File: bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 128
   analyze_response(self, response) -> Dict[str, Any]
-    File: bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 141
+    File: bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 179
   compute_dispersion_relations(self) -> Dict[str, Any]
-    File: bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 185
+    File: bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 248
   _compute_external_force_gpu(self, external_field, excitation_gpu) -> 'cp.ndarray'
-    File: bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 208
+    File: bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 271
 
 Class: MultiParticlePotentialAnalyzerCUDA
   __init__(self, domain, particles, interaction_range, params, system_params) -> None
     File: bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 72
   compute_effective_potential(self) -> np.ndarray
-    File: bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 124
+    File: bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 164
   _compute_optimal_block_size_7d(self) -> int
-    File: bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 234
+    File: bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 259
 
 Class: PotentialLandscapeAnalyzer
   __init__(self, domain, particles, system_params)

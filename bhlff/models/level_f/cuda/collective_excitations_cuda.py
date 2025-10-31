@@ -56,9 +56,7 @@ class CollectiveExcitationsCUDA:
 
     def __init__(self, system: Any, excitation_params: Dict[str, Any]):
         if not CUDA_AVAILABLE:
-            raise RuntimeError(
-                "CUDA not available for CollectiveExcitationsCUDA"
-            )
+            raise RuntimeError("CUDA not available for CollectiveExcitationsCUDA")
 
         self.system = system
         self.params = excitation_params
@@ -73,16 +71,25 @@ class CollectiveExcitationsCUDA:
         self.duration = float(self.params.get("duration", 100.0))
         self.dt = float(self.params.get("dt", 0.01))
 
+        # Optional tuning parameters
+        self.memory_fraction = float(self.params.get("memory_fraction", 0.8))
+        self.device_id = int(self.params.get("device_id", cp.cuda.Device().id))
+        self.precision = str(self.params.get("precision", "float64")).lower()
+        self._dtype = cp.float32 if self.precision == "float32" else cp.float64
+
+        # Select target device (if provided)
+        cp.cuda.Device(self.device_id).use()
+
         # Time grid and block sizing (80% GPU memory)
         self._setup_time_blocks()
 
         # Precompute dynamics matrix on CPU and transfer to GPU
         dyn = self.system._compute_dynamics_matrix()
-        self.dynamics_gpu = cp.asarray(dyn)
+        self.dynamics_gpu = cp.asarray(dyn, dtype=self._dtype)
 
         # Cache charges on GPU for force mapping
         self._charges_gpu = cp.asarray(
-            [p.charge for p in self.system.particles], dtype=cp.float64
+            [p.charge for p in self.system.particles], dtype=self._dtype
         )
 
         # Factorize once for many RHS if possible (LU)
@@ -102,11 +109,11 @@ class CollectiveExcitationsCUDA:
 
         mem = self.backend.get_memory_info()
         free_bytes = int(mem.get("free_memory", 0))
-        usable = int(free_bytes * 0.8)
+        usable = int(free_bytes * self.memory_fraction)
 
         # Response buffer per block: n_particles x block_time float64
         n_particles = len(self.system.particles)
-        bytes_per_element = 8
+        bytes_per_element = 4 if self._dtype == cp.float32 else 8
         # Allocate for response, excitation, temporaries (~ x3 safety)
         if n_particles <= 0:
             self.block_time = min(1024, n_steps)
@@ -133,9 +140,7 @@ class CollectiveExcitationsCUDA:
             t_gpu = cp.asarray(tb)
             if self.excitation_type == "harmonic":
                 omega = float(np.mean(self.frequency_range))
-                excitation_gpu = self.amplitude * cp.sin(
-                    2 * cp.pi * omega * t_gpu
-                )
+                excitation_gpu = self.amplitude * cp.sin(2 * cp.pi * omega * t_gpu)
             elif self.excitation_type == "impulse":
                 excitation_gpu = cp.where(t_gpu < 0.1, self.amplitude, 0.0)
             elif self.excitation_type == "sweep":
@@ -143,18 +148,12 @@ class CollectiveExcitationsCUDA:
                 omega_t = w0 + (w1 - w0) * (t_gpu - t_gpu[0]) / cp.maximum(
                     self.dt, (t_gpu[-1] - t_gpu[0] + self.dt)
                 )
-                excitation_gpu = self.amplitude * cp.sin(
-                    2 * cp.pi * omega_t * t_gpu
-                )
+                excitation_gpu = self.amplitude * cp.sin(2 * cp.pi * omega_t * t_gpu)
             else:
-                raise ValueError(
-                    f"Unknown excitation type: {self.excitation_type}"
-                )
+                raise ValueError(f"Unknown excitation type: {self.excitation_type}")
 
             # External field to forces (vectorized simple mapping)
-            F_gpu = self._compute_external_force_gpu(
-                external_field, excitation_gpu
-            )
+            F_gpu = self._compute_external_force_gpu(external_field, excitation_gpu)
 
             # Solve dynamics for all timesteps in the batch at once
             # X = A^{-1} F; prefer LU reuse for many RHS
@@ -164,9 +163,7 @@ class CollectiveExcitationsCUDA:
                     and self._lu_piv is not None
                     and cp_lu_solve is not None
                 ):
-                    batch_resp = cp_lu_solve(
-                        (self._lu_factor, self._lu_piv), F_gpu
-                    )
+                    batch_resp = cp_lu_solve((self._lu_factor, self._lu_piv), F_gpu)
                 else:
                     batch_resp = cp.linalg.solve(self.dynamics_gpu, F_gpu)
             except cp.linalg.LinAlgError:
@@ -197,15 +194,11 @@ class CollectiveExcitationsCUDA:
                     height=self.params.get("peak_threshold", 0.1),
                 )
                 inds_cpu = cp.asnumpy(inds)
-                heights_cpu = cp.asnumpy(
-                    props.get("peak_heights", cp.array([]))
-                )
+                heights_cpu = cp.asnumpy(props.get("peak_heights", cp.array([])))
                 freqs_cpu = cp.asnumpy(freqs_gpu)
                 peak_indices = inds_cpu.tolist()
                 peak_freqs = [float(freqs_cpu[i]) for i in inds_cpu]
-                peak_amps = [
-                    float(heights_cpu[k]) for k in range(len(inds_cpu))
-                ]
+                peak_amps = [float(heights_cpu[k]) for k in range(len(inds_cpu))]
             else:
                 # Fallback simple GPU→CPU compare
                 mag_cpu = cp.asnumpy(mag_mean_gpu)
@@ -238,9 +231,7 @@ class CollectiveExcitationsCUDA:
             part = part / np.sum(part)
 
         # Quality factors (proxy)
-        Q = np.array(
-            [max(0.0, float(f)) for f in peak_freqs], dtype=np.float64
-        )
+        Q = np.array([max(0.0, float(f)) for f in peak_freqs], dtype=np.float64)
 
         return {
             "frequencies": cp.asnumpy(freqs_gpu),
@@ -284,7 +275,5 @@ class CollectiveExcitationsCUDA:
         # Simple model: mean field * cached charge * excitation (vectorized)
         field_mean = float(np.mean(external_field))
         # Outer product: (n_particles, 1) * (1, n_times)
-        forces = (
-            self._charges_gpu[:, None] * field_mean * excitation_gpu[None, :]
-        )
+        forces = self._charges_gpu[:, None] * field_mean * excitation_gpu[None, :]
         return forces.astype(cp.float64)

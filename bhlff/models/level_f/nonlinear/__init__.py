@@ -21,8 +21,8 @@ from .basic_effects import BasicNonlinearEffects
 from .soliton_analysis import SingleSolitonSolver, MultiSolitonSolutions
 from .mode_analysis import NonlinearModeAnalyzer
 
-# Re-export facade class expected by tests from sibling module file
-from ..nonlinear import NonlinearEffects
+# Re-export facade class from dedicated facade module to avoid circular import
+from ..nonlinear_facade import NonlinearEffects
 
 __all__ = [
     "BasicNonlinearEffects",

@@ -12,63 +12,66 @@ Total classes: 559
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 4488
+Total functions: 4486
 
 ISSUES SUMMARY:
 ----------------------------------------
 methods_with_pass: 0
 not_implemented_in_non_abstract: 0
-methods_without_docstrings: 190
+methods_without_docstrings: 250
 files_without_docstrings: 4
 classes_without_docstrings: 2
 imports_in_middle: 528
-files_too_large: 96
+files_too_large: 95
 
 METHODS_WITHOUT_DOCSTRINGS:
 ----------------------------------------
-  File: bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
-  Line: 102
-  Method: bc
-
-  File: bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
-  Line: 129
-  Method: bc
-
-  File: bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
-  Line: 334
-  Method: bc
-
-  File: bhlff/models/level_f/cuda/collective_excitations_cuda.py
-  Line: 57
+  File: bhlff/models/level_f/nonlinear_facade.py
+  Line: 41
   Method: __init__
 
-  File: bhlff/models/level_f/cuda/collective_excitations_cuda.py
-  Line: 57
-  Class: CollectiveExcitationsCUDA
+  File: bhlff/models/level_f/nonlinear_facade.py
+  Line: 41
+  Class: NonlinearEffects
   Method: __init__
 
-  File: bhlff/models/level_f/cuda/collective_excitations_cuda.py
-  Line: 57
-  Method: __init__
+  File: bhlff/models/level_f/nonlinear_facade.py
+  Line: 54
+  Method: add_nonlinear_interactions
 
-  File: bhlff/models/level_e/cuda/energy/blocks.py
-  Line: 43
-  Method: __init__
+  File: bhlff/models/level_f/nonlinear_facade.py
+  Line: 54
+  Class: NonlinearEffects
+  Method: add_nonlinear_interactions
 
-  File: bhlff/models/level_e/cuda/energy/blocks.py
-  Line: 43
-  Class: EnergyBlockComputerCUDA
-  Method: __init__
+  File: bhlff/models/level_f/nonlinear_facade.py
+  Line: 65
+  Method: _nonlinear_potential
 
-  File: bhlff/models/level_e/cuda/energy/blocks.py
-  Line: 43
-  Method: __init__
+  File: bhlff/models/level_f/nonlinear_facade.py
+  Line: 65
+  Class: NonlinearEffects
+  Method: _nonlinear_potential
 
-  File: bhlff/models/level_e/cuda/energy/skyrme.py
-  Line: 42
-  Method: __init__
+  File: bhlff/models/level_f/nonlinear_facade.py
+  Line: 74
+  Method: _nonlinear_force
 
-  ... and 180 more
+  File: bhlff/models/level_f/nonlinear_facade.py
+  Line: 74
+  Class: NonlinearEffects
+  Method: _nonlinear_force
+
+  File: bhlff/models/level_f/nonlinear_facade.py
+  Line: 83
+  Method: find_nonlinear_modes
+
+  File: bhlff/models/level_f/nonlinear_facade.py
+  Line: 83
+  Class: NonlinearEffects
+  Method: find_nonlinear_modes
+
+  ... and 240 more
 
 FILES_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -152,4 +155,4 @@ FILES_TOO_LARGE:
 
   File: bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
 
-  ... and 86 more
+  ... and 85 more

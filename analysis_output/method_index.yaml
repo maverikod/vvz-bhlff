@@ -18900,142 +18900,130 @@ method_index:
       - self
       - system
       - nonlinear_params
-      file: bhlff/models/level_f/nonlinear.py
-      line: 57
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 41
       name: __init__
       returns: null
     - args:
       - self
       - nonlinear_params
-      file: bhlff/models/level_f/nonlinear.py
-      line: 83
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 54
       name: add_nonlinear_interactions
       returns: None
     - args:
       - self
-      file: bhlff/models/level_f/nonlinear.py
-      line: 105
-      name: _add_nonlinear_potential
-      returns: None
-    - args:
-      - self
-      file: bhlff/models/level_f/nonlinear.py
-      line: 117
-      name: _add_nonlinear_dynamics
-      returns: None
-    - args:
-      - self
       - psi
-      file: bhlff/models/level_f/nonlinear.py
-      line: 129
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 65
       name: _nonlinear_potential
       returns: np.ndarray
     - args:
       - self
       - psi
-      file: bhlff/models/level_f/nonlinear.py
-      line: 152
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 74
       name: _nonlinear_force
       returns: np.ndarray
     - args:
       - self
-      file: bhlff/models/level_f/nonlinear.py
-      line: 175
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 83
       name: find_nonlinear_modes
       returns: Dict[str, Any]
     - args:
       - self
-      file: bhlff/models/level_f/nonlinear.py
-      line: 193
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 86
       name: find_soliton_solutions
       returns: Dict[str, Any]
     - args:
       - self
       - field
-      file: bhlff/models/level_f/nonlinear.py
-      line: 211
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 89
       name: analyze_nonlinear_strength
       returns: Dict[str, Any]
     - args:
       - self
       - field
-      file: bhlff/models/level_f/nonlinear.py
-      line: 228
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 92
       name: compute_nonlinear_energy
       returns: float
     - args:
       - self
       - field
-      file: bhlff/models/level_f/nonlinear.py
-      line: 245
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 95
       name: compute_nonlinear_force
       returns: np.ndarray
     - args:
       - self
-      file: bhlff/models/level_f/nonlinear.py
-      line: 262
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 98
       name: analyze_nonlinear_stability
       returns: Dict[str, Any]
     - args:
       - self
-      file: bhlff/models/level_f/nonlinear.py
-      line: 276
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 101
       name: find_bifurcation_points
       returns: List[Dict[str, Any]]
     - args:
       - self
       - linear_modes
-      file: bhlff/models/level_f/nonlinear.py
-      line: 290
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 104
       name: compute_nonlinear_corrections
       returns: Dict[str, Any]
     - args:
       - self
       - soliton_profiles
-      file: bhlff/models/level_f/nonlinear.py
-      line: 309
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 109
       name: analyze_soliton_stability
       returns: Dict[str, Any]
     - args:
       - self
       - soliton_profiles
-      file: bhlff/models/level_f/nonlinear.py
-      line: 327
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 114
       name: analyze_soliton_interactions
       returns: Dict[str, Any]
     - args:
       - self
       - soliton_profiles
-      file: bhlff/models/level_f/nonlinear.py
-      line: 345
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 119
       name: compute_soliton_energies
       returns: List[float]
     - args:
       - self
       - results
-      file: bhlff/models/level_f/nonlinear.py
-      line: 363
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 124
       name: validate_nonlinear_analysis
       returns: Dict[str, Any]
     - args:
       - self
       - basic_effects
-      file: bhlff/models/level_f/nonlinear.py
-      line: 403
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 143
       name: _validate_basic_effects
       returns: Dict[str, Any]
     - args:
       - self
       - soliton_analysis
-      file: bhlff/models/level_f/nonlinear.py
-      line: 429
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 153
       name: _validate_soliton_analysis
       returns: Dict[str, Any]
     - args:
       - self
       - mode_analysis
-      file: bhlff/models/level_f/nonlinear.py
-      line: 464
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 170
       name: _validate_mode_analysis
       returns: Dict[str, Any]
     - args:
@@ -19043,8 +19031,8 @@ method_index:
       - basic_validation
       - soliton_validation
       - mode_validation
-      file: bhlff/models/level_f/nonlinear.py
-      line: 497
+      file: bhlff/models/level_f/nonlinear_facade.py
+      line: 185
       name: _calculate_overall_validation
       returns: Dict[str, Any]
     NonlinearModeAnalyzer:
@@ -32918,6 +32906,6 @@ method_index:
       returns: Dict[str, Any]
   standalone_functions: []
   summary:
-    total_class_methods: 4416
+    total_class_methods: 4414
     total_classes: 467
     total_standalone_functions: 0

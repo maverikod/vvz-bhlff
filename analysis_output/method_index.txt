@@ -2386,52 +2386,6 @@ Class: MultiParticleSystem
   analyze_system_properties(self) -> Dict[str, Any]
     File: bhlff/models/level_f/multi_particle.py, Line: 146
 
-Class: NonlinearEffects
-  __init__(self, system, nonlinear_params)
-    File: bhlff/models/level_f/nonlinear.py, Line: 57
-  add_nonlinear_interactions(self, nonlinear_params) -> None
-    File: bhlff/models/level_f/nonlinear.py, Line: 83
-  _add_nonlinear_potential(self) -> None
-    File: bhlff/models/level_f/nonlinear.py, Line: 105
-  _add_nonlinear_dynamics(self) -> None
-    File: bhlff/models/level_f/nonlinear.py, Line: 117
-  _nonlinear_potential(self, psi) -> np.ndarray
-    File: bhlff/models/level_f/nonlinear.py, Line: 129
-  _nonlinear_force(self, psi) -> np.ndarray
-    File: bhlff/models/level_f/nonlinear.py, Line: 152
-  find_nonlinear_modes(self) -> Dict[str, Any]
-    File: bhlff/models/level_f/nonlinear.py, Line: 175
-  find_soliton_solutions(self) -> Dict[str, Any]
-    File: bhlff/models/level_f/nonlinear.py, Line: 193
-  analyze_nonlinear_strength(self, field) -> Dict[str, Any]
-    File: bhlff/models/level_f/nonlinear.py, Line: 211
-  compute_nonlinear_energy(self, field) -> float
-    File: bhlff/models/level_f/nonlinear.py, Line: 228
-  compute_nonlinear_force(self, field) -> np.ndarray
-    File: bhlff/models/level_f/nonlinear.py, Line: 245
-  analyze_nonlinear_stability(self) -> Dict[str, Any]
-    File: bhlff/models/level_f/nonlinear.py, Line: 262
-  find_bifurcation_points(self) -> List[Dict[str, Any]]
-    File: bhlff/models/level_f/nonlinear.py, Line: 276
-  compute_nonlinear_corrections(self, linear_modes) -> Dict[str, Any]
-    File: bhlff/models/level_f/nonlinear.py, Line: 290
-  analyze_soliton_stability(self, soliton_profiles) -> Dict[str, Any]
-    File: bhlff/models/level_f/nonlinear.py, Line: 309
-  analyze_soliton_interactions(self, soliton_profiles) -> Dict[str, Any]
-    File: bhlff/models/level_f/nonlinear.py, Line: 327
-  compute_soliton_energies(self, soliton_profiles) -> List[float]
-    File: bhlff/models/level_f/nonlinear.py, Line: 345
-  validate_nonlinear_analysis(self, results) -> Dict[str, Any]
-    File: bhlff/models/level_f/nonlinear.py, Line: 363
-  _validate_basic_effects(self, basic_effects) -> Dict[str, Any]
-    File: bhlff/models/level_f/nonlinear.py, Line: 403
-  _validate_soliton_analysis(self, soliton_analysis) -> Dict[str, Any]
-    File: bhlff/models/level_f/nonlinear.py, Line: 429
-  _validate_mode_analysis(self, mode_analysis) -> Dict[str, Any]
-    File: bhlff/models/level_f/nonlinear.py, Line: 464
-  _calculate_overall_validation(self, basic_validation, soliton_validation, mode_validation) -> Dict[str, Any]
-    File: bhlff/models/level_f/nonlinear.py, Line: 497
-
 Class: CollectiveExcitations
   __init__(self, system, excitation_params) -> None
     File: bhlff/models/level_f/collective_facade.py, Line: 54
@@ -2471,6 +2425,48 @@ Class: MultiParticlePotentialAnalyzer
     File: bhlff/models/level_f/multi_particle_potential.py, Line: 304
   _step_three_body_interaction_potential(self, distance_12, distance_13, distance_23) -> float
     File: bhlff/models/level_f/multi_particle_potential.py, Line: 329
+
+Class: NonlinearEffects
+  __init__(self, system, nonlinear_params)
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 41
+  add_nonlinear_interactions(self, nonlinear_params) -> None
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 54
+  _nonlinear_potential(self, psi) -> np.ndarray
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 65
+  _nonlinear_force(self, psi) -> np.ndarray
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 74
+  find_nonlinear_modes(self) -> Dict[str, Any]
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 83
+  find_soliton_solutions(self) -> Dict[str, Any]
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 86
+  analyze_nonlinear_strength(self, field) -> Dict[str, Any]
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 89
+  compute_nonlinear_energy(self, field) -> float
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 92
+  compute_nonlinear_force(self, field) -> np.ndarray
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 95
+  analyze_nonlinear_stability(self) -> Dict[str, Any]
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 98
+  find_bifurcation_points(self) -> List[Dict[str, Any]]
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 101
+  compute_nonlinear_corrections(self, linear_modes) -> Dict[str, Any]
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 104
+  analyze_soliton_stability(self, soliton_profiles) -> Dict[str, Any]
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 109
+  analyze_soliton_interactions(self, soliton_profiles) -> Dict[str, Any]
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 114
+  compute_soliton_energies(self, soliton_profiles) -> List[float]
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 119
+  validate_nonlinear_analysis(self, results) -> Dict[str, Any]
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 124
+  _validate_basic_effects(self, basic_effects) -> Dict[str, Any]
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 143
+  _validate_soliton_analysis(self, soliton_analysis) -> Dict[str, Any]
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 153
+  _validate_mode_analysis(self, mode_analysis) -> Dict[str, Any]
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 170
+  _calculate_overall_validation(self, basic_validation, soliton_validation, mode_validation) -> Dict[str, Any]
+    File: bhlff/models/level_f/nonlinear_facade.py, Line: 185
 
 Class: SolitonAnalysisInitialization
   __init__(self, system, nonlinear_params)

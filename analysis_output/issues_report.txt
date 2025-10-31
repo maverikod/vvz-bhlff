@@ -2,10 +2,270 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 820
+Total issues found: 879
 
-METHODS_WITHOUT_DOCSTRINGS: 190 issues
+METHODS_WITHOUT_DOCSTRINGS: 250 issues
 ----------------------------------------
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 41
+    Method: __init__
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 41
+    Class: NonlinearEffects
+    Method: __init__
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 54
+    Method: add_nonlinear_interactions
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 54
+    Class: NonlinearEffects
+    Method: add_nonlinear_interactions
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 65
+    Method: _nonlinear_potential
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 65
+    Class: NonlinearEffects
+    Method: _nonlinear_potential
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 74
+    Method: _nonlinear_force
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 74
+    Class: NonlinearEffects
+    Method: _nonlinear_force
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 83
+    Method: find_nonlinear_modes
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 83
+    Class: NonlinearEffects
+    Method: find_nonlinear_modes
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 86
+    Method: find_soliton_solutions
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 86
+    Class: NonlinearEffects
+    Method: find_soliton_solutions
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 89
+    Method: analyze_nonlinear_strength
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 89
+    Class: NonlinearEffects
+    Method: analyze_nonlinear_strength
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 92
+    Method: compute_nonlinear_energy
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 92
+    Class: NonlinearEffects
+    Method: compute_nonlinear_energy
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 95
+    Method: compute_nonlinear_force
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 95
+    Class: NonlinearEffects
+    Method: compute_nonlinear_force
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 98
+    Method: analyze_nonlinear_stability
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 98
+    Class: NonlinearEffects
+    Method: analyze_nonlinear_stability
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 101
+    Method: find_bifurcation_points
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 101
+    Class: NonlinearEffects
+    Method: find_bifurcation_points
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 104
+    Method: compute_nonlinear_corrections
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 104
+    Class: NonlinearEffects
+    Method: compute_nonlinear_corrections
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 109
+    Method: analyze_soliton_stability
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 109
+    Class: NonlinearEffects
+    Method: analyze_soliton_stability
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 114
+    Method: analyze_soliton_interactions
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 114
+    Class: NonlinearEffects
+    Method: analyze_soliton_interactions
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 119
+    Method: compute_soliton_energies
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 119
+    Class: NonlinearEffects
+    Method: compute_soliton_energies
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 124
+    Method: validate_nonlinear_analysis
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 124
+    Class: NonlinearEffects
+    Method: validate_nonlinear_analysis
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 143
+    Method: _validate_basic_effects
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 143
+    Class: NonlinearEffects
+    Method: _validate_basic_effects
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 153
+    Method: _validate_soliton_analysis
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 153
+    Class: NonlinearEffects
+    Method: _validate_soliton_analysis
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 170
+    Method: _validate_mode_analysis
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 170
+    Class: NonlinearEffects
+    Method: _validate_mode_analysis
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 185
+    Method: _calculate_overall_validation
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 185
+    Class: NonlinearEffects
+    Method: _calculate_overall_validation
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 41
+    Method: __init__
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 54
+    Method: add_nonlinear_interactions
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 65
+    Method: _nonlinear_potential
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 74
+    Method: _nonlinear_force
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 83
+    Method: find_nonlinear_modes
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 86
+    Method: find_soliton_solutions
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 89
+    Method: analyze_nonlinear_strength
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 92
+    Method: compute_nonlinear_energy
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 95
+    Method: compute_nonlinear_force
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 98
+    Method: analyze_nonlinear_stability
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 101
+    Method: find_bifurcation_points
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 104
+    Method: compute_nonlinear_corrections
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 109
+    Method: analyze_soliton_stability
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 114
+    Method: analyze_soliton_interactions
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 119
+    Method: compute_soliton_energies
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 124
+    Method: validate_nonlinear_analysis
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 143
+    Method: _validate_basic_effects
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 153
+    Method: _validate_soliton_analysis
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 170
+    Method: _validate_mode_analysis
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 185
+    Method: _calculate_overall_validation
+
   bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
     Line 102
     Method: bc
@@ -1131,9 +1391,6 @@ IMPORTS_IN_MIDDLE: 528 issues
   bhlff/models/level_f/multi_particle_system.py
     Line 98
 
-  bhlff/models/level_f/nonlinear.py
-    Line 33
-
   bhlff/models/level_f/__init__.py
     Line 28
 
@@ -1145,6 +1402,9 @@ IMPORTS_IN_MIDDLE: 528 issues
 
   bhlff/models/level_f/multi_particle_potential.py
     Line 24
+
+  bhlff/models/level_f/nonlinear_facade.py
+    Line 29
 
   bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py
     Line 23
@@ -2422,7 +2682,7 @@ IMPORTS_IN_MIDDLE: 528 issues
     Line 23
 
 
-FILES_TOO_LARGE: 96 issues
+FILES_TOO_LARGE: 95 issues
 ----------------------------------------
   bhlff/models/level_c/boundaries_core.py
 
@@ -2475,8 +2735,6 @@ FILES_TOO_LARGE: 96 issues
   bhlff/models/level_f/bvp_integration.py
 
   bhlff/models/level_f/multi_particle_modes.py
-
-  bhlff/models/level_f/nonlinear.py
 
   bhlff/models/level_f/nonlinear/basic_effects.py
 

@@ -256,10 +256,10 @@ class CollectiveExcitationsCUDA:
         c = 1.0
         omega = cp.sqrt(omega0 * omega0 + (c * k_values) ** 2)
 
-        # Group and phase velocities
-        with cp.errstate(divide="ignore", invalid="ignore"):
-            v_g = cp.gradient(omega) / cp.gradient(k_values)
-            v_phi = cp.where(k_values != 0, omega / k_values, 0.0)
+        # Group and phase velocities (avoid warnings via safe where)
+        denom = cp.gradient(k_values)
+        v_g = cp.where(denom != 0, cp.gradient(omega) / denom, 0.0)
+        v_phi = cp.where(k_values != 0, omega / k_values, 0.0)
 
         return {
             "k_values": cp.asnumpy(k_values),

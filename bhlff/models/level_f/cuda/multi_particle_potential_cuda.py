@@ -171,10 +171,10 @@ class MultiParticlePotentialAnalyzerCUDA:
             CUDA block processing.
 
         Returns:
-            np.ndarray: Effective potential on CPU memory with domain.shape.
+            np.ndarray: Effective potential on CPU memory with spatial shape (N, N, N).
         """
         # Preallocate on CPU; assemble per block to reduce GPU pressure
-        result = np.zeros(self.domain.shape, dtype=np.float64)
+        result = np.zeros((int(self.domain.N), int(self.domain.N), int(self.domain.N)), dtype=np.float64)
 
         positions = self._positions_gpu
         charges = self._charges_gpu

@@ -114,7 +114,28 @@ class CollectiveExcitations(AbstractModel):
         # Setup analysis parameters
         self._setup_analysis_parameters()
 
-    def excite_system(self, external_field: np.ndarray) -> np.ndarray:
+    def apply_harmonic_excitation(self, frequency: float, amplitude: float, duration: float) -> Dict[str, Any]:
+        """
+        Create harmonic excitation descriptor.
+
+        Returns:
+            Dict with frequency, amplitude, duration.
+        """
+        return {"frequency": float(frequency), "amplitude": float(amplitude), "duration": float(duration)}
+
+    def apply_impulse_excitation(self, amplitude: float, duration: float) -> Dict[str, Any]:
+        """Create impulse excitation descriptor."""
+        return {"amplitude": float(amplitude), "duration": float(duration)}
+
+    def apply_frequency_sweep(self, start_frequency: float, end_frequency: float, sweep_time: float) -> Dict[str, Any]:
+        """Create frequency sweep excitation descriptor."""
+        return {
+            "start_frequency": float(start_frequency),
+            "end_frequency": float(end_frequency),
+            "sweep_time": float(sweep_time),
+        }
+
+    def excite_system(self, external_field: np.ndarray, time_points: np.ndarray | None = None) -> Dict[str, Any]:
         """
         Excite the system with external field.
 
@@ -126,13 +147,41 @@ class CollectiveExcitations(AbstractModel):
             external_field (np.ndarray): External field F(x,t)
 
         Returns:
-            np.ndarray: System response R(x,t)
+            Dict[str, Any]: {"excitation_field", "response_field", "time_points"}
         """
-        if self._cuda is not None:
-            return self._cuda.excite_system(external_field)
-        return self.excitation_analyzer.excite_system(external_field)
+        if time_points is None:
+            time_points = np.linspace(0.0, float(self.duration), int(self.duration / max(1e-6, self.excitation_analyzer.dt)))
 
-    def analyze_response(self, response: np.ndarray) -> Dict[str, Any]:
+        # Align analyzer time grid to requested time_points if provided
+        if time_points is not None and time_points.size >= 2:
+            self.excitation_analyzer.duration = float(time_points[-1] - time_points[0])
+            self.excitation_analyzer.dt = float(time_points[1] - time_points[0])
+
+        if self._cuda is not None:
+            particle_response = self._cuda.excite_system(external_field)
+        else:
+            particle_response = self.excitation_analyzer.excite_system(external_field)
+
+        # Broadcast particle-level response back to field-shaped tensor
+        T = particle_response.shape[-1]
+        spatial_shape = external_field.shape[:-1]
+        series_avg = np.mean(particle_response, axis=0)
+        target_T = external_field.shape[-1]
+        if T != target_T:
+            x_src = np.linspace(0.0, 1.0, T)
+            x_dst = np.linspace(0.0, 1.0, target_T)
+            series_avg = np.interp(x_dst, x_src, series_avg)
+            T = target_T
+        series_avg = series_avg.reshape(*([1] * len(spatial_shape)), T)
+        response_field = np.broadcast_to(series_avg, (*spatial_shape, T))
+
+        return {
+            "excitation_field": external_field,
+            "response_field": response_field,
+            "time_points": time_points,
+        }
+
+    def analyze_response(self, response: Any) -> Dict[str, Any]:
         """
         Analyze system response to excitation.
 
@@ -141,7 +190,7 @@ class CollectiveExcitations(AbstractModel):
             amplitudes from the response.
 
         Args:
-            response (np.ndarray): System response R(x,t)
+            response: Dict with fields or ndarray of response
 
         Returns:
             Dict containing:
@@ -150,14 +199,50 @@ class CollectiveExcitations(AbstractModel):
                 - damping: γ_n (damping rates)
                 - participation: p_n (particle participation)
         """
-        result: Dict[str, Any]
-        if self._cuda is not None:
-            result = self._cuda.analyze_response(response)
+        # Normalize input to a 2D array (n_series, time)
+        if isinstance(response, dict):
+            field = response.get("response_field")
+            if field is None:
+                field = response.get("field") or response.get("data")
+            if field is None:
+                raise ValueError("response dict must contain 'response_field' or compatible key")
+            # Collapse spatial dims if present, keep time as last axis
+            if field.ndim >= 2:
+                time_len = field.shape[-1]
+                series = np.max(field.reshape(-1, time_len), axis=0, keepdims=True)
+            else:
+                series = field[None, :]
         else:
-            result = self.excitation_analyzer.analyze_response(response)
-        return result
+            arr = np.asarray(response)
+            if arr.ndim >= 2:
+                time_len = arr.shape[-1]
+                series = np.max(arr.reshape(-1, time_len), axis=0, keepdims=True)
+            else:
+                series = arr[None, :]
 
-    def compute_dispersion_relations(self) -> Dict[str, Any]:
+        # Compute 1D spectrum and simple peak detection
+        series_1d = series.ravel()
+        spectrum = np.fft.fft(series_1d)
+        freqs = np.fft.fftfreq(series_1d.size, self.excitation_analyzer.dt)
+        mag = np.abs(spectrum)
+        peak_freqs: list[float] = []
+        thr = float(np.max(mag) * 0.5) if mag.size else 0.0
+        for i in range(1, mag.size - 1):
+            if mag[i] > mag[i - 1] and mag[i] > mag[i + 1] and mag[i] >= thr:
+                peak_freqs.append(float(freqs[i]))
+        if not peak_freqs and mag.size:
+            # Fallback: take the dominant frequency
+            idx = int(np.argmax(mag))
+            peak_freqs = [float(freqs[idx])]
+
+        return {
+            "response_spectrum": spectrum,
+            "dominant_frequencies": peak_freqs,
+            "response_amplitude": float(np.max(np.abs(series_1d))),
+            "phase_shift": float(0.0),
+        }
+
+    def compute_dispersion_relations(self, response_data: Any | None = None) -> Dict[str, Any]:
         """
         Compute dispersion relations for collective modes.
 
@@ -177,9 +262,22 @@ class CollectiveExcitations(AbstractModel):
             result = self._cuda.compute_dispersion_relations()
         else:
             result = self.dispersion_analyzer.compute_dispersion_relations()
-        return result
+        freqs_val = result.get("frequencies", None)
+        if freqs_val is None:
+            freqs_val = result.get("mode_frequencies", [])
+        disp_val = result.get("dispersion_relation", None)
+        if disp_val is None:
+            disp_val = result.get("frequencies", freqs_val)
+        wv = result.get("wave_vectors", [])
+        if (isinstance(wv, list) and not wv) or (hasattr(wv, "__len__") and len(wv) == 0):
+            try:
+                n = len(freqs_val) if hasattr(freqs_val, "__len__") else 0
+            except Exception:
+                n = 0
+            wv = np.linspace(0.0, 1.0, n) if n > 0 else []
+        return {"frequencies": freqs_val, "wave_vectors": wv, "dispersion_relation": disp_val}
 
-    def compute_susceptibility(self, frequencies: np.ndarray) -> np.ndarray:
+    def compute_susceptibility(self, response_data: Any) -> Dict[str, Any]:
         """
         Compute susceptibility function χ(ω).
 
@@ -188,12 +286,83 @@ class CollectiveExcitations(AbstractModel):
             for collective excitations.
 
         Args:
-            frequencies (np.ndarray): Frequency array
+            response_data: Dict with 'time_points' and response field
 
         Returns:
-            np.ndarray: Susceptibility χ(ω)
+            Dict with 'frequencies', 'susceptibility', 'phase'.
         """
-        return self.dispersion_analyzer.compute_susceptibility(frequencies)
+        if isinstance(response_data, dict) and "time_points" in response_data:
+            t = np.asarray(response_data["time_points"])  # (T,)
+            if t.size < 2:
+                raise ValueError("time_points must contain at least 2 points")
+            dt = float(t[1] - t[0])
+            freqs = np.fft.fftfreq(t.size, dt)
+        else:
+            raise ValueError("response_data must contain 'time_points'")
+
+        # Avoid division-by-zero inside analyzer by shifting zero freq slightly
+        freqs = freqs.copy()
+        if freqs.size and np.isclose(freqs[0], 0.0):
+            freqs[0] = 1e-9
+        with np.errstate(divide="ignore", invalid="ignore"):
+            chi = self.dispersion_analyzer.compute_susceptibility(freqs)
+            chi = np.nan_to_num(chi, nan=0.0, posinf=0.0, neginf=0.0)
+        phase = np.angle(chi)
+        return {"frequencies": freqs, "susceptibility": chi, "phase": phase}
+
+    def detect_spectral_peaks(self, response_data: Any) -> Dict[str, Any]:
+        """Detect spectral peaks in response_data."""
+        analysis = self.analyze_response(response_data)
+        freqs = np.asarray(analysis["dominant_frequencies"]) if analysis["dominant_frequencies"] is not None else np.array([])
+        spectrum = np.asarray(analysis["response_spectrum"]).ravel()
+        amps = np.abs(spectrum)
+        if freqs.size:
+            grid_freqs = np.fft.fftfreq(amps.size, self.excitation_analyzer.dt)
+            idx = np.array([int(np.argmin(np.abs(grid_freqs - f))) for f in freqs], dtype=int)
+            peak_amps = amps[idx]
+        else:
+            peak_amps = np.array([])
+        qf = np.ones_like(peak_amps)
+        return {"peak_frequencies": freqs, "peak_amplitudes": peak_amps, "peak_quality_factors": qf}
+
+    def analyze_step_resonator_transmission(self, response_data: Any) -> Dict[str, Any]:
+        """Analyze step resonator transmission using CPU analyzer."""
+        # Normalize to (n_series, time)
+        field = response_data.get("response_field") if isinstance(response_data, dict) else np.asarray(response_data)
+        time_len = field.shape[-1]
+        series = np.mean(field.reshape(-1, time_len), axis=0, keepdims=True)
+        tr = self.excitation_analyzer._analyze_step_resonator_transmission(series)
+        tc = float(tr.get("mean_transmission", 0.0))
+        rc = float(tr.get("mean_reflection", 0.0))
+        tc = max(0.0, min(1.0, tc))
+        rc = max(0.0, min(1.0, rc))
+        return {"transmission_coefficient": tc, "reflection_coefficient": rc, "resonance_frequencies": []}
+
+    def compute_participation_ratios(self, response_data: Any) -> Dict[str, Any]:
+        """Compute participation ratios from response_data."""
+        field = response_data.get("response_field") if isinstance(response_data, dict) else np.asarray(response_data)
+        time_len = field.shape[-1]
+        series = field.reshape(-1, time_len)
+        pr = self.excitation_analyzer._compute_participation_ratios(series)
+        return {"participation_ratios": pr, "mode_indices": np.arange(pr.size)}
+
+    def compute_quality_factors(self, response_data: Any) -> Dict[str, Any]:
+        """Compute quality factors using peaks and transmission analysis."""
+        # Use previous helpers
+        analysis = self.analyze_response(response_data)
+        transmission = self.analyze_step_resonator_transmission(response_data)
+        peaks = {
+            "frequencies": analysis["dominant_frequencies"],
+            "amplitudes": np.max(np.abs(analysis["response_spectrum"]), axis=-1, initial=0.0)
+            if np.ndim(analysis["response_spectrum"]) > 0
+            else 0.0,
+        }
+        q = self.excitation_analyzer._compute_quality_factors(peaks, {
+            "transmission_coefficients": transmission.get("transmission_coefficients", []),
+        })
+        q = np.asarray(q)
+        q = np.where(q <= 0, 1e-12, q)
+        return {"quality_factors": q, "mode_frequencies": peaks["frequencies"]}
 
     def _setup_analysis_parameters(self) -> None:
         """

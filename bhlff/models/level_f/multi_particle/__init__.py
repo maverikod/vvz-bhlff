@@ -20,3 +20,18 @@ Example:
 from .data_structures import Particle, SystemParameters
 from .potential_analysis import PotentialAnalyzer
 from .collective_modes import CollectiveModesAnalyzer
+__all__ = [
+    "MultiParticleSystem",
+    "Particle",
+    "SystemParameters",
+    "PotentialAnalyzer",
+    "CollectiveModesAnalyzer",
+]
+
+def __getattr__(name):
+    # Lazy export to avoid circular import during package initialization
+    if name == "MultiParticleSystem":
+        from ..multi_particle_system import MultiParticleSystem
+
+        return MultiParticleSystem
+    raise AttributeError(name)

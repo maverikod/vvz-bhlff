@@ -1,8 +1,8 @@
 from .excitation_analysis import ExcitationAnalyzer
 from .dispersion_analysis import DispersionAnalyzer
 
-# Re-export facade class expected by tests from sibling module file
-from ..collective import CollectiveExcitations
+# Re-export facade class from dedicated facade module to avoid circular import
+from ..collective_facade import CollectiveExcitations
 
 __all__ = [
     "ExcitationAnalyzer",

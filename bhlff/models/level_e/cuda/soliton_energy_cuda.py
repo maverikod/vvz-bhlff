@@ -66,7 +66,9 @@ class SolitonEnergyCalculatorCUDA:
         processing optimized for 80% of available GPU memory.
     """
 
-    def __init__(self, domain: "Domain", physics_params: Dict[str, Any], use_cuda: bool = True):
+    def __init__(
+        self, domain: "Domain", physics_params: Dict[str, Any], use_cuda: bool = True
+    ):
         """
         Initialize CUDA energy calculator.
 
@@ -107,14 +109,18 @@ class SolitonEnergyCalculatorCUDA:
         self._kinetic = KineticEnergyCUDA()
         self._skyrme = SkyrmeEnergyCUDA(S4=self.S4)
         self._wzw = WZWEnergyCUDA()
-        self._block_computer = EnergyBlockComputerCUDA(self._kinetic, self._skyrme, self._wzw)
+        self._block_computer = EnergyBlockComputerCUDA(
+            self._kinetic, self._skyrme, self._wzw
+        )
 
         # Compute optimal block size
         self.block_size = self._compute_optimal_block_size()
 
         # Initialize block processor if CUDA available
         if self.cuda_available:
-            self.block_processor = CUDABlockProcessor(domain, block_size=self.block_size)
+            self.block_processor = CUDABlockProcessor(
+                domain, block_size=self.block_size
+            )
         else:
             self.block_processor = None
 
@@ -159,7 +165,9 @@ class SolitonEnergyCalculatorCUDA:
             overhead_factor = 8
 
             # Maximum elements per block
-            max_elements = available_memory_bytes // (bytes_per_element * overhead_factor)
+            max_elements = available_memory_bytes // (
+                bytes_per_element * overhead_factor
+            )
 
             # For 7D, calculate block size per dimension
             elements_per_dim = int(max_elements ** (1.0 / 7.0))
@@ -176,7 +184,9 @@ class SolitonEnergyCalculatorCUDA:
             return block_size
 
         except Exception as e:
-            self.logger.warning(f"Failed to compute optimal block size: {e}, using default 8")
+            self.logger.warning(
+                f"Failed to compute optimal block size: {e}, using default 8"
+            )
             return 8
 
     def compute_total_energy(self, field: np.ndarray) -> float:
@@ -217,7 +227,9 @@ class SolitonEnergyCalculatorCUDA:
                     # Slice the input field by block indices (use provided field, not internal generator)
                     slices = tuple(
                         slice(start, end)
-                        for start, end in zip(block_info.start_indices, block_info.end_indices)
+                        for start, end in zip(
+                            block_info.start_indices, block_info.end_indices
+                        )
                     )
                     block_gpu = field_gpu[slices]
                     block_energy = self._compute_block_energy_cuda(block_gpu)
@@ -225,7 +237,9 @@ class SolitonEnergyCalculatorCUDA:
                     block_id += 1
             else:
                 # Process entire field if no block processor
-                total_energy = float(cp.asnumpy(self._compute_block_energy_cuda(field_gpu)))
+                total_energy = float(
+                    cp.asnumpy(self._compute_block_energy_cuda(field_gpu))
+                )
 
         finally:
             # Cleanup GPU memory

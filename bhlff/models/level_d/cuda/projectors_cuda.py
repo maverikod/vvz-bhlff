@@ -22,6 +22,7 @@ from typing import Dict, Any, Tuple
 
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except ImportError:
     CUDA_AVAILABLE = False
@@ -31,7 +32,9 @@ except ImportError:
 class EMProjectorCUDA:
     """CUDA-optimized electromagnetic field projector."""
 
-    def __init__(self, params: Dict[str, Any], cuda_available: bool = False, backend=None):
+    def __init__(
+        self, params: Dict[str, Any], cuda_available: bool = False, backend=None
+    ):
         """Initialize CUDA EM projector."""
         self.params = params
         self.frequency_range = params.get("frequency_range", [0.1, 1.0])
@@ -104,7 +107,9 @@ class EMProjectorCUDA:
 class StrongProjectorCUDA:
     """CUDA-optimized strong interaction field projector."""
 
-    def __init__(self, params: Dict[str, Any], cuda_available: bool = False, backend=None):
+    def __init__(
+        self, params: Dict[str, Any], cuda_available: bool = False, backend=None
+    ):
         """Initialize CUDA strong projector."""
         self.params = params
         self.frequency_range = params.get("frequency_range", [1.0, 10.0])
@@ -195,7 +200,9 @@ class StrongProjectorCUDA:
 class WeakProjectorCUDA:
     """CUDA-optimized weak interaction field projector."""
 
-    def __init__(self, params: Dict[str, Any], cuda_available: bool = False, backend=None):
+    def __init__(
+        self, params: Dict[str, Any], cuda_available: bool = False, backend=None
+    ):
         """Initialize CUDA weak projector."""
         self.params = params
         self.frequency_range = params.get("frequency_range", [0.01, 0.1])

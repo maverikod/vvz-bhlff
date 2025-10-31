@@ -47,6 +47,7 @@ try:
         ProjectionAnalyzerCUDA,
     )
     from .cuda.streamlines_cuda import StreamlineAnalyzerCUDA
+
     CUDA_MODULES_AVAILABLE = True
 except ImportError:
     CUDA_MODULES_AVAILABLE = False
@@ -97,13 +98,17 @@ class LevelDModels(AbstractLevelModels):
         use_cuda = CUDA_MODULES_AVAILABLE and CUDA_AVAILABLE
         if use_cuda:
             try:
-                self._superposition_analyzer = SuperpositionAnalyzerCUDA(domain, parameters)
+                self._superposition_analyzer = SuperpositionAnalyzerCUDA(
+                    domain, parameters
+                )
                 self._projection_analyzer = ProjectionAnalyzerCUDA(domain, parameters)
                 self._streamline_analyzer = StreamlineAnalyzerCUDA(domain, parameters)
                 self._multimode_model = MultiModeModelCUDA(domain, parameters)
                 self.logger.info("Level D models initialized with CUDA acceleration")
             except Exception as e:
-                self.logger.warning(f"CUDA initialization failed: {e}, falling back to CPU")
+                self.logger.warning(
+                    f"CUDA initialization failed: {e}, falling back to CPU"
+                )
                 use_cuda = False
 
         if not use_cuda:

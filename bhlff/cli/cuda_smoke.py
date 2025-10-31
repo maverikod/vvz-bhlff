@@ -43,10 +43,16 @@ def main() -> int:
 
     try:
         import cupy as cp
+
         cuda_ok = cp.cuda.is_available()
         dev_count = cp.cuda.runtime.getDeviceCount() if cuda_ok else 0
         mem_info = cp.cuda.Device(0).mem_info if cuda_ok else (0, 0)
-        logger.info("CuPy: %s | CUDA available: %s | devices: %s", cp.__version__, cuda_ok, dev_count)
+        logger.info(
+            "CuPy: %s | CUDA available: %s | devices: %s",
+            cp.__version__,
+            cuda_ok,
+            dev_count,
+        )
         if not cuda_ok:
             print("[ERROR] CUDA not available in current environment.")
             return 2
@@ -67,12 +73,22 @@ def main() -> int:
     N_t = int(args.t)
 
     domain = Domain(L=1.0, N=N, dimensions=7, N_phi=N_phi, N_t=N_t, T=1.0)
-    params: Dict[str, Any] = {"mu": 1.0, "beta": 1.0, "lambda": 0.1, "S4": 0.1, "S6": 0.01, "F2": 1.0, "N_c": 3}
+    params: Dict[str, Any] = {
+        "mu": 1.0,
+        "beta": 1.0,
+        "lambda": 0.1,
+        "S4": 0.1,
+        "S6": 0.01,
+        "F2": 1.0,
+        "N_c": 3,
+    }
 
     print("[INFO] Creating small synthetic 7D field...")
     rng = np.random.default_rng(42)
     shape = (N, N, N, N_phi, N_phi, N_phi, N_t)
-    field = (rng.standard_normal(shape) + 1j * rng.standard_normal(shape)).astype(np.complex128)
+    field = (rng.standard_normal(shape) + 1j * rng.standard_normal(shape)).astype(
+        np.complex128
+    )
 
     print("[INFO] Initializing CUDA energy calculator (with block processing)...")
     calc = SolitonEnergyCalculatorCUDA(domain, params, use_cuda=True)
@@ -86,5 +102,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-

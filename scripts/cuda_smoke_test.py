@@ -35,8 +35,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--phi", type=int, default=8, help="Phase grid size (per axis)")
     parser.add_argument("--t", type=int, default=8, help="Temporal grid size")
     parser.add_argument(
-        "--precision", choices=["float64", "float32"], default="float64",
-        help="Field dtype precision"
+        "--precision",
+        choices=["float64", "float32"],
+        default="float64",
+        help="Field dtype precision",
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose logs")
     return parser.parse_args()
@@ -57,10 +59,16 @@ def main() -> int:
 
     try:
         import cupy as cp
+
         cuda_ok = cp.cuda.is_available()
         dev_count = cp.cuda.runtime.getDeviceCount() if cuda_ok else 0
         mem_info = cp.cuda.Device(0).mem_info if cuda_ok else (0, 0)
-        logger.info("CuPy: %s | CUDA available: %s | devices: %s", cp.__version__, cuda_ok, dev_count)
+        logger.info(
+            "CuPy: %s | CUDA available: %s | devices: %s",
+            cp.__version__,
+            cuda_ok,
+            dev_count,
+        )
         if cuda_ok:
             logger.info("GPU[0] mem (free,total) bytes: %s", mem_info)
         else:
@@ -111,5 +119,3 @@ def main() -> int:
 
 if __name__ == "__main__":  # pragma: no cover
     raise SystemExit(main())
-
-

@@ -51,7 +51,9 @@ class SolitonOptimizerCUDA:
         algorithms with block processing and vectorization.
     """
 
-    def __init__(self, domain: "Domain", physics_params: Dict[str, Any], use_cuda: bool = True):
+    def __init__(
+        self, domain: "Domain", physics_params: Dict[str, Any], use_cuda: bool = True
+    ):
         """Initialize CUDA optimizer."""
         self.domain = domain
         self.params = physics_params
@@ -77,7 +79,9 @@ class SolitonOptimizerCUDA:
         self.block_size = self._compute_optimal_block_size()
 
         if self.cuda_available:
-            self.block_processor = CUDABlockProcessor(domain, block_size=self.block_size)
+            self.block_processor = CUDABlockProcessor(
+                domain, block_size=self.block_size
+            )
         else:
             self.block_processor = None
 
@@ -92,7 +96,9 @@ class SolitonOptimizerCUDA:
                 available_memory_bytes = int(mem_info["free_memory"] * 0.8)
                 bytes_per_element = 16
                 overhead_factor = 10  # Field + gradients + hessian
-                max_elements = available_memory_bytes // (bytes_per_element * overhead_factor)
+                max_elements = available_memory_bytes // (
+                    bytes_per_element * overhead_factor
+                )
                 elements_per_dim = int(max_elements ** (1.0 / 7.0))
                 return max(4, min(elements_per_dim, 128))
             return 8
@@ -150,7 +156,9 @@ class SolitonOptimizerCUDA:
                     )
 
             if iteration == max_iterations - 1:
-                raise ConvergenceError(f"Failed to converge after {max_iterations} iterations")
+                raise ConvergenceError(
+                    f"Failed to converge after {max_iterations} iterations"
+                )
 
             return cp.asnumpy(U)
 
@@ -314,8 +322,12 @@ class SolitonOptimizerCUDA:
             L_i = Ls[i]
             for j in range(3):
                 L_j = Ls[j]
-                inner = cp.einsum("...ik,...kj->...ij", L_i, L_j) - cp.einsum("...ik,...kj->...ij", L_j, L_i)
-                outer = cp.einsum("...ik,...kj->...ij", L_j, inner) - cp.einsum("...ik,...kj->...ij", inner, L_j)
+                inner = cp.einsum("...ik,...kj->...ij", L_i, L_j) - cp.einsum(
+                    "...ik,...kj->...ij", L_j, L_i
+                )
+                outer = cp.einsum("...ik,...kj->...ij", L_j, inner) - cp.einsum(
+                    "...ik,...kj->...ij", inner, L_j
+                )
                 K_i = K_i - S4 * outer
             Ks.append(K_i)
 
@@ -324,8 +336,14 @@ class SolitonOptimizerCUDA:
         for i in range(3):
             K_i = Ks[i]
             L_i = Ls[i]
-            dKi = cp.gradient(K_i, dx, axis=i) if field.shape[i] > 1 else cp.zeros_like(K_i)
-            comm_LK = cp.einsum("...ik,...kj->...ij", L_i, K_i) - cp.einsum("...ik,...kj->...ij", K_i, L_i)
+            dKi = (
+                cp.gradient(K_i, dx, axis=i)
+                if field.shape[i] > 1
+                else cp.zeros_like(K_i)
+            )
+            comm_LK = cp.einsum("...ik,...kj->...ij", L_i, K_i) - cp.einsum(
+                "...ik,...kj->...ij", K_i, L_i
+            )
             # D_i K^i - [K^i, L_i] = ∂_i K^i + [L_i, K^i] - [K^i, L_i] = ∂_i K^i + 2 [L_i, K^i]
             R = R + dKi + 2.0 * comm_LK
 

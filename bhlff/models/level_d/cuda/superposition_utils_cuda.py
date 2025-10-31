@@ -18,6 +18,7 @@ import logging
 
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except ImportError:
     CUDA_AVAILABLE = False
@@ -34,6 +35,7 @@ class FrameExtractorCUDA:
         if cuda_available:
             try:
                 from bhlff.utils.cuda_utils import get_optimal_backend
+
                 self.backend = get_optimal_backend()
             except Exception:
                 self.cuda_available = False
@@ -73,6 +75,7 @@ class StabilityAnalyzerCUDA:
         if cuda_available:
             try:
                 from bhlff.utils.cuda_utils import get_optimal_backend
+
                 self.backend = get_optimal_backend()
             except Exception:
                 self.cuda_available = False

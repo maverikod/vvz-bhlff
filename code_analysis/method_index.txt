@@ -1944,6 +1944,26 @@ Class: TestSensitivityAnalysis7D
   test_proper_7d_source_creation(self)
     File: ./tests/unit/test_level_e/test_sensitivity_analysis_7d.py, Line: 187
 
+Class: TestCUDAModules
+  domain(self)
+    File: ./tests/unit/test_level_e/test_cuda_modules.py, Line: 44
+  physics_params(self)
+    File: ./tests/unit/test_level_e/test_cuda_modules.py, Line: 49
+  test_field(self, domain)
+    File: ./tests/unit/test_level_e/test_cuda_modules.py, Line: 63
+  test_soliton_energy_calculator_initialization(self, domain, physics_params)
+    File: ./tests/unit/test_level_e/test_cuda_modules.py, Line: 70
+  test_soliton_energy_calculator_total_energy(self, domain, physics_params, test_field)
+    File: ./tests/unit/test_level_e/test_cuda_modules.py, Line: 76
+  test_soliton_optimizer_initialization(self, domain, physics_params)
+    File: ./tests/unit/test_level_e/test_cuda_modules.py, Line: 86
+  test_soliton_optimizer_find_solution(self, domain, physics_params, test_field)
+    File: ./tests/unit/test_level_e/test_cuda_modules.py, Line: 92
+  test_defect_dynamics_initialization(self, domain, physics_params)
+    File: ./tests/unit/test_level_e/test_cuda_modules.py, Line: 105
+  test_defect_dynamics_simulate_motion(self, domain, physics_params)
+    File: ./tests/unit/test_level_e/test_cuda_modules.py, Line: 111
+
 Class: TestSolitonTopologyPhysicsAdvanced
   domain_3d(self)
     File: ./tests/unit/test_level_e/test_soliton_topology_physics_advanced.py, Line: 42
@@ -7615,16 +7635,16 @@ Class: MultiParticleModesAnalyzer
     File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 401
 
 Class: MultiParticleSystem
-  __init__(self, domain, particles, interaction_range, system_params)
-    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 54
+  __init__(self, domain, particles, interaction_range, system_params, use_cuda)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 53
   compute_effective_potential(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 91
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 114
   find_collective_modes(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 107
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 132
   compute_correlation_function(self, field, time_points) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 124
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 149
   analyze_system_properties(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 146
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 173
   __init__(self, domain, particles, interaction_range, system_params)
     File: ./bhlff/models/level_f/multi_particle.py, Line: 54
   compute_effective_potential(self) -> np.ndarray
@@ -7707,20 +7727,20 @@ Class: MultiParticlePotentialAnalyzer
     File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 329
 
 Class: CollectiveExcitations
-  __init__(self, system, excitation_params)
+  __init__(self, system, excitation_params) -> None
     File: ./bhlff/models/level_f/collective.py, Line: 54
   excite_system(self, external_field) -> np.ndarray
-    File: ./bhlff/models/level_f/collective.py, Line: 88
+    File: ./bhlff/models/level_f/collective.py, Line: 102
   analyze_response(self, response) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/collective.py, Line: 104
+    File: ./bhlff/models/level_f/collective.py, Line: 120
   compute_dispersion_relations(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/collective.py, Line: 124
+    File: ./bhlff/models/level_f/collective.py, Line: 147
   compute_susceptibility(self, frequencies) -> np.ndarray
-    File: ./bhlff/models/level_f/collective.py, Line: 141
+    File: ./bhlff/models/level_f/collective.py, Line: 169
   _setup_analysis_parameters(self) -> None
-    File: ./bhlff/models/level_f/collective.py, Line: 157
+    File: ./bhlff/models/level_f/collective.py, Line: 185
   analyze(self, data) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/collective.py, Line: 171
+    File: ./bhlff/models/level_f/collective.py, Line: 199
 
 Class: SolitonAnalysisInitialization
   __init__(self, system, nonlinear_params)
@@ -8248,6 +8268,28 @@ Class: ExcitationAnalyzer
   _compute_quality_factors(self, peaks, transmission_analysis) -> np.ndarray
     File: ./bhlff/models/level_f/collective/excitation_analysis.py, Line: 419
 
+Class: CollectiveExcitationsCUDA
+  __init__(self, system, excitation_params)
+    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 49
+  _setup_time_blocks(self) -> None
+    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 75
+  excite_system(self, external_field) -> np.ndarray
+    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 98
+  analyze_response(self, response) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 152
+  compute_dispersion_relations(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 198
+  _compute_external_force_gpu(self, external_field, excitation_gpu) -> 'cp.ndarray'
+    File: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py, Line: 221
+
+Class: MultiParticlePotentialAnalyzerCUDA
+  __init__(self, domain, particles, interaction_range, params, system_params) -> None
+    File: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 72
+  compute_effective_potential(self) -> np.ndarray
+    File: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 124
+  _compute_optimal_block_size_7d(self) -> int
+    File: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 234
+
 Class: PotentialLandscapeAnalyzer
   __init__(self, domain, particles, system_params)
     File: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py, Line: 42
@@ -8526,23 +8568,23 @@ Class: PhaseTransitionsHelpers
 
 Class: LevelDModels
   __init__(self, domain, parameters)
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 80
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 81
   create_multi_mode_field(self, base_field, modes) -> np.ndarray
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 117
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 122
   analyze_mode_superposition(self, field, new_modes) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 146
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 151
   project_field_windows(self, field, window_params) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 176
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 181
   trace_phase_streamlines(self, field, center) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 208
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 213
   analyze_multimode_field(self, field) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 237
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 242
   _get_default_window_params(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 287
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 292
   validate_field(self, field) -> bool
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 312
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 317
   analyze_field(self, field) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/level_d_models.py, Line: 346
+    File: ./bhlff/models/level_d/level_d_models.py, Line: 351
 
 Class: FieldProjection
   __init__(self)
@@ -8688,95 +8730,95 @@ Class: MultiModeModel
 
 Class: EMProjectorCUDA
   __init__(self, params, cuda_available, backend)
-    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 198
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 203
   project(self, field) -> np.ndarray
-    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 207
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 214
   _create_em_filter_cuda(self, shape) -> 'cp.ndarray'
-    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 59
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 62
   _create_em_filter_cpu(self, shape) -> np.ndarray
-    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 69
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 72
   _create_frequency_grid_cuda(self, shape) -> 'cp.ndarray'
-    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 247
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 254
   _create_frequency_grid_cpu(self, shape) -> np.ndarray
-    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 259
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 266
   _create_strong_filter_cuda(self, shape) -> 'cp.ndarray'
-    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 132
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 137
   _create_strong_filter_cpu(self, shape) -> np.ndarray
-    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 143
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 148
   _apply_q_factor_filter_cuda(self, frequencies, q_factor) -> 'cp.ndarray'
-    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 178
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 183
   _apply_q_factor_filter_cpu(self, frequencies, q_factor) -> np.ndarray
-    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 186
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 191
   _create_weak_filter_cuda(self, shape) -> 'cp.ndarray'
-    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 223
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 230
   _create_weak_filter_cpu(self, shape) -> np.ndarray
-    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 235
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 242
   _apply_chiral_filter_cuda(self, chiral_factor, shape) -> 'cp.ndarray'
-    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 271
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 278
   _apply_chiral_filter_cpu(self, chiral_factor, shape) -> np.ndarray
-    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 277
+    File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 284
 
 Class: FrameExtractorCUDA
   __init__(self, domain, cuda_available)
-    File: ./bhlff/models/level_d/cuda/superposition_utils_cuda.py, Line: 69
+    File: ./bhlff/models/level_d/cuda/superposition_utils_cuda.py, Line: 71
   extract_frame(self, field) -> np.ndarray
-    File: ./bhlff/models/level_d/cuda/superposition_utils_cuda.py, Line: 41
+    File: ./bhlff/models/level_d/cuda/superposition_utils_cuda.py, Line: 43
   compute_stability_metrics(self, frame_before, frame_after) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/cuda/superposition_utils_cuda.py, Line: 80
+    File: ./bhlff/models/level_d/cuda/superposition_utils_cuda.py, Line: 83
 
 Class: SignatureAnalyzerCUDA
   __init__(self, cuda_available, backend)
-    File: ./bhlff/models/level_d/cuda/signature_analyzer_cuda.py, Line: 30
+    File: ./bhlff/models/level_d/cuda/signature_analyzer_cuda.py, Line: 31
   analyze_field_signatures(self, projections) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/cuda/signature_analyzer_cuda.py, Line: 39
+    File: ./bhlff/models/level_d/cuda/signature_analyzer_cuda.py, Line: 40
   _analyze_single_field_signature(self, field, field_type) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/cuda/signature_analyzer_cuda.py, Line: 62
+    File: ./bhlff/models/level_d/cuda/signature_analyzer_cuda.py, Line: 63
 
 Class: StreamlineAnalyzerCUDA
   __init__(self, domain, cuda_available)
-    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 305
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 326
   trace_phase_streamlines(self, field, center) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 65
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 76
   compute_phase_gradient(self, phase) -> np.ndarray
-    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 121
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 132
   trace_streamlines(self, gradient_field, center) -> List[np.ndarray]
-    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 181
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 198
   _create_initial_points(self, center, num_points) -> List[np.ndarray]
-    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 216
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 233
   _trace_single_streamline(self, gradient_field, initial_point, integration_steps, step_size) -> np.ndarray
-    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 246
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 267
   _interpolate_gradient(self, gradient_field, point) -> np.ndarray
-    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 268
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 289
   _is_out_of_bounds(self, point) -> bool
-    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 294
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 315
   analyze_streamline_topology(self, streamlines) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 310
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 331
   _compute_winding_numbers(self, streamlines) -> List[float]
-    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 342
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 363
   _compute_single_winding_number(self, streamline) -> float
-    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 353
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 374
   _compute_topology_class(self, streamlines) -> str
-    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 370
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 391
   _compute_stability_index(self, streamlines) -> float
-    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 379
+    File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 400
 
 Class: SuperpositionAnalyzerCUDA
   __init__(self, domain, parameters)
-    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 43
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 47
   analyze_superposition(self, field, threshold) -> Dict[str, Any]
-    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 57
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 61
   _extract_dominant_frequencies_cuda(self, fft_field, mask) -> List[float]
-    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 152
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 156
   _extract_dominant_frequencies_cpu(self, fft_field, mask) -> List[float]
-    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 163
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 167
   _extract_mode_amplitudes_cuda(self, fft_field, mask) -> List[float]
-    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 174
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 178
   _extract_mode_amplitudes_cpu(self, fft_field, mask) -> List[float]
-    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 181
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 185
   _extract_mode_phases_cuda(self, fft_field, mask) -> List[float]
-    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 188
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 192
   _extract_mode_phases_cpu(self, fft_field, mask) -> List[float]
-    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 195
+    File: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py, Line: 199
 
 Class: LevelBVisualizer
   __init__(self, style)
@@ -10144,75 +10186,101 @@ Class: TimeStabilityAnalyzer
 
 Class: SolitonOptimizerCUDA
   __init__(self, domain, physics_params, use_cuda)
-    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 46
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 54
   _compute_optimal_block_size(self) -> int
-    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 76
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 88
   find_solution(self, initial_guess) -> np.ndarray
-    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 94
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 108
   _solve_stationary_equation_cuda(self, initial_guess) -> np.ndarray
-    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 107
-  _compute_energy_gradient_cuda(self, field) -> cp.ndarray
-    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 144
-  _compute_energy_hessian_cuda(self, field) -> cp.ndarray
-    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 156
-  _compute_hessian_block_cuda(self, field, i_start, i_end, j_start, j_end) -> cp.ndarray
-    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 178
-  _update_with_line_search_cuda(self, U, delta_U, F) -> cp.ndarray
-    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 213
-  _compute_kinetic_gradient_cuda(self, field) -> cp.ndarray
-    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 232
-  _compute_skyrme_gradient_cuda(self, field) -> cp.ndarray
-    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 236
-  _compute_wzw_gradient_cuda(self, field) -> cp.ndarray
-    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 240
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 121
+  _compute_energy_gradient_cuda(self, field) -> CpArray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 169
+  _compute_energy_hessian_cuda(self, field) -> CpArray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 181
+  _compute_hessian_block_cuda(self, field, i_start, i_end, j_start, j_end) -> CpArray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 203
+  _update_with_line_search_cuda(self, U, delta_U, F) -> CpArray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 238
+  _compute_kinetic_gradient_cuda(self, field) -> CpArray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 257
+  _compute_skyrme_gradient_cuda(self, field) -> CpArray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 280
+  _compute_wzw_gradient_cuda(self, field) -> CpArray
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 354
   _solve_stationary_equation_cpu(self, initial_guess) -> np.ndarray
-    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 244
+    File: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py, Line: 383
 
 Class: DefectDynamicsCUDA
   __init__(self, domain, physics_params, use_cuda)
-    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 53
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 61
   _compute_optimal_block_size(self) -> int
-    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 103
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 115
   simulate_defect_motion(self, initial_position, time_steps, field) -> Dict[str, np.ndarray]
-    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 141
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 155
   _simulate_defect_motion_cuda(self, initial_position, time_steps, field) -> Dict[str, np.ndarray]
-    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 164
-  _compute_energy_landscape_cuda(self, field) -> cp.ndarray
-    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 194
-  _compute_energy_gradients_cuda(self, energy_landscape) -> cp.ndarray
-    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 221
-  _integrate_energy_dynamics_cuda(self, initial_position, energy_gradients, time_steps) -> cp.ndarray
-    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 243
-  _interpolate_gradient_cuda(self, position, gradients) -> cp.ndarray
-    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 277
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 180
+  _compute_energy_landscape_cuda(self, field) -> CpArray
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 210
+  _compute_energy_gradients_cuda(self, energy_landscape) -> CpArray
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 237
+  _integrate_energy_dynamics_cuda(self, initial_position, energy_gradients, time_steps) -> CpArray
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 259
+  _interpolate_gradient_cuda(self, position, gradients) -> CpArray
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 295
   _simulate_defect_motion_cpu(self, initial_position, time_steps, field) -> Dict[str, np.ndarray]
-    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 298
+    File: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py, Line: 318
 
 Class: SolitonEnergyCalculatorCUDA
   __init__(self, domain, physics_params, use_cuda)
-    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 57
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 69
   _compute_optimal_block_size(self) -> int
-    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 108
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 132
   compute_total_energy(self, field) -> float
-    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 164
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 192
   _compute_total_energy_cuda(self, field) -> float
-    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 186
-  _compute_block_energy_cuda(self, block) -> cp.ndarray
-    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 212
-  _compute_kinetic_energy_cuda(self, field) -> cp.ndarray
-    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 234
-  _compute_skyrme_energy_cuda(self, field) -> cp.ndarray
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 214
+  _compute_block_energy_cuda(self, block) -> CpArray
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 251
+  _compute_kinetic_energy_cuda(self, field) -> CpArray
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 255
+  _compute_skyrme_energy_cuda(self, field) -> CpArray
     File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 259
-  _compute_wzw_energy_cuda(self, field) -> cp.ndarray
-    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 304
+  _compute_wzw_energy_cuda(self, field) -> CpArray
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 263
   _compute_total_energy_cpu(self, field) -> float
-    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 340
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 267
   _compute_kinetic_energy_cpu(self, field) -> float
-    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 350
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 277
   _compute_skyrme_energy_cpu(self, field) -> float
-    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 364
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 303
   _compute_wzw_energy_cpu(self, field) -> float
-    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 398
+    File: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py, Line: 355
+
+Class: EnergyBlockComputerCUDA
+  __init__(self, kinetic, skyrme, wzw) -> None
+    File: ./bhlff/models/level_e/cuda/energy/blocks.py, Line: 43
+  compute_block(self, block) -> CpArray
+    File: ./bhlff/models/level_e/cuda/energy/blocks.py, Line: 50
+
+Class: KineticEnergyCUDA
+  compute_cuda(self, field) -> CpArray
+    File: ./bhlff/models/level_e/cuda/energy/kinetic.py, Line: 53
+  compute_cpu(self, field) -> float
+    File: ./bhlff/models/level_e/cuda/energy/kinetic.py, Line: 75
+
+Class: SkyrmeEnergyCUDA
+  __init__(self, S4) -> None
+    File: ./bhlff/models/level_e/cuda/energy/skyrme.py, Line: 42
+  compute_cuda(self, field) -> CpArray
+    File: ./bhlff/models/level_e/cuda/energy/skyrme.py, Line: 45
+  compute_cpu(self, field) -> float
+    File: ./bhlff/models/level_e/cuda/energy/skyrme.py, Line: 84
+
+Class: WZWEnergyCUDA
+  compute_cuda(self, field) -> CpArray
+    File: ./bhlff/models/level_e/cuda/energy/wzw.py, Line: 42
+  compute_cpu(self, field) -> float
+    File: ./bhlff/models/level_e/cuda/energy/wzw.py, Line: 62
 
 Class: SpecializedExperiments
   __init__(self)
@@ -13844,37 +13912,37 @@ Class: BVPVectorizedProcessor
 
 Class: CUDABlockProcessor
   __init__(self, domain, block_size, overlap)
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 54
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 62
   _initialize_cuda(self) -> None
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 80
-  iterate_blocks_cuda(self) -> Iterator[Tuple[cp.ndarray, BlockInfo]]
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 106
-  _extract_block_data_cuda(self, start_indices, end_indices) -> cp.ndarray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 148
-  process_block_cuda(self, block_data, block_info, operation) -> cp.ndarray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 168
-  _process_block_fft_cuda(self, block_data, block_info) -> cp.ndarray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 203
-  _process_block_convolution_cuda(self, block_data, block_info) -> cp.ndarray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 216
-  _process_block_gradient_cuda(self, block_data, block_info) -> cp.ndarray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 229
-  _process_block_bvp_cuda(self, block_data, block_info) -> cp.ndarray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 241
-  merge_blocks_cuda(self, processed_blocks) -> cp.ndarray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 257
-  _create_weight_mask_cuda(self, block_info) -> cp.ndarray
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 310
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 88
+  iterate_blocks_cuda(self) -> Iterator[Tuple[CpArray, BlockInfo]]
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 114
+  _extract_block_data_cuda(self, start_indices, end_indices) -> CpArray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 162
+  process_block_cuda(self, block_data, block_info, operation) -> CpArray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 182
+  _process_block_fft_cuda(self, block_data, block_info) -> CpArray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 217
+  _process_block_convolution_cuda(self, block_data, block_info) -> CpArray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 230
+  _process_block_gradient_cuda(self, block_data, block_info) -> CpArray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 243
+  _process_block_bvp_cuda(self, block_data, block_info) -> CpArray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 255
+  merge_blocks_cuda(self, processed_blocks) -> CpArray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 271
+  _create_weight_mask_cuda(self, block_info) -> CpArray
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 324
   optimize_block_size_cuda(self, available_memory_gb) -> int
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 339
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 353
   get_cuda_info(self) -> Dict[str, Any]
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 375
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 389
   get_memory_usage_cuda(self) -> Dict[str, Any]
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 388
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 402
   cleanup_cuda_memory(self) -> None
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 400
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 414
   __del__(self)
-    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 419
+    File: ./bhlff/core/domain/cuda_block_processor.py, Line: 433
 
 Class: BlockInfo
   __init__(self, domain, block_size, overlap)

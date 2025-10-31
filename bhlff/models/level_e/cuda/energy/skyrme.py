@@ -21,6 +21,7 @@ import numpy as np
 
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except Exception:  # pragma: no cover
     cp = None
@@ -70,9 +71,9 @@ class SkyrmeEnergyCUDA:
         for i in range(3):
             for j in range(3):
                 if i != j:
-                    comm = cp.einsum("...ik,...kj->...ij", L_currents[i], L_currents[j]) - cp.einsum(
-                        "...ik,...kj->...ij", L_currents[j], L_currents[i]
-                    )
+                    comm = cp.einsum(
+                        "...ik,...kj->...ij", L_currents[i], L_currents[j]
+                    ) - cp.einsum("...ik,...kj->...ij", L_currents[j], L_currents[i])
                     prod = cp.einsum("...ik,...kj->...ij", comm, comm)
                     # Match numpy.trace default: axes 0,1 (not last two)
                     tr = cp.real(cp.trace(prod))
@@ -102,11 +103,11 @@ class SkyrmeEnergyCUDA:
         for i in range(3):
             for j in range(3):
                 if i != j:
-                    comm = np.einsum("...ik,...kj->...ij", L_currents[i], L_currents[j]) - np.einsum(
-                        "...ik,...kj->...ij", L_currents[j], L_currents[i]
+                    comm = np.einsum(
+                        "...ik,...kj->...ij", L_currents[i], L_currents[j]
+                    ) - np.einsum("...ik,...kj->...ij", L_currents[j], L_currents[i])
+                    skyrme_energy += np.sum(
+                        np.real(np.trace(np.einsum("...ik,...kj->...ij", comm, comm)))
                     )
-                    skyrme_energy += np.sum(np.real(np.trace(np.einsum("...ik,...kj->...ij", comm, comm))))
 
         return float(skyrme_energy / (32 * np.pi**2))
-
-

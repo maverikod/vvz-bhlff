@@ -26,6 +26,7 @@ import numpy as np
 
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except Exception:  # pragma: no cover
     cp = None
@@ -88,5 +89,3 @@ class KineticEnergyCUDA:
             )
             return float(np.sum(kinetic_density))
         return 0.0
-
-

@@ -35,7 +35,15 @@ def test_skyrme_gradient_parity_su2():
     # Small domain
     N, Nphi, Nt = 3, 3, 2
     domain = Domain(L=1.0, N=N, dimensions=7, N_phi=Nphi, N_t=Nt, T=1.0)
-    params: Dict[str, Any] = {"mu": 1.0, "beta": 1.0, "lambda": 0.1, "S4": 0.1, "S6": 0.0, "F2": 1.0, "N_c": 3}
+    params: Dict[str, Any] = {
+        "mu": 1.0,
+        "beta": 1.0,
+        "lambda": 0.1,
+        "S4": 0.1,
+        "S6": 0.0,
+        "F2": 1.0,
+        "N_c": 3,
+    }
 
     # Generator field: build U(1)^3 phase Θ(x,φ), then embed into SU(2) via U = exp(i Θ σ_z)
     N = domain.N
@@ -59,7 +67,9 @@ def test_skyrme_gradient_parity_su2():
     U11 = np.exp(1j * Theta)
     U22 = np.exp(-1j * Theta)
     zeros = np.zeros_like(Theta, dtype=np.complex128)
-    U0 = np.stack([np.stack([U11, zeros], axis=-1), np.stack([zeros, U22], axis=-1)], axis=-2)
+    U0 = np.stack(
+        [np.stack([U11, zeros], axis=-1), np.stack([zeros, U22], axis=-1)], axis=-2
+    )
 
     # Compute GPU Skyrme gradient
     optimizer = SolitonOptimizerCUDA(domain, params, use_cuda=True)
@@ -76,8 +86,10 @@ def test_skyrme_gradient_parity_su2():
     # Numerical directional derivative of Skyrme energy
     sky = SkyrmeEnergyCUDA(S4=params["S4"])  # S6 disabled
     eps = 1e-7
-    U_plus = U0.copy(); U_plus[blk_idx] = U0[blk_idx] @ expm(eps * X)
-    U_minus = U0.copy(); U_minus[blk_idx] = U0[blk_idx] @ expm(-eps * X)
+    U_plus = U0.copy()
+    U_plus[blk_idx] = U0[blk_idx] @ expm(eps * X)
+    U_minus = U0.copy()
+    U_minus[blk_idx] = U0[blk_idx] @ expm(-eps * X)
     E_plus = float(cp.asnumpy(sky.compute_cuda(cp.asarray(U_plus))))
     E_minus = float(cp.asnumpy(sky.compute_cuda(cp.asarray(U_minus))))
     dE_num = (E_plus - E_minus) / (2.0 * eps)
@@ -91,7 +103,7 @@ def test_skyrme_gradient_parity_su2():
     # Allow moderate tolerance on small random field
     assert np.isfinite(dE_num) and np.isfinite(dE_ana)
     # Allow left/right action convention: match up to sign
-    ok = np.isclose(dE_ana, dE_num, rtol=1e-4, atol=1e-6) or np.isclose(-dE_ana, dE_num, rtol=1e-4, atol=1e-6)
+    ok = np.isclose(dE_ana, dE_num, rtol=1e-4, atol=1e-6) or np.isclose(
+        -dE_ana, dE_num, rtol=1e-4, atol=1e-6
+    )
     assert ok, (dE_ana, dE_num)
-
-

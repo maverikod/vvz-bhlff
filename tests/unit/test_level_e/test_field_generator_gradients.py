@@ -47,7 +47,14 @@ def test_field_generator_has_nonzero_gradients():
 
     # Compute gradients along spatial and phase axes
     axes = (0, 1, 2, 3, 4, 5)
-    steps = {0: x[1] - x[0], 1: y[1] - y[0], 2: z[1] - z[0], 3: phi[1] - phi[0], 4: phi[1] - phi[0], 5: phi[1] - phi[0]}
+    steps = {
+        0: x[1] - x[0],
+        1: y[1] - y[0],
+        2: z[1] - z[0],
+        3: phi[1] - phi[0],
+        4: phi[1] - phi[0],
+        5: phi[1] - phi[0],
+    }
 
     total_norm = 0.0
     nonzero = 0
@@ -65,5 +72,3 @@ def test_field_generator_has_nonzero_gradients():
     # Assertions: we expect non-zero gradient magnitudes and non-trivial coverage
     assert total_norm > 0.0, "Generated field has zero gradient norm"
     assert coverage > 0.0, "Generated field has zero gradient everywhere"
-
-

@@ -4,28 +4,36 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 952
+Total files analyzed: 968
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 804
+Total classes: 811
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 7025
+Total functions: 7074
 
 ISSUES SUMMARY:
 ----------------------------------------
 methods_with_pass: 0
 not_implemented_in_non_abstract: 0
-methods_without_docstrings: 318
+methods_without_docstrings: 349
 files_without_docstrings: 4
 classes_without_docstrings: 21
-imports_in_middle: 686
-files_too_large: 121
+imports_in_middle: 702
+files_too_large: 122
 
 METHODS_WITHOUT_DOCSTRINGS:
 ----------------------------------------
+  File: ./scripts/cuda_smoke_test.py
+  Line: 30
+  Method: parse_args
+
+  File: ./scripts/cuda_smoke_test.py
+  Line: 47
+  Method: main
+
   File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
   Line: 86
   Method: __init__
@@ -61,16 +69,7 @@ METHODS_WITHOUT_DOCSTRINGS:
   Class: MockBVPCore
   Method: __init__
 
-  File: ./tests/unit/test_power_law_7d_bvp_compliance.py
-  Line: 216
-  Method: __init__
-
-  File: ./tests/unit/test_power_law_7d_bvp_compliance.py
-  Line: 216
-  Class: MockBVPCore
-  Method: __init__
-
-  ... and 308 more
+  ... and 339 more
 
 FILES_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -163,7 +162,7 @@ IMPORTS_IN_MIDDLE:
   File: ./scripts/demo_block_processing.py
   Line: 317
 
-  ... and 676 more
+  ... and 692 more
 
 FILES_TOO_LARGE:
 ----------------------------------------
@@ -187,4 +186,4 @@ FILES_TOO_LARGE:
 
   File: ./tests/unit/test_base_models.py
 
-  ... and 111 more
+  ... and 112 more

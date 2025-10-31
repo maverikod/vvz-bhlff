@@ -23,12 +23,16 @@ import logging
 
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except ImportError:
     CUDA_AVAILABLE = False
     cp = None
 
-from bhlff.utils.cuda_utils import get_optimal_backend, CUDA_AVAILABLE as UTILS_CUDA_AVAILABLE
+from bhlff.utils.cuda_utils import (
+    get_optimal_backend,
+    CUDA_AVAILABLE as UTILS_CUDA_AVAILABLE,
+)
 
 
 class SuperpositionAnalyzerCUDA:

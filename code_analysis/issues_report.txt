@@ -2,10 +2,18 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 1150
+Total issues found: 1198
 
-METHODS_WITHOUT_DOCSTRINGS: 318 issues
+METHODS_WITHOUT_DOCSTRINGS: 349 issues
 ----------------------------------------
+  ./scripts/cuda_smoke_test.py
+    Line 30
+    Method: parse_args
+
+  ./scripts/cuda_smoke_test.py
+    Line 47
+    Method: main
+
   ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
     Line 86
     Method: __init__
@@ -225,6 +233,78 @@ METHODS_WITHOUT_DOCSTRINGS: 318 issues
   ./tests/unit/test_level_b/test_zone_analyzer_7d.py
     Line 12
     Method: test_zone_indicators_7d_axes
+
+  ./tests/unit/test_level_e/test_skyrme_gradient_parity_su2.py
+    Line 24
+    Method: test_skyrme_gradient_parity_su2
+
+  ./tests/unit/test_level_e/test_field_generator_gradients.py
+    Line 21
+    Method: test_field_generator_has_nonzero_gradients
+
+  ./tests/unit/test_level_e/test_cuda_optimizer_smoke.py
+    Line 24
+    Method: test_cuda_optimizer_smoke
+
+  ./tests/unit/test_level_e/test_cuda_energy_consistency.py
+    Line 25
+    Method: test_cuda_cpu_energy_consistency
+
+  ./tests/unit/test_level_e/test_skyrme_gradient_descent.py
+    Line 28
+    Method: test_skyrme_gradient_descent_energy_nonincreasing
+
+  ./tests/unit/test_level_e/test_skyrme_gradient_descent.py
+    Line 93
+    Method: project_unitary
+
+  ./tests/unit/test_level_f/test_collective_cuda.py
+    Line 17
+    Method: _cuda_available
+
+  ./tests/unit/test_level_f/test_collective_cuda.py
+    Line 27
+    Method: domain
+
+  ./tests/unit/test_level_f/test_collective_cuda.py
+    Line 32
+    Method: particles
+
+  ./tests/unit/test_level_f/test_collective_cuda.py
+    Line 42
+    Method: test_collective_cuda_cpu_parity
+
+  ./tests/unit/test_level_f/test_collective_cuda.py
+    Line 73
+    Method: test_collective_cpu_fallback
+
+  ./tests/unit/test_level_f/test_collective_cuda.py
+    Line 78
+    Method: fake_import
+
+  ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
+    Line 23
+    Method: _cuda_available
+
+  ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
+    Line 33
+    Method: domain
+
+  ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
+    Line 38
+    Method: particles
+
+  ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
+    Line 48
+    Method: test_cuda_cpu_parity_small_domain
+
+  ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
+    Line 67
+    Method: test_cpu_fallback_when_no_cuda
+
+  ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
+    Line 73
+    Method: fake_import
 
   ./tests/unit/automated_testing/test_automated_testing_system_advanced.py
     Line 164
@@ -540,6 +620,53 @@ METHODS_WITHOUT_DOCSTRINGS: 318 issues
   ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
     Line 334
     Method: bc
+
+  ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
+    Line 49
+    Method: __init__
+
+  ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
+    Line 49
+    Class: CollectiveExcitationsCUDA
+    Method: __init__
+
+  ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
+    Line 49
+    Method: __init__
+
+  ./bhlff/models/level_e/cuda/energy/blocks.py
+    Line 43
+    Method: __init__
+
+  ./bhlff/models/level_e/cuda/energy/blocks.py
+    Line 43
+    Class: EnergyBlockComputerCUDA
+    Method: __init__
+
+  ./bhlff/models/level_e/cuda/energy/blocks.py
+    Line 43
+    Method: __init__
+
+  ./bhlff/models/level_e/cuda/energy/skyrme.py
+    Line 42
+    Method: __init__
+
+  ./bhlff/models/level_e/cuda/energy/skyrme.py
+    Line 42
+    Class: SkyrmeEnergyCUDA
+    Method: __init__
+
+  ./bhlff/models/level_e/cuda/energy/skyrme.py
+    Line 42
+    Method: __init__
+
+  ./bhlff/cli/cuda_smoke.py
+    Line 23
+    Method: _parse_args
+
+  ./bhlff/cli/cuda_smoke.py
+    Line 32
+    Method: main
 
   ./bhlff/cli/main.py
     Line 24
@@ -1452,7 +1579,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 21 issues
     Class: TestStep2Command
 
 
-IMPORTS_IN_MIDDLE: 686 issues
+IMPORTS_IN_MIDDLE: 702 issues
 ----------------------------------------
   ./test_quench_detector_minimal.py
     Line 31
@@ -1489,6 +1616,9 @@ IMPORTS_IN_MIDDLE: 686 issues
 
   ./scripts/demo_enhanced_block_processing.py
     Line 336
+
+  ./scripts/cuda_smoke_test.py
+    Line 83
 
   ./scripts/demo_ml_prediction_simple.py
     Line 26
@@ -1664,6 +1794,9 @@ IMPORTS_IN_MIDDLE: 686 issues
   ./tests/unit/test_level_e/test_soliton_physics_advanced.py
     Line 30
 
+  ./tests/unit/test_level_e/test_skyrme_gradient_parity_su2.py
+    Line 33
+
   ./tests/unit/test_level_e/test_defect_physics.py
     Line 23
 
@@ -1673,16 +1806,31 @@ IMPORTS_IN_MIDDLE: 686 issues
   ./tests/unit/test_level_e/test_soliton_physics_basic.py
     Line 29
 
+  ./tests/unit/test_level_e/test_cuda_optimizer_smoke.py
+    Line 33
+
+  ./tests/unit/test_level_e/test_cuda_energy_consistency.py
+    Line 34
+
+  ./tests/unit/test_level_e/__init__.py
+    Line 31
+
   ./tests/unit/test_level_e/test_soliton_topology_physics_basic.py
     Line 29
 
   ./tests/unit/test_level_e/test_soliton_energy_physics_basic.py
     Line 28
 
+  ./tests/unit/test_level_e/test_skyrme_gradient_descent.py
+    Line 77
+
   ./tests/unit/test_level_e/test_defect_fractional_physics.py
     Line 26
 
   ./tests/unit/test_level_e/test_soliton_energy_physics_advanced.py
+    Line 28
+
+  ./tests/unit/test_level_e/test_cuda_modules.py
     Line 28
 
   ./tests/unit/test_level_e/test_soliton_topology_physics_advanced.py
@@ -1718,8 +1866,14 @@ IMPORTS_IN_MIDDLE: 686 issues
   ./tests/unit/test_level_e/phase_mapping/test_phase_mapper.py
     Line 25
 
+  ./tests/unit/test_level_f/test_collective_cuda.py
+    Line 74
+
   ./tests/unit/test_level_f/test_nonlinear.py
     Line 23
+
+  ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
+    Line 69
 
   ./tests/unit/test_level_f/test_multi_particle_basic.py
     Line 22
@@ -2223,7 +2377,7 @@ IMPORTS_IN_MIDDLE: 686 issues
     Line 24
 
   ./bhlff/models/level_f/multi_particle_system.py
-    Line 35
+    Line 98
 
   ./bhlff/models/level_f/nonlinear.py
     Line 33
@@ -2238,7 +2392,7 @@ IMPORTS_IN_MIDDLE: 686 issues
     Line 24
 
   ./bhlff/models/level_f/collective.py
-    Line 30
+    Line 91
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py
     Line 23
@@ -2327,6 +2481,12 @@ IMPORTS_IN_MIDDLE: 686 issues
   ./bhlff/models/level_f/collective/excitation_analysis.py
     Line 329
 
+  ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
+    Line 34
+
+  ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
+    Line 47
+
   ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
     Line 24
 
@@ -2361,7 +2521,7 @@ IMPORTS_IN_MIDDLE: 686 issues
     Line 28
 
   ./bhlff/models/level_d/level_d_models.py
-    Line 54
+    Line 55
 
   ./bhlff/models/level_d/projections.py
     Line 34
@@ -2382,13 +2542,13 @@ IMPORTS_IN_MIDDLE: 686 issues
     Line 24
 
   ./bhlff/models/level_d/cuda/superposition_utils_cuda.py
-    Line 75
+    Line 77
 
   ./bhlff/models/level_d/cuda/streamlines_cuda.py
-    Line 32
+    Line 33
 
   ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py
-    Line 31
+    Line 32
 
   ./bhlff/models/level_b/visualization.py
     Line 25
@@ -2610,13 +2770,25 @@ IMPORTS_IN_MIDDLE: 686 issues
     Line 503
 
   ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
-    Line 34
+    Line 394
 
   ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py
-    Line 36
+    Line 44
 
   ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
-    Line 40
+    Line 52
+
+  ./bhlff/models/level_e/cuda/energy/blocks.py
+    Line 37
+
+  ./bhlff/models/level_e/cuda/energy/kinetic.py
+    Line 41
+
+  ./bhlff/models/level_e/cuda/energy/skyrme.py
+    Line 36
+
+  ./bhlff/models/level_e/cuda/energy/wzw.py
+    Line 36
 
   ./bhlff/models/level_e/experiments/specialized_experiments.py
     Line 26
@@ -2881,6 +3053,9 @@ IMPORTS_IN_MIDDLE: 686 issues
 
   ./bhlff/testing/automated_testing/resource_manager.py
     Line 32
+
+  ./bhlff/cli/cuda_smoke.py
+    Line 66
 
   ./bhlff/cli/main.py
     Line 21
@@ -3327,7 +3502,7 @@ IMPORTS_IN_MIDDLE: 686 issues
     Line 40
 
   ./bhlff/core/domain/cuda_block_processor.py
-    Line 37
+    Line 45
 
   ./bhlff/core/domain/block_processor.py
     Line 261
@@ -3513,7 +3688,7 @@ IMPORTS_IN_MIDDLE: 686 issues
     Line 65
 
 
-FILES_TOO_LARGE: 121 issues
+FILES_TOO_LARGE: 122 issues
 ----------------------------------------
   ./test_quench_detector_optimized.py
 
@@ -3646,6 +3821,8 @@ FILES_TOO_LARGE: 121 issues
   ./bhlff/models/level_d/streamlines.py
 
   ./bhlff/models/level_d/superposition.py
+
+  ./bhlff/models/level_d/cuda/streamlines_cuda.py
 
   ./bhlff/models/level_b/visualization.py
 

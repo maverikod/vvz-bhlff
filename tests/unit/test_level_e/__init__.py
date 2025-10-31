@@ -32,8 +32,12 @@ try:  # pragma: no cover
 except Exception:  # pragma: no cover
     TestSolitonTopologyPhysicsBasic = None  # type: ignore
 
-__all__ = [name for name in (
-    "TestSolitonPhysicsBasic",
-    "TestSolitonEnergyPhysicsBasic",
-    "TestSolitonTopologyPhysicsBasic",
-) if globals().get(name) is not None]
+__all__ = [
+    name
+    for name in (
+        "TestSolitonPhysicsBasic",
+        "TestSolitonEnergyPhysicsBasic",
+        "TestSolitonTopologyPhysicsBasic",
+    )
+    if globals().get(name) is not None
+]

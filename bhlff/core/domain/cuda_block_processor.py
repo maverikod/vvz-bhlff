@@ -43,6 +43,21 @@ else:
 
 from .domain import Domain
 from .block_processor import BlockProcessor, BlockInfo
+from .cuda_block_ops import (
+    process_block_fft_cuda,
+    process_block_convolution_cuda,
+    process_block_gradient_cuda,
+    process_block_bvp_cuda,
+)
+from .cuda_block_merge import (
+    merge_blocks_cuda as _merge_blocks_cuda,
+    create_weight_mask_cuda as _create_weight_mask_cuda,
+)
+from .cuda_block_utils import (
+    extract_block_data_cuda as _extract_block_data_cuda,
+    get_cuda_device_info as _get_cuda_device_info,
+    cleanup_memory as _cleanup_memory,
+)
 
 
 class CUDABlockProcessor(BlockProcessor):
@@ -162,22 +177,8 @@ class CUDABlockProcessor(BlockProcessor):
     def _extract_block_data_cuda(
         self, start_indices: Tuple[int, ...], end_indices: Tuple[int, ...]
     ) -> CpArray:
-        """Extract block data to GPU memory."""
-        # Create slice object
-        slices = tuple(
-            slice(start, end) for start, end in zip(start_indices, end_indices)
-        )
-
-        # Generate synthetic block data for demonstration
-        block_shape = tuple(
-            end - start for start, end in zip(start_indices, end_indices)
-        )
-
-        # Generate data on CPU first, then transfer to GPU
-        cpu_data = np.random.random(block_shape).astype(np.complex128)
-        gpu_data = cp.asarray(cpu_data)
-
-        return gpu_data
+        """Extract block data to GPU memory (delegated to helper)."""
+        return _extract_block_data_cuda(start_indices, end_indices)
 
     def process_block_cuda(
         self, block_data: CpArray, block_info: BlockInfo, operation: str = "fft"
@@ -217,138 +218,52 @@ class CUDABlockProcessor(BlockProcessor):
     def _process_block_fft_cuda(
         self, block_data: CpArray, block_info: BlockInfo
     ) -> CpArray:
-        """Process block with CUDA FFT operation."""
-        # Apply CUDA FFT to block
-        fft_result = cp.fft.fftn(block_data)
-
-        # Apply 7D phase field specific processing on GPU
-        phase = cp.angle(fft_result)
-        processed_result = fft_result * cp.exp(-1j * phase)
-
-        return processed_result
+        """Process block with CUDA FFT operation (delegated)."""
+        return process_block_fft_cuda(block_data, block_info)
 
     def _process_block_convolution_cuda(
         self, block_data: CpArray, block_info: BlockInfo
     ) -> CpArray:
-        """Process block with CUDA convolution operation."""
-        # Create convolution kernel for 7D phase field
-        kernel_shape = tuple(min(3, size) for size in block_data.shape)
-        kernel = cp.ones(kernel_shape, dtype=cp.complex128) / cp.prod(kernel_shape)
-
-        # Apply CUDA convolution
-        convolved = cp_ndimage.convolve(block_data.real, kernel, mode="constant")
-
-        return convolved.astype(cp.complex128)
+        """Process block with CUDA convolution operation (delegated)."""
+        return process_block_convolution_cuda(block_data, block_info)
 
     def _process_block_gradient_cuda(
         self, block_data: CpArray, block_info: BlockInfo
     ) -> CpArray:
-        """Process block with CUDA gradient operation."""
-        # Compute gradient in 7D space using CUDA
-        gradient = cp.gradient(block_data.real)
-
-        # Compute magnitude of gradient on GPU
-        gradient_magnitude = cp.sqrt(cp.sum(cp.array([g**2 for g in gradient]), axis=0))
-
-        return gradient_magnitude.astype(cp.complex128)
+        """Process block with CUDA gradient operation (delegated)."""
+        return process_block_gradient_cuda(block_data, block_info)
 
     def _process_block_bvp_cuda(
         self, block_data: CpArray, block_info: BlockInfo
     ) -> CpArray:
-        """Process block with CUDA BVP solving."""
-        # CUDA-accelerated BVP solving
-        # This would implement the full BVP equation on GPU
-
-        # For now, implement a simplified version
-        amplitude = cp.abs(block_data)
-        phase = cp.angle(block_data)
-
-        # Apply BVP-specific processing
-        result = amplitude * cp.exp(1j * phase)
-
-        return result
+        """Process block with CUDA BVP solving (delegated)."""
+        return process_block_bvp_cuda(block_data, block_info)
 
     def merge_blocks_cuda(
         self, processed_blocks: List[Tuple[CpArray, BlockInfo]]
     ) -> CpArray:
-        """
-        Merge processed blocks back into full domain using CUDA.
-
-        Physical Meaning:
-            Merges processed blocks back into full 7D domain using GPU,
-            handling overlaps and ensuring continuity.
-
-        Args:
-            processed_blocks (List[Tuple[CpArray, BlockInfo]]): List of CUDA-processed blocks.
-
-        Returns:
-            CpArray: Merged full domain data on GPU.
-        """
+        """Merge processed blocks back into full domain using CUDA (delegated)."""
         if not self.cuda_available:
-            # Fallback to CPU processing
             cpu_blocks = [
                 (cp.asnumpy(block_data), block_info)
                 for block_data, block_info in processed_blocks
             ]
             cpu_result = super().merge_blocks(cpu_blocks)
             return cp.asarray(cpu_result)
-
-        # Initialize result array on GPU
-        result = cp.zeros(self.domain_shape, dtype=cp.complex128)
-        weight_map = cp.zeros(self.domain_shape, dtype=cp.float64)
-
-        # Merge blocks with overlap handling on GPU
-        for block_data, block_info in processed_blocks:
-            start_indices = block_info.start_indices
-            end_indices = block_info.end_indices
-
-            # Create slices
-            slices = tuple(
-                slice(start, end) for start, end in zip(start_indices, end_indices)
-            )
-
-            # Create weight mask for overlap handling on GPU
-            weight_mask = self._create_weight_mask_cuda(block_info)
-
-            # Add block data to result on GPU
-            result[slices] += block_data * weight_mask
-            weight_map[slices] += weight_mask
-
-        # Normalize by weights on GPU
-        result = cp.divide(
-            result, weight_map, out=cp.zeros_like(result), where=weight_map != 0
+        return _merge_blocks_cuda(
+            processed_blocks, self.domain_shape, self.n_dims, self.overlap
         )
 
-        return result
-
     def _create_weight_mask_cuda(self, block_info: BlockInfo) -> CpArray:
-        """Create weight mask for overlap handling on GPU."""
-        block_shape = block_info.shape
-        weight_mask = cp.ones(block_shape, dtype=cp.float64)
-
-        # Apply overlap weights at boundaries on GPU
-        for dim in range(self.n_dims):
-            if block_info.start_indices[dim] > 0:
-                # Overlap at start
-                overlap_size = min(self.overlap, block_shape[dim])
-                weight_mask[
-                    tuple(
-                        slice(0, overlap_size) if i == dim else slice(None)
-                        for i in range(self.n_dims)
-                    )
-                ] *= 0.5
-
-            if block_info.end_indices[dim] < self.domain_shape[dim]:
-                # Overlap at end
-                overlap_size = min(self.overlap, block_shape[dim])
-                weight_mask[
-                    tuple(
-                        slice(-overlap_size, None) if i == dim else slice(None)
-                        for i in range(self.n_dims)
-                    )
-                ] *= 0.5
-
-        return weight_mask
+        """Create weight mask for overlap handling on GPU (delegated)."""
+        return _create_weight_mask_cuda(
+            block_info.shape,
+            self.n_dims,
+            self.overlap,
+            block_info.start_indices,
+            block_info.end_indices,
+            self.domain_shape,
+        )
 
     def optimize_block_size_cuda(self, available_memory_gb: float = None) -> int:
         """
@@ -370,34 +285,21 @@ class CUDABlockProcessor(BlockProcessor):
         if available_memory_gb is None:
             available_memory_gb = self.free_memory / 1e9
 
-        # Calculate maximum block size that fits in GPU memory
-        # Account for CUDA memory overhead
-        effective_memory = available_memory_gb * 0.8  # Use 80% of available memory
+        effective_memory = available_memory_gb * 0.8
         max_block_size = int((effective_memory / (8 * 1e-9)) ** (1.0 / self.n_dims))
-
-        # Ensure block size is reasonable for CUDA
-        optimized_size = min(max_block_size, self.block_size)
-        optimized_size = max(4, optimized_size)  # Minimum block size
-
+        optimized_size = max(4, min(max_block_size, self.block_size))
         self.logger.info(
-            f"CUDA optimized block size: {optimized_size} "
-            f"(available GPU memory: {available_memory_gb:.1f} GB)"
+            f"CUDA optimized block size: {optimized_size} (available GPU memory: {available_memory_gb:.1f} GB)"
         )
-
         return optimized_size
 
     def get_cuda_info(self) -> Dict[str, Any]:
         """Get CUDA device information."""
         if not self.cuda_available:
             return {"cuda_available": False}
-
-        return {
-            "cuda_available": True,
-            "device_id": self.device_id,
-            "total_memory_gb": self.total_memory / 1e9,
-            "free_memory_gb": self.free_memory / 1e9,
-            "cupy_version": cp.__version__ if hasattr(cp, "__version__") else "unknown",
-        }
+        info = _get_cuda_device_info()
+        info["cuda_available"] = True
+        return info
 
     def get_memory_usage_cuda(self) -> Dict[str, Any]:
         """Get CUDA memory usage information."""
@@ -415,18 +317,9 @@ class CUDABlockProcessor(BlockProcessor):
         """Clean up CUDA memory."""
         if not self.cuda_available:
             return
-
         try:
-            # Clear memory pool
-            mempool = cp.get_default_memory_pool()
-            mempool.free_all_blocks()
-
-            # Clear pinned memory pool
-            pinned_mempool = cp.get_default_pinned_memory_pool()
-            pinned_mempool.free_all_blocks()
-
+            _cleanup_memory()
             self.logger.info("CUDA memory cleaned up")
-
         except Exception as e:
             self.logger.warning(f"CUDA memory cleanup failed: {e}")
 

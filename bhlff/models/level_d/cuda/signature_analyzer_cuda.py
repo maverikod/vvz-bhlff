@@ -18,6 +18,7 @@ from typing import Dict, Any
 
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except ImportError:
     CUDA_AVAILABLE = False

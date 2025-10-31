@@ -26,8 +26,7 @@ Example:
 """
 
 import numpy as np
-from typing import List, Dict, Any, Optional, Tuple
-from dataclasses import dataclass
+from typing import List, Dict, Any, Optional, cast
 from ..base.abstract_model import AbstractModel
 from .multi_particle.data_structures import Particle, SystemParameters
 from .multi_particle_potential import MultiParticlePotentialAnalyzer
@@ -53,10 +52,11 @@ class MultiParticleSystem(AbstractModel):
 
     def __init__(
         self,
-        domain,
+        domain: Any,
         particles: List[Particle],
         interaction_range: float = 2.0,
         system_params: Optional[SystemParameters] = None,
+        use_cuda: bool = True,
     ):
         """
         Initialize multi-particle system.
@@ -76,6 +76,7 @@ class MultiParticleSystem(AbstractModel):
         self.particles = particles
         self.interaction_range = interaction_range
         self.system_params = system_params or SystemParameters()
+        self._use_cuda = bool(use_cuda)
 
         # Initialize analysis components
         self._potential_analyzer = MultiParticlePotentialAnalyzer(
@@ -87,6 +88,28 @@ class MultiParticleSystem(AbstractModel):
         self._system_analyzer = MultiParticleSystemAnalyzer(
             domain, particles, interaction_range
         )
+
+        # Optional CUDA analyzer (lazy import to respect environments
+        # without CUDA)
+        self._potential_analyzer_cuda = None
+        if self._use_cuda:
+            try:
+                import cupy as _cp  # noqa: F401
+                from .cuda.multi_particle_potential_cuda import (
+                    MultiParticlePotentialAnalyzerCUDA,
+                )
+
+                self._potential_analyzer_cuda = (
+                    MultiParticlePotentialAnalyzerCUDA(
+                        domain,
+                        particles,
+                        interaction_range=interaction_range,
+                        params={},
+                        system_params=self.system_params,
+                    )
+                )
+            except Exception:
+                self._potential_analyzer_cuda = None
 
     def compute_effective_potential(self) -> np.ndarray:
         """
@@ -102,6 +125,8 @@ class MultiParticleSystem(AbstractModel):
         Returns:
             np.ndarray: Effective potential field.
         """
+        if self._potential_analyzer_cuda is not None:
+            return self._potential_analyzer_cuda.compute_effective_potential()
         return self._potential_analyzer.compute_effective_potential()
 
     def find_collective_modes(self) -> Dict[str, Any]:
@@ -119,7 +144,7 @@ class MultiParticleSystem(AbstractModel):
         Returns:
             Dict[str, Any]: Collective modes analysis results.
         """
-        return self._modes_analyzer.find_collective_modes()
+        return cast(Dict[str, Any], self._modes_analyzer.find_collective_modes())
 
     def compute_correlation_function(
         self, field: np.ndarray, time_points: np.ndarray
@@ -141,7 +166,9 @@ class MultiParticleSystem(AbstractModel):
         Returns:
             np.ndarray: Correlation function.
         """
-        return self._modes_analyzer.compute_correlation_function(field, time_points)
+        return self._modes_analyzer.compute_correlation_function(
+            field, time_points
+        )
 
     def analyze_system_properties(self) -> Dict[str, Any]:
         """
@@ -160,4 +187,4 @@ class MultiParticleSystem(AbstractModel):
         Returns:
             Dict[str, Any]: System properties analysis results.
         """
-        return self._system_analyzer.analyze_system_properties()
+        return cast(Dict[str, Any], self._system_analyzer.analyze_system_properties())

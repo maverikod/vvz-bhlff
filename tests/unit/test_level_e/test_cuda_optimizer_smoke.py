@@ -24,6 +24,7 @@ sys.path.insert(0, ".")
 def test_cuda_optimizer_smoke():
     try:
         import cupy as cp
+
         cuda_available = cp.cuda.is_available()
     except Exception:
         cuda_available = False
@@ -33,11 +34,22 @@ def test_cuda_optimizer_smoke():
 
     N, Nphi, Nt = 4, 4, 8
     domain = Domain(L=1.0, N=N, dimensions=7, N_phi=Nphi, N_t=Nt, T=1.0)
-    params: Dict[str, Any] = {"mu": 1.0, "beta": 1.0, "lambda": 0.1, "S4": 0.1, "S6": 0.01, "F2": 1.0, "N_c": 3}
+    params: Dict[str, Any] = {
+        "mu": 1.0,
+        "beta": 1.0,
+        "lambda": 0.1,
+        "S4": 0.1,
+        "S6": 0.01,
+        "F2": 1.0,
+        "N_c": 3,
+    }
 
     # small initial guess
     rng = np.random.default_rng(321)
-    init = (rng.standard_normal((N, N, N, Nphi, Nphi, Nphi, Nt)) + 1j * rng.standard_normal((N, N, N, Nphi, Nphi, Nphi, Nt))).astype(np.complex128)
+    init = (
+        rng.standard_normal((N, N, N, Nphi, Nphi, Nphi, Nt))
+        + 1j * rng.standard_normal((N, N, N, Nphi, Nphi, Nphi, Nt))
+    ).astype(np.complex128)
 
     if not cuda_available:
         pytest.skip("CUDA not available in test environment")
@@ -49,5 +61,3 @@ def test_cuda_optimizer_smoke():
         assert np.all(np.isfinite(sol))
     except Exception as e:
         pytest.xfail(f"Non-convergent or backend limitation (expected in smoke): {e}")
-
-

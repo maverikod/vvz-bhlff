@@ -21,6 +21,7 @@ import numpy as np
 
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except Exception:  # pragma: no cover
     cp = None
@@ -74,5 +75,3 @@ class WZWEnergyCUDA:
             div_phase += np.sum(phase_gradients[alpha], axis=tuple(range(-3, 0)))
         wzw_energy = np.sum(div_phase) * (dphi**3) / (8 * np.pi**2)
         return float(np.real(wzw_energy))
-
-

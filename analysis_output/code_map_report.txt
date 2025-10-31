@@ -4,186 +4,152 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 964
+Total files analyzed: 682
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 809
+Total classes: 559
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 7053
+Total functions: 4488
 
 ISSUES SUMMARY:
 ----------------------------------------
 methods_with_pass: 0
 not_implemented_in_non_abstract: 0
-methods_without_docstrings: 334
+methods_without_docstrings: 190
 files_without_docstrings: 4
-classes_without_docstrings: 21
-imports_in_middle: 698
-files_too_large: 120
+classes_without_docstrings: 2
+imports_in_middle: 528
+files_too_large: 96
 
 METHODS_WITHOUT_DOCSTRINGS:
 ----------------------------------------
-  File: ./scripts/cuda_smoke_test.py
-  Line: 30
-  Method: parse_args
+  File: bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
+  Line: 102
+  Method: bc
 
-  File: ./scripts/cuda_smoke_test.py
-  Line: 45
-  Method: main
+  File: bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+  Line: 129
+  Method: bc
 
-  File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 86
+  File: bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
+  Line: 334
+  Method: bc
+
+  File: bhlff/models/level_f/cuda/collective_excitations_cuda.py
+  Line: 49
   Method: __init__
 
-  File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 86
-  Class: MockDomain
+  File: bhlff/models/level_f/cuda/collective_excitations_cuda.py
+  Line: 49
+  Class: CollectiveExcitationsCUDA
   Method: __init__
 
-  File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 160
+  File: bhlff/models/level_f/cuda/collective_excitations_cuda.py
+  Line: 49
   Method: __init__
 
-  File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 160
-  Class: MockDomain
+  File: bhlff/models/level_e/cuda/energy/blocks.py
+  Line: 43
   Method: __init__
 
-  File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 86
+  File: bhlff/models/level_e/cuda/energy/blocks.py
+  Line: 43
+  Class: EnergyBlockComputerCUDA
   Method: __init__
 
-  File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 160
+  File: bhlff/models/level_e/cuda/energy/blocks.py
+  Line: 43
   Method: __init__
 
-  File: ./tests/unit/test_power_law_7d_bvp_compliance.py
-  Line: 170
+  File: bhlff/models/level_e/cuda/energy/skyrme.py
+  Line: 42
   Method: __init__
 
-  File: ./tests/unit/test_power_law_7d_bvp_compliance.py
-  Line: 170
-  Class: MockBVPCore
-  Method: __init__
-
-  ... and 324 more
+  ... and 180 more
 
 FILES_WITHOUT_DOCSTRINGS:
 ----------------------------------------
-  File: ./bhlff/models/level_f/collective/__init__.py
+  File: bhlff/models/level_f/collective/__init__.py
   Line: 1
 
-  File: ./bhlff/models/level_e/phase_mapping_components/__init__.py
+  File: bhlff/models/level_e/phase_mapping_components/__init__.py
   Line: 1
 
-  File: ./bhlff/models/level_e/sensitivity/__init__.py
+  File: bhlff/models/level_e/sensitivity/__init__.py
   Line: 1
 
-  File: ./bhlff/models/level_e/experiments/__init__.py
+  File: bhlff/models/level_e/experiments/__init__.py
   Line: 1
 
 
 CLASSES_WITHOUT_DOCSTRINGS:
 ----------------------------------------
-  File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 85
-  Class: MockDomain
+  File: bhlff/core/bvp/quench_detector.py
+  Line: 37
+  Class: DummyCuPy
 
-  File: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
-  Line: 159
-  Class: MockDomain
+  File: bhlff/core/bvp/quench_detector.py
+  Line: 38
+  Class: ndarray
 
-  File: ./tests/unit/test_power_law_7d_bvp_compliance.py
-  Line: 169
-  Class: MockBVPCore
-
-  File: ./tests/unit/test_power_law_7d_bvp_compliance.py
-  Line: 215
-  Class: MockBVPCore
-
-  File: ./tests/unit/test_level_g/test_gravity_physics.py
-  Line: 60
-  Class: MockSystem
-
-  File: ./tests/unit/test_level_g/test_vbp_gravitational_effects_integration.py
-  Line: 52
-  Class: MockSystem
-
-  File: ./tests/unit/test_core/test_cuda_fft_backend_parity.py
-  Line: 13
-  Class: DummyDomain
-
-  File: ./tests/unit/test_core/test_enhanced_block_processing.py
-  Line: 220
-  Class: MockBlockInfo
-
-  File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
-  Line: 104
-  Class: MockParameters
-
-  File: ./tests/unit/test_core/test_fractional_laplacian_parameters.py
-  Line: 183
-  Class: MockInvalidParameters
-
-  ... and 11 more
 
 IMPORTS_IN_MIDDLE:
 ----------------------------------------
-  File: ./test_quench_detector_minimal.py
-  Line: 31
+  File: bhlff/__init__.py
+  Line: 47
 
-  File: ./test_quench_detector_light.py
-  Line: 37
+  File: bhlff/utils/cuda_utils.py
+  Line: 225
 
-  File: ./debug_block_processing.py
-  Line: 253
+  File: bhlff/utils/memory_monitor.py
+  Line: 36
 
-  File: ./test_quench_detector_cuda.py
-  Line: 31
-
-  File: ./setup.py
+  File: bhlff/models/base/abstract_models.py
   Line: 28
 
-  File: ./test_quench_detector_optimized.py
-  Line: 284
+  File: bhlff/models/base/model_base.py
+  Line: 32
 
-  File: ./scripts/demo_vectorized_power_law.py
-  Line: 206
+  File: bhlff/models/base/__init__.py
+  Line: 21
 
-  File: ./scripts/demo_7d_vectorized_processing.py
-  Line: 30
+  File: bhlff/models/base/abstract_model.py
+  Line: 31
 
-  File: ./scripts/demo_vectorized_processing.py
-  Line: 22
+  File: bhlff/models/level_c/mode_beating_analysis.py
+  Line: 39
 
-  File: ./scripts/demo_block_processing.py
-  Line: 317
+  File: bhlff/models/level_c/boundaries_energy.py
+  Line: 23
 
-  ... and 688 more
+  File: bhlff/models/level_c/boundaries.py
+  Line: 36
+
+  ... and 518 more
 
 FILES_TOO_LARGE:
 ----------------------------------------
-  File: ./test_quench_detector_optimized.py
+  File: bhlff/models/level_c/boundaries_core.py
 
-  File: ./tests/integration/automated_testing/test_quality_monitoring_integration.py
+  File: bhlff/models/level_c/abcd_model.py
 
-  File: ./tests/unit/test_ml_prediction_vectorized_implementations.py
+  File: bhlff/models/level_c/cuda/cuda_compute_processor.py
 
-  File: ./tests/unit/test_ml_prediction_physics_validation.py
+  File: bhlff/models/level_c/beating/theoretical_analysis.py
 
-  File: ./tests/unit/test_ml_prediction_full_implementation.py
+  File: bhlff/models/level_c/beating/beating_core_basic.py
 
-  File: ./tests/unit/test_soliton_analysis_optimization.py
+  File: bhlff/models/level_c/beating/background_analysis.py
 
-  File: ./tests/unit/test_full_algorithm_implementations.py
+  File: bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py
 
-  File: ./tests/unit/test_ml_prediction_vectorized_implementation.py
+  File: bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
 
-  File: ./tests/unit/test_physics_validation_step_2_1_1.py
+  File: bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
 
-  File: ./tests/unit/test_base_models.py
+  File: bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
 
-  ... and 110 more
+  ... and 86 more

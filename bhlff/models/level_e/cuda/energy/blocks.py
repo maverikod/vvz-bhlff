@@ -18,6 +18,7 @@ import numpy as np
 
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except Exception:  # pragma: no cover
     cp = None
@@ -39,7 +40,9 @@ from .wzw import WZWEnergyCUDA
 class EnergyBlockComputerCUDA:
     """Compute total energy for a single GPU block."""
 
-    def __init__(self, kinetic: KineticEnergyCUDA, skyrme: SkyrmeEnergyCUDA, wzw: WZWEnergyCUDA) -> None:
+    def __init__(
+        self, kinetic: KineticEnergyCUDA, skyrme: SkyrmeEnergyCUDA, wzw: WZWEnergyCUDA
+    ) -> None:
         self._kinetic = kinetic
         self._skyrme = skyrme
         self._wzw = wzw
@@ -51,9 +54,7 @@ class EnergyBlockComputerCUDA:
         kinetic_total = cp.sum(kinetic) if kinetic.ndim > 0 else kinetic
 
         skyrme = self._skyrme.compute_cuda(block)  # scalar (cp.array)
-        wzw = self._wzw.compute_cuda(block)        # scalar (cp.array)
+        wzw = self._wzw.compute_cuda(block)  # scalar (cp.array)
 
         total = kinetic_total + skyrme + wzw
         return total
-
-

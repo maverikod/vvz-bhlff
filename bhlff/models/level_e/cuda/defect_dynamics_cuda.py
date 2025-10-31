@@ -58,7 +58,9 @@ class DefectDynamicsCUDA:
         with GPU-accelerated block processing.
     """
 
-    def __init__(self, domain: "Domain", physics_params: Dict[str, Any], use_cuda: bool = True):
+    def __init__(
+        self, domain: "Domain", physics_params: Dict[str, Any], use_cuda: bool = True
+    ):
         """
         Initialize CUDA defect dynamics calculator.
 
@@ -99,7 +101,9 @@ class DefectDynamicsCUDA:
 
         # Initialize block processor if CUDA available
         if self.cuda_available:
-            self.block_processor = CUDABlockProcessor(domain, block_size=self.block_size)
+            self.block_processor = CUDABlockProcessor(
+                domain, block_size=self.block_size
+            )
         else:
             self.block_processor = None
 
@@ -131,7 +135,9 @@ class DefectDynamicsCUDA:
 
             bytes_per_element = 16
             overhead_factor = 6  # Energy landscape + gradients + positions
-            max_elements = available_memory_bytes // (bytes_per_element * overhead_factor)
+            max_elements = available_memory_bytes // (
+                bytes_per_element * overhead_factor
+            )
             elements_per_dim = int(max_elements ** (1.0 / 7.0))
             block_size = max(4, min(elements_per_dim, 128))
 
@@ -165,7 +171,9 @@ class DefectDynamicsCUDA:
             Dict containing positions, energy landscape, and gradients
         """
         if self.cuda_available:
-            return self._simulate_defect_motion_cuda(initial_position, time_steps, field)
+            return self._simulate_defect_motion_cuda(
+                initial_position, time_steps, field
+            )
         else:
             return self._simulate_defect_motion_cpu(initial_position, time_steps, field)
 
@@ -271,7 +279,9 @@ class DefectDynamicsCUDA:
         # Time integration loop (vectorized where possible)
         for t in range(1, time_steps):
             # Interpolate energy gradient at current position
-            gradient_at_pos = self._interpolate_gradient_cuda(position_gpu, energy_gradients)
+            gradient_at_pos = self._interpolate_gradient_cuda(
+                position_gpu, energy_gradients
+            )
 
             # Energy-based motion: dx/dt = -∇U (no mass)
             velocity = -gradient_at_pos * self.time_step
@@ -282,7 +292,9 @@ class DefectDynamicsCUDA:
 
         return trajectory
 
-    def _interpolate_gradient_cuda(self, position: CpArray, gradients: CpArray) -> CpArray:
+    def _interpolate_gradient_cuda(
+        self, position: CpArray, gradients: CpArray
+    ) -> CpArray:
         """
         Interpolate energy gradient at given position on GPU.
 

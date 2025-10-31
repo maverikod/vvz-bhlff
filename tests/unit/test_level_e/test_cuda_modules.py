@@ -73,7 +73,9 @@ class TestCUDAModules:
         assert calculator.domain == domain
         assert calculator.params == physics_params
 
-    def test_soliton_energy_calculator_total_energy(self, domain, physics_params, test_field):
+    def test_soliton_energy_calculator_total_energy(
+        self, domain, physics_params, test_field
+    ):
         """Test that total energy computation works."""
         calculator = SolitonEnergyCalculatorCUDA(domain, physics_params)
         energy = calculator.compute_total_energy(test_field)
@@ -121,4 +123,3 @@ class TestCUDAModules:
         except Exception as e:
             # CPU fallback might have issues - that's OK
             pytest.skip(f"Defect dynamics failed (likely CPU fallback): {e}")
-

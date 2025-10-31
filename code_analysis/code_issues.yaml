@@ -328,6 +328,10 @@ issues:
     file: ./bhlff/models/level_d/superposition.py
     limit: 400
     lines: 464
+  - exceeds_limit: 9
+    file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
+    limit: 400
+    lines: 409
   - exceeds_limit: 129
     file: ./bhlff/models/level_b/visualization.py
     limit: 400
@@ -380,10 +384,10 @@ issues:
     file: ./bhlff/models/level_e/discretization/time_stability.py
     limit: 400
     lines: 691
-  - exceeds_limit: 20
+  - exceeds_limit: 7
     file: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
     limit: 400
-    lines: 420
+    lines: 407
   - exceeds_limit: 55
     file: ./bhlff/models/level_e/experiments/experiment_runner.py
     limit: 400
@@ -504,10 +508,10 @@ issues:
     file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
     limit: 400
     lines: 481
-  - exceeds_limit: 22
+  - exceeds_limit: 36
     file: ./bhlff/core/domain/cuda_block_processor.py
     limit: 400
-    lines: 422
+    lines: 436
   - exceeds_limit: 62
     file: ./bhlff/core/domain/vectorized_block_processor.py
     limit: 400
@@ -582,6 +586,8 @@ issues:
     line: 204
   - file: ./scripts/demo_enhanced_block_processing.py
     line: 336
+  - file: ./scripts/cuda_smoke_test.py
+    line: 83
   - file: ./scripts/demo_ml_prediction_simple.py
     line: 26
   - file: ./scripts/run_level_a_experiments.py
@@ -698,19 +704,31 @@ issues:
     line: 443
   - file: ./tests/unit/test_level_e/test_soliton_physics_advanced.py
     line: 30
+  - file: ./tests/unit/test_level_e/test_skyrme_gradient_parity_su2.py
+    line: 33
   - file: ./tests/unit/test_level_e/test_defect_physics.py
     line: 23
   - file: ./tests/unit/test_level_e/test_level_e_simple.py
     line: 30
   - file: ./tests/unit/test_level_e/test_soliton_physics_basic.py
     line: 29
+  - file: ./tests/unit/test_level_e/test_cuda_optimizer_smoke.py
+    line: 33
+  - file: ./tests/unit/test_level_e/test_cuda_energy_consistency.py
+    line: 34
+  - file: ./tests/unit/test_level_e/__init__.py
+    line: 31
   - file: ./tests/unit/test_level_e/test_soliton_topology_physics_basic.py
     line: 29
   - file: ./tests/unit/test_level_e/test_soliton_energy_physics_basic.py
     line: 28
+  - file: ./tests/unit/test_level_e/test_skyrme_gradient_descent.py
+    line: 77
   - file: ./tests/unit/test_level_e/test_defect_fractional_physics.py
     line: 26
   - file: ./tests/unit/test_level_e/test_soliton_energy_physics_advanced.py
+    line: 28
+  - file: ./tests/unit/test_level_e/test_cuda_modules.py
     line: 28
   - file: ./tests/unit/test_level_e/test_soliton_topology_physics_advanced.py
     line: 30
@@ -734,8 +752,12 @@ issues:
     line: 25
   - file: ./tests/unit/test_level_e/phase_mapping/test_phase_mapper.py
     line: 25
+  - file: ./tests/unit/test_level_f/test_collective_cuda.py
+    line: 74
   - file: ./tests/unit/test_level_f/test_nonlinear.py
     line: 23
+  - file: ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
+    line: 69
   - file: ./tests/unit/test_level_f/test_multi_particle_basic.py
     line: 22
   - file: ./tests/unit/test_level_f/test_collective_basic.py
@@ -1071,7 +1093,7 @@ issues:
   - file: ./bhlff/models/level_f/multi_particle_modes.py
     line: 24
   - file: ./bhlff/models/level_f/multi_particle_system.py
-    line: 35
+    line: 98
   - file: ./bhlff/models/level_f/nonlinear.py
     line: 33
   - file: ./bhlff/models/level_f/__init__.py
@@ -1081,7 +1103,7 @@ issues:
   - file: ./bhlff/models/level_f/multi_particle_potential.py
     line: 24
   - file: ./bhlff/models/level_f/collective.py
-    line: 30
+    line: 91
   - file: ./bhlff/models/level_f/nonlinear/soliton_analysis_initialization.py
     line: 23
   - file: ./bhlff/models/level_f/nonlinear/basic_effects.py
@@ -1140,6 +1162,10 @@ issues:
     line: 22
   - file: ./bhlff/models/level_f/collective/excitation_analysis.py
     line: 329
+  - file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
+    line: 34
+  - file: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
+    line: 47
   - file: ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
     line: 24
   - file: ./bhlff/models/level_f/multi_particle/potential_analysis_computation.py
@@ -1163,7 +1189,7 @@ issues:
   - file: ./bhlff/models/level_f/transitions/phase_transitions_helpers.py
     line: 28
   - file: ./bhlff/models/level_d/level_d_models.py
-    line: 54
+    line: 55
   - file: ./bhlff/models/level_d/projections.py
     line: 34
   - file: ./bhlff/models/level_d/bvp_integration.py
@@ -1177,11 +1203,11 @@ issues:
   - file: ./bhlff/models/level_d/cuda/projectors_cuda.py
     line: 24
   - file: ./bhlff/models/level_d/cuda/superposition_utils_cuda.py
-    line: 75
+    line: 77
   - file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
-    line: 32
+    line: 33
   - file: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py
-    line: 31
+    line: 32
   - file: ./bhlff/models/level_b/visualization.py
     line: 25
   - file: ./bhlff/models/level_b/zone_analyzer_utils.py
@@ -1329,11 +1355,19 @@ issues:
   - file: ./bhlff/models/level_e/discretization/time_stability.py
     line: 503
   - file: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
-    line: 34
+    line: 394
   - file: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py
-    line: 36
+    line: 44
   - file: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
-    line: 40
+    line: 52
+  - file: ./bhlff/models/level_e/cuda/energy/blocks.py
+    line: 37
+  - file: ./bhlff/models/level_e/cuda/energy/kinetic.py
+    line: 41
+  - file: ./bhlff/models/level_e/cuda/energy/skyrme.py
+    line: 36
+  - file: ./bhlff/models/level_e/cuda/energy/wzw.py
+    line: 36
   - file: ./bhlff/models/level_e/experiments/specialized_experiments.py
     line: 26
   - file: ./bhlff/models/level_e/experiments/experiment_runner.py
@@ -1510,6 +1544,8 @@ issues:
     line: 33
   - file: ./bhlff/testing/automated_testing/resource_manager.py
     line: 32
+  - file: ./bhlff/cli/cuda_smoke.py
+    line: 66
   - file: ./bhlff/cli/main.py
     line: 21
   - file: ./bhlff/solvers/__init__.py
@@ -1807,7 +1843,7 @@ issues:
   - file: ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
     line: 40
   - file: ./bhlff/core/domain/cuda_block_processor.py
-    line: 37
+    line: 45
   - file: ./bhlff/core/domain/block_processor.py
     line: 261
   - file: ./bhlff/core/domain/simple_block_processor.py
@@ -1932,6 +1968,14 @@ issues:
     line: 65
   methods_with_pass: []
   methods_without_docstrings:
+  - class: null
+    file: ./scripts/cuda_smoke_test.py
+    line: 30
+    method: parse_args
+  - class: null
+    file: ./scripts/cuda_smoke_test.py
+    line: 47
+    method: main
   - class: null
     file: ./tests/unit/test_step_1_1_1_exponential_decay_fix.py
     line: 86
@@ -2136,6 +2180,78 @@ issues:
     file: ./tests/unit/test_level_b/test_zone_analyzer_7d.py
     line: 12
     method: test_zone_indicators_7d_axes
+  - class: null
+    file: ./tests/unit/test_level_e/test_skyrme_gradient_parity_su2.py
+    line: 24
+    method: test_skyrme_gradient_parity_su2
+  - class: null
+    file: ./tests/unit/test_level_e/test_field_generator_gradients.py
+    line: 21
+    method: test_field_generator_has_nonzero_gradients
+  - class: null
+    file: ./tests/unit/test_level_e/test_cuda_optimizer_smoke.py
+    line: 24
+    method: test_cuda_optimizer_smoke
+  - class: null
+    file: ./tests/unit/test_level_e/test_cuda_energy_consistency.py
+    line: 25
+    method: test_cuda_cpu_energy_consistency
+  - class: null
+    file: ./tests/unit/test_level_e/test_skyrme_gradient_descent.py
+    line: 28
+    method: test_skyrme_gradient_descent_energy_nonincreasing
+  - class: null
+    file: ./tests/unit/test_level_e/test_skyrme_gradient_descent.py
+    line: 93
+    method: project_unitary
+  - class: null
+    file: ./tests/unit/test_level_f/test_collective_cuda.py
+    line: 17
+    method: _cuda_available
+  - class: null
+    file: ./tests/unit/test_level_f/test_collective_cuda.py
+    line: 27
+    method: domain
+  - class: null
+    file: ./tests/unit/test_level_f/test_collective_cuda.py
+    line: 32
+    method: particles
+  - class: null
+    file: ./tests/unit/test_level_f/test_collective_cuda.py
+    line: 42
+    method: test_collective_cuda_cpu_parity
+  - class: null
+    file: ./tests/unit/test_level_f/test_collective_cuda.py
+    line: 73
+    method: test_collective_cpu_fallback
+  - class: null
+    file: ./tests/unit/test_level_f/test_collective_cuda.py
+    line: 78
+    method: fake_import
+  - class: null
+    file: ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
+    line: 23
+    method: _cuda_available
+  - class: null
+    file: ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
+    line: 33
+    method: domain
+  - class: null
+    file: ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
+    line: 38
+    method: particles
+  - class: null
+    file: ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
+    line: 48
+    method: test_cuda_cpu_parity_small_domain
+  - class: null
+    file: ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
+    line: 67
+    method: test_cpu_fallback_when_no_cuda
+  - class: null
+    file: ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
+    line: 73
+    method: fake_import
   - class: null
     file: ./tests/unit/automated_testing/test_automated_testing_system_advanced.py
     line: 164
@@ -2440,6 +2556,50 @@ issues:
     file: ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
     line: 334
     method: bc
+  - class: null
+    file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
+    line: 49
+    method: __init__
+  - class: CollectiveExcitationsCUDA
+    file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
+    line: 49
+    method: __init__
+  - class: null
+    file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
+    line: 49
+    method: __init__
+  - class: null
+    file: ./bhlff/models/level_e/cuda/energy/blocks.py
+    line: 43
+    method: __init__
+  - class: EnergyBlockComputerCUDA
+    file: ./bhlff/models/level_e/cuda/energy/blocks.py
+    line: 43
+    method: __init__
+  - class: null
+    file: ./bhlff/models/level_e/cuda/energy/blocks.py
+    line: 43
+    method: __init__
+  - class: null
+    file: ./bhlff/models/level_e/cuda/energy/skyrme.py
+    line: 42
+    method: __init__
+  - class: SkyrmeEnergyCUDA
+    file: ./bhlff/models/level_e/cuda/energy/skyrme.py
+    line: 42
+    method: __init__
+  - class: null
+    file: ./bhlff/models/level_e/cuda/energy/skyrme.py
+    line: 42
+    method: __init__
+  - class: null
+    file: ./bhlff/cli/cuda_smoke.py
+    line: 23
+    method: _parse_args
+  - class: null
+    file: ./bhlff/cli/cuda_smoke.py
+    line: 32
+    method: main
   - class: null
     file: ./bhlff/cli/main.py
     line: 24
@@ -3207,9 +3367,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 21
-  files_too_large: 121
+  files_too_large: 122
   files_without_docstrings: 4
-  imports_in_middle: 686
+  imports_in_middle: 702
   methods_with_pass: 0
-  methods_without_docstrings: 318
+  methods_without_docstrings: 349
   not_implemented_in_non_abstract: 0

@@ -24,12 +24,16 @@ import logging
 
 try:
     import cupy as cp
+
     CUDA_AVAILABLE = True
 except ImportError:
     CUDA_AVAILABLE = False
     cp = None
 
-from bhlff.utils.cuda_utils import get_optimal_backend, CUDA_AVAILABLE as UTILS_CUDA_AVAILABLE
+from bhlff.utils.cuda_utils import (
+    get_optimal_backend,
+    CUDA_AVAILABLE as UTILS_CUDA_AVAILABLE,
+)
 
 
 class StreamlineAnalyzerCUDA:
@@ -56,8 +60,15 @@ class StreamlineAnalyzerCUDA:
                 self.cuda_available = False
 
         # Initialize analysis tools
-        self._gradient_computer = GradientComputerCUDA(domain, self.cuda_available, self.backend if self.cuda_available else None)
-        self._streamline_tracer = StreamlineTracerCUDA(domain, parameters, self.cuda_available, self.backend if self.cuda_available else None)
+        self._gradient_computer = GradientComputerCUDA(
+            domain, self.cuda_available, self.backend if self.cuda_available else None
+        )
+        self._streamline_tracer = StreamlineTracerCUDA(
+            domain,
+            parameters,
+            self.cuda_available,
+            self.backend if self.cuda_available else None,
+        )
         self._topology_analyzer = TopologyAnalyzerCUDA(domain, self.cuda_available)
 
         self.logger.info(f"Streamline analyzer CUDA initialized: {self.cuda_available}")
@@ -171,7 +182,13 @@ class GradientComputerCUDA:
 class StreamlineTracerCUDA:
     """CUDA-optimized streamline tracer."""
 
-    def __init__(self, domain: "Domain", parameters: Dict[str, Any] = None, cuda_available: bool = False, backend=None):
+    def __init__(
+        self,
+        domain: "Domain",
+        parameters: Dict[str, Any] = None,
+        cuda_available: bool = False,
+        backend=None,
+    ):
         """Initialize CUDA streamline tracer."""
         self.domain = domain
         self.parameters = parameters or {}
@@ -222,20 +239,24 @@ class StreamlineTracerCUDA:
             radius = 0.1
             for i in range(num_points):
                 angle = 2 * np.pi * i / num_points
-                point = np.array([
-                    center[0] + radius * np.cos(angle),
-                    center[1] + radius * np.sin(angle),
-                    center[2],
-                ])
+                point = np.array(
+                    [
+                        center[0] + radius * np.cos(angle),
+                        center[1] + radius * np.sin(angle),
+                        center[2],
+                    ]
+                )
                 points.append(point)
         elif len(center) == 2:
             radius = 0.1
             for i in range(num_points):
                 angle = 2 * np.pi * i / num_points
-                point = np.array([
-                    center[0] + radius * np.cos(angle),
-                    center[1] + radius * np.sin(angle),
-                ])
+                point = np.array(
+                    [
+                        center[0] + radius * np.cos(angle),
+                        center[1] + radius * np.sin(angle),
+                    ]
+                )
                 points.append(point)
         else:
             for i in range(num_points):

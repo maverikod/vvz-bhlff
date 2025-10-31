@@ -8776,113 +8776,113 @@ method_index:
       - block_size
       - overlap
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 54
+      line: 62
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 80
+      line: 88
       name: _initialize_cuda
       returns: None
     - args:
       - self
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 106
+      line: 114
       name: iterate_blocks_cuda
-      returns: Iterator[Tuple[cp.ndarray, BlockInfo]]
+      returns: Iterator[Tuple[CpArray, BlockInfo]]
     - args:
       - self
       - start_indices
       - end_indices
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 148
+      line: 162
       name: _extract_block_data_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - block_data
       - block_info
       - operation
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 168
+      line: 182
       name: process_block_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - block_data
       - block_info
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 203
+      line: 217
       name: _process_block_fft_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - block_data
       - block_info
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 216
+      line: 230
       name: _process_block_convolution_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - block_data
       - block_info
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 229
+      line: 243
       name: _process_block_gradient_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - block_data
       - block_info
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 241
+      line: 255
       name: _process_block_bvp_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - processed_blocks
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 257
+      line: 271
       name: merge_blocks_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - block_info
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 310
+      line: 324
       name: _create_weight_mask_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - available_memory_gb
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 339
+      line: 353
       name: optimize_block_size_cuda
       returns: int
     - args:
       - self
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 375
+      line: 389
       name: get_cuda_info
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 388
+      line: 402
       name: get_memory_usage_cuda
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 400
+      line: 414
       name: cleanup_cuda_memory
       returns: None
     - args:
       - self
       file: ./bhlff/core/domain/cuda_block_processor.py
-      line: 419
+      line: 433
       name: __del__
       returns: null
     CarrierPrimacyPostulate:
@@ -9445,47 +9445,90 @@ method_index:
       file: ./bhlff/models/level_f/collective.py
       line: 54
       name: __init__
-      returns: null
+      returns: None
     - args:
       - self
       - external_field
       file: ./bhlff/models/level_f/collective.py
-      line: 88
+      line: 102
       name: excite_system
       returns: np.ndarray
     - args:
       - self
       - response
       file: ./bhlff/models/level_f/collective.py
-      line: 104
+      line: 120
       name: analyze_response
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/collective.py
-      line: 124
+      line: 147
       name: compute_dispersion_relations
       returns: Dict[str, Any]
     - args:
       - self
       - frequencies
       file: ./bhlff/models/level_f/collective.py
-      line: 141
+      line: 169
       name: compute_susceptibility
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/collective.py
-      line: 157
+      line: 185
       name: _setup_analysis_parameters
       returns: None
     - args:
       - self
       - data
       file: ./bhlff/models/level_f/collective.py
-      line: 171
+      line: 199
       name: analyze
       returns: Dict[str, Any]
+    CollectiveExcitationsCUDA:
+    - args:
+      - self
+      - system
+      - excitation_params
+      file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
+      line: 49
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
+      line: 75
+      name: _setup_time_blocks
+      returns: None
+    - args:
+      - self
+      - external_field
+      file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
+      line: 98
+      name: excite_system
+      returns: np.ndarray
+    - args:
+      - self
+      - response
+      file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
+      line: 152
+      name: analyze_response
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
+      line: 198
+      name: compute_dispersion_relations
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - external_field
+      - excitation_gpu
+      file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
+      line: 221
+      name: _compute_external_force_gpu
+      returns: '''cp.ndarray'''
     CollectiveModesAnalyzer:
     - args:
       - self
@@ -11273,13 +11316,13 @@ method_index:
       - physics_params
       - use_cuda
       file: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py
-      line: 53
+      line: 61
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py
-      line: 103
+      line: 115
       name: _compute_optimal_block_size
       returns: int
     - args:
@@ -11288,7 +11331,7 @@ method_index:
       - time_steps
       - field
       file: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py
-      line: 141
+      line: 155
       name: simulate_defect_motion
       returns: Dict[str, np.ndarray]
     - args:
@@ -11297,47 +11340,47 @@ method_index:
       - time_steps
       - field
       file: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py
-      line: 164
+      line: 180
       name: _simulate_defect_motion_cuda
       returns: Dict[str, np.ndarray]
     - args:
       - self
       - field
       file: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py
-      line: 194
+      line: 210
       name: _compute_energy_landscape_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - energy_landscape
       file: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py
-      line: 221
+      line: 237
       name: _compute_energy_gradients_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - initial_position
       - energy_gradients
       - time_steps
       file: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py
-      line: 243
+      line: 259
       name: _integrate_energy_dynamics_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - position
       - gradients
       file: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py
-      line: 277
+      line: 295
       name: _interpolate_gradient_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - initial_position
       - time_steps
       - field
       file: ./bhlff/models/level_e/cuda/defect_dynamics_cuda.py
-      line: 298
+      line: 318
       name: _simulate_defect_motion_cpu
       returns: Dict[str, np.ndarray]
     DefectInteractions:
@@ -12320,56 +12363,56 @@ method_index:
       - cuda_available
       - backend
       file: ./bhlff/models/level_d/cuda/projectors_cuda.py
-      line: 198
+      line: 203
       name: __init__
       returns: null
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/cuda/projectors_cuda.py
-      line: 207
+      line: 214
       name: project
       returns: np.ndarray
     - args:
       - self
       - shape
       file: ./bhlff/models/level_d/cuda/projectors_cuda.py
-      line: 59
+      line: 62
       name: _create_em_filter_cuda
       returns: '''cp.ndarray'''
     - args:
       - self
       - shape
       file: ./bhlff/models/level_d/cuda/projectors_cuda.py
-      line: 69
+      line: 72
       name: _create_em_filter_cpu
       returns: np.ndarray
     - args:
       - self
       - shape
       file: ./bhlff/models/level_d/cuda/projectors_cuda.py
-      line: 247
+      line: 254
       name: _create_frequency_grid_cuda
       returns: '''cp.ndarray'''
     - args:
       - self
       - shape
       file: ./bhlff/models/level_d/cuda/projectors_cuda.py
-      line: 259
+      line: 266
       name: _create_frequency_grid_cpu
       returns: np.ndarray
     - args:
       - self
       - shape
       file: ./bhlff/models/level_d/cuda/projectors_cuda.py
-      line: 132
+      line: 137
       name: _create_strong_filter_cuda
       returns: '''cp.ndarray'''
     - args:
       - self
       - shape
       file: ./bhlff/models/level_d/cuda/projectors_cuda.py
-      line: 143
+      line: 148
       name: _create_strong_filter_cpu
       returns: np.ndarray
     - args:
@@ -12377,7 +12420,7 @@ method_index:
       - frequencies
       - q_factor
       file: ./bhlff/models/level_d/cuda/projectors_cuda.py
-      line: 178
+      line: 183
       name: _apply_q_factor_filter_cuda
       returns: '''cp.ndarray'''
     - args:
@@ -12385,21 +12428,21 @@ method_index:
       - frequencies
       - q_factor
       file: ./bhlff/models/level_d/cuda/projectors_cuda.py
-      line: 186
+      line: 191
       name: _apply_q_factor_filter_cpu
       returns: np.ndarray
     - args:
       - self
       - shape
       file: ./bhlff/models/level_d/cuda/projectors_cuda.py
-      line: 223
+      line: 230
       name: _create_weak_filter_cuda
       returns: '''cp.ndarray'''
     - args:
       - self
       - shape
       file: ./bhlff/models/level_d/cuda/projectors_cuda.py
-      line: 235
+      line: 242
       name: _create_weak_filter_cpu
       returns: np.ndarray
     - args:
@@ -12407,7 +12450,7 @@ method_index:
       - chiral_factor
       - shape
       file: ./bhlff/models/level_d/cuda/projectors_cuda.py
-      line: 271
+      line: 278
       name: _apply_chiral_filter_cuda
       returns: '''cp.ndarray'''
     - args:
@@ -12415,7 +12458,7 @@ method_index:
       - chiral_factor
       - shape
       file: ./bhlff/models/level_d/cuda/projectors_cuda.py
-      line: 277
+      line: 284
       name: _apply_chiral_filter_cpu
       returns: np.ndarray
     ElectroweakCoupling:
@@ -12561,6 +12604,23 @@ method_index:
       line: 112
       name: compute_total_energy
       returns: float
+    EnergyBlockComputerCUDA:
+    - args:
+      - self
+      - kinetic
+      - skyrme
+      - wzw
+      file: ./bhlff/models/level_e/cuda/energy/blocks.py
+      line: 43
+      name: __init__
+      returns: None
+    - args:
+      - self
+      - block
+      file: ./bhlff/models/level_e/cuda/energy/blocks.py
+      line: 50
+      name: compute_block
+      returns: CpArray
     EnergyComplexityAnalyzer:
     - args:
       - self
@@ -14932,14 +14992,14 @@ method_index:
       - domain
       - cuda_available
       file: ./bhlff/models/level_d/cuda/superposition_utils_cuda.py
-      line: 69
+      line: 71
       name: __init__
       returns: null
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/cuda/superposition_utils_cuda.py
-      line: 41
+      line: 43
       name: extract_frame
       returns: np.ndarray
     - args:
@@ -14947,7 +15007,7 @@ method_index:
       - frame_before
       - frame_after
       file: ./bhlff/models/level_d/cuda/superposition_utils_cuda.py
-      line: 80
+      line: 83
       name: compute_stability_metrics
       returns: Dict[str, Any]
     FrequencyDependentProperties:
@@ -15480,6 +15540,21 @@ method_index:
       file: ./bhlff/models/level_c/beating/basic/core_analysis_interference.py
       line: 199
       name: _calculate_temporal_coherence
+      returns: float
+    KineticEnergyCUDA:
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_e/cuda/energy/kinetic.py
+      line: 53
+      name: compute_cuda
+      returns: CpArray
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_e/cuda/energy/kinetic.py
+      line: 75
+      name: compute_cpu
       returns: float
     LargeScaleStructureModel:
     - args:
@@ -16655,7 +16730,7 @@ method_index:
       - domain
       - parameters
       file: ./bhlff/models/level_d/level_d_models.py
-      line: 80
+      line: 81
       name: __init__
       returns: null
     - args:
@@ -16663,7 +16738,7 @@ method_index:
       - base_field
       - modes
       file: ./bhlff/models/level_d/level_d_models.py
-      line: 117
+      line: 122
       name: create_multi_mode_field
       returns: np.ndarray
     - args:
@@ -16671,7 +16746,7 @@ method_index:
       - field
       - new_modes
       file: ./bhlff/models/level_d/level_d_models.py
-      line: 146
+      line: 151
       name: analyze_mode_superposition
       returns: Dict[str, Any]
     - args:
@@ -16679,7 +16754,7 @@ method_index:
       - field
       - window_params
       file: ./bhlff/models/level_d/level_d_models.py
-      line: 176
+      line: 181
       name: project_field_windows
       returns: Dict[str, Any]
     - args:
@@ -16687,34 +16762,34 @@ method_index:
       - field
       - center
       file: ./bhlff/models/level_d/level_d_models.py
-      line: 208
+      line: 213
       name: trace_phase_streamlines
       returns: Dict[str, Any]
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/level_d_models.py
-      line: 237
+      line: 242
       name: analyze_multimode_field
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_d/level_d_models.py
-      line: 287
+      line: 292
       name: _get_default_window_params
       returns: Dict[str, Any]
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/level_d_models.py
-      line: 312
+      line: 317
       name: validate_field
       returns: bool
     - args:
       - self
       - field
       file: ./bhlff/models/level_d/level_d_models.py
-      line: 346
+      line: 351
       name: analyze_field
       returns: Dict[str, Any]
     LevelEBVPIntegration:
@@ -18750,6 +18825,30 @@ method_index:
       line: 329
       name: _step_three_body_interaction_potential
       returns: float
+    MultiParticlePotentialAnalyzerCUDA:
+    - args:
+      - self
+      - domain
+      - particles
+      - interaction_range
+      - params
+      - system_params
+      file: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
+      line: 72
+      name: __init__
+      returns: None
+    - args:
+      - self
+      file: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
+      line: 124
+      name: compute_effective_potential
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
+      line: 234
+      name: _compute_optimal_block_size_7d
+      returns: int
     MultiParticleSystem:
     - args:
       - self
@@ -18757,20 +18856,21 @@ method_index:
       - particles
       - interaction_range
       - system_params
+      - use_cuda
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 54
+      line: 53
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 91
+      line: 114
       name: compute_effective_potential
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 107
+      line: 132
       name: find_collective_modes
       returns: Dict[str, Any]
     - args:
@@ -18778,13 +18878,13 @@ method_index:
       - field
       - time_points
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 124
+      line: 149
       name: compute_correlation_function
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 146
+      line: 173
       name: analyze_system_properties
       returns: Dict[str, Any]
     - args:
@@ -28143,14 +28243,14 @@ method_index:
       - cuda_available
       - backend
       file: ./bhlff/models/level_d/cuda/signature_analyzer_cuda.py
-      line: 30
+      line: 31
       name: __init__
       returns: null
     - args:
       - self
       - projections
       file: ./bhlff/models/level_d/cuda/signature_analyzer_cuda.py
-      line: 39
+      line: 40
       name: analyze_field_signatures
       returns: Dict[str, Any]
     - args:
@@ -28158,7 +28258,7 @@ method_index:
       - field
       - field_type
       file: ./bhlff/models/level_d/cuda/signature_analyzer_cuda.py
-      line: 62
+      line: 63
       name: _analyze_single_field_signature
       returns: Dict[str, Any]
     SingleSolitonCore:
@@ -28457,6 +28557,28 @@ method_index:
       line: 437
       name: _compute_full_fractional_laplacian
       returns: np.ndarray
+    SkyrmeEnergyCUDA:
+    - args:
+      - self
+      - S4
+      file: ./bhlff/models/level_e/cuda/energy/skyrme.py
+      line: 42
+      name: __init__
+      returns: None
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_e/cuda/energy/skyrme.py
+      line: 45
+      name: compute_cuda
+      returns: CpArray
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_e/cuda/energy/skyrme.py
+      line: 84
+      name: compute_cpu
+      returns: float
     SobolAnalyzer:
     - args:
       - self
@@ -28807,83 +28929,83 @@ method_index:
       - physics_params
       - use_cuda
       file: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
-      line: 57
+      line: 69
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
-      line: 108
+      line: 132
       name: _compute_optimal_block_size
       returns: int
     - args:
       - self
       - field
       file: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
-      line: 164
+      line: 192
       name: compute_total_energy
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
-      line: 186
+      line: 214
       name: _compute_total_energy_cuda
       returns: float
     - args:
       - self
       - block
       file: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
-      line: 212
+      line: 251
       name: _compute_block_energy_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - field
       file: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
-      line: 234
+      line: 255
       name: _compute_kinetic_energy_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - field
       file: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
       line: 259
       name: _compute_skyrme_energy_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - field
       file: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
-      line: 304
+      line: 263
       name: _compute_wzw_energy_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - field
       file: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
-      line: 340
+      line: 267
       name: _compute_total_energy_cpu
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
-      line: 350
+      line: 277
       name: _compute_kinetic_energy_cpu
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
-      line: 364
+      line: 303
       name: _compute_skyrme_energy_cpu
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
-      line: 398
+      line: 355
       name: _compute_wzw_energy_cpu
       returns: float
     SolitonInteractionAnalyzer:
@@ -29431,43 +29553,43 @@ method_index:
       - physics_params
       - use_cuda
       file: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
-      line: 46
+      line: 54
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
-      line: 76
+      line: 88
       name: _compute_optimal_block_size
       returns: int
     - args:
       - self
       - initial_guess
       file: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
-      line: 94
+      line: 108
       name: find_solution
       returns: np.ndarray
     - args:
       - self
       - initial_guess
       file: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
-      line: 107
+      line: 121
       name: _solve_stationary_equation_cuda
       returns: np.ndarray
     - args:
       - self
       - field
       file: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
-      line: 144
+      line: 169
       name: _compute_energy_gradient_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - field
       file: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
-      line: 156
+      line: 181
       name: _compute_energy_hessian_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - field
@@ -29476,44 +29598,44 @@ method_index:
       - j_start
       - j_end
       file: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
-      line: 178
+      line: 203
       name: _compute_hessian_block_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - U
       - delta_U
       - F
       file: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
-      line: 213
+      line: 238
       name: _update_with_line_search_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - field
       file: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
-      line: 232
+      line: 257
       name: _compute_kinetic_gradient_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - field
       file: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
-      line: 236
+      line: 280
       name: _compute_skyrme_gradient_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - field
       file: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
-      line: 240
+      line: 354
       name: _compute_wzw_gradient_cuda
-      returns: cp.ndarray
+      returns: CpArray
     - args:
       - self
       - initial_guess
       file: ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
-      line: 244
+      line: 383
       name: _solve_stationary_equation_cpu
       returns: np.ndarray
     SolitonStabilityAnalyzer:
@@ -31038,7 +31160,7 @@ method_index:
       - domain
       - cuda_available
       file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
-      line: 305
+      line: 326
       name: __init__
       returns: null
     - args:
@@ -31046,14 +31168,14 @@ method_index:
       - field
       - center
       file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
-      line: 65
+      line: 76
       name: trace_phase_streamlines
       returns: Dict[str, Any]
     - args:
       - self
       - phase
       file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
-      line: 121
+      line: 132
       name: compute_phase_gradient
       returns: np.ndarray
     - args:
@@ -31061,7 +31183,7 @@ method_index:
       - gradient_field
       - center
       file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
-      line: 181
+      line: 198
       name: trace_streamlines
       returns: List[np.ndarray]
     - args:
@@ -31069,7 +31191,7 @@ method_index:
       - center
       - num_points
       file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
-      line: 216
+      line: 233
       name: _create_initial_points
       returns: List[np.ndarray]
     - args:
@@ -31079,7 +31201,7 @@ method_index:
       - integration_steps
       - step_size
       file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
-      line: 246
+      line: 267
       name: _trace_single_streamline
       returns: np.ndarray
     - args:
@@ -31087,49 +31209,49 @@ method_index:
       - gradient_field
       - point
       file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
-      line: 268
+      line: 289
       name: _interpolate_gradient
       returns: np.ndarray
     - args:
       - self
       - point
       file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
-      line: 294
+      line: 315
       name: _is_out_of_bounds
       returns: bool
     - args:
       - self
       - streamlines
       file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
-      line: 310
+      line: 331
       name: analyze_streamline_topology
       returns: Dict[str, Any]
     - args:
       - self
       - streamlines
       file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
-      line: 342
+      line: 363
       name: _compute_winding_numbers
       returns: List[float]
     - args:
       - self
       - streamline
       file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
-      line: 353
+      line: 374
       name: _compute_single_winding_number
       returns: float
     - args:
       - self
       - streamlines
       file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
-      line: 370
+      line: 391
       name: _compute_topology_class
       returns: str
     - args:
       - self
       - streamlines
       file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
-      line: 379
+      line: 400
       name: _compute_stability_index
       returns: float
     StructureAnalysis:
@@ -31310,7 +31432,7 @@ method_index:
       - domain
       - parameters
       file: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py
-      line: 43
+      line: 47
       name: __init__
       returns: null
     - args:
@@ -31318,7 +31440,7 @@ method_index:
       - field
       - threshold
       file: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py
-      line: 57
+      line: 61
       name: analyze_superposition
       returns: Dict[str, Any]
     - args:
@@ -31326,7 +31448,7 @@ method_index:
       - fft_field
       - mask
       file: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py
-      line: 152
+      line: 156
       name: _extract_dominant_frequencies_cuda
       returns: List[float]
     - args:
@@ -31334,7 +31456,7 @@ method_index:
       - fft_field
       - mask
       file: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py
-      line: 163
+      line: 167
       name: _extract_dominant_frequencies_cpu
       returns: List[float]
     - args:
@@ -31342,7 +31464,7 @@ method_index:
       - fft_field
       - mask
       file: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py
-      line: 174
+      line: 178
       name: _extract_mode_amplitudes_cuda
       returns: List[float]
     - args:
@@ -31350,7 +31472,7 @@ method_index:
       - fft_field
       - mask
       file: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py
-      line: 181
+      line: 185
       name: _extract_mode_amplitudes_cpu
       returns: List[float]
     - args:
@@ -31358,7 +31480,7 @@ method_index:
       - fft_field
       - mask
       file: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py
-      line: 188
+      line: 192
       name: _extract_mode_phases_cuda
       returns: List[float]
     - args:
@@ -31366,7 +31488,7 @@ method_index:
       - fft_field
       - mask
       file: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py
-      line: 195
+      line: 199
       name: _extract_mode_phases_cpu
       returns: List[float]
     TailInterface:
@@ -36070,6 +36192,76 @@ method_index:
       file: ./tests/unit/test_core/fft_solver_7d_validation/test_boundary_cases.py
       line: 282
       name: test_C09_consistency_across_runs
+      returns: null
+    TestCUDAModules:
+    - args:
+      - self
+      file: ./tests/unit/test_level_e/test_cuda_modules.py
+      line: 44
+      name: domain
+      returns: null
+    - args:
+      - self
+      file: ./tests/unit/test_level_e/test_cuda_modules.py
+      line: 49
+      name: physics_params
+      returns: null
+    - args:
+      - self
+      - domain
+      file: ./tests/unit/test_level_e/test_cuda_modules.py
+      line: 63
+      name: test_field
+      returns: null
+    - args:
+      - self
+      - domain
+      - physics_params
+      file: ./tests/unit/test_level_e/test_cuda_modules.py
+      line: 70
+      name: test_soliton_energy_calculator_initialization
+      returns: null
+    - args:
+      - self
+      - domain
+      - physics_params
+      - test_field
+      file: ./tests/unit/test_level_e/test_cuda_modules.py
+      line: 76
+      name: test_soliton_energy_calculator_total_energy
+      returns: null
+    - args:
+      - self
+      - domain
+      - physics_params
+      file: ./tests/unit/test_level_e/test_cuda_modules.py
+      line: 86
+      name: test_soliton_optimizer_initialization
+      returns: null
+    - args:
+      - self
+      - domain
+      - physics_params
+      - test_field
+      file: ./tests/unit/test_level_e/test_cuda_modules.py
+      line: 92
+      name: test_soliton_optimizer_find_solution
+      returns: null
+    - args:
+      - self
+      - domain
+      - physics_params
+      file: ./tests/unit/test_level_e/test_cuda_modules.py
+      line: 105
+      name: test_defect_dynamics_initialization
+      returns: null
+    - args:
+      - self
+      - domain
+      - physics_params
+      file: ./tests/unit/test_level_e/test_cuda_modules.py
+      line: 111
+      name: test_defect_dynamics_simulate_motion
       returns: null
     TestCarrierPrimacyPostulatePhysics:
     - args:
@@ -49100,6 +49292,21 @@ method_index:
       line: 381
       name: _check_and_handle_annihilation
       returns: None
+    WZWEnergyCUDA:
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_e/cuda/energy/wzw.py
+      line: 42
+      name: compute_cuda
+      returns: CpArray
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_e/cuda/energy/wzw.py
+      line: 62
+      name: compute_cpu
+      returns: float
     ZoneAnalysis:
     - args:
       - self
@@ -49499,6 +49706,6 @@ method_index:
       returns: null
   standalone_functions: []
   summary:
-    total_class_methods: 6849
-    total_classes: 665
+    total_class_methods: 6876
+    total_classes: 672
     total_standalone_functions: 0

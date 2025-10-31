@@ -121,6 +121,39 @@ class MultiParticlePotentialAnalyzerCUDA:
             domain, block_size=self.block_size
         )
 
+        # Cache particle data on GPU
+        self._positions_gpu = cp.asarray(
+            [p.position for p in self.particles], dtype=cp.float64
+        )
+        self._charges_gpu = cp.asarray(
+            [float(p.charge) for p in self.particles], dtype=cp.float64
+        )
+
+        # Precompute close pairs and triples once to avoid per-block checks
+        self._close_pairs: List[tuple[int, int]] = []
+        self._close_triples: List[tuple[int, int, int]] = []
+        try:
+            pos = self._positions_gpu  # (n,3)
+            diffs = pos[:, None, :] - pos[None, :, :]  # (n,n,3)
+            d2 = cp.sum(diffs * diffs, axis=-1)
+            mask_pairs = (d2 < (self.interaction_range**2)).astype(cp.bool_)
+            mp = cp.asnumpy(mask_pairs)
+            n = mp.shape[0]
+            for i in range(n):
+                for j in range(i + 1, n):
+                    if mp[i, j]:
+                        self._close_pairs.append((i, j))
+            for i in range(n):
+                for j in range(i + 1, n):
+                    if not mp[i, j]:
+                        continue
+                    for k in range(j + 1, n):
+                        if mp[i, k] and mp[j, k]:
+                            self._close_triples.append((i, j, k))
+        except Exception:
+            self._close_pairs = []
+            self._close_triples = []
+
     def compute_effective_potential(self) -> np.ndarray:
         """
         Compute the effective potential field on GPU with block processing.
@@ -136,13 +169,8 @@ class MultiParticlePotentialAnalyzerCUDA:
         # Preallocate on CPU; assemble per block to reduce GPU pressure
         result = np.zeros(self.domain.shape, dtype=np.float64)
 
-        # Prepare particle data as CuPy arrays for vectorized math
-        particle_positions = [
-            cp.asarray(p.position, dtype=cp.float64) for p in self.particles
-        ]
-        particle_charges = [
-            float(p.charge) for p in self.particles
-        ]
+        positions = self._positions_gpu
+        charges = self._charges_gpu
 
         # Grid coordinates (per-block will slice views to minimize allocations)
         x = cp.linspace(0.0, float(self.domain.L), int(self.domain.N))
@@ -165,55 +193,47 @@ class MultiParticlePotentialAnalyzerCUDA:
             # Accumulate block potential on GPU
             block_potential = cp.zeros(Xb.shape, dtype=cp.float64)
 
-            # Single-particle contributions:
-            # step potential around each particle
+            # Single-particle contributions via sub-batching (vectorized)
             strength = float(self.params.get("interaction_strength", 1.0))
             r_cut = self.interaction_range
             rc2 = r_cut * r_cut
 
-            for p_pos, p_q in zip(particle_positions, particle_charges):
-                dx = Xb - p_pos[0]
-                dy = Yb - p_pos[1]
-                dz = Zb - p_pos[2]
+            n = positions.shape[0]
+            mem = self.backend.get_memory_info()
+            free_bytes = int(mem.get("free_memory", 0))
+            if free_bytes <= 0:
+                subbatch = min(n, 32)
+            else:
+                elements_per_block = int(Xb.size)
+                bytes_per_element = 8
+                budget = max(1, int(0.1 * free_bytes))
+                est_per_particle = elements_per_block * bytes_per_element * 6
+                subbatch = max(1, min(n, budget // max(1, est_per_particle)))
+                subbatch = int(min(subbatch, 128))
+
+            for p0 in range(0, n, subbatch):
+                p1 = min(n, p0 + subbatch)
+                px = positions[p0:p1, 0]
+                py = positions[p0:p1, 1]
+                pz = positions[p0:p1, 2]
+                cq = charges[p0:p1]
+
+                dx = Xb[..., None] - px[None, None, None, :]
+                dy = Yb[..., None] - py[None, None, None, :]
+                dz = Zb[..., None] - pz[None, None, None, :]
                 r2 = dx * dx + dy * dy + dz * dz
-                mask = r2 <= rc2
-                # Step potential:
-                # V0 below cutoff, zero above, weighted by charge
-                block_potential += strength * p_q * mask.astype(cp.float64)
+                mask = r2 <= rc2  # (..., s)
+                weighted = mask.astype(cp.float64) * cq[None, None, None, :]
+                contrib = weighted.sum(axis=-1)
+                block_potential += strength * contrib
 
-            # Pair-wise uniform contributions if pair within cutoff
-            n = len(self.particles)
-            for i in range(n):
-                for j in range(i + 1, n):
-                    d = cp.linalg.norm(
-                        particle_positions[i]
-                        - particle_positions[j]
-                    )
-                    if float(d) < r_cut:
-                        block_potential += strength
+            # Pair-wise uniform contributions using precomputed adjacency
+            for i, j in self._close_pairs:
+                block_potential += strength
 
-            # Three-body uniform contributions when all three
-            # mutually within cutoff
-            for i in range(n):
-                for j in range(i + 1, n):
-                    for k in range(j + 1, n):
-                        dij = cp.linalg.norm(
-                            particle_positions[i]
-                            - particle_positions[j]
-                        )
-                        dik = cp.linalg.norm(
-                            particle_positions[i]
-                            - particle_positions[k]
-                        )
-                        djk = cp.linalg.norm(
-                            particle_positions[j] - particle_positions[k]
-                        )
-                        if (
-                            float(dij) < r_cut
-                            and float(dik) < r_cut
-                            and float(djk) < r_cut
-                        ):
-                            block_potential += strength
+            # Three-body uniform contributions using precomputed adjacency
+            for i, j, k in self._close_triples:
+                block_potential += strength
 
             # Bring block result to CPU and insert
             result[slices[0], slices[1], slices[2]] = cp.asnumpy(

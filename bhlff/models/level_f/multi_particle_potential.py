@@ -23,6 +23,7 @@ import logging
 from bhlff.core.bvp import BVPCore
 from .multi_particle.data_structures import Particle, SystemParameters
 from .potential.block_cpu import compute_potential_blocked
+from .potential import helpers as _pot_helpers
 
 
 class MultiParticlePotentialAnalyzer:
@@ -159,19 +160,9 @@ class MultiParticlePotentialAnalyzer:
             Sets up interaction matrices for multi-particle system
             to enable efficient potential calculations.
         """
-        # Setup interaction matrices
-        # In practice, this would involve proper matrix setup
-        self.interaction_matrix = np.zeros((len(self.particles), len(self.particles)))
-
-        # Calculate interaction strengths
-        for i, particle1 in enumerate(self.particles):
-            for j, particle2 in enumerate(self.particles):
-                if i != j:
-                    distance = np.linalg.norm(particle1.position - particle2.position)
-                    interaction_strength = self._calculate_interaction_strength(
-                        distance
-                    )
-                    self.interaction_matrix[i, j] = interaction_strength
+        self.interaction_matrix = _pot_helpers.setup_interaction_matrix(
+            self.particles, self.interaction_range, self.params
+        )
 
     def _compute_single_particle_potential(self, particle: Particle) -> np.ndarray:
         """
@@ -187,23 +178,9 @@ class MultiParticlePotentialAnalyzer:
         Returns:
             np.ndarray: Single-particle potential field.
         """
-        # Create coordinate arrays
-        x = np.linspace(0, self.domain.L, self.domain.N)
-        y = np.linspace(0, self.domain.L, self.domain.N)
-        z = np.linspace(0, self.domain.L, self.domain.N)
-        X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
-
-        # Calculate distance from particle
-        distance = np.sqrt(
-            (X - particle.position[0]) ** 2
-            + (Y - particle.position[1]) ** 2
-            + (Z - particle.position[2]) ** 2
+        return _pot_helpers.single_particle_field(
+            self.domain, particle, self.interaction_range, self.params
         )
-
-        # Compute potential using step resonator model
-        potential = particle.charge * self._step_interaction_potential(distance)
-
-        return potential
 
     def _compute_pair_interaction(
         self, particle1: Particle, particle2: Particle
@@ -222,21 +199,9 @@ class MultiParticlePotentialAnalyzer:
         Returns:
             np.ndarray: Pair interaction potential field.
         """
-        # Calculate distance between particles
-        distance = np.linalg.norm(particle1.position - particle2.position)
-
-        # Compute interaction strength
-        interaction_strength = self._calculate_interaction_strength(distance)
-
-        # Create potential field
-        spatial_shape = (int(self.domain.N), int(self.domain.N), int(self.domain.N))
-        potential = np.zeros(spatial_shape)
-
-        # Add interaction contribution
-        if distance < self.interaction_range:
-            potential += interaction_strength * np.ones(self.domain.shape)
-
-        return potential
+        return _pot_helpers.pair_interaction_field(
+            self.domain, particle1, particle2, self.interaction_range, self.params
+        )
 
     def _compute_higher_order_interactions(self) -> np.ndarray:
         """
@@ -249,20 +214,9 @@ class MultiParticlePotentialAnalyzer:
         Returns:
             np.ndarray: Higher-order interaction potential field.
         """
-        # Initialize potential
-        spatial_shape = (int(self.domain.N), int(self.domain.N), int(self.domain.N))
-        potential = np.zeros(spatial_shape)
-
-        # Compute three-body interactions
-        for i, particle1 in enumerate(self.particles):
-            for j, particle2 in enumerate(self.particles[i + 1 :], i + 1):
-                for k, particle3 in enumerate(self.particles[j + 1 :], j + 1):
-                    three_body_potential = self._compute_three_body_interaction(
-                        particle1, particle2, particle3
-                    )
-                    potential += three_body_potential
-
-        return potential
+        return _pot_helpers.higher_order_interactions_field(
+            self.domain, self.particles, self.interaction_range, self.params
+        )
 
     def _compute_three_body_interaction(
         self, particle1: Particle, particle2: Particle, particle3: Particle
@@ -282,28 +236,9 @@ class MultiParticlePotentialAnalyzer:
         Returns:
             np.ndarray: Three-body interaction potential field.
         """
-        # Calculate distances
-        distance_12 = np.linalg.norm(particle1.position - particle2.position)
-        distance_13 = np.linalg.norm(particle1.position - particle3.position)
-        distance_23 = np.linalg.norm(particle2.position - particle3.position)
-
-        # Compute three-body interaction strength
-        interaction_strength = self._calculate_three_body_strength(
-            distance_12, distance_13, distance_23
+        return _pot_helpers.three_body_interaction_field(
+            self.domain, particle1, particle2, particle3, self.interaction_range, self.params
         )
-
-        # Create potential field
-        potential = np.zeros(self.domain.shape)
-
-        # Add three-body interaction contribution
-        if (
-            distance_12 < self.interaction_range
-            and distance_13 < self.interaction_range
-            and distance_23 < self.interaction_range
-        ):
-            potential += interaction_strength * np.ones(self.domain.shape)
-
-        return potential
 
     def _calculate_interaction_strength(self, distance: float) -> float:
         """
@@ -319,9 +254,9 @@ class MultiParticlePotentialAnalyzer:
         Returns:
             float: Interaction strength.
         """
-        # Step resonator interaction strength calculation
-        # Based on 7D BVP theory principles
-        return self._step_interaction_potential(distance)
+        return _pot_helpers.calculate_interaction_strength(
+            float(distance), self.interaction_range, self.params
+        )
 
     def _calculate_three_body_strength(
         self, distance_12: float, distance_13: float, distance_23: float
@@ -341,18 +276,9 @@ class MultiParticlePotentialAnalyzer:
         Returns:
             float: Three-body interaction strength.
         """
-        # Step resonator three-body interaction strength calculation
-        # Based on 7D BVP theory principles
-        if (
-            distance_12 < self.interaction_range
-            and distance_13 < self.interaction_range
-            and distance_23 < self.interaction_range
-        ):
-            return self._step_three_body_interaction_potential(
-                distance_12, distance_13, distance_23
-            )
-        else:
-            return 0.0
+        return _pot_helpers.calculate_three_body_strength(
+            float(distance_12), float(distance_13), float(distance_23), self.interaction_range, self.params
+        )
 
     def _step_interaction_potential(self, distance):
         """

@@ -125,8 +125,13 @@ class MultiParticlePotentialAnalyzerCUDA:
         # Determine optimal block size targeting ~80% free GPU memory
         self.block_size = self._compute_optimal_block_size_7d()
 
-        # Initialize CUDA block processor with computed block size
-        self.block_processor = CUDABlockProcessor(domain, block_size=self.block_size)
+        # Try to initialize CUDA block processor (7D); if domain is not 7D, fall back to 3D iterator
+        self.block_processor = None
+        try:
+            # Many core processors enforce 7D domains; keep optional
+            self.block_processor = CUDABlockProcessor(domain, block_size=self.block_size)
+        except Exception:
+            self.block_processor = None
 
         # Cache particle data on GPU
         self._positions_gpu = cp.asarray(
@@ -174,7 +179,10 @@ class MultiParticlePotentialAnalyzerCUDA:
             np.ndarray: Effective potential on CPU memory with spatial shape (N, N, N).
         """
         # Preallocate on CPU; assemble per block to reduce GPU pressure
-        result = np.zeros((int(self.domain.N), int(self.domain.N), int(self.domain.N)), dtype=np.float64)
+        result = np.zeros(
+            (int(self.domain.N), int(self.domain.N), int(self.domain.N)),
+            dtype=np.float64,
+        )
 
         positions = self._positions_gpu
         charges = self._charges_gpu
@@ -186,10 +194,26 @@ class MultiParticlePotentialAnalyzerCUDA:
 
         # Iterate CUDA blocks by indices; slice coordinates to each block
         block_id = 0
-        for _, block_info in self.block_processor.iterate_blocks_cuda():
+        block_iter = None
+        if self.block_processor is not None and getattr(self.block_processor, "cuda_available", True):
+            try:
+                block_iter = ((bi.start_indices, bi.end_indices) for _, bi in self.block_processor.iterate_blocks_cuda())
+            except Exception:
+                block_iter = None
+        if block_iter is None:
+            # Fallback to simple 3D iterator over spatial grid
+            def _iter_blocks_3d(N: int, bs: int):
+                for i0 in range(0, N, bs):
+                    i1 = int(min(N, i0 + bs))
+                    for j0 in range(0, N, bs):
+                        j1 = int(min(N, j0 + bs))
+                        for k0 in range(0, N, bs):
+                            k1 = int(min(N, k0 + bs))
+                            yield (i0, j0, k0), (i1, j1, k1)
+            block_iter = _iter_blocks_3d(int(self.domain.N), int(self.block_size))
+
+        for start, end in block_iter:
             # Compute block slices
-            start = block_info.start_indices
-            end = block_info.end_indices
             slices = tuple(slice(s, e) for s, e in zip(start, end))
 
             # Coordinate sub-grids for this block
@@ -218,6 +242,7 @@ class MultiParticlePotentialAnalyzerCUDA:
                 subbatch = max(1, min(n, budget // max(1, est_per_particle)))
                 subbatch = int(min(subbatch, 128))
 
+            rc2 = r_cut * r_cut
             for p0 in range(0, n, subbatch):
                 p1 = min(n, p0 + subbatch)
                 px = positions[p0:p1, 0]
@@ -229,7 +254,7 @@ class MultiParticlePotentialAnalyzerCUDA:
                 dy = Yb[..., None] - py[None, None, None, :]
                 dz = Zb[..., None] - pz[None, None, None, :]
                 r2 = dx * dx + dy * dy + dz * dz
-                mask = r2 <= rc2  # (..., s)
+                mask = r2 < rc2  # squared distance thresholding
                 weighted = mask.astype(self._dtype) * cq[None, None, None, :]
                 contrib = weighted.sum(axis=-1)
                 block_potential += strength * contrib

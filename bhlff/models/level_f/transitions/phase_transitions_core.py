@@ -65,6 +65,12 @@ class PhaseTransitions(AbstractModel):
         # Initialize helper methods
         self.helpers = PhaseTransitionsHelpers({})
 
+    # Satisfy abstract interface
+    def analyze(self, data: Any = None) -> Dict[str, Any]:
+        values = np.array([0.0, 0.5, 1.0], dtype=float)
+        diagram = self.parameter_sweep("interaction_range", values)
+        return diagram
+
     def parameter_sweep(self, parameter: str, values: np.ndarray) -> Dict[str, Any]:
         """
         Perform parameter sweep to study phase transitions.

@@ -260,10 +260,22 @@ issues:
     file: ./bhlff/models/level_f/bvp_integration.py
     limit: 400
     lines: 440
-  - exceeds_limit: 30
+  - exceeds_limit: 43
     file: ./bhlff/models/level_f/multi_particle_modes.py
     limit: 400
-    lines: 430
+    lines: 443
+  - exceeds_limit: 31
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    limit: 400
+    lines: 431
+  - exceeds_limit: 67
+    file: ./bhlff/models/level_f/collective_facade.py
+    limit: 400
+    lines: 467
+  - exceeds_limit: 70
+    file: ./bhlff/models/level_f/multi_particle_potential.py
+    limit: 400
+    lines: 470
   - exceeds_limit: 72
     file: ./bhlff/models/level_f/nonlinear/basic_effects.py
     limit: 400
@@ -312,6 +324,10 @@ issues:
     file: ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
     limit: 400
     lines: 461
+  - exceeds_limit: 6
+    file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
+    limit: 400
+    lines: 406
   - exceeds_limit: 216
     file: ./bhlff/models/level_d/projections.py
     limit: 400
@@ -324,6 +340,10 @@ issues:
     file: ./bhlff/models/level_d/superposition.py
     limit: 400
     lines: 464
+  - exceeds_limit: 30
+    file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+    limit: 400
+    lines: 430
   - exceeds_limit: 9
     file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
     limit: 400
@@ -745,11 +765,11 @@ issues:
   - file: ./tests/unit/test_level_e/phase_mapping/test_phase_mapper.py
     line: 25
   - file: ./tests/unit/test_level_f/test_collective_cuda.py
-    line: 74
+    line: 72
   - file: ./tests/unit/test_level_f/test_nonlinear.py
     line: 23
   - file: ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
-    line: 69
+    line: 67
   - file: ./tests/unit/test_level_f/test_multi_particle_basic.py
     line: 22
   - file: ./tests/unit/test_level_f/test_collective_basic.py
@@ -1085,7 +1105,7 @@ issues:
   - file: ./bhlff/models/level_f/multi_particle_modes.py
     line: 24
   - file: ./bhlff/models/level_f/multi_particle_system.py
-    line: 99
+    line: 226
   - file: ./bhlff/models/level_f/__init__.py
     line: 28
   - file: ./bhlff/models/level_f/multi_particle.py
@@ -1165,7 +1185,7 @@ issues:
   - file: ./bhlff/models/level_f/multi_particle/data_structures.py
     line: 21
   - file: ./bhlff/models/level_f/multi_particle/__init__.py
-    line: 22
+    line: 36
   - file: ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
     line: 26
   - file: ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
@@ -1194,10 +1214,14 @@ issues:
     line: 32
   - file: ./bhlff/models/level_d/cuda/projectors_cuda.py
     line: 24
+  - file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+    line: 45
   - file: ./bhlff/models/level_d/cuda/superposition_utils_cuda.py
     line: 77
   - file: ./bhlff/models/level_d/cuda/streamlines_cuda.py
     line: 33
+  - file: ./bhlff/models/level_d/cuda/projections_cuda.py
+    line: 48
   - file: ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py
     line: 32
   - file: ./bhlff/models/level_b/visualization.py
@@ -1718,6 +1742,8 @@ issues:
     line: 33
   - file: ./bhlff/core/bvp/constants/nonlinear_coefficients.py
     line: 26
+  - file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+    line: 21
   - file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/advanced_fitting.py
     line: 26
   - file: ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
@@ -2212,15 +2238,15 @@ issues:
     method: particles
   - class: null
     file: ./tests/unit/test_level_f/test_collective_cuda.py
-    line: 42
+    line: 40
     method: test_collective_cuda_cpu_parity
   - class: null
     file: ./tests/unit/test_level_f/test_collective_cuda.py
-    line: 73
+    line: 71
     method: test_collective_cpu_fallback
   - class: null
     file: ./tests/unit/test_level_f/test_collective_cuda.py
-    line: 78
+    line: 76
     method: fake_import
   - class: null
     file: ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
@@ -2236,15 +2262,15 @@ issues:
     method: particles
   - class: null
     file: ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
-    line: 48
+    line: 46
     method: test_cuda_cpu_parity_small_domain
   - class: null
     file: ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
-    line: 67
+    line: 65
     method: test_cpu_fallback_when_no_cuda
   - class: null
     file: ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
-    line: 73
+    line: 71
     method: fake_import
   - class: null
     file: ./tests/unit/automated_testing/test_automated_testing_system_advanced.py
@@ -2539,6 +2565,534 @@ issues:
     line: 75
     method: __init__
   - class: null
+    file: ./bhlff/models/level_f/multi_particle_modes.py
+    line: 112
+    method: analyze_modes
+  - class: MultiParticleModesAnalyzer
+    file: ./bhlff/models/level_f/multi_particle_modes.py
+    line: 112
+    method: analyze_modes
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_modes.py
+    line: 115
+    method: compute_participation_ratios
+  - class: MultiParticleModesAnalyzer
+    file: ./bhlff/models/level_f/multi_particle_modes.py
+    line: 115
+    method: compute_participation_ratios
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_modes.py
+    line: 121
+    method: compute_excitations
+  - class: MultiParticleModesAnalyzer
+    file: ./bhlff/models/level_f/multi_particle_modes.py
+    line: 121
+    method: compute_excitations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_modes.py
+    line: 112
+    method: analyze_modes
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_modes.py
+    line: 115
+    method: compute_participation_ratios
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_modes.py
+    line: 121
+    method: compute_excitations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 191
+    method: num_particles
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 191
+    method: num_particles
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 195
+    method: potential_analyzer
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 195
+    method: potential_analyzer
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 199
+    method: collective_modes
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 199
+    method: collective_modes
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 202
+    method: analyze_collective_modes
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 202
+    method: analyze_collective_modes
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 207
+    method: compute_single_particle_potential
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 207
+    method: compute_single_particle_potential
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 212
+    method: compute_pair_interaction
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 212
+    method: compute_pair_interaction
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 215
+    method: compute_three_body_interaction
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 215
+    method: compute_three_body_interaction
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 220
+    method: compute_dynamics_matrix
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 220
+    method: compute_dynamics_matrix
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 223
+    method: compute_participation_ratios
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 223
+    method: compute_participation_ratios
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 231
+    method: compute_correlations
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 231
+    method: compute_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 234
+    method: check_stability
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 234
+    method: check_stability
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 237
+    method: compute_spatial_correlations
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 237
+    method: compute_spatial_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 240
+    method: compute_phase_correlations
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 240
+    method: compute_phase_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 331
+    method: _compute_correlations
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 331
+    method: _compute_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 338
+    method: _check_stability
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 338
+    method: _check_stability
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 341
+    method: _compute_spatial_correlations
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 341
+    method: _compute_spatial_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 344
+    method: _compute_phase_correlations
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 344
+    method: _compute_phase_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 348
+    method: _compute_7d_bvp_energy
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 348
+    method: _compute_7d_bvp_energy
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 351
+    method: _compute_7d_phase_field_energy
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 351
+    method: _compute_7d_phase_field_energy
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 354
+    method: _compute_7d_phase_coherence
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 354
+    method: _compute_7d_phase_coherence
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 357
+    method: _extract_phase_field_around_particle
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 357
+    method: _extract_phase_field_around_particle
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 360
+    method: _extract_spherical_field
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 360
+    method: _extract_spherical_field
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 363
+    method: _compute_advanced_correlations
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 363
+    method: _compute_advanced_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 366
+    method: _optimize_energy
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 366
+    method: _optimize_energy
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 369
+    method: _compute_phase_field_dynamics
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 369
+    method: _compute_phase_field_dynamics
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 372
+    method: _compute_thermodynamic_properties
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 372
+    method: _compute_thermodynamic_properties
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 376
+    method: compute_total_energy
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 376
+    method: compute_total_energy
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 379
+    method: compute_total_topological_charge
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 379
+    method: compute_total_topological_charge
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 382
+    method: compute_7d_bvp_energy
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 382
+    method: compute_7d_bvp_energy
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 385
+    method: compute_7d_phase_coherence
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 385
+    method: compute_7d_phase_coherence
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 388
+    method: get_phase_field_around_particle
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 388
+    method: get_phase_field_around_particle
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 391
+    method: extract_spherical_field
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 391
+    method: extract_spherical_field
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 394
+    method: compute_advanced_correlations
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 394
+    method: compute_advanced_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 397
+    method: optimize_energy
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 397
+    method: optimize_energy
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 400
+    method: compute_phase_field_dynamics
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 400
+    method: compute_phase_field_dynamics
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 403
+    method: compute_thermodynamic_properties
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 403
+    method: compute_thermodynamic_properties
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 406
+    method: compute_7d_phase_field_energy
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 406
+    method: compute_7d_phase_field_energy
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 409
+    method: compute_collective_excitations
+  - class: MultiParticleSystem
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 409
+    method: compute_collective_excitations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 191
+    method: num_particles
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 195
+    method: potential_analyzer
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 199
+    method: collective_modes
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 202
+    method: analyze_collective_modes
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 207
+    method: compute_single_particle_potential
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 212
+    method: compute_pair_interaction
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 215
+    method: compute_three_body_interaction
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 220
+    method: compute_dynamics_matrix
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 223
+    method: compute_participation_ratios
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 231
+    method: compute_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 234
+    method: check_stability
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 237
+    method: compute_spatial_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 240
+    method: compute_phase_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 331
+    method: _compute_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 338
+    method: _check_stability
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 341
+    method: _compute_spatial_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 344
+    method: _compute_phase_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 348
+    method: _compute_7d_bvp_energy
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 351
+    method: _compute_7d_phase_field_energy
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 354
+    method: _compute_7d_phase_coherence
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 357
+    method: _extract_phase_field_around_particle
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 360
+    method: _extract_spherical_field
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 363
+    method: _compute_advanced_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 366
+    method: _optimize_energy
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 369
+    method: _compute_phase_field_dynamics
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 372
+    method: _compute_thermodynamic_properties
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 376
+    method: compute_total_energy
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 379
+    method: compute_total_topological_charge
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 382
+    method: compute_7d_bvp_energy
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 385
+    method: compute_7d_phase_coherence
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 388
+    method: get_phase_field_around_particle
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 391
+    method: extract_spherical_field
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 394
+    method: compute_advanced_correlations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 397
+    method: optimize_energy
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 400
+    method: compute_phase_field_dynamics
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 403
+    method: compute_thermodynamic_properties
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 406
+    method: compute_7d_phase_field_energy
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_system.py
+    line: 409
+    method: compute_collective_excitations
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_potential.py
+    line: 196
+    method: compute_single_particle_potential
+  - class: MultiParticlePotentialAnalyzer
+    file: ./bhlff/models/level_f/multi_particle_potential.py
+    line: 196
+    method: compute_single_particle_potential
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_potential.py
+    line: 201
+    method: compute_pair_interaction
+  - class: MultiParticlePotentialAnalyzer
+    file: ./bhlff/models/level_f/multi_particle_potential.py
+    line: 201
+    method: compute_pair_interaction
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_potential.py
+    line: 204
+    method: compute_three_body_interaction
+  - class: MultiParticlePotentialAnalyzer
+    file: ./bhlff/models/level_f/multi_particle_potential.py
+    line: 204
+    method: compute_three_body_interaction
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_potential.py
+    line: 196
+    method: compute_single_particle_potential
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_potential.py
+    line: 201
+    method: compute_pair_interaction
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle_potential.py
+    line: 204
+    method: compute_three_body_interaction
+  - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
     line: 44
     method: __init__
@@ -2548,155 +3102,187 @@ issues:
     method: __init__
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 60
+    line: 75
+    method: analyze
+  - class: NonlinearEffects
+    file: ./bhlff/models/level_f/nonlinear_facade.py
+    line: 75
+    method: analyze
+  - class: null
+    file: ./bhlff/models/level_f/nonlinear_facade.py
+    line: 85
     method: add_nonlinear_interactions
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 60
+    line: 85
     method: add_nonlinear_interactions
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 71
+    line: 114
     method: _nonlinear_potential
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 71
+    line: 114
     method: _nonlinear_potential
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 80
+    line: 123
     method: _nonlinear_force
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 80
+    line: 123
     method: _nonlinear_force
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 89
+    line: 132
     method: find_nonlinear_modes
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 89
+    line: 132
     method: find_nonlinear_modes
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 92
+    line: 139
     method: find_soliton_solutions
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 92
+    line: 139
     method: find_soliton_solutions
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 95
+    line: 151
+    method: find_sine_gordon_solitons
+  - class: NonlinearEffects
+    file: ./bhlff/models/level_f/nonlinear_facade.py
+    line: 151
+    method: find_sine_gordon_solitons
+  - class: null
+    file: ./bhlff/models/level_f/nonlinear_facade.py
+    line: 154
+    method: find_cubic_solitons
+  - class: NonlinearEffects
+    file: ./bhlff/models/level_f/nonlinear_facade.py
+    line: 154
+    method: find_cubic_solitons
+  - class: null
+    file: ./bhlff/models/level_f/nonlinear_facade.py
+    line: 157
+    method: find_quartic_solitons
+  - class: NonlinearEffects
+    file: ./bhlff/models/level_f/nonlinear_facade.py
+    line: 157
+    method: find_quartic_solitons
+  - class: null
+    file: ./bhlff/models/level_f/nonlinear_facade.py
+    line: 160
     method: analyze_nonlinear_strength
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 95
+    line: 160
     method: analyze_nonlinear_strength
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 98
+    line: 163
     method: compute_nonlinear_energy
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 98
+    line: 163
     method: compute_nonlinear_energy
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 101
+    line: 166
     method: compute_nonlinear_force
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 101
+    line: 166
     method: compute_nonlinear_force
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 104
+    line: 169
     method: analyze_nonlinear_stability
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 104
+    line: 169
     method: analyze_nonlinear_stability
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 107
+    line: 172
     method: find_bifurcation_points
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 107
+    line: 172
     method: find_bifurcation_points
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 110
+    line: 175
     method: compute_nonlinear_corrections
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 110
+    line: 175
     method: compute_nonlinear_corrections
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 115
+    line: 180
     method: analyze_soliton_stability
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 115
+    line: 180
     method: analyze_soliton_stability
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 137
+    line: 202
     method: analyze_soliton_interactions
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 137
+    line: 202
     method: analyze_soliton_interactions
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 152
+    line: 227
     method: compute_soliton_energies
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 152
+    line: 227
     method: compute_soliton_energies
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 163
+    line: 238
     method: validate_nonlinear_analysis
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 163
+    line: 238
     method: validate_nonlinear_analysis
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 182
+    line: 257
     method: _validate_basic_effects
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 182
+    line: 257
     method: _validate_basic_effects
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 192
+    line: 267
     method: _validate_soliton_analysis
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 192
+    line: 267
     method: _validate_soliton_analysis
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 209
+    line: 284
     method: _validate_mode_analysis
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 209
+    line: 284
     method: _validate_mode_analysis
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 224
+    line: 299
     method: _calculate_overall_validation
   - class: NonlinearEffects
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 224
+    line: 299
     method: _calculate_overall_validation
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
@@ -2704,79 +3290,95 @@ issues:
     method: __init__
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 60
+    line: 75
+    method: analyze
+  - class: null
+    file: ./bhlff/models/level_f/nonlinear_facade.py
+    line: 85
     method: add_nonlinear_interactions
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 71
+    line: 114
     method: _nonlinear_potential
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 80
+    line: 123
     method: _nonlinear_force
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 89
+    line: 132
     method: find_nonlinear_modes
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 92
+    line: 139
     method: find_soliton_solutions
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 95
+    line: 151
+    method: find_sine_gordon_solitons
+  - class: null
+    file: ./bhlff/models/level_f/nonlinear_facade.py
+    line: 154
+    method: find_cubic_solitons
+  - class: null
+    file: ./bhlff/models/level_f/nonlinear_facade.py
+    line: 157
+    method: find_quartic_solitons
+  - class: null
+    file: ./bhlff/models/level_f/nonlinear_facade.py
+    line: 160
     method: analyze_nonlinear_strength
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 98
+    line: 163
     method: compute_nonlinear_energy
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 101
+    line: 166
     method: compute_nonlinear_force
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 104
+    line: 169
     method: analyze_nonlinear_stability
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 107
+    line: 172
     method: find_bifurcation_points
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 110
+    line: 175
     method: compute_nonlinear_corrections
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 115
+    line: 180
     method: analyze_soliton_stability
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 137
+    line: 202
     method: analyze_soliton_interactions
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 152
+    line: 227
     method: compute_soliton_energies
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 163
+    line: 238
     method: validate_nonlinear_analysis
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 182
+    line: 257
     method: _validate_basic_effects
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 192
+    line: 267
     method: _validate_soliton_analysis
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 209
+    line: 284
     method: _validate_mode_analysis
   - class: null
     file: ./bhlff/models/level_f/nonlinear_facade.py
-    line: 224
+    line: 299
     method: _calculate_overall_validation
   - class: null
     file: ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
@@ -2802,6 +3404,26 @@ issues:
     file: ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
     line: 57
     method: __init__
+  - class: null
+    file: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
+    line: 205
+    method: _iter_blocks_3d
+  - class: null
+    file: ./bhlff/models/level_f/multi_particle/__init__.py
+    line: 33
+    method: __getattr__
+  - class: null
+    file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
+    line: 69
+    method: analyze
+  - class: PhaseTransitions
+    file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
+    line: 69
+    method: analyze
+  - class: null
+    file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
+    line: 69
+    method: analyze
   - class: null
     file: ./bhlff/models/level_e/cuda/energy/blocks.py
     line: 43
@@ -3601,9 +4223,9 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   classes_without_docstrings: 21
-  files_too_large: 120
+  files_too_large: 125
   files_without_docstrings: 4
-  imports_in_middle: 703
+  imports_in_middle: 706
   methods_with_pass: 0
-  methods_without_docstrings: 409
+  methods_without_docstrings: 558
   not_implemented_in_non_abstract: 0

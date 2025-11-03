@@ -2,9 +2,9 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 1257
+Total issues found: 1414
 
-METHODS_WITHOUT_DOCSTRINGS: 409 issues
+METHODS_WITHOUT_DOCSTRINGS: 558 issues
 ----------------------------------------
   ./scripts/cuda_smoke_test.py
     Line 30
@@ -271,15 +271,15 @@ METHODS_WITHOUT_DOCSTRINGS: 409 issues
     Method: particles
 
   ./tests/unit/test_level_f/test_collective_cuda.py
-    Line 42
+    Line 40
     Method: test_collective_cuda_cpu_parity
 
   ./tests/unit/test_level_f/test_collective_cuda.py
-    Line 73
+    Line 71
     Method: test_collective_cpu_fallback
 
   ./tests/unit/test_level_f/test_collective_cuda.py
-    Line 78
+    Line 76
     Method: fake_import
 
   ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
@@ -295,15 +295,15 @@ METHODS_WITHOUT_DOCSTRINGS: 409 issues
     Method: particles
 
   ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
-    Line 48
+    Line 46
     Method: test_cuda_cpu_parity_small_domain
 
   ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
-    Line 67
+    Line 65
     Method: test_cpu_fallback_when_no_cuda
 
   ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
-    Line 73
+    Line 71
     Method: fake_import
 
   ./tests/unit/automated_testing/test_automated_testing_system_advanced.py
@@ -609,6 +609,578 @@ METHODS_WITHOUT_DOCSTRINGS: 409 issues
     Line 75
     Method: __init__
 
+  ./bhlff/models/level_f/multi_particle_modes.py
+    Line 112
+    Method: analyze_modes
+
+  ./bhlff/models/level_f/multi_particle_modes.py
+    Line 112
+    Class: MultiParticleModesAnalyzer
+    Method: analyze_modes
+
+  ./bhlff/models/level_f/multi_particle_modes.py
+    Line 115
+    Method: compute_participation_ratios
+
+  ./bhlff/models/level_f/multi_particle_modes.py
+    Line 115
+    Class: MultiParticleModesAnalyzer
+    Method: compute_participation_ratios
+
+  ./bhlff/models/level_f/multi_particle_modes.py
+    Line 121
+    Method: compute_excitations
+
+  ./bhlff/models/level_f/multi_particle_modes.py
+    Line 121
+    Class: MultiParticleModesAnalyzer
+    Method: compute_excitations
+
+  ./bhlff/models/level_f/multi_particle_modes.py
+    Line 112
+    Method: analyze_modes
+
+  ./bhlff/models/level_f/multi_particle_modes.py
+    Line 115
+    Method: compute_participation_ratios
+
+  ./bhlff/models/level_f/multi_particle_modes.py
+    Line 121
+    Method: compute_excitations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 191
+    Method: num_particles
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 191
+    Class: MultiParticleSystem
+    Method: num_particles
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 195
+    Method: potential_analyzer
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 195
+    Class: MultiParticleSystem
+    Method: potential_analyzer
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 199
+    Method: collective_modes
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 199
+    Class: MultiParticleSystem
+    Method: collective_modes
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 202
+    Method: analyze_collective_modes
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 202
+    Class: MultiParticleSystem
+    Method: analyze_collective_modes
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 207
+    Method: compute_single_particle_potential
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 207
+    Class: MultiParticleSystem
+    Method: compute_single_particle_potential
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 212
+    Method: compute_pair_interaction
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 212
+    Class: MultiParticleSystem
+    Method: compute_pair_interaction
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 215
+    Method: compute_three_body_interaction
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 215
+    Class: MultiParticleSystem
+    Method: compute_three_body_interaction
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 220
+    Method: compute_dynamics_matrix
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 220
+    Class: MultiParticleSystem
+    Method: compute_dynamics_matrix
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 223
+    Method: compute_participation_ratios
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 223
+    Class: MultiParticleSystem
+    Method: compute_participation_ratios
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 231
+    Method: compute_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 231
+    Class: MultiParticleSystem
+    Method: compute_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 234
+    Method: check_stability
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 234
+    Class: MultiParticleSystem
+    Method: check_stability
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 237
+    Method: compute_spatial_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 237
+    Class: MultiParticleSystem
+    Method: compute_spatial_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 240
+    Method: compute_phase_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 240
+    Class: MultiParticleSystem
+    Method: compute_phase_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 331
+    Method: _compute_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 331
+    Class: MultiParticleSystem
+    Method: _compute_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 338
+    Method: _check_stability
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 338
+    Class: MultiParticleSystem
+    Method: _check_stability
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 341
+    Method: _compute_spatial_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 341
+    Class: MultiParticleSystem
+    Method: _compute_spatial_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 344
+    Method: _compute_phase_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 344
+    Class: MultiParticleSystem
+    Method: _compute_phase_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 348
+    Method: _compute_7d_bvp_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 348
+    Class: MultiParticleSystem
+    Method: _compute_7d_bvp_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 351
+    Method: _compute_7d_phase_field_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 351
+    Class: MultiParticleSystem
+    Method: _compute_7d_phase_field_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 354
+    Method: _compute_7d_phase_coherence
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 354
+    Class: MultiParticleSystem
+    Method: _compute_7d_phase_coherence
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 357
+    Method: _extract_phase_field_around_particle
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 357
+    Class: MultiParticleSystem
+    Method: _extract_phase_field_around_particle
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 360
+    Method: _extract_spherical_field
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 360
+    Class: MultiParticleSystem
+    Method: _extract_spherical_field
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 363
+    Method: _compute_advanced_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 363
+    Class: MultiParticleSystem
+    Method: _compute_advanced_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 366
+    Method: _optimize_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 366
+    Class: MultiParticleSystem
+    Method: _optimize_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 369
+    Method: _compute_phase_field_dynamics
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 369
+    Class: MultiParticleSystem
+    Method: _compute_phase_field_dynamics
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 372
+    Method: _compute_thermodynamic_properties
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 372
+    Class: MultiParticleSystem
+    Method: _compute_thermodynamic_properties
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 376
+    Method: compute_total_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 376
+    Class: MultiParticleSystem
+    Method: compute_total_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 379
+    Method: compute_total_topological_charge
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 379
+    Class: MultiParticleSystem
+    Method: compute_total_topological_charge
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 382
+    Method: compute_7d_bvp_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 382
+    Class: MultiParticleSystem
+    Method: compute_7d_bvp_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 385
+    Method: compute_7d_phase_coherence
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 385
+    Class: MultiParticleSystem
+    Method: compute_7d_phase_coherence
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 388
+    Method: get_phase_field_around_particle
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 388
+    Class: MultiParticleSystem
+    Method: get_phase_field_around_particle
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 391
+    Method: extract_spherical_field
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 391
+    Class: MultiParticleSystem
+    Method: extract_spherical_field
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 394
+    Method: compute_advanced_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 394
+    Class: MultiParticleSystem
+    Method: compute_advanced_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 397
+    Method: optimize_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 397
+    Class: MultiParticleSystem
+    Method: optimize_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 400
+    Method: compute_phase_field_dynamics
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 400
+    Class: MultiParticleSystem
+    Method: compute_phase_field_dynamics
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 403
+    Method: compute_thermodynamic_properties
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 403
+    Class: MultiParticleSystem
+    Method: compute_thermodynamic_properties
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 406
+    Method: compute_7d_phase_field_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 406
+    Class: MultiParticleSystem
+    Method: compute_7d_phase_field_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 409
+    Method: compute_collective_excitations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 409
+    Class: MultiParticleSystem
+    Method: compute_collective_excitations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 191
+    Method: num_particles
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 195
+    Method: potential_analyzer
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 199
+    Method: collective_modes
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 202
+    Method: analyze_collective_modes
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 207
+    Method: compute_single_particle_potential
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 212
+    Method: compute_pair_interaction
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 215
+    Method: compute_three_body_interaction
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 220
+    Method: compute_dynamics_matrix
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 223
+    Method: compute_participation_ratios
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 231
+    Method: compute_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 234
+    Method: check_stability
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 237
+    Method: compute_spatial_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 240
+    Method: compute_phase_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 331
+    Method: _compute_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 338
+    Method: _check_stability
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 341
+    Method: _compute_spatial_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 344
+    Method: _compute_phase_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 348
+    Method: _compute_7d_bvp_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 351
+    Method: _compute_7d_phase_field_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 354
+    Method: _compute_7d_phase_coherence
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 357
+    Method: _extract_phase_field_around_particle
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 360
+    Method: _extract_spherical_field
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 363
+    Method: _compute_advanced_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 366
+    Method: _optimize_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 369
+    Method: _compute_phase_field_dynamics
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 372
+    Method: _compute_thermodynamic_properties
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 376
+    Method: compute_total_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 379
+    Method: compute_total_topological_charge
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 382
+    Method: compute_7d_bvp_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 385
+    Method: compute_7d_phase_coherence
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 388
+    Method: get_phase_field_around_particle
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 391
+    Method: extract_spherical_field
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 394
+    Method: compute_advanced_correlations
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 397
+    Method: optimize_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 400
+    Method: compute_phase_field_dynamics
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 403
+    Method: compute_thermodynamic_properties
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 406
+    Method: compute_7d_phase_field_energy
+
+  ./bhlff/models/level_f/multi_particle_system.py
+    Line 409
+    Method: compute_collective_excitations
+
+  ./bhlff/models/level_f/multi_particle_potential.py
+    Line 196
+    Method: compute_single_particle_potential
+
+  ./bhlff/models/level_f/multi_particle_potential.py
+    Line 196
+    Class: MultiParticlePotentialAnalyzer
+    Method: compute_single_particle_potential
+
+  ./bhlff/models/level_f/multi_particle_potential.py
+    Line 201
+    Method: compute_pair_interaction
+
+  ./bhlff/models/level_f/multi_particle_potential.py
+    Line 201
+    Class: MultiParticlePotentialAnalyzer
+    Method: compute_pair_interaction
+
+  ./bhlff/models/level_f/multi_particle_potential.py
+    Line 204
+    Method: compute_three_body_interaction
+
+  ./bhlff/models/level_f/multi_particle_potential.py
+    Line 204
+    Class: MultiParticlePotentialAnalyzer
+    Method: compute_three_body_interaction
+
+  ./bhlff/models/level_f/multi_particle_potential.py
+    Line 196
+    Method: compute_single_particle_potential
+
+  ./bhlff/models/level_f/multi_particle_potential.py
+    Line 201
+    Method: compute_pair_interaction
+
+  ./bhlff/models/level_f/multi_particle_potential.py
+    Line 204
+    Method: compute_three_body_interaction
+
   ./bhlff/models/level_f/nonlinear_facade.py
     Line 44
     Method: __init__
@@ -619,173 +1191,209 @@ METHODS_WITHOUT_DOCSTRINGS: 409 issues
     Method: __init__
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 60
+    Line 75
+    Method: analyze
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 75
+    Class: NonlinearEffects
+    Method: analyze
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 85
     Method: add_nonlinear_interactions
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 60
+    Line 85
     Class: NonlinearEffects
     Method: add_nonlinear_interactions
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 71
+    Line 114
     Method: _nonlinear_potential
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 71
+    Line 114
     Class: NonlinearEffects
     Method: _nonlinear_potential
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 80
+    Line 123
     Method: _nonlinear_force
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 80
+    Line 123
     Class: NonlinearEffects
     Method: _nonlinear_force
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 89
+    Line 132
     Method: find_nonlinear_modes
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 89
+    Line 132
     Class: NonlinearEffects
     Method: find_nonlinear_modes
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 92
+    Line 139
     Method: find_soliton_solutions
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 92
+    Line 139
     Class: NonlinearEffects
     Method: find_soliton_solutions
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 95
+    Line 151
+    Method: find_sine_gordon_solitons
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 151
+    Class: NonlinearEffects
+    Method: find_sine_gordon_solitons
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 154
+    Method: find_cubic_solitons
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 154
+    Class: NonlinearEffects
+    Method: find_cubic_solitons
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 157
+    Method: find_quartic_solitons
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 157
+    Class: NonlinearEffects
+    Method: find_quartic_solitons
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 160
     Method: analyze_nonlinear_strength
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 95
+    Line 160
     Class: NonlinearEffects
     Method: analyze_nonlinear_strength
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 98
-    Method: compute_nonlinear_energy
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 98
-    Class: NonlinearEffects
-    Method: compute_nonlinear_energy
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 101
-    Method: compute_nonlinear_force
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 101
-    Class: NonlinearEffects
-    Method: compute_nonlinear_force
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 104
-    Method: analyze_nonlinear_stability
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 104
-    Class: NonlinearEffects
-    Method: analyze_nonlinear_stability
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 107
-    Method: find_bifurcation_points
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 107
-    Class: NonlinearEffects
-    Method: find_bifurcation_points
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 110
-    Method: compute_nonlinear_corrections
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 110
-    Class: NonlinearEffects
-    Method: compute_nonlinear_corrections
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 115
-    Method: analyze_soliton_stability
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 115
-    Class: NonlinearEffects
-    Method: analyze_soliton_stability
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 137
-    Method: analyze_soliton_interactions
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 137
-    Class: NonlinearEffects
-    Method: analyze_soliton_interactions
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 152
-    Method: compute_soliton_energies
-
-  ./bhlff/models/level_f/nonlinear_facade.py
-    Line 152
-    Class: NonlinearEffects
-    Method: compute_soliton_energies
 
   ./bhlff/models/level_f/nonlinear_facade.py
     Line 163
-    Method: validate_nonlinear_analysis
+    Method: compute_nonlinear_energy
 
   ./bhlff/models/level_f/nonlinear_facade.py
     Line 163
     Class: NonlinearEffects
+    Method: compute_nonlinear_energy
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 166
+    Method: compute_nonlinear_force
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 166
+    Class: NonlinearEffects
+    Method: compute_nonlinear_force
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 169
+    Method: analyze_nonlinear_stability
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 169
+    Class: NonlinearEffects
+    Method: analyze_nonlinear_stability
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 172
+    Method: find_bifurcation_points
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 172
+    Class: NonlinearEffects
+    Method: find_bifurcation_points
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 175
+    Method: compute_nonlinear_corrections
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 175
+    Class: NonlinearEffects
+    Method: compute_nonlinear_corrections
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 180
+    Method: analyze_soliton_stability
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 180
+    Class: NonlinearEffects
+    Method: analyze_soliton_stability
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 202
+    Method: analyze_soliton_interactions
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 202
+    Class: NonlinearEffects
+    Method: analyze_soliton_interactions
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 227
+    Method: compute_soliton_energies
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 227
+    Class: NonlinearEffects
+    Method: compute_soliton_energies
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 238
     Method: validate_nonlinear_analysis
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 182
+    Line 238
+    Class: NonlinearEffects
+    Method: validate_nonlinear_analysis
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 257
     Method: _validate_basic_effects
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 182
+    Line 257
     Class: NonlinearEffects
     Method: _validate_basic_effects
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 192
+    Line 267
     Method: _validate_soliton_analysis
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 192
+    Line 267
     Class: NonlinearEffects
     Method: _validate_soliton_analysis
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 209
+    Line 284
     Method: _validate_mode_analysis
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 209
+    Line 284
     Class: NonlinearEffects
     Method: _validate_mode_analysis
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 224
+    Line 299
     Method: _calculate_overall_validation
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 224
+    Line 299
     Class: NonlinearEffects
     Method: _calculate_overall_validation
 
@@ -794,79 +1402,95 @@ METHODS_WITHOUT_DOCSTRINGS: 409 issues
     Method: __init__
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 60
+    Line 75
+    Method: analyze
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 85
     Method: add_nonlinear_interactions
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 71
+    Line 114
     Method: _nonlinear_potential
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 80
+    Line 123
     Method: _nonlinear_force
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 89
+    Line 132
     Method: find_nonlinear_modes
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 92
+    Line 139
     Method: find_soliton_solutions
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 95
+    Line 151
+    Method: find_sine_gordon_solitons
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 154
+    Method: find_cubic_solitons
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 157
+    Method: find_quartic_solitons
+
+  ./bhlff/models/level_f/nonlinear_facade.py
+    Line 160
     Method: analyze_nonlinear_strength
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 98
+    Line 163
     Method: compute_nonlinear_energy
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 101
+    Line 166
     Method: compute_nonlinear_force
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 104
+    Line 169
     Method: analyze_nonlinear_stability
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 107
+    Line 172
     Method: find_bifurcation_points
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 110
+    Line 175
     Method: compute_nonlinear_corrections
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 115
+    Line 180
     Method: analyze_soliton_stability
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 137
+    Line 202
     Method: analyze_soliton_interactions
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 152
+    Line 227
     Method: compute_soliton_energies
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 163
+    Line 238
     Method: validate_nonlinear_analysis
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 182
+    Line 257
     Method: _validate_basic_effects
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 192
+    Line 267
     Method: _validate_soliton_analysis
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 209
+    Line 284
     Method: _validate_mode_analysis
 
   ./bhlff/models/level_f/nonlinear_facade.py
-    Line 224
+    Line 299
     Method: _calculate_overall_validation
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_optimization.py
@@ -893,6 +1517,27 @@ METHODS_WITHOUT_DOCSTRINGS: 409 issues
   ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
     Line 57
     Method: __init__
+
+  ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
+    Line 205
+    Method: _iter_blocks_3d
+
+  ./bhlff/models/level_f/multi_particle/__init__.py
+    Line 33
+    Method: __getattr__
+
+  ./bhlff/models/level_f/transitions/phase_transitions_core.py
+    Line 69
+    Method: analyze
+
+  ./bhlff/models/level_f/transitions/phase_transitions_core.py
+    Line 69
+    Class: PhaseTransitions
+    Method: analyze
+
+  ./bhlff/models/level_f/transitions/phase_transitions_core.py
+    Line 69
+    Method: analyze
 
   ./bhlff/models/level_e/cuda/energy/blocks.py
     Line 43
@@ -1839,7 +2484,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 21 issues
     Class: TestStep2Command
 
 
-IMPORTS_IN_MIDDLE: 703 issues
+IMPORTS_IN_MIDDLE: 706 issues
 ----------------------------------------
   ./test_quench_detector_minimal.py
     Line 31
@@ -2127,13 +2772,13 @@ IMPORTS_IN_MIDDLE: 703 issues
     Line 25
 
   ./tests/unit/test_level_f/test_collective_cuda.py
-    Line 74
+    Line 72
 
   ./tests/unit/test_level_f/test_nonlinear.py
     Line 23
 
   ./tests/unit/test_level_f/test_multi_particle_potential_cuda.py
-    Line 69
+    Line 67
 
   ./tests/unit/test_level_f/test_multi_particle_basic.py
     Line 22
@@ -2637,7 +3282,7 @@ IMPORTS_IN_MIDDLE: 703 issues
     Line 24
 
   ./bhlff/models/level_f/multi_particle_system.py
-    Line 99
+    Line 226
 
   ./bhlff/models/level_f/__init__.py
     Line 28
@@ -2757,7 +3402,7 @@ IMPORTS_IN_MIDDLE: 703 issues
     Line 21
 
   ./bhlff/models/level_f/multi_particle/__init__.py
-    Line 22
+    Line 36
 
   ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
     Line 26
@@ -2801,11 +3446,17 @@ IMPORTS_IN_MIDDLE: 703 issues
   ./bhlff/models/level_d/cuda/projectors_cuda.py
     Line 24
 
+  ./bhlff/models/level_d/cuda/superposition_cuda.py
+    Line 45
+
   ./bhlff/models/level_d/cuda/superposition_utils_cuda.py
     Line 77
 
   ./bhlff/models/level_d/cuda/streamlines_cuda.py
     Line 33
+
+  ./bhlff/models/level_d/cuda/projections_cuda.py
+    Line 48
 
   ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py
     Line 32
@@ -3587,6 +4238,9 @@ IMPORTS_IN_MIDDLE: 703 issues
   ./bhlff/core/bvp/constants/nonlinear_coefficients.py
     Line 26
 
+  ./bhlff/core/bvp/power_law_core_modules/power_law_fitting.py
+    Line 21
+
   ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/advanced_fitting.py
     Line 26
 
@@ -3951,7 +4605,7 @@ IMPORTS_IN_MIDDLE: 703 issues
     Line 65
 
 
-FILES_TOO_LARGE: 120 issues
+FILES_TOO_LARGE: 125 issues
 ----------------------------------------
   ./test_quench_detector_optimized.py
 
@@ -4053,6 +4707,12 @@ FILES_TOO_LARGE: 120 issues
 
   ./bhlff/models/level_f/multi_particle_modes.py
 
+  ./bhlff/models/level_f/multi_particle_system.py
+
+  ./bhlff/models/level_f/collective_facade.py
+
+  ./bhlff/models/level_f/multi_particle_potential.py
+
   ./bhlff/models/level_f/nonlinear/basic_effects.py
 
   ./bhlff/models/level_f/nonlinear/mode_analysis.py
@@ -4077,11 +4737,15 @@ FILES_TOO_LARGE: 120 issues
 
   ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
 
+  ./bhlff/models/level_f/transitions/phase_transitions_core.py
+
   ./bhlff/models/level_d/projections.py
 
   ./bhlff/models/level_d/streamlines.py
 
   ./bhlff/models/level_d/superposition.py
+
+  ./bhlff/models/level_d/cuda/superposition_cuda.py
 
   ./bhlff/models/level_d/cuda/streamlines_cuda.py
 

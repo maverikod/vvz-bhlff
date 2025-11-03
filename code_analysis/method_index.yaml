@@ -9448,42 +9448,98 @@ method_index:
       returns: None
     - args:
       - self
-      - external_field
+      - frequency
+      - amplitude
+      - duration
       file: ./bhlff/models/level_f/collective_facade.py
       line: 117
+      name: apply_harmonic_excitation
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - amplitude
+      - duration
+      file: ./bhlff/models/level_f/collective_facade.py
+      line: 132
+      name: apply_impulse_excitation
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - start_frequency
+      - end_frequency
+      - sweep_time
+      file: ./bhlff/models/level_f/collective_facade.py
+      line: 138
+      name: apply_frequency_sweep
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - external_field
+      - time_points
+      file: ./bhlff/models/level_f/collective_facade.py
+      line: 148
       name: excite_system
-      returns: np.ndarray
+      returns: null
     - args:
       - self
       - response
       file: ./bhlff/models/level_f/collective_facade.py
-      line: 135
+      line: 197
       name: analyze_response
       returns: Dict[str, Any]
     - args:
       - self
+      - response_data
       file: ./bhlff/models/level_f/collective_facade.py
-      line: 160
+      line: 260
       name: compute_dispersion_relations
       returns: Dict[str, Any]
     - args:
       - self
-      - frequencies
+      - response_data
       file: ./bhlff/models/level_f/collective_facade.py
-      line: 182
+      line: 304
       name: compute_susceptibility
-      returns: np.ndarray
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - response_data
+      file: ./bhlff/models/level_f/collective_facade.py
+      line: 337
+      name: detect_spectral_peaks
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - response_data
+      file: ./bhlff/models/level_f/collective_facade.py
+      line: 362
+      name: analyze_step_resonator_transmission
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - response_data
+      file: ./bhlff/models/level_f/collective_facade.py
+      line: 383
+      name: compute_participation_ratios
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - response_data
+      file: ./bhlff/models/level_f/collective_facade.py
+      line: 395
+      name: compute_quality_factors
+      returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/collective_facade.py
-      line: 198
+      line: 420
       name: _setup_analysis_parameters
       returns: None
     - args:
       - self
       - data
       file: ./bhlff/models/level_f/collective_facade.py
-      line: 212
+      line: 434
       name: analyze
       returns: Dict[str, Any]
     CollectiveExcitationsCUDA:
@@ -11799,7 +11855,7 @@ method_index:
       - self
       - data
       file: ./bhlff/models/level_f/collective/dispersion_analysis.py
-      line: 219
+      line: 221
       name: analyze
       returns: Dict[str, Any]
     DistributionManager:
@@ -14901,6 +14957,50 @@ method_index:
       line: 612
       name: _compute_decay_rate
       returns: float
+    FieldProjectionCUDA:
+    - args:
+      - self
+      - domain
+      - parameters
+      file: ./bhlff/models/level_d/cuda/projections_cuda.py
+      line: 253
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_d/cuda/projections_cuda.py
+      line: 116
+      name: _compute_optimal_block_size
+      returns: int
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_d/cuda/projections_cuda.py
+      line: 155
+      name: project_em_field
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_d/cuda/projections_cuda.py
+      line: 174
+      name: project_strong_field
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_d/cuda/projections_cuda.py
+      line: 190
+      name: project_weak_field
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      - window_params
+      file: ./bhlff/models/level_d/cuda/projections_cuda.py
+      line: 267
+      name: project_field_windows
+      returns: Dict[str, Any]
     FluxComputer:
     - args:
       - self
@@ -18653,6 +18753,125 @@ method_index:
       line: 445
       name: compute_stability_metrics
       returns: Dict[str, Any]
+    MultiModeModelCUDA:
+    - args:
+      - self
+      - domain
+      - parameters
+      file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+      line: 423
+      name: __init__
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+      line: 99
+      name: _compute_optimal_block_size
+      returns: int
+    - args:
+      - self
+      - base_field
+      - modes
+      file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+      line: 157
+      name: create_multi_mode_field
+      returns: np.ndarray
+    - args:
+      - self
+      - frequency
+      - amplitude
+      - phase
+      - spatial_mode
+      - shape
+      file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+      line: 217
+      name: _create_single_mode_field_cuda
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - frequency
+      - amplitude
+      - phase
+      - spatial_mode
+      - shape
+      file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+      line: 244
+      name: _create_single_mode_field_cpu
+      returns: np.ndarray
+    - args:
+      - self
+      - shape
+      file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+      line: 265
+      name: _create_coordinate_grids_cuda
+      returns: List['cp.ndarray']
+    - args:
+      - self
+      - shape
+      file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+      line: 275
+      name: _create_coordinate_grids_cpu
+      returns: List[np.ndarray]
+    - args:
+      - self
+      - coords
+      - frequency
+      - shape
+      file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+      line: 283
+      name: _create_bvp_envelope_modulation_cuda
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - coords
+      - frequency
+      - shape
+      file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+      line: 290
+      name: _create_bvp_envelope_modulation_cpu
+      returns: np.ndarray
+    - args:
+      - self
+      - coords
+      - frequency
+      - shape
+      file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+      line: 297
+      name: _create_default_spatial_mode_cuda
+      returns: '''cp.ndarray'''
+    - args:
+      - self
+      - coords
+      - frequency
+      - shape
+      file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+      line: 304
+      name: _create_default_spatial_mode_cpu
+      returns: np.ndarray
+    - args:
+      - self
+      - before
+      - after
+      file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+      line: 311
+      name: analyze_frame_stability
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - map1
+      - map2
+      file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+      line: 364
+      name: compute_jaccard_index
+      returns: float
+    - args:
+      - self
+      - before
+      - after
+      file: ./bhlff/models/level_d/cuda/superposition_cuda.py
+      line: 428
+      name: analyze
+      returns: Dict[str, Any]
     MultiParticleModesAnalyzer:
     - args:
       - self
@@ -18672,28 +18891,49 @@ method_index:
       returns: Dict[str, Any]
     - args:
       - self
+      - particles
+      file: ./bhlff/models/level_f/multi_particle_modes.py
+      line: 112
+      name: analyze_modes
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - particles
+      file: ./bhlff/models/level_f/multi_particle_modes.py
+      line: 115
+      name: compute_participation_ratios
+      returns: List[float]
+    - args:
+      - self
+      - particles
+      file: ./bhlff/models/level_f/multi_particle_modes.py
+      line: 121
+      name: compute_excitations
+      returns: Dict[str, Any]
+    - args:
+      - self
       - field
       - time_points
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 111
+      line: 124
       name: compute_correlation_function
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 145
+      line: 158
       name: _create_dynamics_matrix
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 169
+      line: 182
       name: _create_energy_matrix
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 195
+      line: 208
       name: _create_stiffness_matrix
       returns: np.ndarray
     - args:
@@ -18701,21 +18941,21 @@ method_index:
       - eigenvalues
       - eigenvectors
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 225
+      line: 238
       name: _analyze_mode_spectrum
       returns: Dict[str, Any]
     - args:
       - self
       - eigenvalues
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 258
+      line: 271
       name: _calculate_mode_frequencies
       returns: np.ndarray
     - args:
       - self
       - eigenvectors
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 277
+      line: 290
       name: _calculate_mode_amplitudes
       returns: np.ndarray
     - args:
@@ -18723,35 +18963,35 @@ method_index:
       - field
       - time
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 296
+      line: 309
       name: _compute_time_correlation
       returns: np.ndarray
     - args:
       - self
       - distance
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 318
+      line: 331
       name: _calculate_interaction_strength
       returns: float
     - args:
       - self
       - distance
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 336
+      line: 349
       name: _step_interaction_potential
       returns: float
     - args:
       - self
       - particle
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 361
+      line: 374
       name: _compute_particle_energy_from_field
       returns: float
     - args:
       - self
       - energy_matrix
       file: ./bhlff/models/level_f/multi_particle_modes.py
-      line: 402
+      line: 415
       name: _compute_energy_matrix_inverse
       returns: np.ndarray
     MultiParticlePotentialAnalyzer:
@@ -18768,20 +19008,45 @@ method_index:
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 69
+      line: 105
       name: compute_effective_potential
       returns: np.ndarray
     - args:
       - self
+      - particle
+      - particles
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 104
+      line: 196
+      name: compute_single_particle_potential
+      returns: Any
+    - args:
+      - self
+      - particle1
+      - particle2
+      file: ./bhlff/models/level_f/multi_particle_potential.py
+      line: 201
+      name: compute_pair_interaction
+      returns: Any
+    - args:
+      - self
+      - p1
+      - p2
+      - p3
+      file: ./bhlff/models/level_f/multi_particle_potential.py
+      line: 204
+      name: compute_three_body_interaction
+      returns: Any
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_potential.py
+      line: 209
       name: _setup_interaction_matrices
       returns: None
     - args:
       - self
       - particle
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 126
+      line: 231
       name: _compute_single_particle_potential
       returns: np.ndarray
     - args:
@@ -18789,13 +19054,13 @@ method_index:
       - particle1
       - particle2
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 158
+      line: 263
       name: _compute_pair_interaction
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 191
+      line: 296
       name: _compute_higher_order_interactions
       returns: np.ndarray
     - args:
@@ -18804,14 +19069,14 @@ method_index:
       - particle2
       - particle3
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 217
+      line: 322
       name: _compute_three_body_interaction
       returns: np.ndarray
     - args:
       - self
       - distance
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 258
+      line: 363
       name: _calculate_interaction_strength
       returns: float
     - args:
@@ -18820,14 +19085,14 @@ method_index:
       - distance_13
       - distance_23
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 276
+      line: 381
       name: _calculate_three_body_strength
       returns: float
     - args:
       - self
       - distance
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 307
+      line: 412
       name: _step_interaction_potential
       returns: null
     - args:
@@ -18836,7 +19101,7 @@ method_index:
       - distance_13
       - distance_23
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 333
+      line: 440
       name: _step_three_body_interaction_potential
       returns: float
     MultiParticlePotentialAnalyzerCUDA:
@@ -18854,15 +19119,22 @@ method_index:
     - args:
       - self
       file: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
-      line: 164
+      line: 169
       name: compute_effective_potential
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
-      line: 259
+      line: 284
       name: _compute_optimal_block_size_7d
       returns: int
+    - args:
+      - N
+      - bs
+      file: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
+      line: 205
+      name: _iter_blocks_3d
+      returns: null
     MultiParticleSystem:
     - args:
       - self
@@ -18878,40 +19150,279 @@ method_index:
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 131
+      line: 142
       name: compute_effective_potential
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 149
+      line: 172
       name: find_collective_modes
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 191
+      name: num_particles
+      returns: int
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 195
+      name: potential_analyzer
+      returns: Any
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 199
+      name: collective_modes
+      returns: Any
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 202
+      name: analyze_collective_modes
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - particle
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 207
+      name: compute_single_particle_potential
+      returns: Any
+    - args:
+      - self
+      - p1
+      - p2
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 212
+      name: compute_pair_interaction
+      returns: Any
+    - args:
+      - self
+      - p1
+      - p2
+      - p3
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 215
+      name: compute_three_body_interaction
+      returns: Any
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 220
+      name: compute_dynamics_matrix
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 223
+      name: compute_participation_ratios
+      returns: Any
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 231
+      name: compute_correlations
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 234
+      name: check_stability
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 237
+      name: compute_spatial_correlations
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 240
+      name: compute_phase_correlations
       returns: Dict[str, Any]
     - args:
       - self
       - field
       - time_points
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 166
+      line: 243
       name: compute_correlation_function
       returns: np.ndarray
     - args:
       - self
       - data
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 190
+      line: 265
       name: analyze
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 228
+      line: 303
       name: _compute_dynamics_matrix
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_system.py
-      line: 251
+      line: 331
+      name: _compute_correlations
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 338
+      name: _check_stability
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 341
+      name: _compute_spatial_correlations
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 344
+      name: _compute_phase_correlations
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 348
+      name: _compute_7d_bvp_energy
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 351
+      name: _compute_7d_phase_field_energy
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 354
+      name: _compute_7d_phase_coherence
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 357
+      name: _extract_phase_field_around_particle
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 360
+      name: _extract_spherical_field
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 363
+      name: _compute_advanced_correlations
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 366
+      name: _optimize_energy
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 369
+      name: _compute_phase_field_dynamics
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 372
+      name: _compute_thermodynamic_properties
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 376
+      name: compute_total_energy
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 379
+      name: compute_total_topological_charge
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 382
+      name: compute_7d_bvp_energy
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 385
+      name: compute_7d_phase_coherence
+      returns: null
+    - args:
+      - self
+      - particle
+      - radius
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 388
+      name: get_phase_field_around_particle
+      returns: null
+    - args:
+      - self
+      - particle
+      - radius
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 391
+      name: extract_spherical_field
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 394
+      name: compute_advanced_correlations
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 397
+      name: optimize_energy
+      returns: null
+    - args:
+      - self
+      - time_steps
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 400
+      name: compute_phase_field_dynamics
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 403
+      name: compute_thermodynamic_properties
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 406
+      name: compute_7d_phase_field_energy
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 409
+      name: compute_collective_excitations
+      returns: null
+    - args:
+      - self
+      file: ./bhlff/models/level_f/multi_particle_system.py
+      line: 414
       name: analyze_system_properties
       returns: Dict[str, Any]
     - args:
@@ -20075,124 +20586,148 @@ method_index:
       returns: null
     - args:
       - self
-      - nonlinear_params
+      - data
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 60
+      line: 75
+      name: analyze
+      returns: Dict[str, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 85
       name: add_nonlinear_interactions
       returns: None
     - args:
       - self
       - psi
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 71
+      line: 114
       name: _nonlinear_potential
       returns: np.ndarray
     - args:
       - self
       - psi
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 80
+      line: 123
       name: _nonlinear_force
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 89
+      line: 132
       name: find_nonlinear_modes
-      returns: Dict[str, Any]
+      returns: List[Dict[str, Any]]
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 92
+      line: 139
       name: find_soliton_solutions
-      returns: Dict[str, Any]
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 151
+      name: find_sine_gordon_solitons
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 154
+      name: find_cubic_solitons
+      returns: List[Dict[str, Any]]
+    - args:
+      - self
+      file: ./bhlff/models/level_f/nonlinear_facade.py
+      line: 157
+      name: find_quartic_solitons
+      returns: List[Dict[str, Any]]
     - args:
       - self
       - field
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 95
+      line: 160
       name: analyze_nonlinear_strength
       returns: Dict[str, Any]
     - args:
       - self
       - field
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 98
+      line: 163
       name: compute_nonlinear_energy
       returns: float
     - args:
       - self
       - field
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 101
+      line: 166
       name: compute_nonlinear_force
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 104
+      line: 169
       name: analyze_nonlinear_stability
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 107
+      line: 172
       name: find_bifurcation_points
       returns: List[Dict[str, Any]]
     - args:
       - self
       - linear_modes
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 110
+      line: 175
       name: compute_nonlinear_corrections
       returns: Dict[str, Any]
     - args:
       - self
       - soliton_profiles
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 115
+      line: 180
       name: analyze_soliton_stability
       returns: Dict[str, Any]
     - args:
       - self
       - soliton_profiles
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 137
+      line: 202
       name: analyze_soliton_interactions
       returns: Dict[str, Any]
     - args:
       - self
       - soliton_profiles
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 152
+      line: 227
       name: compute_soliton_energies
       returns: List[float]
     - args:
       - self
       - results
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 163
+      line: 238
       name: validate_nonlinear_analysis
       returns: Dict[str, Any]
     - args:
       - self
       - basic_effects
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 182
+      line: 257
       name: _validate_basic_effects
       returns: Dict[str, Any]
     - args:
       - self
       - soliton_analysis
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 192
+      line: 267
       name: _validate_soliton_analysis
       returns: Dict[str, Any]
     - args:
       - self
       - mode_analysis
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 209
+      line: 284
       name: _validate_mode_analysis
       returns: Dict[str, Any]
     - args:
@@ -20201,7 +20736,7 @@ method_index:
       - soliton_validation
       - mode_validation
       file: ./bhlff/models/level_f/nonlinear_facade.py
-      line: 224
+      line: 299
       name: _calculate_overall_validation
       returns: Dict[str, Any]
     NonlinearModeAnalyzer:
@@ -23112,35 +23647,42 @@ method_index:
       returns: null
     - args:
       - self
+      - data
+      file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
+      line: 69
+      name: analyze
+      returns: Dict[str, Any]
+    - args:
+      - self
       - parameter
       - values
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 68
+      line: 74
       name: parameter_sweep
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 124
+      line: 130
       name: compute_order_parameters
       returns: Dict[str, float]
     - args:
       - self
       - phase_diagram
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 152
+      line: 158
       name: identify_critical_points
       returns: List[Dict[str, Any]]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 192
+      line: 198
       name: analyze_phase_stability
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 217
+      line: 223
       name: _setup_analysis_parameters
       returns: None
     - args:
@@ -23148,50 +23690,50 @@ method_index:
       - parameter
       - value
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 223
+      line: 229
       name: _update_system_parameter
       returns: None
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 240
+      line: 246
       name: _equilibrate_system
       returns: None
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 265
+      line: 271
       name: _analyze_system_state
       returns: Dict[str, Any]
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 292
+      line: 298
       name: _compute_topological_order
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 312
+      line: 318
       name: _compute_phase_coherence
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 334
+      line: 340
       name: _compute_spatial_order
       returns: float
     - args:
       - self
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 360
+      line: 366
       name: _compute_energy_density
       returns: float
     - args:
       - self
       - phase_diagram
       file: ./bhlff/models/level_f/transitions/phase_transitions_core.py
-      line: 380
+      line: 386
       name: _find_discontinuities
       returns: List[Dict[str, Any]]
     PhaseTransitionsHelpers:
@@ -49721,6 +50263,6 @@ method_index:
       returns: null
   standalone_functions: []
   summary:
-    total_class_methods: 6878
-    total_classes: 672
+    total_class_methods: 6955
+    total_classes: 674
     total_standalone_functions: 0

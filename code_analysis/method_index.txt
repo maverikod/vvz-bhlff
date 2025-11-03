@@ -7609,46 +7609,128 @@ Class: MultiParticleModesAnalyzer
     File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 41
   find_collective_modes(self) -> Dict[str, Any]
     File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 67
+  analyze_modes(self, particles) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 112
+  compute_participation_ratios(self, particles) -> List[float]
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 115
+  compute_excitations(self, particles) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 121
   compute_correlation_function(self, field, time_points) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 111
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 124
   _create_dynamics_matrix(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 145
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 158
   _create_energy_matrix(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 169
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 182
   _create_stiffness_matrix(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 195
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 208
   _analyze_mode_spectrum(self, eigenvalues, eigenvectors) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 225
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 238
   _calculate_mode_frequencies(self, eigenvalues) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 258
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 271
   _calculate_mode_amplitudes(self, eigenvectors) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 277
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 290
   _compute_time_correlation(self, field, time) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 296
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 309
   _calculate_interaction_strength(self, distance) -> float
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 318
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 331
   _step_interaction_potential(self, distance) -> float
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 336
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 349
   _compute_particle_energy_from_field(self, particle) -> float
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 361
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 374
   _compute_energy_matrix_inverse(self, energy_matrix) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 402
+    File: ./bhlff/models/level_f/multi_particle_modes.py, Line: 415
 
 Class: MultiParticleSystem
   __init__(self, domain, particles, interaction_range, system_params, use_cuda)
     File: ./bhlff/models/level_f/multi_particle_system.py, Line: 54
   compute_effective_potential(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 131
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 142
   find_collective_modes(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 149
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 172
+  num_particles(self) -> int
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 191
+  potential_analyzer(self) -> Any
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 195
+  collective_modes(self) -> Any
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 199
+  analyze_collective_modes(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 202
+  compute_single_particle_potential(self, particle) -> Any
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 207
+  compute_pair_interaction(self, p1, p2) -> Any
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 212
+  compute_three_body_interaction(self, p1, p2, p3) -> Any
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 215
+  compute_dynamics_matrix(self) -> np.ndarray
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 220
+  compute_participation_ratios(self) -> Any
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 223
+  compute_correlations(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 231
+  check_stability(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 234
+  compute_spatial_correlations(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 237
+  compute_phase_correlations(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 240
   compute_correlation_function(self, field, time_points) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 166
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 243
   analyze(self, data) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 190
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 265
   _compute_dynamics_matrix(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 228
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 303
+  _compute_correlations(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 331
+  _check_stability(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 338
+  _compute_spatial_correlations(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 341
+  _compute_phase_correlations(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 344
+  _compute_7d_bvp_energy(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 348
+  _compute_7d_phase_field_energy(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 351
+  _compute_7d_phase_coherence(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 354
+  _extract_phase_field_around_particle(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 357
+  _extract_spherical_field(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 360
+  _compute_advanced_correlations(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 363
+  _optimize_energy(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 366
+  _compute_phase_field_dynamics(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 369
+  _compute_thermodynamic_properties(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 372
+  compute_total_energy(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 376
+  compute_total_topological_charge(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 379
+  compute_7d_bvp_energy(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 382
+  compute_7d_phase_coherence(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 385
+  get_phase_field_around_particle(self, particle, radius)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 388
+  extract_spherical_field(self, particle, radius)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 391
+  compute_advanced_correlations(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 394
+  optimize_energy(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 397
+  compute_phase_field_dynamics(self, time_steps)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 400
+  compute_thermodynamic_properties(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 403
+  compute_7d_phase_field_energy(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 406
+  compute_collective_excitations(self)
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 409
   analyze_system_properties(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 251
+    File: ./bhlff/models/level_f/multi_particle_system.py, Line: 414
   __init__(self, domain, particles, interaction_range, system_params)
     File: ./bhlff/models/level_f/multi_particle.py, Line: 54
   compute_effective_potential(self) -> np.ndarray
@@ -7663,84 +7745,112 @@ Class: MultiParticleSystem
 Class: CollectiveExcitations
   __init__(self, system, excitation_params) -> None
     File: ./bhlff/models/level_f/collective_facade.py, Line: 55
-  excite_system(self, external_field) -> np.ndarray
+  apply_harmonic_excitation(self, frequency, amplitude, duration) -> Dict[str, Any]
     File: ./bhlff/models/level_f/collective_facade.py, Line: 117
+  apply_impulse_excitation(self, amplitude, duration) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 132
+  apply_frequency_sweep(self, start_frequency, end_frequency, sweep_time) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 138
+  excite_system(self, external_field, time_points)
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 148
   analyze_response(self, response) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/collective_facade.py, Line: 135
-  compute_dispersion_relations(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/collective_facade.py, Line: 160
-  compute_susceptibility(self, frequencies) -> np.ndarray
-    File: ./bhlff/models/level_f/collective_facade.py, Line: 182
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 197
+  compute_dispersion_relations(self, response_data) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 260
+  compute_susceptibility(self, response_data) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 304
+  detect_spectral_peaks(self, response_data) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 337
+  analyze_step_resonator_transmission(self, response_data) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 362
+  compute_participation_ratios(self, response_data) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 383
+  compute_quality_factors(self, response_data) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 395
   _setup_analysis_parameters(self) -> None
-    File: ./bhlff/models/level_f/collective_facade.py, Line: 198
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 420
   analyze(self, data) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/collective_facade.py, Line: 212
+    File: ./bhlff/models/level_f/collective_facade.py, Line: 434
 
 Class: MultiParticlePotentialAnalyzer
   __init__(self, domain, particles, interaction_range, params)
     File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 40
   compute_effective_potential(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 69
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 105
+  compute_single_particle_potential(self, particle, particles) -> Any
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 196
+  compute_pair_interaction(self, particle1, particle2) -> Any
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 201
+  compute_three_body_interaction(self, p1, p2, p3) -> Any
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 204
   _setup_interaction_matrices(self) -> None
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 104
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 209
   _compute_single_particle_potential(self, particle) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 126
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 231
   _compute_pair_interaction(self, particle1, particle2) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 158
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 263
   _compute_higher_order_interactions(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 191
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 296
   _compute_three_body_interaction(self, particle1, particle2, particle3) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 217
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 322
   _calculate_interaction_strength(self, distance) -> float
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 258
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 363
   _calculate_three_body_strength(self, distance_12, distance_13, distance_23) -> float
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 276
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 381
   _step_interaction_potential(self, distance)
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 307
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 412
   _step_three_body_interaction_potential(self, distance_12, distance_13, distance_23) -> float
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 333
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 440
 
 Class: NonlinearEffects
   __init__(self, system, nonlinear_params)
     File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 44
-  add_nonlinear_interactions(self, nonlinear_params) -> None
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 60
+  analyze(self, data) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 75
+  add_nonlinear_interactions(self) -> None
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 85
   _nonlinear_potential(self, psi) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 71
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 114
   _nonlinear_force(self, psi) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 80
-  find_nonlinear_modes(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 89
-  find_soliton_solutions(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 92
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 123
+  find_nonlinear_modes(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 132
+  find_soliton_solutions(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 139
+  find_sine_gordon_solitons(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 151
+  find_cubic_solitons(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 154
+  find_quartic_solitons(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 157
   analyze_nonlinear_strength(self, field) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 95
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 160
   compute_nonlinear_energy(self, field) -> float
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 98
-  compute_nonlinear_force(self, field) -> np.ndarray
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 101
-  analyze_nonlinear_stability(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 104
-  find_bifurcation_points(self) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 107
-  compute_nonlinear_corrections(self, linear_modes) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 110
-  analyze_soliton_stability(self, soliton_profiles) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 115
-  analyze_soliton_interactions(self, soliton_profiles) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 137
-  compute_soliton_energies(self, soliton_profiles) -> List[float]
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 152
-  validate_nonlinear_analysis(self, results) -> Dict[str, Any]
     File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 163
+  compute_nonlinear_force(self, field) -> np.ndarray
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 166
+  analyze_nonlinear_stability(self) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 169
+  find_bifurcation_points(self) -> List[Dict[str, Any]]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 172
+  compute_nonlinear_corrections(self, linear_modes) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 175
+  analyze_soliton_stability(self, soliton_profiles) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 180
+  analyze_soliton_interactions(self, soliton_profiles) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 202
+  compute_soliton_energies(self, soliton_profiles) -> List[float]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 227
+  validate_nonlinear_analysis(self, results) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 238
   _validate_basic_effects(self, basic_effects) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 182
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 257
   _validate_soliton_analysis(self, soliton_analysis) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 192
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 267
   _validate_mode_analysis(self, mode_analysis) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 209
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 284
   _calculate_overall_validation(self, basic_validation, soliton_validation, mode_validation) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 224
+    File: ./bhlff/models/level_f/nonlinear_facade.py, Line: 299
 
 Class: SolitonAnalysisInitialization
   __init__(self, system, nonlinear_params)
@@ -8238,7 +8348,7 @@ Class: DispersionAnalyzer
   _fit_dispersion_relation(self, k_values, frequencies) -> Dict[str, Any]
     File: ./bhlff/models/level_f/collective/dispersion_analysis.py, Line: 188
   analyze(self, data) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/collective/dispersion_analysis.py, Line: 219
+    File: ./bhlff/models/level_f/collective/dispersion_analysis.py, Line: 221
 
 Class: ExcitationAnalyzer
   __init__(self, system, excitation_params)
@@ -8290,9 +8400,11 @@ Class: MultiParticlePotentialAnalyzerCUDA
   __init__(self, domain, particles, interaction_range, params, system_params) -> None
     File: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 72
   compute_effective_potential(self) -> np.ndarray
-    File: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 164
+    File: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 169
   _compute_optimal_block_size_7d(self) -> int
-    File: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 259
+    File: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 284
+  _iter_blocks_3d(N, bs)
+    File: ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py, Line: 205
 
 Class: PotentialLandscapeAnalyzer
   __init__(self, domain, particles, system_params)
@@ -8525,32 +8637,34 @@ Class: CollectiveModesAnalyzer
 Class: PhaseTransitions
   __init__(self, system)
     File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 46
+  analyze(self, data) -> Dict[str, Any]
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 69
   parameter_sweep(self, parameter, values) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 68
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 74
   compute_order_parameters(self) -> Dict[str, float]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 124
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 130
   identify_critical_points(self, phase_diagram) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 152
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 158
   analyze_phase_stability(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 192
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 198
   _setup_analysis_parameters(self) -> None
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 217
-  _update_system_parameter(self, parameter, value) -> None
     File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 223
+  _update_system_parameter(self, parameter, value) -> None
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 229
   _equilibrate_system(self) -> None
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 240
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 246
   _analyze_system_state(self) -> Dict[str, Any]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 265
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 271
   _compute_topological_order(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 292
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 298
   _compute_phase_coherence(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 312
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 318
   _compute_spatial_order(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 334
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 340
   _compute_energy_density(self) -> float
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 360
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 366
   _find_discontinuities(self, phase_diagram) -> List[Dict[str, Any]]
-    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 380
+    File: ./bhlff/models/level_f/transitions/phase_transitions_core.py, Line: 386
 
 Class: PhaseTransitionsHelpers
   __init__(self, config)
@@ -8762,6 +8876,36 @@ Class: EMProjectorCUDA
   _apply_chiral_filter_cpu(self, chiral_factor, shape) -> np.ndarray
     File: ./bhlff/models/level_d/cuda/projectors_cuda.py, Line: 284
 
+Class: MultiModeModelCUDA
+  __init__(self, domain, parameters)
+    File: ./bhlff/models/level_d/cuda/superposition_cuda.py, Line: 423
+  _compute_optimal_block_size(self) -> int
+    File: ./bhlff/models/level_d/cuda/superposition_cuda.py, Line: 99
+  create_multi_mode_field(self, base_field, modes) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/superposition_cuda.py, Line: 157
+  _create_single_mode_field_cuda(self, frequency, amplitude, phase, spatial_mode, shape) -> 'cp.ndarray'
+    File: ./bhlff/models/level_d/cuda/superposition_cuda.py, Line: 217
+  _create_single_mode_field_cpu(self, frequency, amplitude, phase, spatial_mode, shape) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/superposition_cuda.py, Line: 244
+  _create_coordinate_grids_cuda(self, shape) -> List['cp.ndarray']
+    File: ./bhlff/models/level_d/cuda/superposition_cuda.py, Line: 265
+  _create_coordinate_grids_cpu(self, shape) -> List[np.ndarray]
+    File: ./bhlff/models/level_d/cuda/superposition_cuda.py, Line: 275
+  _create_bvp_envelope_modulation_cuda(self, coords, frequency, shape) -> 'cp.ndarray'
+    File: ./bhlff/models/level_d/cuda/superposition_cuda.py, Line: 283
+  _create_bvp_envelope_modulation_cpu(self, coords, frequency, shape) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/superposition_cuda.py, Line: 290
+  _create_default_spatial_mode_cuda(self, coords, frequency, shape) -> 'cp.ndarray'
+    File: ./bhlff/models/level_d/cuda/superposition_cuda.py, Line: 297
+  _create_default_spatial_mode_cpu(self, coords, frequency, shape) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/superposition_cuda.py, Line: 304
+  analyze_frame_stability(self, before, after) -> Dict[str, Any]
+    File: ./bhlff/models/level_d/cuda/superposition_cuda.py, Line: 311
+  compute_jaccard_index(self, map1, map2) -> float
+    File: ./bhlff/models/level_d/cuda/superposition_cuda.py, Line: 364
+  analyze(self, before, after) -> Dict[str, Any]
+    File: ./bhlff/models/level_d/cuda/superposition_cuda.py, Line: 428
+
 Class: FrameExtractorCUDA
   __init__(self, domain, cuda_available)
     File: ./bhlff/models/level_d/cuda/superposition_utils_cuda.py, Line: 71
@@ -8805,6 +8949,20 @@ Class: StreamlineAnalyzerCUDA
     File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 391
   _compute_stability_index(self, streamlines) -> float
     File: ./bhlff/models/level_d/cuda/streamlines_cuda.py, Line: 400
+
+Class: FieldProjectionCUDA
+  __init__(self, domain, parameters)
+    File: ./bhlff/models/level_d/cuda/projections_cuda.py, Line: 253
+  _compute_optimal_block_size(self) -> int
+    File: ./bhlff/models/level_d/cuda/projections_cuda.py, Line: 116
+  project_em_field(self, field) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/projections_cuda.py, Line: 155
+  project_strong_field(self, field) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/projections_cuda.py, Line: 174
+  project_weak_field(self, field) -> np.ndarray
+    File: ./bhlff/models/level_d/cuda/projections_cuda.py, Line: 190
+  project_field_windows(self, field, window_params) -> Dict[str, Any]
+    File: ./bhlff/models/level_d/cuda/projections_cuda.py, Line: 267
 
 Class: SuperpositionAnalyzerCUDA
   __init__(self, domain, parameters)

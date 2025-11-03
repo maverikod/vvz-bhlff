@@ -22,6 +22,7 @@ import logging
 
 from bhlff.core.bvp import BVPCore
 from .multi_particle.data_structures import Particle, SystemParameters
+from .potential.block_cpu import compute_potential_blocked
 
 
 class MultiParticlePotentialAnalyzer:
@@ -118,76 +119,20 @@ class MultiParticlePotentialAnalyzer:
         """
         self.logger.info("Computing effective potential (vectorized, block-processed)")
 
-        # Spatial grid shape (3D)
-        N = int(self.domain.N)
-        spatial_shape = (N, N, N)
-        result = np.zeros(spatial_shape, dtype=np.float64)
-
-        if self._positions.size == 0:
-            return result
-
-        # Coordinate arrays
-        x = np.linspace(0.0, float(getattr(self.domain, "L", N)), N)
-        y = np.linspace(0.0, float(getattr(self.domain, "L", N)), N)
-        z = np.linspace(0.0, float(getattr(self.domain, "L", N)), N)
-
         # Memory-aware block size for CPU (aim ~ few hundred MB per block)
         cpu_block_size = int(self.params.get("cpu_block_size", 64))
-        cpu_block_size = max(8, min(cpu_block_size, N))
-
-        # Particle sub-batching to limit peak memory
-        n_particles = self._positions.shape[0]
         strength = float(self.params.get("interaction_strength", 1.0))
-        r_cut = self.interaction_range
-        rc2 = r_cut * r_cut
 
-        # Iterate spatial blocks
-        for i0 in range(0, N, cpu_block_size):
-            i1 = min(N, i0 + cpu_block_size)
-            for j0 in range(0, N, cpu_block_size):
-                j1 = min(N, j0 + cpu_block_size)
-                for k0 in range(0, N, cpu_block_size):
-                    k1 = min(N, k0 + cpu_block_size)
-                    Xb, Yb, Zb = np.meshgrid(
-                        x[i0:i1], y[j0:j1], z[k0:k1], indexing="ij"
-                    )
-                    block = np.zeros(Xb.shape, dtype=np.float64)
-
-                    # Estimate sub-batch size: target ~600 MB cap per sub-batch
-                    elements = Xb.size
-                    bytes_per_elem = 8
-                    est_per_particle = (
-                        elements * bytes_per_elem * 6
-                    )  # dx,dy,dz,r2,mask,accum
-                    budget = int(600 * (1024**2))  # ~600 MB
-                    if est_per_particle <= 0:
-                        subbatch = min(n_particles, 64)
-                    else:
-                        subbatch = max(1, min(n_particles, budget // est_per_particle))
-                        subbatch = min(subbatch, 128)
-
-                    for p0 in range(0, n_particles, subbatch):
-                        p1 = min(n_particles, p0 + subbatch)
-                        px = self._positions[p0:p1, 0]
-                        py = self._positions[p0:p1, 1]
-                        pz = self._positions[p0:p1, 2]
-                        cq = self._charges[p0:p1]
-
-                        dx = Xb[..., None] - px[None, None, None, :]
-                        dy = Yb[..., None] - py[None, None, None, :]
-                        dz = Zb[..., None] - pz[None, None, None, :]
-                        r2 = dx * dx + dy * dy + dz * dz
-                        mask = r2 < rc2
-                        contrib = mask.astype(np.float64) * cq[None, None, None, :]
-                        block += strength * contrib.sum(axis=-1)
-
-                    # Uniform pair and three-body contributions (precomputed adjacency)
-                    if self._close_pairs:
-                        block += strength * len(self._close_pairs)
-                    if self._close_triples:
-                        block += strength * len(self._close_triples)
-
-                    result[i0:i1, j0:j1, k0:k1] = block
+        result = compute_potential_blocked(
+            self.domain,
+            self._positions,
+            self._charges,
+            self.interaction_range,
+            strength,
+            cpu_block_size,
+            num_pairs=len(self._close_pairs),
+            num_triples=len(self._close_triples),
+        )
 
         self.logger.info("Effective potential computed (CPU vectorized)")
         return result

@@ -88,24 +88,73 @@ class PowerLawCore:
         amplitudes = amplitudes[amplitudes > 0]  # Remove zeros
 
         if len(amplitudes) == 0:
-            return {"amplitude_exponent": 0.0}
+            return {
+                "amplitude_exponent": 0.0,
+                "r_squared": 0.0,
+                "confidence_interval": (0.0, 0.0),
+            }
 
-        # Simple power law fit (log-log regression)
+        # Robust power law fit with R² and confidence intervals
+        # Required for B1 test: R² ≥ 0.99, proper confidence intervals
         sorted_amplitudes = np.sort(amplitudes)[::-1]  # Descending order
         ranks = np.arange(1, len(sorted_amplitudes) + 1)
 
-        # Fit power law: P(x) ~ x^(-α)
+        # Filter out zeros and negative values
+        valid_mask = sorted_amplitudes > 0
+        if np.sum(valid_mask) < 3:
+            return {
+                "amplitude_exponent": 0.0,
+                "r_squared": 0.0,
+                "confidence_interval": (0.0, 0.0),
+            }
+
+        sorted_amplitudes = sorted_amplitudes[valid_mask]
+        ranks = ranks[valid_mask]
+
+        # Fit power law: P(x) ~ x^(-α) in log-log space
         log_ranks = np.log(ranks)
         log_amplitudes = np.log(sorted_amplitudes)
 
-        # Linear regression in log space
+        # Robust linear regression with error estimation
         if len(log_ranks) > 1:
-            slope = np.polyfit(log_ranks, log_amplitudes, 1)[0]
+            # OLS regression
+            coeffs = np.polyfit(log_ranks, log_amplitudes, 1)
+            slope = coeffs[0]
+            intercept = coeffs[1]
             exponent = -slope
+
+            # Compute R² (coefficient of determination)
+            y_pred = slope * log_ranks + intercept
+            ss_res = np.sum((log_amplitudes - y_pred) ** 2)
+            ss_tot = np.sum((log_amplitudes - np.mean(log_amplitudes)) ** 2)
+            r_squared = 1.0 - (ss_res / ss_tot) if ss_tot > 0 else 0.0
+
+            # Compute confidence interval (95%) for slope
+            n = len(log_ranks)
+            if n > 2:
+                # Standard error of slope
+                se_slope = np.sqrt(ss_res / (n - 2)) / np.sqrt(
+                    np.sum((log_ranks - np.mean(log_ranks)) ** 2)
+                )
+                # t-statistic for 95% CI (approximate, n > 30 uses ~1.96)
+                t_critical = 2.0 if n < 30 else 1.96
+                slope_ci = t_critical * se_slope
+                # Convert to exponent CI (exponent = -slope)
+                exp_ci_low = -slope - slope_ci
+                exp_ci_high = -slope + slope_ci
+                confidence_interval = (exp_ci_low, exp_ci_high)
+            else:
+                confidence_interval = (exponent, exponent)
         else:
             exponent = 0.0
+            r_squared = 0.0
+            confidence_interval = (0.0, 0.0)
 
-        return {"amplitude_exponent": exponent}
+        return {
+            "amplitude_exponent": exponent,
+            "r_squared": r_squared,
+            "confidence_interval": confidence_interval,
+        }
 
     def identify_scaling_regions(self, envelope: np.ndarray) -> List[Dict[str, Any]]:
         """

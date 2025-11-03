@@ -87,11 +87,12 @@ class LevelBFundamentalPropertiesTestsBasic:
             "base_source_type": "gaussian",
         }
         self.source = BVPSource(self.domain, config)
-        self.power_law_analyzer = LevelBPowerLawAnalyzer(
-            use_cuda=False
-        )  # Disable CUDA for testing
-        self.node_analyzer = LevelBNodeAnalyzer()
-        self.zone_analyzer = LevelBZoneAnalyzer()
+        # Use CUDA if available (standard project behavior)
+        import os
+        use_cuda = os.getenv("BHLFF_DISABLE_CUDA", "0") != "1"
+        self.power_law_analyzer = LevelBPowerLawAnalyzer(use_cuda=use_cuda)
+        self.node_analyzer = LevelBNodeAnalyzer(use_cuda=use_cuda)
+        self.zone_analyzer = LevelBZoneAnalyzer(use_cuda=use_cuda)
 
     def test_stepwise_tail(self):
         """

@@ -112,10 +112,13 @@ class RadialProfileComputer:
         Returns:
             Dict[str, np.ndarray]: Radial profile with 'r' and 'A' arrays.
         """
-        use_cuda_here = self.use_cuda and (
-            hasattr(substrate, "device") or isinstance(substrate, cp.ndarray)
-        )
+        # Always use CUDA if enabled, converting numpy arrays to cupy
+        use_cuda_here = self.use_cuda
         xp = self.xp if use_cuda_here else np
+        
+        # Convert numpy array to cupy if CUDA is enabled
+        if use_cuda_here and isinstance(substrate, np.ndarray):
+            substrate = xp.asarray(substrate)
 
         if len(substrate.shape) == 7:
             shape = substrate.shape[:3]
@@ -167,9 +170,10 @@ class RadialProfileComputer:
                 if xp.any(mask):
                     T_radial[i] = xp.mean(transparency_flat[mask])
 
-        if use_cuda_here and hasattr(T_radial, "get"):
-            T_radial = T_radial.get()
-            r_centers = r_centers.get() if hasattr(r_centers, "get") else r_centers
+        # Always convert back to numpy for return
+        if use_cuda_here:
+            T_radial = cp.asnumpy(T_radial)
+            r_centers = cp.asnumpy(r_centers)
 
         return {"r": r_centers, "A": T_radial}
 
@@ -241,13 +245,13 @@ class RadialProfileComputer:
                 if self.xp.any(mask):
                     A_radial[i] = self.xp.mean(amplitude_flat[mask])
 
+        # Always convert back to numpy for return
         if self.use_cuda:
             return {
-                "r": self.xp.asnumpy(r_centers),
-                "A": self.xp.asnumpy(A_radial),
+                "r": cp.asnumpy(r_centers),
+                "A": cp.asnumpy(A_radial),
             }
-        else:
-            return {"r": r_centers, "A": A_radial}
+        return {"r": r_centers, "A": A_radial}
 
     def _compute_cpu(
         self, field: np.ndarray, center: List[float]

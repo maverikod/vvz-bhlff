@@ -22,6 +22,15 @@ from typing import Dict, Any, Tuple, List
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+# CUDA support
+try:
+    import cupy as cp
+
+    CUDA_AVAILABLE = True
+except ImportError:
+    CUDA_AVAILABLE = False
+    cp = None
+
 
 class LevelBNodeAnalyzer:
     """
@@ -37,9 +46,23 @@ class LevelBNodeAnalyzer:
         nodes and ensuring monotonic decay.
     """
 
-    def __init__(self, use_cuda: bool = False):
-        """Initialize node analyzer."""
-        self.use_cuda = use_cuda
+    def __init__(self, use_cuda: bool = True):
+        """
+        Initialize node analyzer.
+
+        Physical Meaning:
+            Sets up analyzer for node detection and topological charge
+            computation with CUDA acceleration for 7D phase field computations.
+
+        Args:
+            use_cuda (bool): Whether to use CUDA acceleration if available.
+                Defaults to True to enable GPU acceleration when possible.
+        """
+        self.use_cuda = use_cuda and CUDA_AVAILABLE
+        if self.use_cuda:
+            self.xp = cp
+        else:
+            self.xp = np
         self.max_sign_changes = 1
         self.tolerance = 1e-6
         self.radius_threshold = 0.1
@@ -344,17 +367,69 @@ class LevelBNodeAnalyzer:
     def _interpolate_gradient(
         self, grad_phase: np.ndarray, point: np.ndarray
     ) -> np.ndarray:
-        """Interpolate gradient at given point."""
-        # Simple nearest neighbor interpolation
-        # In practice, should use proper interpolation
-        x, y, z = int(round(point[0])), int(round(point[1])), int(round(point[2]))
+        """
+        Interpolate gradient at given point using trilinear interpolation.
 
-        # Ensure indices are within bounds
-        x = max(0, min(x, grad_phase.shape[0] - 1))
-        y = max(0, min(y, grad_phase.shape[1] - 1))
-        z = max(0, min(z, grad_phase.shape[2] - 1))
+        Physical Meaning:
+            Computes gradient value at arbitrary point using proper 3D
+            trilinear interpolation, ensuring accurate topological charge
+            computation for B3 test (requirement: |q̄ - q| ≤ 0.01).
 
-        return grad_phase[x, y, z]
+        Mathematical Foundation:
+            Trilinear interpolation computes value at point (x,y,z) as
+            weighted average of 8 nearest grid points using barycentric
+            coordinates, providing C⁰ continuity and second-order accuracy.
+
+        Args:
+            grad_phase (np.ndarray): Gradient field on 3D grid [nx, ny, nz, 3]
+            point (np.ndarray): Interpolation point [x, y, z] in grid coordinates
+
+        Returns:
+            np.ndarray: Interpolated gradient vector [gx, gy, gz]
+        """
+        # Get grid dimensions
+        nx, ny, nz = grad_phase.shape[:3]
+        x, y, z = point[0], point[1], point[2]
+
+        # Clamp to valid range [0, shape-1] for boundary handling
+        x = max(0.0, min(x, nx - 1.0))
+        y = max(0.0, min(y, ny - 1.0))
+        z = max(0.0, min(z, nz - 1.0))
+
+        # Get integer and fractional parts
+        x0, y0, z0 = int(np.floor(x)), int(np.floor(y)), int(np.floor(z))
+        x1, y1, z1 = min(x0 + 1, nx - 1), min(y0 + 1, ny - 1), min(z0 + 1, nz - 1)
+
+        dx = x - x0
+        dy = y - y0
+        dz = z - z0
+
+        # Trilinear interpolation weights
+        w000 = (1 - dx) * (1 - dy) * (1 - dz)
+        w001 = (1 - dx) * (1 - dy) * dz
+        w010 = (1 - dx) * dy * (1 - dz)
+        w011 = (1 - dx) * dy * dz
+        w100 = dx * (1 - dy) * (1 - dz)
+        w101 = dx * (1 - dy) * dz
+        w110 = dx * dy * (1 - dz)
+        w111 = dx * dy * dz
+
+        # Interpolate each gradient component
+        grad_interp = np.zeros(3)
+        for comp in range(3):
+            grad_comp = grad_phase[:, :, :, comp]
+            grad_interp[comp] = (
+                w000 * grad_comp[x0, y0, z0]
+                + w001 * grad_comp[x0, y0, z1]
+                + w010 * grad_comp[x0, y1, z0]
+                + w011 * grad_comp[x0, y1, z1]
+                + w100 * grad_comp[x1, y0, z0]
+                + w101 * grad_comp[x1, y0, z1]
+                + w110 * grad_comp[x1, y1, z0]
+                + w111 * grad_comp[x1, y1, z1]
+            )
+
+        return grad_interp
 
     def visualize_node_analysis(
         self, analysis_result: Dict[str, Any], output_path: str = "node_analysis.png"
@@ -452,9 +527,9 @@ class LevelBNodeAnalyzer:
         # 3. Verify discrete layers
         discrete_layers = self._verify_discrete_layers(field, center)
 
-        # 4. Acceptance criteria (more lenient for testing)
-        # For testing, accept if we have any stepwise pattern
-        passed = stepwise_pattern or discrete_layers
+        # 4. Acceptance criteria for stepwise structure validation
+        # Stepwise structure requires both pattern detection and discrete layers
+        passed = stepwise_pattern and discrete_layers
 
         return {
             "stepwise_structure": stepwise_pattern,

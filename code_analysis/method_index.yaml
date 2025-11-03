@@ -10875,6 +10875,79 @@ method_index:
       line: 188
       name: analyze_cosmological_evolution
       returns: Dict[str, Any]
+    CosmologicalEvolutionCUDA:
+    - args:
+      - self
+      - domain
+      - cosmology_params
+      - use_cuda
+      file: ./bhlff/models/level_g/cuda/cosmology_cuda.py
+      line: 63
+      name: __init__
+      returns: None
+    - args:
+      - self
+      - field
+      - t
+      - dt
+      - scale_factor
+      file: ./bhlff/models/level_g/cuda/cosmology_cuda.py
+      line: 104
+      name: evolve_step
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      - dt
+      - scale_factor
+      file: ./bhlff/models/level_g/cuda/cosmology_cuda.py
+      line: 128
+      name: _evolve_step_cpu
+      returns: np.ndarray
+    - args:
+      - self
+      - spatial_shape
+      file: ./bhlff/models/level_g/cuda/cosmology_cuda.py
+      line: 158
+      name: _get_k_grids_cpu
+      returns: Tuple[np.ndarray, np.ndarray, np.ndarray]
+    - args:
+      - self
+      - field
+      - dt
+      - scale_factor
+      file: ./bhlff/models/level_g/cuda/cosmology_cuda.py
+      line: 176
+      name: _evolve_step_cuda
+      returns: np.ndarray
+    - args:
+      - self
+      - field_gpu
+      - dt
+      - scale_factor
+      file: ./bhlff/models/level_g/cuda/cosmology_cuda.py
+      line: 200
+      name: _evolve_whole_gpu
+      returns: Any
+    - args:
+      - self
+      - scale_factor
+      file: ./bhlff/models/level_g/cuda/cosmology_cuda.py
+      line: 235
+      name: _hubble
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/cuda/cosmology_cuda.py
+      line: 239
+      name: _get_domain_lengths
+      returns: Tuple[float, float, float]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/cuda/cosmology_cuda.py
+      line: 251
+      name: _cp
+      returns: Any
     CosmologicalModel:
     - args:
       - self
@@ -15476,6 +15549,114 @@ method_index:
       line: 104
       name: __repr__
       returns: str
+    GravitationalEffectsCUDA:
+    - args:
+      - self
+      - domain
+      - params
+      - use_cuda
+      file: ./bhlff/models/level_g/cuda/gravity_cuda.py
+      line: 32
+      name: __init__
+      returns: None
+    - args:
+      - self
+      - phase_field
+      file: ./bhlff/models/level_g/cuda/gravity_cuda.py
+      line: 49
+      name: analyze
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_g/cuda/gravity_cuda.py
+      line: 58
+      name: _analyze_cpu
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_g/cuda/gravity_cuda.py
+      line: 71
+      name: _gradients_cpu
+      returns: Dict[str, np.ndarray]
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_g/cuda/gravity_cuda.py
+      line: 76
+      name: _effective_metric_cpu
+      returns: np.ndarray
+    - args:
+      - self
+      - grads
+      file: ./bhlff/models/level_g/cuda/gravity_cuda.py
+      line: 87
+      name: _invariants_cpu
+      returns: Dict[str, float]
+    - args:
+      - self
+      - g
+      file: ./bhlff/models/level_g/cuda/gravity_cuda.py
+      line: 102
+      name: _anisotropy_cpu
+      returns: float
+    - args:
+      - self
+      - grads
+      file: ./bhlff/models/level_g/cuda/gravity_cuda.py
+      line: 107
+      name: _focusing_cpu
+      returns: float
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_g/cuda/gravity_cuda.py
+      line: 119
+      name: _analyze_cuda
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - field_gpu
+      file: ./bhlff/models/level_g/cuda/gravity_cuda.py
+      line: 165
+      name: _analyze_whole_gpu
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - field_gpu
+      file: ./bhlff/models/level_g/cuda/gravity_cuda.py
+      line: 192
+      name: _gradients_gpu
+      returns: list[Any]
+    - args:
+      - self
+      - arr
+      - axis
+      file: ./bhlff/models/level_g/cuda/gravity_cuda.py
+      line: 200
+      name: _gradient_component
+      returns: Any
+    - args:
+      - self
+      - field_gpu
+      file: ./bhlff/models/level_g/cuda/gravity_cuda.py
+      line: 204
+      name: _effective_metric_gpu
+      returns: np.ndarray
+    - args:
+      - self
+      - g_cpu
+      file: ./bhlff/models/level_g/cuda/gravity_cuda.py
+      line: 216
+      name: _anisotropy_gpu
+      returns: float
+    - args:
+      - self
+      file: ./bhlff/models/level_g/cuda/gravity_cuda.py
+      line: 221
+      name: _cp
+      returns: Any
     GridConvergenceAnalyzer:
     - args:
       - self
@@ -15670,6 +15851,96 @@ method_index:
       line: 75
       name: compute_cpu
       returns: float
+    LargeScaleStructureAnalyzerCUDA:
+    - args:
+      - self
+      - domain
+      - use_cuda
+      file: ./bhlff/models/level_g/cuda/structure_cuda.py
+      line: 36
+      name: __init__
+      returns: None
+    - args:
+      - self
+      - field
+      - bins
+      file: ./bhlff/models/level_g/cuda/structure_cuda.py
+      line: 46
+      name: compute_power_spectrum
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_g/cuda/structure_cuda.py
+      line: 59
+      name: two_point_correlation
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      - bins
+      file: ./bhlff/models/level_g/cuda/structure_cuda.py
+      line: 74
+      name: _compute_power_spectrum_cpu
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - power
+      - shape
+      file: ./bhlff/models/level_g/cuda/structure_cuda.py
+      line: 84
+      name: _radial_bin_cpu
+      returns: Tuple[np.ndarray, np.ndarray]
+    - args:
+      - self
+      - field
+      - bins
+      file: ./bhlff/models/level_g/cuda/structure_cuda.py
+      line: 120
+      name: _compute_power_spectrum_cuda
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - field_gpu
+      file: ./bhlff/models/level_g/cuda/structure_cuda.py
+      line: 134
+      name: _power_spectrum_whole_gpu
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - field_gpu
+      file: ./bhlff/models/level_g/cuda/structure_cuda.py
+      line: 146
+      name: _power_spectrum_blocks_gpu
+      returns: Dict[str, Any]
+    - args:
+      - self
+      - power
+      - shape
+      file: ./bhlff/models/level_g/cuda/structure_cuda.py
+      line: 173
+      name: _radial_bin_gpu
+      returns: Tuple[Any, Any]
+    - args:
+      - self
+      file: ./bhlff/models/level_g/cuda/structure_cuda.py
+      line: 210
+      name: _domain_lengths
+      returns: Tuple[float, float, float]
+    - args:
+      - self
+      - ps
+      - shape
+      file: ./bhlff/models/level_g/cuda/structure_cuda.py
+      line: 220
+      name: _reconstruct_spectrum_cube
+      returns: np.ndarray
+    - args:
+      - self
+      file: ./bhlff/models/level_g/cuda/structure_cuda.py
+      line: 235
+      name: _cp
+      returns: Any
     LargeScaleStructureModel:
     - args:
       - self
@@ -17312,6 +17583,40 @@ method_index:
       file: ./bhlff/models/level_g/bvp_integration.py
       line: 401
       name: _check_bvp_compliance
+      returns: Dict[str, Any]
+    LevelGCUDAFacade:
+    - args:
+      - self
+      - domain
+      - params
+      - use_cuda
+      file: ./bhlff/models/level_g/level_g_cuda_facade.py
+      line: 35
+      name: __init__
+      returns: None
+    - args:
+      - self
+      - field
+      - t
+      - dt
+      - scale_factor
+      file: ./bhlff/models/level_g/level_g_cuda_facade.py
+      line: 50
+      name: cosmo_evolve_step
+      returns: np.ndarray
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_g/level_g_cuda_facade.py
+      line: 55
+      name: compute_power_spectrum
+      returns: Dict[str, np.ndarray]
+    - args:
+      - self
+      - field
+      file: ./bhlff/models/level_g/level_g_cuda_facade.py
+      line: 60
+      name: analyze_gravity
       returns: Dict[str, Any]
     LevelGInterface:
     - args:
@@ -19002,13 +19307,13 @@ method_index:
       - interaction_range
       - params
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 40
+      line: 42
       name: __init__
       returns: null
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 105
+      line: 107
       name: compute_effective_potential
       returns: np.ndarray
     - args:
@@ -19016,7 +19321,7 @@ method_index:
       - particle
       - particles
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 196
+      line: 142
       name: compute_single_particle_potential
       returns: Any
     - args:
@@ -19024,7 +19329,7 @@ method_index:
       - particle1
       - particle2
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 201
+      line: 147
       name: compute_pair_interaction
       returns: Any
     - args:
@@ -19033,20 +19338,20 @@ method_index:
       - p2
       - p3
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 204
+      line: 150
       name: compute_three_body_interaction
       returns: Any
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 209
+      line: 155
       name: _setup_interaction_matrices
       returns: None
     - args:
       - self
       - particle
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 231
+      line: 167
       name: _compute_single_particle_potential
       returns: np.ndarray
     - args:
@@ -19054,13 +19359,13 @@ method_index:
       - particle1
       - particle2
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 263
+      line: 185
       name: _compute_pair_interaction
       returns: np.ndarray
     - args:
       - self
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 296
+      line: 206
       name: _compute_higher_order_interactions
       returns: np.ndarray
     - args:
@@ -19069,14 +19374,14 @@ method_index:
       - particle2
       - particle3
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 322
+      line: 221
       name: _compute_three_body_interaction
       returns: np.ndarray
     - args:
       - self
       - distance
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 363
+      line: 243
       name: _calculate_interaction_strength
       returns: float
     - args:
@@ -19085,14 +19390,14 @@ method_index:
       - distance_13
       - distance_23
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 381
+      line: 261
       name: _calculate_three_body_strength
       returns: float
     - args:
       - self
       - distance
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 412
+      line: 283
       name: _step_interaction_potential
       returns: null
     - args:
@@ -19101,7 +19406,7 @@ method_index:
       - distance_13
       - distance_23
       file: ./bhlff/models/level_f/multi_particle_potential.py
-      line: 440
+      line: 311
       name: _step_three_body_interaction_potential
       returns: float
     MultiParticlePotentialAnalyzerCUDA:
@@ -50263,6 +50568,6 @@ method_index:
       returns: null
   standalone_functions: []
   summary:
-    total_class_methods: 6955
-    total_classes: 674
+    total_class_methods: 6995
+    total_classes: 678
     total_standalone_functions: 0

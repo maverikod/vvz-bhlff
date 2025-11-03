@@ -33,6 +33,9 @@ except Exception:
     cp = None  # type: ignore
 
 
+from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
+
+
 class FFTSolver7DBasic:
     """Full-array FFT-based 7D solver (no batching)."""
 
@@ -58,24 +61,24 @@ class FFTSolver7DBasic:
         self.beta = float(beta)
         self.lmbda = float(lambda_param)
         self.use_cuda = bool(use_cuda_flag) and CUDA_AVAILABLE
-        self._xp = cp if self.use_cuda else np
         self._coeffs = None  # type: ignore
+        # Use unified spectral ops to ensure proper normalization and GPU fallback
+        self._ops = UnifiedSpectralOperations(self.domain, precision="float64")
         self._build_spectral_coefficients()
 
     def solve_stationary(self, source_field: np.ndarray) -> np.ndarray:
-        xp = self._xp
-        src = xp.asarray(source_field) if self.use_cuda else source_field
         # Validate shape
-        if src is None:
+        if source_field is None:
             raise ValueError("source_field must not be None")
-        if tuple(src.shape) != tuple(getattr(self.domain, "shape")):
+        if tuple(source_field.shape) != tuple(getattr(self.domain, "shape")):
             raise ValueError(
-                f"Source shape {src.shape} incompatible with domain shape {self.domain.shape}"
+                f"Source shape {source_field.shape} incompatible with domain shape {self.domain.shape}"
             )
-        s_hat = xp.fft.fftn(src, norm="ortho")
+        # Always operate through unified ops (handles GPU/CPU and OOM fallback)
+        s_hat = self._ops.forward_fft(np.asarray(source_field, dtype=np.complex128), "ortho")
         a_hat = s_hat / self._coeffs
-        a = xp.fft.ifftn(a_hat, norm="ortho").real
-        return cp.asnumpy(a) if self.use_cuda else a
+        a = self._ops.inverse_fft(a_hat, "ortho").real
+        return a
 
     # Backward-compatible API expected by tests
     def solve(self, source_field: np.ndarray) -> np.ndarray:
@@ -101,7 +104,8 @@ class FFTSolver7DBasic:
         }
 
     def _build_spectral_coefficients(self) -> None:
-        xp = self._xp
+        # Build coefficients on CPU (numpy) to avoid GPU OOM; ops layer handles device
+        xp = np
         # Support both classic Domain (N, N_phi, N_t) and Domain7DBVP (N_spatial, N_phase, N_t)
         N = getattr(self.domain, "N", getattr(self.domain, "N_spatial", None))
         Np = getattr(self.domain, "N_phi", getattr(self.domain, "N_phase", None))
@@ -142,4 +146,4 @@ class FFTSolver7DBasic:
         D = self.mu * abs_k_2beta + self.lmbda
         if self.lmbda == 0.0:
             D[(k2 == 0)] = 1.0
-        self._coeffs = D.astype(xp.float64)
+        self._coeffs = D.astype(np.float64)

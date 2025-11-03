@@ -2,9 +2,9 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 1414
+Total issues found: 1533
 
-METHODS_WITHOUT_DOCSTRINGS: 558 issues
+METHODS_WITHOUT_DOCSTRINGS: 672 issues
 ----------------------------------------
   ./scripts/cuda_smoke_test.py
     Line 30
@@ -1143,42 +1143,42 @@ METHODS_WITHOUT_DOCSTRINGS: 558 issues
     Method: compute_collective_excitations
 
   ./bhlff/models/level_f/multi_particle_potential.py
-    Line 196
+    Line 142
     Method: compute_single_particle_potential
 
   ./bhlff/models/level_f/multi_particle_potential.py
-    Line 196
+    Line 142
     Class: MultiParticlePotentialAnalyzer
     Method: compute_single_particle_potential
 
   ./bhlff/models/level_f/multi_particle_potential.py
-    Line 201
+    Line 147
     Method: compute_pair_interaction
 
   ./bhlff/models/level_f/multi_particle_potential.py
-    Line 201
+    Line 147
     Class: MultiParticlePotentialAnalyzer
     Method: compute_pair_interaction
 
   ./bhlff/models/level_f/multi_particle_potential.py
-    Line 204
+    Line 150
     Method: compute_three_body_interaction
 
   ./bhlff/models/level_f/multi_particle_potential.py
-    Line 204
+    Line 150
     Class: MultiParticlePotentialAnalyzer
     Method: compute_three_body_interaction
 
   ./bhlff/models/level_f/multi_particle_potential.py
-    Line 196
+    Line 142
     Method: compute_single_particle_potential
 
   ./bhlff/models/level_f/multi_particle_potential.py
-    Line 201
+    Line 147
     Method: compute_pair_interaction
 
   ./bhlff/models/level_f/multi_particle_potential.py
-    Line 204
+    Line 150
     Method: compute_three_body_interaction
 
   ./bhlff/models/level_f/nonlinear_facade.py
@@ -1522,6 +1522,42 @@ METHODS_WITHOUT_DOCSTRINGS: 558 issues
     Line 205
     Method: _iter_blocks_3d
 
+  ./bhlff/models/level_f/potential/helpers.py
+    Line 18
+    Method: setup_interaction_matrix
+
+  ./bhlff/models/level_f/potential/helpers.py
+    Line 30
+    Method: calculate_interaction_strength
+
+  ./bhlff/models/level_f/potential/helpers.py
+    Line 34
+    Method: calculate_three_body_strength
+
+  ./bhlff/models/level_f/potential/helpers.py
+    Line 40
+    Method: step_interaction_potential
+
+  ./bhlff/models/level_f/potential/helpers.py
+    Line 44
+    Method: step_three_body_potential
+
+  ./bhlff/models/level_f/potential/helpers.py
+    Line 49
+    Method: single_particle_field
+
+  ./bhlff/models/level_f/potential/helpers.py
+    Line 62
+    Method: pair_interaction_field
+
+  ./bhlff/models/level_f/potential/helpers.py
+    Line 68
+    Method: three_body_interaction_field
+
+  ./bhlff/models/level_f/potential/helpers.py
+    Line 76
+    Method: higher_order_interactions_field
+
   ./bhlff/models/level_f/multi_particle/__init__.py
     Line 33
     Method: __getattr__
@@ -1564,6 +1600,461 @@ METHODS_WITHOUT_DOCSTRINGS: 558 issues
   ./bhlff/models/level_e/cuda/energy/skyrme.py
     Line 42
     Method: __init__
+
+  ./bhlff/models/level_g/level_g_cuda_facade.py
+    Line 35
+    Method: __init__
+
+  ./bhlff/models/level_g/level_g_cuda_facade.py
+    Line 35
+    Class: LevelGCUDAFacade
+    Method: __init__
+
+  ./bhlff/models/level_g/level_g_cuda_facade.py
+    Line 50
+    Method: cosmo_evolve_step
+
+  ./bhlff/models/level_g/level_g_cuda_facade.py
+    Line 50
+    Class: LevelGCUDAFacade
+    Method: cosmo_evolve_step
+
+  ./bhlff/models/level_g/level_g_cuda_facade.py
+    Line 55
+    Method: compute_power_spectrum
+
+  ./bhlff/models/level_g/level_g_cuda_facade.py
+    Line 55
+    Class: LevelGCUDAFacade
+    Method: compute_power_spectrum
+
+  ./bhlff/models/level_g/level_g_cuda_facade.py
+    Line 60
+    Method: analyze_gravity
+
+  ./bhlff/models/level_g/level_g_cuda_facade.py
+    Line 60
+    Class: LevelGCUDAFacade
+    Method: analyze_gravity
+
+  ./bhlff/models/level_g/level_g_cuda_facade.py
+    Line 35
+    Method: __init__
+
+  ./bhlff/models/level_g/level_g_cuda_facade.py
+    Line 50
+    Method: cosmo_evolve_step
+
+  ./bhlff/models/level_g/level_g_cuda_facade.py
+    Line 55
+    Method: compute_power_spectrum
+
+  ./bhlff/models/level_g/level_g_cuda_facade.py
+    Line 60
+    Method: analyze_gravity
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 128
+    Method: _evolve_step_cpu
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 128
+    Class: CosmologicalEvolutionCUDA
+    Method: _evolve_step_cpu
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 158
+    Method: _get_k_grids_cpu
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 158
+    Class: CosmologicalEvolutionCUDA
+    Method: _get_k_grids_cpu
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 176
+    Method: _evolve_step_cuda
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 176
+    Class: CosmologicalEvolutionCUDA
+    Method: _evolve_step_cuda
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 200
+    Method: _evolve_whole_gpu
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 200
+    Class: CosmologicalEvolutionCUDA
+    Method: _evolve_whole_gpu
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 235
+    Method: _hubble
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 235
+    Class: CosmologicalEvolutionCUDA
+    Method: _hubble
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 239
+    Method: _get_domain_lengths
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 239
+    Class: CosmologicalEvolutionCUDA
+    Method: _get_domain_lengths
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 251
+    Method: _cp
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 251
+    Class: CosmologicalEvolutionCUDA
+    Method: _cp
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 128
+    Method: _evolve_step_cpu
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 158
+    Method: _get_k_grids_cpu
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 176
+    Method: _evolve_step_cuda
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 200
+    Method: _evolve_whole_gpu
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 235
+    Method: _hubble
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 239
+    Method: _get_domain_lengths
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 251
+    Method: _cp
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 32
+    Method: __init__
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 32
+    Class: GravitationalEffectsCUDA
+    Method: __init__
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 58
+    Method: _analyze_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 58
+    Class: GravitationalEffectsCUDA
+    Method: _analyze_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 71
+    Method: _gradients_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 71
+    Class: GravitationalEffectsCUDA
+    Method: _gradients_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 76
+    Method: _effective_metric_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 76
+    Class: GravitationalEffectsCUDA
+    Method: _effective_metric_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 87
+    Method: _invariants_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 87
+    Class: GravitationalEffectsCUDA
+    Method: _invariants_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 102
+    Method: _anisotropy_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 102
+    Class: GravitationalEffectsCUDA
+    Method: _anisotropy_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 107
+    Method: _focusing_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 107
+    Class: GravitationalEffectsCUDA
+    Method: _focusing_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 119
+    Method: _analyze_cuda
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 119
+    Class: GravitationalEffectsCUDA
+    Method: _analyze_cuda
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 165
+    Method: _analyze_whole_gpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 165
+    Class: GravitationalEffectsCUDA
+    Method: _analyze_whole_gpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 192
+    Method: _gradients_gpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 192
+    Class: GravitationalEffectsCUDA
+    Method: _gradients_gpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 200
+    Method: _gradient_component
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 200
+    Class: GravitationalEffectsCUDA
+    Method: _gradient_component
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 204
+    Method: _effective_metric_gpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 204
+    Class: GravitationalEffectsCUDA
+    Method: _effective_metric_gpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 216
+    Method: _anisotropy_gpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 216
+    Class: GravitationalEffectsCUDA
+    Method: _anisotropy_gpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 221
+    Method: _cp
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 221
+    Class: GravitationalEffectsCUDA
+    Method: _cp
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 32
+    Method: __init__
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 58
+    Method: _analyze_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 71
+    Method: _gradients_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 76
+    Method: _effective_metric_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 87
+    Method: _invariants_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 102
+    Method: _anisotropy_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 107
+    Method: _focusing_cpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 119
+    Method: _analyze_cuda
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 165
+    Method: _analyze_whole_gpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 192
+    Method: _gradients_gpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 200
+    Method: _gradient_component
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 204
+    Method: _effective_metric_gpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 216
+    Method: _anisotropy_gpu
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 221
+    Method: _cp
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 36
+    Method: __init__
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 36
+    Class: LargeScaleStructureAnalyzerCUDA
+    Method: __init__
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 74
+    Method: _compute_power_spectrum_cpu
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 74
+    Class: LargeScaleStructureAnalyzerCUDA
+    Method: _compute_power_spectrum_cpu
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 84
+    Method: _radial_bin_cpu
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 84
+    Class: LargeScaleStructureAnalyzerCUDA
+    Method: _radial_bin_cpu
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 120
+    Method: _compute_power_spectrum_cuda
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 120
+    Class: LargeScaleStructureAnalyzerCUDA
+    Method: _compute_power_spectrum_cuda
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 134
+    Method: _power_spectrum_whole_gpu
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 134
+    Class: LargeScaleStructureAnalyzerCUDA
+    Method: _power_spectrum_whole_gpu
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 146
+    Method: _power_spectrum_blocks_gpu
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 146
+    Class: LargeScaleStructureAnalyzerCUDA
+    Method: _power_spectrum_blocks_gpu
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 173
+    Method: _radial_bin_gpu
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 173
+    Class: LargeScaleStructureAnalyzerCUDA
+    Method: _radial_bin_gpu
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 210
+    Method: _domain_lengths
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 210
+    Class: LargeScaleStructureAnalyzerCUDA
+    Method: _domain_lengths
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 220
+    Method: _reconstruct_spectrum_cube
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 220
+    Class: LargeScaleStructureAnalyzerCUDA
+    Method: _reconstruct_spectrum_cube
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 235
+    Method: _cp
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 235
+    Class: LargeScaleStructureAnalyzerCUDA
+    Method: _cp
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 36
+    Method: __init__
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 74
+    Method: _compute_power_spectrum_cpu
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 84
+    Method: _radial_bin_cpu
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 120
+    Method: _compute_power_spectrum_cuda
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 134
+    Method: _power_spectrum_whole_gpu
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 146
+    Method: _power_spectrum_blocks_gpu
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 173
+    Method: _radial_bin_gpu
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 210
+    Method: _domain_lengths
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 220
+    Method: _reconstruct_spectrum_cube
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 235
+    Method: _cp
 
   ./bhlff/cli/cuda_smoke.py
     Line 23
@@ -2484,7 +2975,7 @@ CLASSES_WITHOUT_DOCSTRINGS: 21 issues
     Class: TestStep2Command
 
 
-IMPORTS_IN_MIDDLE: 706 issues
+IMPORTS_IN_MIDDLE: 712 issues
 ----------------------------------------
   ./test_quench_detector_minimal.py
     Line 31
@@ -3294,7 +3785,7 @@ IMPORTS_IN_MIDDLE: 706 issues
     Line 106
 
   ./bhlff/models/level_f/multi_particle_potential.py
-    Line 24
+    Line 26
 
   ./bhlff/models/level_f/nonlinear_facade.py
     Line 32
@@ -3391,6 +3882,9 @@ IMPORTS_IN_MIDDLE: 706 issues
 
   ./bhlff/models/level_f/cuda/multi_particle_potential_cuda.py
     Line 47
+
+  ./bhlff/models/level_f/potential/block_cpu.py
+    Line 24
 
   ./bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
     Line 24
@@ -3740,6 +4234,9 @@ IMPORTS_IN_MIDDLE: 706 issues
   ./bhlff/models/level_g/__init__.py
     Line 29
 
+  ./bhlff/models/level_g/level_g_cuda_facade.py
+    Line 23
+
   ./bhlff/models/level_g/analysis.py
     Line 22
 
@@ -3859,6 +4356,18 @@ IMPORTS_IN_MIDDLE: 706 issues
 
   ./bhlff/models/level_g/cosmology/cosmological_model.py
     Line 30
+
+  ./bhlff/models/level_g/cuda/cosmology_cuda.py
+    Line 252
+
+  ./bhlff/models/level_g/cuda/gravity_cuda.py
+    Line 222
+
+  ./bhlff/models/level_g/cuda/__init__.py
+    Line 21
+
+  ./bhlff/models/level_g/cuda/structure_cuda.py
+    Line 236
 
   ./bhlff/models/level_g/structure/galaxy_formation.py
     Line 30
@@ -4605,7 +5114,7 @@ IMPORTS_IN_MIDDLE: 706 issues
     Line 65
 
 
-FILES_TOO_LARGE: 125 issues
+FILES_TOO_LARGE: 124 issues
 ----------------------------------------
   ./test_quench_detector_optimized.py
 
@@ -4710,8 +5219,6 @@ FILES_TOO_LARGE: 125 issues
   ./bhlff/models/level_f/multi_particle_system.py
 
   ./bhlff/models/level_f/collective_facade.py
-
-  ./bhlff/models/level_f/multi_particle_potential.py
 
   ./bhlff/models/level_f/nonlinear/basic_effects.py
 

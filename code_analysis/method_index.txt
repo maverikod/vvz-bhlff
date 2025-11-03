@@ -7774,33 +7774,33 @@ Class: CollectiveExcitations
 
 Class: MultiParticlePotentialAnalyzer
   __init__(self, domain, particles, interaction_range, params)
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 40
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 42
   compute_effective_potential(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 105
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 107
   compute_single_particle_potential(self, particle, particles) -> Any
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 196
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 142
   compute_pair_interaction(self, particle1, particle2) -> Any
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 201
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 147
   compute_three_body_interaction(self, p1, p2, p3) -> Any
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 204
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 150
   _setup_interaction_matrices(self) -> None
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 209
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 155
   _compute_single_particle_potential(self, particle) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 231
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 167
   _compute_pair_interaction(self, particle1, particle2) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 263
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 185
   _compute_higher_order_interactions(self) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 296
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 206
   _compute_three_body_interaction(self, particle1, particle2, particle3) -> np.ndarray
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 322
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 221
   _calculate_interaction_strength(self, distance) -> float
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 363
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 243
   _calculate_three_body_strength(self, distance_12, distance_13, distance_23) -> float
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 381
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 261
   _step_interaction_potential(self, distance)
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 412
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 283
   _step_three_body_interaction_potential(self, distance_12, distance_13, distance_23) -> float
-    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 440
+    File: ./bhlff/models/level_f/multi_particle_potential.py, Line: 311
 
 Class: NonlinearEffects
   __init__(self, system, nonlinear_params)
@@ -10662,6 +10662,16 @@ Class: VBPGravitationalEffectsModel
   compute_envelope_effects(self) -> Dict[str, Any]
     File: ./bhlff/models/level_g/gravity.py, Line: 203
 
+Class: LevelGCUDAFacade
+  __init__(self, domain, params, use_cuda) -> None
+    File: ./bhlff/models/level_g/level_g_cuda_facade.py, Line: 35
+  cosmo_evolve_step(self, field, t, dt, scale_factor) -> np.ndarray
+    File: ./bhlff/models/level_g/level_g_cuda_facade.py, Line: 50
+  compute_power_spectrum(self, field) -> Dict[str, np.ndarray]
+    File: ./bhlff/models/level_g/level_g_cuda_facade.py, Line: 55
+  analyze_gravity(self, field) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/level_g_cuda_facade.py, Line: 60
+
 Class: ParticleInversion
   __init__(self, observables, priors, loss_weights, optimization_params)
     File: ./bhlff/models/level_g/particle_inversion.py, Line: 47
@@ -11263,6 +11273,84 @@ Class: CosmologicalModel
     File: ./bhlff/models/level_g/cosmology/cosmological_model.py, Line: 201
   compute_cosmological_parameters(self) -> Dict[str, float]
     File: ./bhlff/models/level_g/cosmology/cosmological_model.py, Line: 226
+
+Class: CosmologicalEvolutionCUDA
+  __init__(self, domain, cosmology_params, use_cuda) -> None
+    File: ./bhlff/models/level_g/cuda/cosmology_cuda.py, Line: 63
+  evolve_step(self, field, t, dt, scale_factor) -> np.ndarray
+    File: ./bhlff/models/level_g/cuda/cosmology_cuda.py, Line: 104
+  _evolve_step_cpu(self, field, dt, scale_factor) -> np.ndarray
+    File: ./bhlff/models/level_g/cuda/cosmology_cuda.py, Line: 128
+  _get_k_grids_cpu(self, spatial_shape) -> Tuple[np.ndarray, np.ndarray, np.ndarray]
+    File: ./bhlff/models/level_g/cuda/cosmology_cuda.py, Line: 158
+  _evolve_step_cuda(self, field, dt, scale_factor) -> np.ndarray
+    File: ./bhlff/models/level_g/cuda/cosmology_cuda.py, Line: 176
+  _evolve_whole_gpu(self, field_gpu, dt, scale_factor) -> Any
+    File: ./bhlff/models/level_g/cuda/cosmology_cuda.py, Line: 200
+  _hubble(self, scale_factor) -> float
+    File: ./bhlff/models/level_g/cuda/cosmology_cuda.py, Line: 235
+  _get_domain_lengths(self) -> Tuple[float, float, float]
+    File: ./bhlff/models/level_g/cuda/cosmology_cuda.py, Line: 239
+  _cp(self) -> Any
+    File: ./bhlff/models/level_g/cuda/cosmology_cuda.py, Line: 251
+
+Class: GravitationalEffectsCUDA
+  __init__(self, domain, params, use_cuda) -> None
+    File: ./bhlff/models/level_g/cuda/gravity_cuda.py, Line: 32
+  analyze(self, phase_field) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/cuda/gravity_cuda.py, Line: 49
+  _analyze_cpu(self, field) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/cuda/gravity_cuda.py, Line: 58
+  _gradients_cpu(self, field) -> Dict[str, np.ndarray]
+    File: ./bhlff/models/level_g/cuda/gravity_cuda.py, Line: 71
+  _effective_metric_cpu(self, field) -> np.ndarray
+    File: ./bhlff/models/level_g/cuda/gravity_cuda.py, Line: 76
+  _invariants_cpu(self, grads) -> Dict[str, float]
+    File: ./bhlff/models/level_g/cuda/gravity_cuda.py, Line: 87
+  _anisotropy_cpu(self, g) -> float
+    File: ./bhlff/models/level_g/cuda/gravity_cuda.py, Line: 102
+  _focusing_cpu(self, grads) -> float
+    File: ./bhlff/models/level_g/cuda/gravity_cuda.py, Line: 107
+  _analyze_cuda(self, field) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/cuda/gravity_cuda.py, Line: 119
+  _analyze_whole_gpu(self, field_gpu) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/cuda/gravity_cuda.py, Line: 165
+  _gradients_gpu(self, field_gpu) -> list[Any]
+    File: ./bhlff/models/level_g/cuda/gravity_cuda.py, Line: 192
+  _gradient_component(self, arr, axis) -> Any
+    File: ./bhlff/models/level_g/cuda/gravity_cuda.py, Line: 200
+  _effective_metric_gpu(self, field_gpu) -> np.ndarray
+    File: ./bhlff/models/level_g/cuda/gravity_cuda.py, Line: 204
+  _anisotropy_gpu(self, g_cpu) -> float
+    File: ./bhlff/models/level_g/cuda/gravity_cuda.py, Line: 216
+  _cp(self) -> Any
+    File: ./bhlff/models/level_g/cuda/gravity_cuda.py, Line: 221
+
+Class: LargeScaleStructureAnalyzerCUDA
+  __init__(self, domain, use_cuda) -> None
+    File: ./bhlff/models/level_g/cuda/structure_cuda.py, Line: 36
+  compute_power_spectrum(self, field, bins) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/cuda/structure_cuda.py, Line: 46
+  two_point_correlation(self, field) -> np.ndarray
+    File: ./bhlff/models/level_g/cuda/structure_cuda.py, Line: 59
+  _compute_power_spectrum_cpu(self, field, bins) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/cuda/structure_cuda.py, Line: 74
+  _radial_bin_cpu(self, power, shape) -> Tuple[np.ndarray, np.ndarray]
+    File: ./bhlff/models/level_g/cuda/structure_cuda.py, Line: 84
+  _compute_power_spectrum_cuda(self, field, bins) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/cuda/structure_cuda.py, Line: 120
+  _power_spectrum_whole_gpu(self, field_gpu) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/cuda/structure_cuda.py, Line: 134
+  _power_spectrum_blocks_gpu(self, field_gpu) -> Dict[str, Any]
+    File: ./bhlff/models/level_g/cuda/structure_cuda.py, Line: 146
+  _radial_bin_gpu(self, power, shape) -> Tuple[Any, Any]
+    File: ./bhlff/models/level_g/cuda/structure_cuda.py, Line: 173
+  _domain_lengths(self) -> Tuple[float, float, float]
+    File: ./bhlff/models/level_g/cuda/structure_cuda.py, Line: 210
+  _reconstruct_spectrum_cube(self, ps, shape) -> np.ndarray
+    File: ./bhlff/models/level_g/cuda/structure_cuda.py, Line: 220
+  _cp(self) -> Any
+    File: ./bhlff/models/level_g/cuda/structure_cuda.py, Line: 235
 
 Class: GalaxyFormation
   __init__(self, evolution_params)

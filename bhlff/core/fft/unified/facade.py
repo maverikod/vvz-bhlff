@@ -10,7 +10,7 @@ import os
 import logging
 import numpy as np
 
-from bhlff.utils.cuda_utils import get_global_backend
+from bhlff.utils.cuda_utils import get_global_backend, CPUBackend
 from .plans import setup_fft_plans
 from .volume import compute_volume_element
 from .wave_vectors import get_wave_vectors, create_wave_vector_grid
@@ -34,6 +34,12 @@ class UnifiedSpectralOperations:
         self.precision = precision
         self.logger = logging.getLogger(__name__)
         self.backend = get_global_backend()
+        # Deterministic Level-A behavior: force CPU backend for low-dimensional domains
+        try:
+            if hasattr(self.domain, "shape") and len(self.domain.shape) <= 3:
+                self.backend = CPUBackend()
+        except Exception:
+            pass
 
         ratio_str = os.getenv("BHLFF_GPU_MEMORY_RATIO", "0.8")
         try:

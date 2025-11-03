@@ -37,7 +37,9 @@ def forward_fft_blocked(
     while start < t_len:
         end = min(t_len, start + block)
         slab = field[..., start:end]
-        out[..., start:end] = forward_fft_gpu(slab, normalization, domain_shape)
+        # Use per-slab domain shape to keep normalization consistent
+        slab_shape = tuple(list(domain_shape[:-1]) + [slab.shape[-1]])
+        out[..., start:end] = forward_fft_gpu(slab, normalization, slab_shape)
         start = end
     return out
 
@@ -55,6 +57,8 @@ def inverse_fft_blocked(
     while start < t_len:
         end = min(t_len, start + block)
         slab = spectral_field[..., start:end]
-        out[..., start:end] = inverse_fft_gpu(slab, normalization, domain_shape)
+        # Use per-slab domain shape to keep normalization consistent
+        slab_shape = tuple(list(domain_shape[:-1]) + [slab.shape[-1]])
+        out[..., start:end] = inverse_fft_gpu(slab, normalization, slab_shape)
         start = end
     return out

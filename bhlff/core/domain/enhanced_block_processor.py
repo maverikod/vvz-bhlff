@@ -18,45 +18,31 @@ Mathematical Foundation:
 
 Example:
     >>> processor = EnhancedBlockProcessor(domain, config)
-    >>> result = processor.process_7d_field(field, operation="bvp_solve")
+    >>> result = processor.process_7d_field(field, operation="bvp_solve", level_c_context=True)
 """
 
 import numpy as np
-import cupy as cp
-from typing import Dict, Any, Optional, Tuple, List, Callable
 import logging
-import psutil
 import gc
-from dataclasses import dataclass
-from enum import Enum
+from typing import Dict, Any
 
-from .block_processor import BlockProcessor, BlockInfo
+try:
+    import cupy as cp
+
+    CUDA_AVAILABLE = True
+except ImportError:
+    CUDA_AVAILABLE = False
+    cp = None
+
+from .block_processor import BlockProcessor
 from .domain import Domain
 from ...utils.memory_monitor import MemoryMonitor
-
-
-class ProcessingMode(Enum):
-    """Processing mode for block operations."""
-
-    CPU_ONLY = "cpu_only"
-    GPU_PREFERRED = "gpu_preferred"
-    GPU_ONLY = "gpu_only"
-    ADAPTIVE = "adaptive"
-
-
-@dataclass
-class ProcessingConfig:
-    """Configuration for enhanced block processing."""
-
-    mode: ProcessingMode = ProcessingMode.ADAPTIVE
-    max_memory_usage: float = 0.8  # 80% of available memory
-    min_block_size: int = 4
-    max_block_size: int = 64
-    overlap_ratio: float = 0.1  # 10% overlap between blocks
-    batch_size: int = 4
-    enable_memory_optimization: bool = True
-    enable_adaptive_sizing: bool = True
-    enable_parallel_processing: bool = True
+from .enhanced_block_processing import ProcessingConfig
+from .enhanced_block_processing.gpu_block_processor import GPUBlockProcessor
+from .enhanced_block_processing.cpu_block_processor import CPUBlockProcessor
+from .enhanced_block_processing.field_processing_strategy import FieldProcessingStrategy
+from .enhanced_block_processing_core import EnhancedBlockProcessorCore
+from .enhanced_block_processing_utils import EnhancedBlockProcessorUtils
 
 
 class EnhancedBlockProcessor:
@@ -66,6 +52,7 @@ class EnhancedBlockProcessor:
     Physical Meaning:
         Provides intelligent block-based processing for 7D phase field computations
         with adaptive memory management and processing optimization.
+        For Level C contexts, enforces GPU-only execution with 7D operations.
 
     Mathematical Foundation:
         Implements adaptive block decomposition with intelligent memory management
@@ -91,13 +78,39 @@ class EnhancedBlockProcessor:
         # Initialize memory monitoring
         self.memory_monitor = MemoryMonitor()
 
-        # Initialize base block processor
-        self.base_processor = BlockProcessor(
-            domain, self._calculate_optimal_block_size()
+        # CUDA availability
+        self.cuda_available = EnhancedBlockProcessorUtils.check_cuda_availability()
+
+        # Initialize utility methods
+        self.utils = EnhancedBlockProcessorUtils(
+            domain, self.config, self.cuda_available, self.logger
         )
 
-        # CUDA availability
-        self.cuda_available = self._check_cuda_availability()
+        # Initialize block processors
+        self.gpu_processor = GPUBlockProcessor(self.cuda_available, self.logger)
+        self.cpu_processor = CPUBlockProcessor(self.logger)
+
+        # Initialize base block processor with optimal block size
+        self.base_processor = BlockProcessor(
+            domain, self.utils.calculate_optimal_block_size()
+        )
+
+        # Initialize field processing strategy handler
+        self.processing_strategy = FieldProcessingStrategy(
+            self.gpu_processor,
+            self.cpu_processor,
+            self.base_processor,
+            self.cuda_available,
+            self.logger,
+        )
+
+        # Initialize core processing methods
+        self.core = EnhancedBlockProcessorCore(
+            self.processing_strategy,
+            self.cuda_available,
+            self.config.mode,
+            self.logger,
+        )
 
         # Processing statistics
         self.stats = {
@@ -122,300 +135,120 @@ class EnhancedBlockProcessor:
         Physical Meaning:
             Processes 7D phase field using intelligent block decomposition
             with adaptive memory management and processing optimization.
+            For Level C contexts, enforces GPU-only execution with 7D operations
+            (7D Laplacian Δ₇ = Σᵢ₌₀⁶ ∂²/∂xᵢ²), backpressure, and 80% GPU memory limit.
+            All operations use vectorized CUDA kernels for optimal performance.
+
+        Mathematical Foundation:
+            Uses 7D Laplacian: Δ₇ = Σᵢ₌₀⁶ ∂²/∂xᵢ² for all 7D operations.
+            Implements block-based processing with:
+            - Vectorized CUDA operations across all 7 dimensions
+            - Backpressure management with 80% GPU memory usage limit
+            - Optimal block tiling for 7D geometry M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
 
         Args:
-            field (np.ndarray): 7D phase field to process.
+            field (np.ndarray): 7D phase field to process with shape (N₀, N₁, N₂, N₃, N₄, N₅, N₆).
             operation (str): Processing operation to perform.
-            **kwargs: Additional operation parameters.
+            **kwargs: Additional operation parameters including:
+                - level_c_context (bool): If True, requires GPU and disables CPU fallback.
+                    Forces 7D operations, backpressure, and 80% GPU memory limit.
+                - use_7d_operations (bool): If True, uses 7D-specific operations (default: True).
+                - use_backpressure (bool): Enable backpressure management (default: True for Level C).
 
         Returns:
             np.ndarray: Processed 7D field.
+
+        Raises:
+            RuntimeError: If Level C context is requested but CUDA is not available.
+            ValueError: If field is not 7D.
         """
-        self.logger.info(
-            f"Processing 7D field: shape={field.shape}, operation={operation}"
-        )
-
-        # Check memory requirements
-        if not self._check_memory_requirements(field):
-            self.logger.warning("Insufficient memory, using fallback processing")
-            return self._fallback_processing(field, operation, **kwargs)
-
-        # Choose processing strategy
-        if self.config.mode == ProcessingMode.ADAPTIVE:
-            strategy = self._choose_adaptive_strategy(field)
-        else:
-            strategy = self.config.mode
-
-        # Process based on strategy
-        if strategy == ProcessingMode.GPU_PREFERRED and self.cuda_available:
-            return self._process_gpu_preferred(field, operation, **kwargs)
-        elif strategy == ProcessingMode.GPU_ONLY and self.cuda_available:
-            return self._process_gpu_only(field, operation, **kwargs)
-        else:
-            return self._process_cpu_optimized(field, operation, **kwargs)
-
-    def _calculate_optimal_block_size(self) -> int:
-        """
-        Calculate optimal block size based on available memory and domain size.
-
-        Physical Meaning:
-            Calculates optimal block size to maximize processing efficiency
-            while staying within memory constraints.
-
-        Returns:
-            int: Optimal block size.
-        """
-        # Get available memory
-        available_memory = psutil.virtual_memory().available / (1024**3)  # GB
-        usable_memory = available_memory * self.config.max_memory_usage
-
-        # Calculate domain size
-        domain_size = np.prod(self.domain.shape)
-        element_size = 16  # complex128 = 16 bytes
-
-        # Calculate maximum block size that fits in memory
-        max_block_size = int(
-            (usable_memory * 1024**3 / (element_size * 8))
-            ** (1.0 / len(self.domain.shape))
-        )
-
-        # Apply constraints
-        optimal_size = min(max_block_size, self.config.max_block_size)
-        optimal_size = max(optimal_size, self.config.min_block_size)
-
-        # Ensure it's reasonable for the domain
-        for dim_size in self.domain.shape:
-            optimal_size = min(optimal_size, dim_size)
-
-        self.logger.info(
-            f"Optimal block size: {optimal_size} "
-            f"(available memory: {available_memory:.2f} GB)"
-        )
-
-        return optimal_size
-
-    def _check_cuda_availability(self) -> bool:
-        """Check if CUDA is available."""
-        try:
-            cp.cuda.Device(0).compute_capability
-            return True
-        except:
-            return False
-
-    def _check_memory_requirements(self, field: np.ndarray) -> bool:
-        """
-        Check if there's enough memory for processing.
-
-        Physical Meaning:
-            Verifies that available memory is sufficient for processing
-            the 7D field with the current block configuration.
-        """
-        # Estimate memory requirements
-        field_memory = field.nbytes / (1024**3)  # GB
-        processing_memory = field_memory * 3  # 3x for processing overhead
-
-        available_memory = psutil.virtual_memory().available / (1024**3)
-        required_memory = processing_memory / self.config.max_memory_usage
-
-        sufficient = available_memory >= required_memory
-
-        if not sufficient:
-            self.logger.warning(
-                f"Insufficient memory: required={required_memory:.2f} GB, "
-                f"available={available_memory:.2f} GB"
+        # Validate 7D field structure
+        if field.ndim != 7:
+            raise ValueError(
+                f"Expected 7D field for processing, got {field.ndim}D. "
+                f"Shape: {field.shape}. 7D structure M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ required."
             )
 
-        return sufficient
+        # Check for Level C context
+        level_c_context = kwargs.get("level_c_context", False)
 
-    def _choose_adaptive_strategy(self, field: np.ndarray) -> ProcessingMode:
-        """
-        Choose processing strategy based on field size and available resources.
+        self.logger.info(
+            f"Processing 7D field: shape={field.shape}, operation={operation}, "
+            f"level_c_context={level_c_context}"
+        )
 
-        Physical Meaning:
-            Intelligently selects the best processing strategy based on
-            field characteristics and available computational resources.
-        """
-        field_size = field.nbytes / (1024**3)  # GB
-        available_memory = psutil.virtual_memory().available / (1024**3)
-
-        # If field is small, prefer GPU for speed
-        if field_size < 0.5 and self.cuda_available:
-            return ProcessingMode.GPU_PREFERRED
-
-        # If field is large, prefer CPU for memory efficiency
-        elif field_size > 2.0:
-            return ProcessingMode.CPU_ONLY
-
-        # Otherwise, use adaptive approach
-        else:
-            return ProcessingMode.ADAPTIVE
-
-    def _process_gpu_preferred(
-        self, field: np.ndarray, operation: str, **kwargs
-    ) -> np.ndarray:
-        """Process field with GPU preference and CPU fallback."""
-        try:
-            return self._process_gpu_blocks(field, operation, **kwargs)
-        except Exception as e:
-            self.logger.warning(f"GPU processing failed: {e}, falling back to CPU")
-            self.stats["fallback_count"] += 1
-            return self._process_cpu_optimized(field, operation, **kwargs)
-
-    def _process_gpu_only(
-        self, field: np.ndarray, operation: str, **kwargs
-    ) -> np.ndarray:
-        """Process field using GPU only."""
-        if not self.cuda_available:
-            raise RuntimeError("GPU processing requested but CUDA not available")
-
-        return self._process_gpu_blocks(field, operation, **kwargs)
-
-    def _process_cpu_optimized(
-        self, field: np.ndarray, operation: str, **kwargs
-    ) -> np.ndarray:
-        """Process field using CPU with optimizations."""
-        self.logger.info("Processing with CPU optimization")
-
-        # Use base processor with optimized settings
-        result = np.zeros_like(field, dtype=np.complex128)
-
-        # Process in blocks
-        for block_data, block_info in self.base_processor.iterate_blocks():
-            processed_block = self._process_single_block_cpu(
-                block_data, operation, **kwargs
-            )
-            self._merge_block_result(result, processed_block, block_info)
-
-            # Memory cleanup
-            if self.config.enable_memory_optimization:
-                gc.collect()
-
-        return result
-
-    def _process_gpu_blocks(
-        self, field: np.ndarray, operation: str, **kwargs
-    ) -> np.ndarray:
-        """Process field using GPU blocks."""
-        self.logger.info("Processing with GPU blocks")
-
-        # Transfer to GPU
-        field_gpu = cp.asarray(field)
-        result_gpu = cp.zeros_like(field_gpu, dtype=cp.complex128)
-
-        try:
-            # Process in blocks on GPU
-            for block_data, block_info in self.base_processor.iterate_blocks():
-                # Extract block on GPU
-                block_gpu = self._extract_block_gpu(field_gpu, block_info)
-
-                # Process block
-                processed_block = self._process_single_block_gpu(
-                    block_gpu, operation, **kwargs
+        # Level C requires CUDA - no CPU fallback (project policy)
+        if level_c_context:
+            if not self.cuda_available:
+                raise RuntimeError(
+                    "Level C context requires CUDA but GPU is not available. "
+                    "Level C does not support CPU fallback. Please ensure CUDA "
+                    "is available and GPU is accessible."
                 )
 
-                # Merge result
-                self._merge_block_result_gpu(result_gpu, processed_block, block_info)
+            # Enforce 7D operations, backpressure, and 80% GPU memory limit for Level C
+            kwargs["use_7d_operations"] = True
+            kwargs["use_backpressure"] = True
+            kwargs["level_c_context"] = True  # Ensure flag is set
 
-            # Transfer back to CPU
-            result = cp.asnumpy(result_gpu)
+            # Optimize block size for Level C with 80% GPU memory limit
+            self.optimize_for_field(field)
 
-        finally:
-            # Cleanup GPU memory
-            del field_gpu, result_gpu
-            cp.get_default_memory_pool().free_all_blocks()
+            self.logger.info(
+                "Level C context: enforcing GPU-only processing with 7D operations "
+                "(7D Laplacian Δ₇ = Σᵢ₌₀⁶ ∂²/∂xᵢ²), backpressure, and 80% GPU memory limit"
+            )
 
-        return result
+            # Use GPU-only processing with explicit 7D operations and backpressure
+            result = self.processing_strategy.process_gpu_only(
+                field, operation, **kwargs
+            )
+            self.stats["blocks_processed"] = getattr(
+                self.processing_strategy, "_last_block_count", 0
+            )
+            return result
 
-    def _process_single_block_cpu(
-        self, block_data: np.ndarray, operation: str, **kwargs
-    ) -> np.ndarray:
-        """Process a single block on CPU."""
-        if operation == "bvp_solve":
-            return self._solve_bvp_block_cpu(block_data, **kwargs)
-        elif operation == "fft":
-            return np.fft.fftn(block_data)
-        elif operation == "ifft":
-            return np.fft.ifftn(block_data)
-        else:
-            raise ValueError(f"Unknown operation: {operation}")
+        # Check memory requirements
+        # For Level C, never use fallback - must fail if memory insufficient
+        # Level C processing already handled above, so this check is for non-Level C
+        if not self.utils.check_memory_requirements(
+            field, level_c_context=level_c_context
+        ):
+            # For non-Level C, use fallback only if explicitly enabled
+            non_level_c = kwargs.get("non_level_c", False)
+            if not non_level_c:
+                self.logger.error(
+                    "Insufficient memory for processing. CPU fallback is disabled "
+                    "by default. Set non_level_c=True to explicitly enable CPU fallback."
+                )
+                raise RuntimeError(
+                    "Insufficient memory for processing. CPU fallback is disabled by default. "
+                    "Set non_level_c=True in kwargs to explicitly enable CPU fallback."
+                )
+            self.logger.warning(
+                "Insufficient memory, using fallback processing (non_level_c=True explicitly set)"
+            )
+            result = self.core.fallback_processing(
+                field,
+                operation,
+                self.config.min_block_size,
+                self.base_processor,
+                **kwargs,
+            )
+            self.stats["blocks_processed"] = getattr(
+                self.processing_strategy, "_last_block_count", 0
+            )
+            self.stats["fallback_count"] += 1
+            return result
 
-    def _process_single_block_gpu(
-        self, block_data: cp.ndarray, operation: str, **kwargs
-    ) -> cp.ndarray:
-        """Process a single block on GPU."""
-        if operation == "bvp_solve":
-            return self._solve_bvp_block_gpu(block_data, **kwargs)
-        elif operation == "fft":
-            return cp.fft.fftn(block_data)
-        elif operation == "ifft":
-            return cp.fft.ifftn(block_data)
-        else:
-            raise ValueError(f"Unknown operation: {operation}")
-
-    def _solve_bvp_block_cpu(self, block_data: np.ndarray, **kwargs) -> np.ndarray:
-        """Solve BVP equation for a block on CPU."""
-        # Simplified BVP solver for demonstration
-        # In practice, this would implement the full BVP envelope equation
-        return block_data * 0.5  # Placeholder implementation
-
-    def _solve_bvp_block_gpu(self, block_data: cp.ndarray, **kwargs) -> cp.ndarray:
-        """Solve BVP equation for a block on GPU."""
-        # Simplified BVP solver for demonstration
-        # In practice, this would implement the full BVP envelope equation
-        return block_data * 0.5  # Placeholder implementation
-
-    def _extract_block_gpu(
-        self, field_gpu: cp.ndarray, block_info: BlockInfo
-    ) -> cp.ndarray:
-        """Extract block from GPU field."""
-        start_indices = block_info.start_indices
-        end_indices = block_info.end_indices
-
-        slices = tuple(
-            slice(start, end) for start, end in zip(start_indices, end_indices)
+        # For non-Level C, use core processing method
+        # This method handles CPU fallback only if explicitly enabled
+        # Default to 7D operations for optimal performance with vectorization
+        kwargs.setdefault("use_7d_operations", True)
+        result = self.core.process_field(field, operation, **kwargs)
+        self.stats["blocks_processed"] = getattr(
+            self.processing_strategy, "_last_block_count", 0
         )
-        return field_gpu[slices]
-
-    def _merge_block_result(
-        self, result: np.ndarray, block_result: np.ndarray, block_info: BlockInfo
-    ) -> None:
-        """Merge block result into main result array."""
-        start_indices = block_info.start_indices
-        end_indices = block_info.end_indices
-
-        slices = tuple(
-            slice(start, end) for start, end in zip(start_indices, end_indices)
-        )
-        result[slices] = block_result
-
-    def _merge_block_result_gpu(
-        self, result_gpu: cp.ndarray, block_result: cp.ndarray, block_info: BlockInfo
-    ) -> None:
-        """Merge block result into main result array on GPU."""
-        start_indices = block_info.start_indices
-        end_indices = block_info.end_indices
-
-        slices = tuple(
-            slice(start, end) for start, end in zip(start_indices, end_indices)
-        )
-        result_gpu[slices] = block_result
-
-    def _fallback_processing(
-        self, field: np.ndarray, operation: str, **kwargs
-    ) -> np.ndarray:
-        """Fallback processing for memory-constrained situations."""
-        self.logger.info("Using fallback processing due to memory constraints")
-
-        # Use minimal block size
-        original_block_size = self.base_processor.block_size
-        self.base_processor.block_size = self.config.min_block_size
-
-        try:
-            result = self._process_cpu_optimized(field, operation, **kwargs)
-        finally:
-            # Restore original block size
-            self.base_processor.block_size = original_block_size
-
         return result
 
     def get_processing_stats(self) -> Dict[str, Any]:
@@ -429,15 +262,94 @@ class EnhancedBlockProcessor:
 
     def optimize_for_field(self, field: np.ndarray) -> None:
         """
-        Optimize processor settings for a specific field.
+        Optimize processor settings for a specific 7D field.
 
         Physical Meaning:
-            Optimizes processor configuration based on field characteristics
-            to maximize processing efficiency.
+            Optimizes processor configuration based on 7D field characteristics
+            to maximize processing efficiency with vectorized CUDA operations.
+            For 7D fields, uses 7D-specific optimization with 80% GPU memory limit.
+            Considers 7D structure M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ for optimal block sizing.
+            All operations use 7D Laplacian Δ₇ = Σᵢ₌₀⁶ ∂²/∂xᵢ² with vectorization.
+
+        Mathematical Foundation:
+            For 7D field with shape (N₀, N₁, N₂, N₃, N₄, N₅, N₆):
+            - GPU: uses 80% of free GPU memory with 7D block tiling
+            - Block size optimized for 7D Laplacian operations: Δ₇ = Σᵢ₌₀⁶ ∂²/∂xᵢ²
+            - Vectorized operations across all 7 dimensions for optimal GPU utilization
+            - Optimal block tiling preserves 7D geometry M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
+
+        Args:
+            field (np.ndarray): 7D field to optimize for with shape (N₀, N₁, N₂, N₃, N₄, N₅, N₆).
+
+        Raises:
+            ValueError: If field is not 7D.
+            RuntimeError: If CUDA optimization fails for Level C context.
         """
+        # Validate 7D field structure
+        if field.ndim != 7:
+            raise ValueError(
+                f"Expected 7D field for optimization, got {field.ndim}D. "
+                f"Shape: {field.shape}. 7D structure M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ required."
+            )
+
         field_size = field.nbytes / (1024**3)  # GB
 
-        # Adjust block size based on field size
+        # For CUDA, use GPU memory-based optimization with 80% limit
+        # This is critical for Level C contexts and optimal 7D processing
+        if self.cuda_available:
+            try:
+                if CUDA_AVAILABLE:
+                    # Use 7D block tiling optimization with 80% GPU memory
+                    # This ensures optimal block size for 7D Laplacian operations
+                    optimal_size = self.utils.calculate_optimal_block_size()
+                    self.base_processor.block_size = optimal_size
+
+                    # Verify GPU memory usage is within 80% limit
+                    if CUDA_AVAILABLE:
+                        mem_info = cp.cuda.runtime.memGetInfo()
+                        free_memory_gpu = mem_info[0] / (1024**3)  # GB
+                        available_memory_gpu = free_memory_gpu * 0.8  # 80% limit
+
+                        # Estimate memory usage for optimal block size
+                        block_volume = optimal_size**7  # 7D block
+                        element_size = 16  # complex128 = 16 bytes
+                        block_memory = (block_volume * element_size) / (1024**3)  # GB
+                        # Processing overhead: ~5x for 7D operations (FFT, Laplacian, etc.)
+                        processing_memory = block_memory * 5
+
+                        if processing_memory > available_memory_gpu:
+                            self.logger.warning(
+                                f"Block size {optimal_size} may exceed 80% GPU memory limit. "
+                                f"Estimated: {processing_memory:.2f} GB > {available_memory_gpu:.2f} GB. "
+                                f"Reducing block size to stay within limit."
+                            )
+                            # Reduce block size to stay within 80% limit
+                            max_block_volume = (available_memory_gpu * 1024**3) / (
+                                element_size * 5
+                            )
+                            optimal_size = max(4, int(max_block_volume ** (1.0 / 7.0)))
+                            self.base_processor.block_size = optimal_size
+
+                    self.logger.info(
+                        f"Optimized 7D block size using GPU: {self.base_processor.block_size} "
+                        f"(80% GPU memory limit, field_size={field_size:.2f} GB, "
+                        f"7D Laplacian operations with vectorization)"
+                    )
+                    return
+            except Exception as e:
+                self.logger.error(
+                    f"Failed to optimize using GPU memory: {e}. "
+                    f"For Level C contexts, GPU optimization is required."
+                )
+                # For Level C, raise error instead of falling back
+                raise RuntimeError(
+                    f"GPU optimization failed for 7D field: {e}. "
+                    f"Level C requires GPU optimization with 80% memory limit."
+                ) from e
+
+        # CPU fallback: adjust block size based on field size
+        # For 7D fields, use smaller blocks to respect memory constraints
+        # Note: CPU processing should not be used for Level C contexts
         if field_size < 0.1:  # Small field
             self.base_processor.block_size = min(32, self.config.max_block_size)
         elif field_size < 1.0:  # Medium field
@@ -446,12 +358,13 @@ class EnhancedBlockProcessor:
             self.base_processor.block_size = self.config.min_block_size
 
         self.logger.info(
-            f"Optimized block size for field: {self.base_processor.block_size}"
+            f"Optimized block size for 7D field (CPU fallback): "
+            f"{self.base_processor.block_size} (field_size={field_size:.2f} GB)"
         )
 
     def cleanup(self) -> None:
         """Cleanup resources."""
-        if self.cuda_available:
+        if self.cuda_available and CUDA_AVAILABLE:
             cp.get_default_memory_pool().free_all_blocks()
 
         gc.collect()

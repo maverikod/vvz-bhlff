@@ -118,141 +118,11 @@ class CriticalExponents:
 
     def _compute_correlation_length_exponent(self, amplitude: np.ndarray) -> float:
         """Compute correlation length exponent ν."""
-        # Compute correlation function
-        from .correlation_analysis import CorrelationAnalysis
-
-        correlation_analyzer = CorrelationAnalysis(self.bvp_core)
-        correlation_7d = correlation_analyzer._compute_7d_correlation_function(
-            amplitude
-        )
-
-        # Compute correlation length as function of amplitude
-        correlation_lengths = correlation_analyzer._compute_7d_correlation_lengths(
-            correlation_7d
-        )
-
-        # Fit power law: ξ ~ |t|^(-ν), where t is the reduced control parameter
-        # In BVP theory, control parameter is deviation from critical point
-        # For homogeneous case, use amplitude deviation as control parameter
-
-        # Estimate critical amplitude (mean value for homogeneous case)
-        A_c = np.mean(amplitude)
-
-        # Compute correlation lengths for different amplitude levels
-        # to extract scaling behavior ξ ~ |A - A_c|^(-ν)
-        num_samples = min(15, len(amplitude.flatten()) // 10)
-        if num_samples < 3:
-            return 0.5  # Fallback for very small arrays
-
-        # Sample amplitude levels across the distribution
-        amplitude_flat = amplitude.flatten()
-        amp_levels = np.linspace(
-            np.percentile(amplitude_flat, 15),
-            np.percentile(amplitude_flat, 85),
-            num_samples,
-        )
-
-        control_params = []
-        correlation_lengths = []
-
-        for A_val in amp_levels:
-            # Compute local correlation length around this amplitude level
-            # Use windowing to get local correlation
-            window_mask = np.abs(amplitude - A_val) < 0.15 * np.std(amplitude)
-            if np.sum(window_mask) > 10:
-                window_field = amplitude[window_mask]
-                # Compute correlation function for this window
-                try:
-                    window_corr = correlation_analyzer._compute_7d_correlation_function(
-                        window_field.reshape(amplitude.shape)
-                    )
-                    window_lengths = (
-                        correlation_analyzer._compute_7d_correlation_lengths(
-                            window_corr
-                        )
-                    )
-                    avg_length = (
-                        np.mean(list(window_lengths.values()))
-                        if window_lengths
-                        else None
-                    )
-                    if avg_length is not None and avg_length > 0:
-                        # Control parameter: deviation from critical point
-                        t = abs(A_val - A_c)
-                        control_params.append(t)
-                        correlation_lengths.append(avg_length)
-                except Exception:
-                    continue
-
-        # Fit power law: ξ ~ |t|^(-ν)
-        if len(control_params) >= 3 and all(t > 0 for t in control_params):
-            log_control = np.log(control_params)
-            log_lengths = np.log(correlation_lengths)
-
-            if (
-                len(log_control) > 1
-                and np.all(np.isfinite(log_control))
-                and np.all(np.isfinite(log_lengths))
-            ):
-                try:
-                    slope = np.polyfit(log_control, log_lengths, 1)[0]
-                    nu = -slope
-                except (np.linalg.LinAlgError, ValueError):
-                    nu = 0.5  # Fallback if fit fails
-            else:
-                nu = 0.5  # Fallback if data invalid
-        else:
-            # Insufficient data: use global correlation length scaling
-            # This is a fallback, not ideal but better than hardcoded value
-            if len(amplitude_flat) > 10:
-                try:
-                    global_corr = correlation_analyzer._compute_7d_correlation_function(
-                        amplitude
-                    )
-                    global_lengths = (
-                        correlation_analyzer._compute_7d_correlation_lengths(
-                            global_corr
-                        )
-                    )
-                    if global_lengths:
-                        avg_global_length = np.mean(list(global_lengths.values()))
-                        # Estimate ν from correlation length structure
-                        # Conservative estimate based on field structure
-                        nu = 0.5  # Conservative fallback
-                    else:
-                        nu = 0.5
-                except Exception:
-                    nu = 0.5
-            else:
-                nu = 0.5  # Fallback for very small arrays
-
-        return max(0.1, min(2.0, nu))  # Reasonable bounds
+        return self.estimate_nu_from_correlation_length(amplitude)
 
     def _compute_order_parameter_exponent(self, amplitude: np.ndarray) -> float:
         """Compute order parameter exponent β."""
-        # Use amplitude as order parameter
-        order_parameter = np.mean(amplitude)
-
-        # Compute β from amplitude distribution
-        # For power law distribution P(A) ~ A^(-β-1)
-        amplitudes_sorted = np.sort(amplitude.flatten())[::-1]
-        amplitudes_sorted = amplitudes_sorted[amplitudes_sorted > 0]
-
-        if len(amplitudes_sorted) > 1:
-            # Fit power law distribution
-            ranks = np.arange(1, len(amplitudes_sorted) + 1)
-            log_ranks = np.log(ranks)
-            log_amps = np.log(amplitudes_sorted)
-
-            if len(log_ranks) > 1:
-                slope = np.polyfit(log_ranks, log_amps, 1)[0]
-                beta = -slope - 1
-            else:
-                beta = 0.5  # Mean field value
-        else:
-            beta = 0.5  # Mean field value
-
-        return max(0.1, min(2.0, beta))  # Reasonable bounds
+        return self.estimate_beta_from_tail(amplitude)
 
     def _compute_susceptibility_exponent(self, amplitude: np.ndarray) -> float:
         """
@@ -277,85 +147,293 @@ class CriticalExponents:
         Returns:
             float: Susceptibility exponent γ (bounded between 0.5 and 2.0)
         """
-        # Estimate critical amplitude as mean value (for homogeneous case)
-        # In general, should use proper critical point detection
-        A_c = np.mean(amplitude)
+        return self.estimate_chi_from_variance(amplitude)
 
-        # Compute local susceptibility from amplitude fluctuations
-        # Use windowed variance/mean as susceptibility estimator
-        amplitude_flat = amplitude.flatten()
-        if len(amplitude_flat) < 10:
-            return 1.0  # Fallback for very small arrays
+    # -------------------- Robust, block-aware estimators --------------------
+    def _iter_blocks(self, array: np.ndarray, max_blocks_per_axis: int = 6):
+        """
+        Yield block slices to traverse the N-D array without flattening.
 
-        # Compute susceptibility for different amplitude windows
-        # to extract scaling behavior
-        num_samples = min(20, len(amplitude_flat) // 5)
-        control_params = np.linspace(
-            np.percentile(amplitude_flat, 10),
-            np.percentile(amplitude_flat, 90),
-            num_samples,
-        )
-        susceptibilities = []
+        The number of blocks per axis is chosen to keep at least ~32 elements per block
+        and not exceed max_blocks_per_axis. This preserves locality for block-aware
+        sampling required by BVP theory.
+        """
+        shape = array.shape
+        itemsize = array.dtype.itemsize if hasattr(array, "dtype") else 8
+        # Determine memory cap per block: 80% free memory; FFT/corr need ~4x
+        try:
+            from bhlff.utils.cuda_utils import get_global_backend, CUDABackend
 
-        for A_val in control_params:
-            # Compute local variance around this amplitude level
-            window_mask = np.abs(amplitude_flat - A_val) < 0.1 * np.std(amplitude_flat)
-            if np.sum(window_mask) > 5:
-                window_vals = amplitude_flat[window_mask]
-                local_mean = np.mean(window_vals)
-                local_var = np.var(window_vals)
-                if local_mean > 1e-10:
-                    # Susceptibility χ ~ variance / mean
-                    chi = local_var / local_mean
-                    susceptibilities.append((A_val, chi))
-
-        if len(susceptibilities) < 3:
-            # Fallback: use global variance/mean scaling
-            mean_amp = np.mean(amplitude_flat)
-            variance = np.var(amplitude_flat)
-            if mean_amp > 1e-10:
-                chi_global = variance / mean_amp
-                # Estimate γ from single point (conservative estimate)
-                return 1.0
+            backend = get_global_backend()
+            mem_info = backend.get_memory_info()
+            free_bytes = float(mem_info.get("free_memory", 0))
+            if isinstance(backend, CUDABackend):
+                cap_bytes = 0.8 * free_bytes / 4.0
             else:
-                return 1.0
+                cap_bytes = 0.8 * free_bytes / 3.0
+        except Exception:
+            cap_bytes = float(256 * 1024 * 1024)  # 256MB conservative
 
-        # Extract control parameter (deviation from critical point)
-        A_vals = np.array([s[0] for s in susceptibilities])
-        chi_vals = np.array([s[1] for s in susceptibilities])
+        # Heuristic splitting to keep block within cap and <= max_blocks_per_axis per axis
+        splits = [1] * len(shape)
 
-        # Use |A - A_c| as control parameter
-        control_param = np.abs(A_vals - A_c)
+        def block_elems(splits_local):
+            size = 1
+            for n, k in zip(shape, splits_local):
+                size *= int(np.ceil(n / k))
+            return size
 
-        # Filter out zero or very small control parameters
-        valid_mask = control_param > 1e-10
-        if np.sum(valid_mask) < 3:
-            return 1.0
+        # Increase splits greedily on the largest dimension until under cap
+        while block_elems(splits) * itemsize > cap_bytes:
+            # choose axis with largest current block extent
+            extents = [n / k for n, k in zip(shape, splits)]
+            axis = int(np.argmax(extents))
+            if splits[axis] >= max_blocks_per_axis:
+                # try next largest
+                sorted_axes = np.argsort(extents)[::-1]
+                updated = False
+                for ax in sorted_axes:
+                    if splits[ax] < max_blocks_per_axis:
+                        splits[ax] += 1
+                        updated = True
+                        break
+                if not updated:
+                    break
+            else:
+                splits[axis] += 1
 
-        control_param = control_param[valid_mask]
-        chi_vals = chi_vals[valid_mask]
+        # Build slices
+        edges_per_axis = []
+        for n, k in zip(shape, splits):
+            bounds = np.linspace(0, n, k + 1, dtype=int)
+            edges_per_axis.append([(bounds[i], bounds[i + 1]) for i in range(k)])
+        # Cartesian product of blocks
+        from itertools import product
 
-        # Fit power law: χ ~ |A - A_c|^(-γ)
-        # In log-log: log(χ) = -γ * log(|A - A_c|) + const
-        log_control = np.log(control_param)
-        log_chi = np.log(chi_vals)
+        for idxs in product(*edges_per_axis):
+            slices = tuple(slice(i0, i1) for (i0, i1) in idxs)
+            yield slices
 
-        if (
-            len(log_control) > 1
-            and np.all(np.isfinite(log_control))
-            and np.all(np.isfinite(log_chi))
-        ):
-            # Robust linear fit with error handling
+    def _robust_loglog_slope(self, x: np.ndarray, y: np.ndarray) -> float:
+        """
+        Compute robust slope of log(y) vs log(x) using outlier suppression.
+
+        Steps:
+        - Keep positive, finite pairs
+        - Log-transform
+        - IQR-based trimming in both axes
+        - Bin by x-quantiles, use medians per bin
+        - Fit slope; also compute median adjacent-bin slopes and average
+        """
+        x = np.asarray(x)
+        y = np.asarray(y)
+        mask = (x > 0) & (y > 0) & np.isfinite(x) & np.isfinite(y)
+        x = x[mask]
+        y = y[mask]
+        if x.size < 3:
+            raise ValueError("insufficient data for robust log-log fit")
+        lx = np.log(x)
+        ly = np.log(y)
+
+        # IQR trimming
+        def _trim(v):
+            q1, q3 = np.percentile(v, [25, 75])
+            iqr = q3 - q1
+            lo = q1 - 1.5 * iqr
+            hi = q3 + 1.5 * iqr
+            m = (v >= lo) & (v <= hi)
+            return m
+
+        m1 = _trim(lx)
+        m2 = _trim(ly)
+        m = m1 & m2
+        lx = lx[m]
+        ly = ly[m]
+        if lx.size < 3:
+            raise ValueError("insufficient trimmed data for robust log-log fit")
+        # Bin by x-quantiles to reduce leverage
+        nbins = min(12, max(4, lx.size // 4))
+        q = np.linspace(0, 1, nbins + 1)
+        bins = np.quantile(lx, q)
+        # Ensure strictly increasing
+        bins = np.unique(bins)
+        if bins.size < 3:
+            # fallback to simple fit on trimmed data
+            return float(np.polyfit(lx, ly, 1)[0])
+        binned_x = []
+        binned_y = []
+        for i in range(bins.size - 1):
+            sel = (lx >= bins[i]) & (lx <= bins[i + 1])
+            if np.any(sel):
+                binned_x.append(np.median(lx[sel]))
+                binned_y.append(np.median(ly[sel]))
+        binned_x = np.asarray(binned_x)
+        binned_y = np.asarray(binned_y)
+        if binned_x.size < 3:
+            return float(np.polyfit(lx, ly, 1)[0])
+        # Ordinary fit on binned medians
+        slope = float(np.polyfit(binned_x, binned_y, 1)[0])
+        # Median adjacent-bin slope (Theil–Sen-like on reduced set)
+        adj_slopes = []
+        for i in range(binned_x.size - 1):
+            dx = binned_x[i + 1] - binned_x[i]
+            if dx != 0:
+                adj_slopes.append((binned_y[i + 1] - binned_y[i]) / dx)
+        if len(adj_slopes) >= 2:
+            slope = 0.5 * (slope + float(np.median(adj_slopes)))
+        return slope
+
+    def estimate_nu_from_correlation_length(self, amplitude: np.ndarray) -> float:
+        """
+        Estimate ν via block-aware scaling of correlation length: ξ ~ |t|^{-ν}.
+
+        Control parameter t is taken as the deviation of the block mean amplitude
+        from the global mean (homogeneous case proxy). Correlation length is
+        computed per block using the correlation analysis pipeline.
+        """
+        from .correlation_analysis import CorrelationAnalysis
+
+        A_c = float(np.mean(amplitude))
+        corr = CorrelationAnalysis(self.bvp_core)
+        t_vals = []
+        xi_vals = []
+        # Adaptive minimal elements per block relative to global size
+        total_elems = amplitude.size
+        min_block_elems = max(16, min(262144, int(0.002 * total_elems)))
+        # Iterate blocks and gather (|A_block - A_c|, xi_block)
+        for block in self._iter_blocks(amplitude):
+            block_arr = amplitude[block]
+            if block_arr.size < min_block_elems:
+                continue
+            A_b = float(np.mean(block_arr))
+            t = abs(A_b - A_c)
+            if t <= 0:
+                continue
             try:
-                slope = np.polyfit(log_control, log_chi, 1)[0]
-                gamma = -slope
-            except (np.linalg.LinAlgError, ValueError):
-                # Fallback if fit fails
-                gamma = 1.0
-        else:
-            gamma = 1.0
+                c7 = corr._compute_7d_correlation_function(block_arr)
+                lens = corr._compute_7d_correlation_lengths(c7)
+                if not lens:
+                    continue
+                xi = float(np.mean(list(lens.values())))
+                if xi > 0 and np.isfinite(xi):
+                    t_vals.append(t)
+                    xi_vals.append(xi)
+            except Exception:
+                continue
+        if len(t_vals) < 3:
+            raise ValueError("insufficient block data for ν estimate")
+        slope = self._robust_loglog_slope(np.asarray(t_vals), np.asarray(xi_vals))
+        nu = -slope
+        return float(max(0.1, min(2.0, nu)))
 
-        return max(0.5, min(2.0, gamma))  # Reasonable bounds
+    def estimate_beta_from_tail(self, amplitude: np.ndarray) -> float:
+        """
+        Estimate β from the tail CCDF across blocks without blind flattening.
+
+        Uses per-block CCDF p(>A) and aggregates on a common amplitude grid by
+        averaging CCDFs across blocks. For a power-law tail, CCDF ∼ A^{-β}.
+        """
+        # Build a shared tail grid based on block-local high quantiles
+        tail_grid = []
+        per_block_ccdf = []
+        total_elems = amplitude.size
+        min_block_elems = max(64, min(524288, int(0.004 * total_elems)))
+        # First pass: collect candidate tail thresholds from blocks
+        for block in self._iter_blocks(amplitude):
+            block_arr = amplitude[block]
+            flat = block_arr.reshape(-1)
+            flat = flat[np.isfinite(flat) & (flat > 0)]
+            if flat.size < min_block_elems:
+                continue
+            # Adaptive tail percentiles based on sample size
+            # Wider coverage for small samples, tighter for large
+            hi_adj = max(99.0, 100.0 - 100.0 / max(3.0, np.sqrt(flat.size)))
+            q_lo = np.percentile(flat, 80.0)
+            q_hi = np.percentile(flat, hi_adj)
+            if not np.isfinite(q_lo) or not np.isfinite(q_hi) or q_hi <= q_lo:
+                continue
+            # Adaptive number of grid points by sample size
+            n_grid = int(np.clip(np.sqrt(flat.size), 8, 64))
+            grid = np.linspace(q_lo, q_hi, n_grid)
+            tail_grid.append(grid)
+        if not tail_grid:
+            raise ValueError("insufficient block data for β estimate")
+        # Common grid as median across blocks
+        grid = np.unique(np.round(np.median(np.vstack(tail_grid), axis=0), 12))
+        if grid.size < 6:
+            raise ValueError("insufficient tail grid for β estimate")
+        # Second pass: compute CCDF per block on the shared grid (vectorized, GPU-aware)
+        for block in self._iter_blocks(amplitude):
+            block_arr = amplitude[block]
+            flat = block_arr.reshape(-1)
+            flat = flat[np.isfinite(flat) & (flat > 0)]
+            if flat.size < min_block_elems:
+                continue
+            try:
+                # Try GPU vectorization if available
+                from bhlff.utils.cuda_utils import get_global_backend, CUDABackend
+
+                backend = get_global_backend()
+                if isinstance(backend, CUDABackend):
+                    import cupy as cp
+
+                    v = cp.asarray(flat)
+                    g = cp.asarray(grid)
+                    # Broadcast compare: shape (len(g), len(v))
+                    ccdf_gpu = (v[None, :] > g[:, None]).mean(axis=1)
+                    ccdf = cp.asnumpy(ccdf_gpu)
+                else:
+                    # CPU vectorized broadcasting
+                    v = flat[None, :]
+                    g = grid[:, None]
+                    ccdf = (v > g).mean(axis=1)
+            except Exception:
+                v = flat[None, :]
+                g = grid[:, None]
+                ccdf = (v > g).mean(axis=1)
+            mask = (ccdf > 0) & np.isfinite(ccdf)
+            if np.any(mask):
+                per_block_ccdf.append(ccdf)
+        if len(per_block_ccdf) < 2:
+            raise ValueError("insufficient CCDF blocks for β estimate")
+        mean_ccdf = np.mean(np.vstack(per_block_ccdf), axis=0)
+        # Fit log(mean_ccdf) ~ -β * log(A) + c
+        slope = self._robust_loglog_slope(grid, mean_ccdf)
+        beta = -slope
+        return float(max(0.1, min(2.0, beta)))
+
+    def estimate_chi_from_variance(self, amplitude: np.ndarray) -> float:
+        """
+        Estimate γ (susceptibility exponent) from block variance scaling.
+
+        For each block, compute χ_block = Var(A_block)/Mean(A_block) and control
+        parameter t_block = |Mean(A_block) - A_c|, then fit χ ∼ t^{-γ} robustly.
+        """
+        A_c = float(np.mean(amplitude))
+        t_vals = []
+        chi_vals = []
+        total_elems = amplitude.size
+        min_block_elems = max(32, min(262144, int(0.0025 * total_elems)))
+        for block in self._iter_blocks(amplitude):
+            block_arr = amplitude[block]
+            if block_arr.size < min_block_elems:
+                continue
+            m = float(np.mean(block_arr))
+            v = float(np.var(block_arr))
+            if m <= 0 or not np.isfinite(m) or v <= 0 or not np.isfinite(v):
+                continue
+            t = abs(m - A_c)
+            if t <= 0:
+                continue
+            chi = v / m
+            if chi > 0 and np.isfinite(chi):
+                t_vals.append(t)
+                chi_vals.append(chi)
+        if len(t_vals) < 3:
+            raise ValueError("insufficient block data for γ estimate")
+        slope = self._robust_loglog_slope(np.asarray(t_vals), np.asarray(chi_vals))
+        gamma = -slope
+        return float(max(0.5, min(2.0, gamma)))
 
     def _compute_critical_isotherm_exponent(self, amplitude: np.ndarray) -> float:
         """Compute critical isotherm exponent δ."""
@@ -546,7 +624,7 @@ class CriticalExponents:
         nu = critical_exponents.get("nu", 0.5)
         beta = critical_exponents.get("beta", 0.5)
         gamma = critical_exponents.get("gamma", 1.0)
-        eta = critical_exponents.get("eta", 0.0)
+        # eta is not directly used for class determination here
 
         # Mean field values
         if abs(nu - 0.5) < 0.1 and abs(beta - 0.5) < 0.1 and abs(gamma - 1.0) < 0.1:

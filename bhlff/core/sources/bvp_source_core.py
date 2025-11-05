@@ -192,48 +192,129 @@ class BVPSource(Source):
                 try:
                     envelope_block = self.envelope_generator.generate_envelope()
                     # Generate carrier for this block only with explicit 7D construction
+                    # For 7D domains, carrier will already be 7D from generate_carrier
                     carrier_block = self.envelope_generator.generate_carrier(
                         config.get("time", 0.0), use_cuda=use_cuda
                     )
                 finally:
                     self.envelope_generator.domain = original_domain_env
 
-                # Combine 3D components (vectorized operation)
-                modulated_block_3d = base_source_block * envelope_block * carrier_block
-
                 # Extract phase and time extents from block_shape for explicit 7D expansion
                 # (N_x, N_y, N_z) -> (N_x, N_y, N_z, N_φ₁, N_φ₂, N_φ₃, N_t)
                 N_phi_block = block_shape[3] if len(block_shape) > 3 else domain.N_phi
                 N_t_block = block_shape[6] if len(block_shape) > 6 else domain.N_t
 
-                # Use explicit 7D expansion with concrete phase/time extents
-                # Optionally generate directly on device (GPU if CUDA available)
-                # Uses block processing automatically if needed (80% GPU memory limit)
-                if use_cuda:
-                    # Generate directly on GPU using explicit 7D construction
-                    modulated_block_7d = generate_7d_block_on_device(
-                        modulated_block_3d,
-                        N_phi=N_phi_block,
-                        N_t=N_t_block,
-                        domain=domain,
-                        use_cuda=True,
-                    )
-                else:
-                    # CPU: explicit 7D expansion with block processing support
-                    modulated_block_7d = expand_spatial_to_7d(
-                        modulated_block_3d,
-                        N_phi=N_phi_block,
-                        N_t=N_t_block,
-                        use_cuda=False,
-                        optimize_block_size=True,
-                    )
+                # Check if we need to expand components to 7D
+                is_7d_domain = domain.dimensions == 7
+                
+                if is_7d_domain:
+                    # Expand 3D components to 7D with explicit construction
+                    # Uses block processing automatically if needed (80% GPU memory limit)
+                    
+                    # Expand envelope (3D) to 7D
+                    if envelope_block.ndim == 3:
+                        if use_cuda:
+                            envelope_block_7d = generate_7d_block_on_device(
+                                envelope_block,
+                                N_phi=N_phi_block,
+                                N_t=N_t_block,
+                                domain=domain,
+                                use_cuda=True,
+                            )
+                        else:
+                            envelope_block_7d = expand_spatial_to_7d(
+                                envelope_block,
+                                N_phi=N_phi_block,
+                                N_t=N_t_block,
+                                use_cuda=False,
+                                optimize_block_size=True,
+                            )
+                    else:
+                        envelope_block_7d = envelope_block
 
-                # Verify shape matches expected block_shape
+                    # Carrier is already 7D for 7D domains, but may need shape adjustment
+                    if carrier_block.ndim == 3:
+                        # Shouldn't happen for 7D domains, but handle it
+                        if use_cuda:
+                            carrier_block_7d = generate_7d_block_on_device(
+                                carrier_block,
+                                N_phi=N_phi_block,
+                                N_t=N_t_block,
+                                domain=domain,
+                                use_cuda=True,
+                            )
+                        else:
+                            carrier_block_7d = expand_spatial_to_7d(
+                                carrier_block,
+                                N_phi=N_phi_block,
+                                N_t=N_t_block,
+                                use_cuda=False,
+                                optimize_block_size=True,
+                            )
+                    else:
+                        carrier_block_7d = carrier_block
+
+                    # Expand base_source (3D) to 7D
+                    if base_source_block.ndim == 3:
+                        if use_cuda:
+                            base_source_block_7d = generate_7d_block_on_device(
+                                base_source_block,
+                                N_phi=N_phi_block,
+                                N_t=N_t_block,
+                                domain=domain,
+                                use_cuda=True,
+                            )
+                        else:
+                            base_source_block_7d = expand_spatial_to_7d(
+                                base_source_block,
+                                N_phi=N_phi_block,
+                                N_t=N_t_block,
+                                use_cuda=False,
+                                optimize_block_size=True,
+                            )
+                    else:
+                        base_source_block_7d = base_source_block
+
+                    # Combine 7D components (vectorized operation, fully parallelized)
+                    if use_cuda:
+                        import cupy as cp
+                        # Move to GPU if needed
+                        if isinstance(base_source_block_7d, np.ndarray):
+                            base_source_block_7d = cp.asarray(base_source_block_7d)
+                        if isinstance(envelope_block_7d, np.ndarray):
+                            envelope_block_7d = cp.asarray(envelope_block_7d)
+                        if isinstance(carrier_block_7d, np.ndarray):
+                            carrier_block_7d = cp.asarray(carrier_block_7d)
+                        
+                        modulated_block_7d = base_source_block_7d * envelope_block_7d * carrier_block_7d
+                        cp.cuda.Stream.null.synchronize()
+                        modulated_block_7d = cp.asnumpy(modulated_block_7d)
+                    else:
+                        modulated_block_7d = base_source_block_7d * envelope_block_7d * carrier_block_7d
+
+                else:
+                    # Non-7D domain: combine 3D components directly
+                    if use_cuda:
+                        import cupy as cp
+                        if isinstance(base_source_block, np.ndarray):
+                            base_source_block = cp.asarray(base_source_block)
+                        if isinstance(envelope_block, np.ndarray):
+                            envelope_block = cp.asarray(envelope_block)
+                        if isinstance(carrier_block, np.ndarray):
+                            carrier_block = cp.asarray(carrier_block)
+                        
+                        modulated_block_7d = base_source_block * envelope_block * carrier_block
+                        cp.cuda.Stream.null.synchronize()
+                        modulated_block_7d = cp.asnumpy(modulated_block_7d)
+                    else:
+                        modulated_block_7d = base_source_block * envelope_block * carrier_block
+
+                # Verify shape matches expected block_shape and adjust if needed
                 if modulated_block_7d.shape != block_shape:
                     # If shape mismatch, adjust to match block_shape using explicit expansion
                     # This handles partial 7D slices correctly
                     modulated_block_7d = expand_block_to_7d_explicit(
-                        modulated_block_3d,
+                        modulated_block_7d,
                         target_shape=block_shape,
                         block_start=block_start,
                         use_cuda=use_cuda,

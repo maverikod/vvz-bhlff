@@ -29,6 +29,7 @@ from ..domain import Domain
 from .block_7d_expansion import (
     expand_spatial_to_7d,
     generate_7d_block_on_device,
+    expand_block_to_7d_explicit,
 )
 
 # Import CUDA availability check
@@ -153,49 +154,83 @@ class BVPSourceEnvelope:
 
     def generate_carrier(self, time: float = 0.0, use_cuda: bool = False) -> np.ndarray:
         """
-        Generate high-frequency carrier with explicit 7D construction.
+        Generate high-frequency carrier with explicit 7D construction and block processing.
 
         Physical Meaning:
             Creates the high-frequency carrier component exp(iω₀t) that
             modulates the source in the BVP framework. For 7D domains,
-            generates carrier with explicit phase and time dimensions.
+            generates carrier with explicit phase and time dimensions using
+            block processing and CUDA acceleration (80% GPU memory limit).
 
         Mathematical Foundation:
             Carrier: exp(iω₀t)
             where ω₀ is the carrier frequency and t is time. For 7D domains,
-            carrier is expanded to 7D with explicit phase and time extents.
+            carrier is expanded to 7D with explicit phase and time extents:
+            carrier_7d(x, y, z, φ₁, φ₂, φ₃, t) = exp(iω₀t) ⊗ 1_xyz ⊗ 1_φ₁ ⊗ 1_φ₂ ⊗ 1_φ₃
+            using explicit 7D construction that respects M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
 
         Args:
             time (float): Time for carrier generation.
             use_cuda (bool): Whether to use CUDA for generation (if available).
+                Uses block processing for large arrays (80% GPU memory limit).
 
         Returns:
             np.ndarray: Carrier component (complex, 3D or 7D depending on domain).
+                For 7D domains, returns 7D array with explicit phase/time dimensions.
         """
         # Generate carrier phase
         carrier_phase = self.carrier_frequency * time
 
-        # Create carrier as complex exponential
-        carrier = np.exp(1j * carrier_phase)
-
         # For 7D domains, expand to 7D with explicit phase/time dimensions
         if self.domain.dimensions == 7:
-            # Create 3D spatial carrier block
-            carrier_3d = carrier * np.ones(
-                (self.domain.N, self.domain.N, self.domain.N), dtype=complex
-            )
-            # Expand to 7D with explicit phase and time extents
-            carrier_field = expand_spatial_to_7d(
-                carrier_3d,
-                N_phi=self.domain.N_phi,
-                N_t=self.domain.N_t,
-                use_cuda=use_cuda,
-            )
+            # Create 3D spatial carrier block (constant across spatial dimensions)
+            # Use device-appropriate array creation
+            if use_cuda and CUDA_AVAILABLE:
+                carrier_3d = cp.full(
+                    (self.domain.N, self.domain.N, self.domain.N),
+                    cp.exp(1j * carrier_phase),
+                    dtype=cp.complex128
+                )
+                # Generate 7D block directly on GPU with explicit construction
+                # Uses block processing automatically if needed (80% GPU memory limit)
+                carrier_field = generate_7d_block_on_device(
+                    cp.asnumpy(carrier_3d),
+                    N_phi=self.domain.N_phi,
+                    N_t=self.domain.N_t,
+                    domain=self.domain,
+                    use_cuda=True,
+                )
+            else:
+                # CPU: create 3D carrier and expand to 7D with explicit construction
+                carrier_3d = np.full(
+                    (self.domain.N, self.domain.N, self.domain.N),
+                    np.exp(1j * carrier_phase),
+                    dtype=np.complex128
+                )
+                # Expand to 7D with explicit phase and time extents
+                # Uses block processing automatically if needed
+                carrier_field = expand_spatial_to_7d(
+                    carrier_3d,
+                    N_phi=self.domain.N_phi,
+                    N_t=self.domain.N_t,
+                    use_cuda=False,
+                    optimize_block_size=True,
+                )
         else:
             # For non-7D domains, return 3D carrier
-            carrier_field = carrier * np.ones(
-                (self.domain.N, self.domain.N, self.domain.N), dtype=complex
-            )
+            if use_cuda and CUDA_AVAILABLE:
+                carrier_field = cp.full(
+                    (self.domain.N, self.domain.N, self.domain.N),
+                    cp.exp(1j * carrier_phase),
+                    dtype=cp.complex128
+                )
+                carrier_field = cp.asnumpy(carrier_field)
+            else:
+                carrier_field = np.full(
+                    (self.domain.N, self.domain.N, self.domain.N),
+                    np.exp(1j * carrier_phase),
+                    dtype=np.complex128
+                )
 
         return carrier_field
 
@@ -227,62 +262,97 @@ class BVPSourceEnvelope:
         Returns:
             np.ndarray: BVP-modulated source field with shape matching domain.shape.
         """
-        # Generate envelope and carrier (these are 3D initially)
+        # Generate envelope and carrier
+        # Envelope is 3D, carrier is 3D or 7D depending on domain
         envelope = self.generate_envelope()
         carrier = self.generate_carrier(time, use_cuda=use_cuda)
 
-        # Check if we need to expand to 7D
-        if base_source.shape != self.domain.shape:
-            # Expand 3D components to 7D using explicit construction
+        # Check domain dimensions and determine expansion needs
+        is_7d_domain = self.domain.dimensions == 7
+        target_shape = self.domain.shape if is_7d_domain else envelope.shape
+
+        # Expand components to target shape using explicit 7D construction
+        # Uses block processing automatically if needed (80% GPU memory limit)
+        if is_7d_domain:
             # Get phase and time dimensions from domain
             N_phi = self.domain.N_phi
             N_t = self.domain.N_t
 
-            # Explicit 7D expansion with concrete phase/time extents
-            # Uses block processing automatically if needed (80% GPU memory limit)
-            envelope_7d = expand_spatial_to_7d(
-                envelope, N_phi=N_phi, N_t=N_t, use_cuda=use_cuda, optimize_block_size=True
-            )
-            carrier_7d = expand_spatial_to_7d(
-                carrier, N_phi=N_phi, N_t=N_t, use_cuda=use_cuda, optimize_block_size=True
-            )
+            # Expand envelope (3D) to 7D with explicit construction
+            if envelope.shape != target_shape:
+                envelope_7d = expand_spatial_to_7d(
+                    envelope,
+                    N_phi=N_phi,
+                    N_t=N_t,
+                    use_cuda=use_cuda,
+                    optimize_block_size=True,
+                )
+            else:
+                envelope_7d = envelope
+
+            # Carrier is already 7D for 7D domains (from generate_carrier)
+            if carrier.shape != target_shape:
+                # Expand carrier to 7D if needed (shouldn't happen for 7D domains)
+                carrier_7d = expand_spatial_to_7d(
+                    carrier,
+                    N_phi=N_phi,
+                    N_t=N_t,
+                    use_cuda=use_cuda,
+                    optimize_block_size=True,
+                )
+            else:
+                carrier_7d = carrier
 
             # Expand base_source if needed
-            if base_source.shape == envelope.shape:
-                base_source_7d = expand_spatial_to_7d(
-                    base_source, N_phi=N_phi, N_t=N_t, use_cuda=use_cuda, optimize_block_size=True
-                )
+            if base_source.shape != target_shape:
+                if base_source.ndim == 3:
+                    # 3D base source: expand to 7D
+                    base_source_7d = expand_spatial_to_7d(
+                        base_source,
+                        N_phi=N_phi,
+                        N_t=N_t,
+                        use_cuda=use_cuda,
+                        optimize_block_size=True,
+                    )
+                else:
+                    # Partial 7D or other shape: use explicit expansion
+                    base_source_7d = expand_block_to_7d_explicit(
+                        base_source,
+                        target_shape=target_shape,
+                        use_cuda=use_cuda,
+                    )
             else:
                 base_source_7d = base_source
 
-            # Combine components (vectorized operation, preserves 7D structure)
-            if use_cuda and CUDA_AVAILABLE:
-                import cupy as cp
-                if isinstance(base_source_7d, np.ndarray):
-                    base_source_7d = cp.asarray(base_source_7d)
-                if isinstance(envelope_7d, np.ndarray):
-                    envelope_7d = cp.asarray(envelope_7d)
-                if isinstance(carrier_7d, np.ndarray):
-                    carrier_7d = cp.asarray(carrier_7d)
-                modulated_source = base_source_7d * envelope_7d * carrier_7d
-                # Synchronize CUDA operations
-                cp.cuda.Stream.null.synchronize()
-            else:
-                modulated_source = base_source_7d * envelope_7d * carrier_7d
         else:
-            # Already 7D, just combine (vectorized operation)
-            if use_cuda and CUDA_AVAILABLE:
-                import cupy as cp
-                if isinstance(base_source, np.ndarray):
-                    base_source = cp.asarray(base_source)
-                if isinstance(envelope, np.ndarray):
-                    envelope = cp.asarray(envelope)
-                if isinstance(carrier, np.ndarray):
-                    carrier = cp.asarray(carrier)
-                modulated_source = base_source * envelope * carrier
-                cp.cuda.Stream.null.synchronize()
-            else:
-                modulated_source = base_source * envelope * carrier
+            # Non-7D domain: components stay 3D
+            envelope_7d = envelope
+            carrier_7d = carrier
+            base_source_7d = base_source
+
+        # Combine components (vectorized operation, preserves 7D structure)
+        # All components should have same shape at this point
+        if use_cuda and CUDA_AVAILABLE:
+            import cupy as cp
+            # Move to GPU if needed
+            if isinstance(base_source_7d, np.ndarray):
+                base_source_7d = cp.asarray(base_source_7d)
+            if isinstance(envelope_7d, np.ndarray):
+                envelope_7d = cp.asarray(envelope_7d)
+            if isinstance(carrier_7d, np.ndarray):
+                carrier_7d = cp.asarray(carrier_7d)
+            
+            # Vectorized multiplication on GPU (fully parallelized)
+            modulated_source = base_source_7d * envelope_7d * carrier_7d
+            
+            # Synchronize CUDA operations
+            cp.cuda.Stream.null.synchronize()
+            
+            # Return as numpy array
+            modulated_source = cp.asnumpy(modulated_source)
+        else:
+            # CPU: vectorized multiplication (NumPy optimized)
+            modulated_source = base_source_7d * envelope_7d * carrier_7d
 
         return modulated_source
 

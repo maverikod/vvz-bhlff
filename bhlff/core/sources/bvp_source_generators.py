@@ -27,6 +27,10 @@ import numpy as np
 from typing import Dict, Any
 
 from ..domain import Domain
+from .block_7d_expansion import (
+    expand_spatial_to_7d,
+    generate_7d_block_on_device,
+)
 
 try:
     import cupy as cp
@@ -427,11 +431,43 @@ class BVPSourceGenerators:
             wall_mask = self._create_layer_wall(
                 r, R_n, 0.02, xp=xp
             )  # 0.02 wall thickness
-            # Expand wall mask (3D) to 7D for broadcasting
-            wall_mask_7d = wall_mask[
-                ..., xp.newaxis, xp.newaxis, xp.newaxis, xp.newaxis
-            ]
-            multiscale_substrate = xp.where(wall_mask_7d, T_n, multiscale_substrate)
+            
+            # Explicit 7D expansion: expand 3D wall_mask to 7D with concrete phase/time extents
+            # Uses block processing and CUDA if available (80% GPU memory limit)
+            if self.use_cuda and CUDA_AVAILABLE:
+                # Move to GPU if needed
+                if isinstance(wall_mask, np.ndarray):
+                    wall_mask_gpu = cp.asarray(wall_mask)
+                else:
+                    wall_mask_gpu = wall_mask
+                
+                # Generate 7D block directly on GPU with explicit construction
+                wall_mask_7d = generate_7d_block_on_device(
+                    cp.asnumpy(wall_mask_gpu) if isinstance(wall_mask_gpu, cp.ndarray) else wall_mask,
+                    N_phi=self.domain.N_phi,
+                    N_t=self.domain.N_t,
+                    domain=self.domain,
+                    use_cuda=True,
+                )
+            else:
+                # CPU: explicit 7D expansion with block processing support
+                wall_mask_7d = expand_spatial_to_7d(
+                    wall_mask if isinstance(wall_mask, np.ndarray) else cp.asnumpy(wall_mask),
+                    N_phi=self.domain.N_phi,
+                    N_t=self.domain.N_t,
+                    use_cuda=False,
+                    optimize_block_size=True,
+                )
+            
+            # Apply wall mask with explicit 7D structure (vectorized operation)
+            if self.use_cuda and CUDA_AVAILABLE:
+                if isinstance(wall_mask_7d, np.ndarray):
+                    wall_mask_7d = cp.asarray(wall_mask_7d)
+                if isinstance(multiscale_substrate, np.ndarray):
+                    multiscale_substrate = cp.asarray(multiscale_substrate)
+                multiscale_substrate = cp.where(wall_mask_7d, T_n, multiscale_substrate)
+            else:
+                multiscale_substrate = np.where(wall_mask_7d, T_n, multiscale_substrate)
 
         if self.use_cuda:
             return cp.asnumpy(multiscale_substrate)

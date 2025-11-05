@@ -24,12 +24,17 @@ Example:
 """
 
 import numpy as np
-from typing import Dict, Any
+from typing import Dict, Any, Union
 
 from ..domain import Domain
 from .source import Source
 from .bvp_source_generators import BVPSourceGenerators
 from .bvp_source_envelope import BVPSourceEnvelope
+from .block_7d_expansion import (
+    expand_spatial_to_7d,
+    expand_block_to_7d_explicit,
+    generate_7d_block_on_device,
+)
 
 
 class BVPSource(Source):
@@ -91,7 +96,7 @@ class BVPSource(Source):
         self.envelope_amplitude = self.config.get("envelope_amplitude", 1.0)
         self.base_source_type = self.config.get("base_source_type", "gaussian")
 
-    def generate(self) -> np.ndarray:
+    def generate(self, use_blocked: bool = True) -> np.ndarray:
         """
         Generate BVP-modulated source field.
 
@@ -105,16 +110,154 @@ class BVPSource(Source):
             where s₀(x) is the base source, A(x) is the envelope, and
             ω₀ is the carrier frequency.
 
+        Args:
+            use_blocked (bool): Whether to use blocked generation for large fields.
+                If True and field is large, returns BlockedField for lazy access.
+
         Returns:
-            np.ndarray: BVP-modulated source field.
+            np.ndarray or BlockedField: BVP-modulated source field.
+                For large fields with use_blocked=True, returns BlockedField.
         """
-        # Generate base source
+        # Check if field is large enough to require blocking
+        total_elements = np.prod(self.domain.shape)
+        memory_threshold_elements = (
+            1e6  # ~1M elements = ~16MB (lower threshold for safety)
+        )
+
+        # Additional safety: always use blocked generation for 7D domains with N >= 32
+        # to prevent memory exhaustion even for "small" 7D arrays
+        force_blocked = (
+            self.domain.dimensions == 7
+            and hasattr(self.domain, "N")
+            and self.domain.N >= 32
+        )
+
+        if use_blocked and (
+            total_elements > memory_threshold_elements or force_blocked
+        ):
+            # Use blocked generation
+            from .blocked_field_generator import BlockedFieldGenerator
+
+            def field_block_generator(
+                domain: Domain, slice_config: Dict[str, Any], config: Dict[str, Any]
+            ) -> np.ndarray:
+                """
+                Generate field block with explicit 7D construction on device.
+
+                Physical Meaning:
+                    Generates only the requested 7D block using explicit construction
+                    that respects the 7D space-time structure M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ.
+                    Uses block processing and CUDA acceleration with 80% GPU memory
+                    limit for optimal performance.
+
+                Mathematical Foundation:
+                    Generates BVP-modulated source block:
+                    s(x,φ,t) = s₀(x) * A(x) * exp(iω₀t)
+                    where components are explicitly expanded to 7D with concrete
+                    phase and time extents, generated directly on target device.
+                """
+                block_shape = tuple(slice_config["shape"])
+                block_start = tuple(slice_config["start"])
+                use_cuda = config.get("use_cuda", False)
+
+                # Generate only the spatial block needed (3D), not full domain
+                # This is the spatial part that will be expanded to 7D explicitly
+                spatial_shape = block_shape[:3]
+                spatial_start = block_start[:3]
+
+                # Generate only the block we need, not full 3D array
+                # Create a minimal domain slice for just this block
+                from ..domain import Domain as DomainClass
+
+                block_domain = DomainClass(
+                    L=domain.L,
+                    N=spatial_shape[0],  # Only block size
+                    dimensions=3,
+                )
+
+                # Generate base source for this block only
+                # Temporarily modify domain to generate only needed block
+                original_domain = self.source_generators.domain
+                self.source_generators.domain = block_domain
+                try:
+                    base_source_block = self.source_generators.generate_base_source(
+                        self.base_source_type
+                    )
+                finally:
+                    self.source_generators.domain = original_domain
+
+                # Generate envelope for this block only
+                original_domain_env = self.envelope_generator.domain
+                self.envelope_generator.domain = block_domain
+                try:
+                    envelope_block = self.envelope_generator.generate_envelope()
+                    # Generate carrier for this block only with explicit 7D construction
+                    carrier_block = self.envelope_generator.generate_carrier(
+                        config.get("time", 0.0), use_cuda=use_cuda
+                    )
+                finally:
+                    self.envelope_generator.domain = original_domain_env
+
+                # Combine 3D components (vectorized operation)
+                modulated_block_3d = base_source_block * envelope_block * carrier_block
+
+                # Extract phase and time extents from block_shape for explicit 7D expansion
+                # (N_x, N_y, N_z) -> (N_x, N_y, N_z, N_φ₁, N_φ₂, N_φ₃, N_t)
+                N_phi_block = block_shape[3] if len(block_shape) > 3 else domain.N_phi
+                N_t_block = block_shape[6] if len(block_shape) > 6 else domain.N_t
+
+                # Use explicit 7D expansion with concrete phase/time extents
+                # Optionally generate directly on device (GPU if CUDA available)
+                # Uses block processing automatically if needed (80% GPU memory limit)
+                if use_cuda:
+                    # Generate directly on GPU using explicit 7D construction
+                    modulated_block_7d = generate_7d_block_on_device(
+                        modulated_block_3d,
+                        N_phi=N_phi_block,
+                        N_t=N_t_block,
+                        domain=domain,
+                        use_cuda=True,
+                    )
+                else:
+                    # CPU: explicit 7D expansion with block processing support
+                    modulated_block_7d = expand_spatial_to_7d(
+                        modulated_block_3d,
+                        N_phi=N_phi_block,
+                        N_t=N_t_block,
+                        use_cuda=False,
+                        optimize_block_size=True,
+                    )
+
+                # Verify shape matches expected block_shape
+                if modulated_block_7d.shape != block_shape:
+                    # If shape mismatch, adjust to match block_shape using explicit expansion
+                    # This handles partial 7D slices correctly
+                    modulated_block_7d = expand_block_to_7d_explicit(
+                        modulated_block_3d,
+                        target_shape=block_shape,
+                        block_start=block_start,
+                        use_cuda=use_cuda,
+                    )
+
+                return modulated_block_7d
+
+            # Create blocked generator
+            blocked_generator = BlockedFieldGenerator(
+                self.domain,
+                field_block_generator,
+                config=self.config,
+            )
+
+            return blocked_generator.get_field()
+
+        # Generate normally for small fields
         base_source = self.source_generators.generate_base_source(self.base_source_type)
 
-        # Generate BVP-modulated source
+        # Generate BVP-modulated source with explicit 7D construction
         time = self.config.get("time", 0.0)
+        use_cuda = self.config.get("use_cuda", False)
         modulated_source = self.envelope_generator.generate_modulated_source(
-            base_source, time
+            base_source, time, use_cuda=use_cuda
         )
 
         return modulated_source

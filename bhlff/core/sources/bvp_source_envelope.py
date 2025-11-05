@@ -23,9 +23,21 @@ Example:
 """
 
 import numpy as np
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 from ..domain import Domain
+from .block_7d_expansion import (
+    expand_spatial_to_7d,
+    generate_7d_block_on_device,
+)
+
+# Import CUDA availability check
+try:
+    import cupy as cp
+    CUDA_AVAILABLE = True
+except ImportError:
+    CUDA_AVAILABLE = False
+    cp = None
 
 
 class BVPSourceEnvelope:
@@ -139,23 +151,26 @@ class BVPSourceEnvelope:
 
         return envelope
 
-    def generate_carrier(self, time: float = 0.0) -> np.ndarray:
+    def generate_carrier(self, time: float = 0.0, use_cuda: bool = False) -> np.ndarray:
         """
-        Generate high-frequency carrier.
+        Generate high-frequency carrier with explicit 7D construction.
 
         Physical Meaning:
             Creates the high-frequency carrier component exp(iω₀t) that
-            modulates the source in the BVP framework.
+            modulates the source in the BVP framework. For 7D domains,
+            generates carrier with explicit phase and time dimensions.
 
         Mathematical Foundation:
             Carrier: exp(iω₀t)
-            where ω₀ is the carrier frequency and t is time.
+            where ω₀ is the carrier frequency and t is time. For 7D domains,
+            carrier is expanded to 7D with explicit phase and time extents.
 
         Args:
             time (float): Time for carrier generation.
+            use_cuda (bool): Whether to use CUDA for generation (if available).
 
         Returns:
-            np.ndarray: Carrier component (complex).
+            np.ndarray: Carrier component (complex, 3D or 7D depending on domain).
         """
         # Generate carrier phase
         carrier_phase = self.carrier_frequency * time
@@ -163,41 +178,111 @@ class BVPSourceEnvelope:
         # Create carrier as complex exponential
         carrier = np.exp(1j * carrier_phase)
 
-        # Broadcast to domain shape
-        carrier_field = carrier * np.ones(
-            (self.domain.N, self.domain.N, self.domain.N), dtype=complex
-        )
+        # For 7D domains, expand to 7D with explicit phase/time dimensions
+        if self.domain.dimensions == 7:
+            # Create 3D spatial carrier block
+            carrier_3d = carrier * np.ones(
+                (self.domain.N, self.domain.N, self.domain.N), dtype=complex
+            )
+            # Expand to 7D with explicit phase and time extents
+            carrier_field = expand_spatial_to_7d(
+                carrier_3d,
+                N_phi=self.domain.N_phi,
+                N_t=self.domain.N_t,
+                use_cuda=use_cuda,
+            )
+        else:
+            # For non-7D domains, return 3D carrier
+            carrier_field = carrier * np.ones(
+                (self.domain.N, self.domain.N, self.domain.N), dtype=complex
+            )
 
         return carrier_field
 
     def generate_modulated_source(
-        self, base_source: np.ndarray, time: float = 0.0
+        self, base_source: np.ndarray, time: float = 0.0, use_cuda: bool = False
     ) -> np.ndarray:
         """
-        Generate BVP-modulated source.
+        Generate BVP-modulated source with explicit 7D construction and block processing.
 
         Physical Meaning:
             Creates the complete BVP-modulated source by combining the
-            base source, envelope, and carrier components.
+            base source, envelope, and carrier components using explicit
+            7D block construction that respects the 7D space-time structure
+            M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ. For large arrays, uses block-wise processing
+            to manage memory constraints (80% GPU memory limit).
 
         Mathematical Foundation:
-            BVP-modulated source: s(x) = s₀(x) * A(x) * exp(iω₀t)
+            BVP-modulated source: s(x,φ,t) = s₀(x) * A(x) * exp(iω₀t)
             where s₀(x) is the base source, A(x) is the envelope, and
-            exp(iω₀t) is the carrier.
+            exp(iω₀t) is the carrier. Components are explicitly expanded
+            to 7D with concrete phase and time extents using block-wise
+            processing for large arrays.
 
         Args:
-            base_source (np.ndarray): Base source field.
+            base_source (np.ndarray): Base source field (3D or 7D).
             time (float): Time for carrier generation.
+            use_cuda (bool): Whether to use CUDA for expansion (if available).
 
         Returns:
-            np.ndarray: BVP-modulated source field.
+            np.ndarray: BVP-modulated source field with shape matching domain.shape.
         """
-        # Generate envelope and carrier
+        # Generate envelope and carrier (these are 3D initially)
         envelope = self.generate_envelope()
-        carrier = self.generate_carrier(time)
+        carrier = self.generate_carrier(time, use_cuda=use_cuda)
 
-        # Combine components
-        modulated_source = base_source * envelope * carrier
+        # Check if we need to expand to 7D
+        if base_source.shape != self.domain.shape:
+            # Expand 3D components to 7D using explicit construction
+            # Get phase and time dimensions from domain
+            N_phi = self.domain.N_phi
+            N_t = self.domain.N_t
+
+            # Explicit 7D expansion with concrete phase/time extents
+            # Uses block processing automatically if needed (80% GPU memory limit)
+            envelope_7d = expand_spatial_to_7d(
+                envelope, N_phi=N_phi, N_t=N_t, use_cuda=use_cuda, optimize_block_size=True
+            )
+            carrier_7d = expand_spatial_to_7d(
+                carrier, N_phi=N_phi, N_t=N_t, use_cuda=use_cuda, optimize_block_size=True
+            )
+
+            # Expand base_source if needed
+            if base_source.shape == envelope.shape:
+                base_source_7d = expand_spatial_to_7d(
+                    base_source, N_phi=N_phi, N_t=N_t, use_cuda=use_cuda, optimize_block_size=True
+                )
+            else:
+                base_source_7d = base_source
+
+            # Combine components (vectorized operation, preserves 7D structure)
+            if use_cuda and CUDA_AVAILABLE:
+                import cupy as cp
+                if isinstance(base_source_7d, np.ndarray):
+                    base_source_7d = cp.asarray(base_source_7d)
+                if isinstance(envelope_7d, np.ndarray):
+                    envelope_7d = cp.asarray(envelope_7d)
+                if isinstance(carrier_7d, np.ndarray):
+                    carrier_7d = cp.asarray(carrier_7d)
+                modulated_source = base_source_7d * envelope_7d * carrier_7d
+                # Synchronize CUDA operations
+                cp.cuda.Stream.null.synchronize()
+            else:
+                modulated_source = base_source_7d * envelope_7d * carrier_7d
+        else:
+            # Already 7D, just combine (vectorized operation)
+            if use_cuda and CUDA_AVAILABLE:
+                import cupy as cp
+                if isinstance(base_source, np.ndarray):
+                    base_source = cp.asarray(base_source)
+                if isinstance(envelope, np.ndarray):
+                    envelope = cp.asarray(envelope)
+                if isinstance(carrier, np.ndarray):
+                    carrier = cp.asarray(carrier)
+                modulated_source = base_source * envelope * carrier
+                cp.cuda.Stream.null.synchronize()
+            else:
+                modulated_source = base_source * envelope * carrier
 
         return modulated_source
 

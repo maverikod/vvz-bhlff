@@ -8,6 +8,11 @@ Validates superposition and absence of aliasing for multiple monochromatic modes
 - Build a spectral source with J random modes below Nyquist.
 - Solve â(k_j) = c_j / D(k_j), others ~ 0 within tolerance.
 - Check L2 error and spurious modes.
+
+This test uses ready-made generators and solvers:
+- BVPSourceGenerators for plane wave source generation
+- FFTSolver7DBasic for solving stationary problems
+- FieldArray for automatic memory management
 """
 
 from __future__ import annotations
@@ -19,6 +24,10 @@ from typing import Tuple, List
 
 import numpy as np
 
+from bhlff.core.domain import Domain
+from bhlff.core.sources.bvp_source_generators import BVPSourceGenerators
+from bhlff.core.fft.fft_solver_7d_basic import FFTSolver7DBasic
+from bhlff.core.arrays import FieldArray
 from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
 
 
@@ -30,8 +39,23 @@ def _load_config() -> dict:
         return json.load(f)
 
 
-def _make_domain_shape(N: int) -> Tuple[int, int, int]:
-    return (N, N, N)
+def _create_3d_domain(L: float, N: int) -> Domain:
+    """
+    Create 3D domain as 7D domain with minimal phase and temporal dimensions.
+    
+    Physical Meaning:
+        Creates a 7D domain for 3D spatial computations by using
+        minimal phase (N_phi=1) and temporal (N_t=1) dimensions.
+        This allows using 7D solvers for 3D problems.
+    """
+    return Domain(
+        L=L,
+        N=N,
+        N_phi=1,  # Minimal phase dimensions for 3D spatial problem
+        N_t=1,    # Minimal temporal dimension for stationary problem
+        T=1.0,
+        dimensions=7,
+    )
 
 
 def _rand_modes(N: int, J: int, seed: int) -> List[Tuple[int, int, int]]:
@@ -46,20 +70,6 @@ def _rand_modes(N: int, J: int, seed: int) -> List[Tuple[int, int, int]]:
     return list(modes)
 
 
-def _build_spectral_source(
-    shape: Tuple[int, int, int],
-    modes: List[Tuple[int, int, int]],
-    amplitudes: np.ndarray,
-) -> np.ndarray:
-    # Create spectral array with non-zero entries only at exact integer frequency bins
-    spec = np.zeros(shape, dtype=np.complex128)
-    N = np.array(shape)
-    center = tuple(0 for _ in shape)  # using unshifted indexing consistent with ops
-    for idx, m in enumerate(modes):
-        # Map negative frequencies to equivalent FFT bins via modulo
-        k = tuple((mi % n) for mi, n in zip(m, N))
-        spec[k] = amplitudes[idx]
-    return spec
 
 
 def test_A02_multi_plane() -> None:
@@ -74,45 +84,104 @@ def test_A02_multi_plane() -> None:
     tol = float(cfg["tolerance"]["error_L2"])
     tol_sp = float(cfg["tolerance"].get("spurious", tol))
 
-    shape = _make_domain_shape(N)
-
-    class _Domain:
-        def __init__(self, shape: Tuple[int, int, int]):
-            self.shape = shape
-            self.L = L
-            self.N = N
-
-    domain = _Domain(shape)
-    ops = UnifiedSpectralOperations(domain, precision="float64")
-
+    # Create 7D domain for 3D spatial problem
+    domain = _create_3d_domain(L, N)
+    
     # Random modes and complex amplitudes on the unit circle
     modes = _rand_modes(N, J, seed)
     rng = np.random.default_rng(seed + 1)
     phases = rng.random(J) * 2.0 * np.pi
     amps = np.exp(1j * phases).astype(np.complex128)
 
-    # Build spectral source and its real-space version
-    s_hat = _build_spectral_source(shape, modes, amps)
-    s_real = ops.inverse_fft(s_hat, "ortho")
-
-    # Solve in spectral space: a_hat = s_hat / (mu|k|^{2β} + λ)
-    a_hat = np.zeros_like(s_hat)
-    # only at selected modes
+    # Build multi-plane wave source by summing individual plane waves
+    # Each plane wave is generated using BVPSourceGenerators
+    source_3d = np.zeros((N, N, N), dtype=np.complex128)
+    
+    for idx, mode in enumerate(modes):
+        # Generate plane wave source for this mode with given amplitude
+        source_config = {
+            "plane_wave_amplitude": amps[idx],  # Complex amplitude
+            "plane_wave_mode": list(mode),
+            "use_cuda": True,  # Use CUDA if available
+        }
+        
+        generators = BVPSourceGenerators(domain, source_config)
+        mode_source_field = generators.generate_plane_wave_source()
+        
+        # Extract 3D spatial slice
+        if isinstance(mode_source_field, FieldArray):
+            mode_source_array = mode_source_field.array
+        else:
+            mode_source_array = mode_source_field
+        
+        mode_source_3d = mode_source_array[:, :, :, 0, 0, 0, 0] if mode_source_array.ndim == 7 else mode_source_array
+        
+        # Sum into total source (superposition principle)
+        source_3d += mode_source_3d
+    
+    # Expand to 7D for solver (solver expects 7D)
+    source_7d = np.zeros(domain.shape, dtype=np.complex128)
+    source_7d[:, :, :, 0, 0, 0, 0] = source_3d
+    
+    # Create solver with physics parameters
+    solver = FFTSolver7DBasic(
+        domain,
+        {
+            "mu": mu,
+            "beta": beta,
+            "lambda": lam,
+            "use_cuda": True,  # Use CUDA if available
+        }
+    )
+    
+    # Solve stationary problem (returns FieldArray)
+    solution_field = solver.solve_stationary(source_7d)
+    
+    # Extract 3D spatial slice from solution
+    if isinstance(solution_field, FieldArray):
+        solution_array = solution_field.array
+    else:
+        solution_array = solution_field
+    
+    solution_3d = solution_array[:, :, :, 0, 0, 0, 0] if solution_array.ndim == 7 else solution_array
+    a_real = solution_3d.astype(np.complex128)
+    
+    # Build reference solution using exact spectral formula
+    # For comparison with solver result
+    shape = (N, N, N)
+    
+    class _Domain:
+        def __init__(self, shape: Tuple[int, int, int], L: float, N: int):
+            self.shape = shape
+            self.L = L
+            self.N = N
+    
+    domain_3d = _Domain(shape, L, N)
+    ops = UnifiedSpectralOperations(domain_3d, precision="float64")
+    
+    # Build spectral representation of source
+    s_hat = ops.forward_fft(source_3d, "ortho")
+    
+    # Build reference solution using exact spectral formula
+    # This is the expected solution based on exact spectral operator
+    a_hat_ref = np.zeros_like(s_hat)
     for idx, m in enumerate(modes):
         k = tuple((mi % n) for mi, n in zip(m, shape))
         ksq = (2.0 * np.pi / L) ** 2 * float(sum(mi * mi for mi in m))
         denom = mu * (ksq**beta) + lam
-        a_hat[k] = s_hat[k] / denom
+        a_hat_ref[k] = s_hat[k] / denom
 
-    # Transform back to real space and compute forward to check aliasing
-    a_real = ops.inverse_fft(a_hat, "ortho")
+    # Transform reference solution back to real space for comparison
+    a_real_ref = ops.inverse_fft(a_hat_ref, "ortho")
+    
+    # Transform solver solution back to spectral space to check aliasing
     a_hat_back = ops.forward_fft(a_real, "ortho")
 
     # Metrics: error vs exact at target bins, and spurious energy elsewhere
     err_bins = []
     for m in modes:
         k = tuple((mi % n) for mi, n in zip(m, shape))
-        err_bins.append(np.abs(a_hat_back[k] - a_hat[k]))
+        err_bins.append(np.abs(a_hat_back[k] - a_hat_ref[k]))
     err_target = float(np.linalg.norm(err_bins))
 
     # Spurious energy (aliasing) at bins not in modes

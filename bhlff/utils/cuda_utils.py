@@ -2,239 +2,60 @@
 Author: Vasiliy Zdanovskiy
 email: vasilyvz@gmail.com
 
-CUDA utilities for automatic GPU acceleration in BHLFF.
+CUDA utilities for GPU acceleration in BHLFF with 7D phase field support.
 
-This module provides automatic CUDA detection and fallback to CPU
-when CUDA is not available, ensuring optimal performance for
-7D phase field calculations.
+This module provides CUDA detection, backend selection, and utility functions
+for 7D phase field calculations. For Level C code paths, CUDA is required with
+no CPU fallback. All operations use block-based processing optimized for 80%
+GPU memory usage with vectorized operations and explicit stream synchronization.
 
 Physical Meaning:
-    CUDA acceleration is critical for 7D phase field calculations
-    due to the high computational complexity of spectral operations
-    in 7D space-time. This module automatically detects and uses
-    available GPU resources.
+    CUDA acceleration is critical for 7D phase field calculations in space-time
+    M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ due to the high computational complexity of spectral
+    operations in 7D. This module provides backend selection, detection, and
+    block processing utilities with optimal GPU memory utilization.
+
+Theoretical Background:
+    The 7D phase field theory operates in M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ, where:
+    - Spatial coordinates: x ∈ ℝ³ (dimensions 0, 1, 2)
+    - Phase coordinates: φ ∈ 𝕋³ (dimensions 3, 4, 5)
+    - Time: t ∈ ℝ (dimension 6)
+    All operations preserve 7D structure and use vectorized GPU kernels with
+    block-based processing for optimal memory usage (80% of GPU memory).
 
 Example:
-    >>> from bhlff.utils.cuda_utils import get_optimal_backend
-    >>> backend = get_optimal_backend()
+    >>> from bhlff.utils.cuda_utils import get_cuda_backend_required
+    >>> backend = get_cuda_backend_required()
     >>> array = backend.zeros((64, 64, 64, 16, 16, 16, 100))
+    >>> block_tiling = backend.compute_optimal_block_tiling_7d(array.shape)
 """
 
 import logging
 import os
-from typing import Optional, Union, Any
-import numpy as np
+from typing import Optional, Union
 
-# Try to import CUDA libraries
-try:
-    import cupy as cp
-    import cupyx.scipy.fft as cp_fft
-
-    CUDA_AVAILABLE = True
-except ImportError:
-    CUDA_AVAILABLE = False
-    cp = None
-    cp_fft = None
-
-# Try to import NumPy FFT as fallback
-try:
-    import numpy.fft as np_fft
-
-    NUMPY_FFT_AVAILABLE = True
-except ImportError:
-    NUMPY_FFT_AVAILABLE = False
-    np_fft = None
+# Import backend classes
+from .cuda_backend import CUDABackend, CUDA_AVAILABLE
+from .cpu_backend import CPUBackend, NUMPY_FFT_AVAILABLE
 
 logger = logging.getLogger(__name__)
 
-
-class CUDABackend:
-    """
-    CUDA backend for GPU-accelerated computations.
-
-    Physical Meaning:
-        Provides GPU-accelerated array operations and FFT
-        for 7D phase field calculations using CuPy.
-    """
-
-    def __init__(self):
-        """Initialize CUDA backend."""
-        if not CUDA_AVAILABLE:
-            raise RuntimeError("CUDA not available")
-
-        self.device = cp.cuda.Device()
-        self.memory_pool = cp.get_default_memory_pool()
-        self.pinned_memory_pool = cp.get_default_pinned_memory_pool()
-
-        logger.info(f"CUDA backend initialized on device {self.device.id}")
-
-    def zeros(self, shape: tuple, dtype=np.complex128) -> "cp.ndarray":
-        """Create zero array on GPU."""
-        return cp.zeros(shape, dtype=dtype)
-
-    def ones(self, shape: tuple, dtype=np.complex128) -> "cp.ndarray":
-        """Create ones array on GPU."""
-        return cp.ones(shape, dtype=dtype)
-
-    def array(self, array: np.ndarray) -> "cp.ndarray":
-        """Convert numpy array to GPU array."""
-        return cp.asarray(array)
-
-    def to_numpy(self, array: "cp.ndarray") -> np.ndarray:
-        """Convert GPU array to numpy array."""
-        return cp.asnumpy(array)
-
-    def fft(self, array: "cp.ndarray", axes: Optional[tuple] = None) -> "cp.ndarray":
-        """Perform FFT on GPU with memory check."""
-        # Check available memory before FFT
-        if not self._check_memory_for_fft(array):
-            # Fallback to CPU if not enough GPU memory
-            logger.warning("Insufficient GPU memory for FFT, falling back to CPU")
-            array_cpu = cp.asnumpy(array)
-            result_cpu = np.fft.fftn(array_cpu, axes=axes)
-            return cp.asarray(result_cpu)
-
-        return cp_fft.fftn(array, axes=axes)
-
-    def ifft(self, array: "cp.ndarray", axes: Optional[tuple] = None) -> "cp.ndarray":
-        """Perform inverse FFT on GPU with memory check."""
-        # Check available memory before FFT
-        if not self._check_memory_for_fft(array):
-            # Fallback to CPU if not enough GPU memory
-            logger.warning("Insufficient GPU memory for FFT, falling back to CPU")
-            array_cpu = cp.asnumpy(array)
-            result_cpu = np.fft.ifftn(array_cpu, axes=axes)
-            return cp.asarray(result_cpu)
-
-        return cp_fft.ifftn(array, axes=axes)
-
-    def fftshift(
-        self, array: "cp.ndarray", axes: Optional[tuple] = None
-    ) -> "cp.ndarray":
-        """Perform FFT shift on GPU."""
-        return cp_fft.fftshift(array, axes=axes)
-
-    def ifftshift(
-        self, array: "cp.ndarray", axes: Optional[tuple] = None
-    ) -> "cp.ndarray":
-        """Perform inverse FFT shift on GPU."""
-        return cp_fft.ifftshift(array, axes=axes)
-
-    def get_memory_info(self) -> dict:
-        """Get GPU memory information."""
-        mempool = cp.get_default_memory_pool()
-        pinned_mempool = cp.get_default_pinned_memory_pool()
-
-        return {
-            "total_memory": self.device.mem_info[1],
-            "free_memory": self.device.mem_info[0],
-            "used_memory": self.device.mem_info[1] - self.device.mem_info[0],
-            "mempool_used": mempool.used_bytes(),
-            "mempool_total": mempool.total_bytes(),
-            "pinned_used": pinned_mempool.n_free_blocks(),
-            "pinned_total": pinned_mempool.n_free_blocks(),
-        }
-
-    def _check_memory_for_fft(self, array: "cp.ndarray") -> bool:
-        """
-        Check if there's enough GPU memory for FFT operations.
-
-        Physical Meaning:
-            FFT operations require 3-4x the input array size in memory
-            for intermediate computations and output arrays.
-
-        Args:
-            array: Input array for FFT operation.
-
-        Returns:
-            bool: True if enough memory available, False otherwise.
-        """
-        try:
-            # Estimate memory needed for FFT (3-4x input size)
-            input_size = array.nbytes
-            fft_memory_needed = input_size * 4  # 4x for safety
-
-            # Get available memory
-            free_memory = self.device.mem_info[0]
-
-            # Check if we have enough memory
-            if fft_memory_needed > free_memory:
-                logger.warning(
-                    f"FFT requires {fft_memory_needed / (1024**2):.1f} MB, "
-                    f"but only {free_memory / (1024**2):.1f} MB available"
-                )
-                return False
-
-            return True
-
-        except Exception as e:
-            logger.error(f"Error checking memory for FFT: {e}")
-            return False
-
-
-class CPUBackend:
-    """
-    CPU backend for computations when CUDA is not available.
-
-    Physical Meaning:
-        Provides CPU-based array operations and FFT
-        for 7D phase field calculations using NumPy.
-    """
-
-    def __init__(self):
-        """Initialize CPU backend."""
-        if not NUMPY_FFT_AVAILABLE:
-            raise RuntimeError("NumPy FFT not available")
-
-        logger.info("CPU backend initialized")
-
-    def zeros(self, shape: tuple, dtype=np.complex128) -> np.ndarray:
-        """Create zero array on CPU."""
-        return np.zeros(shape, dtype=dtype)
-
-    def ones(self, shape: tuple, dtype=np.complex128) -> np.ndarray:
-        """Create ones array on CPU."""
-        return np.ones(shape, dtype=dtype)
-
-    def array(self, array: np.ndarray) -> np.ndarray:
-        """Return array as-is (already on CPU)."""
-        return array
-
-    def to_numpy(self, array: np.ndarray) -> np.ndarray:
-        """Return array as-is (already numpy)."""
-        return array
-
-    def fft(self, array: np.ndarray, axes: Optional[tuple] = None) -> np.ndarray:
-        """Perform FFT on CPU."""
-        return np_fft.fftn(array, axes=axes)
-
-    def ifft(self, array: np.ndarray, axes: Optional[tuple] = None) -> np.ndarray:
-        """Perform inverse FFT on CPU."""
-        return np_fft.ifftn(array, axes=axes)
-
-    def fftshift(self, array: np.ndarray, axes: Optional[tuple] = None) -> np.ndarray:
-        """Perform FFT shift on CPU."""
-        return np_fft.fftshift(array, axes=axes)
-
-    def ifftshift(self, array: np.ndarray, axes: Optional[tuple] = None) -> np.ndarray:
-        """Perform inverse FFT shift on CPU."""
-        return np_fft.ifftshift(array, axes=axes)
-
-    def get_memory_info(self) -> dict:
-        """Get CPU memory information."""
-        import psutil
-
-        memory = psutil.virtual_memory()
-
-        return {
-            "total_memory": memory.total,
-            "free_memory": memory.available,
-            "used_memory": memory.used,
-            "mempool_used": 0,
-            "mempool_total": 0,
-            "pinned_used": 0,
-            "pinned_total": 0,
-        }
+# Re-export for backward compatibility
+__all__ = [
+    "CUDABackend",
+    "CPUBackend",
+    "CUDA_AVAILABLE",
+    "NUMPY_FFT_AVAILABLE",
+    "detect_cuda_availability",
+    "get_cuda_backend_required",
+    "get_optimal_backend",
+    "get_backend_info",
+    "get_global_backend",
+    "reset_global_backend",
+    "check_level_c_cuda_required",
+    "raise_insufficient_memory_error",
+    "calculate_optimal_window_memory",
+]
 
 
 def detect_cuda_availability() -> bool:
@@ -242,8 +63,8 @@ def detect_cuda_availability() -> bool:
     Detect if CUDA is available and working.
 
     Physical Meaning:
-        Checks if CUDA is properly installed and functional
-        for 7D phase field calculations.
+        Checks if CUDA is properly installed and functional for 7D phase
+        field calculations with comprehensive testing of GPU operations.
 
     Returns:
         bool: True if CUDA is available and working.
@@ -252,6 +73,8 @@ def detect_cuda_availability() -> bool:
         return False
 
     try:
+        import cupy as cp
+
         # Test basic CUDA operations
         test_array = cp.zeros((10, 10), dtype=cp.complex128)
         result = cp.fft.fft(test_array)
@@ -267,14 +90,64 @@ def detect_cuda_availability() -> bool:
         return False
 
 
-def get_optimal_backend() -> Union[CUDABackend, CPUBackend]:
+def get_cuda_backend_required() -> CUDABackend:
     """
-    Get the optimal backend for computations.
+    Get CUDA backend - required for Level C code paths.
 
     Physical Meaning:
-        Automatically selects the best available backend
-        (CUDA GPU or CPU) for 7D phase field calculations
-        based on availability and performance.
+        Returns CUDA backend instance, raising error if CUDA is not available.
+        This function is used by Level C code paths which require GPU
+        acceleration and do not support CPU fallback. All Level C operations
+        must use this function to ensure GPU-only execution.
+
+    Returns:
+        CUDABackend: CUDA backend instance.
+
+    Raises:
+        RuntimeError: If CUDA is not available or detection fails with
+            guidance on how to resolve the issue.
+    """
+    if not CUDA_AVAILABLE:
+        raise RuntimeError(
+            "CUDA not available. Level C requires GPU acceleration. "
+            "Please install CuPy and ensure CUDA is properly configured. "
+            "Install with: pip install cupy-cuda11x or cupy-cuda12x "
+            "(matching your CUDA version)."
+        )
+
+    if not detect_cuda_availability():
+        raise RuntimeError(
+            "CUDA detection failed. Level C requires functional GPU. "
+            "Please check CUDA installation and GPU drivers. "
+            "Verify CUDA installation with: nvidia-smi"
+        )
+
+    try:
+        backend = CUDABackend()
+        logger.info(
+            "CUDA backend initialized for Level C (GPU required, no CPU fallback)"
+        )
+        return backend
+    except Exception as e:
+        raise RuntimeError(
+            f"CUDA backend initialization failed: {e}. "
+            f"Level C requires GPU acceleration. "
+            f"Ensure GPU is available and CUDA drivers are properly installed."
+        ) from e
+
+
+def get_optimal_backend() -> Union[CUDABackend, CPUBackend]:
+    """
+    Get the optimal backend for computations (with CPU fallback).
+
+    Physical Meaning:
+        Automatically selects the best available backend (CUDA GPU or CPU)
+        for 7D phase field calculations based on availability and performance.
+        Note: Level C code paths should use get_cuda_backend_required() instead.
+
+    WARNING:
+        For Level C code paths, use get_cuda_backend_required() instead.
+        This function provides CPU fallback which is not supported by Level C.
 
     Returns:
         Union[CUDABackend, CPUBackend]: Optimal backend for computations.
@@ -299,7 +172,7 @@ def get_optimal_backend() -> Union[CUDABackend, CPUBackend]:
         except Exception as e:
             logger.warning(f"CUDA backend failed: {e}, falling back to CPU")
 
-    # Fall back to CPU
+    # Fall back to CPU (not for Level C!)
     logger.info("Using CPU backend")
     return CPUBackend()
 
@@ -309,8 +182,8 @@ def get_backend_info() -> dict:
     Get information about the current backend.
 
     Physical Meaning:
-        Provides detailed information about the computational
-        backend being used for 7D phase field calculations.
+        Provides detailed information about the computational backend
+        being used for 7D phase field calculations.
 
     Returns:
         dict: Backend information including type, memory, and capabilities.
@@ -326,7 +199,10 @@ def get_backend_info() -> dict:
 
     if isinstance(backend, CUDABackend):
         info["device_id"] = backend.device.id
-        info["device_name"] = backend.device.name
+        try:
+            info["device_name"] = backend.device.name
+        except Exception:
+            info["device_name"] = "Unknown"
 
     return info
 
@@ -340,8 +216,8 @@ def get_global_backend() -> Union[CUDABackend, CPUBackend]:
     Get the global backend instance.
 
     Physical Meaning:
-        Returns the global backend instance for use throughout
-        the BHLFF framework, ensuring consistent GPU/CPU usage.
+        Returns the global backend instance for use throughout the BHLFF
+        framework, ensuring consistent GPU/CPU usage.
 
     Returns:
         Union[CUDABackend, CPUBackend]: Global backend instance.
@@ -357,8 +233,206 @@ def reset_global_backend() -> None:
     Reset the global backend instance.
 
     Physical Meaning:
-        Resets the global backend to allow re-detection
-        of optimal backend configuration.
+        Resets the global backend to allow re-detection of optimal backend
+        configuration.
     """
     global _global_backend
     _global_backend = None
+
+
+def check_level_c_cuda_required(backend: Union[CUDABackend, CPUBackend]) -> None:
+    """
+    Verify that backend is CUDA for Level C code paths.
+
+    Physical Meaning:
+        Ensures that Level C code paths use GPU-only execution by verifying
+        that the backend is CUDA, not CPU. This function should be called
+        at the beginning of Level C methods to prevent CPU fallback.
+
+    Args:
+        backend (Union[CUDABackend, CPUBackend]): Backend instance to check.
+
+    Raises:
+        RuntimeError: If backend is not CUDA with guidance on using
+            get_cuda_backend_required() instead.
+    """
+    if not isinstance(backend, CUDABackend):
+        raise RuntimeError(
+            f"Level C requires CUDA backend, but got {type(backend).__name__}. "
+            f"Use get_cuda_backend_required() instead of get_optimal_backend() "
+            f"for Level C code paths. Level C does not support CPU fallback."
+        )
+
+
+def raise_insufficient_memory_error(
+    required_memory: int,
+    available_memory: int,
+    operation_name: str = "operation",
+    field_shape: Optional[tuple] = None,
+) -> RuntimeError:
+    """
+    Raise informative error for insufficient GPU memory with guidance.
+
+    Physical Meaning:
+        Provides detailed error message with guidance on using block-based
+        processing when GPU memory is insufficient for 7D phase field
+        operations. For Level C, block processing is required for large fields.
+
+    Mathematical Foundation:
+        For 7D operations, memory requirements scale as:
+        - Input field: 1x
+        - Output field: 1x
+        - Intermediate operations: 2-4x
+        - FFT workspace: 2x
+        - Reduction buffers: 1x
+        Total overhead: ~10x for complex 7D operations
+
+    Args:
+        required_memory (int): Required memory in bytes.
+        available_memory (int): Available memory in bytes.
+        operation_name (str): Name of the operation (default: "operation").
+        field_shape (Optional[tuple]): Shape of the field array if available.
+
+    Returns:
+        RuntimeError: Error with detailed guidance on block processing.
+    """
+    required_gb = required_memory / 1e9
+    available_gb = available_memory / 1e9
+
+    error_msg = (
+        f"Insufficient GPU memory for {operation_name}. "
+        f"Required: {required_gb:.2f}GB, Available: {available_gb:.2f}GB. "
+        f"For Level C, use block-based processing with compute_optimal_block_tiling_7d(). "
+    )
+
+    if field_shape is not None:
+        error_msg += (
+            f"Field shape: {field_shape}. "
+            f"Use backend.compute_optimal_block_tiling_7d({field_shape}) "
+            f"to compute optimal block size for 80% GPU memory usage. "
+        )
+
+    error_msg += (
+        f"Example: block_tiling = backend.compute_optimal_block_tiling_7d(field_shape); "
+        f"then process field in blocks using the returned tiling."
+    )
+
+    return RuntimeError(error_msg)
+
+
+def calculate_optimal_window_memory(
+    gpu_memory_ratio: float = 0.8,
+    overhead_factor: float = 4.0,
+    logger: Optional[logging.Logger] = None,
+) -> tuple[int, float, float]:
+    """
+    Calculate optimal window/block memory size based on TOTAL GPU memory.
+    
+    Physical Meaning:
+        Calculates optimal window/block size for GPU processing based on
+        TOTAL GPU memory (not free), adapting to card size. Uses 80% of
+        total memory as safety limit, with 20% reserve covering minor overflows.
+        
+    Mathematical Foundation:
+        - base_memory = total_memory * gpu_memory_ratio (80% limit)
+        - window_memory = base_memory / fft_factor
+        - fft_factor depends on card size:
+          * Small cards (<4GB): 4.5 (conservative)
+          * Medium cards (4-16GB): 3.8 (moderate)
+          * Large cards (>16GB): 3.5 (aggressive)
+        - Actual usage = window_memory * overhead_factor
+        
+    Args:
+        gpu_memory_ratio (float): GPU memory utilization ratio (default: 0.8).
+        overhead_factor (float): Memory overhead factor for operations (default: 4.0).
+        logger (Optional[logging.Logger]): Logger instance for info messages.
+        
+    Returns:
+        tuple[int, float, float]: (max_window_elements, actual_usage_gb, actual_usage_pct)
+            - max_window_elements: Maximum elements per window/block
+            - actual_usage_gb: Actual memory usage in GB with overhead
+            - actual_usage_pct: Actual memory usage as percentage of total
+    """
+    if not CUDA_AVAILABLE:
+        # CPU fallback: use 1GB window
+        max_window_elements = int(1e9 // 16)  # complex128 = 16 bytes
+        return max_window_elements, 0.0, 0.0
+    
+    try:
+        import cupy as cp
+        mem_info = cp.cuda.runtime.memGetInfo()
+        free_memory = mem_info[0]
+        total_memory = mem_info[1]
+        
+        # Calculate window size based on TOTAL memory, not free
+        # Use 80% of TOTAL memory as base (safety limit to avoid hard reset)
+        # 20% reserve covers minor overflows
+        base_memory = int(total_memory * gpu_memory_ratio)
+        
+        # Factor depends on card size (more aggressive for larger cards):
+        # - Small cards (<4GB): conservative (4.5) - window*4 = 80%*4/4.5 = 71% of total
+        # - Medium cards (4-16GB): moderate (3.8) - window*4 = 80%*4/3.8 = 84% of total (20% reserve covers)
+        # - Large cards (>16GB): aggressive (3.5) - window*4 = 80%*4/3.5 = 91% of total (20% reserve covers)
+        if total_memory < 4 * 1024**3:  # < 4GB
+            fft_factor = 4.5  # Conservative for small cards
+        elif total_memory < 16 * 1024**3:  # 4-16GB
+            fft_factor = 3.8  # Moderate: slight overflow covered by 20% reserve
+        else:  # > 16GB
+            fft_factor = 3.5  # Aggressive: overflow covered by 20% reserve, maximizes utilization
+        
+        window_memory = int(base_memory / fft_factor)
+        bytes_per_element = 16  # complex128
+        max_window_elements = window_memory // bytes_per_element
+        
+        # CRITICAL: Ensure window with overhead doesn't exceed 80% of TOTAL memory
+        # This prevents hard reset by ensuring we never exceed the safety limit
+        max_window_with_overhead = int(base_memory / overhead_factor)
+        max_window_elements_safe = max_window_with_overhead // bytes_per_element
+        
+        # Use the safer limit (window with overhead must fit in 80% of total)
+        max_window_elements = min(max_window_elements, max_window_elements_safe)
+        
+        # Also check free memory as additional safety (but don't let it override total-based calculation)
+        # Only if free memory is very low (< 20% of total), reduce window size
+        if free_memory < 0.2 * total_memory:
+            max_window_from_free = int(free_memory * 0.9 / fft_factor)  # Use 90% of free
+            max_window_elements = min(max_window_elements, max_window_from_free // bytes_per_element)
+            if logger:
+                logger.warning(
+                    f"Free memory is low ({free_memory/1e9:.2f}GB < 20% of total), "
+                    f"reducing window size to {max_window_elements/1e6:.1f}M elements"
+                )
+        
+        # Calculate actual memory usage with overhead
+        actual_usage = (max_window_elements * bytes_per_element * overhead_factor) / (1024**3)
+        actual_usage_pct = (actual_usage / (total_memory / (1024**3))) * 100
+        
+        # CRITICAL SAFETY CHECK: Ensure we never exceed 80% even with overhead
+        if actual_usage_pct > 80.0:
+            # Reduce window size to ensure we stay under 80%
+            max_window_elements = int((total_memory * 0.8 / overhead_factor) // bytes_per_element)
+            actual_usage = (max_window_elements * bytes_per_element * overhead_factor) / (1024**3)
+            actual_usage_pct = (actual_usage / (total_memory / (1024**3))) * 100
+            if logger:
+                logger.warning(
+                    f"Window size reduced to stay under 80% limit: "
+                    f"{max_window_elements/1e6:.1f}M elements, {actual_usage_pct:.1f}% of total"
+                )
+        
+        if logger:
+            logger.info(
+                f"GPU memory: free={free_memory/1e9:.2f}GB, total={total_memory/1e9:.2f}GB, "
+                f"base={base_memory/1e9:.2f}GB (80% limit), fft_factor={fft_factor:.1f}, "
+                f"max_window={max_window_elements/1e6:.1f}M elements "
+                f"({max_window_elements*bytes_per_element/1e6:.1f}MB), "
+                f"usage={actual_usage:.2f}GB ({actual_usage_pct:.1f}% of total)"
+            )
+        
+        return max_window_elements, actual_usage, actual_usage_pct
+        
+    except Exception as e:
+        if logger:
+            logger.warning(f"Failed to get GPU memory info: {e}")
+        # Fallback: use 1GB window
+        max_window_elements = int(1e9 // 16)
+        return max_window_elements, 0.0, 0.0

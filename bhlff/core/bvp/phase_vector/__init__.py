@@ -27,7 +27,7 @@ Example:
     >>> electroweak_currents = phase_vector.compute_electroweak_currents(envelope)
 """
 
-from .phase_vector import PhaseVector
+from .phase_vector.phase_vector_facade import PhaseVector
 from .phase_components import PhaseComponents
 from .electroweak_coupling import ElectroweakCoupling
 

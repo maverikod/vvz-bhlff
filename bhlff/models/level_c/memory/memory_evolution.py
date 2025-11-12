@@ -22,6 +22,10 @@ import logging
 
 from bhlff.core.bvp import BVPCore
 from .data_structures import MemoryParameters, QuenchEvent, MemoryKernel, MemoryState
+from .spatial_field_extractor import SpatialFieldExtractor
+from .memory_kernel_processor import MemoryKernelProcessor
+from .memory_effects_analyzer import MemoryEffectsAnalyzer
+from .initial_field_generator_cuda import InitialFieldGeneratorCUDA
 
 
 class MemoryEvolutionAnalyzer:
@@ -48,6 +52,10 @@ class MemoryEvolutionAnalyzer:
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
+        self.spatial_extractor = SpatialFieldExtractor()
+        self.kernel_processor = MemoryKernelProcessor()
+        self.effects_analyzer = MemoryEffectsAnalyzer()
+        self.initial_field_generator = InitialFieldGeneratorCUDA(self.spatial_extractor)
 
     def evolve_with_memory(
         self,
@@ -84,12 +92,14 @@ class MemoryEvolutionAnalyzer:
         field_history = [field.copy()]
 
         # Create memory kernel
-        memory_kernel = self._create_memory_kernel(memory)
+        memory_kernel = self.kernel_processor.create_memory_kernel(memory)
 
         # Time evolution
         for t in time_points[1:]:
             # Apply memory term
-            memory_term = self._apply_memory_term(field_history, memory_kernel, memory)
+            memory_term = self.kernel_processor.apply_memory_term(
+                field_history, memory_kernel, memory
+            )
 
             # Apply evolution operator
             field = self._apply_evolution_operator(field, memory_term, dt)
@@ -101,7 +111,9 @@ class MemoryEvolutionAnalyzer:
             field_history.append(field.copy())
 
         # Analyze memory effects
-        memory_analysis = self._analyze_memory_effects(field_history, memory)
+        memory_analysis = self.effects_analyzer.analyze_memory_effects(
+            field_history, memory
+        )
 
         return {
             "field_evolution": field_history,
@@ -112,122 +124,109 @@ class MemoryEvolutionAnalyzer:
 
     def _create_initial_field(self, domain: Dict[str, Any]) -> np.ndarray:
         """
-        Create initial field configuration.
+        Create initial field configuration with block-based processing.
 
         Physical Meaning:
-            Creates an initial field configuration for
-            memory evolution analysis.
+            Creates an initial field configuration for memory evolution analysis
+            using block-based processing with CUDA acceleration when field size
+            exceeds memory limits. Extracts 3D spatial field from 7D BlockedField
+            by averaging over phase and temporal dimensions (indices 3,4,5,6) per block
+            using vectorized operations. Iterates via generator with capped max_blocks
+            for memory safety. Preserves 7D-to-3D semantics with proper broadcasting.
+
+        Mathematical Foundation:
+            For 7D space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ:
+            - Field: a(x, y, z, φ₁, φ₂, φ₃, t)
+            - 3D extraction per block: a_3d(x, y, z) = ⟨|a(x, y, z, φ₁, φ₂, φ₃, t)|⟩_{φ₁,φ₂,φ₃,t}
+            - Block processing: processes blocks preserving 7D structure using generator
+            - CUDA acceleration: uses 80% GPU memory limit with vectorized operations
+            - Generator iteration: uses max_blocks limit for memory safety
 
         Args:
             domain (Dict[str, Any]): Domain parameters.
 
         Returns:
-            np.ndarray: Initial field configuration.
+            np.ndarray: Initial 3D field configuration (N, N, N).
         """
+        # Extract domain parameters
         N = domain.get("N", 64)
         L = domain.get("L", 1.0)
 
-        # Create coordinate arrays
-        x = np.linspace(0, L, N)
-        y = np.linspace(0, L, N)
-        z = np.linspace(0, L, N)
-        X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
+        # Use block-based processing for large fields
+        if N**3 > 64**3:  # Threshold for block processing
+            return self._create_blocked_initial_field(domain, N, L)
 
-        # Create initial field with random perturbations
-        field = np.random.rand(N, N, N) + 1j * np.random.rand(N, N, N)
-        field *= 0.1  # Small amplitude
+        # Create small field directly (fallback for small domains)
+        return self.initial_field_generator._create_small_field(N, L)
 
-        return field
-
-    def _create_memory_kernel(self, memory: MemoryParameters) -> MemoryKernel:
-        """
-        Create memory kernel.
-
-        Physical Meaning:
-            Creates a memory kernel for the given memory
-            parameters.
-
-        Mathematical Foundation:
-            Creates a memory kernel of the form:
-            K(t) = (1/τ) * Θ(t_cutoff - t)  # Step resonator function
-            where τ is the relaxation time and Θ is step function.
-
-        Args:
-            memory (MemoryParameters): Memory parameters.
-
-        Returns:
-            MemoryKernel: Memory kernel.
-        """
-        # Create temporal kernel using step resonator function
-        t_max = 100.0  # Maximum time for kernel
-        dt = 0.01
-        t_points = np.arange(0, t_max, dt)
-        temporal_kernel = (1.0 / memory.tau) * self._step_memory_kernel(
-            t_points, memory.tau
-        )
-
-        # Create spatial kernel
-        N = 64
-        L = 1.0
-        x = np.linspace(0, L, N)
-        y = np.linspace(0, L, N)
-        z = np.linspace(0, L, N)
-        X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
-
-        # Gaussian spatial kernel
-        center = np.array([L / 2, L / 2, L / 2])
-        sigma = L / 8
-        spatial_kernel = self._step_spatial_kernel(X, Y, Z, center, sigma)
-
-        return MemoryKernel(
-            temporal_kernel=temporal_kernel,
-            spatial_kernel=spatial_kernel,
-            relaxation_time=memory.tau,
-            memory_strength=memory.gamma,
-        )
-
-    def _apply_memory_term(
-        self,
-        field_history: List[np.ndarray],
-        memory_kernel: MemoryKernel,
-        memory: MemoryParameters,
+    def _create_blocked_initial_field(
+        self, domain: Dict[str, Any], N: int, L: float
     ) -> np.ndarray:
         """
-        Apply memory term to field evolution.
+        Create initial field from 7D BlockedField using block-based processing.
 
         Physical Meaning:
-            Applies the memory term to the field evolution,
-            incorporating historical information.
+            Creates 7D blocked field and extracts 3D spatial field by averaging
+            over phase and temporal dimensions per block. Iterates via generator
+            with capped max_blocks for memory safety. Uses CUDA acceleration with
+            80% GPU memory limit and vectorized operations.
 
         Mathematical Foundation:
-            Applies the memory term:
-            Γ_memory[a] = -γ ∫_0^t K(t-τ) a(τ) dτ
-            where K is the memory kernel and γ is the memory strength.
+            For 7D space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ:
+            - Creates 7D BlockedField using BlockedFieldGenerator
+            - Iterates blocks via generator.iterate_blocks(max_blocks)
+            - Extracts 3D per block: a_3d(x, y, z) = ⟨|a(x, y, z, φ₁, φ₂, φ₃, t)|⟩_{φ₁,φ₂,φ₃,t}
+            - Combines blocks into full 3D field using vectorized operations
+            - CUDA optimization: respects 80% GPU memory limit
 
         Args:
-            field_history (List[np.ndarray]): History of field evolution.
-            memory_kernel (MemoryKernel): Memory kernel.
-            memory (MemoryParameters): Memory parameters.
+            domain (Dict[str, Any]): Domain parameters.
+            N (int): Domain size (N×N×N).
+            L (float): Domain length.
 
         Returns:
-            np.ndarray: Memory term contribution.
+            np.ndarray: Initial 3D field configuration (N, N, N).
         """
-        if len(field_history) < 2:
-            return np.zeros_like(field_history[0])
+        from bhlff.core.sources.blocked_field_generator import (
+            BlockedFieldGenerator,
+            BlockedField,
+        )
+        from bhlff.core.domain import Domain as DomainClass
 
-        # Simplified memory term application
-        # In practice, this would involve proper convolution
-        memory_term = np.zeros_like(field_history[0])
+        # Create 7D domain object (required for 7D BlockedField)
+        # Level C works with 3D spatial fields, but BlockedField requires 7D
+        domain_obj = DomainClass(L=L, N=N, N_phi=4, N_t=8, T=1.0, dimensions=7)
 
-        for i, field in enumerate(field_history):
-            if i < len(memory_kernel.temporal_kernel):
-                weight = memory_kernel.temporal_kernel[i]
-                memory_term += weight * field
+        # Create field generator function with CUDA support
+        field_generator = self.initial_field_generator._create_field_generator_function()
 
-        # Apply memory strength
-        memory_term *= -memory.gamma
+        # Use BlockedFieldGenerator with CUDA support
+        generator = BlockedFieldGenerator(
+            domain_obj, field_generator, use_cuda=self.initial_field_generator.cuda_available
+        )
+        blocked_field = generator.get_field()
 
-        return memory_term
+        # Process blocked field using generator with max_blocks limit
+        if isinstance(blocked_field, BlockedField):
+            from .blocked_field_processor_cuda import BlockedFieldProcessorCUDA
+
+            processor = BlockedFieldProcessorCUDA(self.spatial_extractor)
+            return processor.process_blocked_field_blocks(
+                blocked_field, generator, N, self.initial_field_generator.cuda_available
+            )
+        else:
+            # Fallback: if not BlockedField, try direct extraction
+            if hasattr(blocked_field, "shape") and len(blocked_field.shape) == 7:
+                return self.spatial_extractor.extract_spatial_from_7d_block(
+                    blocked_field, self.initial_field_generator.cuda_available
+                )
+            else:
+                # If already 3D or different shape, use absolute value
+                return (
+                    np.abs(blocked_field)
+                    if isinstance(blocked_field, np.ndarray)
+                    else np.array(blocked_field)
+                )
 
     def _apply_evolution_operator(
         self, field: np.ndarray, memory_term: np.ndarray, dt: float
@@ -291,124 +290,6 @@ class MemoryEvolutionAnalyzer:
 
         return quench_events
 
-    def _analyze_memory_effects(
-        self, field_history: List[np.ndarray], memory: MemoryParameters
-    ) -> Dict[str, Any]:
-        """
-        Analyze memory effects in field evolution.
-
-        Physical Meaning:
-            Analyzes the memory effects in the field evolution,
-            including memory formation and retention.
-
-        Args:
-            field_history (List[np.ndarray]): History of field evolution.
-            memory (MemoryParameters): Memory parameters.
-
-        Returns:
-            Dict[str, Any]: Memory effects analysis.
-        """
-        # Analyze memory formation
-        memory_formation = self._analyze_memory_formation(field_history, memory)
-
-        # Analyze memory retention
-        memory_retention = self._analyze_memory_retention(field_history, memory)
-
-        # Analyze memory stability
-        memory_stability = self._analyze_memory_stability(field_history, memory)
-
-        return {
-            "memory_formation": memory_formation,
-            "memory_retention": memory_retention,
-            "memory_stability": memory_stability,
-            "memory_effects_detected": True,
-        }
-
-    def _analyze_memory_formation(
-        self, field_history: List[np.ndarray], memory: MemoryParameters
-    ) -> Dict[str, Any]:
-        """
-        Analyze memory formation.
-
-        Physical Meaning:
-            Analyzes how memory forms in the field evolution,
-            including formation rate and characteristics.
-
-        Args:
-            field_history (List[np.ndarray]): History of field evolution.
-            memory (MemoryParameters): Memory parameters.
-
-        Returns:
-            Dict[str, Any]: Memory formation analysis.
-        """
-        # Simplified memory formation analysis
-        # In practice, this would involve proper formation analysis
-        formation_rate = memory.gamma / memory.tau
-        formation_strength = np.mean(
-            [np.mean(np.abs(field)) for field in field_history]
-        )
-
-        return {
-            "formation_rate": formation_rate,
-            "formation_strength": formation_strength,
-            "formation_complete": True,
-        }
-
-    def _analyze_memory_retention(
-        self, field_history: List[np.ndarray], memory: MemoryParameters
-    ) -> Dict[str, Any]:
-        """
-        Analyze memory retention.
-
-        Physical Meaning:
-            Analyzes how memory is retained in the field evolution,
-            including retention time and characteristics.
-
-        Args:
-            field_history (List[np.ndarray]): History of field evolution.
-            memory (MemoryParameters): Memory parameters.
-
-        Returns:
-            Dict[str, Any]: Memory retention analysis.
-        """
-        # Simplified memory retention analysis
-        # In practice, this would involve proper retention analysis
-        retention_time = memory.tau
-        retention_strength = memory.gamma
-
-        return {
-            "retention_time": retention_time,
-            "retention_strength": retention_strength,
-            "retention_complete": True,
-        }
-
-    def _analyze_memory_stability(
-        self, field_history: List[np.ndarray], memory: MemoryParameters
-    ) -> Dict[str, Any]:
-        """
-        Analyze memory stability.
-
-        Physical Meaning:
-            Analyzes the stability of memory in the field evolution,
-            including stability metrics and characteristics.
-
-        Args:
-            field_history (List[np.ndarray]): History of field evolution.
-            memory (MemoryParameters): Memory parameters.
-
-        Returns:
-            Dict[str, Any]: Memory stability analysis.
-        """
-        # Simplified memory stability analysis
-        # In practice, this would involve proper stability analysis
-        stability_score = 0.9  # Placeholder value
-        stability_metric = memory.gamma * memory.tau
-
-        return {
-            "stability_score": stability_score,
-            "stability_metric": stability_metric,
-            "stability_complete": True,
-        }
 
     def _collect_quench_events(
         self, field_history: List[np.ndarray]
@@ -441,67 +322,3 @@ class MemoryEvolutionAnalyzer:
 
         return quench_events
 
-    def _step_memory_kernel(self, t_points: np.ndarray, tau: float) -> np.ndarray:
-        """
-        Step function memory kernel.
-
-        Physical Meaning:
-            Implements step resonator model for memory kernel instead of
-            exponential decay. This follows 7D BVP theory principles where
-            energy exchange occurs through semi-transparent boundaries.
-
-        Mathematical Foundation:
-            K(t) = (1/τ) * Θ(t_cutoff - t) where Θ is the Heaviside step function
-            and t_cutoff is the cutoff time for the memory kernel.
-
-        Args:
-            t_points (np.ndarray): Time points
-            tau (float): Relaxation time
-
-        Returns:
-            np.ndarray: Step function memory kernel
-        """
-        # Step resonator parameters
-        cutoff_ratio = 0.8  # 80% of relaxation time
-        t_cutoff = tau * cutoff_ratio
-
-        # Step function kernel: 1.0 below cutoff, 0.0 above
-        return np.where(t_points < t_cutoff, 1.0, 0.0)
-
-    def _step_spatial_kernel(
-        self,
-        X: np.ndarray,
-        Y: np.ndarray,
-        Z: np.ndarray,
-        center: np.ndarray,
-        sigma: float,
-    ) -> np.ndarray:
-        """
-        Step function spatial kernel.
-
-        Physical Meaning:
-            Implements step resonator model for spatial kernel instead of
-            Gaussian decay. This follows 7D BVP theory principles where
-            energy exchange occurs through semi-transparent boundaries.
-
-        Mathematical Foundation:
-            K(x) = Θ(r_cutoff - r) where Θ is the Heaviside step function
-            and r_cutoff is the cutoff radius for the spatial kernel.
-
-        Args:
-            X, Y, Z (np.ndarray): Coordinate arrays
-            center (np.ndarray): Center coordinates
-            sigma (float): Characteristic length scale
-
-        Returns:
-            np.ndarray: Step function spatial kernel
-        """
-        # Step resonator parameters
-        cutoff_ratio = 2.0  # 2 sigma cutoff
-        r_cutoff = sigma * cutoff_ratio
-
-        # Calculate distance from center
-        r = np.sqrt((X - center[0]) ** 2 + (Y - center[1]) ** 2 + (Z - center[2]) ** 2)
-
-        # Step function kernel: 1.0 below cutoff, 0.0 above
-        return np.where(r < r_cutoff, 1.0, 0.0)

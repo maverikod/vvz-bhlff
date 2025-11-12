@@ -133,19 +133,81 @@ class RadialConcentrationAnalyzer:
         near_boundary_mask = self._create_near_boundary_mask(domain, boundary_thickness)
 
         # Analyze concentration in near-boundary region
-        near_boundary_field = field[near_boundary_mask]
+        # Handle BlockedField - extract spatial part and compute statistics
+        from bhlff.core.sources.blocked_field_generator import BlockedField
+        
+        if isinstance(field, BlockedField):
+            # For BlockedField, compute statistics block-wise
+            # Extract spatial part by averaging over phase and temporal dimensions
+            # Get spatial slice matching mask dimensions
+            N = domain["N"]
+            spatial_shape = near_boundary_mask.shape
+            
+            # Extract spatial slice directly using slicing
+            # For 7D BlockedField, we need spatial part (first 3 dims)
+            # Average over phase and temporal dimensions (dims 3,4,5,6)
+            # Use slicing to get spatial part
+            try:
+                # Try to get full spatial slice
+                # Extract all spatial coordinates, first indices for phase/temporal
+                spatial_slice = (slice(None), slice(None), slice(None), 0, 0, 0, 0)
+                field_7d_sample = field[spatial_slice]
+                
+                if len(field_7d_sample.shape) == 7:
+                    field_spatial = np.mean(np.abs(field_7d_sample), axis=(3, 4, 5, 6))
+                else:
+                    field_spatial = np.abs(field_7d_sample)
+                
+                # Ensure field_spatial matches mask shape
+                if field_spatial.shape != spatial_shape:
+                    min_shape = tuple(min(s, m) for s, m in zip(field_spatial.shape, spatial_shape))
+                    field_spatial = field_spatial[tuple(slice(0, s) for s in min_shape)]
+                    near_boundary_mask = near_boundary_mask[tuple(slice(0, s) for s in min_shape)]
+                
+                near_boundary_field = field_spatial[near_boundary_mask]
+                field_mean = np.mean(field_spatial)
+            except Exception as e:
+                # Fallback: use sample block for statistics
+                self.logger.warning(f"Could not extract full spatial field from BlockedField: {e}, using sample")
+                sample_block = field[tuple(slice(0, min(32, s)) for s in field.shape[:3]) + (0, 0, 0, 0)]
+                if len(sample_block.shape) == 7:
+                    field_spatial = np.mean(np.abs(sample_block), axis=(3, 4, 5, 6))
+                else:
+                    field_spatial = np.abs(sample_block)
+                # Crop to match mask
+                if field_spatial.shape != spatial_shape:
+                    min_shape = tuple(min(s, m) for s, m in zip(field_spatial.shape, spatial_shape))
+                    field_spatial = field_spatial[tuple(slice(0, s) for s in min_shape)]
+                    near_boundary_mask = near_boundary_mask[tuple(slice(0, s) for s in min_shape)]
+                near_boundary_field = field_spatial[near_boundary_mask]
+                field_mean = np.mean(field_spatial)
+        else:
+            # Regular numpy array
+            if len(field.shape) == 7:
+                field_spatial = np.mean(np.abs(field), axis=(3, 4, 5, 6))
+            else:
+                field_spatial = np.abs(field)
+            
+            # Ensure field_spatial matches mask shape
+            if field_spatial.shape != near_boundary_mask.shape:
+                min_shape = tuple(min(s, m) for s, m in zip(field_spatial.shape, near_boundary_mask.shape))
+                field_spatial = field_spatial[tuple(slice(0, s) for s in min_shape)]
+                near_boundary_mask = near_boundary_mask[tuple(slice(0, s) for s in min_shape)]
+            
+            near_boundary_field = field_spatial[near_boundary_mask]
+            field_mean = np.mean(field_spatial)
+        
         concentration_metrics = {
             "mean_concentration": np.mean(np.abs(near_boundary_field)),
             "max_concentration": np.max(np.abs(near_boundary_field)),
             "concentration_variance": np.var(np.abs(near_boundary_field)),
-            "concentration_ratio": np.mean(np.abs(near_boundary_field))
-            / np.mean(np.abs(field)),
+            "concentration_ratio": np.mean(np.abs(near_boundary_field)) / field_mean,
         }
 
         return concentration_metrics
 
     def _analyze_far_boundary_concentration(
-        self, domain: Dict[str, Any], boundary: BoundaryGeometry, field: np.ndarray
+        self, domain: Dict[str, Any], boundary: BoundaryGeometry, field
     ) -> Dict[str, Any]:
         """
         Analyze far-boundary concentration.
@@ -173,19 +235,67 @@ class RadialConcentrationAnalyzer:
         far_boundary_mask = self._create_far_boundary_mask(domain, boundary_thickness)
 
         # Analyze concentration in far-boundary region
-        far_boundary_field = field[far_boundary_mask]
+        # Handle BlockedField - extract spatial part
+        from bhlff.core.sources.blocked_field_generator import BlockedField
+        
+        if isinstance(field, BlockedField):
+            # Extract spatial part using slicing
+            spatial_shape = far_boundary_mask.shape
+            try:
+                spatial_slice = (slice(None), slice(None), slice(None), 0, 0, 0, 0)
+                field_7d_sample = field[spatial_slice]
+                
+                if len(field_7d_sample.shape) == 7:
+                    field_spatial = np.mean(np.abs(field_7d_sample), axis=(3, 4, 5, 6))
+                else:
+                    field_spatial = np.abs(field_7d_sample)
+                
+                if field_spatial.shape != spatial_shape:
+                    min_shape = tuple(min(s, m) for s, m in zip(field_spatial.shape, spatial_shape))
+                    field_spatial = field_spatial[tuple(slice(0, s) for s in min_shape)]
+                    far_boundary_mask = far_boundary_mask[tuple(slice(0, s) for s in min_shape)]
+                
+                far_boundary_field = field_spatial[far_boundary_mask]
+                field_mean = np.mean(field_spatial)
+            except Exception:
+                # Fallback
+                sample_block = field[tuple(slice(0, min(32, s)) for s in field.shape[:3]) + (0, 0, 0, 0)]
+                if len(sample_block.shape) == 7:
+                    field_spatial = np.mean(np.abs(sample_block), axis=(3, 4, 5, 6))
+                else:
+                    field_spatial = np.abs(sample_block)
+                if field_spatial.shape != spatial_shape:
+                    min_shape = tuple(min(s, m) for s, m in zip(field_spatial.shape, spatial_shape))
+                    field_spatial = field_spatial[tuple(slice(0, s) for s in min_shape)]
+                    far_boundary_mask = far_boundary_mask[tuple(slice(0, s) for s in min_shape)]
+                far_boundary_field = field_spatial[far_boundary_mask]
+                field_mean = np.mean(field_spatial)
+        else:
+            # Regular numpy array
+            if len(field.shape) == 7:
+                field_spatial = np.mean(np.abs(field), axis=(3, 4, 5, 6))
+            else:
+                field_spatial = np.abs(field)
+            
+            if field_spatial.shape != far_boundary_mask.shape:
+                min_shape = tuple(min(s, m) for s, m in zip(field_spatial.shape, far_boundary_mask.shape))
+                field_spatial = field_spatial[tuple(slice(0, s) for s in min_shape)]
+                far_boundary_mask = far_boundary_mask[tuple(slice(0, s) for s in min_shape)]
+            
+            far_boundary_field = field_spatial[far_boundary_mask]
+            field_mean = np.mean(field_spatial)
+        
         concentration_metrics = {
             "mean_concentration": np.mean(np.abs(far_boundary_field)),
             "max_concentration": np.max(np.abs(far_boundary_field)),
             "concentration_variance": np.var(np.abs(far_boundary_field)),
-            "concentration_ratio": np.mean(np.abs(far_boundary_field))
-            / np.mean(np.abs(field)),
+            "concentration_ratio": np.mean(np.abs(far_boundary_field)) / field_mean,
         }
 
         return concentration_metrics
 
     def _analyze_overall_concentration_pattern(
-        self, domain: Dict[str, Any], boundary: BoundaryGeometry, field: np.ndarray
+        self, domain: Dict[str, Any], boundary: BoundaryGeometry, field
     ) -> Dict[str, Any]:
         """
         Analyze overall concentration pattern.
@@ -203,13 +313,40 @@ class RadialConcentrationAnalyzer:
             Dict[str, Any]: Overall concentration pattern analysis results.
         """
         # Analyze overall concentration pattern
+        # Handle BlockedField - extract spatial part
+        from bhlff.core.sources.blocked_field_generator import BlockedField
+        
+        if isinstance(field, BlockedField):
+            # Extract spatial part using slicing
+            try:
+                spatial_slice = (slice(None), slice(None), slice(None), 0, 0, 0, 0)
+                field_7d_sample = field[spatial_slice]
+                
+                if len(field_7d_sample.shape) == 7:
+                    field_spatial = np.mean(np.abs(field_7d_sample), axis=(3, 4, 5, 6))
+                else:
+                    field_spatial = np.abs(field_7d_sample)
+            except Exception:
+                # Fallback
+                sample_block = field[tuple(slice(0, min(32, s)) for s in field.shape[:3]) + (0, 0, 0, 0)]
+                if len(sample_block.shape) == 7:
+                    field_spatial = np.mean(np.abs(sample_block), axis=(3, 4, 5, 6))
+                else:
+                    field_spatial = np.abs(sample_block)
+        else:
+            # Regular numpy array
+            if len(field.shape) == 7:
+                field_spatial = np.mean(np.abs(field), axis=(3, 4, 5, 6))
+            else:
+                field_spatial = np.abs(field)
+        
         overall_metrics = {
-            "total_concentration": np.sum(np.abs(field)),
-            "mean_concentration": np.mean(np.abs(field)),
-            "max_concentration": np.max(np.abs(field)),
-            "concentration_variance": np.var(np.abs(field)),
-            "concentration_skewness": self._calculate_skewness(np.abs(field)),
-            "concentration_kurtosis": self._calculate_kurtosis(np.abs(field)),
+            "total_concentration": np.sum(field_spatial),
+            "mean_concentration": np.mean(field_spatial),
+            "max_concentration": np.max(field_spatial),
+            "concentration_variance": np.var(field_spatial),
+            "concentration_skewness": self._calculate_skewness(field_spatial),
+            "concentration_kurtosis": self._calculate_kurtosis(field_spatial),
         }
 
         return overall_metrics

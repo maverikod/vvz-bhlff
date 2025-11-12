@@ -37,7 +37,13 @@ class FFTSolver7DAdvanced:
         self.mu = float(parameters.get("mu", 1.0))
         self.beta = float(parameters.get("beta", 1.0))
         self.lmbda = float(parameters.get("lambda", 0.0))
-        self.use_cuda = bool(parameters.get("use_cuda", True)) and CUDA_AVAILABLE
+        use_cuda_flag = bool(parameters.get("use_cuda", True))  # CUDA required by default
+        if use_cuda_flag and not CUDA_AVAILABLE:
+            raise RuntimeError(
+                "CUDA is required for FFTSolver7DAdvanced. "
+                "Install cupy to enable GPU acceleration."
+            )
+        self.use_cuda = use_cuda_flag and CUDA_AVAILABLE
         self._xp = cp if self.use_cuda else np
         self._coeffs = None  # type: ignore
         try:

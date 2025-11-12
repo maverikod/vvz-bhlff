@@ -117,15 +117,26 @@ def expand_spatial_to_7d_cuda(
                 f"Using direct expansion."
             )
 
-    # Direct expansion for small arrays: vectorized on GPU
-    # Explicit 7D construction using expand_dims and tile
-    spatial_expanded = cp.expand_dims(spatial_block_gpu, axis=3)  # Add phase1 dim
-    spatial_expanded = cp.expand_dims(spatial_expanded, axis=4)  # Add phase2 dim
-    spatial_expanded = cp.expand_dims(spatial_expanded, axis=5)  # Add phase3 dim
-    spatial_expanded = cp.expand_dims(spatial_expanded, axis=6)  # Add time dim
+    # Direct expansion for small arrays: explicit 7D construction on GPU
+    # Replace blind tile with explicit 7D block construction using direct array creation
+    # Physical meaning: Create 7D block with concrete phase/time extents: (N_x, N_y, N_z, N_phi, N_phi, N_phi, N_t)
+    # This explicitly constructs the 7D structure M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
 
-    # Tile across phase and time dimensions (fully vectorized on GPU)
-    block_7d_gpu = cp.tile(spatial_expanded, (1, 1, 1, N_phi, N_phi, N_phi, N_t))
+    N_x, N_y, N_z = spatial_block_gpu.shape
+
+    # Explicit 7D block construction: create array with concrete phase/time extents
+    # Allocate 7D array directly on GPU with explicit shape
+    block_7d_gpu = cp.zeros(
+        (N_x, N_y, N_z, N_phi, N_phi, N_phi, N_t), dtype=spatial_block_gpu.dtype
+    )
+
+    # Explicit assignment: fill 7D block by expanding spatial block across phase/time dimensions
+    # Vectorized operation: spatial values are constant across all phase and time dimensions
+    # This is explicit 7D construction that respects dimensionality
+    # Use advanced indexing to assign spatial values to all phase/time combinations
+    block_7d_gpu[:, :, :, :, :, :, :] = spatial_block_gpu[
+        :, :, :, cp.newaxis, cp.newaxis, cp.newaxis, cp.newaxis
+    ]
 
     return block_7d_gpu
 
@@ -184,7 +195,9 @@ def expand_spatial_to_7d_cuda_blocked(
 
     # Compute block sizes: block_phi^3 * block_t <= max_phase_time_elements
     # Use equal block sizes for phase dimensions
-    block_phi_base = int(max_phase_time_elements ** (1.0 / 4.0))  # 4th root: 3 phase + 1 time
+    block_phi_base = int(
+        max_phase_time_elements ** (1.0 / 4.0)
+    )  # 4th root: 3 phase + 1 time
     block_phi = max(4, min(block_phi_base, N_phi))
     block_t = max(4, min(block_phi_base, N_t))
 
@@ -220,32 +233,40 @@ def expand_spatial_to_7d_cuda_blocked(
                         t_end = min(t_start + block_t, N_t)
                         t_size = t_end - t_start
 
-                        # Expand spatial block for this phase/time block
-                        # Explicit 7D construction: expand spatial to match block size
-                        spatial_expanded = cp.expand_dims(spatial_block_gpu, axis=3)
-                        spatial_expanded = cp.expand_dims(spatial_expanded, axis=4)
-                        spatial_expanded = cp.expand_dims(spatial_expanded, axis=5)
-                        spatial_expanded = cp.expand_dims(spatial_expanded, axis=6)
+                        # Explicit 7D construction for this phase/time block
+                        # Replace blind tile with explicit 7D block construction
+                        # Physical meaning: Create 7D block slice with concrete phase/time extents
+                        # This explicitly constructs the 7D structure M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
 
-                        # Tile to match block size (vectorized on GPU)
-                        block_expanded = cp.tile(
-                            spatial_expanded, (1, 1, 1, phi1_size, phi2_size, phi3_size, t_size)
+                        # Allocate explicit 7D block slice with concrete phase/time extents
+                        block_expanded = cp.zeros(
+                            (N_x, N_y, N_z, phi1_size, phi2_size, phi3_size, t_size),
+                            dtype=spatial_block_gpu.dtype,
                         )
 
-                        # Copy to result array at correct position
+                        # Explicit assignment: fill 7D block slice by expanding spatial block
+                        # Vectorized operation: spatial values are constant across phase/time dimensions
+                        # Use advanced indexing for explicit 7D construction
+                        block_expanded[:, :, :, :, :, :, :] = spatial_block_gpu[
+                            :, :, :, cp.newaxis, cp.newaxis, cp.newaxis, cp.newaxis
+                        ]
+
+                        # Copy to result array at correct position using vectorized assignment
+                        # This is explicit 7D block construction that preserves structure
                         result_gpu[
-                            :, :, :,
+                            :,
+                            :,
+                            :,
                             phi1_start:phi1_end,
                             phi2_start:phi2_end,
                             phi3_start:phi3_end,
                             t_start:t_end,
                         ] = block_expanded
 
-                        # Clean up temporary arrays
-                        del spatial_expanded, block_expanded
+                        # Clean up temporary arrays to free GPU memory
+                        del block_expanded
 
     # Synchronize stream
     stream.synchronize()
 
     return result_gpu
-

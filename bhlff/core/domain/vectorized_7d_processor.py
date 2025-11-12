@@ -404,11 +404,16 @@ class Vectorized7DProcessor:
 
     def _process_laplacian_7d(self, field: np.ndarray) -> np.ndarray:
         """
-        Process 7D Laplacian with memory optimization.
+        Process 7D Laplacian with CUDA optimization.
 
         Physical Meaning:
-            Computes the 7D Laplacian while maintaining the physical
-            properties essential for 7D BVP theory.
+            Computes the 7D Laplacian Δ₇ = Σᵢ₌₀⁶ ∂²/∂xᵢ² for phase field in
+            space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ using vectorized CUDA operations.
+
+        Mathematical Foundation:
+            For 7D field a(x,φ,t) with grid spacing h:
+            Δ₇ a ≈ Σᵢ₌₀⁶ (a(x+h·eᵢ) - 2a(x) + a(x-h·eᵢ)) / h²
+            where eᵢ are unit vectors in each of the 7 dimensions.
 
         Args:
             field (np.ndarray): 7D phase field.
@@ -416,23 +421,27 @@ class Vectorized7DProcessor:
         Returns:
             np.ndarray: 7D Laplacian result.
         """
-        # For 7D domains, we need to be very careful with memory
-        # Use the smallest possible operations
+        # Use CUDA-optimized 7D Laplacian if available
+        if self.use_cuda and CUDA_AVAILABLE:
+            from bhlff.utils.cuda_backend_7d_ops import CUDABackend7DOps
+
+            backend_ops = CUDABackend7DOps()
+            field_gpu = cp.asarray(field)
+            result_gpu = backend_ops.laplacian_7d(field_gpu, h=1.0)
+            result = cp.asnumpy(result_gpu)
+            return result
+
+        # CPU fallback with vectorized operations
+        h_sq = 1.0
         result = np.zeros_like(field, dtype=np.complex128)
 
-        # Simplified Laplacian computation for demonstration
-        # In practice, you would implement proper 7D Laplacian
-        for i in range(field.shape[0]):
-            for j in range(field.shape[1]):
-                for k in range(field.shape[2]):
-                    for l in range(field.shape[3]):
-                        for m in range(field.shape[4]):
-                            for n in range(field.shape[5]):
-                                for o in range(field.shape[6]):
-                                    # Simple Laplacian approximation
-                                    result[i, j, k, l, m, n, o] = field[
-                                        i, j, k, l, m, n, o
-                                    ]
+        # Vectorized computation over all 7 dimensions
+        for axis in range(7):
+            result += (
+                np.roll(field, 1, axis=axis)
+                - 2.0 * field
+                + np.roll(field, -1, axis=axis)
+            ) / h_sq
 
         return result
 

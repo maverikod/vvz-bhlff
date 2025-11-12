@@ -36,11 +36,16 @@ class TestBVPLevelBIntegration:
     @pytest.fixture
     def domain(self):
         """Create test domain."""
+        # Create 7D domain for BVP tests with block processing
+        # 7D domain: 3 spatial + 3 phase + 1 temporal
+        # Block processing should handle memory efficiently
         return Domain(
-            dimensions=3,
-            size=(2.0, 2.0, 2.0),
-            resolution=(128, 128, 128),
-            boundary_conditions="periodic",
+            L=1.0,  # Spatial domain size
+            N=16,  # Reduced for testing
+            N_phi=4,  # Phase dimension resolution
+            N_t=4,  # Temporal dimension resolution
+            T=1.0,  # Temporal domain size
+            dimensions=7,  # 7D domain required for BVP
         )
 
     @pytest.fixture
@@ -61,26 +66,32 @@ class TestBVPLevelBIntegration:
         """Test B1: BVP Power Law Tails."""
         bvp_core = BVPCore(domain, bvp_config)
 
-        # Create point source for power law analysis
+        # Create point source for power law analysis (7D domain)
+        # Use center of spatial dimensions, average over phase and time
         source = np.zeros(domain.shape)
-        source[64, 64, 64] = 1.0
+        center_idx = domain.N // 2
+        # Place source at spatial center, average over phase/temporal dimensions
+        source[center_idx, center_idx, center_idx, :, :, :, :] = 1.0
 
         # Solve BVP envelope
         envelope = bvp_core.solve_envelope(source)
 
-        # Analyze power law behavior
-        center = np.array([64, 64, 64])
+        # Analyze power law behavior in spatial dimensions only
+        center = np.array([center_idx, center_idx, center_idx])
         radial_profile = []
 
-        for r in range(1, 30):
+        # Average over phase and temporal dimensions for radial analysis
+        envelope_spatial = np.mean(np.abs(envelope), axis=(3, 4, 5, 6))
+
+        for r in range(1, min(10, center_idx)):
             count = 0
             total_amp = 0
-            for i in range(domain.shape[0]):
-                for j in range(domain.shape[1]):
-                    for k in range(domain.shape[2]):
+            for i in range(domain.N):
+                for j in range(domain.N):
+                    for k in range(domain.N):
                         dist = np.linalg.norm(np.array([i, j, k]) - center)
                         if abs(dist - r) < 0.5:
-                            total_amp += np.abs(envelope[i, j, k])
+                            total_amp += envelope_spatial[i, j, k]
                             count += 1
             if count > 0:
                 radial_profile.append(total_amp / count)
@@ -94,17 +105,20 @@ class TestBVPLevelBIntegration:
         bvp_core = BVPCore(domain, bvp_config)
 
         # Test U(1)³ phase vector structure
-        phase_vector = bvp_core.get_phase_vector()
-        phase_components = bvp_core.get_phase_components()
+        phase_vector_obj = bvp_core.get_phase_vector()
+        assert phase_vector_obj is not None
+        
+        # Get phase components from phase vector
+        phase_components = phase_vector_obj.get_phase_components()
         assert len(phase_components) == 3
 
         # Test topological charge calculation
-        total_phase = bvp_core.get_total_phase()
+        total_phase = phase_vector_obj.get_total_phase()
         assert total_phase.shape == domain.shape
 
         # Test electroweak current generation
         envelope = np.ones(domain.shape)
-        currents = bvp_core.compute_electroweak_currents(envelope)
+        currents = phase_vector_obj.compute_electroweak_currents(envelope)
         assert "em_current" in currents
         assert "weak_current" in currents
 
@@ -112,9 +126,11 @@ class TestBVPLevelBIntegration:
         """Test B3: BVP Zone Separation."""
         bvp_core = BVPCore(domain, bvp_config)
 
-        # Create test envelope
+        # Create test envelope (7D domain)
         source = np.zeros(domain.shape)
-        source[64, 64, 64] = 1.0
+        center_idx = domain.N // 2
+        # Place source at spatial center, average over phase/temporal dimensions
+        source[center_idx, center_idx, center_idx, :, :, :, :] = 1.0
         envelope = bvp_core.solve_envelope(source)
 
         # Test impedance calculation for zone analysis

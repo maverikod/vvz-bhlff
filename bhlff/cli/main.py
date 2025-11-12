@@ -14,8 +14,9 @@ import sys
 from pathlib import Path
 from typing import Any, Dict
 
-from .run import main as run_main
 from .analyze import main as analyze_main
+from .quench_detect import main as quench_main
+from .run import main as run_main
 from .report import main as report_main
 from .step03 import main as step03_main
 from .step04_level_a import main as step04_main
@@ -61,6 +62,42 @@ def build_parser() -> argparse.ArgumentParser:
     )
     report_parser.set_defaults(
         func=lambda args: report_main(["--config", str(args.config)])
+    )
+
+    # quench-detect
+    quench_parser = subparsers.add_parser(
+        "quench-detect", help="Run quench detection workflow"
+    )
+    quench_parser.add_argument(
+        "--config",
+        type=Path,
+        default=Path("configs/level_a/A06_quench_detection.json"),
+        help="Path to quench detection configuration JSON",
+    )
+    quench_parser.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="Directory for storing detection artefacts",
+    )
+    quench_parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Enable verbose logging",
+    )
+    quench_parser.set_defaults(
+        func=lambda args: quench_main(
+            [
+                "--config",
+                str(args.config),
+                *(
+                    ["--output", str(args.output)]
+                    if args.output is not None
+                    else []
+                ),
+                *("--verbose",) if args.verbose else (),
+            ]
+        )
     )
 
     # step-03

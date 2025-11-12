@@ -170,6 +170,7 @@ def expand_spatial_to_7d(
     # Use CUDA if requested and available
     if use_cuda and CUDA_AVAILABLE:
         from .block_7d_expansion_cuda import expand_spatial_to_7d_cuda
+
         return expand_spatial_to_7d_cuda(
             spatial_block,
             N_phi,
@@ -180,20 +181,27 @@ def expand_spatial_to_7d(
         )
 
     # CPU implementation: explicit 7D construction with vectorization
-    # Use numpy broadcasting with explicit control: expand spatial to 7D
-    # Vectorized approach: spatial_block[:, :, :, None, None, None, None]
-    # then tile across phase and time dimensions
-    spatial_expanded = np.expand_dims(spatial_block, axis=3)  # Add phase1 dim
-    spatial_expanded = np.expand_dims(spatial_expanded, axis=4)  # Add phase2 dim
-    spatial_expanded = np.expand_dims(spatial_expanded, axis=5)  # Add phase3 dim
-    spatial_expanded = np.expand_dims(spatial_expanded, axis=6)  # Add time dim
+    # Replace blind tile with explicit 7D block construction using direct array creation
+    # Physical meaning: Create 7D block with concrete phase/time extents: (N_x, N_y, N_z, N_phi, N_phi, N_phi, N_t)
+    # This explicitly constructs the 7D structure M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
 
-    # Tile across phase and time dimensions (vectorized operation)
-    block_7d = np.tile(spatial_expanded, (1, 1, 1, N_phi, N_phi, N_phi, N_t))
+    N_x, N_y, N_z = spatial_block.shape
+
+    # Explicit 7D block construction: create array with concrete phase/time extents
+    # Allocate 7D array directly with explicit shape
+    block_7d = np.zeros(
+        (N_x, N_y, N_z, N_phi, N_phi, N_phi, N_t), dtype=spatial_block.dtype
+    )
+
+    # Explicit assignment: fill 7D block by expanding spatial block across phase/time dimensions
+    # Vectorized operation: spatial values are constant across all phase and time dimensions
+    # This is explicit 7D construction that respects dimensionality
+    # Use advanced indexing to assign spatial values to all phase/time combinations
+    block_7d[:, :, :, :, :, :, :] = spatial_block[
+        :, :, :, np.newaxis, np.newaxis, np.newaxis, np.newaxis
+    ]
 
     return block_7d
-
-
 
 
 def expand_block_to_7d_explicit(
@@ -271,12 +279,64 @@ def expand_block_to_7d_explicit(
         if block.shape == target_shape:
             return block
         else:
-            # Partial 7D block: expand to full 7D
+            # Partial 7D block: expand to full 7D with explicit construction
             # This handles the case where block is a subset of 7D domain
-            expanded = np.zeros(target_shape, dtype=block.dtype)
-            # Copy block to appropriate location in expanded array
-            # (implementation depends on block_start)
-            return expanded
+            # Use explicit 7D construction that respects M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
+
+            # Determine expansion strategy based on block dimensions
+            block_shape = block.shape
+
+            # Check if block needs expansion in spatial dimensions
+            if block_shape[:3] != target_shape[:3]:
+                # Spatial dimensions differ: need to expand spatial block first
+                # Extract spatial block (first 3 dimensions)
+                spatial_block = block[
+                    :, :, :, 0, 0, 0, 0
+                ]  # Take first phase/time slice
+                # Expand to full 7D
+                return expand_spatial_to_7d(
+                    spatial_block,
+                    N_phi=target_shape[3],
+                    N_t=target_shape[6],
+                    use_cuda=use_cuda,
+                    optimize_block_size=True,
+                )
+
+            # Check if block needs expansion in phase/time dimensions only
+            if block_shape[3:] != target_shape[3:]:
+                # Phase/time dimensions differ: expand using explicit construction
+                # Allocate full 7D array with explicit shape
+                expanded = np.zeros(target_shape, dtype=block.dtype)
+
+                # Copy block to appropriate location in expanded array
+                # If block_start is provided, use it to determine position
+                if block_start is not None and len(block_start) >= 7:
+                    # Copy block to specific location
+                    expanded[
+                        block_start[0] : block_start[0] + block_shape[0],
+                        block_start[1] : block_start[1] + block_shape[1],
+                        block_start[2] : block_start[2] + block_shape[2],
+                        block_start[3] : block_start[3] + block_shape[3],
+                        block_start[4] : block_start[4] + block_shape[4],
+                        block_start[5] : block_start[5] + block_shape[5],
+                        block_start[6] : block_start[6] + block_shape[6],
+                    ] = block
+                else:
+                    # Copy to origin (0,0,0,0,0,0,0)
+                    expanded[
+                        : block_shape[0],
+                        : block_shape[1],
+                        : block_shape[2],
+                        : block_shape[3],
+                        : block_shape[4],
+                        : block_shape[5],
+                        : block_shape[6],
+                    ] = block
+
+                return expanded
+            else:
+                # Shape matches but might be a different array: return as-is or copy
+                return block
     else:
         raise ValueError(
             f"Cannot expand {block_ndim}D block to 7D. "
@@ -317,6 +377,7 @@ def generate_7d_block_on_device(
     """
     if use_cuda and CUDA_AVAILABLE:
         from .block_7d_expansion_cuda import expand_spatial_to_7d_cuda
+
         return expand_spatial_to_7d_cuda(spatial_block, N_phi, N_t)
     else:
         return expand_spatial_to_7d(spatial_block, N_phi, N_t, use_cuda=False)

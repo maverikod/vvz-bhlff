@@ -63,11 +63,33 @@ class BoundaryAnalysis:
         """
         Initialize boundary analysis.
 
+        Physical Meaning:
+            Sets up boundary analysis with CUDA-accelerated block processing
+            using 80% of available GPU memory for optimal performance.
+
         Args:
             bvp_core (BVPCore): BVP core framework instance.
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
+
+        # Initialize CUDA processor for block processing with 80% GPU memory
+        # CUDA is required for Level C - no fallback to CPU
+        try:
+            from .cuda import LevelCCUDAProcessor
+
+            self.cuda_processor = LevelCCUDAProcessor(bvp_core, use_cuda=True)
+            self.use_cuda = self.cuda_processor.cuda_available
+            if not self.use_cuda:
+                raise RuntimeError("CUDA not available - Level C requires GPU acceleration")
+            self.block_size = self.cuda_processor.block_size
+            self.logger.info(
+                f"Boundary analysis initialized with CUDA block processing: "
+                f"block_size={self.block_size}, using 80% GPU memory"
+            )
+        except Exception as e:
+            self.logger.error(f"CUDA processor initialization failed: {e}")
+            raise RuntimeError(f"Level C requires CUDA: {e}")
 
         # Initialize sub-analyzers
         self.admittance_analyzer = AdmittanceAnalyzer(bvp_core)
@@ -127,7 +149,7 @@ class BoundaryAnalysis:
 
             # Analyze field concentration
             concentration_analysis = self.radial_analyzer.analyze_field_concentration(
-                radial_profile, boundary
+                domain, boundary, field
             )
 
             contrast_results[f"contrast_{contrast}"] = {
@@ -193,7 +215,9 @@ class BoundaryAnalysis:
 
         Physical Meaning:
             Creates a test field configuration for radial
-            profile analysis around the boundary.
+            profile analysis around the boundary using
+            block-based processing when field size exceeds
+            memory limits.
 
         Args:
             domain (Dict[str, Any]): Domain parameters.
@@ -204,6 +228,38 @@ class BoundaryAnalysis:
         """
         N = domain.get("N", 64)
         L = domain.get("L", 1.0)
+
+        # Use BlockedFieldGenerator for large fields
+        if N**3 > 64**3:  # Threshold for block processing
+            from bhlff.core.sources.blocked_field_generator import BlockedFieldGenerator
+            from bhlff.core.domain import Domain as DomainClass
+
+            # Create 7D domain object (required by Domain class)
+            # Level C works with 3D spatial fields, but Domain requires 7D
+            domain_obj = DomainClass(L=L, N=N, N_phi=4, N_t=8, T=1.0, dimensions=7)
+
+            # Create field generator function
+            def field_generator(
+                domain: DomainClass,
+                slice_config: Dict[str, Any],
+                config: Dict[str, Any],
+            ) -> np.ndarray:
+                """Generate test field block."""
+                block_shape = slice_config["shape"]
+                # Create random field block
+                field_block = np.random.rand(*block_shape) + 1j * np.random.rand(
+                    *block_shape
+                )
+                field_block *= 0.1  # Small amplitude
+                return field_block
+
+            # Use BlockedFieldGenerator
+            generator = BlockedFieldGenerator(domain_obj, field_generator)
+            blocked_field = generator.get_field()
+
+            # Return 7D BlockedField directly - теория работает на 7D!
+            # Level C анализирует пространственные эффекты, но поле остается 7D
+            return blocked_field
 
         # Create coordinate arrays
         x = np.linspace(0, L, N)

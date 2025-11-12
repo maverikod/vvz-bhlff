@@ -2,10 +2,14 @@
 BHLFF CODE ISSUES REPORT
 ================================================================================
 
-Total issues found: 1533
+Total issues found: 1588
 
-METHODS_WITHOUT_DOCSTRINGS: 672 issues
+METHODS_WITHOUT_DOCSTRINGS: 656 issues
 ----------------------------------------
+  ./test_gpu_logging.py
+    Line 22
+    Method: main
+
   ./scripts/cuda_smoke_test.py
     Line 30
     Method: parse_args
@@ -460,6 +464,10 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
     Line 75
     Method: __init__
 
+  ./tests/unit/test_level_a/test_A07_impedance_calculation.py
+    Line 42
+    Method: _load_config
+
   ./tests/unit/test_level_a/test_A04_time_harmonic.py
     Line 23
     Method: _load_config
@@ -509,6 +517,10 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
   ./tests/unit/test_level_a/test_A12_units_invariance.py
     Line 56
     Method: __init__
+
+  ./tests/unit/test_level_a/test_A06_quench_detection.py
+    Line 46
+    Method: _load_config
 
   ./tests/unit/test_level_a/test_A01_plane_wave.py
     Line 24
@@ -1497,12 +1509,12 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
     Line 102
     Method: bc
 
-  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
-    Line 129
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization/multi_soliton_optimization_three.py
+    Line 86
     Method: bc
 
-  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
-    Line 334
+  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization/multi_soliton_optimization_two.py
+    Line 64
     Method: bc
 
   ./bhlff/models/level_f/cuda/collective_excitations_cuda.py
@@ -1574,6 +1586,53 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
   ./bhlff/models/level_f/transitions/phase_transitions_core.py
     Line 69
     Method: analyze
+
+  ./bhlff/models/level_b/power_law/robust_fit.py
+    Line 150
+    Method: _trim
+
+  ./bhlff/models/level_b/power_law/critical_exponents.py
+    Line 171
+    Method: estimate_nu_from_correlation_length
+
+  ./bhlff/models/level_b/power_law/critical_exponents.py
+    Line 171
+    Class: CriticalExponents
+    Method: estimate_nu_from_correlation_length
+
+  ./bhlff/models/level_b/power_law/critical_exponents.py
+    Line 174
+    Method: estimate_beta_from_tail
+
+  ./bhlff/models/level_b/power_law/critical_exponents.py
+    Line 174
+    Class: CriticalExponents
+    Method: estimate_beta_from_tail
+
+  ./bhlff/models/level_b/power_law/critical_exponents.py
+    Line 177
+    Method: estimate_chi_from_variance
+
+  ./bhlff/models/level_b/power_law/critical_exponents.py
+    Line 177
+    Class: CriticalExponents
+    Method: estimate_chi_from_variance
+
+  ./bhlff/models/level_b/power_law/critical_exponents.py
+    Line 171
+    Method: estimate_nu_from_correlation_length
+
+  ./bhlff/models/level_b/power_law/critical_exponents.py
+    Line 174
+    Method: estimate_beta_from_tail
+
+  ./bhlff/models/level_b/power_law/critical_exponents.py
+    Line 177
+    Method: estimate_chi_from_variance
+
+  ./bhlff/models/level_b/power_law/block_utils.py
+    Line 58
+    Method: block_elems
 
   ./bhlff/models/level_e/cuda/energy/blocks.py
     Line 43
@@ -1745,185 +1804,159 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
     Method: _cp
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 32
+    Line 34
     Method: __init__
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 32
+    Line 34
     Class: GravitationalEffectsCUDA
     Method: __init__
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 58
+    Line 60
     Method: _analyze_cpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 58
+    Line 60
     Class: GravitationalEffectsCUDA
     Method: _analyze_cpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 71
+    Line 73
     Method: _gradients_cpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 71
+    Line 73
     Class: GravitationalEffectsCUDA
     Method: _gradients_cpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 76
-    Method: _effective_metric_cpu
-
-  ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 76
-    Class: GravitationalEffectsCUDA
-    Method: _effective_metric_cpu
-
-  ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 87
-    Method: _invariants_cpu
-
-  ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 87
-    Class: GravitationalEffectsCUDA
-    Method: _invariants_cpu
-
-  ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 102
+    Line 166
     Method: _anisotropy_cpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 102
+    Line 166
     Class: GravitationalEffectsCUDA
     Method: _anisotropy_cpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 107
+    Line 171
     Method: _focusing_cpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 107
+    Line 171
     Class: GravitationalEffectsCUDA
     Method: _focusing_cpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 119
+    Line 183
     Method: _analyze_cuda
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 119
+    Line 183
     Class: GravitationalEffectsCUDA
     Method: _analyze_cuda
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 165
+    Line 229
     Method: _analyze_whole_gpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 165
+    Line 229
     Class: GravitationalEffectsCUDA
     Method: _analyze_whole_gpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 192
+    Line 258
     Method: _gradients_gpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 192
+    Line 258
     Class: GravitationalEffectsCUDA
     Method: _gradients_gpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 200
+    Line 266
     Method: _gradient_component
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 200
+    Line 266
     Class: GravitationalEffectsCUDA
     Method: _gradient_component
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 204
+    Line 270
     Method: _effective_metric_gpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 204
+    Line 270
     Class: GravitationalEffectsCUDA
     Method: _effective_metric_gpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 216
+    Line 282
     Method: _anisotropy_gpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 216
+    Line 282
     Class: GravitationalEffectsCUDA
     Method: _anisotropy_gpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 221
+    Line 287
     Method: _cp
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 221
+    Line 287
     Class: GravitationalEffectsCUDA
     Method: _cp
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 32
+    Line 34
     Method: __init__
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 58
+    Line 60
     Method: _analyze_cpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 71
+    Line 73
     Method: _gradients_cpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 76
-    Method: _effective_metric_cpu
-
-  ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 87
-    Method: _invariants_cpu
-
-  ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 102
+    Line 166
     Method: _anisotropy_cpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 107
+    Line 171
     Method: _focusing_cpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 119
+    Line 183
     Method: _analyze_cuda
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 165
+    Line 229
     Method: _analyze_whole_gpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 192
+    Line 258
     Method: _gradients_gpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 200
+    Line 266
     Method: _gradient_component
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 204
+    Line 270
     Method: _effective_metric_gpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 216
+    Line 282
     Method: _anisotropy_gpu
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 221
+    Line 287
     Method: _cp
 
   ./bhlff/models/level_g/cuda/structure_cuda.py
@@ -2140,14 +2173,6 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
     Line 106
     Method: main
 
-  ./bhlff/core/bvp/quench_detector.py
-    Line 277
-    Method: _gpu_mem_info
-
-  ./bhlff/core/bvp/quench_detector.py
-    Line 339
-    Method: _offset_events
-
   ./bhlff/core/bvp/memory_decorator.py
     Line 58
     Method: decorator
@@ -2161,7 +2186,7 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
     Method: decorator
 
   ./bhlff/core/bvp/memory_decorator.py
-    Line 269
+    Line 286
     Method: decorator
 
   ./bhlff/core/bvp/memory_decorator.py
@@ -2177,7 +2202,7 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
     Method: wrapper
 
   ./bhlff/core/bvp/memory_decorator.py
-    Line 271
+    Line 288
     Method: wrapper
 
   ./bhlff/core/bvp/bvp_level_interfaces_g.py
@@ -2267,12 +2292,20 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
     Line 38
     Method: __init__
 
-  ./bhlff/core/bvp/power_law/power_law_optimization.py
-    Line 158
+  ./bhlff/core/bvp/phase_vector/phase_components/phase_components_setup.py
+    Line 122
+    Method: create_phase_block_generator
+
+  ./bhlff/core/bvp/bvp_block_processing_system/bvp_block_processing_solver.py
+    Line 51
+    Method: zero_block_generator
+
+  ./bhlff/core/bvp/power_law/power_law_optimization/power_law_optimization_region.py
+    Line 43
     Method: objective_function
 
-  ./bhlff/core/bvp/power_law/power_law_optimization.py
-    Line 271
+  ./bhlff/core/bvp/power_law/power_law_optimization/power_law_optimization_region.py
+    Line 154
     Method: refinement_objective
 
   ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/optimization_methods.py
@@ -2286,6 +2319,14 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
   ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/power_law_fitting.py
     Line 103
     Method: power_law_func
+
+  ./bhlff/core/bvp/quench_detector/quench_detector_detection.py
+    Line 35
+    Method: _gpu_mem_info
+
+  ./bhlff/core/bvp/quench_detector/quench_detector_detection.py
+    Line 97
+    Method: _offset_events
 
   ./bhlff/core/bvp/envelope_equation/bvp_envelope_equation_7d_facade.py
     Line 119
@@ -2305,20 +2346,20 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
     Method: __init__
 
   ./bhlff/core/sources/substrate_generators.py
-    Line 166
+    Line 172
     Method: _block_ranges
 
   ./bhlff/core/sources/substrate_generators.py
-    Line 166
+    Line 172
     Class: TopologicalSubstrateGenerator
     Method: _block_ranges
 
   ./bhlff/core/sources/substrate_generators.py
-    Line 174
+    Line 180
     Method: _layer_wall
 
   ./bhlff/core/sources/substrate_generators.py
-    Line 174
+    Line 180
     Class: TopologicalSubstrateGenerator
     Method: _layer_wall
 
@@ -2327,11 +2368,11 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
     Method: __init__
 
   ./bhlff/core/sources/substrate_generators.py
-    Line 166
+    Line 172
     Method: _block_ranges
 
   ./bhlff/core/sources/substrate_generators.py
-    Line 174
+    Line 180
     Method: _layer_wall
 
   ./bhlff/core/fft/frac_laplacian.py
@@ -2399,84 +2440,6 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
     Line 250
     Method: _build_coefficients
 
-  ./bhlff/core/fft/spectral_derivatives_impl.py
-    Line 135
-    Method: compute_mixed_derivative
-
-  ./bhlff/core/fft/spectral_derivatives_impl.py
-    Line 135
-    Class: SpectralDerivatives
-    Method: compute_mixed_derivative
-
-  ./bhlff/core/fft/spectral_derivatives_impl.py
-    Line 135
-    Method: compute_mixed_derivative
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 39
-    Method: __init__
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 39
-    Class: FFTSolver7DBasic
-    Method: __init__
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 65
-    Method: solve_stationary
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 65
-    Class: FFTSolver7DBasic
-    Method: solve_stationary
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 81
-    Method: solve
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 81
-    Class: FFTSolver7DBasic
-    Method: solve
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 84
-    Method: get_spectral_coefficients
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 84
-    Class: FFTSolver7DBasic
-    Method: get_spectral_coefficients
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 103
-    Method: _build_spectral_coefficients
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 103
-    Class: FFTSolver7DBasic
-    Method: _build_spectral_coefficients
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 39
-    Method: __init__
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 65
-    Method: solve_stationary
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 81
-    Method: solve
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 84
-    Method: get_spectral_coefficients
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 103
-    Method: _build_spectral_coefficients
-
   ./bhlff/core/fft/fft_solver_7d_advanced.py
     Line 35
     Method: __init__
@@ -2487,83 +2450,83 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
     Method: __init__
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 48
+    Line 54
     Method: solve_stationary
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 48
+    Line 54
     Class: FFTSolver7DAdvanced
     Method: solve_stationary
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 57
+    Line 63
     Method: get_spectral_coefficients
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 57
+    Line 63
     Class: FFTSolver7DAdvanced
     Method: get_spectral_coefficients
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 60
+    Line 66
     Method: _build_spectral_coefficients
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 60
+    Line 66
     Class: FFTSolver7DAdvanced
     Method: _build_spectral_coefficients
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 95
+    Line 101
     Method: _get_free_memory_bytes
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 95
+    Line 101
     Class: FFTSolver7DAdvanced
     Method: _get_free_memory_bytes
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 104
+    Line 110
     Method: _estimate_batch
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 104
+    Line 110
     Class: FFTSolver7DAdvanced
     Method: _estimate_batch
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 115
-    Method: _fftn_batched
-
-  ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 115
-    Class: FFTSolver7DAdvanced
+    Line 121
     Method: _fftn_batched
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
     Line 121
-    Method: _ifftn_batched
+    Class: FFTSolver7DAdvanced
+    Method: _fftn_batched
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 121
-    Class: FFTSolver7DAdvanced
+    Line 127
     Method: _ifftn_batched
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
     Line 127
+    Class: FFTSolver7DAdvanced
+    Method: _ifftn_batched
+
+  ./bhlff/core/fft/fft_solver_7d_advanced.py
+    Line 133
     Method: _fft_axis_batched
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 127
+    Line 133
     Class: FFTSolver7DAdvanced
     Method: _fft_axis_batched
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 142
+    Line 148
     Method: _ifft_axis_batched
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 142
+    Line 148
     Class: FFTSolver7DAdvanced
     Method: _ifft_axis_batched
 
@@ -2572,39 +2535,39 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
     Method: __init__
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 48
+    Line 54
     Method: solve_stationary
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 57
+    Line 63
     Method: get_spectral_coefficients
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 60
+    Line 66
     Method: _build_spectral_coefficients
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 95
+    Line 101
     Method: _get_free_memory_bytes
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 104
+    Line 110
     Method: _estimate_batch
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 115
+    Line 121
     Method: _fftn_batched
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 121
+    Line 127
     Method: _ifftn_batched
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 127
+    Line 133
     Method: _fft_axis_batched
 
   ./bhlff/core/fft/fft_solver_7d_advanced.py
-    Line 142
+    Line 148
     Method: _ifft_axis_batched
 
   ./bhlff/core/fft/unified/facade.py
@@ -2617,101 +2580,92 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
     Method: __init__
 
   ./bhlff/core/fft/unified/facade.py
-    Line 50
+    Line 65
     Method: forward_fft
 
   ./bhlff/core/fft/unified/facade.py
-    Line 50
+    Line 65
     Class: UnifiedSpectralOperations
     Method: forward_fft
 
   ./bhlff/core/fft/unified/facade.py
-    Line 75
+    Line 133
     Method: inverse_fft
 
   ./bhlff/core/fft/unified/facade.py
-    Line 75
+    Line 133
     Class: UnifiedSpectralOperations
     Method: inverse_fft
 
   ./bhlff/core/fft/unified/facade.py
-    Line 101
+    Line 193
     Method: compute_spectral_derivatives
 
   ./bhlff/core/fft/unified/facade.py
-    Line 101
+    Line 193
     Class: UnifiedSpectralOperations
     Method: compute_spectral_derivatives
 
   ./bhlff/core/fft/unified/facade.py
-    Line 116
+    Line 208
     Method: apply_spectral_filter
 
   ./bhlff/core/fft/unified/facade.py
-    Line 116
+    Line 208
     Class: UnifiedSpectralOperations
     Method: apply_spectral_filter
 
   ./bhlff/core/fft/unified/facade.py
-    Line 136
+    Line 228
     Method: compute_spectral_energy
 
   ./bhlff/core/fft/unified/facade.py
-    Line 136
+    Line 228
     Class: UnifiedSpectralOperations
     Method: compute_spectral_energy
 
   ./bhlff/core/fft/unified/facade.py
-    Line 140
+    Line 232
     Method: get_spectral_info
 
   ./bhlff/core/fft/unified/facade.py
-    Line 140
+    Line 232
     Class: UnifiedSpectralOperations
     Method: get_spectral_info
 
   ./bhlff/core/fft/unified/facade.py
-    Line 149
+    Line 241
     Method: __repr__
 
   ./bhlff/core/fft/unified/facade.py
-    Line 149
+    Line 241
     Class: UnifiedSpectralOperations
     Method: __repr__
 
   ./bhlff/core/fft/unified/facade.py
-    Line 153
+    Line 245
     Method: _validate_shape
 
   ./bhlff/core/fft/unified/facade.py
-    Line 153
+    Line 245
     Class: UnifiedSpectralOperations
     Method: _validate_shape
 
   ./bhlff/core/fft/unified/facade.py
-    Line 159
-    Method: _is_field_too_large
-
-  ./bhlff/core/fft/unified/facade.py
-    Line 159
-    Class: UnifiedSpectralOperations
-    Method: _is_field_too_large
-
-  ./bhlff/core/fft/unified/facade.py
-    Line 172
+    Line 300
     Method: _forward_backend
 
   ./bhlff/core/fft/unified/facade.py
-    Line 172
+    Line 300
     Class: UnifiedSpectralOperations
     Method: _forward_backend
 
   ./bhlff/core/fft/unified/facade.py
-    Line 177
+    Line 304
     Method: _inverse_backend
 
   ./bhlff/core/fft/unified/facade.py
-    Line 177
+    Line 304
     Class: UnifiedSpectralOperations
     Method: _inverse_backend
 
@@ -2720,56 +2674,44 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
     Method: __init__
 
   ./bhlff/core/fft/unified/facade.py
-    Line 50
+    Line 65
     Method: forward_fft
 
   ./bhlff/core/fft/unified/facade.py
-    Line 75
+    Line 133
     Method: inverse_fft
 
   ./bhlff/core/fft/unified/facade.py
-    Line 101
+    Line 193
     Method: compute_spectral_derivatives
 
   ./bhlff/core/fft/unified/facade.py
-    Line 116
+    Line 208
     Method: apply_spectral_filter
 
   ./bhlff/core/fft/unified/facade.py
-    Line 136
+    Line 228
     Method: compute_spectral_energy
 
   ./bhlff/core/fft/unified/facade.py
-    Line 140
+    Line 232
     Method: get_spectral_info
 
   ./bhlff/core/fft/unified/facade.py
-    Line 149
+    Line 241
     Method: __repr__
 
   ./bhlff/core/fft/unified/facade.py
-    Line 153
+    Line 245
     Method: _validate_shape
 
   ./bhlff/core/fft/unified/facade.py
-    Line 159
-    Method: _is_field_too_large
-
-  ./bhlff/core/fft/unified/facade.py
-    Line 172
+    Line 300
     Method: _forward_backend
 
   ./bhlff/core/fft/unified/facade.py
-    Line 177
+    Line 304
     Method: _inverse_backend
-
-  ./bhlff/core/fft/unified/fft_gpu.py
-    Line 14
-    Method: forward_fft_gpu
-
-  ./bhlff/core/fft/unified/fft_gpu.py
-    Line 30
-    Method: inverse_fft_gpu
 
   ./bhlff/core/fft/unified/fft_cpu.py
     Line 14
@@ -2794,18 +2736,6 @@ METHODS_WITHOUT_DOCSTRINGS: 672 issues
   ./bhlff/core/fft/unified/filters.py
     Line 48
     Method: create_bandpass_filter
-
-  ./bhlff/core/fft/unified/blocked.py
-    Line 14
-    Method: compute_block_size
-
-  ./bhlff/core/fft/unified/blocked.py
-    Line 27
-    Method: forward_fft_blocked
-
-  ./bhlff/core/fft/unified/blocked.py
-    Line 45
-    Method: inverse_fft_blocked
 
   ./examples/level_g_example.py
     Line 175
@@ -2958,12 +2888,12 @@ CLASSES_WITHOUT_DOCSTRINGS: 21 issues
     Line 74
     Class: _Domain
 
-  ./bhlff/core/bvp/quench_detector.py
-    Line 37
+  ./bhlff/core/bvp/quench_detector/quench_detector_base.py
+    Line 23
     Class: DummyCuPy
 
-  ./bhlff/core/bvp/quench_detector.py
-    Line 38
+  ./bhlff/core/bvp/quench_detector/quench_detector_base.py
+    Line 24
     Class: ndarray
 
   ./examples/level_g_example.py
@@ -2975,13 +2905,16 @@ CLASSES_WITHOUT_DOCSTRINGS: 21 issues
     Class: TestStep2Command
 
 
-IMPORTS_IN_MIDDLE: 712 issues
+IMPORTS_IN_MIDDLE: 800 issues
 ----------------------------------------
   ./test_quench_detector_minimal.py
     Line 31
 
   ./test_quench_detector_light.py
     Line 37
+
+  ./debug_radial_profile.py
+    Line 67
 
   ./debug_block_processing.py
     Line 253
@@ -3007,6 +2940,9 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./scripts/demo_block_processing.py
     Line 317
 
+  ./scripts/run_level_c_experiments.py
+    Line 279
+
   ./scripts/demo_vectorized_ml_methods.py
     Line 204
 
@@ -3019,14 +2955,20 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./scripts/demo_ml_prediction_simple.py
     Line 26
 
+  ./scripts/validate_level_c_acceptance_criteria.py
+    Line 25
+
   ./scripts/run_level_a_experiments.py
     Line 32
 
   ./scripts/demo_ml_prediction_models.py
     Line 24
 
+  ./scripts/level_c_validation/__init__.py
+    Line 21
+
   ./tests/test_bvp_level_c_integration.py
-    Line 30
+    Line 32
 
   ./tests/test_bvp_level_a_integration.py
     Line 30
@@ -3094,9 +3036,6 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./tests/integration/automated_testing/test_performance_integration.py
     Line 205
 
-  ./tests/unit/test_ml_prediction_vectorized_implementations.py
-    Line 449
-
   ./tests/unit/test_ml_prediction_physics_validation.py
     Line 29
 
@@ -3154,11 +3093,23 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./tests/unit/test_level_g/test_phase_envelope_balance_physics.py
     Line 25
 
+  ./tests/unit/test_level_b/test_B1_power_law_tails.py
+    Line 360
+
+  ./tests/unit/test_level_b/test_large_data_cuda.py
+    Line 135
+
+  ./tests/unit/test_level_b/test_block_processing_80_percent.py
+    Line 63
+
   ./tests/unit/test_level_b/test_fundamental_properties_basic.py
-    Line 35
+    Line 219
 
   ./tests/unit/test_level_b/test_fundamental_properties_advanced.py
-    Line 35
+    Line 330
+
+  ./tests/unit/test_level_b/test_critical_exponents_robust.py
+    Line 50
 
   ./tests/unit/test_level_c/test_level_c_advanced_models.py
     Line 31
@@ -3421,6 +3372,9 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./tests/unit/test_core/test_power_balance_postulate_physics.py
     Line 29
 
+  ./tests/unit/test_core/test_quench_morphology_cuda.py
+    Line 40
+
   ./tests/unit/test_core/test_phase_vector_cuda.py
     Line 40
 
@@ -3463,8 +3417,14 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./tests/unit/test_level_a/test_simple_basic.py
     Line 129
 
+  ./tests/unit/test_level_a/test_A07_impedance_calculation.py
+    Line 39
+
   ./tests/unit/test_level_a/test_reporting_basic.py
     Line 25
+
+  ./tests/unit/test_level_a/test_A06_quench_detection.py
+    Line 43
 
   ./tests/unit/test_level_a/test_A01_plane_wave.py
     Line 21
@@ -3484,8 +3444,20 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/__init__.py
     Line 47
 
+  ./bhlff/utils/cuda_batch_processor.py
+    Line 114
+
+  ./bhlff/utils/cuda_backend_7d_ops.py
+    Line 32
+
+  ./bhlff/utils/cpu_backend.py
+    Line 211
+
   ./bhlff/utils/cuda_utils.py
-    Line 225
+    Line 362
+
+  ./bhlff/utils/cuda_backend.py
+    Line 266
 
   ./bhlff/utils/memory_monitor.py
     Line 36
@@ -3503,7 +3475,7 @@ IMPORTS_IN_MIDDLE: 712 issues
     Line 31
 
   ./bhlff/models/level_c/mode_beating_analysis.py
-    Line 39
+    Line 75
 
   ./bhlff/models/level_c/boundaries_energy.py
     Line 23
@@ -3515,34 +3487,31 @@ IMPORTS_IN_MIDDLE: 712 issues
     Line 22
 
   ./bhlff/models/level_c/quench_memory_analysis.py
-    Line 44
+    Line 80
 
   ./bhlff/models/level_c/level_c_integration_tests.py
-    Line 27
+    Line 28
 
   ./bhlff/models/level_c/boundary_analysis.py
-    Line 42
+    Line 235
 
   ./bhlff/models/level_c/level_c_integration.py
     Line 38
 
   ./bhlff/models/level_c/level_c_integration_validation.py
-    Line 21
+    Line 36
 
   ./bhlff/models/level_c/__init__.py
-    Line 37
+    Line 38
 
   ./bhlff/models/level_c/boundaries_core.py
     Line 24
 
-  ./bhlff/models/level_c/abcd_model.py
-    Line 35
-
   ./bhlff/models/level_c/boundary/radial_analysis_core.py
-    Line 25
+    Line 306
 
   ./bhlff/models/level_c/boundary/radial_analysis_concentration.py
-    Line 24
+    Line 317
 
   ./bhlff/models/level_c/boundary/data_structures.py
     Line 21
@@ -3562,8 +3531,29 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/models/level_c/boundary/radial_analysis.py
     Line 26
 
+  ./bhlff/models/level_c/cuda/cuda_admittance_processor.py
+    Line 176
+
+  ./bhlff/models/level_c/cuda/cuda_radial_profile_7d_ops.py
+    Line 29
+
   ./bhlff/models/level_c/cuda/cuda_compute_processor.py
-    Line 43
+    Line 120
+
+  ./bhlff/models/level_c/cuda/cuda_radial_profile_processor.py
+    Line 199
+
+  ./bhlff/models/level_c/cuda/admittance/admittance_block_processing.py
+    Line 368
+
+  ./bhlff/models/level_c/cuda/admittance/admittance_reductions.py
+    Line 30
+
+  ./bhlff/models/level_c/cuda/admittance/admittance_vectorized_freqs.py
+    Line 38
+
+  ./bhlff/models/level_c/cuda/admittance/admittance_optimization.py
+    Line 32
 
   ./bhlff/models/level_c/beating/pinned_analysis_evolution.py
     Line 23
@@ -3598,20 +3588,8 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/models/level_c/beating/ml/beating_ml_patterns_refactored.py
     Line 31
 
-  ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py
-    Line 388
-
-  ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
-    Line 296
-
   ./bhlff/models/level_c/beating/ml/beating_ml_pattern_classifier.py
     Line 280
-
-  ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
-    Line 256
-
-  ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
-    Line 25
 
   ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py
     Line 23
@@ -3642,6 +3620,12 @@ IMPORTS_IN_MIDDLE: 712 issues
 
   ./bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
     Line 23
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old/beating_ml_patterns_old_helpers.py
+    Line 55
+
+  ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core/beating_ml_optimization_core_optimization.py
+    Line 74
 
   ./bhlff/models/level_c/beating/ml/core/feature_extraction.py
     Line 26
@@ -3675,9 +3659,6 @@ IMPORTS_IN_MIDDLE: 712 issues
 
   ./bhlff/models/level_c/beating/basic/comparison_metrics.py
     Line 22
-
-  ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
-    Line 21
 
   ./bhlff/models/level_c/beating/basic/optimization_methods.py
     Line 23
@@ -3724,23 +3705,77 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/models/level_c/beating/optimization/beating_validation_optimization_core.py
     Line 22
 
+  ./bhlff/models/level_c/abcd/vectorized_ops.py
+    Line 41
+
+  ./bhlff/models/level_c/abcd/transmission_core.py
+    Line 39
+
+  ./bhlff/models/level_c/abcd/block_processing.py
+    Line 33
+
+  ./bhlff/models/level_c/abcd/spectral_analysis.py
+    Line 31
+
+  ./bhlff/models/level_c/abcd_model/spectral_analysis_poles.py
+    Line 35
+
+  ./bhlff/models/level_c/abcd_model/transmission_computation.py
+    Line 320
+
+  ./bhlff/models/level_c/abcd_model/delegation_methods.py
+    Line 398
+
+  ./bhlff/models/level_c/abcd_model/admittance_computation.py
+    Line 35
+
+  ./bhlff/models/level_c/abcd_model/mode_analysis.py
+    Line 28
+
+  ./bhlff/models/level_c/abcd_model/quality_factors.py
+    Line 32
+
+  ./bhlff/models/level_c/abcd_model/abcd_model_package/abcd_model_helpers.py
+    Line 140
+
+  ./bhlff/models/level_c/abcd_model/abcd_model_package/abcd_model_base.py
+    Line 119
+
+  ./bhlff/models/level_c/abcd_model/abcd_model_package/abcd_model_transmission.py
+    Line 21
+
+  ./bhlff/models/level_c/abcd_model/abcd_model_package/abcd_model_determinants.py
+    Line 95
+
+  ./bhlff/models/level_c/memory/blocked_field_processor_cuda.py
+    Line 31
+
   ./bhlff/models/level_c/memory/correlation_analysis.py
     Line 28
 
   ./bhlff/models/level_c/memory/pinning_analysis_potential.py
     Line 23
 
+  ./bhlff/models/level_c/memory/initial_field_generator_cuda.py
+    Line 145
+
   ./bhlff/models/level_c/memory/pinning_analysis.py
     Line 27
 
+  ./bhlff/models/level_c/memory/spatial_field_extractor.py
+    Line 193
+
   ./bhlff/models/level_c/memory/correlation_analysis_core.py
-    Line 24
+    Line 118
 
   ./bhlff/models/level_c/memory/correlation_analysis_coherence.py
     Line 21
 
   ./bhlff/models/level_c/memory/pinning_analysis_effects.py
     Line 23
+
+  ./bhlff/models/level_c/memory/memory_kernel_processor.py
+    Line 30
 
   ./bhlff/models/level_c/memory/correlation_analysis_stability.py
     Line 21
@@ -3751,8 +3786,11 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/models/level_c/memory/data_structures.py
     Line 21
 
+  ./bhlff/models/level_c/memory/memory_effects_analyzer.py
+    Line 28
+
   ./bhlff/models/level_c/memory/memory_evolution.py
-    Line 24
+    Line 211
 
   ./bhlff/models/level_c/memory/__init__.py
     Line 24
@@ -3802,9 +3840,6 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/models/level_f/nonlinear/__init__.py
     Line 25
 
-  ./bhlff/models/level_f/nonlinear/mode_analysis.py
-    Line 21
-
   ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton.py
     Line 27
 
@@ -3812,9 +3847,6 @@ IMPORTS_IN_MIDDLE: 712 issues
     Line 25
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
-    Line 24
-
-  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
     Line 24
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/interactions.py
@@ -3853,9 +3885,6 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py
     Line 25
 
-  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
-    Line 27
-
   ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/stability_analysis.py
     Line 23
 
@@ -3870,6 +3899,9 @@ IMPORTS_IN_MIDDLE: 712 issues
 
   ./bhlff/models/level_f/nonlinear/soliton_analysis/interaction_analysis/mode_analysis.py
     Line 25
+
+  ./bhlff/models/level_f/nonlinear/mode_analysis/mode_analysis_setup.py
+    Line 113
 
   ./bhlff/models/level_f/collective/dispersion_analysis.py
     Line 22
@@ -3898,9 +3930,6 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/models/level_f/multi_particle/__init__.py
     Line 36
 
-  ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-    Line 26
-
   ./bhlff/models/level_f/multi_particle/potential_analysis_optimization.py
     Line 24
 
@@ -3922,14 +3951,8 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/models/level_d/level_d_models.py
     Line 55
 
-  ./bhlff/models/level_d/projections.py
-    Line 34
-
   ./bhlff/models/level_d/bvp_integration.py
     Line 33
-
-  ./bhlff/models/level_d/streamlines.py
-    Line 34
 
   ./bhlff/models/level_d/__init__.py
     Line 33
@@ -3937,11 +3960,14 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/models/level_d/superposition.py
     Line 32
 
+  ./bhlff/models/level_d/projections/projections_analyzer.py
+    Line 46
+
   ./bhlff/models/level_d/cuda/projectors_cuda.py
     Line 24
 
   ./bhlff/models/level_d/cuda/superposition_cuda.py
-    Line 45
+    Line 114
 
   ./bhlff/models/level_d/cuda/superposition_utils_cuda.py
     Line 77
@@ -3955,50 +3981,95 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/models/level_d/cuda/superposition_analyzer_cuda.py
     Line 32
 
-  ./bhlff/models/level_b/visualization.py
-    Line 25
-
   ./bhlff/models/level_b/zone_analyzer_utils.py
     Line 31
 
   ./bhlff/models/level_b/__init__.py
     Line 30
 
-  ./bhlff/models/level_b/node_analyzer.py
-    Line 515
-
   ./bhlff/models/level_b/power_law_core.py
     Line 27
 
   ./bhlff/models/level_b/zone_analyzer.py
-    Line 26
+    Line 30
+
+  ./bhlff/models/level_b/power_law/gamma_estimator.py
+    Line 39
+
+  ./bhlff/models/level_b/power_law/estimators.py
+    Line 27
 
   ./bhlff/models/level_b/power_law/scaling_regions.py
-    Line 117
+    Line 171
+
+  ./bhlff/models/level_b/power_law/robust_fit.py
+    Line 34
 
   ./bhlff/models/level_b/power_law/correlation_analysis.py
-    Line 24
+    Line 211
+
+  ./bhlff/models/level_b/power_law/scaling_relations.py
+    Line 22
+
+  ./bhlff/models/level_b/power_law/nu_estimator.py
+    Line 80
+
+  ./bhlff/models/level_b/power_law/cuda_estimator_utils.py
+    Line 230
+
+  ./bhlff/models/level_b/power_law/scaling_functions.py
+    Line 78
 
   ./bhlff/models/level_b/power_law/power_law_core.py
     Line 34
 
+  ./bhlff/models/level_b/power_law/dynamic_exponent_calculator.py
+    Line 37
+
   ./bhlff/models/level_b/power_law/critical_exponents.py
-    Line 390
+    Line 44
+
+  ./bhlff/models/level_b/power_law/beta_estimator.py
+    Line 40
+
+  ./bhlff/models/level_b/power_law/anomalous_dimension.py
+    Line 24
+
+  ./bhlff/models/level_b/power_law/block_utils.py
+    Line 44
+
+  ./bhlff/models/level_b/node_analyzer/node_analyzer_stepwise.py
+    Line 64
 
   ./bhlff/models/level_b/stepwise/geometric_decay.py
     Line 22
 
   ./bhlff/models/level_b/stepwise/power_law_tail.py
-    Line 22
-
-  ./bhlff/models/level_b/stepwise/radial_profile.py
-    Line 68
+    Line 141
 
   ./bhlff/models/level_b/stepwise/analyzer.py
-    Line 86
+    Line 242
 
   ./bhlff/models/level_b/stepwise/layer_detection.py
     Line 26
+
+  ./bhlff/models/level_b/stepwise/radial_profile/radial_profile_cpu.py
+    Line 22
+
+  ./bhlff/models/level_b/stepwise/radial_profile/radial_profile_cuda_blocked.py
+    Line 294
+
+  ./bhlff/models/level_b/stepwise/radial_profile/radial_profile_cuda_window_processing.py
+    Line 271
+
+  ./bhlff/models/level_b/stepwise/radial_profile/radial_profile_cuda_core.py
+    Line 247
+
+  ./bhlff/models/level_b/stepwise/radial_profile/radial_profile_cuda_single.py
+    Line 60
+
+  ./bhlff/models/level_b/stepwise/radial_profile/radial_profile_base.py
+    Line 162
 
   ./bhlff/models/level_b/node_analysis/node_analysis.py
     Line 33
@@ -4010,7 +4081,7 @@ IMPORTS_IN_MIDDLE: 712 issues
     Line 24
 
   ./bhlff/models/level_b/zone_analysis/boundary_detection.py
-    Line 192
+    Line 218
 
   ./bhlff/models/level_b/zone_analysis/zone_analysis.py
     Line 282
@@ -4062,9 +4133,6 @@ IMPORTS_IN_MIDDLE: 712 issues
 
   ./bhlff/models/level_e/soliton_core.py
     Line 27
-
-  ./bhlff/models/level_e/failure_detection.py
-    Line 31
 
   ./bhlff/models/level_e/robustness_tests.py
     Line 28
@@ -4162,17 +4230,23 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/models/level_e/discretization/grid_convergence.py
     Line 24
 
-  ./bhlff/models/level_e/discretization/domain_effects.py
-    Line 444
-
   ./bhlff/models/level_e/discretization/discretization_analyzer.py
     Line 32
 
   ./bhlff/models/level_e/discretization/__init__.py
     Line 32
 
-  ./bhlff/models/level_e/discretization/time_stability.py
-    Line 503
+  ./bhlff/models/level_e/discretization/domain_effects/domain_effects_7d_computations.py
+    Line 168
+
+  ./bhlff/models/level_e/discretization/time_stability/time_stability_7d_metrics.py
+    Line 79
+
+  ./bhlff/models/level_e/discretization/time_stability/time_stability_7d_computations.py
+    Line 131
+
+  ./bhlff/models/level_e/failure_detection/failure_detection_io.py
+    Line 33
 
   ./bhlff/models/level_e/cuda/soliton_optimization_cuda.py
     Line 394
@@ -4213,9 +4287,6 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/models/level_g/cosmology.py
     Line 24
 
-  ./bhlff/models/level_g/particle_validation.py
-    Line 22
-
   ./bhlff/models/level_g/structure.py
     Line 23
 
@@ -4245,9 +4316,6 @@ IMPORTS_IN_MIDDLE: 712 issues
 
   ./bhlff/models/level_g/validation.py
     Line 24
-
-  ./bhlff/models/level_g/gravity_einstein.py
-    Line 29
 
   ./bhlff/models/level_g/astrophysics/observable_properties.py
     Line 27
@@ -4361,7 +4429,7 @@ IMPORTS_IN_MIDDLE: 712 issues
     Line 252
 
   ./bhlff/models/level_g/cuda/gravity_cuda.py
-    Line 222
+    Line 288
 
   ./bhlff/models/level_g/cuda/__init__.py
     Line 21
@@ -4549,9 +4617,6 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/core/bvp/quenches_postulate_core.py
     Line 28
 
-  ./bhlff/core/bvp/quench_morphology.py
-    Line 39
-
   ./bhlff/core/bvp/transition_zone_postulate.py
     Line 25
 
@@ -4560,9 +4625,6 @@ IMPORTS_IN_MIDDLE: 712 issues
 
   ./bhlff/core/bvp/bvp_postulate_base.py
     Line 24
-
-  ./bhlff/core/bvp/quench_detector.py
-    Line 442
 
   ./bhlff/core/bvp/bvp_impedance_calculator.py
     Line 34
@@ -4587,9 +4649,6 @@ IMPORTS_IN_MIDDLE: 712 issues
 
   ./bhlff/core/bvp/topological_defect_analyzer.py
     Line 41
-
-  ./bhlff/core/bvp/bvp_block_processing_system.py
-    Line 468
 
   ./bhlff/core/bvp/impedance_core.py
     Line 29
@@ -4630,9 +4689,6 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/core/bvp/__init__.py
     Line 35
 
-  ./bhlff/core/bvp/bvp_envelope_solver.py
-    Line 37
-
   ./bhlff/core/bvp/abstract_bvp_facade.py
     Line 37
 
@@ -4672,9 +4728,6 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/core/bvp/level_c_interface.py
     Line 26
 
-  ./bhlff/core/bvp/quench_characteristics.py
-    Line 39
-
   ./bhlff/core/bvp/bvp_envelope_equation_7d.py
     Line 29
 
@@ -4690,11 +4743,26 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/core/bvp/resonance_peak_detector.py
     Line 28
 
+  ./bhlff/core/bvp/quench_morphology/quench_morphology_cpu.py
+    Line 182
+
   ./bhlff/core/bvp/analysis/topological_charge_analyzer.py
     Line 30
 
   ./bhlff/core/bvp/analysis/charge_computation.py
     Line 24
+
+  ./bhlff/core/bvp/bvp_block_processing/bvp_block_boundary_conditions.py
+    Line 25
+
+  ./bhlff/core/bvp/bvp_block_processing/bvp_block_solver.py
+    Line 34
+
+  ./bhlff/core/bvp/bvp_block_processing/bvp_block_iterative_solver.py
+    Line 28
+
+  ./bhlff/core/bvp/bvp_block_processing/bvp_block_coefficients.py
+    Line 23
 
   ./bhlff/core/bvp/u1_phase_structure/coherence_analysis.py
     Line 27
@@ -4708,17 +4776,38 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/core/bvp/u1_phase_structure/u1_phase_structure_postulate.py
     Line 28
 
-  ./bhlff/core/bvp/phase_vector/phase_components.py
+  ./bhlff/core/bvp/phase_vector/block_processor.py
+    Line 34
+
+  ./bhlff/core/bvp/phase_vector/electroweak_block_processing.py
+    Line 131
+
+  ./bhlff/core/bvp/phase_vector/electroweak_block_sizing.py
+    Line 37
+
+  ./bhlff/core/bvp/phase_vector/electroweak_gpu_computation.py
     Line 34
 
   ./bhlff/core/bvp/phase_vector/__init__.py
     Line 32
 
   ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-    Line 34
+    Line 193
 
-  ./bhlff/core/bvp/phase_vector/phase_vector.py
-    Line 50
+  ./bhlff/core/bvp/phase_vector/block_tiling.py
+    Line 32
+
+  ./bhlff/core/bvp/phase_vector/phase_vector/phase_vector_base.py
+    Line 32
+
+  ./bhlff/core/bvp/phase_vector/phase_components/phase_components_base.py
+    Line 76
+
+  ./bhlff/core/bvp/phase_vector/phase_components/phase_components_operations.py
+    Line 102
+
+  ./bhlff/core/bvp/phase_vector/phase_components/phase_components_setup.py
+    Line 115
 
   ./bhlff/core/bvp/level_integration/__init__.py
     Line 35
@@ -4726,11 +4815,11 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/core/bvp/boundary/step_resonator.py
     Line 24
 
-  ./bhlff/core/bvp/power_law/power_law_optimization.py
-    Line 675
+  ./bhlff/core/bvp/bvp_block_processing_system/bvp_block_processing_base.py
+    Line 34
 
-  ./bhlff/core/bvp/power_law/power_law_core.py
-    Line 322
+  ./bhlff/core/bvp/power_law/power_law_core/power_law_core_fitting.py
+    Line 38
 
   ./bhlff/core/bvp/constants/frequency_dependent_properties.py
     Line 28
@@ -4764,6 +4853,15 @@ IMPORTS_IN_MIDDLE: 712 issues
 
   ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
     Line 22
+
+  ./bhlff/core/bvp/quench_detector/quench_detector_helpers.py
+    Line 91
+
+  ./bhlff/core/bvp/quench_detector/quench_detector_base.py
+    Line 31
+
+  ./bhlff/core/bvp/quench_detector/quench_detector_detection.py
+    Line 198
 
   ./bhlff/core/bvp/envelope_equation/solver_core_basic.py
     Line 251
@@ -4888,11 +4986,17 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/core/bvp/postulates/power_balance/power_balance_postulate.py
     Line 29
 
+  ./bhlff/core/bvp/bvp_envelope_solver/bvp_envelope_solver_base.py
+    Line 22
+
+  ./bhlff/core/bvp/bvp_envelope_solver/bvp_envelope_solver_solve.py
+    Line 183
+
   ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-    Line 27
+    Line 111
 
   ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
-    Line 470
+    Line 21
 
   ./bhlff/core/bvp/bvp_core/bvp_7d_operations.py
     Line 37
@@ -4924,6 +5028,21 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
     Line 40
 
+  ./bhlff/core/bvp/bvp_core/bvp_cuda_block/bvp_cuda_block_processor.py
+    Line 40
+
+  ./bhlff/core/bvp/bvp_core/bvp_cuda_block/bvp_cuda_cpu_fallback.py
+    Line 241
+
+  ./bhlff/core/bvp/bvp_core/bvp_cuda_block/bvp_cuda_7d_operations.py
+    Line 42
+
+  ./bhlff/core/bvp/bvp_core/bvp_cuda_block/bvp_cuda_block_solver.py
+    Line 25
+
+  ./bhlff/core/bvp/bvp_core/bvp_cuda_block/bvp_cuda_block_operations.py
+    Line 33
+
   ./bhlff/core/domain/cuda_block_processor.py
     Line 56
 
@@ -4942,6 +5061,9 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/core/domain/vectorized_block_processor.py
     Line 35
 
+  ./bhlff/core/domain/enhanced_block_processing_utils.py
+    Line 26
+
   ./bhlff/core/domain/config.py
     Line 28
 
@@ -4949,13 +5071,13 @@ IMPORTS_IN_MIDDLE: 712 issues
     Line 27
 
   ./bhlff/core/domain/7d_vectorized_processor.py
-    Line 462
+    Line 471
 
   ./bhlff/core/domain/optimized_block_processor.py
     Line 41
 
   ./bhlff/core/domain/vectorized_7d_processor.py
-    Line 462
+    Line 471
 
   ./bhlff/core/domain/__init__.py
     Line 24
@@ -4967,13 +5089,25 @@ IMPORTS_IN_MIDDLE: 712 issues
     Line 31
 
   ./bhlff/core/domain/enhanced_block_processor.py
-    Line 35
+    Line 46
 
   ./bhlff/core/domain/domain.py
     Line 103
 
   ./bhlff/core/domain/parameters_7d_bvp.py
     Line 30
+
+  ./bhlff/core/domain/enhanced_block_processing/field_processing_strategy.py
+    Line 25
+
+  ./bhlff/core/domain/enhanced_block_processing/gpu_block_operations.py
+    Line 22
+
+  ./bhlff/core/domain/enhanced_block_processing/gpu_block_processor.py
+    Line 25
+
+  ./bhlff/core/domain/enhanced_block_processing/gpu_block_utils.py
+    Line 24
 
   ./bhlff/core/phase/u1_phase_field.py
     Line 36
@@ -5000,16 +5134,52 @@ IMPORTS_IN_MIDDLE: 712 issues
     Line 28
 
   ./bhlff/core/sources/bvp_source_envelope.py
-    Line 28
+    Line 37
 
-  ./bhlff/core/sources/bvp_source_generators.py
-    Line 544
+  ./bhlff/core/sources/block_config.py
+    Line 108
+
+  ./bhlff/core/sources/block_cache_manager.py
+    Line 44
+
+  ./bhlff/core/sources/blocked_field.py
+    Line 33
+
+  ./bhlff/core/sources/__init__.py
+    Line 23
+
+  ./bhlff/core/sources/block_7d_expansion.py
+    Line 379
+
+  ./bhlff/core/sources/block_generator.py
+    Line 42
+
+  ./bhlff/core/sources/blocked_field_generator.py
+    Line 43
 
   ./bhlff/core/sources/bvp_source_core.py
-    Line 32
+    Line 253
+
+  ./bhlff/core/sources/block_7d_expansion_cuda.py
+    Line 35
 
   ./bhlff/core/sources/bvp_source.py
     Line 26
+
+  ./bhlff/core/sources/block_iterator.py
+    Line 180
+
+  ./bhlff/core/sources/block_metadata.py
+    Line 33
+
+  ./bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
+    Line 101
+
+  ./bhlff/core/sources/bvp_source_generators/bvp_source_generators_helpers.py
+    Line 35
+
+  ./bhlff/core/arrays/field_array.py
+    Line 389
 
   ./bhlff/core/fft/fft_plan_manager.py
     Line 28
@@ -5019,9 +5189,6 @@ IMPORTS_IN_MIDDLE: 712 issues
 
   ./bhlff/core/fft/fft_twiddle_computer.py
     Line 26
-
-  ./bhlff/core/fft/spectral_derivatives_impl.py
-    Line 427
 
   ./bhlff/core/fft/spectral_operations.py
     Line 40
@@ -5037,9 +5204,6 @@ IMPORTS_IN_MIDDLE: 712 issues
 
   ./bhlff/core/fft/fft_backend.py
     Line 25
-
-  ./bhlff/core/fft/fft_solver_7d_basic.py
-    Line 28
 
   ./bhlff/core/fft/fft_solver_time.py
     Line 259
@@ -5086,11 +5250,41 @@ IMPORTS_IN_MIDDLE: 712 issues
   ./bhlff/core/fft/advanced/fft_advanced_core.py
     Line 30
 
+  ./bhlff/core/fft/spectral_derivatives_impl/spectral_derivatives_impl_derivatives.py
+    Line 115
+
+  ./bhlff/core/fft/spectral_derivatives_impl/spectral_derivatives_impl_base.py
+    Line 46
+
+  ./bhlff/core/fft/spectral_derivatives_impl/spectral_derivatives_impl_vector.py
+    Line 168
+
+  ./bhlff/core/fft/spectral_derivatives_impl/spectral_derivatives_impl_laplacian.py
+    Line 104
+
+  ./bhlff/core/fft/fft_solver_7d_basic/fft_solver_7d_basic_solve.py
+    Line 33
+
+  ./bhlff/core/fft/fft_solver_7d_basic/fft_solver_7d_basic_base.py
+    Line 28
+
   ./bhlff/core/fft/unified/facade.py
-    Line 24
+    Line 136
+
+  ./bhlff/core/fft/unified/fft_gpu.py
+    Line 244
+
+  ./bhlff/core/fft/unified/swap_manager.py
+    Line 129
 
   ./bhlff/core/fft/unified/__init__.py
     Line 23
+
+  ./bhlff/core/fft/unified/blocked/blocked_inverse.py
+    Line 143
+
+  ./bhlff/core/fft/unified/blocked/blocked_forward.py
+    Line 143
 
   ./examples/level_c_example.py
     Line 30
@@ -5114,13 +5308,11 @@ IMPORTS_IN_MIDDLE: 712 issues
     Line 65
 
 
-FILES_TOO_LARGE: 124 issues
+FILES_TOO_LARGE: 107 issues
 ----------------------------------------
   ./test_quench_detector_optimized.py
 
   ./tests/integration/automated_testing/test_quality_monitoring_integration.py
-
-  ./tests/unit/test_ml_prediction_vectorized_implementations.py
 
   ./tests/unit/test_ml_prediction_physics_validation.py
 
@@ -5137,6 +5329,12 @@ FILES_TOO_LARGE: 124 issues
   ./tests/unit/test_base_models.py
 
   ./tests/unit/test_soliton_optimization_algorithms.py
+
+  ./tests/unit/test_level_b/test_B1_power_law_tails.py
+
+  ./tests/unit/test_level_b/test_fundamental_properties_advanced.py
+
+  ./tests/unit/test_level_b/test_critical_exponents_robust.py
 
   ./tests/unit/test_models/test_level_e/test_time_stability_full.py
 
@@ -5156,6 +5354,8 @@ FILES_TOO_LARGE: 124 issues
 
   ./tests/unit/test_core/test_bvp_constants_comprehensive.py
 
+  ./tests/unit/test_core/test_quench_morphology_cuda.py
+
   ./tests/unit/test_core/test_phase_vector_cuda.py
 
   ./tests/unit/test_level_a/test_A05_residual_energy_advanced.py
@@ -5164,25 +5364,21 @@ FILES_TOO_LARGE: 124 issues
 
   ./tests/unit/test_level_a/test_A02_multi_plane_advanced.py
 
+  ./bhlff/utils/cuda_batch_processor.py
+
+  ./bhlff/utils/cuda_utils.py
+
   ./bhlff/models/level_c/boundaries_core.py
 
-  ./bhlff/models/level_c/abcd_model.py
+  ./bhlff/models/level_c/boundary/radial_analysis_core.py
 
-  ./bhlff/models/level_c/cuda/cuda_compute_processor.py
+  ./bhlff/models/level_c/boundary/radial_analysis_concentration.py
 
   ./bhlff/models/level_c/beating/theoretical_analysis.py
 
   ./bhlff/models/level_c/beating/beating_core_basic.py
 
   ./bhlff/models/level_c/beating/background_analysis.py
-
-  ./bhlff/models/level_c/beating/ml/beating_ml_patterns_old.py
-
-  ./bhlff/models/level_c/beating/ml/beating_ml_optimization_classification.py
-
-  ./bhlff/models/level_c/beating/ml/beating_ml_optimization_core.py
-
-  ./bhlff/models/level_c/beating/ml/beating_ml_optimization_prediction.py
 
   ./bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py
 
@@ -5198,13 +5394,13 @@ FILES_TOO_LARGE: 124 issues
 
   ./bhlff/models/level_c/beating/ml/core/prediction_engine.py
 
-  ./bhlff/models/level_c/beating/basic/beating_basic_core_validation.py
-
   ./bhlff/models/level_c/beating/basic/optimization_methods.py
 
-  ./bhlff/models/level_c/memory/memory_analyzer.py
+  ./bhlff/models/level_c/abcd_model/transmission_computation.py
 
-  ./bhlff/models/level_c/memory/memory_evolution.py
+  ./bhlff/models/level_c/abcd_model/delegation_methods.py
+
+  ./bhlff/models/level_c/memory/memory_analyzer.py
 
   ./bhlff/models/level_c/resonators/resonator_analyzer.py
 
@@ -5222,15 +5418,9 @@ FILES_TOO_LARGE: 124 issues
 
   ./bhlff/models/level_f/nonlinear/basic_effects.py
 
-  ./bhlff/models/level_f/nonlinear/mode_analysis.py
-
   ./bhlff/models/level_f/nonlinear/soliton_analysis/single_soliton_validation.py
 
-  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_physical_properties.py
-
   ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_core.py
-
-  ./bhlff/models/level_f/nonlinear/soliton_analysis/multi_soliton_optimization.py
 
   ./bhlff/models/level_f/collective/excitation_analysis.py
 
@@ -5240,15 +5430,9 @@ FILES_TOO_LARGE: 124 issues
 
   ./bhlff/models/level_f/multi_particle/data_structures.py
 
-  ./bhlff/models/level_f/multi_particle/collective_modes_finding.py
-
   ./bhlff/models/level_f/multi_particle/collective_modes_spectrum.py
 
   ./bhlff/models/level_f/transitions/phase_transitions_core.py
-
-  ./bhlff/models/level_d/projections.py
-
-  ./bhlff/models/level_d/streamlines.py
 
   ./bhlff/models/level_d/superposition.py
 
@@ -5256,13 +5440,15 @@ FILES_TOO_LARGE: 124 issues
 
   ./bhlff/models/level_d/cuda/streamlines_cuda.py
 
-  ./bhlff/models/level_b/visualization.py
+  ./bhlff/models/level_b/zone_analyzer.py
 
-  ./bhlff/models/level_b/node_analyzer.py
+  ./bhlff/models/level_b/power_law/scaling_regions.py
 
-  ./bhlff/models/level_b/power_law/critical_exponents.py
+  ./bhlff/models/level_b/power_law/correlation_analysis.py
 
   ./bhlff/models/level_b/node_analysis/topological_analysis.py
+
+  ./bhlff/models/level_b/zone_analysis/boundary_detection.py
 
   ./bhlff/models/level_e/defect_dynamics.py
 
@@ -5272,15 +5458,9 @@ FILES_TOO_LARGE: 124 issues
 
   ./bhlff/models/level_e/defect_interactions.py
 
-  ./bhlff/models/level_e/failure_detection.py
-
   ./bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
 
   ./bhlff/models/level_e/sensitivity/sobol_analysis.py
-
-  ./bhlff/models/level_e/discretization/domain_effects.py
-
-  ./bhlff/models/level_e/discretization/time_stability.py
 
   ./bhlff/models/level_e/cuda/soliton_energy_cuda.py
 
@@ -5288,15 +5468,11 @@ FILES_TOO_LARGE: 124 issues
 
   ./bhlff/models/level_g/gravity_curvature.py
 
-  ./bhlff/models/level_g/particle_validation.py
-
   ./bhlff/models/level_g/bvp_integration.py
 
   ./bhlff/models/level_g/gravity_waves.py
 
   ./bhlff/models/level_g/particle_inversion_computations.py
-
-  ./bhlff/models/level_g/gravity_einstein.py
 
   ./bhlff/models/level_g/astrophysics/observable_properties.py
 
@@ -5312,25 +5488,9 @@ FILES_TOO_LARGE: 124 issues
 
   ./bhlff/core/time/bvp_envelope_integrator.py
 
-  ./bhlff/core/bvp/quench_morphology.py
-
-  ./bhlff/core/bvp/quench_detector.py
-
-  ./bhlff/core/bvp/bvp_block_processing_system.py
-
   ./bhlff/core/bvp/physical_validation_decorator.py
 
-  ./bhlff/core/bvp/quench_characteristics.py
-
-  ./bhlff/core/bvp/phase_vector/electroweak_coupling.py
-
-  ./bhlff/core/bvp/phase_vector/phase_vector.py
-
   ./bhlff/core/bvp/validation/physical_constraints.py
-
-  ./bhlff/core/bvp/power_law/power_law_optimization.py
-
-  ./bhlff/core/bvp/power_law/power_law_core.py
 
   ./bhlff/core/bvp/power_law_core_modules/power_law_fitting/quality_analysis.py
 
@@ -5339,8 +5499,6 @@ FILES_TOO_LARGE: 124 issues
   ./bhlff/core/bvp/envelope_equation/advanced/solver_advanced_core.py
 
   ./bhlff/core/bvp/bvp_core/bvp_block_processor.py
-
-  ./bhlff/core/bvp/bvp_core/bvp_cuda_block_processor.py
 
   ./bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
 
@@ -5352,11 +5510,13 @@ FILES_TOO_LARGE: 124 issues
 
   ./bhlff/core/domain/vectorized_7d_processor.py
 
-  ./bhlff/core/domain/enhanced_block_processor.py
+  ./bhlff/core/sources/bvp_source_envelope.py
 
-  ./bhlff/core/sources/bvp_source_generators.py
+  ./bhlff/core/sources/blocked_field_generator.py
 
-  ./bhlff/core/fft/spectral_derivatives_impl.py
+  ./bhlff/core/sources/bvp_source_core.py
+
+  ./bhlff/core/arrays/field_array.py
 
   ./bhlff/core/fft/spectral_filtering.py
 

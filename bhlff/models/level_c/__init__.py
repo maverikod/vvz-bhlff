@@ -31,7 +31,8 @@ Example:
 
 from .boundaries import BoundaryAnalyzer
 from .boundary_analysis import BoundaryAnalysis
-from .abcd_model import ABCDModel, ResonatorLayer, SystemMode
+from .abcd_model import ABCDModel
+from .abcd import ResonatorLayer, SystemMode
 from .quench_memory_analysis import QuenchMemoryAnalysis, MemoryParameters, QuenchEvent
 from .mode_beating_analysis import ModeBeatingAnalysis, DualModeSource, BeatingPattern
 from .level_c_integration import LevelCIntegration, LevelCResults, TestConfiguration

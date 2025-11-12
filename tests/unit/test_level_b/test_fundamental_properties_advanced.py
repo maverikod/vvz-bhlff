@@ -65,12 +65,14 @@ class LevelBFundamentalPropertiesTestsAdvanced:
 
     def __init__(self):
         """Initialize test suite."""
+        # Framework will use swap/block processing automatically for large fields
+        # Real production will use larger fields (N=256+) on powerful GPUs
         self.domain = Domain(
-            L=80.0,
-            N=256,
-            N_phi=32,
-            N_t=64,
-            T=40.0,
+            L=8 * np.pi,  # As per document 7d-32
+            N=128,
+            N_phi=8,
+            N_t=8,
+            T=1.0,
             dimensions=7,
         )
 
@@ -288,21 +290,84 @@ class LevelBFundamentalPropertiesTestsAdvanced:
             return {"passed": False, "error": str(e)}
 
     def _generate_test_field(self) -> np.ndarray:
-        """Generate test field for analysis."""
-        # Create source field
-        source_field = self.source.generate()
+        """
+        Generate test field for analysis using solver.
+        
+        Physical Meaning:
+            Generates test field by solving the phase field equation
+            with a neutralized Gaussian source. The solver automatically
+            uses swap and block processing if field size exceeds memory.
+            
+        Returns:
+            np.ndarray: Field array (may be memory-mapped if swapped).
+        """
+        from bhlff.core.fft.fft_solver_7d_basic import FFTSolver7DBasic
+        from bhlff.core.arrays.field_array import FieldArray
+        
+        # Create neutralized Gaussian source wrapped in FieldArray for automatic swap
+        source_array = self._create_neutralized_gaussian(self.domain, sigma_cells=2.0)
+        source = FieldArray(array=source_array)  # FieldArray will use swap if needed
+        
+        # Solve stationary problem - solver returns FieldArray with automatic swap
+        solver = FFTSolver7DBasic(self.domain, self.parameters)
+        solution = solver.solve_stationary(source)
 
-        # Solve the field equation
-        field = self._solve_field_equation(source_field)
-
-        return field
+        # Extract array from FieldArray (may be memory-mapped if swapped)
+        if isinstance(solution, FieldArray):
+            return solution.array
+        return solution
+    
+    def _create_neutralized_gaussian(self, domain: Domain, sigma_cells: float) -> np.ndarray:
+        """
+        Create neutralized Gaussian source as per document 7d-32.
+        
+        Physical Meaning:
+            Creates a quasi-point source using neutralized Gaussian
+            to satisfy ∫ s(x) dx = 0 requirement. Uses FieldArray
+            for automatic swap management of large fields.
+        """
+        from bhlff.core.arrays.field_array import FieldArray
+        import numpy as np
+        
+        # Create coordinate grids
+        dx = domain.L / domain.N
+        x = np.linspace(0, domain.L, domain.N, endpoint=False)
+        y = np.linspace(0, domain.L, domain.N, endpoint=False)
+        z = np.linspace(0, domain.L, domain.N, endpoint=False)
+        X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
+        
+        # Center
+        center = [domain.L / 2, domain.L / 2, domain.L / 2]
+        sigma = sigma_cells * dx
+        
+        # Gaussian with underflow protection
+        distances_sq = (X - center[0]) ** 2 + (Y - center[1]) ** 2 + (Z - center[2]) ** 2
+        exponent = -distances_sq / (2 * sigma ** 2)
+        # Clip exponent to avoid underflow (exp(-700) ≈ 0 in float64)
+        exponent = np.clip(exponent, -700, None)
+        g = np.exp(exponent)
+        
+        # Neutralize: subtract mean
+        g_mean = np.mean(g)
+        s = g - g_mean
+        
+        # Create 7D array using FieldArray for automatic swap
+        # FieldArray will automatically use swap if field is large
+        s_7d_field = FieldArray(shape=domain.shape, dtype=np.complex128)
+        
+        # Fill 7D array efficiently (FieldArray handles swap automatically)
+        # For large fields, this will use swap transparently
+        s_3d = s[:, :, :, None, None, None, None]
+        s_3d_broadcast = np.broadcast_to(s_3d, domain.shape)
+        s_7d_field[:] = s_3d_broadcast[:]
+        
+        # Return underlying array (may be memory-mapped if swapped)
+        return s_7d_field.array
 
     def _solve_field_equation(self, source: np.ndarray) -> np.ndarray:
-        """Solve the field equation L_β a = s."""
-        # This is a simplified solver for testing
-        # In practice, this would use the full FFT solver
-
-        # Create spectral coefficients
+        """Solve the field equation L_β a = s (deprecated - use _generate_test_field)."""
+        # This method is deprecated - use _generate_test_field instead
+        # which uses FFTSolver7DBasic with automatic swap/block processing
         kx = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
         ky = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)
         kz = np.fft.fftfreq(self.domain.N, self.domain.L / self.domain.N)

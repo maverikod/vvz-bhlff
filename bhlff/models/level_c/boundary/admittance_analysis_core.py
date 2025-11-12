@@ -55,13 +55,15 @@ class AdmittanceAnalysisCore:
         self.logger = logging.getLogger(__name__)
 
         # Initialize CUDA processor for vectorized operations
+        # CUDA is required for Level C - no fallback to CPU
         try:
             self.cuda_processor = LevelCCUDAProcessor(bvp_core, use_cuda=True)
             self.use_cuda = self.cuda_processor.cuda_available
+            if not self.use_cuda:
+                raise RuntimeError("CUDA not available - Level C requires GPU acceleration")
         except Exception as e:
-            self.logger.warning(f"CUDA processor initialization failed: {e}, using CPU")
-            self.cuda_processor = None
-            self.use_cuda = False
+            self.logger.error(f"CUDA processor initialization failed: {e}")
+            raise RuntimeError(f"Level C requires CUDA: {e}")
 
     def analyze_admittance_spectrum(
         self,
@@ -96,34 +98,26 @@ class AdmittanceAnalysisCore:
         num_frequencies = 100
         frequencies = np.linspace(f_min, f_max, num_frequencies)
 
-        # Use CUDA vectorized computation if available
-        if self.use_cuda and self.cuda_processor is not None:
-            # Create field and source for vectorized computation
-            field = self._create_test_field_for_admittance(domain, boundary)
-            source = self._create_source_field_for_admittance(domain, frequencies[0])
-
-            # Compute admittance using CUDA vectorized operations
-            try:
-                admittances = self.cuda_processor.compute_admittance_vectorized(
-                    field, source, frequencies, domain
-                )
-            except Exception as e:
-                self.logger.warning(
-                    f"CUDA admittance computation failed: {e}, falling back to CPU"
-                )
-                # Fallback to CPU
-                admittances = np.zeros(num_frequencies, dtype=complex)
-                for i, omega in enumerate(frequencies):
-                    admittances[i] = self._compute_admittance_at_frequency(
-                        domain, boundary, omega
-                    )
-        else:
-            # CPU computation
-            admittances = np.zeros(num_frequencies, dtype=complex)
-            for i, omega in enumerate(frequencies):
-                admittances[i] = self._compute_admittance_at_frequency(
-                    domain, boundary, omega
-                )
+        # CUDA is required for Level C - no fallback
+        if not self.use_cuda or self.cuda_processor is None:
+            raise RuntimeError("CUDA processor not initialized - Level C requires GPU")
+        
+        # Create field and source for vectorized computation
+        self.logger.info("Creating test field and source for admittance computation")
+        field = self._create_test_field_for_admittance(domain, boundary)
+        source = self._create_source_field_for_admittance(domain, frequencies[0])
+        
+        self.logger.info(
+            f"Field shape: {field.shape}, source shape: {source.shape}, "
+            f"field size: {field.size}, field dtype: {field.dtype}"
+        )
+        
+        # Compute admittance using CUDA vectorized operations
+        self.logger.info(f"Calling compute_admittance_vectorized with {len(frequencies)} frequencies")
+        admittances = self.cuda_processor.compute_admittance_vectorized(
+            field, source, frequencies, domain
+        )
+        self.logger.info(f"Admittance computation completed: shape={admittances.shape}")
 
         # Create admittance spectrum
         spectrum = AdmittanceSpectrum(

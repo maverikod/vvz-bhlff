@@ -109,6 +109,25 @@ class LevelBPowerLawAnalyzer:
             stepwise_color=self.stepwise_color,
         )
 
+        # Initialize batch processor for efficient GPU memory utilization
+        self.batch_processor = None
+        if self.use_cuda:
+            try:
+                from ...utils.cuda_batch_processor import CUDABatchProcessor
+
+                self.batch_processor = CUDABatchProcessor(
+                    gpu_memory_ratio=self.gpu_memory_ratio,
+                    dtype=np.complex128,
+                    use_swap=True,
+                )
+                self.logger.info(
+                    "Batch processor initialized for efficient GPU memory utilization"
+                )
+            except ImportError:
+                self.logger.warning(
+                    "Batch processor not available, using sequential processing"
+                )
+
     def analyze_stepwise_tail(
         self,
         field: np.ndarray,
@@ -194,6 +213,7 @@ class LevelBPowerLawAnalyzer:
         beta: float,
         center: List[float],
         min_decades: float = 1.0,
+        r_min: float = None,
     ) -> Dict[str, Any]:
         """
         Analyze classical power-law tail A(r) ∝ r^(2β-3) on the field.
@@ -203,18 +223,52 @@ class LevelBPowerLawAnalyzer:
             region consistent with the fractional Laplacian symbol.
 
         Args:
-            field (np.ndarray): Phase field solution.
+            field (np.ndarray): Phase field solution (7D).
             beta (float): Fractional order β ∈ (0,2).
             center (List[float]): Center coordinates [x, y, z].
             min_decades (float): Minimum dynamic range in decades.
+            r_min (float, optional): Minimum radius for tail analysis. If None,
+                uses 2.0 * r_core.
 
         Returns:
-            Dict[str, Any]: Fit metrics and data for plotting.
+            Dict[str, Any]: Fit metrics and data for plotting including:
+                - slope: Fitted power law slope
+                - slope_ci_95: 95% confidence interval for slope (tuple)
+                - decades: Number of decades in the fit range
+                - r_squared: R-squared value of the fit
+                - passed: Whether all criteria are met
         """
-        radial_profile = self.radial_profiler.compute(field, center)
-        return self.tail_analyzer.analyze(
-            field, beta, center, radial_profile, min_decades
+        import sys
+        import logging
+        logger = logging.getLogger(__name__)
+        
+        field_size_mb = field.nbytes / (1024**2) if hasattr(field, 'nbytes') else 0
+        logger.info(
+            f"[ANALYZER] analyze_power_law_tail: START - field shape={field.shape}, "
+            f"size={field_size_mb:.2f}MB, beta={beta}, center={center}"
         )
+        sys.stdout.flush()
+        sys.stderr.flush()
+        
+        logger.info(f"[ANALYZER] STEP 1: Computing radial profile...")
+        sys.stdout.flush()
+        sys.stderr.flush()
+        radial_profile = self.radial_profiler.compute(field, center)
+        logger.info(f"[ANALYZER] STEP 1 COMPLETE: Radial profile computed")
+        sys.stdout.flush()
+        sys.stderr.flush()
+        
+        logger.info(f"[ANALYZER] STEP 2: Analyzing tail...")
+        sys.stdout.flush()
+        sys.stderr.flush()
+        result = self.tail_analyzer.analyze(
+            field, beta, center, radial_profile, min_decades, r_min=r_min
+        )
+        logger.info(f"[ANALYZER] STEP 2 COMPLETE: Tail analysis complete, analyze_power_law_tail: COMPLETE")
+        sys.stdout.flush()
+        sys.stderr.flush()
+        
+        return result
 
     def visualize_power_law_analysis(
         self,

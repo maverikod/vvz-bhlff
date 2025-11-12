@@ -101,8 +101,26 @@ class BVPBlockProcessor:
         """
         self.logger.info("Starting blocked BVP envelope solution")
 
-        # Initialize solution
-        envelope = np.zeros(self.domain.shape, dtype=np.complex128)
+        # Initialize solution using block processing for large domains
+        # Check if domain is too large for full array initialization
+        total_elements = np.prod(self.domain.shape)
+        memory_needed_gb = (total_elements * 16) / (1024**3)  # complex128 = 16 bytes
+        
+        if memory_needed_gb > 1.0:
+            # Use BlockedField for large domains
+            from bhlff.core.sources.blocked_field_generator import BlockedFieldGenerator
+            
+            def zero_block_generator(domain, slice_config, config):
+                """Generate zero block for initialization."""
+                block_shape = slice_config["shape"]
+                return np.zeros(block_shape, dtype=complex)
+            
+            generator = BlockedFieldGenerator(self.domain, zero_block_generator)
+            envelope = generator.get_field()
+            self.logger.info(f"Using BlockedField for envelope (domain size: {memory_needed_gb:.2f} GB)")
+        else:
+            # Direct initialization for small domains
+            envelope = np.zeros(self.domain.shape, dtype=np.complex128)
 
         # Iterative solution across blocks
         for iteration in range(max_iterations):

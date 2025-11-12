@@ -18,8 +18,14 @@ Mathematical Foundation:
 
 from .source import Source
 from .bvp_source import BVPSource
+from .blocked_field_generator import BlockedFieldGenerator
+from .blocked_field import BlockedField
+from .block_metadata import BlockMetadata
 
 __all__ = [
     "Source",
     "BVPSource",
+    "BlockedFieldGenerator",
+    "BlockedField",
+    "BlockMetadata",
 ]

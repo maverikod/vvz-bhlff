@@ -4,28 +4,32 @@ BHLFF CODE MAP REPORT
 
 FILES SUMMARY:
 ----------------------------------------
-Total files analyzed: 982
+Total files analyzed: 1309
 
 CLASSES SUMMARY:
 ----------------------------------------
-Total classes: 819
+Total classes: 1064
 
 FUNCTIONS SUMMARY:
 ----------------------------------------
-Total functions: 7213
+Total functions: 7654
 
 ISSUES SUMMARY:
 ----------------------------------------
 methods_with_pass: 0
 not_implemented_in_non_abstract: 0
-methods_without_docstrings: 672
+methods_without_docstrings: 656
 files_without_docstrings: 4
 classes_without_docstrings: 21
-imports_in_middle: 712
-files_too_large: 124
+imports_in_middle: 800
+files_too_large: 107
 
 METHODS_WITHOUT_DOCSTRINGS:
 ----------------------------------------
+  File: ./test_gpu_logging.py
+  Line: 22
+  Method: main
+
   File: ./scripts/cuda_smoke_test.py
   Line: 30
   Method: parse_args
@@ -64,12 +68,7 @@ METHODS_WITHOUT_DOCSTRINGS:
   Line: 170
   Method: __init__
 
-  File: ./tests/unit/test_power_law_7d_bvp_compliance.py
-  Line: 170
-  Class: MockBVPCore
-  Method: __init__
-
-  ... and 662 more
+  ... and 646 more
 
 FILES_WITHOUT_DOCSTRINGS:
 ----------------------------------------
@@ -138,6 +137,9 @@ IMPORTS_IN_MIDDLE:
   File: ./test_quench_detector_light.py
   Line: 37
 
+  File: ./debug_radial_profile.py
+  Line: 67
+
   File: ./debug_block_processing.py
   Line: 253
 
@@ -159,18 +161,13 @@ IMPORTS_IN_MIDDLE:
   File: ./scripts/demo_vectorized_processing.py
   Line: 22
 
-  File: ./scripts/demo_block_processing.py
-  Line: 317
-
-  ... and 702 more
+  ... and 790 more
 
 FILES_TOO_LARGE:
 ----------------------------------------
   File: ./test_quench_detector_optimized.py
 
   File: ./tests/integration/automated_testing/test_quality_monitoring_integration.py
-
-  File: ./tests/unit/test_ml_prediction_vectorized_implementations.py
 
   File: ./tests/unit/test_ml_prediction_physics_validation.py
 
@@ -186,4 +183,6 @@ FILES_TOO_LARGE:
 
   File: ./tests/unit/test_base_models.py
 
-  ... and 114 more
+  File: ./tests/unit/test_soliton_optimization_algorithms.py
+
+  ... and 97 more

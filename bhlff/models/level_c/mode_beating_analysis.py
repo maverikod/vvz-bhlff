@@ -60,11 +60,34 @@ class ModeBeatingAnalysis:
         """
         Initialize mode beating analysis.
 
+        Physical Meaning:
+            Sets up mode beating analysis with CUDA-accelerated block processing
+            using 80% of available GPU memory for optimal performance.
+
         Args:
             bvp_core (BVPCore): BVP core framework instance.
         """
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
+
+        # Initialize CUDA processor for block processing with 80% GPU memory
+        try:
+            from .cuda import LevelCCUDAProcessor
+
+            self.cuda_processor = LevelCCUDAProcessor(bvp_core, use_cuda=True)
+            self.use_cuda = self.cuda_processor.cuda_available
+            self.block_size = self.cuda_processor.block_size
+            self.logger.info(
+                f"Mode beating analysis initialized with CUDA block processing: "
+                f"block_size={self.block_size}, using 80% GPU memory"
+            )
+        except Exception as e:
+            self.logger.warning(
+                f"CUDA processor initialization failed: {e}, using CPU"
+            )
+            self.cuda_processor = None
+            self.use_cuda = False
+            self.block_size = 8  # Default CPU block size
 
         # Initialize sub-analyzers
         self.background_analyzer = BackgroundBeatingAnalyzer(bvp_core)

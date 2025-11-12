@@ -104,6 +104,7 @@ bhlff-run = "bhlff.cli.run:main"
 bhlff-analyze = "bhlff.cli.analyze:main"
 bhlff-report = "bhlff.cli.report:main"
 bhlff-cuda-smoke = "bhlff.cli.cuda_smoke:main"
+bhlff-quench-detect = "bhlff.cli.quench_detect:main"
 
 [tool.setuptools.packages.find]
 include = ["bhlff*"]

@@ -37,10 +37,11 @@ except ImportError:
 from .block_processor import BlockProcessor
 from .domain import Domain
 from ...utils.memory_monitor import MemoryMonitor
-from .enhanced_block_processing import ProcessingConfig
+from .enhanced_block_processing import ProcessingConfig, ProcessingMode
 from .enhanced_block_processing.gpu_block_processor import GPUBlockProcessor
 from .enhanced_block_processing.cpu_block_processor import CPUBlockProcessor
 from .enhanced_block_processing.field_processing_strategy import FieldProcessingStrategy
+from .enhanced_block_processing.field_processor import FieldProcessor
 from .enhanced_block_processing_core import EnhancedBlockProcessorCore
 from .enhanced_block_processing_utils import EnhancedBlockProcessorUtils
 
@@ -109,6 +110,14 @@ class EnhancedBlockProcessor:
             self.processing_strategy,
             self.cuda_available,
             self.config.mode,
+            self.logger,
+        )
+
+        # Initialize field processor for internal processing methods
+        self.field_processor = FieldProcessor(
+            self.processing_strategy,
+            self.base_processor,
+            self.cuda_available,
             self.logger,
         )
 
@@ -228,11 +237,10 @@ class EnhancedBlockProcessor:
             self.logger.warning(
                 "Insufficient memory, using fallback processing (non_level_c=True explicitly set)"
             )
-            result = self.core.fallback_processing(
+            result = self.field_processor.fallback_processing(
                 field,
                 operation,
                 self.config.min_block_size,
-                self.base_processor,
                 **kwargs,
             )
             self.stats["blocks_processed"] = getattr(
@@ -241,11 +249,11 @@ class EnhancedBlockProcessor:
             self.stats["fallback_count"] += 1
             return result
 
-        # For non-Level C, use core processing method
+        # For non-Level C, use internal processing method with 7D operations
         # This method handles CPU fallback only if explicitly enabled
         # Default to 7D operations for optimal performance with vectorization
         kwargs.setdefault("use_7d_operations", True)
-        result = self.core.process_field(field, operation, **kwargs)
+        result = self.field_processor.process_field(field, operation, **kwargs)
         self.stats["blocks_processed"] = getattr(
             self.processing_strategy, "_last_block_count", 0
         )

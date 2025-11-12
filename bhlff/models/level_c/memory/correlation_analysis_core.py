@@ -100,7 +100,8 @@ class CorrelationAnalysisCore:
 
         Physical Meaning:
             Creates an initial field configuration for
-            correlation analysis.
+            correlation analysis using block-based processing
+            when field size exceeds memory limits.
 
         Args:
             domain (Dict[str, Any]): Domain parameters.
@@ -110,6 +111,46 @@ class CorrelationAnalysisCore:
         """
         N = domain.get("N", 64)
         L = domain.get("L", 1.0)
+
+        # Use BlockedFieldGenerator for large fields
+        if N**3 > 64**3:  # Threshold for block processing
+            from bhlff.core.sources.blocked_field_generator import BlockedFieldGenerator
+            from bhlff.core.domain import Domain as DomainClass
+
+            # Create 7D domain object (required by Domain class)
+            # Level C works with 3D spatial fields, but Domain requires 7D
+            domain_obj = DomainClass(L=L, N=N, N_phi=4, N_t=8, T=1.0, dimensions=7)
+
+            # Create field generator function
+            def field_generator(
+                domain: DomainClass,
+                slice_config: Dict[str, Any],
+                config: Dict[str, Any],
+            ) -> np.ndarray:
+                """Generate initial field block with random perturbations."""
+                block_shape = slice_config["shape"]
+                field_block = np.random.rand(*block_shape) + 1j * np.random.rand(
+                    *block_shape
+                )
+                field_block *= 0.1  # Small amplitude
+                return field_block
+
+            # Use BlockedFieldGenerator
+            generator = BlockedFieldGenerator(domain_obj, field_generator)
+            blocked_field = generator.get_field()
+
+            # Convert to full array (for compatibility)
+            field = np.zeros((N, N, N), dtype=np.complex128)
+            for i in range(0, N, 64):
+                for j in range(0, N, 64):
+                    for k in range(0, N, 64):
+                        i_end = min(i + 64, N)
+                        j_end = min(j + 64, N)
+                        k_end = min(k + 64, N)
+                        field[i:i_end, j:j_end, k:k_end] = blocked_field[
+                            i:i_end, j:j_end, k:k_end
+                        ]
+            return field
 
         # Create coordinate arrays
         x = np.linspace(0, L, N)

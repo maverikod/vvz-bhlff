@@ -228,14 +228,31 @@ def memory_protected_class_method(
                     dtype = args[1]
 
             # Check memory usage if shape is available
+            # For methods that support block processing (like solve_envelope),
+            # allow them to proceed - they will automatically use block processing
             if shape is not None:
                 try:
                     protector.check_memory_usage(shape, dtype)
                 except MemoryError as e:
-                    raise MemoryError(
-                        f"Memory protection triggered in {func.__name__}: {e}. "
-                        f"Consider reducing domain size or using lower precision."
+                    # Check if method supports block processing
+                    # Methods that handle BlockedField or have _block_processor
+                    # should be allowed to proceed - they'll use blocks automatically
+                    supports_block_processing = (
+                        hasattr(self, '_block_processor') or
+                        hasattr(self, 'solve_envelope_blocked') or
+                        func.__name__ == 'solve_envelope'  # This method handles blocks
                     )
+                    
+                    if supports_block_processing:
+                        # Method supports block processing - let it handle memory
+                        # It will automatically use blocks for large domains
+                        pass
+                    else:
+                        # No block processing available - raise error
+                        raise MemoryError(
+                            f"Memory protection triggered in {func.__name__}: {e}. "
+                            f"Consider reducing domain size or using lower precision."
+                        )
 
             # Execute the method
             return func(self, *args, **kwargs)

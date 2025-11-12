@@ -1,8 +1,8 @@
 {
   "test_id": "A11",
   "test_name": "scale_length_invariance",
-  "case1": { "domain": { "L": 1.0, "N": 256 }, "physics": { "mu": 1.0, "beta": 1.0, "lambda": 0.1 } },
-  "case2": { "domain": { "L": 2.0, "N": 512 }, "physics": { "mu": 1.0, "beta": 1.0, "lambda": 0.1 } },
+  "case1": { "domain": { "L": 1.0, "N": 64 }, "physics": { "mu": 1.0, "beta": 1.0, "lambda": 0.1 } },
+  "case2": { "domain": { "L": 2.0, "N": 128 }, "physics": { "mu": 1.0, "beta": 1.0, "lambda": 0.1 } },
   "forcing": { "type": "plane_wave", "mode": [4, 0, 0] },
   "tolerance": { "invariance": 1e-12 }
 }

@@ -45,7 +45,13 @@ class TopologicalSubstrateGenerator:
     def __init__(self, domain: "Domain", config: Dict[str, Any]) -> None:
         self.domain = domain
         self.config = config
-        self.use_cuda = bool(config.get("use_cuda", False)) and CUDA_AVAILABLE
+        use_cuda_flag = bool(config.get("use_cuda", True))  # CUDA required by default
+        if use_cuda_flag and not CUDA_AVAILABLE:
+            raise RuntimeError(
+                "CUDA is required for TopologicalSubstrateGenerator. "
+                "Install cupy to enable GPU acceleration."
+            )
+        self.use_cuda = use_cuda_flag and CUDA_AVAILABLE
 
     def generate_topological_substrate(
         self, defect_config: Dict[str, Any]

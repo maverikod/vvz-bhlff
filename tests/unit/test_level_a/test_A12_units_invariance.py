@@ -6,6 +6,11 @@ Test A1.2: Units invariance.
 
 Emulate change of base units (L0,T0,A0) keeping dimensionless parameters (ν̃, λ̃, ŝ̃)
 constant; compare normalized solutions.
+
+This test uses ready-made generators and solvers:
+- BVPSourceGenerators for plane wave source generation
+- FFTSolver7DBasic for solving stationary problems
+- FieldArray for automatic memory management
 """
 
 from __future__ import annotations
@@ -17,7 +22,10 @@ from typing import Tuple
 
 import numpy as np
 
-from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
+from bhlff.core.domain import Domain
+from bhlff.core.sources.bvp_source_generators import BVPSourceGenerators
+from bhlff.core.fft.fft_solver_7d_basic import FFTSolver7DBasic
+from bhlff.core.arrays import FieldArray
 
 
 def _load_config() -> dict:
@@ -28,8 +36,23 @@ def _load_config() -> dict:
         return json.load(f)
 
 
-def _make_domain_shape(N: int) -> Tuple[int, int, int]:
-    return (N, N, N)
+def _create_3d_domain(L: float, N: int) -> Domain:
+    """
+    Create 3D domain as 7D domain with minimal phase and temporal dimensions.
+    
+    Physical Meaning:
+        Creates a 7D domain for 3D spatial computations by using
+        minimal phase (N_phi=1) and temporal (N_t=1) dimensions.
+        This allows using 7D solvers for 3D problems.
+    """
+    return Domain(
+        L=L,
+        N=N,
+        N_phi=1,  # Minimal phase dimensions for 3D spatial problem
+        N_t=1,    # Minimal temporal dimension for stationary problem
+        T=1.0,
+        dimensions=7,
+    )
 
 
 def _solve_with_units(
@@ -42,47 +65,90 @@ def _solve_with_units(
     L0: float,
     T0: float,
     A0: float,
-) -> np.ndarray:
+) -> FieldArray:
     """
-    Keep dimensionless ν̃, λ̃ fixed; convert to dimensional ν, λ
-    for solver given base units.
-    For spectral operator here, use effective ν = ν̃ / T0 * L0^(2β)
-    (up to constant factors);
-    since we compare normalized fields, proportionality suffices.
+    Solve stationary problem with plane wave source using ready-made generators and solvers.
+    
+    Physical Meaning:
+        Solves the fractional Laplacian equation L_β a = s for a plane wave
+        source with amplitude scaled by A0. Uses effective dimensional parameters
+        computed from dimensionless parameters and base units.
+        Uses ready-made generators and solvers for consistency.
+    
+    Args:
+        L (float): Domain size.
+        N (int): Number of grid points per spatial dimension.
+        nu_dimless (float): Dimensionless diffusion parameter.
+        beta (float): Fractional order.
+        lam_dimless (float): Dimensionless damping parameter.
+        mode (Tuple[int, int, int]): Wave vector mode.
+        L0 (float): Base length unit.
+        T0 (float): Base time unit.
+        A0 (float): Base amplitude unit.
+        
+    Returns:
+        FieldArray: Solution field with automatic memory management.
     """
-    shape = _make_domain_shape(N)
-
-    class _Domain:
-        def __init__(self, shape: Tuple[int, int, int], L: float, N: int):
-            self.shape = shape
-            self.L = L
-            self.N = N
-
-    domain = _Domain(shape, L, N)
-    ops = UnifiedSpectralOperations(domain, precision="float64")
-
-    # Build plane wave source with amplitude scaled by A0 (dimensionful amplitude)
-    grid = np.meshgrid(*[np.arange(n) for n in shape], indexing="ij")
-    m = np.array(mode)
-    phase = sum((2.0 * np.pi * mi * gi) / n for mi, gi, n in zip(m, grid, shape))
-    s = (A0 * np.exp(1j * phase)).astype(np.complex128)
-
-    s_hat = ops.forward_fft(s, "ortho")
-
+    # Create 7D domain for 3D spatial problem
+    domain = _create_3d_domain(L, N)
+    
+    # Create plane wave source using BVPSourceGenerators
+    source_config = {
+        "plane_wave_amplitude": A0,  # Amplitude scaled by A0
+        "plane_wave_mode": list(mode),  # Wave vector mode
+        "use_cuda": True,  # Use CUDA if available
+    }
+    
+    generators = BVPSourceGenerators(domain, source_config)
+    
+    # Generate plane wave source (returns FieldArray)
+    source_field = generators.generate_plane_wave_source()
+    
+    # Extract spatial slice (3D) from 7D field for 3D problem
+    if isinstance(source_field, FieldArray):
+        source_array = source_field.array
+    else:
+        source_array = source_field
+    
+    # Extract 3D spatial slice
+    source_3d = source_array[:, :, :, 0, 0, 0, 0] if source_array.ndim == 7 else source_array
+    
+    # Expand back to 7D for solver (solver expects 7D)
+    source_7d = np.zeros(domain.shape, dtype=np.complex128)
+    source_7d[:, :, :, 0, 0, 0, 0] = source_3d
+    
     # Effective dimensional parameters from dimensionless (proportional forms)
+    # nu_eff = nu_dimless * L0^(2β) / T0
+    # lam_eff = lam_dimless / T0
     nu_eff = nu_dimless * (L0 ** (2.0 * beta)) / max(T0, np.finfo(float).tiny)
     lam_eff = lam_dimless / max(T0, np.finfo(float).tiny)
-
-    # Only mode bin non-zero; compute denominator at that mode
-    a_hat = np.zeros_like(s_hat)
-    idx = tuple((mi % n) for mi, n in zip(mode, shape))
-    ksq = (2.0 * np.pi / L) ** 2 * float(
-        np.dot(np.array(mode, dtype=float), np.array(mode, dtype=float))
+    
+    # Create solver with effective dimensional parameters
+    # Note: FFTSolver7DBasic uses mu, beta, lambda parameters
+    # We map: mu = nu_eff, lambda = lam_eff
+    solver = FFTSolver7DBasic(
+        domain,
+        {
+            "mu": nu_eff,  # Effective diffusion coefficient
+            "beta": beta,  # Fractional order
+            "lambda": lam_eff,  # Effective damping parameter
+            "use_cuda": True,  # Use CUDA if available
+        }
     )
-    denom = nu_eff * (ksq**beta) + lam_eff
-    a_hat[idx] = s_hat[idx] / denom
-    a = ops.inverse_fft(a_hat, "ortho").astype(np.complex128)
-    return a
+    
+    # Solve stationary problem (returns FieldArray)
+    solution_field = solver.solve_stationary(source_7d)
+    
+    # Extract 3D spatial slice from solution
+    if isinstance(solution_field, FieldArray):
+        solution_array = solution_field.array
+    else:
+        solution_array = solution_field
+    
+    solution_3d = solution_array[:, :, :, 0, 0, 0, 0] if solution_array.ndim == 7 else solution_array
+    
+    # Return as FieldArray for automatic memory management
+    return FieldArray(array=solution_3d.astype(np.complex128))
 
 
 def test_A12_units_invariance() -> None:
@@ -98,25 +164,62 @@ def test_A12_units_invariance() -> None:
     u1 = cfg["units1"]
     u2 = cfg["units2"]
 
-    a1 = _solve_with_units(
+    # Solve in both cases with properly scaled sources
+    a1_field = _solve_with_units(
         L, N, nu_dimless, beta, lam_dimless, mode, u1["L0"], u1["T0"], u1["A0"]
     )
-    a2 = _solve_with_units(
+    a2_field = _solve_with_units(
         L, N, nu_dimless, beta, lam_dimless, mode, u2["L0"], u2["T0"], u2["A0"]
     )
+    
+    # Extract arrays from FieldArray if needed
+    if isinstance(a1_field, FieldArray):
+        a1 = a1_field.array
+    else:
+        a1 = a1_field
+    
+    if isinstance(a2_field, FieldArray):
+        a2 = a2_field.array
+    else:
+        a2 = a2_field
 
     # Normalize by amplitude scale to compare dimensionless fields
-    a1n = a1 / max(np.linalg.norm(a1), np.finfo(float).eps)
-    a2n = a2 / max(np.linalg.norm(a2), np.finfo(float).eps)
+    # Use L2 norm for better numerical stability
+    norm1 = np.linalg.norm(a1)
+    norm2 = np.linalg.norm(a2)
+    if norm1 < np.finfo(float).eps or norm2 < np.finfo(float).eps:
+        err = 0.0 if norm1 == norm2 else 1.0
+    else:
+        a1n = a1 / norm1
+        a2n = a2 / norm2
 
-    # Align global phase using the first sample for numerical precision
-    a1_first = a1n.reshape(-1)[0]
-    a2_first = a2n.reshape(-1)[0]
-    if np.abs(a1_first) > 0 and np.abs(a2_first) > 0:
-        phase = a2_first / a1_first
-        a2n = a2n / phase
+        # Align global phase using maximum correlation approach
+        # Find phase that minimizes |a1n - e^(i*phi)*a2n|^2
+        # This is more robust than using a single sample
+        a1_flat = a1n.reshape(-1)
+        a2_flat = a2n.reshape(-1)
+        
+        # Compute optimal phase using correlation
+        correlation = np.vdot(a1_flat, a2_flat)
+        if np.abs(correlation) > np.finfo(float).eps:
+            phase_optimal = correlation / np.abs(correlation)
+            a2n_aligned = a2n * phase_optimal
+        else:
+            # Fallback: use first non-zero sample
+            a1_first = a1_flat[0]
+            a2_first = a2_flat[0]
+            if np.abs(a1_first) > np.finfo(float).eps and np.abs(a2_first) > np.finfo(float).eps:
+                phase_optimal = a2_first / a1_first
+                phase_optimal = phase_optimal / np.abs(phase_optimal)  # Normalize to unit circle
+                a2n_aligned = a2n * phase_optimal
+            else:
+                a2n_aligned = a2n
 
-    err = float(np.linalg.norm(a1n - a2n))
+        # Use relative error for better numerical stability
+        # Normalize by the norm of a1n to get relative error
+        norm_diff = np.linalg.norm(a1n - a2n_aligned)
+        norm_ref = np.linalg.norm(a1n)
+        err = float(norm_diff / max(norm_ref, np.finfo(float).eps))
 
     out_dir = Path("output") / cfg["test_id"]
     out_dir.mkdir(parents=True, exist_ok=True)

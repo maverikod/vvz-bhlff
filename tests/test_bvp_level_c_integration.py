@@ -27,6 +27,8 @@ from typing import Dict, Any
 from bhlff.core.domain import Domain
 from bhlff.core.bvp import BVPCore, BVPInterface
 from bhlff.core.bvp.bvp_envelope_solver import BVPEnvelopeSolver
+from bhlff.core.sources.bvp_source import BVPSource
+from bhlff.core.sources.blocked_field_generator import BlockedField
 from bhlff.solvers.integrators import TimeIntegrator
 
 
@@ -35,13 +37,18 @@ class TestBVPLevelCIntegration:
 
     @pytest.fixture
     def domain(self):
-        """Create test domain."""
-        return Domain(
-            dimensions=3,
-            size=(1.0, 1.0, 1.0),
-            resolution=(64, 64, 64),
-            boundary_conditions="periodic",
+        """Create test domain with safe size for testing."""
+        # Use smaller size for tests to avoid memory issues and blocked generation
+        # Tests should be fast and not hang the system
+        domain = Domain(
+            L=1.0,
+            N=16,  # Smaller size for fast tests, avoids blocked generation
+            dimensions=7,
+            N_phi=4,  # Reduced for faster tests
+            N_t=8,    # Reduced for faster tests
+            T=1.0,
         )
+        return domain
 
     @pytest.fixture
     def bvp_config(self):
@@ -65,9 +72,18 @@ class TestBVPLevelCIntegration:
         """Test C1: BVP Boundary Effects."""
         bvp_core = BVPCore(domain, bvp_config)
 
-        # Create envelope with boundary effects
-        source = np.zeros(domain.shape)
-        source[32, 32, 32] = 1.0
+        # Use ready-made BVP source generator (as in Level B tests)
+        source_config = {
+            "carrier_frequency": bvp_config.get("carrier_frequency", 1.85e43),
+            "envelope_amplitude": 1.0,
+            "base_source_type": "gaussian",
+        }
+        bvp_source = BVPSource(domain, source_config)
+        source = bvp_source.generate()
+        
+        # BlockedField is automatically handled by solve_envelope
+        # Both generation and solving use block processing automatically
+        # solve_envelope accepts both np.ndarray and BlockedField
         envelope = bvp_core.solve_envelope(source)
 
         # Test BVP impedance calculation
@@ -85,9 +101,17 @@ class TestBVPLevelCIntegration:
         # Test BVP interface for resonator chains
         bvp_interface = BVPInterface(bvp_core)
 
-        # Create test envelope
-        source = np.zeros(domain.shape)
-        source[32, 32, 32] = 1.0
+        # Use ready-made BVP source generator
+        source_config = {
+            "carrier_frequency": bvp_config.get("carrier_frequency", 1.85e43),
+            "envelope_amplitude": 1.0,
+            "base_source_type": "gaussian",
+        }
+        bvp_source = BVPSource(domain, source_config)
+        source = bvp_source.generate()
+        
+        # BlockedField is automatically handled by solve_envelope
+        # Block processing is automatic in both generation and solving
         envelope = bvp_core.solve_envelope(source)
 
         # Test interface with tail resonators
@@ -102,9 +126,17 @@ class TestBVPLevelCIntegration:
         """Test C3: BVP Quench Memory."""
         bvp_core = BVPCore(domain, bvp_config)
 
-        # Create envelope with quench events
-        source = np.zeros(domain.shape)
-        source[32, 32, 32] = 1.0
+        # Use ready-made BVP source generator
+        source_config = {
+            "carrier_frequency": bvp_config.get("carrier_frequency", 1.85e43),
+            "envelope_amplitude": 1.0,
+            "base_source_type": "gaussian",
+        }
+        bvp_source = BVPSource(domain, source_config)
+        source = bvp_source.generate()
+        
+        # BlockedField is automatically handled by solve_envelope
+        # Block processing is automatic in both generation and solving
         envelope = bvp_core.solve_envelope(source)
 
         # Test quench detection

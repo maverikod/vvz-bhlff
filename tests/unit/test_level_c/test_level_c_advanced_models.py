@@ -52,15 +52,18 @@ class TestQuenchEvent:
             Tests that QuenchEvent objects are created correctly
             with proper parameter assignment.
         """
-        location = np.array([1.0, 2.0, 3.0])
+        spatial_position = np.array([1.0, 2.0, 3.0])
         event = QuenchEvent(
-            location=location, time=5.0, intensity=0.8, threshold_type="amplitude"
+            timestamp=5.0,
+            intensity=0.8,
+            spatial_position=spatial_position,
+            event_type="amplitude"
         )
 
-        assert np.array_equal(event.location, location)
-        assert event.time == 5.0
+        assert np.array_equal(event.spatial_position, spatial_position)
+        assert event.timestamp == 5.0
         assert event.intensity == 0.8
-        assert event.threshold_type == "amplitude"
+        assert event.event_type == "amplitude"
 
     def test_quench_event_types(self):
         """

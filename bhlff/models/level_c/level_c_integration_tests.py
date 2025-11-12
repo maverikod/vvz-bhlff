@@ -22,7 +22,8 @@ import logging
 
 from bhlff.core.bvp import BVPCore
 from .boundary_analysis import BoundaryAnalysis
-from .abcd_model import ABCDModel, ResonatorLayer
+from .abcd_model import ABCDModel
+from .abcd import ResonatorLayer
 from .quench_memory_analysis import QuenchMemoryAnalysis
 from .mode_beating_analysis import ModeBeatingAnalysis
 
@@ -59,7 +60,7 @@ class LevelCIntegrationTests:
 
         # Initialize analysis modules
         self.boundary_analysis = BoundaryAnalysis(bvp_core)
-        self.abcd_model = ABCDModel(bvp_core)
+        self.abcd_model = ABCDModel(bvp_core=bvp_core)  # Use keyword argument
         self.quench_memory_analysis = QuenchMemoryAnalysis(bvp_core)
         self.mode_beating_analysis = ModeBeatingAnalysis(bvp_core)
 
@@ -86,8 +87,8 @@ class LevelCIntegrationTests:
         resonator_layers = self._create_resonator_layers(test_config)
 
         # Run boundary analysis
-        boundary_results = self.boundary_analysis.analyze_boundary_effects(
-            test_config.domain, resonator_layers, test_config.boundary_params
+        boundary_results = self.boundary_analysis.analyze_single_wall(
+            test_config.domain, test_config.boundary_params
         )
 
         # Run ABCD analysis
@@ -161,8 +162,10 @@ class LevelCIntegrationTests:
         self.logger.info("Starting C3 test: Quench memory analysis")
 
         # Run quench memory analysis
+        # Combine memory_params and time_params into single dict
+        combined_params = {**test_config.memory_params, "time_params": test_config.time_params}
         memory_results = self.quench_memory_analysis.analyze_quench_memory(
-            test_config.domain, test_config.memory_params, test_config.time_params
+            test_config.domain, combined_params
         )
 
         c3_results = {
@@ -226,10 +229,14 @@ class LevelCIntegrationTests:
         layers = []
 
         for i in range(test_config.num_layers):
+            # ResonatorLayer requires: radius, thickness, contrast
+            # Use reasonable defaults for test
             layer = ResonatorLayer(
+                radius=0.1 + i * test_config.layer_spacing,  # Position-dependent radius
                 thickness=test_config.layer_thickness,
-                impedance=test_config.layer_impedance,
-                position=i * test_config.layer_spacing,
+                contrast=0.1 * i,  # Varying contrast for different layers
+                memory_gamma=0.0,  # No memory for basic test
+                memory_tau=1.0,
             )
             layers.append(layer)
 

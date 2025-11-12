@@ -37,10 +37,12 @@ class TestBVPLevelAIntegration:
     def domain(self):
         """Create test domain."""
         return Domain(
-            dimensions=3,
-            size=(1.0, 1.0, 1.0),
-            resolution=(64, 64, 64),
-            boundary_conditions="periodic",
+            L=1.0,
+            N=16,  # Reduced for testing
+            N_phi=4,
+            N_t=4,
+            T=1.0,
+            dimensions=7,
         )
 
     @pytest.fixture
@@ -68,7 +70,10 @@ class TestBVPLevelAIntegration:
 
         # Validate BVP envelope solver
         source = np.zeros(domain.shape)
-        source[32, 32, 32] = 1.0
+        center_idx = domain.N // 2
+        phi_center = domain.N_phi // 2
+        t_center = domain.N_t // 2
+        source[center_idx, center_idx, center_idx, phi_center, phi_center, phi_center, t_center] = 1.0
         envelope = bvp_core.solve_envelope(source)
         assert envelope.shape == domain.shape
 
@@ -93,7 +98,10 @@ class TestBVPLevelAIntegration:
 
         # Test BVP envelope equation solution
         source = np.zeros(domain.shape)
-        source[32, 32, 32, 16, 16, 16, 50] = 1.0  # 7D source
+        center_idx = domain.N // 2
+        phi_center = domain.N_phi // 2
+        t_center = domain.N_t // 2
+        source[center_idx, center_idx, center_idx, phi_center, phi_center, phi_center, t_center] = 1.0  # 7D source
         envelope = envelope_solver.solve_envelope(source)
         assert envelope.shape == domain.shape
 
@@ -112,7 +120,10 @@ class TestBVPLevelAIntegration:
         bvp_core2 = BVPCore(domain, config2)
 
         source = np.zeros(domain.shape)
-        source[32, 32, 32] = 1.0
+        center_idx = domain.N // 2
+        phi_center = domain.N_phi // 2
+        t_center = domain.N_t // 2
+        source[center_idx, center_idx, center_idx, phi_center, phi_center, phi_center, t_center] = 1.0
 
         envelope1 = bvp_core1.solve_envelope(source)
         envelope2 = bvp_core2.solve_envelope(source)

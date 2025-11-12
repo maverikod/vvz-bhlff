@@ -38,6 +38,7 @@ except ImportError:
 
 from .block_processor import BlockProcessor, BlockInfo
 from .domain import Domain
+from .optimal_block_size_calculator import OptimalBlockSizeCalculator
 from ...utils.memory_monitor import MemoryMonitor
 
 
@@ -105,6 +106,11 @@ class OptimizedBlockProcessor:
         # CUDA availability
         self.cuda_available = CUDA_AVAILABLE and self.config.enable_gpu_acceleration
 
+        # Initialize unified block size calculator
+        self._block_size_calculator = OptimalBlockSizeCalculator(
+            gpu_memory_ratio=0.8  # Use 80% GPU memory (project requirement)
+        )
+
         # Calculate optimal block size
         self.block_size = self._calculate_optimal_block_size()
 
@@ -134,8 +140,51 @@ class OptimizedBlockProcessor:
 
         Physical Meaning:
             Calculates optimal block size to maximize processing efficiency
-            while staying within memory constraints.
+            while staying within memory constraints. Uses unified
+            OptimalBlockSizeCalculator for consistent 80% GPU memory usage.
 
+        Returns:
+            int: Optimal block size.
+        """
+        # Use unified block size calculator
+        try:
+            block_tiling = self._block_size_calculator.calculate_for_7d(
+                domain_shape=self.domain.shape,
+                dtype=np.complex128,
+                overhead_factor=5.0,
+            )
+            # Use minimum block size from tiling
+            optimal_size = min(block_tiling)
+            
+            # Apply config constraints
+            optimal_size = min(optimal_size, self.config.block_size)
+            optimal_size = max(optimal_size, 2)  # Minimum block size
+            
+            # Ensure it's reasonable for the domain
+            for dim_size in self.domain.shape:
+                optimal_size = min(optimal_size, dim_size)
+            
+            self.logger.info(
+                f"Optimal block size (via unified calculator): {optimal_size} "
+                f"(from tiling: {block_tiling}, GPU memory ratio: 80%)"
+            )
+            return optimal_size
+        except Exception as e:
+            self.logger.warning(
+                f"Failed to compute optimal block size with unified calculator: {e}, "
+                f"falling back to legacy calculation"
+            )
+            # Fallback to legacy calculation
+            return self._calculate_optimal_block_size_legacy()
+    
+    def _calculate_optimal_block_size_legacy(self) -> int:
+        """
+        Legacy block size calculation (fallback).
+        
+        Physical Meaning:
+            Legacy calculation method used as fallback when unified
+            calculator fails.
+            
         Returns:
             int: Optimal block size.
         """
@@ -162,7 +211,7 @@ class OptimizedBlockProcessor:
             optimal_size = min(optimal_size, dim_size)
 
         self.logger.info(
-            f"Optimal block size: {optimal_size} "
+            f"Optimal block size (legacy): {optimal_size} "
             f"(available memory: {available_memory_gb:.2f} GB)"
         )
 

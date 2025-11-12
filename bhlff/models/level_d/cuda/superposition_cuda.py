@@ -111,13 +111,7 @@ class MultiModeModelCUDA:
             return 8
 
         try:
-            mem_info = self.backend.get_memory_info()
-            free_memory_bytes = mem_info["free_memory"]
-            # Use 80% of free memory
-            available_memory_bytes = int(free_memory_bytes * 0.8)
-
-            # Memory per element (complex128 = 16 bytes)
-            bytes_per_element = 16
+            from ....utils.cuda_utils import calculate_optimal_window_memory
 
             # For multimode operations, we need space for:
             # - Input field: 1x
@@ -127,23 +121,21 @@ class MultiModeModelCUDA:
             # Total overhead: ~7x
             overhead_factor = 7
 
-            # Maximum elements per block
-            max_elements = available_memory_bytes // (
-                bytes_per_element * overhead_factor
+            max_window_elements, _, _ = calculate_optimal_window_memory(
+                gpu_memory_ratio=0.8,
+                overhead_factor=overhead_factor,
+                logger=self.logger,
             )
 
             # Calculate block size per dimension
             n_dims = len(self.domain.shape)
-            elements_per_dim = int(max_elements ** (1.0 / n_dims))
+            elements_per_dim = int(max_window_elements ** (1.0 / n_dims))
 
             # Ensure reasonable bounds (4 to 128)
             block_size = max(4, min(elements_per_dim, 128))
 
             self.block_size = block_size
-            self.logger.info(
-                f"Optimal block size: {block_size} "
-                f"(available GPU memory: {available_memory_bytes / 1e9:.2f} GB, using 80%)"
-            )
+            self.logger.info(f"Optimal block size: {block_size}")
 
             return block_size
 

@@ -39,6 +39,9 @@ from .scaling_functions import (
     identify_critical_regions as _identify_regions,
 )
 from .anomalous_dimension import compute_anomalous_dimension as _est_eta
+from .dynamic_exponent_calculator import DynamicExponentCalculator
+from .scaling_relations import ScalingRelations
+from .universality_classifier import UniversalityClassifier
 
 
 class CriticalExponents:
@@ -54,6 +57,9 @@ class CriticalExponents:
         """Initialize critical exponents analyzer."""
         self.bvp_core = bvp_core
         self.logger = logging.getLogger(__name__)
+        self.dynamic_calculator = DynamicExponentCalculator(bvp_core)
+        self.scaling_relations = ScalingRelations()
+        self.universality_classifier = UniversalityClassifier()
 
     def analyze_critical_behavior(self, envelope: np.ndarray) -> Dict[str, Any]:
         """
@@ -200,20 +206,7 @@ class CriticalExponents:
         beta = self._compute_order_parameter_exponent(amplitude)
         gamma = self._compute_susceptibility_exponent(amplitude)
 
-        # Validate β > 0 (no fixed fallback)
-        if beta <= 0:
-            raise ValueError(
-                f"Cannot compute δ: β = {beta} ≤ 0. "
-                f"Order parameter exponent must be positive."
-            )
-
-        delta = (gamma + beta) / beta
-
-        # Validate result (no fixed fallback)
-        if not np.isfinite(delta):
-            raise ValueError(f"computed δ is not finite: {delta} (γ={gamma}, β={beta})")
-
-        return float(delta)
+        return self.scaling_relations.compute_critical_isotherm_exponent(beta, gamma)
 
     def _compute_anomalous_dimension(self, amplitude: np.ndarray) -> float:
         """Compute anomalous dimension η."""
@@ -248,13 +241,7 @@ class CriticalExponents:
         # Explicit 7D dimension for 7D phase field theory
         d = 7
 
-        alpha = 2 - nu * d
-
-        # Validate result (no fixed fallback)
-        if not np.isfinite(alpha):
-            raise ValueError(f"computed α is not finite: {alpha} (ν={nu}, d={d})")
-
-        return float(alpha)
+        return self.scaling_relations.compute_specific_heat_exponent(nu, d)
 
     def _compute_dynamic_exponent(self, amplitude: np.ndarray) -> float:
         """
@@ -281,97 +268,7 @@ class CriticalExponents:
         Raises:
             ValueError: If insufficient block data or z is not finite.
         """
-        from .correlation_analysis import CorrelationAnalysis
-        from .robust_fit import robust_loglog_slope
-        from .block_utils import iter_blocks
-        from .cuda_estimator_utils import (
-            get_cuda_backend,
-            compute_block_statistics_cuda,
-        )
-
-        cuda_backend = get_cuda_backend()
-        correlation_analyzer = CorrelationAnalysis(self.bvp_core)
-
-        # Block-wise estimation of z from τ ~ ξ^z
-        xi_vals: List[float] = []
-        tau_vals: List[float] = []
-        total_elems = amplitude.size
-
-        # Adaptive minimum block size for 7D structure
-        min_block_elems = max(128, min(262144, int(0.002 * total_elems)))
-
-        block_count = 0
-        for block in iter_blocks(amplitude):
-            block_arr = amplitude[block]
-            if block_arr.size < min_block_elems:
-                continue
-
-            try:
-                # Compute block statistics using CUDA if available
-                if cuda_backend is not None:
-                    mean_amp, variance = compute_block_statistics_cuda(
-                        block_arr, cuda_backend
-                    )
-                else:
-                    mean_amp = float(np.mean(block_arr))
-                    variance = float(np.var(block_arr))
-
-                # Validate statistics
-                if mean_amp <= 1e-12 or not np.isfinite(mean_amp):
-                    continue
-                if variance <= 0 or not np.isfinite(variance):
-                    continue
-
-                # Estimate relaxation time scale from fluctuation-to-mean ratio
-                # τ ~ variance / (mean^2) for diffusive systems
-                tau = variance / (mean_amp**2) if mean_amp > 0 else 1.0
-
-                # Compute correlation length for this block
-                corr_7d = correlation_analyzer._compute_7d_correlation_function(
-                    block_arr
-                )
-                corr_lengths = correlation_analyzer._compute_7d_correlation_lengths(
-                    corr_7d
-                )
-
-                if not corr_lengths:
-                    continue
-
-                # Average correlation length across 7 dimensions
-                xi = float(np.mean(list(corr_lengths.values())))
-
-                # Validate values
-                if xi > 1e-12 and tau > 1e-12 and np.isfinite(xi) and np.isfinite(tau):
-                    xi_vals.append(xi)
-                    tau_vals.append(tau)
-                    block_count += 1
-            except Exception as e:
-                self.logger.debug(f"Dynamic exponent computation failed for block: {e}")
-                continue
-
-        if len(xi_vals) < 3:
-            raise ValueError(
-                f"insufficient block data for z estimate: only {len(xi_vals)} blocks "
-                f"with valid correlations (need ≥3)"
-            )
-
-        # Robust log-log fit: log(τ) ~ z*log(ξ)
-        slope = robust_loglog_slope(np.asarray(xi_vals), np.asarray(tau_vals))
-        z = slope
-
-        # Validate result (no fixed fallback)
-        if not np.isfinite(z):
-            raise ValueError(
-                f"computed z is not finite: {z} from {len(xi_vals)} blocks"
-            )
-
-        self.logger.info(
-            f"Estimated z={z:.4f} from {block_count} blocks "
-            f"(ξ range: [{min(xi_vals):.2e}, {max(xi_vals):.2e}], "
-            f"τ range: [{min(tau_vals):.2e}, {max(tau_vals):.2e}])"
-        )
-
-        return float(z)
+        return self.dynamic_calculator.compute_dynamic_exponent(amplitude)
 
     def _identify_critical_regions(
         self, amplitude: np.ndarray, critical_exponents: Dict[str, float]
@@ -405,7 +302,6 @@ class CriticalExponents:
             KeyError: If required exponents are missing.
             ValueError: If computed d_eff is not finite.
         """
-        # Use scaling relation: d_eff = 2 - α - β
         # Require explicit values (no defaults)
         if "alpha" not in critical_exponents:
             raise KeyError("Missing 'alpha' exponent for scaling dimension computation")
@@ -415,41 +311,27 @@ class CriticalExponents:
         alpha = critical_exponents["alpha"]
         beta = critical_exponents["beta"]
 
-        d_eff = 2 - alpha - beta
-
-        # Validate result (no fixed bounds, but check finiteness)
-        if not np.isfinite(d_eff):
-            raise ValueError(
-                f"computed d_eff is not finite: {d_eff} (α={alpha}, β={beta})"
-            )
-
-        return float(d_eff)
+        return self.scaling_relations.compute_7d_scaling_dimension(alpha, beta)
 
     def _determine_universality_class(
         self, critical_exponents: Dict[str, float]
     ) -> str:
-        """Determine universality class from critical exponents."""
-        # Compare with known universality classes
-        nu = critical_exponents.get("nu", 0.5)
-        beta = critical_exponents.get("beta", 0.5)
-        gamma = critical_exponents.get("gamma", 1.0)
-        # eta is not directly used for class determination here
+        """
+        Determine universality class from critical exponents.
 
-        # Mean field values
-        if abs(nu - 0.5) < 0.1 and abs(beta - 0.5) < 0.1 and abs(gamma - 1.0) < 0.1:
-            return "mean_field"
+        Physical Meaning:
+            Determines universality class by comparing computed critical
+            exponents with known theoretical values.
 
-        # Ising-like values
-        elif abs(nu - 0.63) < 0.1 and abs(beta - 0.33) < 0.1:
-            return "ising_3d"
+        Args:
+            critical_exponents (Dict[str, float]): Dictionary of critical exponents.
 
-        # XY-like values
-        elif abs(nu - 0.67) < 0.1 and abs(beta - 0.35) < 0.1:
-            return "xy_3d"
-
-        # Custom 7D values
-        else:
-            return "custom_7d"
+        Returns:
+            str: Universality class identifier.
+        """
+        return self.universality_classifier.determine_universality_class(
+            critical_exponents
+        )
 
     def _compute_critical_scaling_functions(
         self, amplitude: np.ndarray, critical_exponents: Dict[str, float]

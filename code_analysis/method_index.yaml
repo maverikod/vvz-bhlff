@@ -777,6 +777,7 @@ BVPSourceGeneratorsBasicMixin:
 - generate_gaussian_source
 - generate_point_source
 - generate_distributed_source
+- generate_plane_wave_source
 BVPSourceGeneratorsDefectsMixin:
 - _add_line_defects
 - _add_surface_defects
@@ -1372,6 +1373,7 @@ BlockCacheManager:
 BlockConfig:
 - __init__
 - compute_optimal_block_size
+- _compute_optimal_block_size_legacy
 - compute_block_configuration
 BlockGenerator:
 - __init__
@@ -1575,6 +1577,8 @@ CUDABlockProcessor:
 - get_memory_usage_cuda
 - cleanup_cuda_memory
 - __del__
+CUDANotAvailableError:
+- __init__
 CarrierPrimacyPostulate:
 - __init__
 - apply
@@ -1608,53 +1612,6 @@ ChargeComputation:
 - analyze_charge_distribution
 - _compute_skewness
 - _compute_kurtosis
-CodeMapper:
-- __init__
-- scan_directory
-- analyze_file
-- generate_report
-- generate_issues_report
-- save_report
-- generate_yaml_code_map
-- save_yaml_code_map
-- save_issues_report
-- generate_yaml_issues_report
-- save_yaml_issues_report
-- generate_method_index
-- save_method_index
-- generate_yaml_method_index
-- save_yaml_method_index
-- __init__
-- scan_directory
-- generate_all_reports
-- print_summary
-CodeMapperCore:
-- __init__
-- scan_directory
-- analyze_file
-- extract_class_info
-- extract_function_info
-- _check_method_issues
-- _has_only_pass
-- _has_not_implemented
-- _is_abstract_method
-- extract_import_info
-CodeMapperMethods:
-- __init__
-- generate_method_index
-- save_method_index
-- generate_yaml_method_index
-- save_yaml_method_index
-CodeMapperReports:
-- __init__
-- generate_report
-- generate_issues_report
-- save_report
-- generate_yaml_code_map
-- save_yaml_code_map
-- save_issues_report
-- generate_yaml_issues_report
-- save_yaml_issues_report
 CoherenceAnalysis:
 - __init__
 - analyze_phase_coherence
@@ -2164,6 +2121,7 @@ EnhancedBlockProcessorCore:
 EnhancedBlockProcessorUtils:
 - __init__
 - calculate_optimal_block_size
+- _calculate_optimal_block_size_legacy
 - check_cuda_availability
 - check_memory_requirements
 EnvelopeEffectiveMetric:
@@ -2678,6 +2636,8 @@ InitialFieldGeneratorCUDA:
 - _create_blocked_field
 - _create_field_generator_function
 - _create_small_field
+InsufficientGPUMemoryError:
+- __init__
 InterferencePatternAnalyzer:
 - __init__
 - analyze_interference_patterns
@@ -3667,6 +3627,7 @@ OptimizationScalingAnalyzer:
 OptimizedBlockProcessor:
 - __init__
 - _calculate_optimal_block_size
+- _calculate_optimal_block_size_legacy
 - process_7d_field
 - _process_cpu_optimized
 - _process_gpu_optimized
@@ -4778,6 +4739,7 @@ SignatureAnalyzerCUDA:
 SimpleBlockProcessor:
 - __init__
 - _calculate_optimal_block_size
+- _calculate_optimal_block_size_legacy
 - process_7d_field
 - _process_cpu_optimized
 - _process_large_field
@@ -8387,11 +8349,7 @@ _Domain:
 - __init__
 - __init__
 - __init__
-- __init__
-- __init__
 _Domain1:
 - __init__
-- __init__
 _Domain2:
-- __init__
 - __init__

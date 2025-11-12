@@ -11,6 +11,7 @@ import logging
 import numpy as np
 
 from bhlff.utils.cuda_utils import get_global_backend, CPUBackend, CUDABackend
+from ..exceptions import CUDANotAvailableError
 from .plans import setup_fft_plans
 from .volume import compute_volume_element
 from .wave_vectors import get_wave_vectors, create_wave_vector_grid
@@ -34,22 +35,31 @@ class UnifiedSpectralOperations:
         self.precision = precision
         self.logger = logging.getLogger(__name__)
         # CUDA is required - use CUDA backend, raise error if not available
-        self.backend = get_global_backend()
-        self._using_cuda = isinstance(self.backend, CUDABackend)
+        # NO CPU fallback allowed
+        try:
+            self.backend = get_global_backend()
+            if not isinstance(self.backend, CUDABackend):
+                raise CUDANotAvailableError(
+                    "CUDA backend is required. CPU fallback is NOT ALLOWED. "
+                    "Please ensure CUDA is properly configured."
+                )
+        except CUDANotAvailableError:
+            raise
+        except Exception as e:
+            self.logger.error(f"CUDA backend initialization failed: {e}")
+            raise CUDANotAvailableError(
+                "CUDA backend is required for UnifiedSpectralOperations. "
+                "CPU fallback is NOT ALLOWED. "
+                "Please install CuPy and ensure CUDA is properly configured."
+            ) from e
 
-        if not self._using_cuda:
-            self.logger.warning(
-                "CUDA backend unavailable or disabled; using CPU fallback for "
-                "UnifiedSpectralOperations. GPU acceleration will be skipped."
-            )
+        self._using_cuda = True  # Always True - no CPU fallback
 
         ratio_str = os.getenv("BHLFF_GPU_MEMORY_RATIO", "0.8")
         try:
             self._gpu_memory_ratio = float(min(max(float(ratio_str), 0.1), 0.95))
         except Exception:
             self._gpu_memory_ratio = 0.8
-        if not self._using_cuda:
-            self._gpu_memory_ratio = 1.0
 
         self._fft_plans = setup_fft_plans()
         self.logger.info(

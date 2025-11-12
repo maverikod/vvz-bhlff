@@ -37,6 +37,7 @@ from typing import Optional, Union
 # Import backend classes
 from .cuda_backend import CUDABackend, CUDA_AVAILABLE
 from .cpu_backend import CPUBackend, NUMPY_FFT_AVAILABLE
+from ..core.exceptions import CUDANotAvailableError, InsufficientGPUMemoryError
 
 logger = logging.getLogger(__name__)
 
@@ -136,54 +137,70 @@ def get_cuda_backend_required() -> CUDABackend:
         ) from e
 
 
-def get_optimal_backend() -> Union[CUDABackend, CPUBackend]:
+def get_optimal_backend() -> CUDABackend:
     """
-    Get the optimal backend for computations (with CPU fallback).
+    Get CUDA backend - CPU fallback is NOT ALLOWED.
 
     Physical Meaning:
-        Automatically selects the best available backend (CUDA GPU or CPU)
-        for 7D phase field calculations based on availability and performance.
-        Note: Level C code paths should use get_cuda_backend_required() instead.
+        Returns CUDA backend instance, raising error if CUDA is not available.
+        This function requires GPU acceleration - NO CPU fallback is allowed.
+        All operations must use CUDA.
 
     WARNING:
-        For Level C code paths, use get_cuda_backend_required() instead.
-        This function provides CPU fallback which is not supported by Level C.
+        This function requires CUDA and will raise RuntimeError if CUDA is not available.
+        CPU fallback is NOT ALLOWED in this project.
 
     Returns:
-        Union[CUDABackend, CPUBackend]: Optimal backend for computations.
+        CUDABackend: CUDA backend instance.
+
+    Raises:
+        RuntimeError: If CUDA is not available or initialization fails.
     """
     # Check environment variable override
-    force_cpu = os.getenv("BHLFF_FORCE_CPU", "false").lower() == "true"
     force_cuda = os.getenv("BHLFF_FORCE_CUDA", "false").lower() == "true"
 
-    if force_cpu:
-        logger.info("Forcing CPU backend due to BHLFF_FORCE_CPU=true")
-        return CPUBackend()
-
     if force_cuda and not CUDA_AVAILABLE:
-        raise RuntimeError("CUDA forced but not available")
+        raise RuntimeError(
+            "CUDA forced but not available. "
+            "Please install CuPy and ensure CUDA is properly configured."
+        )
 
-    # Try CUDA first if available
-    if CUDA_AVAILABLE and detect_cuda_availability():
-        try:
-            backend = CUDABackend()
-            logger.info("Using CUDA backend for optimal performance")
-            return backend
-        except Exception as e:
-            logger.warning(f"CUDA backend failed: {e}, falling back to CPU")
+    if not CUDA_AVAILABLE:
+        raise CUDANotAvailableError(
+            "CUDA not available. GPU acceleration is required. "
+            "Please install CuPy and ensure CUDA is properly configured. "
+            "Install with: pip install cupy-cuda11x or cupy-cuda12x "
+            "(matching your CUDA version). CPU fallback is NOT ALLOWED."
+        )
 
-    # Fall back to CPU (not for Level C!)
-    logger.info("Using CPU backend")
-    return CPUBackend()
+    if not detect_cuda_availability():
+        raise CUDANotAvailableError(
+            "CUDA detection failed. GPU acceleration is required. "
+            "Please check CUDA installation and GPU drivers. "
+            "Verify CUDA installation with: nvidia-smi. "
+            "CPU fallback is NOT ALLOWED."
+        )
+
+    try:
+        backend = CUDABackend()
+        logger.info("CUDA backend initialized (CPU fallback disabled)")
+        return backend
+    except Exception as e:
+        raise CUDANotAvailableError(
+            f"CUDA backend initialization failed: {e}. "
+            f"GPU acceleration is required. "
+            f"Ensure GPU is available and CUDA drivers are properly installed. "
+            f"CPU fallback is NOT ALLOWED."
+        ) from e
 
 
 def get_backend_info() -> dict:
     """
-    Get information about the current backend.
+    Get information about the current CUDA backend.
 
     Physical Meaning:
-        Provides detailed information about the computational backend
-        being used for 7D phase field calculations.
+        Provides detailed information about the CUDA backend
+        being used for 7D phase field calculations. CPU fallback is NOT ALLOWED.
 
     Returns:
         dict: Backend information including type, memory, and capabilities.
@@ -191,36 +208,35 @@ def get_backend_info() -> dict:
     backend = get_optimal_backend()
 
     info = {
-        "type": "CUDA" if isinstance(backend, CUDABackend) else "CPU",
+        "type": "CUDA",
         "cuda_available": CUDA_AVAILABLE,
         "numpy_fft_available": NUMPY_FFT_AVAILABLE,
         "memory_info": backend.get_memory_info(),
+        "device_id": backend.device.id,
     }
 
-    if isinstance(backend, CUDABackend):
-        info["device_id"] = backend.device.id
-        try:
-            info["device_name"] = backend.device.name
-        except Exception:
-            info["device_name"] = "Unknown"
+    try:
+        info["device_name"] = backend.device.name
+    except Exception:
+        info["device_name"] = "Unknown"
 
     return info
 
 
-# Global backend instance for automatic use
-_global_backend: Optional[Union[CUDABackend, CPUBackend]] = None
+# Global backend instance for automatic use (CUDA only, no CPU fallback)
+_global_backend: Optional[CUDABackend] = None
 
 
-def get_global_backend() -> Union[CUDABackend, CPUBackend]:
+def get_global_backend() -> CUDABackend:
     """
-    Get the global backend instance.
+    Get the global CUDA backend instance.
 
     Physical Meaning:
-        Returns the global backend instance for use throughout the BHLFF
-        framework, ensuring consistent GPU/CPU usage.
+        Returns the global CUDA backend instance for use throughout the BHLFF
+        framework, ensuring consistent GPU usage. CPU fallback is NOT ALLOWED.
 
     Returns:
-        Union[CUDABackend, CPUBackend]: Global backend instance.
+        CUDABackend: Global CUDA backend instance.
     """
     global _global_backend
     if _global_backend is None:
@@ -240,7 +256,7 @@ def reset_global_backend() -> None:
     _global_backend = None
 
 
-def check_level_c_cuda_required(backend: Union[CUDABackend, CPUBackend]) -> None:
+def check_level_c_cuda_required(backend: CUDABackend) -> None:
     """
     Verify that backend is CUDA for Level C code paths.
 
@@ -269,7 +285,7 @@ def raise_insufficient_memory_error(
     available_memory: int,
     operation_name: str = "operation",
     field_shape: Optional[tuple] = None,
-) -> RuntimeError:
+) -> InsufficientGPUMemoryError:
     """
     Raise informative error for insufficient GPU memory with guidance.
 
@@ -294,30 +310,14 @@ def raise_insufficient_memory_error(
         field_shape (Optional[tuple]): Shape of the field array if available.
 
     Returns:
-        RuntimeError: Error with detailed guidance on block processing.
+        InsufficientGPUMemoryError: Error with detailed guidance on block processing.
     """
-    required_gb = required_memory / 1e9
-    available_gb = available_memory / 1e9
-
-    error_msg = (
-        f"Insufficient GPU memory for {operation_name}. "
-        f"Required: {required_gb:.2f}GB, Available: {available_gb:.2f}GB. "
-        f"For Level C, use block-based processing with compute_optimal_block_tiling_7d(). "
+    return InsufficientGPUMemoryError(
+        required_memory=required_memory,
+        available_memory=available_memory,
+        operation_name=operation_name,
+        field_shape=field_shape
     )
-
-    if field_shape is not None:
-        error_msg += (
-            f"Field shape: {field_shape}. "
-            f"Use backend.compute_optimal_block_tiling_7d({field_shape}) "
-            f"to compute optimal block size for 80% GPU memory usage. "
-        )
-
-    error_msg += (
-        f"Example: block_tiling = backend.compute_optimal_block_tiling_7d(field_shape); "
-        f"then process field in blocks using the returned tiling."
-    )
-
-    return RuntimeError(error_msg)
 
 
 def calculate_optimal_window_memory(

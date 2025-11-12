@@ -138,27 +138,20 @@ class FieldProcessor:
                 return self.processing_strategy.process_cpu_optimized(
                     field, operation, **kwargs
                 )
+        except (CUDANotAvailableError, InsufficientGPUMemoryError):
+            # Re-raise CUDA and memory errors as-is
+            raise
         except Exception as e:
-            # CPU fallback is guarded behind explicit non_level_c flag
-            # This enforces project policy: prefer GPU, avoid silent CPU execution
-            if not non_level_c:
-                self.logger.error(
-                    f"GPU processing failed: {e}. CPU fallback disabled by default. "
-                    f"Set non_level_c=True to enable CPU fallback."
-                )
-                raise RuntimeError(
-                    f"GPU processing failed: {e}. CPU fallback is disabled by default. "
-                    f"Set non_level_c=True in kwargs to explicitly enable CPU fallback."
-                ) from e
-
-            # Only allow CPU fallback if explicitly enabled
-            self.logger.warning(
-                f"GPU processing failed: {e}, falling back to CPU "
-                f"(non_level_c=True explicitly set)"
+            # CPU fallback is NOT ALLOWED - raise CUDA error
+            self.logger.error(
+                f"GPU processing failed: {e}. CPU fallback is NOT ALLOWED. "
+                f"Please ensure CUDA is properly configured."
             )
-            # Ensure Level C flag is not set for CPU processing
-            kwargs["level_c_context"] = False
-            return self.processing_strategy.process_cpu_optimized(field, operation, **kwargs)
+            raise CUDANotAvailableError(
+                f"GPU processing failed: {e}. CUDA is required. "
+                f"CPU fallback is NOT ALLOWED in this project. "
+                f"Please ensure CUDA is properly configured and GPU is available."
+            ) from e
 
     def fallback_processing(
         self, field: np.ndarray, operation: str, min_block_size: int, **kwargs

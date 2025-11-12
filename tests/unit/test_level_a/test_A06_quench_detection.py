@@ -41,6 +41,7 @@ from bhlff.core.domain.domain import Domain
 from bhlff.core.domain.domain_7d import Domain7D
 from bhlff.core.bvp.quench_detector import QuenchDetector
 from bhlff.core.fft.fft_solver_7d_advanced import FFTSolver7DAdvanced
+from bhlff.core.arrays import FieldArray
 
 # Lightweight parameters for unit testing
 TEST_GRID_SIZE = 16
@@ -82,12 +83,18 @@ def _create_neutralized_gaussian_7d(
     gaussian = np.exp(exponent)
     gaussian -= np.mean(gaussian)
 
-    source = np.zeros(shape, dtype=np.complex128)
-    for i_phi1 in range(n_phase):
-        for i_phi2 in range(n_phase):
-            for i_phi3 in range(n_phase):
-                for i_t in range(n_time):
-                    source[:, :, :, i_phi1, i_phi2, i_phi3, i_t] = gaussian
+    # VECTORIZED: Use broadcasting instead of loops
+    # Expand gaussian to 7D shape using broadcasting
+    # gaussian shape: (n_spatial, n_spatial, n_spatial)
+    # target shape: (n_spatial, n_spatial, n_spatial, n_phase, n_phase, n_phase, n_time)
+    # Use np.broadcast_to for efficient memory usage
+    gaussian_7d = np.broadcast_to(
+        gaussian[..., np.newaxis, np.newaxis, np.newaxis, np.newaxis],
+        shape
+    ).copy()  # Copy to ensure contiguous array
+    
+    # Use FieldArray for automatic memory management
+    source = FieldArray(array=gaussian_7d.astype(np.complex128))
 
     return source
 
@@ -147,7 +154,11 @@ def test_A06_quench_detection() -> None:
 
     logger.info("Solving stationary BVP with FFT solver")
     solve_start = time.perf_counter()
-    a_7d = solver.solve_stationary(s_7d)
+    # Extract array from FieldArray if needed
+    s_7d_array = s_7d.array if isinstance(s_7d, FieldArray) else s_7d
+    a_7d_field = solver.solve_stationary(s_7d_array)
+    # Extract array from FieldArray result
+    a_7d = a_7d_field.array if isinstance(a_7d_field, FieldArray) else a_7d_field
     logger.info(
         "Stationary solve completed in %.2f s (max amplitude %.5f)",
         time.perf_counter() - solve_start,
@@ -253,14 +264,15 @@ def test_A06_quench_detection() -> None:
     out_dir = Path("output") / cfg["test_id"]
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    quench_map = np.zeros((N, N, N), dtype=float)
+    # Use FieldArray for automatic memory management
+    quench_map = FieldArray(shape=(N, N, N), dtype=float)
     for loc in quench_results.get("quench_locations", []):
         if len(loc) >= 3:
             i, j, k = int(loc[0]), int(loc[1]), int(loc[2])
             if 0 <= i < N and 0 <= j < N and 0 <= k < N:
-                quench_map[i, j, k] = 1.0
+                quench_map.array[i, j, k] = 1.0
 
-    np.save(out_dir / "quench_map.npy", quench_map)
+    np.save(out_dir / "quench_map.npy", quench_map.array)
     np.save(out_dir / "envelope_amplitude.npy", envelope_amp)
     np.save(out_dir / "gradient_magnitude.npy", grad_slice)
 

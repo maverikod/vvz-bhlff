@@ -42,7 +42,7 @@ issues:
     line: 183
   - class: _Domain
     file: tests/unit/test_level_a/test_A02_multi_plane.py
-    line: 79
+    line: 153
   - class: _Domain
     file: tests/unit/test_level_a/test_A03_zero_mode.py
     line: 74
@@ -50,20 +50,8 @@ issues:
     file: tests/unit/test_level_a/test_A04_time_harmonic.py
     line: 49
   - class: _Domain
-    file: tests/unit/test_level_a/test_A12_units_invariance.py
-    line: 55
-  - class: _Domain
     file: tests/unit/test_level_a/test_A01_plane_wave.py
-    line: 70
-  - class: _Domain
-    file: tests/unit/test_level_a/test_A11_scale_length.py
-    line: 48
-  - class: _Domain1
-    file: tests/unit/test_level_a/test_A11_scale_length.py
-    line: 120
-  - class: _Domain2
-    file: tests/unit/test_level_a/test_A11_scale_length.py
-    line: 126
+    line: 142
   - class: _Domain
     file: tests/unit/test_level_a/test_A05_residual_energy.py
     line: 74
@@ -478,10 +466,10 @@ issues:
     file: bhlff/core/domain/7d_vectorized_processor.py
     limit: 400
     lines: 490
-  - exceeds_limit: 9
+  - exceeds_limit: 58
     file: bhlff/core/domain/optimized_block_processor.py
     limit: 400
-    lines: 409
+    lines: 458
   - exceeds_limit: 90
     file: bhlff/core/domain/vectorized_7d_processor.py
     limit: 400
@@ -853,31 +841,23 @@ issues:
     method: __init__
   - class: null
     file: tests/unit/test_level_a/test_A02_multi_plane.py
-    line: 25
+    line: 34
     method: _load_config
   - class: null
     file: tests/unit/test_level_a/test_A02_multi_plane.py
-    line: 33
-    method: _make_domain_shape
-  - class: null
-    file: tests/unit/test_level_a/test_A02_multi_plane.py
-    line: 37
+    line: 61
     method: _rand_modes
   - class: null
     file: tests/unit/test_level_a/test_A02_multi_plane.py
-    line: 49
-    method: _build_spectral_source
-  - class: null
-    file: tests/unit/test_level_a/test_A02_multi_plane.py
-    line: 65
+    line: 75
     method: test_A02_multi_plane
   - class: _Domain
     file: tests/unit/test_level_a/test_A02_multi_plane.py
-    line: 80
+    line: 154
     method: __init__
   - class: null
     file: tests/unit/test_level_a/test_A02_multi_plane.py
-    line: 80
+    line: 154
     method: __init__
   - class: null
     file: tests/unit/test_level_a/test_A03_zero_mode.py
@@ -929,92 +909,44 @@ issues:
     method: __init__
   - class: null
     file: tests/unit/test_level_a/test_A12_units_invariance.py
-    line: 23
-    method: _load_config
-  - class: null
-    file: tests/unit/test_level_a/test_A12_units_invariance.py
     line: 31
-    method: _make_domain_shape
+    method: _load_config
   - class: null
     file: tests/unit/test_level_a/test_A12_units_invariance.py
-    line: 88
+    line: 157
     method: test_A12_units_invariance
-  - class: _Domain
-    file: tests/unit/test_level_a/test_A12_units_invariance.py
-    line: 56
-    method: __init__
-  - class: null
-    file: tests/unit/test_level_a/test_A12_units_invariance.py
-    line: 56
-    method: __init__
   - class: null
     file: tests/unit/test_level_a/test_A01_plane_wave.py
-    line: 24
+    line: 33
     method: _load_config
   - class: null
     file: tests/unit/test_level_a/test_A01_plane_wave.py
-    line: 32
-    method: _make_domain_shape
-  - class: null
-    file: tests/unit/test_level_a/test_A01_plane_wave.py
-    line: 36
-    method: _generate_plane_wave
-  - class: null
-    file: tests/unit/test_level_a/test_A01_plane_wave.py
-    line: 45
+    line: 60
     method: _compute_reference_amplitude
   - class: null
     file: tests/unit/test_level_a/test_A01_plane_wave.py
-    line: 54
+    line: 69
     method: _ensure_output_dir
   - class: null
     file: tests/unit/test_level_a/test_A01_plane_wave.py
-    line: 58
+    line: 73
     method: test_A01_plane_wave
   - class: _Domain
     file: tests/unit/test_level_a/test_A01_plane_wave.py
-    line: 71
+    line: 143
     method: __init__
   - class: null
     file: tests/unit/test_level_a/test_A01_plane_wave.py
-    line: 71
+    line: 143
     method: __init__
-  - class: null
-    file: tests/unit/test_level_a/test_A11_scale_length.py
-    line: 25
-    method: _load_config
   - class: null
     file: tests/unit/test_level_a/test_A11_scale_length.py
     line: 33
-    method: _make_domain_shape
+    method: _load_config
   - class: null
     file: tests/unit/test_level_a/test_A11_scale_length.py
-    line: 100
+    line: 144
     method: test_A11_scale_length
-  - class: _Domain
-    file: tests/unit/test_level_a/test_A11_scale_length.py
-    line: 49
-    method: __init__
-  - class: _Domain1
-    file: tests/unit/test_level_a/test_A11_scale_length.py
-    line: 121
-    method: __init__
-  - class: _Domain2
-    file: tests/unit/test_level_a/test_A11_scale_length.py
-    line: 127
-    method: __init__
-  - class: null
-    file: tests/unit/test_level_a/test_A11_scale_length.py
-    line: 49
-    method: __init__
-  - class: null
-    file: tests/unit/test_level_a/test_A11_scale_length.py
-    line: 121
-    method: __init__
-  - class: null
-    file: tests/unit/test_level_a/test_A11_scale_length.py
-    line: 127
-    method: __init__
   - class: null
     file: tests/unit/test_level_a/test_A05_residual_energy.py
     line: 24
@@ -2337,91 +2269,91 @@ issues:
     method: _ifft_axis_batched
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 32
+    line: 33
     method: __init__
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 60
+    line: 70
     method: forward_fft
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 131
+    line: 141
     method: inverse_fft
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 194
+    line: 204
     method: compute_spectral_derivatives
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 209
+    line: 219
     method: apply_spectral_filter
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 229
+    line: 239
     method: compute_spectral_energy
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 233
+    line: 243
     method: get_spectral_info
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 242
+    line: 252
     method: __repr__
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 246
+    line: 256
     method: _validate_shape
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 303
+    line: 313
     method: _forward_backend
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 317
+    line: 327
     method: _inverse_backend
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 32
+    line: 33
     method: __init__
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 60
+    line: 70
     method: forward_fft
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 131
+    line: 141
     method: inverse_fft
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 194
+    line: 204
     method: compute_spectral_derivatives
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 209
+    line: 219
     method: apply_spectral_filter
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 229
+    line: 239
     method: compute_spectral_energy
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 233
+    line: 243
     method: get_spectral_info
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 242
+    line: 252
     method: __repr__
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 246
+    line: 256
     method: _validate_shape
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 303
+    line: 313
     method: _forward_backend
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 317
+    line: 327
     method: _inverse_backend
   - class: null
     file: bhlff/core/fft/unified/fft_cpu.py
@@ -2490,13 +2422,13 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   any_type_usage: 0
-  classes_without_docstrings: 24
+  classes_without_docstrings: 20
   files_too_large: 110
   files_without_docstrings: 4
   generic_exception_usage: 0
   imports_in_middle: 0
   max_lines_limit: 400
   methods_with_pass: 0
-  methods_without_docstrings: 491
+  methods_without_docstrings: 477
   not_implemented_in_non_abstract: 0
-  total_issues: 629
+  total_issues: 611

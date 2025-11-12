@@ -23,6 +23,7 @@ except ImportError:
 from .gpu_block_processor import GPUBlockProcessor
 from .cpu_block_processor import CPUBlockProcessor
 from ..block_processor import BlockProcessor
+from ...exceptions import CUDANotAvailableError, InsufficientGPUMemoryError
 
 
 class FieldProcessingStrategy:
@@ -128,35 +129,26 @@ class FieldProcessingStrategy:
             )
             return self.process_gpu_only(field, operation, **kwargs)
 
-        # For non-Level C, attempt GPU with conditional CPU fallback
-        # CPU fallback is only allowed if explicitly enabled via non_level_c flag
-        # This enforces project policy: prefer GPU, guard CPU fallback
+        # CUDA is required - NO CPU fallback allowed
+        # All operations must use GPU
         try:
             # Default to 7D operations for optimal performance
             kwargs.setdefault("use_7d_operations", True)
             return self.process_gpu_only(field, operation, **kwargs)
+        except (CUDANotAvailableError, InsufficientGPUMemoryError):
+            # Re-raise CUDA and memory errors as-is
+            raise
         except Exception as e:
-            # CPU fallback is guarded behind explicit non_level_c flag
-            if not non_level_c:
-                # For non-Level C without explicit flag, prefer to raise error
-                # This enforces project policy: prefer GPU, avoid silent CPU execution
-                self.logger.error(
-                    f"GPU processing failed: {e}. CPU fallback disabled by default. "
-                    f"Set non_level_c=True to enable CPU fallback."
-                )
-                raise RuntimeError(
-                    f"GPU processing failed: {e}. CPU fallback is disabled by default. "
-                    f"Set non_level_c=True in kwargs to explicitly enable CPU fallback."
-                ) from e
-
-            # Only allow CPU fallback if explicitly enabled
-            self.logger.warning(
-                f"GPU processing failed: {e}, falling back to CPU "
-                f"(non_level_c=True explicitly set)"
+            # CPU fallback is NOT ALLOWED - raise CUDA error
+            self.logger.error(
+                f"GPU processing failed: {e}. CPU fallback is NOT ALLOWED. "
+                f"Please ensure CUDA is properly configured."
             )
-            # Ensure Level C flag is not set for CPU processing
-            kwargs["level_c_context"] = False
-            return self.process_cpu_optimized(field, operation, **kwargs)
+            raise CUDANotAvailableError(
+                f"GPU processing failed: {e}. CUDA is required. "
+                f"CPU fallback is NOT ALLOWED in this project. "
+                f"Please ensure CUDA is properly configured and GPU is available."
+            ) from e
 
     def process_gpu_only(
         self, field: np.ndarray, operation: str, **kwargs

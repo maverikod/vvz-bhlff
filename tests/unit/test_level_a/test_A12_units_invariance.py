@@ -114,8 +114,9 @@ def _solve_with_units(
     source_3d = source_array[:, :, :, 0, 0, 0, 0] if source_array.ndim == 7 else source_array
     
     # Expand back to 7D for solver (solver expects 7D)
-    source_7d = np.zeros(domain.shape, dtype=np.complex128)
-    source_7d[:, :, :, 0, 0, 0, 0] = source_3d
+    # Use FieldArray for automatic memory management
+    source_7d = FieldArray(shape=domain.shape, dtype=np.complex128)
+    source_7d.array[:, :, :, 0, 0, 0, 0] = source_3d
     
     # Effective dimensional parameters from dimensionless (proportional forms)
     # nu_eff = nu_dimless * L0^(2β) / T0
@@ -137,7 +138,9 @@ def _solve_with_units(
     )
     
     # Solve stationary problem (returns FieldArray)
-    solution_field = solver.solve_stationary(source_7d)
+    # Extract array from FieldArray if needed
+    source_7d_array = source_7d.array if isinstance(source_7d, FieldArray) else source_7d
+    solution_field = solver.solve_stationary(source_7d_array)
     
     # Extract 3D spatial slice from solution
     if isinstance(solution_field, FieldArray):

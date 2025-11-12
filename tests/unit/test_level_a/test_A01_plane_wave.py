@@ -7,6 +7,11 @@ Test A0.1: Plane wave validation for Level A.
 This test validates the spectral solution for a monochromatic excitation,
 checking that the numerical implementation of the fractional operator matches
 analytic expectations and that anisotropy is absent for equal |k|.
+
+This test uses ready-made generators and solvers:
+- BVPSourceGenerators for plane wave source generation
+- FFTSolver7DBasic for solving stationary problems
+- FieldArray for automatic memory management
 """
 
 from __future__ import annotations
@@ -18,6 +23,10 @@ from typing import Tuple
 
 import numpy as np
 
+from bhlff.core.domain import Domain
+from bhlff.core.sources.bvp_source_generators import BVPSourceGenerators
+from bhlff.core.fft.fft_solver_7d_basic import FFTSolver7DBasic
+from bhlff.core.arrays import FieldArray
 from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
 
 
@@ -29,17 +38,23 @@ def _load_config() -> dict:
         return json.load(f)
 
 
-def _make_domain_shape(N: int) -> Tuple[int, int, int]:
-    return (N, N, N)
-
-
-def _generate_plane_wave(
-    shape: Tuple[int, int, int], mode: Tuple[int, int, int]
-) -> np.ndarray:
-    N = np.array(shape)
-    grid = np.meshgrid(*[np.arange(n) for n in shape], indexing="ij")
-    phase = sum((2.0 * np.pi * m * g) / n for m, g, n in zip(mode, grid, N))
-    return np.exp(1j * phase).astype(np.complex128)
+def _create_3d_domain(L: float, N: int) -> Domain:
+    """
+    Create 3D domain as 7D domain with minimal phase and temporal dimensions.
+    
+    Physical Meaning:
+        Creates a 7D domain for 3D spatial computations by using
+        minimal phase (N_phi=1) and temporal (N_t=1) dimensions.
+        This allows using 7D solvers for 3D problems.
+    """
+    return Domain(
+        L=L,
+        N=N,
+        N_phi=1,  # Minimal phase dimensions for 3D spatial problem
+        N_t=1,    # Minimal temporal dimension for stationary problem
+        T=1.0,
+        dimensions=7,
+    )
 
 
 def _compute_reference_amplitude(
@@ -65,23 +80,75 @@ def test_A01_plane_wave() -> None:
     mode = tuple(int(x) for x in cfg["forcing"]["modes"][0])
     tol = float(cfg["tolerance"]["error_L2"])
 
-    shape = _make_domain_shape(N)
-
+    # Create 7D domain for 3D spatial problem
+    domain = _create_3d_domain(L, N)
+    
+    # Create plane wave source using BVPSourceGenerators
+    source_config = {
+        "plane_wave_amplitude": 1.0,  # Unit amplitude
+        "plane_wave_mode": list(mode),  # Wave vector mode
+        "use_cuda": True,  # Use CUDA if available
+    }
+    
+    generators = BVPSourceGenerators(domain, source_config)
+    
+    # Generate plane wave source (returns FieldArray)
+    source_field = generators.generate_plane_wave_source()
+    
+    # Extract spatial slice (3D) from 7D field for 3D problem
+    if isinstance(source_field, FieldArray):
+        source_array = source_field.array
+    else:
+        source_array = source_field
+    
+    # Extract 3D spatial slice
+    source_3d = source_array[:, :, :, 0, 0, 0, 0] if source_array.ndim == 7 else source_array
+    
+    # Expand back to 7D for solver (solver expects 7D)
+    source_7d = np.zeros(domain.shape, dtype=np.complex128)
+    source_7d[:, :, :, 0, 0, 0, 0] = source_3d
+    
+    # Create solver with physics parameters
+    solver = FFTSolver7DBasic(
+        domain,
+        {
+            "mu": mu,
+            "beta": beta,
+            "lambda": lam,
+            "use_cuda": True,  # Use CUDA if available
+        }
+    )
+    
+    # Solve stationary problem (returns FieldArray)
+    solution_field = solver.solve_stationary(source_7d)
+    
+    # Extract 3D spatial slice from solution
+    if isinstance(solution_field, FieldArray):
+        solution_array = solution_field.array
+    else:
+        solution_array = solution_field
+    
+    solution_3d = solution_array[:, :, :, 0, 0, 0, 0] if solution_array.ndim == 7 else solution_array
+    a_num = solution_3d.astype(np.complex128)
+    
+    # Compute reference solution using exact spectral formula
+    # For plane wave source, the solution should be proportional to the source
+    # with amplitude given by the spectral operator response
+    shape = (N, N, N)
+    
     class _Domain:
-        def __init__(self, shape: Tuple[int, int, int]):
+        def __init__(self, shape: Tuple[int, int, int], L: float, N: int):
             self.shape = shape
             self.L = L
             self.N = N
-
-    domain = _Domain(shape)
-
-    ops = UnifiedSpectralOperations(domain, precision="float64")
-
-    # Build spectral delta source exactly at mode bin
-    s_hat = np.zeros(shape, dtype=np.complex128)
-    idx = tuple((mi % n) for mi, n in zip(mode, shape))
-    s_hat[idx] = 1.0 + 0.0j
-    # Build solution only at the excited bin
+    
+    domain_3d = _Domain(shape, L, N)
+    ops = UnifiedSpectralOperations(domain_3d, precision="float64")
+    
+    # Build spectral representation of source
+    s_hat = ops.forward_fft(source_3d, "ortho")
+    
+    # Build reference solution using exact spectral formula
     a_hat = np.zeros_like(s_hat)
     idx = tuple((mi % n) for mi, n in zip(mode, shape))
     ksq = (2.0 * np.pi / L) ** 2 * float(
@@ -89,9 +156,7 @@ def test_A01_plane_wave() -> None:
     )
     denom = mu * (ksq**beta) + lam
     a_hat[idx] = s_hat[idx] / denom
-    a_num = ops.inverse_fft(a_hat, "ortho").astype(np.complex128)
-    # Reference via exact spectral formula (inverse FFT of s_hat/denom)
-    a_ref = a_num.copy()
+    a_ref = ops.inverse_fft(a_hat, "ortho").astype(np.complex128)
 
     # Metrics
     err_L2 = np.linalg.norm(a_num - a_ref) / max(
@@ -107,8 +172,26 @@ def test_A01_plane_wave() -> None:
     for alt in [(mode[0], 0, 0), (0, mode[1], 0), (0, 0, mode[2])]:
         if sum(abs(x) for x in alt) == 0:
             continue
-        s_alt = _generate_plane_wave(shape, alt)
-        a_alt = _compute_reference_amplitude(mu, beta, lam, alt, L, N) * s_alt
+        # Generate plane wave source for alternative mode
+        alt_config = {
+            "plane_wave_amplitude": 1.0,
+            "plane_wave_mode": list(alt),
+            "use_cuda": True,
+        }
+        alt_domain = _create_3d_domain(L, N)
+        alt_generators = BVPSourceGenerators(alt_domain, alt_config)
+        alt_source_field = alt_generators.generate_plane_wave_source()
+        
+        # Extract 3D spatial slice
+        if isinstance(alt_source_field, FieldArray):
+            alt_source_array = alt_source_field.array
+        else:
+            alt_source_array = alt_source_field
+        alt_source_3d = alt_source_array[:, :, :, 0, 0, 0, 0] if alt_source_array.ndim == 7 else alt_source_array
+        
+        # Compute reference amplitude
+        a_alt_amp = _compute_reference_amplitude(mu, beta, lam, alt, L, N)
+        a_alt = a_alt_amp * alt_source_3d
         energies.append(float(np.linalg.norm(a_alt)))
     anis = (
         0.0

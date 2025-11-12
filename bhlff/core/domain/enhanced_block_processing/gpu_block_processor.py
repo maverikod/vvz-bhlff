@@ -55,6 +55,27 @@ class GPUBlockProcessor:
         # Initialize operations and utilities
         self.operations = GPUBlockOperations(self.cuda_available, self.logger)
         self.utils = GPUBlockUtils(self.cuda_available, self.logger)
+        
+        # Initialize batched FFT operations for efficient batch processing
+        self._batched_fft = None
+        if self.cuda_available:
+            try:
+                from ...fft.batched_fft_operations import BatchedFFTOperations
+                # Will be initialized with domain shape when needed
+                self._batched_fft_class = BatchedFFTOperations
+            except ImportError:
+                self.logger.warning("BatchedFFTOperations not available, using single-block FFT")
+                self._batched_fft_class = None
+        
+        # Initialize CUDA stream processor for parallel block processing
+        self._stream_processor = None
+        if self.cuda_available:
+            try:
+                from ...domain.cuda_stream_block_processor import CUDAStreamBlockProcessor
+                self._stream_processor_class = CUDAStreamBlockProcessor
+            except ImportError:
+                self.logger.warning("CUDAStreamBlockProcessor not available, using sequential processing")
+                self._stream_processor_class = None
 
     def process_blocks(
         self,
@@ -243,36 +264,51 @@ class GPUBlockProcessor:
             Processes multiple 7D blocks in batch on GPU using highly optimized
             vectorized CUDA operations for maximum GPU utilization. All blocks are
             processed using 7D operations (7D Laplacian Δ₇ = Σᵢ₌₀⁶ ∂²/∂xᵢ²) when
-            enabled. Uses vectorized batch processing for optimal GPU occupancy.
+            enabled. Uses batched FFT operations and CUDA streams for optimal
+            GPU occupancy and parallel processing.
 
         Mathematical Foundation:
             Uses optimized vectorized CUDA kernels for batch processing:
             - 7D Laplacian: Δ₇ = Σᵢ₌₀⁶ ∂²/∂xᵢ² for all blocks
+            - Batched FFT operations for multiple blocks simultaneously
+            - CUDA streams for parallel processing of blocks
             - Vectorized operations across entire batch for optimal GPU occupancy
-            - Parallel processing of multiple blocks simultaneously
 
         Args:
             block_buffer (list): List of block_gpu arrays (without block_info).
             operation (str): Operation to perform.
             use_7d_operations (bool): Use 7D-specific operations.
-            **kwargs: Additional parameters.
+            **kwargs: Additional parameters including:
+                - use_batched_fft (bool): Use batched FFT for FFT operations (default: True).
+                - use_streams (bool): Use CUDA streams for parallel processing (default: True).
 
         Returns:
             list: List of processed blocks on GPU.
         """
-        processed_batch = []
+        if not block_buffer:
+            return []
         
-        # Process each block with 7D operations if enabled
-        # Always prefer 7D operations for 7D fields
-        # Use vectorized processing for optimal GPU utilization
+        # Validate all blocks are 7D
         for block_gpu in block_buffer:
-            # Validate 7D block structure
             if block_gpu.ndim != 7:
                 raise ValueError(
                     f"Expected 7D block for GPU processing, got {block_gpu.ndim}D. "
                     f"Shape: {block_gpu.shape}"
                 )
-            
+        
+        # Use batched FFT for FFT operations if available
+        use_batched_fft = kwargs.get("use_batched_fft", True)
+        if operation in ("fft", "ifft") and use_batched_fft and self._batched_fft_class is not None:
+            return self._process_batch_with_batched_fft(block_buffer, operation, **kwargs)
+        
+        # Use CUDA streams for parallel processing if available
+        use_streams = kwargs.get("use_streams", True)
+        if use_streams and self._stream_processor_class is not None and len(block_buffer) > 1:
+            return self._process_batch_with_streams(block_buffer, operation, use_7d_operations, **kwargs)
+        
+        # Fallback to sequential processing with 7D operations
+        processed_batch = []
+        for block_gpu in block_buffer:
             if use_7d_operations and self.operations._7d_ops is not None:
                 # Use optimized 7D operations with vectorization
                 processed_block = self.operations.process_single_block_gpu_7d(
@@ -289,6 +325,128 @@ class GPUBlockProcessor:
                     block_gpu, operation, **kwargs
                 )
             processed_batch.append(processed_block)
+        
+        return processed_batch
+    
+    def _process_batch_with_batched_fft(
+        self,
+        block_buffer: list,
+        operation: str,
+        **kwargs
+    ) -> list:
+        """
+        Process batch of blocks using batched FFT operations.
+        
+        Physical Meaning:
+            Processes multiple blocks using batched FFT operations for optimal
+            GPU utilization and performance.
+            
+        Args:
+            block_buffer (list): List of block_gpu arrays.
+            operation (str): Operation name ("fft" or "ifft").
+            **kwargs: Additional parameters.
+            
+        Returns:
+            list: List of processed blocks on GPU.
+        """
+        # Initialize batched FFT if not already done
+        if self._batched_fft is None and block_buffer:
+            block_shape = block_buffer[0].shape
+            self._batched_fft = self._batched_fft_class(
+                domain_shape=block_shape,
+                dtype=block_buffer[0].dtype,
+                gpu_memory_ratio=0.8,  # Use 80% GPU memory (project requirement)
+            )
+        
+        # Convert GPU arrays to CPU for batched FFT (it handles GPU internally)
+        block_cpu_list = [cp.asnumpy(block) for block in block_buffer]
+        
+        # Perform batched FFT
+        if operation == "fft":
+            processed_cpu_list = self._batched_fft.batched_fftn(
+                block_cpu_list, normalization="ortho"
+            )
+        elif operation == "ifft":
+            processed_cpu_list = self._batched_fft.batched_ifftn(
+                block_cpu_list, normalization="ortho"
+            )
+        else:
+            # Fallback to sequential processing
+            return self._process_block_batch_gpu_vectorized(
+                block_buffer, operation, True, use_batched_fft=False, **kwargs
+            )
+        
+        # Convert back to GPU arrays
+        processed_batch = [cp.asarray(block) for block in processed_cpu_list]
+        
+        return processed_batch
+    
+    def _process_batch_with_streams(
+        self,
+        block_buffer: list,
+        operation: str,
+        use_7d_operations: bool,
+        **kwargs
+    ) -> list:
+        """
+        Process batch of blocks using CUDA streams for parallel processing.
+        
+        Physical Meaning:
+            Processes multiple blocks in parallel using CUDA streams for optimal
+            GPU utilization and performance.
+            
+        Args:
+            block_buffer (list): List of block_gpu arrays.
+            operation (str): Operation to perform.
+            use_7d_operations (bool): Use 7D-specific operations.
+            **kwargs: Additional parameters.
+            
+        Returns:
+            list: List of processed blocks on GPU.
+        """
+        # Initialize stream processor if not already done
+        if self._stream_processor is None and block_buffer:
+            block_shape = block_buffer[0].shape
+            num_streams = min(4, len(block_buffer))  # Use up to 4 streams
+            self._stream_processor = self._stream_processor_class(
+                domain_shape=block_shape,
+                num_streams=num_streams,
+                dtype=block_buffer[0].dtype,
+            )
+        
+        # Create block info list (dummy BlockInfo for stream processor)
+        from ..block_processor import BlockInfo
+        block_info_list = [
+            BlockInfo(
+                block_id=i,
+                start_indices=tuple(0 for _ in range(7)),
+                end_indices=block.shape,
+                shape=block.shape,
+                global_offset=tuple(0 for _ in range(7)),
+                memory_usage=block.nbytes / (1024**2),
+            )
+            for i, block in enumerate(block_buffer)
+        ]
+        
+        # Create operation function
+        def operation_func(block_gpu):
+            if use_7d_operations and self.operations._7d_ops is not None:
+                return self.operations.process_single_block_gpu_7d(
+                    block_gpu, operation, **kwargs
+                )
+            else:
+                return self.operations.process_single_block_gpu(
+                    block_gpu, operation, **kwargs
+                )
+        
+        # Process blocks using streams
+        blocks_with_info = list(zip(block_buffer, block_info_list))
+        processed_cpu_list = self._stream_processor.process_blocks_streamed(
+            blocks_with_info, operation, operation_func
+        )
+        
+        # Convert back to GPU arrays
+        processed_batch = [cp.asarray(block) for block in processed_cpu_list]
         
         return processed_batch
 

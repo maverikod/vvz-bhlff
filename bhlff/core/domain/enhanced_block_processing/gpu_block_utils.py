@@ -22,6 +22,7 @@ except ImportError:
     cp = None
 
 from ..block_processor import BlockInfo
+from ...utils.gpu_memory_monitor import GPUMemoryMonitor
 
 
 class GPUBlockUtils:
@@ -48,6 +49,12 @@ class GPUBlockUtils:
         """
         self.cuda_available = cuda_available and CUDA_AVAILABLE
         self.logger = logger or logging.getLogger(__name__)
+        
+        # Initialize GPU memory monitor
+        self._gpu_memory_monitor = GPUMemoryMonitor(
+            warning_threshold=0.75,
+            critical_threshold=0.9,
+        ) if self.cuda_available else None
 
     def extract_block_gpu(
         self, field_gpu: Union[np.ndarray, Any], block_info: BlockInfo
@@ -119,15 +126,13 @@ class GPUBlockUtils:
         Raises:
             RuntimeError: If GPU memory is critically low.
         """
-        if not self.cuda_available or not CUDA_AVAILABLE:
+        if not self.cuda_available or self._gpu_memory_monitor is None:
             return
 
         try:
-            mem_info = cp.cuda.runtime.memGetInfo()
-            free_memory = mem_info[0]
-            total_memory = mem_info[1]
-            used_memory = total_memory - free_memory
-            usage_ratio = used_memory / total_memory if total_memory > 0 else 0.0
+            # Use GPUMemoryMonitor for consistent memory checking
+            gpu_mem_info = self._gpu_memory_monitor.check_memory()
+            usage_ratio = gpu_mem_info["usage_ratio"]
 
             # For 7D operations, enforce 80% GPU memory limit (project requirement)
             # For other operations, use 90% threshold
@@ -137,10 +142,14 @@ class GPUBlockUtils:
             if usage_ratio > threshold:
                 self.logger.warning(
                     f"High GPU memory usage: {usage_ratio*100:.1f}% "
-                    f"(threshold: {threshold*100:.0f}%), applying backpressure"
+                    f"(threshold: {threshold*100:.0f}%), applying backpressure. "
+                    f"Free: {gpu_mem_info['free'] / (1024**3):.2f} GB, "
+                    f"Total: {gpu_mem_info['total'] / (1024**3):.2f} GB"
                 )
-                cp.get_default_memory_pool().free_all_blocks()
-                cp.cuda.Stream.null.synchronize()
+                # Free memory pools and synchronize
+                self._gpu_memory_monitor.free_all_blocks()
+                if CUDA_AVAILABLE:
+                    cp.cuda.Stream.null.synchronize()
                 gc.collect()
 
                 # For 7D operations, if still over limit, raise error
@@ -151,6 +160,12 @@ class GPUBlockUtils:
                         f"or field dimensions."
                     )
 
+        except MemoryError as e:
+            # GPUMemoryMonitor raised MemoryError for critical usage
+            self.logger.error(f"GPU memory critical: {e}")
+            raise RuntimeError(
+                f"GPU memory critical for 7D operations: {e}"
+            ) from e
         except Exception as e:
             self.logger.warning(f"Failed to check GPU memory pressure: {e}")
             raise

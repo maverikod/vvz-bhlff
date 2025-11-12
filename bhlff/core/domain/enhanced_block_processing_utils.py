@@ -25,6 +25,8 @@ from .domain import Domain
 from ...utils.cuda_backend_7d_ops import CUDABackend7DOps
 from .enhanced_block_processing import ProcessingConfig
 from .optimal_block_size_calculator import OptimalBlockSizeCalculator
+from ...utils.gpu_memory_monitor import GPUMemoryMonitor
+from ...utils.cpu_memory_monitor import CPUMemoryMonitor
 
 
 class EnhancedBlockProcessorUtils:
@@ -72,6 +74,17 @@ class EnhancedBlockProcessorUtils:
         # Initialize unified block size calculator
         self._block_size_calculator = OptimalBlockSizeCalculator(
             gpu_memory_ratio=0.8  # Use 80% GPU memory (project requirement)
+        )
+        
+        # Initialize memory monitors
+        self._gpu_memory_monitor = GPUMemoryMonitor(
+            warning_threshold=0.75,
+            critical_threshold=0.9,
+        ) if cuda_available and CUDA_AVAILABLE else None
+        
+        self._cpu_memory_monitor = CPUMemoryMonitor(
+            warning_threshold=0.75,
+            critical_threshold=0.9,
         )
 
     def calculate_optimal_block_size(self) -> int:
@@ -212,17 +225,19 @@ class EnhancedBlockProcessorUtils:
         """
         # For Level C, check GPU memory (80% usage rule)
         if level_c_context and self.cuda_available and CUDA_AVAILABLE:
+            if self._gpu_memory_monitor is None:
+                raise RuntimeError("GPU memory monitor not initialized for Level C context")
+            
             try:
-                mem_info = cp.cuda.runtime.memGetInfo()
-                free_memory_gpu = mem_info[0] / (1024**3)  # GB
-                total_memory_gpu = mem_info[1] / (1024**3)  # GB
-
+                # Use GPUMemoryMonitor for consistent memory checking
+                gpu_mem_info = self._gpu_memory_monitor.check_memory()
+                
                 # Estimate memory requirements for 7D field processing
                 field_memory = field.nbytes / (1024**3)  # GB
                 # For 7D operations, need ~5x memory overhead (FFT, Laplacian, etc.)
                 processing_memory = field_memory * 5
                 # Use 80% of free GPU memory (project requirement)
-                available_memory_gpu = free_memory_gpu * 0.8
+                available_memory_gpu = (gpu_mem_info["free"] / (1024**3)) * 0.8
 
                 sufficient = available_memory_gpu >= processing_memory
 
@@ -231,11 +246,18 @@ class EnhancedBlockProcessorUtils:
                         f"Insufficient GPU memory for Level C: "
                         f"required={processing_memory:.2f} GB, "
                         f"available={available_memory_gpu:.2f} GB "
-                        f"(80% of {free_memory_gpu:.2f} GB free, "
-                        f"total={total_memory_gpu:.2f} GB)"
+                        f"(80% of {gpu_mem_info['free'] / (1024**3):.2f} GB free, "
+                        f"total={gpu_mem_info['total'] / (1024**3):.2f} GB, "
+                        f"usage={gpu_mem_info['usage_ratio']:.1%})"
                     )
 
                 return sufficient
+            except MemoryError as e:
+                # GPUMemoryMonitor raised MemoryError for critical usage
+                self.logger.error(f"GPU memory critical: {e}")
+                raise RuntimeError(
+                    f"Level C requires GPU memory but it's critical: {e}"
+                ) from e
             except Exception as e:
                 self.logger.error(f"Failed to check GPU memory: {e}")
                 # For Level C, if GPU memory check fails, it's an error
@@ -245,20 +267,28 @@ class EnhancedBlockProcessorUtils:
                     ) from e
                 return False
 
-        # For non-Level C, check CPU memory
-        field_memory = field.nbytes / (1024**3)  # GB
-        processing_memory = field_memory * 3  # 3x for processing overhead
-
-        available_memory = psutil.virtual_memory().available / (1024**3)
-        required_memory = processing_memory / self.config.max_memory_usage
-
-        sufficient = available_memory >= required_memory
-
-        if not sufficient:
-            self.logger.warning(
-                f"Insufficient memory: required={required_memory:.2f} GB, "
-                f"available={available_memory:.2f} GB"
-            )
-
-        return sufficient
+        # For non-Level C, check CPU memory using CPUMemoryMonitor
+        field_memory_bytes = field.nbytes
+        processing_memory_bytes = field_memory_bytes * 3  # 3x for processing overhead
+        required_memory_bytes = int(processing_memory_bytes / self.config.max_memory_usage)
+        
+        try:
+            cpu_mem_info = self._cpu_memory_monitor.check_memory(required_bytes=required_memory_bytes)
+            sufficient = cpu_mem_info.get("sufficient", True)
+            
+            if not sufficient:
+                self.logger.warning(
+                    f"Insufficient CPU memory: required={required_memory_bytes / (1024**3):.2f} GB, "
+                    f"available={cpu_mem_info.get('available_limit', 0) / (1024**3):.2f} GB "
+                    f"(usage={cpu_mem_info['usage_ratio']:.1%})"
+                )
+            
+            return sufficient
+        except MemoryError as e:
+            # CPUMemoryMonitor raised MemoryError for insufficient memory
+            self.logger.error(f"CPU memory insufficient: {e}")
+            return False
+        except Exception as e:
+            self.logger.error(f"Failed to check CPU memory: {e}")
+            return False
 

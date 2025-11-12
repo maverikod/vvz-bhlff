@@ -72,6 +72,16 @@ def _prepare_fields(
     np.ndarray,
     np.ndarray,
 ]:
+    """
+    Prepare initial fields and sources for integration.
+    
+    Physical Meaning:
+        Creates initial field configuration and time-dependent sources
+        for phase field evolution, using FieldArray for automatic
+        memory management of large 7D arrays.
+    """
+    from bhlff.core.arrays import FieldArray
+    
     spatial_shape = (
         domain.N,
         domain.N,
@@ -80,8 +90,9 @@ def _prepare_fields(
     full_shape = domain.shape
     nt = domain.N_t
 
-    # Initial field in full 7D shape (complex)
-    initial = np.zeros(full_shape, dtype=np.complex128)
+    # Initial field in full 7D shape (complex) - use FieldArray for automatic swap
+    initial_field = FieldArray(shape=full_shape, dtype=np.complex128)
+    initial = initial_field.array
     seed = np.zeros(spatial_shape, dtype=np.float64)
     seed[0, 0, 0] = 1.0
     # Broadcast seed across phase dims and initial time slice
@@ -91,10 +102,12 @@ def _prepare_fields(
     t = np.linspace(0.0, domain.T, nt)
     source_t = np.sin(2 * np.pi * t / max(domain.T, 1e-6))
 
-    # Source over time: (nt,)+full_shape
-    source_over_time = np.zeros((nt,) + full_shape, dtype=np.complex128)
+    # Source over time: (nt,)+full_shape - use FieldArray for automatic swap
+    source_over_time_field = FieldArray(shape=(nt,) + full_shape, dtype=np.complex128)
+    source_over_time = source_over_time_field.array
     # Build a spatial source and broadcast over phase dims
-    spatial_source_full = np.zeros(full_shape, dtype=np.complex128)
+    spatial_source_full_field = FieldArray(shape=full_shape, dtype=np.complex128)
+    spatial_source_full = spatial_source_full_field.array
     spatial_source_full[0, 0, 0, :, :, :, :] = 1.0 + 0.0j
     for i in range(nt):
         source_over_time[i] = spatial_source_full * source_t[i]

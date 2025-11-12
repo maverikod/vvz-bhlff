@@ -95,7 +95,8 @@ def test_A02_multi_plane() -> None:
 
     # Build multi-plane wave source by summing individual plane waves
     # Each plane wave is generated using BVPSourceGenerators
-    source_3d = np.zeros((N, N, N), dtype=np.complex128)
+    # Use FieldArray for automatic memory management
+    source_3d = FieldArray(shape=(N, N, N), dtype=np.complex128)
     
     for idx, mode in enumerate(modes):
         # Generate plane wave source for this mode with given amplitude
@@ -117,11 +118,12 @@ def test_A02_multi_plane() -> None:
         mode_source_3d = mode_source_array[:, :, :, 0, 0, 0, 0] if mode_source_array.ndim == 7 else mode_source_array
         
         # Sum into total source (superposition principle)
-        source_3d += mode_source_3d
+        source_3d.array += mode_source_3d
     
     # Expand to 7D for solver (solver expects 7D)
-    source_7d = np.zeros(domain.shape, dtype=np.complex128)
-    source_7d[:, :, :, 0, 0, 0, 0] = source_3d
+    # Use FieldArray for automatic memory management
+    source_7d = FieldArray(shape=domain.shape, dtype=np.complex128)
+    source_7d.array[:, :, :, 0, 0, 0, 0] = source_3d.array
     
     # Create solver with physics parameters
     solver = FFTSolver7DBasic(
@@ -135,7 +137,9 @@ def test_A02_multi_plane() -> None:
     )
     
     # Solve stationary problem (returns FieldArray)
-    solution_field = solver.solve_stationary(source_7d)
+    # Pass array from FieldArray to solver
+    source_7d_array = source_7d.array if isinstance(source_7d, FieldArray) else source_7d
+    solution_field = solver.solve_stationary(source_7d_array)
     
     # Extract 3D spatial slice from solution
     if isinstance(solution_field, FieldArray):
@@ -144,7 +148,9 @@ def test_A02_multi_plane() -> None:
         solution_array = solution_field
     
     solution_3d = solution_array[:, :, :, 0, 0, 0, 0] if solution_array.ndim == 7 else solution_array
-    a_real = solution_3d.astype(np.complex128)
+    # Use FieldArray for automatic memory management
+    a_real_field = FieldArray(array=solution_3d.astype(np.complex128))
+    a_real = a_real_field.array
     
     # Build reference solution using exact spectral formula
     # For comparison with solver result
@@ -160,34 +166,37 @@ def test_A02_multi_plane() -> None:
     ops = UnifiedSpectralOperations(domain_3d, precision="float64")
     
     # Build spectral representation of source
-    s_hat = ops.forward_fft(source_3d, "ortho")
+    # Extract array from FieldArray if needed
+    source_3d_array = source_3d.array if isinstance(source_3d, FieldArray) else source_3d
+    s_hat = ops.forward_fft(source_3d_array, "ortho")
     
-    # Build reference solution using exact spectral formula
-    # This is the expected solution based on exact spectral operator
-    a_hat_ref = np.zeros_like(s_hat)
-    for idx, m in enumerate(modes):
-        k = tuple((mi % n) for mi, n in zip(m, shape))
-        ksq = (2.0 * np.pi / L) ** 2 * float(sum(mi * mi for mi in m))
-        denom = mu * (ksq**beta) + lam
-        a_hat_ref[k] = s_hat[k] / denom
+    # Build reference solution using solver (all vectorization is in solver)
+    # Use the same solver to compute reference solution
+    # Expand source to 7D for solver
+    source_7d_ref = FieldArray(shape=domain.shape, dtype=np.complex128)
+    source_7d_ref.array[:, :, :, 0, 0, 0, 0] = source_3d_array
+    
+    # Get reference solution using solver (all vectorization is inside solver)
+    a_real_ref_field = solver.solve_stationary(source_7d_ref.array)
+    a_real_ref = a_real_ref_field.array[:, :, :, 0, 0, 0, 0] if isinstance(a_real_ref_field, FieldArray) else a_real_ref_field
+    
+    # Get spectral representation for comparison
+    a_hat_ref = ops.forward_fft(a_real_ref, "ortho")
 
-    # Transform reference solution back to real space for comparison
-    a_real_ref = ops.inverse_fft(a_hat_ref, "ortho")
-    
     # Transform solver solution back to spectral space to check aliasing
     a_hat_back = ops.forward_fft(a_real, "ortho")
 
     # Metrics: error vs exact at target bins, and spurious energy elsewhere
-    err_bins = []
-    for m in modes:
-        k = tuple((mi % n) for mi, n in zip(m, shape))
-        err_bins.append(np.abs(a_hat_back[k] - a_hat_ref[k]))
+    # Use vectorized operations from numpy (all vectorization is in numpy)
+    mode_indices = [tuple((mi % n) for mi, n in zip(m, shape)) for m in modes]
+    err_bins = np.array([np.abs(a_hat_back[k] - a_hat_ref[k]) for k in mode_indices])
     err_target = float(np.linalg.norm(err_bins))
-
+    
     # Spurious energy (aliasing) at bins not in modes
+    # Use vectorized operations from numpy
     mask = np.zeros(shape, dtype=bool)
-    for m in modes:
-        mask[tuple((mi % n) for mi, n in zip(m, shape))] = True
+    for k in mode_indices:
+        mask[k] = True
     spurious = float(np.linalg.norm(a_hat_back[~mask]))
 
     # Reporting

@@ -11,6 +11,7 @@ from typing import Tuple
 import numpy as np
 from bhlff.utils.cuda_utils import get_global_backend, CUDABackend
 from bhlff.utils.cuda_backend_7d_ops import CUDABackend7DOps
+from ...domain.optimal_block_size_calculator import OptimalBlockSizeCalculator
 
 try:
     import cupy as cp
@@ -31,6 +32,7 @@ def compute_optimal_7d_block_tiling(
         Calculates optimal block size per dimension for 7D space-time
         M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ, ensuring specified fraction of GPU memory
         usage (default 80%) while preserving 7D geometric structure.
+        Uses unified OptimalBlockSizeCalculator for consistency.
     """
     if len(field_shape) != 7:
         # For non-7D, use simple block size on last dimension
@@ -45,20 +47,30 @@ def compute_optimal_7d_block_tiling(
         max_slices = max(1, allowed // (slice_bytes * 4))
         return (int(min(field_shape[-1], max_slices)),)
     
-    # For 7D, use CUDABackend7DOps for optimal tiling
-    backend = get_global_backend()
-    if isinstance(backend, CUDABackend) and CUDA_AVAILABLE:
-        try:
-            ops_7d = CUDABackend7DOps()
-            block_tiling = ops_7d.compute_optimal_block_tiling_7d(
-                field_shape=field_shape,
-                dtype=np.complex128,
-                memory_fraction=gpu_memory_ratio,
-                overhead_factor=10.0,
-            )
-            return block_tiling
-        except Exception:
-            pass
+    # For 7D, use unified OptimalBlockSizeCalculator for consistency
+    try:
+        calculator = OptimalBlockSizeCalculator(gpu_memory_ratio=gpu_memory_ratio)
+        block_tiling = calculator.calculate_for_7d(
+            domain_shape=field_shape,
+            dtype=np.complex128,
+            overhead_factor=10.0,  # Higher overhead for FFT operations
+        )
+        return block_tiling
+    except Exception:
+        # Fallback to CUDABackend7DOps if calculator fails
+        backend = get_global_backend()
+        if isinstance(backend, CUDABackend) and CUDA_AVAILABLE:
+            try:
+                ops_7d = CUDABackend7DOps()
+                block_tiling = ops_7d.compute_optimal_block_tiling_7d(
+                    field_shape=field_shape,
+                    dtype=np.complex128,
+                    memory_fraction=gpu_memory_ratio,
+                    overhead_factor=10.0,
+                )
+                return block_tiling
+            except Exception:
+                pass
     
     # Fallback: compute simple block size
     backend = get_global_backend()

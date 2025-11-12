@@ -37,6 +37,8 @@ except ImportError:
 from .block_processor import BlockProcessor
 from .domain import Domain
 from ...utils.memory_monitor import MemoryMonitor
+from ...utils.gpu_memory_monitor import GPUMemoryMonitor
+from ...utils.cpu_memory_monitor import CPUMemoryMonitor
 from .enhanced_block_processing import ProcessingConfig, ProcessingMode
 from .enhanced_block_processing.gpu_block_processor import GPUBlockProcessor
 from .enhanced_block_processing.cpu_block_processor import CPUBlockProcessor
@@ -78,6 +80,15 @@ class EnhancedBlockProcessor:
 
         # Initialize memory monitoring
         self.memory_monitor = MemoryMonitor()
+        # Initialize specialized GPU and CPU memory monitors
+        self.gpu_memory_monitor = GPUMemoryMonitor(
+            warning_threshold=0.75,
+            critical_threshold=0.9,
+        )
+        self.cpu_memory_monitor = CPUMemoryMonitor(
+            warning_threshold=0.75,
+            critical_threshold=0.9,
+        )
 
         # CUDA availability
         self.cuda_available = EnhancedBlockProcessorUtils.check_cuda_availability()
@@ -307,16 +318,26 @@ class EnhancedBlockProcessor:
         if self.cuda_available:
             try:
                 if CUDA_AVAILABLE:
+                    # Check GPU memory before optimization using specialized monitor
+                    try:
+                        gpu_mem_info = self.gpu_memory_monitor.check_memory()
+                        self.logger.debug(
+                            f"GPU memory check: {gpu_mem_info['usage_ratio']:.1%} used, "
+                            f"{gpu_mem_info['free'] / (1024**3):.2f} GB free"
+                        )
+                    except MemoryError as e:
+                        self.logger.warning(f"GPU memory warning: {e}")
+                    
                     # Use 7D block tiling optimization with 80% GPU memory
                     # This ensures optimal block size for 7D Laplacian operations
                     optimal_size = self.utils.calculate_optimal_block_size()
                     self.base_processor.block_size = optimal_size
 
-                    # Verify GPU memory usage is within 80% limit
+                    # Verify GPU memory usage is within 80% limit using monitor
                     if CUDA_AVAILABLE:
-                        mem_info = cp.cuda.runtime.memGetInfo()
-                        free_memory_gpu = mem_info[0] / (1024**3)  # GB
-                        available_memory_gpu = free_memory_gpu * 0.8  # 80% limit
+                        available_memory_gpu = self.gpu_memory_monitor.get_available_memory(
+                            memory_ratio=0.8
+                        ) / (1024**3)  # GB
 
                         # Estimate memory usage for optimal block size
                         block_volume = optimal_size**7  # 7D block
@@ -373,7 +394,8 @@ class EnhancedBlockProcessor:
     def cleanup(self) -> None:
         """Cleanup resources."""
         if self.cuda_available and CUDA_AVAILABLE:
-            cp.get_default_memory_pool().free_all_blocks()
+            # Use GPU memory monitor for cleanup
+            self.gpu_memory_monitor.free_all_blocks()
 
         gc.collect()
         self.logger.info("Enhanced block processor cleaned up")

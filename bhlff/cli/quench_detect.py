@@ -72,6 +72,7 @@ def _create_neutralized_gaussian_7d(
     Physical Meaning:
         Generates a localized perturbation in the spatial subspace of M₇ =
         ℝ³ₓ × 𝕋³_φ × ℝₜ with neutralized mean, suitable for λ = 0 regimes.
+        Uses FieldArray for automatic memory management of large 7D arrays.
 
     Mathematical Foundation:
         s(x, φ, t) = g_σ(x) - ḡ where g_σ is spatial Gaussian and ḡ its mean.
@@ -83,8 +84,10 @@ def _create_neutralized_gaussian_7d(
         domain_length (float): Spatial domain length.
 
     Returns:
-        np.ndarray: Complex source tensor with zero mean.
+        np.ndarray: Complex source tensor with zero mean (underlying array from FieldArray).
     """
+    from bhlff.core.arrays import FieldArray
+    
     n_spatial = shape[0]
     n_phase = shape[3]
     n_time = shape[6]
@@ -101,7 +104,9 @@ def _create_neutralized_gaussian_7d(
     gaussian = np.exp(exponent)
     gaussian -= np.mean(gaussian)
 
-    source = np.zeros(shape, dtype=np.complex128)
+    # Use FieldArray for automatic swap management of large 7D arrays
+    source_field = FieldArray(shape=shape, dtype=np.complex128)
+    source = source_field.array
     for i_phi1 in range(n_phase):
         for i_phi2 in range(n_phase):
             for i_phi3 in range(n_phase):

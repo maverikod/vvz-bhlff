@@ -40,6 +40,8 @@ from .block_processor import BlockProcessor, BlockInfo
 from .domain import Domain
 from .optimal_block_size_calculator import OptimalBlockSizeCalculator
 from ...utils.memory_monitor import MemoryMonitor
+from ...utils.gpu_memory_monitor import GPUMemoryMonitor
+from ...utils.cpu_memory_monitor import CPUMemoryMonitor
 
 
 class ProcessingMode(Enum):
@@ -102,6 +104,15 @@ class OptimizedBlockProcessor:
 
         # Initialize memory monitoring
         self.memory_monitor = MemoryMonitor()
+        # Initialize specialized GPU and CPU memory monitors
+        self.gpu_memory_monitor = GPUMemoryMonitor(
+            warning_threshold=0.75,
+            critical_threshold=0.9,
+        )
+        self.cpu_memory_monitor = CPUMemoryMonitor(
+            warning_threshold=0.75,
+            critical_threshold=0.9,
+        )
 
         # CUDA availability
         self.cuda_available = CUDA_AVAILABLE and self.config.enable_gpu_acceleration

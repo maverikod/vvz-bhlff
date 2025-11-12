@@ -25,6 +25,9 @@ Example:
     >>> from bhlff.core.domain.seven_d_block_tiling import SevenDBlockTiling
     >>> tiling = SevenDBlockTiling(domain_shape, available_memory)
     >>> block_tiling = tiling.compute_7d_block_tiling()
+    
+    Note: The module file is named 7d_block_tiling.py, but Python imports
+    it as seven_d_block_tiling due to module name restrictions.
 """
 
 import logging

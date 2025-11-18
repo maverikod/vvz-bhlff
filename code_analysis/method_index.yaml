@@ -6192,6 +6192,14 @@ TestBasicValidation:
 - test_A06_solve_method_alias
 - test_A07_get_spectral_coefficients
 - test_A08_spectral_coefficients_consistency
+TestBatchedOperations:
+- setup_method
+- test_field_array_iter_batches
+- test_field_array_from_block_generator
+- test_blocked_field_generator_iter_gpu_blocks
+- test_field_array_swap_flag
+- test_no_direct_zeros_allocation
+- test_batched_fft_preserves_physics
 TestBeatingPattern:
 - test_beating_pattern_creation
 - test_beating_pattern_defaults

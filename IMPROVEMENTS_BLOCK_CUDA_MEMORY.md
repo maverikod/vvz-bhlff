@@ -1,5 +1,7 @@
 # Список доработок для улучшения блочной обработки, векторизации, CUDA и защиты памяти
 
+**Status: in progress** - See detailed action plan in `analysis_output/level_a_block_cuda_memory_plan.md`
+
 ## Критические проблемы в текущей реализации
 
 ### 1. Тесты не используют готовые генераторы и решатели

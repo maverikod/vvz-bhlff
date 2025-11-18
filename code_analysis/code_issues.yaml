@@ -471,10 +471,6 @@ issues:
     file: bhlff/core/fft/unified/facade.py
     limit: 400
     lines: 424
-  - exceeds_limit: 99
-    file: bhlff/core/fft/unified/blocked/blocked_forward.py
-    limit: 400
-    lines: 499
   - exceeds_limit: 28
     file: examples/level_g_example.py
     limit: 400
@@ -2484,7 +2480,7 @@ issues:
 summary:
   any_type_usage: 0
   classes_without_docstrings: 19
-  files_too_large: 105
+  files_too_large: 104
   files_without_docstrings: 0
   generic_exception_usage: 0
   imports_in_middle: 0
@@ -2492,4 +2488,4 @@ summary:
   methods_with_pass: 0
   methods_without_docstrings: 499
   not_implemented_in_non_abstract: 0
-  total_issues: 623
+  total_issues: 622

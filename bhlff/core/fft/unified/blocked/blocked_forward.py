@@ -24,6 +24,11 @@ except ImportError:
 
 from ..fft_gpu import forward_fft_gpu
 from .blocked_tiling import compute_optimal_7d_block_tiling
+from .blocked_copy import copy_with_max_blocks
+from .blocked_streaming import (
+    process_swapped_field_array_streaming,
+    process_memmap_field,
+)
 
 
 def forward_fft_blocked(
@@ -188,144 +193,26 @@ def _forward_fft_blocked_7d(
         logger.info("Processing entire field with FFT (global operation)")
         sys.stdout.flush()
         
-        # For swapped FieldArray, use streaming batch iterator to load blocks
-        # sequentially into pinned memory, then assemble for FFT
+        # For swapped FieldArray, use streaming batch iterator
         if field_array_obj is not None and field_array_obj.is_swapped:
-            logger.info("FieldArray is swapped, using streaming batch iterator")
-            if not CUDA_AVAILABLE:
-                raise RuntimeError(
-                    "CUDA is required for streaming FFT with swapped FieldArray. "
-                    "CPU fallback is not supported."
-                )
-            
-            # Create CUDA stream for async transfers
-            stream = cp.cuda.Stream()
-            
-            # Check if field fits in GPU memory (with overhead)
-            try:
-                from bhlff.utils.cuda_utils import get_global_backend
-                backend = get_global_backend()
-                if hasattr(backend, "get_memory_info"):
-                    mem_info = backend.get_memory_info()
-                    free_memory = mem_info.get("free_memory", 0)
-                    available_memory = int(free_memory * gpu_memory_ratio)
-                else:
-                    available_memory = int(0.8 * 1024**3)  # 0.8 GB fallback
-            except Exception:
-                available_memory = int(0.8 * 1024**3)  # 0.8 GB fallback
-            
-            # Check if field fits in available memory
-            if field_memory_with_overhead > available_memory:
-                raise RuntimeError(
-                    f"Field size {field_memory_with_overhead/1e9:.3f}GB exceeds "
-                    f"available GPU memory {available_memory/1e9:.3f}GB. "
-                    f"FFT requires all data simultaneously. "
-                    f"Please reduce field size or increase GPU memory."
-                )
-            
-            # Allocate regular numpy array for assembled field
-            # This will be in CPU memory, then transferred to GPU
-            assembled_field = np.zeros(field.shape, dtype=field.dtype)
-            
-            # Stream blocks from FieldArray and assemble in CPU memory
-            logger.info("Streaming blocks from FieldArray and assembling")
-            for batch_payload in field_array_obj.iter_batches(
-                max_gpu_ratio=gpu_memory_ratio,
-                use_cuda=False,  # Use CPU for assembly
-                stream=None
-            ):
-                slices = batch_payload["slices"]
-                cpu_block = batch_payload["cpu"]
-                # Copy block to assembled field
-                assembled_field[slices] = cpu_block
-            
-            logger.info("All blocks assembled, transferring to GPU")
-            
-            # Transfer assembled field to GPU using CUDA stream
-            with stream:
-                field_gpu = cp.asarray(assembled_field)
-            stream.synchronize()
-            
-            # Process on GPU
-            result = forward_fft_gpu(field_gpu, normalization, domain_shape)
-            
-            # Copy result back
-            if isinstance(result, cp.ndarray):
-                result = cp.asnumpy(result)
-            
-            # Free assembled field from CPU memory
-            del assembled_field
-            
-        # For memory-mapped arrays, we need to load data in chunks
-        # But FFT requires all data, so we need to load entire field to GPU
-        # If it doesn't fit, we'll get OutOfMemoryError which we'll handle
-        elif isinstance(field, np.memmap):
-            logger.info("Input is memory-mapped, loading to GPU")
-            # Verify input data before processing
-            field_sum = np.sum(field)
-            field_norm = np.linalg.norm(field)
-            logger.debug(
-                f"Memory-mapped input: shape={field.shape}, dtype={field.dtype}, "
-                f"sum={field_sum:.6e}, norm={field_norm:.6e}"
+            result = process_swapped_field_array_streaming(
+                field_array_obj=field_array_obj,
+                field=field,
+                normalization=normalization,
+                domain_shape=domain_shape,
+                gpu_memory_ratio=gpu_memory_ratio,
+                field_memory_with_overhead=field_memory_with_overhead,
+                logger=logger,
             )
-            
-            # Try to load entire field - if it fails, we'll handle it
-            try:
-                # Load entire field to GPU
-                if CUDA_AVAILABLE:
-                    field_gpu = cp.asarray(field)
-                    # Verify data was loaded correctly
-                    if CUDA_AVAILABLE:
-                        # For complex arrays, use abs() to get real magnitude
-                        field_gpu_sum_val = cp.sum(field_gpu)
-                        field_gpu_norm_val = cp.linalg.norm(field_gpu)
-                        # Convert to float: use abs() for complex, direct for real
-                        if np.iscomplexobj(field_gpu):
-                            field_gpu_sum = float(abs(field_gpu_sum_val))
-                            field_gpu_norm = float(abs(field_gpu_norm_val))
-                        else:
-                            field_gpu_sum = float(field_gpu_sum_val)
-                            field_gpu_norm = float(field_gpu_norm_val)
-                        logger.debug(
-                            f"GPU input: sum={field_gpu_sum:.6e}, norm={field_gpu_norm:.6e}"
-                        )
-                        # Compare using abs() for complex numbers
-                        field_sum_abs = abs(field_sum) if np.iscomplexobj(field) else field_sum
-                        if abs(field_sum_abs - field_gpu_sum) > 1e-6:
-                            logger.warning(
-                                f"Data mismatch when loading to GPU: "
-                                f"CPU sum={field_sum_abs:.6e}, GPU sum={field_gpu_sum:.6e}"
-                            )
-                else:
-                    field_gpu = field
-                
-                # Process on GPU
-                result = forward_fft_gpu(field_gpu, normalization, domain_shape)
-                
-                # Copy result back
-                if CUDA_AVAILABLE and isinstance(result, cp.ndarray):
-                    result = cp.asnumpy(result)
-                    # Verify result after transfer
-                    result_sum = np.sum(result)
-                    result_norm = np.linalg.norm(result)
-                    logger.debug(
-                        f"Result after GPU->CPU transfer: sum={result_sum:.6e}, norm={result_norm:.6e}"
-                    )
-            except Exception as e:
-                error_str = str(e)
-                if "OutOfMemoryError" in error_str or "Out of memory" in error_str:
-                    logger.warning(
-                        f"Failed to load entire field to GPU: {e}. "
-                        f"Field is too large for available GPU memory. "
-                        f"FFT/IFFT requires all data simultaneously, so this field cannot be processed."
-                    )
-                    raise RuntimeError(
-                        f"FFT failed: Field size {field_memory_with_overhead/1e9:.3f}GB is too large "
-                        f"for available GPU memory. FFT/IFFT requires all data simultaneously. "
-                        f"Please reduce field size or increase GPU memory."
-                    ) from e
-                else:
-                    raise
+        # For memory-mapped arrays, load to GPU
+        elif isinstance(field, np.memmap):
+            result = process_memmap_field(
+                field=field,
+                normalization=normalization,
+                domain_shape=domain_shape,
+                field_memory_with_overhead=field_memory_with_overhead,
+                logger=logger,
+            )
         else:
             # Regular array - process directly
             result = forward_fft_gpu(field, normalization, domain_shape)
@@ -334,7 +221,7 @@ def _forward_fft_blocked_7d(
         # Use maximum block size for swap operations (80% GPU memory)
         if isinstance(out, np.memmap) or isinstance(result, np.memmap):
             # For memory-mapped arrays, copy in large blocks
-            _copy_with_max_blocks(result, out, gpu_memory_ratio, logger)
+            copy_with_max_blocks(result, out, gpu_memory_ratio, logger)
         else:
             # For regular arrays, direct copy
             out[:] = result
@@ -399,100 +286,3 @@ def _forward_fft_blocked_7d(
     sys.stdout.flush()
     
     return out
-
-
-def _copy_with_max_blocks(
-    source: np.ndarray,
-    target: np.ndarray,
-    gpu_memory_ratio: float,
-    logger: logging.Logger,
-) -> None:
-    """
-    Copy array using maximum block sizes for swap operations.
-    
-    Physical Meaning:
-        Copies data from source to target using maximum block sizes
-        (80% GPU memory) for efficient swap operations. This maximizes
-        throughput while respecting memory constraints.
-        
-    Args:
-        source (np.ndarray): Source array (may be memory-mapped).
-        target (np.ndarray): Target array (may be memory-mapped).
-        gpu_memory_ratio (float): GPU memory ratio to use (default 0.8).
-        logger (logging.Logger): Logger for debug messages.
-    """
-    if source.shape != target.shape:
-        raise ValueError(
-            f"Shape mismatch: source {source.shape} != target {target.shape}"
-        )
-    
-    # Calculate maximum block size (80% GPU memory)
-    max_block_bytes = 0
-    if CUDA_AVAILABLE:
-        try:
-            from bhlff.utils.cuda_utils import get_global_backend
-            backend = get_global_backend()
-            if hasattr(backend, "get_memory_info"):
-                mem_info = backend.get_memory_info()
-                free_memory = mem_info.get("free_memory", 0)
-                max_block_bytes = int(free_memory * gpu_memory_ratio)
-        except Exception:
-            # Fallback to 1GB if cannot determine GPU memory
-            max_block_bytes = 1024 * 1024 * 1024
-    
-    if max_block_bytes == 0:
-        max_block_bytes = 1024 * 1024 * 1024  # 1GB fallback
-    
-    # Calculate block size in elements
-    bytes_per_element = source.dtype.itemsize
-    max_block_elements = max_block_bytes // bytes_per_element
-    
-    # For 7D arrays, copy in spatial blocks (first 3 dimensions)
-    # Use maximum block size for spatial dimensions
-    if len(source.shape) == 7:
-        N_x, N_y, N_z = source.shape[:3]
-        phase_temporal_size = np.prod(source.shape[3:])
-        
-        # Calculate spatial block size
-        max_spatial_elements = max_block_elements // phase_temporal_size
-        if max_spatial_elements < 1:
-            max_spatial_elements = 1
-        
-        # Calculate block size per spatial dimension
-        block_size_per_dim = int(max_spatial_elements ** (1.0 / 3.0))
-        block_x = max(32, min(block_size_per_dim, N_x))
-        block_y = max(32, min(block_size_per_dim, N_y))
-        block_z = max(32, min(block_size_per_dim, N_z))
-        
-        logger.info(
-            f"Copying with spatial blocks: ({block_x}, {block_y}, {block_z}) "
-            f"= {block_x * block_y * block_z * phase_temporal_size / 1e6:.1f}M elements"
-        )
-        
-        # Copy in spatial blocks
-        for x_start in range(0, N_x, block_x):
-            x_end = min(x_start + block_x, N_x)
-            for y_start in range(0, N_y, block_y):
-                y_end = min(y_start + block_y, N_y)
-                for z_start in range(0, N_z, block_z):
-                    z_end = min(z_start + block_z, N_z)
-                    
-                    # Copy block
-                    source_block = source[x_start:x_end, y_start:y_end, z_start:z_end, :, :, :, :]
-                    target[x_start:x_end, y_start:y_end, z_start:z_end, :, :, :, :] = source_block
-                    
-                    # Verify block was copied correctly
-                    target_block = target[x_start:x_end, y_start:y_end, z_start:z_end, :, :, :, :]
-                    if not np.allclose(source_block, target_block, rtol=1e-10, atol=1e-10):
-                        max_diff = np.max(np.abs(source_block - target_block))
-                        logger.warning(
-                            f"Block copy verification failed at ({x_start}:{x_end}, {y_start}:{y_end}, {z_start}:{z_end}): "
-                            f"max difference = {max_diff:.2e}"
-                        )
-                    
-                    # Free GPU memory if using CUDA
-                    if CUDA_AVAILABLE:
-                        cp.get_default_memory_pool().free_all_blocks()
-    else:
-        # For non-7D arrays, copy directly
-        target[:] = source

@@ -18,55 +18,25 @@ Mathematical Foundation:
     for 7D phase field operations while maintaining 7D structure and properties.
 """
 
-import numpy as np
-from typing import Optional, Union, Tuple, Any
 import logging
-import os
+import numpy as np
 from pathlib import Path
+from typing import Any, Dict, Iterator, Optional, Tuple, TYPE_CHECKING, Union
+
+from .field_array_batch_iterator import (
+    FieldArrayBatchIterator,
+    create_field_array_from_block_generator,
+)
+from .field_array_math_mixin import FieldArrayMathMixin
+from .field_array_thresholds import get_default_swap_threshold_gb
+
+if TYPE_CHECKING:
+    from ..sources.blocked_field_generator import BlockedFieldGenerator
 
 logger = logging.getLogger(__name__)
 
-# Default swap threshold - can be overridden via environment variable
-# For production, uses 80% of GPU memory; for testing, use small value
-def _get_default_swap_threshold_gb() -> float:
-    """
-    Get default swap threshold based on GPU memory (80%) or environment variable.
-    
-    Physical Meaning:
-        Determines swap threshold as 80% of available GPU memory for production,
-        or uses environment variable for testing.
-        
-    Returns:
-        float: Swap threshold in GB.
-    """
-    # Check environment variable first (for testing)
-    env_threshold = os.getenv("BHLFF_SWAP_THRESHOLD_GB")
-    if env_threshold is not None:
-        return float(env_threshold)
-    
-    # For production, use 80% of GPU memory
-    try:
-        from ...utils.cuda_utils import get_global_backend, CUDABackend
-        backend = get_global_backend()
-        if isinstance(backend, CUDABackend):
-            mem_info = backend.get_memory_info()
-            free_memory = mem_info.get("free_memory", mem_info.get("total_memory", 0))
-            # Use 80% of free GPU memory as threshold
-            threshold_bytes = int(free_memory * 0.8)
-            threshold_gb = threshold_bytes / 1e9
-            logger.info(
-                f"Using 80% of GPU memory as swap threshold: "
-                f"{threshold_gb:.3f} GB (free GPU memory: {free_memory/1e9:.3f} GB)"
-            )
-            return threshold_gb
-    except Exception as e:
-        logger.warning(f"Could not determine GPU memory, using default 0.01 GB: {e}")
-    
-    # Fallback to small value for testing
-    return 0.01
 
-
-class FieldArray:
+class FieldArray(FieldArrayMathMixin):
     """
     Unified field array wrapper with transparent swap support.
     
@@ -117,7 +87,11 @@ class FieldArray:
         self._swap_manager = swap_manager or get_swap_manager()
         self._swap_id = swap_id
         # Use provided threshold or default based on GPU memory (80%)
-        self._swap_threshold_gb = swap_threshold_gb if swap_threshold_gb is not None else _get_default_swap_threshold_gb()
+        self._swap_threshold_gb = (
+            swap_threshold_gb
+            if swap_threshold_gb is not None
+            else get_default_swap_threshold_gb()
+        )
         
         if array is not None:
             # Wrap existing array
@@ -149,6 +123,85 @@ class FieldArray:
                 self._array = np.zeros(shape, dtype=dtype)
         else:
             raise ValueError("Either array or shape must be provided")
+
+    @classmethod
+    def from_block_generator(
+        cls,
+        block_generator: "BlockedFieldGenerator",
+        *,
+        dtype: np.dtype = np.complex128,
+        swap_threshold_gb: Optional[float] = None,
+    ) -> "FieldArray":
+        """
+        Create FieldArray by streaming blocks from a generator.
+
+        Physical Meaning:
+            Materializes a full 7D phase field by iterating through the
+            block generator with swap-aware writes so large tensors never
+            exceed the 80% GPU memory budget during creation.
+
+        Mathematical Foundation:
+            Tiles the domain shape returned by the generator's domain
+            using block metadata (start, shape) to reconstruct the full
+            tensor while preserving spatial, phase, and temporal indices.
+
+        Args:
+            block_generator (BlockedFieldGenerator): Source of 7D blocks.
+            dtype (np.dtype): Target dtype for the resulting field.
+            swap_threshold_gb (Optional[float]): Overrides default swap threshold.
+
+        Returns:
+            FieldArray: Swap-aware array populated from streamed blocks.
+        """
+
+        return create_field_array_from_block_generator(
+            field_cls=cls,
+            block_generator=block_generator,
+            dtype=dtype,
+            swap_threshold_gb=swap_threshold_gb,
+        )
+
+    def iter_batches(
+        self,
+        *,
+        block_shape: Optional[Tuple[int, ...]] = None,
+        max_gpu_ratio: float = 0.8,
+        axis_priority: Optional[Tuple[int, ...]] = None,
+        use_cuda: bool = True,
+        stream: Optional[Any] = None,
+    ) -> Iterator[Dict[str, Any]]:
+        """
+        Iterate over swap-backed data in GPU-friendly batches.
+
+        Physical Meaning:
+            Provides sequential views over the 7D phase field limited to
+            80% of available GPU memory so CUDA kernels operate on manageable
+            tiles without duplicating the full tensor.
+
+        Mathematical Foundation:
+            Computes block tiling based on memory ratio and axis priority,
+            yielding slice tuples that cover the domain exactly once.
+
+        Args:
+            block_shape (Optional[Tuple[int, ...]]): Forced batch shape.
+            max_gpu_ratio (float): Fraction of free GPU memory per batch.
+            axis_priority (Optional[Tuple[int, ...]]): Order for shrinking axes.
+            use_cuda (bool): Whether to move batches to GPU automatically.
+            stream (Optional[Any]): Optional CUDA stream for async copies.
+
+        Returns:
+            Iterator[Dict[str, Any]]: Generator yielding batch payloads.
+        """
+
+        batch_iterator = FieldArrayBatchIterator(
+            self,
+            block_shape=block_shape,
+            max_gpu_ratio=max_gpu_ratio,
+            axis_priority=axis_priority,
+            use_cuda=use_cuda,
+            stream=stream,
+        )
+        return batch_iterator.iterate()
     
     def _should_use_swap(self, array: np.ndarray) -> bool:
         """Check if array should use swap based on size."""
@@ -201,20 +254,6 @@ class FieldArray:
         self._swap_id = swap_id
     
     @property
-    def array(self) -> Union[np.ndarray, np.memmap]:
-        """
-        Get underlying array.
-        
-        Physical Meaning:
-            Returns the underlying array (in memory or on disk) for direct access
-            when needed for operations that require numpy array interface.
-            
-        Returns:
-            Union[np.ndarray, np.memmap]: Underlying array.
-        """
-        return self._array
-    
-    @property
     def shape(self) -> Tuple[int, ...]:
         """Get array shape."""
         return self._array.shape
@@ -233,75 +272,6 @@ class FieldArray:
     def is_swapped(self) -> bool:
         """Check if array is stored on disk."""
         return isinstance(self._array, np.memmap)
-    
-    def __array__(self) -> np.ndarray:
-        """NumPy array interface."""
-        return self._array
-    
-    def __getitem__(self, key):
-        """Array indexing."""
-        return self._array[key]
-    
-    def __setitem__(self, key, value):
-        """Array assignment."""
-        self._array[key] = value
-        if isinstance(self._array, np.memmap):
-            self._array.flush()
-    
-    def __array_ufunc__(self, ufunc, method, *inputs, **kwargs):
-        """NumPy ufunc support."""
-        # Convert inputs to arrays
-        arrays = []
-        for inp in inputs:
-            if isinstance(inp, FieldArray):
-                arrays.append(inp._array)
-            else:
-                arrays.append(inp)
-        
-        # Apply ufunc
-        result = getattr(ufunc, method)(*arrays, **kwargs)
-        
-        # Wrap result if it's an array
-        if isinstance(result, np.ndarray):
-            return FieldArray(array=result, swap_threshold_gb=self._swap_threshold_gb)
-        return result
-    
-    def __mul__(self, other):
-        """Multiplication operator."""
-        if isinstance(other, FieldArray):
-            result = self._array * other._array
-        else:
-            result = self._array * other
-        return FieldArray(array=result, swap_threshold_gb=self._swap_threshold_gb)
-    
-    def __rmul__(self, other):
-        """Right multiplication operator."""
-        result = other * self._array
-        return FieldArray(array=result, swap_threshold_gb=self._swap_threshold_gb)
-    
-    def __add__(self, other):
-        """Addition operator."""
-        if isinstance(other, FieldArray):
-            result = self._array + other._array
-        else:
-            result = self._array + other
-        return FieldArray(array=result, swap_threshold_gb=self._swap_threshold_gb)
-    
-    def __sub__(self, other):
-        """Subtraction operator."""
-        if isinstance(other, FieldArray):
-            result = self._array - other._array
-        else:
-            result = self._array - other
-        return FieldArray(array=result, swap_threshold_gb=self._swap_threshold_gb)
-    
-    def __truediv__(self, other):
-        """Division operator."""
-        if isinstance(other, FieldArray):
-            result = self._array / other._array
-        else:
-            result = self._array / other
-        return FieldArray(array=result, swap_threshold_gb=self._swap_threshold_gb)
     
     def to_memory(self) -> 'FieldArray':
         """

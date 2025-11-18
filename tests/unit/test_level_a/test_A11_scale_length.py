@@ -82,11 +82,14 @@ def _solve_stationary(
     domain = _create_3d_domain(L, N)
     
     # Create Gaussian source using BVPSourceGenerators
-    # Width proportional to L for dimensionless invariance: σ = L / 8
+    # BVPSourceGenerators uses normalized coordinates [0, 1]
+    # For dimensionless invariance, physical width σ_phys = L * σ_norm should be proportional to L
+    # So σ_norm should be constant (same relative width σ_phys/L = const)
+    # Use σ_norm = 1/8 for both cases to ensure σ_phys = L/8
     source_config = {
         "gaussian_amplitude": 1.0,
-        "gaussian_center": [0.5, 0.5, 0.5],  # Center at L/2 in normalized coordinates
-        "gaussian_width": 0.125,  # σ = L/8 in normalized coordinates (0.125 = 1/8)
+        "gaussian_center": [0.5, 0.5, 0.5],  # Center at 0.5 in normalized coordinates [0, 1]
+        "gaussian_width": 0.125,  # σ_norm = 1/8 in normalized coordinates, so σ_phys = L/8
         "use_cuda": True,  # Use CUDA if available
     }
     
@@ -175,66 +178,78 @@ def test_A11_scale_length() -> None:
     domain1 = _create_3d_domain(L1, N1)
     domain2 = _create_3d_domain(L2, N2)
     
+    # Expand 3D arrays to 7D for UnifiedSpectralOperations
+    # UnifiedSpectralOperations expects 7D shape matching domain
+    a1_7d = FieldArray(shape=domain1.shape, dtype=np.complex128)
+    a1_7d.array[:, :, :, 0, 0, 0, 0] = a1_array
+    
+    a2_7d = FieldArray(shape=domain2.shape, dtype=np.complex128)
+    a2_7d.array[:, :, :, 0, 0, 0, 0] = a2_array
+    
     ops1 = UnifiedSpectralOperations(domain1, precision="float64")
     ops2 = UnifiedSpectralOperations(domain2, precision="float64")
     
-    # Get spectral representations
-    a1_hat = ops1.forward_fft(a1_array, "ortho")
-    a2_hat = ops2.forward_fft(a2_array, "ortho")
+    # Get spectral representations (extract 3D slice from 7D result)
+    a1_hat_7d = ops1.forward_fft(a1_7d.array, "ortho")
+    a2_hat_7d = ops2.forward_fft(a2_7d.array, "ortho")
     
-    # Normalize spectral coefficients
-    a1_hat_norm = a1_hat / max(np.linalg.norm(a1_hat), np.finfo(float).eps)
-    a2_hat_norm = a2_hat / max(np.linalg.norm(a2_hat), np.finfo(float).eps)
+    # Extract 3D spatial slice from 7D spectral representation
+    a1_hat = a1_hat_7d[:, :, :, 0, 0, 0, 0] if a1_hat_7d.ndim == 7 else a1_hat_7d
+    a2_hat = a2_hat_7d[:, :, :, 0, 0, 0, 0] if a2_hat_7d.ndim == 7 else a2_hat_7d
     
-    # Build comparison by extracting low-frequency components from a2_hat
-    # that correspond to modes in a1_hat with same dimensionless k*
-    # VECTORIZED: Use vectorized operations instead of loops
-    a2_hat_extracted = np.zeros_like(a1_hat_norm)
+    # Compare solutions in physical space after proper downsampling
+    # Use spectral downsampling: extract low-frequency components and apply inverse FFT
+    # This preserves spectral structure better than simple spatial downsampling
     
-    # Compute wave number grids for both cases (vectorized)
-    kx1 = np.fft.fftfreq(N1, L1 / N1) * 2.0 * np.pi
-    ky1 = np.fft.fftfreq(N1, L1 / N1) * 2.0 * np.pi
-    kz1 = np.fft.fftfreq(N1, L1 / N1) * 2.0 * np.pi
-    KX1, KY1, KZ1 = np.meshgrid(kx1, ky1, kz1, indexing='ij')
-    k_mag1 = np.sqrt(KX1**2 + KY1**2 + KZ1**2)
+    # For proper downsampling, we need to extract low-frequency components correctly
+    # FFT frequencies: [0, 1, 2, ..., N/2-1, -N/2, ..., -2, -1] for even N
+    # For downsampling by factor 2 (N2=128 -> N1=64), we need:
+    # - Positive frequencies: [0, 1, 2, ..., N1/2-1] = [0, 1, ..., 31]
+    # - Negative frequencies: [-N1/2, ..., -2, -1] = [-32, ..., -2, -1]
+    # But FFT stores them as: [0, 1, ..., 31, -64, ..., -33, -32, ..., -2, -1]
+    # So we need: [0:N1//2] and [N2-N1//2:N2]
     
-    kx2 = np.fft.fftfreq(N2, L2 / N2) * 2.0 * np.pi
-    ky2 = np.fft.fftfreq(N2, L2 / N2) * 2.0 * np.pi
-    kz2 = np.fft.fftfreq(N2, L2 / N2) * 2.0 * np.pi
-    KX2, KY2, KZ2 = np.meshgrid(kx2, ky2, kz2, indexing='ij')
-    k_mag2 = np.sqrt(KX2**2 + KY2**2 + KZ2**2)
+    # Extract low-frequency components correctly
+    # For each axis: take [0:N1//2] and [N2-N1//2:N2], then concatenate
+    a2_hat_ds = np.zeros((N1, N1, N1), dtype=a2_hat.dtype)
     
-    # VECTORIZED: Find corresponding modes using vectorized operations
-    # For each mode in case 1, find closest mode in case 2 with same |k|
-    # Reshape for vectorized comparison
-    k_mag1_flat = k_mag1.reshape(-1)
-    k_mag2_flat = k_mag2.reshape(-1)
-    a2_hat_norm_flat = a2_hat_norm.reshape(-1)
+    # Extract positive frequencies [0, 1, ..., N1//2-1]
+    a2_hat_ds[:N1//2, :N1//2, :N1//2] = a2_hat[:N1//2, :N1//2, :N1//2]
     
-    # Vectorized: find closest indices for all k1 values at once
-    # Use broadcasting to compute all differences
-    k_diff_matrix = np.abs(k_mag2_flat[:, np.newaxis] - k_mag1_flat[np.newaxis, :])
-    idx_min_flat = np.argmin(k_diff_matrix, axis=0)
+    # Extract negative frequencies [-N1//2, ..., -2, -1]
+    # In FFT, these are stored at indices [N2-N1//2:N2]
+    a2_hat_ds[N1//2:, :N1//2, :N1//2] = a2_hat[N2-N1//2:, :N1//2, :N1//2]
+    a2_hat_ds[:N1//2, N1//2:, :N1//2] = a2_hat[:N1//2, N2-N1//2:, :N1//2]
+    a2_hat_ds[:N1//2, :N1//2, N1//2:] = a2_hat[:N1//2, :N1//2, N2-N1//2:]
+    a2_hat_ds[N1//2:, N1//2:, :N1//2] = a2_hat[N2-N1//2:, N2-N1//2:, :N1//2]
+    a2_hat_ds[N1//2:, :N1//2, N1//2:] = a2_hat[N2-N1//2:, :N1//2, N2-N1//2:]
+    a2_hat_ds[:N1//2, N1//2:, N1//2:] = a2_hat[:N1//2, N2-N1//2:, N2-N1//2:]
+    a2_hat_ds[N1//2:, N1//2:, N1//2:] = a2_hat[N2-N1//2:, N2-N1//2:, N2-N1//2:]
     
-    # Extract values using vectorized indexing
-    a2_hat_extracted_flat = a2_hat_norm_flat[idx_min_flat]
-    a2_hat_extracted = a2_hat_extracted_flat.reshape(a1_hat_norm.shape)
+    # Apply inverse FFT on smaller grid (domain1) to get downsampled solution
+    a2_ds_7d = ops1.inverse_fft(
+        FieldArray(array=a2_hat_ds.reshape(domain1.shape)).array, "ortho"
+    )
+    a2_ds = a2_ds_7d[:, :, :, 0, 0, 0, 0] if a2_ds_7d.ndim == 7 else a2_ds_7d
     
-    # Compare extracted spectral representations
+    # Normalize solutions for comparison
+    a1_norm = a1_array / max(np.linalg.norm(a1_array), np.finfo(float).eps)
+    a2_ds_norm = a2_ds / max(np.linalg.norm(a2_ds), np.finfo(float).eps)
+    
     # Align phase using correlation
-    a1_flat = a1_hat_norm.reshape(-1)
-    a2_flat = a2_hat_extracted.reshape(-1)
+    a1_flat = a1_norm.reshape(-1)
+    a2_flat = a2_ds_norm.reshape(-1)
     
     correlation = np.vdot(a1_flat, a2_flat)
     if np.abs(correlation) > np.finfo(float).eps:
         phase_optimal = correlation / np.abs(correlation)
-        a2_hat_aligned = a2_hat_extracted * phase_optimal
+        a2_ds_aligned = a2_ds_norm * phase_optimal
     else:
-        a2_hat_aligned = a2_hat_extracted
+        a2_ds_aligned = a2_ds_norm
     
-    # Compute relative error in spectral domain
-    norm_diff = np.linalg.norm(a1_hat_norm - a2_hat_aligned)
-    norm_ref = np.linalg.norm(a1_hat_norm)
+    # Compute relative error in physical space
+    norm_diff = np.linalg.norm(a1_norm - a2_ds_aligned)
+    norm_ref = np.linalg.norm(a1_norm)
     err = float(norm_diff / max(norm_ref, np.finfo(float).eps))
 
     out_dir = Path("output") / cfg["test_id"]

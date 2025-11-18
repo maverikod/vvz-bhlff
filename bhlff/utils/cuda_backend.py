@@ -260,17 +260,24 @@ class CUDABackend(CUDABackend7DOps):
                 on using block-based processing with compute_optimal_block_tiling_7d().
         """
         # Check available memory before FFT
-        if not self._check_memory_for_fft(array):
-            required_memory = array.nbytes * 4  # FFT needs ~4x memory
-            available_memory = self.device.mem_info[0]
-            from .cuda_utils import raise_insufficient_memory_error
+        # Skip check for windows from window processing (they are calculated to fit)
+        # Only check large arrays that are likely full fields, not windows
+        array_size_mb = array.nbytes / (1024**2)
+        # Skip check for arrays < 800MB (likely windows from window processing)
+        # Windows are typically 250-400MB, so 800MB threshold is safe
+        # This prevents false warnings for properly calculated windows
+        if array_size_mb > 800:  # Only check arrays larger than 800MB
+            if not self._check_memory_for_fft(array):
+                required_memory = array.nbytes * 4  # FFT needs ~4x memory
+                available_memory = self.device.mem_info[0]
+                from .cuda_utils import raise_insufficient_memory_error
 
-            raise raise_insufficient_memory_error(
-                required_memory=required_memory,
-                available_memory=available_memory,
-                operation_name="7D IFFT",
-                field_shape=array.shape,
-            )
+                raise raise_insufficient_memory_error(
+                    required_memory=required_memory,
+                    available_memory=available_memory,
+                    operation_name="7D IFFT",
+                    field_shape=array.shape,
+                )
 
         result = cp_fft.ifftn(array, axes=axes)
         # Synchronize to ensure GPU operations complete

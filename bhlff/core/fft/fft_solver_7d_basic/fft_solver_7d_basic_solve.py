@@ -32,15 +32,23 @@ class FFTSolver7DBasicSolveMixin:
         
         from ...arrays.field_array import FieldArray
         
-        logger.info(f"[SOLVER] solve_stationary: STEP 0.1: Extracting array from FieldArray if needed...")
+        logger.info(f"[SOLVER] solve_stationary: STEP 0.1: Preparing source field...")
         sys.stdout.flush()
         sys.stderr.flush()
-        # Extract array from FieldArray if needed
+        
+        # For FieldArray, pass it directly to forward_fft to enable streaming
+        # For regular numpy arrays, convert to complex128
         if isinstance(source_field, FieldArray):
+            source_for_fft = source_field
             source_array = source_field.array
-            logger.info(f"[SOLVER] solve_stationary: STEP 0.1 COMPLETE: Extracted from FieldArray")
+            logger.info(f"[SOLVER] solve_stationary: STEP 0.1 COMPLETE: Using FieldArray directly for streaming")
         else:
             source_array = source_field
+            # Convert to complex128 for FFT
+            if not np.iscomplexobj(source_array):
+                source_for_fft = np.asarray(source_array, dtype=np.complex128)
+            else:
+                source_for_fft = np.asarray(source_array, dtype=np.complex128)
             logger.info(f"[SOLVER] solve_stationary: STEP 0.1 COMPLETE: Using as numpy array")
         sys.stdout.flush()
         sys.stderr.flush()
@@ -57,15 +65,29 @@ class FFTSolver7DBasicSolveMixin:
         source_size_mb = source_array.nbytes / (1024**2)
         logger.info(
             f"[SOLVER] solve_stationary: START - source {source_array.shape} "
-            f"({source_size_mb:.2f}MB), use_cuda={self.use_cuda}"
+            f"({source_size_mb:.2f}MB), use_cuda={self.use_cuda}, "
+            f"is_FieldArray={isinstance(source_field, FieldArray)}"
         )
         sys.stdout.flush()
         
         logger.info(f"[SOLVER] STEP 1: Performing forward FFT...")
         sys.stdout.flush()
-        s_hat = self._ops.forward_fft(np.asarray(source_array, dtype=np.complex128), "ortho")
+        # Pass FieldArray directly to enable streaming for swapped fields
+        s_hat = self._ops.forward_fft(source_for_fft, "ortho")
         logger.info(f"[SOLVER] STEP 1 COMPLETE: Forward FFT completed, spectral shape: {s_hat.shape}")
         sys.stdout.flush()
+        
+        # CRITICAL: Check for zero-mode (DC component) when lambda=0
+        # If lambda=0 and source has non-zero DC component, division by zero will occur
+        if self.lmbda == 0.0:
+            # Check DC component (all indices = 0)
+            dc_idx = tuple([0] * len(s_hat.shape))
+            dc_component = s_hat[dc_idx]
+            if abs(dc_component) > 1e-12:  # Non-zero DC component
+                raise ZeroDivisionError(
+                    f"lambda=0 with non-zero zero-mode in source: ŝ(0)={dc_component:.6e}≠0. "
+                    f"Source must have zero DC component when lambda=0 to avoid division by zero."
+                )
         
         # Apply spectral operator - use lazy evaluation if needed
         logger.info(f"[SOLVER] STEP 2: Applying spectral operator...")
@@ -84,8 +106,18 @@ class FFTSolver7DBasicSolveMixin:
         
         logger.info(f"[SOLVER] STEP 3: Performing inverse FFT...")
         sys.stdout.flush()
-        a = self._ops.inverse_fft(a_hat, "ortho").real
-        logger.info(f"[SOLVER] STEP 3 COMPLETE: Inverse FFT completed, solution shape: {a.shape}")
+        # CRITICAL: Do not take .real here - preserve complex solution for complex sources
+        # For complex sources (e.g., plane waves exp(i*k*x)), the solution must be complex
+        # to preserve phase information (critical for EM fields, wave physics, etc.)
+        # Only take .real if source is explicitly real-valued
+        a = self._ops.inverse_fft(a_hat, "ortho")
+        # Check if source is real - if so, solution should also be real (within numerical precision)
+        if np.isrealobj(source_array):
+            # Source is real, so solution should be real (IFFT of Hermitian spectrum)
+            # Take real part to remove numerical noise in imaginary part
+            a = a.real
+        # Otherwise, keep complex solution for complex sources
+        logger.info(f"[SOLVER] STEP 3 COMPLETE: Inverse FFT completed, solution shape: {a.shape}, dtype: {a.dtype}")
         sys.stdout.flush()
         
         # Return as FieldArray for transparent swap support

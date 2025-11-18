@@ -42,6 +42,7 @@ except ImportError:
     cp = None
 
 from .optimal_block_size_calculator import OptimalBlockSizeCalculator
+from ...exceptions import CUDANotAvailableError
 
 logger = logging.getLogger(__name__)
 
@@ -228,14 +229,22 @@ class SevenDBlockTiling:
                 )
                 return available_memory_bytes
             except Exception as e:
-                logger.warning(f"Failed to get GPU memory: {e}, falling back to CPU")
+                logger.error(
+                    f"Failed to get GPU memory: {e}. CPU fallback is NOT ALLOWED. "
+                    "CUDA is required for 7D block tiling."
+                )
+                raise CUDANotAvailableError(
+                    f"Failed to get GPU memory: {e}. CPU fallback is NOT ALLOWED. "
+                    "CUDA is required for 7D block tiling. "
+                    "Please ensure CUDA is properly configured."
+                ) from e
         
-        # CPU fallback
-        import psutil
-        cpu_mem = psutil.virtual_memory()
-        available_memory_bytes = int(cpu_mem.available * 0.8)  # 80% of available CPU memory
-        logger.debug(
-            f"CPU memory: available={available_memory_bytes / (1024**3):.2f} GB"
+        # CUDA is required - no CPU fallback
+        logger.error(
+            "CUDA is required for 7D block tiling. CPU fallback is NOT ALLOWED."
         )
-        return available_memory_bytes
+        raise CUDANotAvailableError(
+            "CUDA is required for 7D block tiling. CPU fallback is NOT ALLOWED. "
+            "Please install CuPy and ensure CUDA is properly configured."
+        )
 

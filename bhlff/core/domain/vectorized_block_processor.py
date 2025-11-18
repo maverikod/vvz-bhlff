@@ -261,13 +261,12 @@ class VectorizedBlockProcessor(BlockProcessor):
 
             return processed_result.get()  # Convert back to numpy
         else:
-            # Fallback to CPU FFT
-            fft_result = np.fft.fftn(
-                stacked_blocks, axes=tuple(range(1, stacked_blocks.ndim))
+            # CUDA is required - no CPU fallback
+            from ...exceptions import CUDANotAvailableError
+            raise CUDANotAvailableError(
+                "CUDA is required for vectorized FFT. CPU fallback is NOT ALLOWED. "
+                "Please install CuPy and ensure CUDA is properly configured."
             )
-            phase = np.angle(fft_result)
-            processed_result = fft_result * np.exp(-1j * phase)
-            return processed_result
 
     def _vectorized_fft_cpu(self, stacked_blocks: np.ndarray) -> np.ndarray:
         """Vectorized FFT operation on CPU."""
@@ -284,26 +283,22 @@ class VectorizedBlockProcessor(BlockProcessor):
 
     def _vectorized_convolution_cuda(self, stacked_blocks: np.ndarray) -> np.ndarray:
         """Vectorized convolution operation on CUDA."""
-        if CUDA_AVAILABLE:
-            # Create convolution kernel for 7D phase field
-            kernel_shape = tuple(min(3, size) for size in stacked_blocks.shape[1:])
-            kernel = cp.ones(kernel_shape, dtype=cp.complex128) / cp.prod(kernel_shape)
-        else:
-            # Fallback to CPU convolution
-            kernel_shape = tuple(min(3, size) for size in stacked_blocks.shape[1:])
-            kernel = np.ones(kernel_shape, dtype=np.complex128) / np.prod(kernel_shape)
+        if not CUDA_AVAILABLE:
+            from ...exceptions import CUDANotAvailableError
+            raise CUDANotAvailableError(
+                "CUDA is required for vectorized convolution. CPU fallback is NOT ALLOWED. "
+                "Please install CuPy and ensure CUDA is properly configured."
+            )
+        
+        # Create convolution kernel for 7D phase field
+        kernel_shape = tuple(min(3, size) for size in stacked_blocks.shape[1:])
+        kernel = cp.ones(kernel_shape, dtype=cp.complex128) / cp.prod(kernel_shape)
 
-        # Apply convolution to all blocks at once
-        if CUDA_AVAILABLE:
-            convolved = cp.zeros_like(stacked_blocks)
-            for i in range(stacked_blocks.shape[0]):
-                convolved[i] = cp.convolve(stacked_blocks[i].real, kernel, mode="same")
-            return convolved.get()  # Convert back to numpy
-        else:
-            convolved = np.zeros_like(stacked_blocks)
-            for i in range(stacked_blocks.shape[0]):
-                convolved[i] = np.convolve(stacked_blocks[i].real, kernel, mode="same")
-            return convolved.astype(np.complex128)
+        # Apply convolution to all blocks at once (vectorized)
+        convolved = cp.zeros_like(stacked_blocks)
+        for i in range(stacked_blocks.shape[0]):
+            convolved[i] = cp.convolve(stacked_blocks[i].real, kernel, mode="same")
+        return convolved.get()  # Convert back to numpy
 
     def _vectorized_convolution_cpu(self, stacked_blocks: np.ndarray) -> np.ndarray:
         """Vectorized convolution operation on CPU."""
@@ -331,16 +326,12 @@ class VectorizedBlockProcessor(BlockProcessor):
                 gradients.append(gradient_magnitude)
             return cp.stack(gradients).get()  # Convert back to numpy
         else:
-            # Fallback to CPU gradient
-            gradients = []
-            for i in range(stacked_blocks.shape[0]):
-                block_gradients = np.gradient(stacked_blocks[i].real)
-            gradient_magnitude = np.sqrt(
-                np.sum(np.array([g**2 for g in block_gradients]), axis=0)
+            # CUDA is required - no CPU fallback
+            from ...exceptions import CUDANotAvailableError
+            raise CUDANotAvailableError(
+                "CUDA is required for vectorized gradient. CPU fallback is NOT ALLOWED. "
+                "Please install CuPy and ensure CUDA is properly configured."
             )
-            gradients.append(gradient_magnitude)
-
-        return np.stack(gradients).astype(np.complex128)
 
     def _vectorized_gradient_cpu(self, stacked_blocks: np.ndarray) -> np.ndarray:
         """Vectorized gradient operation on CPU."""
@@ -357,22 +348,20 @@ class VectorizedBlockProcessor(BlockProcessor):
 
     def _vectorized_bvp_solve_cuda(self, stacked_blocks: np.ndarray) -> np.ndarray:
         """Vectorized BVP solving on CUDA."""
-        if CUDA_AVAILABLE:
-            # CUDA-accelerated BVP solving for all blocks at once
-            amplitude = cp.abs(stacked_blocks)
-            phase = cp.angle(stacked_blocks)
-        else:
-            # Fallback to CPU BVP solving
-            amplitude = np.abs(stacked_blocks)
-            phase = np.angle(stacked_blocks)
+        if not CUDA_AVAILABLE:
+            from ...exceptions import CUDANotAvailableError
+            raise CUDANotAvailableError(
+                "CUDA is required for vectorized BVP solving. CPU fallback is NOT ALLOWED. "
+                "Please install CuPy and ensure CUDA is properly configured."
+            )
+        
+        # CUDA-accelerated BVP solving for all blocks at once
+        amplitude = cp.abs(stacked_blocks)
+        phase = cp.angle(stacked_blocks)
 
         # Apply BVP-specific processing vectorized
-        if CUDA_AVAILABLE:
-            result = amplitude * cp.exp(1j * phase)
-            return result.get()  # Convert back to numpy
-        else:
-            result = amplitude * np.exp(1j * phase)
-            return result
+        result = amplitude * cp.exp(1j * phase)
+        return result.get()  # Convert back to numpy
 
     def _vectorized_bvp_solve_cpu(self, stacked_blocks: np.ndarray) -> np.ndarray:
         """Vectorized BVP solving on CPU."""

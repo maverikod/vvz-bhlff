@@ -22,7 +22,7 @@ except ImportError:
     cp = None
 
 from ..block_processor import BlockInfo
-from ...utils.gpu_memory_monitor import GPUMemoryMonitor
+from ....utils.gpu_memory_monitor import GPUMemoryMonitor
 
 
 class GPUBlockUtils:

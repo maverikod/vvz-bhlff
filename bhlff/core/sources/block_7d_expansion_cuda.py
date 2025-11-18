@@ -90,16 +90,17 @@ def expand_spatial_to_7d_cuda(
     bytes_per_element = np.dtype(spatial_block_gpu.dtype).itemsize
     total_size_bytes = total_elements_7d * bytes_per_element
 
+    # Overhead factor for temporary arrays during expansion
+    overhead_factor = 3.0  # spatial_block + expanded + tiled result
+    required_memory = total_size_bytes * overhead_factor
+
     # Check if block processing is needed (80% GPU memory limit)
+    # Always check memory and use block processing if needed
     if optimize_block_size and CUDA_AVAILABLE:
         try:
             mem_info = cp.cuda.runtime.memGetInfo()
             free_memory_bytes = mem_info[0]
             available_memory_bytes = int(free_memory_bytes * 0.8)  # 80% limit
-
-            # Overhead factor for temporary arrays during expansion
-            overhead_factor = 3.0  # spatial_block + expanded + tiled result
-            required_memory = total_size_bytes * overhead_factor
 
             if required_memory > available_memory_bytes:
                 # Use block-wise expansion for large arrays
@@ -114,31 +115,57 @@ def expand_spatial_to_7d_cuda(
         except Exception as e:
             logger.warning(
                 f"Failed to check GPU memory for block processing: {e}. "
-                f"Using direct expansion."
+                f"Using block-wise expansion as fallback."
             )
+            # If memory check fails, use block-wise expansion to be safe
+            try:
+                mem_info = cp.cuda.runtime.memGetInfo()
+                available_memory_bytes = int(mem_info[0] * 0.8)  # 80% limit
+                return expand_spatial_to_7d_cuda_blocked(
+                    spatial_block_gpu, N_phi, N_t, available_memory_bytes
+                )
+            except Exception as e2:
+                logger.error(
+                    f"Failed to use block-wise expansion: {e2}. "
+                    f"Raising error - CUDA memory insufficient."
+                )
+                raise RuntimeError(
+                    f"CUDA memory insufficient for 7D expansion. "
+                    f"Required: {total_size_bytes/1e9:.2f}GB, "
+                    f"but block processing also failed: {e2}"
+                ) from e2
 
-    # Direct expansion for small arrays: explicit 7D construction on GPU
-    # Replace blind tile with explicit 7D block construction using direct array creation
-    # Physical meaning: Create 7D block with concrete phase/time extents: (N_x, N_y, N_z, N_phi, N_phi, N_phi, N_t)
-    # This explicitly constructs the 7D structure M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
-
-    N_x, N_y, N_z = spatial_block_gpu.shape
-
-    # Explicit 7D block construction: create array with concrete phase/time extents
-    # Allocate 7D array directly on GPU with explicit shape
-    block_7d_gpu = cp.zeros(
-        (N_x, N_y, N_z, N_phi, N_phi, N_phi, N_t), dtype=spatial_block_gpu.dtype
-    )
-
-    # Explicit assignment: fill 7D block by expanding spatial block across phase/time dimensions
-    # Vectorized operation: spatial values are constant across all phase and time dimensions
-    # This is explicit 7D construction that respects dimensionality
-    # Use advanced indexing to assign spatial values to all phase/time combinations
-    block_7d_gpu[:, :, :, :, :, :, :] = spatial_block_gpu[
-        :, :, :, cp.newaxis, cp.newaxis, cp.newaxis, cp.newaxis
-    ]
-
-    return block_7d_gpu
+    # Check if direct expansion is safe
+    # Only use direct expansion if we're sure it fits in memory
+    try:
+        mem_info = cp.cuda.runtime.memGetInfo()
+        free_memory_bytes = mem_info[0]
+        available_memory_bytes = int(free_memory_bytes * 0.8)  # 80% limit
+        
+        # Check if direct expansion fits
+        if required_memory <= available_memory_bytes:
+            # Direct expansion for small arrays: explicit 7D construction on GPU
+            # Explicit 7D block construction: create array with concrete phase/time extents
+            block_7d_gpu = cp.zeros(
+                (N_x, N_y, N_z, N_phi, N_phi, N_phi, N_t), dtype=spatial_block_gpu.dtype
+            )
+            
+            # Explicit assignment: fill 7D block by expanding spatial block
+            block_7d_gpu[:, :, :, :, :, :, :] = spatial_block_gpu[
+                :, :, :, cp.newaxis, cp.newaxis, cp.newaxis, cp.newaxis
+            ]
+            
+            return block_7d_gpu
+        else:
+            # Use block-wise expansion
+            return expand_spatial_to_7d_cuda_blocked(
+                spatial_block_gpu, N_phi, N_t, available_memory_bytes
+            )
+    except Exception as e:
+        logger.error(f"Failed to expand 7D block: {e}")
+        raise RuntimeError(
+            f"CUDA memory insufficient for 7D expansion: {e}"
+        ) from e
 
 
 def expand_spatial_to_7d_cuda_blocked(
@@ -188,10 +215,85 @@ def expand_spatial_to_7d_cuda_blocked(
 
     max_phase_time_elements = max_elements_per_block // spatial_elements
     if max_phase_time_elements < 1:
-        raise ValueError(
-            f"Spatial block too large ({spatial_elements} elements) "
-            f"for available memory ({available_memory_bytes/1e9:.2f}GB)"
+        # Spatial block itself is too large - need to process spatial dimensions in blocks too
+        # Calculate how to split spatial dimensions
+        # We need: block_x * block_y * block_z * block_phi^3 * block_t <= max_elements_per_block
+        # For simplicity, use equal block sizes for spatial dimensions
+        spatial_block_size_base = int(max_elements_per_block ** (1.0 / 7.0))  # 7D: 3 spatial + 3 phase + 1 time
+        block_x = max(16, min(spatial_block_size_base, N_x))
+        block_y = max(16, min(spatial_block_size_base, N_y))
+        block_z = max(16, min(spatial_block_size_base, N_z))
+        
+        # Recalculate phase/time block sizes with spatial blocking
+        spatial_block_elements = block_x * block_y * block_z
+        max_phase_time_elements = max_elements_per_block // spatial_block_elements
+        if max_phase_time_elements < 1:
+            raise ValueError(
+                f"Even with spatial blocking, block too large. "
+                f"Spatial block: ({block_x}, {block_y}, {block_z}) = {spatial_block_elements} elements, "
+                f"available memory: {available_memory_bytes/1e9:.2f}GB"
+            )
+        
+        # Use minimal phase/time blocks
+        block_phi = max(1, min(4, N_phi))
+        block_t = max(1, min(4, N_t))
+        
+        logger.warning(
+            f"Spatial block too large, using spatial blocking: "
+            f"spatial=({block_x}, {block_y}, {block_z}), "
+            f"phase_block={block_phi}, time_block={block_t}"
         )
+        
+        # Use FieldArray for result to enable swap
+        from bhlff.core.arrays import FieldArray
+        result_shape = (N_x, N_y, N_z, N_phi, N_phi, N_phi, N_t)
+        result_field = FieldArray(shape=result_shape, dtype=spatial_block_gpu.dtype)
+        
+        # Process spatial dimensions in blocks
+        for x_start in range(0, N_x, block_x):
+            x_end = min(x_start + block_x, N_x)
+            for y_start in range(0, N_y, block_y):
+                y_end = min(y_start + block_y, N_y)
+                for z_start in range(0, N_z, block_z):
+                    z_end = min(z_start + block_z, N_z)
+                    
+                    # Extract spatial block
+                    spatial_block_slice = spatial_block_gpu[x_start:x_end, y_start:y_end, z_start:z_end]
+                    
+                    # Process phase/time dimensions for this spatial block
+                    for phi1_start in range(0, N_phi, block_phi):
+                        phi1_end = min(phi1_start + block_phi, N_phi)
+                        for phi2_start in range(0, N_phi, block_phi):
+                            phi2_end = min(phi2_start + block_phi, N_phi)
+                            for phi3_start in range(0, N_phi, block_phi):
+                                phi3_end = min(phi3_start + block_phi, N_phi)
+                                for t_start in range(0, N_t, block_t):
+                                    t_end = min(t_start + block_t, N_t)
+                                    
+                                    # Expand spatial block slice to 7D block
+                                    block_7d = spatial_block_slice[
+                                        :, :, :, cp.newaxis, cp.newaxis, cp.newaxis, cp.newaxis
+                                    ]
+                                    block_7d = cp.broadcast_to(
+                                        block_7d,
+                                        (x_end - x_start, y_end - y_start, z_end - z_start,
+                                         phi1_end - phi1_start, phi2_end - phi2_start,
+                                         phi3_end - phi3_start, t_end - t_start)
+                                    )
+                                    
+                                    # Write to result FieldArray
+                                    result_field.array[
+                                        x_start:x_end, y_start:y_end, z_start:z_end,
+                                        phi1_start:phi1_end, phi2_start:phi2_end,
+                                        phi3_start:phi3_end, t_start:t_end
+                                    ] = cp.asnumpy(block_7d)
+                                    
+                                    # Free GPU memory
+                                    del block_7d
+                                    cp.get_default_memory_pool().free_all_blocks()
+        
+        # Return numpy array from FieldArray
+        return cp.asarray(result_field.array)
 
     # Compute block sizes: block_phi^3 * block_t <= max_phase_time_elements
     # Use equal block sizes for phase dimensions

@@ -94,36 +94,31 @@ def test_A02_multi_plane() -> None:
     amps = np.exp(1j * phases).astype(np.complex128)
 
     # Build multi-plane wave source by summing individual plane waves
-    # Each plane wave is generated using BVPSourceGenerators
+    # Framework automatically handles block processing, vectorization, and batching
     # Use FieldArray for automatic memory management
-    source_3d = FieldArray(shape=(N, N, N), dtype=np.complex128)
+    source_7d = FieldArray(shape=domain.shape, dtype=np.complex128)
     
     for idx, mode in enumerate(modes):
         # Generate plane wave source for this mode with given amplitude
+        # Framework automatically handles all operations
         source_config = {
             "plane_wave_amplitude": amps[idx],  # Complex amplitude
             "plane_wave_mode": list(mode),
-            "use_cuda": True,  # Use CUDA if available
+            "use_cuda": True,  # Framework automatically handles CUDA/CPU
         }
         
         generators = BVPSourceGenerators(domain, source_config)
         mode_source_field = generators.generate_plane_wave_source()
         
-        # Extract 3D spatial slice
+        # Extract array from FieldArray
         if isinstance(mode_source_field, FieldArray):
             mode_source_array = mode_source_field.array
         else:
             mode_source_array = mode_source_field
         
-        mode_source_3d = mode_source_array[:, :, :, 0, 0, 0, 0] if mode_source_array.ndim == 7 else mode_source_array
-        
-        # Sum into total source (superposition principle)
-        source_3d.array += mode_source_3d
-    
-    # Expand to 7D for solver (solver expects 7D)
-    # Use FieldArray for automatic memory management
-    source_7d = FieldArray(shape=domain.shape, dtype=np.complex128)
-    source_7d.array[:, :, :, 0, 0, 0, 0] = source_3d.array
+        # Sum into total source (superposition principle) - vectorized operation
+        # Framework automatically handles memory management
+        source_7d.array[:] = source_7d.array + mode_source_array
     
     # Create solver with physics parameters
     solver = FFTSolver7DBasic(
@@ -166,15 +161,20 @@ def test_A02_multi_plane() -> None:
     ops = UnifiedSpectralOperations(domain_3d, precision="float64")
     
     # Build spectral representation of source
-    # Extract array from FieldArray if needed
-    source_3d_array = source_3d.array if isinstance(source_3d, FieldArray) else source_3d
-    s_hat = ops.forward_fft(source_3d_array, "ortho")
+    # Extract 3D spatial slice from 7D source for reference computation
+    if isinstance(source_7d, FieldArray):
+        source_7d_array = source_7d.array
+    else:
+        source_7d_array = source_7d
+    
+    source_3d = source_7d_array[:, :, :, 0, 0, 0, 0] if source_7d_array.ndim == 7 else source_7d_array
+    s_hat = ops.forward_fft(source_3d, "ortho")
     
     # Build reference solution using solver (all vectorization is in solver)
     # Use the same solver to compute reference solution
     # Expand source to 7D for solver
     source_7d_ref = FieldArray(shape=domain.shape, dtype=np.complex128)
-    source_7d_ref.array[:, :, :, 0, 0, 0, 0] = source_3d_array
+    source_7d_ref.array[:, :, :, 0, 0, 0, 0] = source_3d
     
     # Get reference solution using solver (all vectorization is inside solver)
     a_real_ref_field = solver.solve_stationary(source_7d_ref.array)

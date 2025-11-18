@@ -11,7 +11,7 @@ import logging
 import numpy as np
 
 from bhlff.utils.cuda_utils import get_global_backend, CPUBackend, CUDABackend
-from ..exceptions import CUDANotAvailableError
+from ...exceptions import CUDANotAvailableError
 from .plans import setup_fft_plans
 from .volume import compute_volume_element
 from .wave_vectors import get_wave_vectors, create_wave_vector_grid
@@ -71,19 +71,35 @@ class UnifiedSpectralOperations:
         self, field: np.ndarray, normalization: str = "ortho"
     ) -> np.ndarray:
         import sys
-        self.logger.info(f"[FACADE] forward_fft: START - shape={field.shape}")
+        # Extract shape and size for validation and logging
+        # Support both FieldArray and regular numpy arrays
+        if hasattr(field, 'shape'):
+            field_shape = field.shape
+        elif hasattr(field, 'array'):
+            field_shape = field.array.shape
+        else:
+            field_shape = field.shape
+        
+        if hasattr(field, 'nbytes'):
+            field_size_mb = field.nbytes / (1024**2)
+        elif hasattr(field, 'array'):
+            field_size_mb = field.array.nbytes / (1024**2)
+        else:
+            field_size_mb = field.nbytes / (1024**2)
+        
+        self.logger.info(f"[FACADE] forward_fft: START - shape={field_shape}, is_FieldArray={hasattr(field, 'is_swapped')}")
         sys.stdout.flush()
         
-        self._validate_shape(field.shape)
+        self._validate_shape(field_shape)
         
         # For 7D fields, block processing is only applicable when using CUDA
-        is_7d = len(field.shape) == 7
+        is_7d = len(field_shape) == 7
         is_too_large = self._is_field_too_large(field)
         
-        field_size_mb = field.nbytes / (1024**2)
         self.logger.info(
-            f"[FACADE] forward_fft: shape={field.shape}, size={field_size_mb:.2f}MB, "
-            f"is_7d={is_7d}, is_too_large={is_too_large}"
+            f"[FACADE] forward_fft: shape={field_shape}, size={field_size_mb:.2f}MB, "
+            f"is_7d={is_7d}, is_too_large={is_too_large}, "
+            f"is_FieldArray={hasattr(field, 'is_swapped')}"
         )
         sys.stdout.flush()
         
@@ -101,13 +117,39 @@ class UnifiedSpectralOperations:
                 sys.stdout.flush()
                 return result
             except Exception as e:
-                self.logger.warning(f"[FACADE] Block processing failed: {e}, trying direct GPU")
-                sys.stdout.flush()
-                # Fallback to direct GPU if block processing fails
-                result = self._forward_backend(field, normalization)
-                self.logger.info(f"[FACADE] forward_fft: COMPLETE (direct GPU fallback)")
-                sys.stdout.flush()
-                return result
+                # Check if error is OutOfMemoryError - in this case, direct GPU will also fail
+                error_str = str(e)
+                if "OutOfMemoryError" in error_str or "Out of memory" in error_str:
+                    self.logger.error(
+                        f"[FACADE] Block processing failed with OutOfMemoryError: {e}. "
+                        f"Direct GPU fallback will also fail. This indicates a critical memory issue. "
+                        f"Field size: {field.nbytes / (1024**2):.2f}MB, shape: {field.shape}"
+                    )
+                    sys.stdout.flush()
+                    raise RuntimeError(
+                        f"Block processing failed with OutOfMemoryError: {e}. "
+                        f"Cannot process field of size {field.nbytes / (1024**2):.2f}MB. "
+                        f"Please reduce field size or increase GPU memory."
+                    ) from e
+                else:
+                    self.logger.warning(f"[FACADE] Block processing failed: {e}, trying direct GPU")
+                    sys.stdout.flush()
+                    # Fallback to direct GPU only for non-memory errors
+                    try:
+                        result = self._forward_backend(field, normalization)
+                        self.logger.info(f"[FACADE] forward_fft: COMPLETE (direct GPU fallback)")
+                        sys.stdout.flush()
+                        return result
+                    except Exception as e2:
+                        self.logger.error(
+                            f"[FACADE] Direct GPU fallback also failed: {e2}. "
+                            f"Original error: {e}"
+                        )
+                        sys.stdout.flush()
+                        raise RuntimeError(
+                            f"Both block processing and direct GPU FFT failed. "
+                            f"Block processing error: {e}. Direct GPU error: {e2}"
+                        ) from e2
         
         if is_too_large and self._using_cuda:
             # try downcast
@@ -128,15 +170,28 @@ class UnifiedSpectralOperations:
                     field, normalization, self.domain.shape, self._gpu_memory_ratio
                 )
             except Exception as e:
-                self.logger.warning(f"Block processing failed: {e}, falling back to CPU")
-            return forward_fft_cpu(field, normalization, self.domain.shape)
+                self.logger.error(
+                    f"Block processing failed: {e}. CPU fallback is NOT ALLOWED. "
+                    "CUDA is required for FFT operations."
+                )
+                raise CUDANotAvailableError(
+                    f"Block processing failed: {e}. CPU fallback is NOT ALLOWED. "
+                    "CUDA is required for FFT operations. "
+                    "Please ensure CUDA is properly configured."
+                ) from e
         
         if self._using_cuda:
             self.logger.info("Using direct GPU processing (field fits in memory)")
             return self._forward_backend(field, normalization)
 
-        self.logger.info("Using CPU FFT backend")
-        return forward_fft_cpu(field, normalization, self.domain.shape)
+        # CUDA is required - no CPU fallback
+        self.logger.error(
+            "CUDA is required for FFT operations. CPU fallback is NOT ALLOWED."
+        )
+        raise CUDANotAvailableError(
+            "CUDA is required for FFT operations. CPU fallback is NOT ALLOWED. "
+            "Please install CuPy and ensure CUDA is properly configured."
+        )
 
     def inverse_fft(
         self, spectral_field: np.ndarray, normalization: str = "ortho"
@@ -169,12 +224,16 @@ class UnifiedSpectralOperations:
                 sys.stdout.flush()
                 return result
             except Exception as e:
-                self.logger.warning(f"[FACADE] Block processing failed: {e}, trying direct GPU")
+                self.logger.error(
+                    f"[FACADE] Block processing failed: {e}. CPU fallback is NOT ALLOWED. "
+                    "CUDA is required for FFT operations."
+                )
                 sys.stdout.flush()
-                result = self._inverse_backend(spectral_field, normalization)
-                self.logger.info(f"[FACADE] inverse_fft: COMPLETE (direct GPU fallback)")
-                sys.stdout.flush()
-                return result
+                raise CUDANotAvailableError(
+                    f"Block processing failed: {e}. CPU fallback is NOT ALLOWED. "
+                    "CUDA is required for FFT operations. "
+                    "Please ensure CUDA is properly configured."
+                ) from e
         
         if is_too_large and self._using_cuda:
             try:
@@ -193,13 +252,27 @@ class UnifiedSpectralOperations:
                     self.domain.shape,
                     self._gpu_memory_ratio,
                 )
-            except Exception:
-                pass
-            return inverse_fft_cpu(spectral_field, normalization, self.domain.shape)
+            except Exception as e:
+                self.logger.error(
+                    f"Block processing failed: {e}. CPU fallback is NOT ALLOWED. "
+                    "CUDA is required for FFT operations."
+                )
+                raise CUDANotAvailableError(
+                    f"Block processing failed: {e}. CPU fallback is NOT ALLOWED. "
+                    "CUDA is required for FFT operations. "
+                    "Please ensure CUDA is properly configured."
+                ) from e
         if self._using_cuda:
             return self._inverse_backend(spectral_field, normalization)
 
-        return inverse_fft_cpu(spectral_field, normalization, self.domain.shape)
+        # CUDA is required - no CPU fallback
+        self.logger.error(
+            "CUDA is required for FFT operations. CPU fallback is NOT ALLOWED."
+        )
+        raise CUDANotAvailableError(
+            "CUDA is required for FFT operations. CPU fallback is NOT ALLOWED. "
+            "Please install CuPy and ensure CUDA is properly configured."
+        )
 
     def compute_spectral_derivatives(
         self, field: np.ndarray, order: int = 1
@@ -271,7 +344,13 @@ class UnifiedSpectralOperations:
         if not self._using_cuda:
             return False
         try:
-            field_size_mb = field.nbytes / (1024**2)
+            # Support both FieldArray and regular numpy arrays
+            if hasattr(field, 'nbytes'):
+                field_size_mb = field.nbytes / (1024**2)
+            elif hasattr(field, 'array'):
+                field_size_mb = field.array.nbytes / (1024**2)
+            else:
+                field_size_mb = field.nbytes / (1024**2)
             # FFT requires ~4x field size in memory
             fft_memory_needed_mb = field_size_mb * 4
             if hasattr(self.backend, "get_memory_info"):

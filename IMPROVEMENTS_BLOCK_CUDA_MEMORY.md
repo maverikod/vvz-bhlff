@@ -291,9 +291,9 @@
    - Некоторые компоненты требуют явного указания `use_cuda=True`
    - Нет единой политики: когда использовать CUDA, когда CPU
 
-3. **Отсутствие fallback механизмов:**
-   - При ошибке CUDA операции падают с исключением
-   - Нет автоматического fallback на CPU
+3. **Неправильная обработка отсутствия CUDA:**
+   - В некоторых местах есть fallback на CPU (НЕДОПУСТИМО!)
+   - При ошибке CUDA должны выбрасываться исключения, а не fallback на CPU
 
 **Требуется:**
 1. Создать единый модуль для работы с CUDA:
@@ -305,28 +305,32 @@
            """Проверяет доступность CUDA."""
        
        @staticmethod
-       def get_backend():
-           """Возвращает cupy или numpy в зависимости от доступности."""
-       
-       @staticmethod
        def require_cuda():
            """Требует CUDA, выбрасывает исключение если недоступна."""
    ```
 
-2. Реализовать автоматический fallback:
+2. **КРИТИЧНО: Убрать все fallback на CPU, выбрасывать ошибки:**
    ```python
-   def process_with_fallback(
+   def process_with_cuda_required(
        self,
        operation: Callable,
        *args,
        **kwargs
    ):
-       """Выполняет операцию с автоматическим fallback на CPU."""
+       """Выполняет операцию с требованием CUDA. CPU fallback ЗАПРЕЩЕН."""
+       if not CUDA_AVAILABLE:
+           raise CUDANotAvailableError(
+               "CUDA is required. CPU fallback is NOT ALLOWED. "
+               "Please install CuPy and ensure CUDA is properly configured."
+           )
        try:
            return operation(*args, use_cuda=True, **kwargs)
        except (RuntimeError, MemoryError) as e:
-           logger.warning(f"CUDA failed: {e}, falling back to CPU")
-           return operation(*args, use_cuda=False, **kwargs)
+           # НЕ fallback на CPU, а выбрасываем ошибку
+           raise CUDANotAvailableError(
+               f"CUDA operation failed: {e}. CPU fallback is NOT ALLOWED. "
+               "Please ensure CUDA is properly configured."
+           ) from e
    ```
 
 **Файлы для доработки:**
@@ -396,8 +400,8 @@
 **Файлы для доработки:**
 - `bhlff/core/domain/enhanced_block_processing/gpu_block_operations.py`
 - `bhlff/core/bvp/bvp_core/bvp_cuda_block/bvp_cuda_block_operations.py`
-- Создать: `bhlff/core/cuda/optimized_kernels.py`
-- Создать: `bhlff/core/cuda/memory_management.py`
+- ✅ Создать: `bhlff/core/cuda/optimized_kernels.py` - **ВЫПОЛНЕНО**
+- ✅ Создать: `bhlff/core/cuda/memory_management.py` - **ВЫПОЛНЕНО**
 
 ---
 
@@ -597,15 +601,15 @@
 4. Реализовать автоматический fallback CPU↔GPU
 
 ### Средний приоритет (P2):
-1. Оптимизировать CUDA kernels
-2. Реализовать 7D-специфичное тилирование
-3. Использовать pinned memory
-4. Реализовать дефрагментацию памяти
+1. ✅ Оптимизировать CUDA kernels - **ВЫПОЛНЕНО** (`bhlff/core/cuda/optimized_kernels.py`)
+2. ✅ Реализовать 7D-специфичное тилирование - **ВЫПОЛНЕНО** (`bhlff/core/domain/7d_block_tiling.py`)
+3. ✅ Использовать pinned memory - **ВЫПОЛНЕНО** (`bhlff/core/cuda/memory_management.py`, `bhlff/utils/gpu_memory_pool.py`)
+4. ✅ Реализовать дефрагментацию памяти - **ВЫПОЛНЕНО** (`bhlff/utils/memory_defragmentation.py`, `bhlff/utils/gpu_memory_pool.py`)
 
 ### Низкий приоритет (P3):
-1. Использовать tensor cores (если доступны)
-2. Реализовать unified memory
-3. Оптимизировать порядок обработки измерений
+1. ✅ Использовать tensor cores (если доступны) - **ВЫПОЛНЕНО** (`bhlff/core/cuda/advanced_features.py`)
+2. ✅ Реализовать unified memory - **ВЫПОЛНЕНО** (`bhlff/core/cuda/advanced_features.py`)
+3. ✅ Оптимизировать порядок обработки измерений - **ВЫПОЛНЕНО** (`bhlff/core/cuda/advanced_features.py`)
 
 ---
 
@@ -619,7 +623,7 @@
 
 2. **Надёжность:**
    - Отсутствие OOM ошибок при работе с большими полями
-   - Автоматический fallback при проблемах с GPU
+   - Четкие ошибки при отсутствии CUDA (без fallback на CPU)
    - Стабильная работа при длительных вычислениях
 
 3. **Удобство использования:**

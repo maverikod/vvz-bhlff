@@ -40,6 +40,7 @@ except ImportError:
     cp = None
 
 from ..domain import Domain
+from ...utils.gpu_memory_monitor import GPUMemoryMonitor
 
 
 class BlockGenerator:
@@ -93,6 +94,15 @@ class BlockGenerator:
         self.use_cuda = use_cuda
         self.config = config
         self.logger = logger
+        
+        # Initialize GPU memory monitor for unified memory management
+        if self.use_cuda and CUDA_AVAILABLE:
+            self.gpu_memory_monitor = GPUMemoryMonitor(
+                warning_threshold=0.75,
+                critical_threshold=0.9,
+            )
+        else:
+            self.gpu_memory_monitor = None
 
     def generate_block(
         self, block_indices: Tuple[int, ...]
@@ -173,8 +183,8 @@ class BlockGenerator:
                 f"got {len(block_shape)}D: {block_shape}"
             )
 
-        # Check GPU memory limit (80%) if CUDA is enabled
-        if self.use_cuda and CUDA_AVAILABLE:
+        # Check GPU memory limit (80%) if CUDA is enabled using unified monitor
+        if self.use_cuda and CUDA_AVAILABLE and self.gpu_memory_monitor is not None:
             try:
                 # Calculate required memory for block generation
                 bytes_per_element = 16  # complex128 = 16 bytes
@@ -182,10 +192,10 @@ class BlockGenerator:
                 block_elements = np.prod(block_shape_array)
                 required_memory = block_elements * bytes_per_element * overhead_factor
 
-                # Get available GPU memory (80% of free)
-                mem_info = cp.cuda.runtime.memGetInfo()
-                free_memory_bytes = mem_info[0]
-                available_memory_bytes = int(free_memory_bytes * 0.8)  # 80% limit
+                # Get available GPU memory (80% of free) using unified monitor
+                available_memory_bytes = self.gpu_memory_monitor.get_available_memory(
+                    memory_ratio=0.8
+                )
 
                 if required_memory > available_memory_bytes:
                     self.logger.warning(

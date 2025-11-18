@@ -218,7 +218,7 @@ class OptimalBlockSizeCalculator:
         self._last_calculation_cache[cache_key] = block_tiling_tuple
         
         logger.info(
-            f"Optimal 7D block tiling (CPU fallback): {block_tiling_tuple} "
+            f"Optimal 7D block tiling: {block_tiling_tuple} "
             f"(available memory: {available_memory_gb:.2f} GB, "
             f"ratio: {self.gpu_memory_ratio:.1%})"
         )

@@ -139,7 +139,12 @@ def forward_fft_gpu(
     # Step 4: Normalization
     logger.info(f"[STEP 4] forward_fft_gpu: Applying normalization '{normalization}'...")
     sys.stdout.flush()
-    spec_gpu /= np.sqrt(n_total)
+    # Use backend's sqrt to ensure correct dtype (cp.sqrt for GPU, np.sqrt for CPU)
+    if CUDA_AVAILABLE and isinstance(spec_gpu, cp.ndarray):
+        sqrt_n = cp.sqrt(n_total)
+    else:
+        sqrt_n = np.sqrt(n_total)
+    spec_gpu /= sqrt_n
     if normalization == "physics":
         spec_gpu *= compute_volume_element(domain_shape)
     elif normalization != "ortho":
@@ -256,7 +261,12 @@ def inverse_fft_gpu(
     if normalization == "ortho":
         logger.info(f"[STEP 3] inverse_fft_gpu: Applying ortho normalization...")
         sys.stdout.flush()
-        spec_gpu = spec_gpu * np.sqrt(n_total)
+        # Use backend's sqrt to ensure correct dtype (cp.sqrt for GPU, np.sqrt for CPU)
+        if CUDA_AVAILABLE and isinstance(spec_gpu, cp.ndarray):
+            sqrt_n = cp.sqrt(n_total)
+        else:
+            sqrt_n = np.sqrt(n_total)
+        spec_gpu = spec_gpu * sqrt_n
         logger.info(f"[STEP 4] inverse_fft_gpu: Performing IFFT...")
         sys.stdout.flush()
         out_gpu = backend.ifft(spec_gpu, axes=axes)
@@ -270,7 +280,12 @@ def inverse_fft_gpu(
         logger.info(f"[STEP 3] inverse_fft_gpu: Applying physics normalization...")
         sys.stdout.flush()
         vol = compute_volume_element(domain_shape)
-        spec_gpu = spec_gpu / vol * np.sqrt(n_total)
+        # Use backend's sqrt to ensure correct dtype (cp.sqrt for GPU, np.sqrt for CPU)
+        if CUDA_AVAILABLE and isinstance(spec_gpu, cp.ndarray):
+            sqrt_n = cp.sqrt(n_total)
+        else:
+            sqrt_n = np.sqrt(n_total)
+        spec_gpu = spec_gpu / vol * sqrt_n
         logger.info(f"[STEP 4] inverse_fft_gpu: Performing IFFT...")
         sys.stdout.flush()
         out = backend.to_numpy(backend.ifft(spec_gpu, axes=axes))

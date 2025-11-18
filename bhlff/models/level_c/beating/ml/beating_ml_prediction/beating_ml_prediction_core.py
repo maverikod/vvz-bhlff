@@ -27,6 +27,8 @@ from .ml_model_manager import MLModelManager
 from .feature_extractor import FeatureExtractor
 from .prediction_engine import PredictionEngine
 from .ml_trainer import MLTrainer
+from .beating_ml_prediction_helpers import BeatingMLPredictionHelpers
+from .beating_ml_prediction_analytical import BeatingMLPredictionAnalytical
 
 
 class BeatingMLPredictionCore:
@@ -68,6 +70,10 @@ class BeatingMLPredictionCore:
             self.model_manager, self.feature_extractor
         )
         self.ml_trainer = MLTrainer(self.model_manager)
+        
+        # Initialize helper classes
+        self.helpers = BeatingMLPredictionHelpers(self.model_manager)
+        self.analytical = BeatingMLPredictionAnalytical(self.feature_extractor)
 
         # Initialize vectorized processor for ML prediction
         self._setup_vectorized_processor()
@@ -97,8 +103,8 @@ class BeatingMLPredictionCore:
         phase_features = self.feature_extractor.extract_7d_phase_features(features)
 
         # Load trained ML model
-        model = self._load_trained_frequency_model()
-        scaler = self._load_frequency_scaler()
+        model = self.helpers.load_trained_frequency_model()
+        scaler = self.helpers.load_frequency_scaler()
 
         if model is not None and scaler is not None:
             # Scale features
@@ -108,26 +114,26 @@ class BeatingMLPredictionCore:
             predicted_frequencies = model.predict(phase_features_scaled)[0]
 
             # Get prediction confidence
-            prediction_confidence = self._compute_prediction_confidence(
+            prediction_confidence = self.helpers.compute_prediction_confidence(
                 phase_features_scaled, model
             )
 
             # Get feature importance
-            feature_importance = self._get_feature_importance(model)
+            feature_importance = self.helpers.get_feature_importance(model)
 
             prediction_results = {
                 "predicted_frequencies": predicted_frequencies.tolist(),
                 "prediction_confidence": prediction_confidence,
                 "feature_importance": feature_importance,
                 "model_type": "RandomForest",
-                "prediction_variance": self._compute_prediction_variance(
+                "prediction_variance": self.helpers.compute_prediction_variance(
                     phase_features_scaled, model
                 ),
                 "prediction_method": "full_ml",
             }
         else:
             # Use full analytical method as fallback
-            prediction_results = self._predict_frequencies_analytical(features)
+            prediction_results = self.analytical.predict_frequencies_analytical(features)
 
         self.logger.info("Full ML frequency prediction completed")
         return prediction_results
@@ -157,8 +163,8 @@ class BeatingMLPredictionCore:
         phase_features = self.feature_extractor.extract_7d_phase_features(features)
 
         # Load trained ML model
-        model = self._load_trained_coupling_model()
-        scaler = self._load_coupling_scaler()
+        model = self.helpers.load_trained_coupling_model()
+        scaler = self.helpers.load_coupling_scaler()
 
         if model is not None and scaler is not None:
             # Scale features
@@ -178,26 +184,26 @@ class BeatingMLPredictionCore:
             }
 
             # Get prediction confidence
-            prediction_confidence = self._compute_prediction_confidence(
+            prediction_confidence = self.helpers.compute_prediction_confidence(
                 phase_features_scaled, model
             )
 
             # Get feature importance
-            feature_importance = self._get_feature_importance(model)
+            feature_importance = self.helpers.get_feature_importance(model)
 
             prediction_results = {
                 "predicted_coupling": predicted_coupling,
                 "prediction_confidence": prediction_confidence,
                 "feature_importance": feature_importance,
                 "model_type": "NeuralNetwork",
-                "prediction_variance": self._compute_prediction_variance(
+                "prediction_variance": self.helpers.compute_prediction_variance(
                     phase_features_scaled, model
                 ),
                 "prediction_method": "full_ml",
             }
         else:
             # Use full analytical method as fallback
-            prediction_results = self._predict_coupling_analytical(features)
+            prediction_results = self.analytical.predict_coupling_analytical(features)
 
         self.logger.info("Full ML coupling prediction completed")
         return prediction_results
@@ -290,202 +296,6 @@ class BeatingMLPredictionCore:
             Dict[str, Any]: Model performance metrics.
         """
         return self.ml_trainer.get_model_performance()
-
-    def _load_trained_frequency_model(self):
-        """Load trained frequency prediction model."""
-        try:
-            return self.model_manager.get_frequency_model()
-        except Exception as e:
-            self.logger.warning(f"Failed to load frequency model: {e}")
-            return None
-
-    def _load_frequency_scaler(self):
-        """Load frequency feature scaler."""
-        try:
-            return self.model_manager.get_frequency_scaler()
-        except Exception as e:
-            self.logger.warning(f"Failed to load frequency scaler: {e}")
-            return None
-
-    def _load_trained_coupling_model(self):
-        """Load trained coupling prediction model."""
-        try:
-            return self.model_manager.get_coupling_model()
-        except Exception as e:
-            self.logger.warning(f"Failed to load coupling model: {e}")
-            return None
-
-    def _load_coupling_scaler(self):
-        """Load coupling feature scaler."""
-        try:
-            return self.model_manager.get_coupling_scaler()
-        except Exception as e:
-            self.logger.warning(f"Failed to load coupling scaler: {e}")
-            return None
-
-    def _compute_prediction_confidence(self, features: np.ndarray, model) -> float:
-        """Compute prediction confidence from ML model."""
-        try:
-            if hasattr(model, "predict_proba"):
-                # For models with probability output
-                proba = model.predict_proba(features)
-                confidence = np.max(proba)
-            else:
-                # For regression models, use prediction variance
-                predictions = []
-                if hasattr(model, "estimators_"):  # Random Forest
-                    for estimator in model.estimators_:
-                        predictions.append(estimator.predict(features))
-                    variance = np.var(predictions)
-                    confidence = 1.0 / (1.0 + variance)
-                else:
-                    # Default confidence based on 7D phase field analysis
-                    confidence = 0.8
-            return min(max(confidence, 0.0), 1.0)
-        except Exception:
-            return 0.7  # Default confidence
-
-    def _get_feature_importance(self, model) -> Dict[str, float]:
-        """Get feature importance from ML model."""
-        try:
-            if hasattr(model, "feature_importances_"):
-                # Random Forest feature importance
-                feature_names = [
-                    "spectral_entropy",
-                    "frequency_spacing",
-                    "frequency_bandwidth",
-                    "autocorrelation",
-                    "coupling_strength",
-                    "interaction_energy",
-                    "coupling_symmetry",
-                    "nonlinear_strength",
-                    "mixing_degree",
-                    "coupling_efficiency",
-                    "phase_coherence",
-                    "topological_charge",
-                    "energy_density",
-                    "phase_velocity",
-                ]
-                importance_dict = {}
-                for i, name in enumerate(feature_names):
-                    if i < len(model.feature_importances_):
-                        importance_dict[name] = float(model.feature_importances_[i])
-                return importance_dict
-            else:
-                # Default importance for models without feature_importances_
-                return {
-                    "spectral_entropy": 0.2,
-                    "frequency_spacing": 0.15,
-                    "frequency_bandwidth": 0.15,
-                    "coupling_strength": 0.2,
-                    "interaction_energy": 0.15,
-                    "phase_coherence": 0.15,
-                }
-        except Exception:
-            return {"default": 1.0}
-
-    def _compute_prediction_variance(self, features: np.ndarray, model) -> float:
-        """Compute prediction variance for uncertainty quantification."""
-        try:
-            if hasattr(model, "estimators_"):  # Random Forest
-                predictions = []
-                for estimator in model.estimators_:
-                    predictions.append(estimator.predict(features))
-                return float(np.var(predictions))
-            else:
-                # For single models, return default variance
-                return 0.1
-        except Exception:
-            return 0.1
-
-    def _predict_frequencies_analytical(
-        self, features: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        """Predict frequencies using full analytical method based on 7D BVP theory."""
-        # Extract 7D phase field features
-        phase_features = self.feature_extractor.extract_7d_phase_features(features)
-
-        # Compute 7D phase field frequency prediction using analytical methods
-        spectral_entropy = features.get("spectral_entropy", 0.0)
-        frequency_spacing = features.get("frequency_spacing", 0.0)
-        frequency_bandwidth = features.get("frequency_bandwidth", 0.0)
-        phase_coherence = features.get("phase_coherence", 0.0)
-        topological_charge = features.get("topological_charge", 0.0)
-
-        # Compute analytical frequency prediction
-        predicted_frequencies = [
-            spectral_entropy * 100.0,
-            frequency_spacing * 50.0,
-            frequency_bandwidth * 25.0,
-        ]
-
-        # Compute prediction confidence based on phase coherence
-        prediction_confidence = min(1.0, phase_coherence + 0.3)
-
-        # Compute feature importance for analytical method
-        feature_importance = {
-            "spectral_entropy": 0.3,
-            "frequency_spacing": 0.25,
-            "frequency_bandwidth": 0.2,
-            "phase_coherence": 0.15,
-            "topological_charge": 0.1,
-        }
-
-        return {
-            "predicted_frequencies": predicted_frequencies,
-            "prediction_confidence": prediction_confidence,
-            "prediction_method": "analytical_7d_bvp",
-            "feature_importance": feature_importance,
-            "phase_coherence": phase_coherence,
-            "topological_charge": topological_charge,
-        }
-
-    def _predict_coupling_analytical(self, features: Dict[str, Any]) -> Dict[str, Any]:
-        """Predict coupling using full analytical method based on 7D BVP theory."""
-        # Extract 7D phase field features
-        phase_features = self.feature_extractor.extract_7d_phase_features(features)
-
-        # Compute 7D phase field coupling prediction using analytical methods
-        coupling_strength = features.get("coupling_strength", 0.0)
-        interaction_energy = features.get("interaction_energy", 0.0)
-        coupling_symmetry = features.get("coupling_symmetry", 0.0)
-        nonlinear_strength = features.get("nonlinear_strength", 0.0)
-        mixing_degree = features.get("mixing_degree", 0.0)
-        coupling_efficiency = features.get("coupling_efficiency", 0.0)
-        phase_coherence = features.get("phase_coherence", 0.0)
-
-        # Compute analytical coupling prediction
-        predicted_coupling = {
-            "coupling_strength": coupling_strength * 1.2,
-            "interaction_energy": interaction_energy * 0.8,
-            "coupling_symmetry": coupling_symmetry * 1.1,
-            "nonlinear_strength": nonlinear_strength * 0.9,
-            "mixing_degree": mixing_degree * 1.0,
-            "coupling_efficiency": coupling_efficiency * 1.05,
-        }
-
-        # Compute prediction confidence based on interaction strength
-        prediction_confidence = min(1.0, coupling_strength + phase_coherence * 0.5)
-
-        # Compute feature importance for analytical method
-        feature_importance = {
-            "coupling_strength": 0.25,
-            "interaction_energy": 0.2,
-            "coupling_symmetry": 0.15,
-            "nonlinear_strength": 0.15,
-            "mixing_degree": 0.1,
-            "coupling_efficiency": 0.1,
-            "phase_coherence": 0.05,
-        }
-
-        return {
-            "predicted_coupling": predicted_coupling,
-            "prediction_confidence": prediction_confidence,
-            "prediction_method": "analytical_7d_bvp",
-            "feature_importance": feature_importance,
-            "interaction_energy": interaction_energy,
-            "phase_coherence": phase_coherence,
-        }
 
     def _setup_vectorized_processor(self) -> None:
         """Setup vectorized processor for ML prediction."""

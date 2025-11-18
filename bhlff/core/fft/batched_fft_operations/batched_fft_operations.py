@@ -39,6 +39,7 @@ except ImportError:
 
 from ...utils.gpu_memory_monitor import GPUMemoryMonitor
 from ...domain.optimal_block_size_calculator import OptimalBlockSizeCalculator
+from ...exceptions import CUDANotAvailableError
 from .batched_fft_core import BatchedFFTCore
 
 logger = logging.getLogger(__name__)
@@ -245,15 +246,17 @@ class BatchedFFTOperations:
                 f"{len(batch_fields)} fields"
             )
             
-            # Process batch using core methods
-            if CUDA_AVAILABLE:
-                batch_results = BatchedFFTCore.process_batch_cuda(
-                    batch_fields, self.dtype, normalization, forward
+            # Process batch using core methods - CUDA is REQUIRED
+            if not CUDA_AVAILABLE:
+                raise CUDANotAvailableError(
+                    "CUDA is required for batched FFT operations. "
+                    "CPU fallback is NOT ALLOWED. "
+                    "Please install CuPy and ensure CUDA is properly configured."
                 )
-            else:
-                batch_results = BatchedFFTCore.process_batch_cpu(
-                    batch_fields, normalization, forward
-                )
+            
+            batch_results = BatchedFFTCore.process_batch_cuda(
+                batch_fields, self.dtype, normalization, forward
+            )
             
             results.extend(batch_results)
         
@@ -274,8 +277,11 @@ class BatchedFFTOperations:
             int: Optimal batch size.
         """
         if not CUDA_AVAILABLE:
-            # CPU fallback: use smaller batches
-            return min(4, len(sample_field.shape))
+            raise CUDANotAvailableError(
+                "CUDA is required for batched FFT operations. "
+                "CPU fallback is NOT ALLOWED. "
+                "Please install CuPy and ensure CUDA is properly configured."
+            )
         
         try:
             # Get GPU memory info

@@ -11,7 +11,7 @@ from typing import Tuple
 import numpy as np
 from bhlff.utils.cuda_utils import get_global_backend, CUDABackend
 from bhlff.utils.cuda_backend_7d_ops import CUDABackend7DOps
-from ...domain.optimal_block_size_calculator import OptimalBlockSizeCalculator
+from ....domain.optimal_block_size_calculator import OptimalBlockSizeCalculator
 
 try:
     import cupy as cp

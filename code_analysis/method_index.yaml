@@ -72,9 +72,6 @@ ABCDTransmissionComputation:
 - compute_layer_matrix
 - compute_transmission_matrices_vectorized
 - compute_layer_matrices_vectorized
-- compute_transmission_matrices_blocked
-- _compute_7d_wave_number
-- _compute_standard_batch_size
 ABCDTransmissionCore:
 - compute_layer_matrix
 - compute_7d_wave_number
@@ -204,6 +201,15 @@ AdmittanceSpectrum:
 AdmittanceVectorizedFreqs:
 - __init__
 - compute_all_freqs_cuda
+AdvancedFeatureExtractor:
+- extract_7d_phase_features_advanced
+- compute_topological_charge_advanced
+- compute_phase_coherence_advanced
+- compute_energy_density_advanced
+- compute_phase_velocity_advanced
+- compute_phase_acceleration_advanced
+- compute_interaction_strength_advanced
+- compute_coupling_symmetry_advanced
 AdvancedPowerLawFitting:
 - __init__
 - fit_power_law_advanced
@@ -778,6 +784,11 @@ BVPSourceGeneratorsBasicMixin:
 - generate_point_source
 - generate_distributed_source
 - generate_plane_wave_source
+- _ensure_cuda
+- _materialize_field_array
+- _get_block_size
+- _create_spatial_axes
+- _expand_spatial_block
 BVPSourceGeneratorsDefectsMixin:
 - _add_line_defects
 - _add_surface_defects
@@ -886,6 +897,15 @@ BasicNonlinearEffects:
 - _step_resonator_potential_3d
 - _step_resonator_potential_4d
 - _step_resonator_potential_sine_gordon
+BatchedFFTCore:
+- process_batch_cuda
+- process_batch_cpu
+BatchedFFTOperations:
+- __init__
+- batched_fftn
+- batched_ifftn
+- _process_batched
+- _calculate_optimal_batch_size
 BeatingBasicComparison:
 - __init__
 - compare_analyses
@@ -1064,27 +1084,7 @@ BeatingMLPatternClassifier:
 BeatingMLPatternFeatureExtractor:
 - __init__
 - extract_pattern_features
-- _extract_spatial_features
-- _extract_frequency_features
-- _extract_pattern_characteristics
-- _compute_spectral_entropy
-- _compute_frequency_spacing
-- _compute_frequency_bandwidth
-- _find_spectral_peaks
-- _calculate_symmetry_score
-- _calculate_regularity_score
-- _calculate_complexity_score
-- _compute_7d_phase_field_symmetry
-- _compute_vbp_envelope_symmetry
-- _combine_7d_symmetries
-- _compute_7d_phase_field_regularity
-- _compute_vbp_envelope_regularity
-- _combine_7d_regularities
-- _compute_7d_phase_field_complexity
-- _compute_vbp_envelope_complexity
-- _combine_7d_complexities
-- _compute_topological_charge
-- _compute_energy_symmetry
+- extract_pattern_characteristics
 BeatingMLPatterns:
 - __init__
 - classify_beating_patterns
@@ -1129,6 +1129,10 @@ BeatingMLPrediction:
 - __init__
 - predict_beating_frequencies
 - predict_mode_coupling
+BeatingMLPredictionAnalytical:
+- __init__
+- predict_frequencies_analytical
+- predict_coupling_analytical
 BeatingMLPredictionCore:
 - __init__
 - predict_beating_frequencies
@@ -1138,15 +1142,6 @@ BeatingMLPredictionCore:
 - train_all_models
 - validate_models
 - get_model_performance
-- _load_trained_frequency_model
-- _load_frequency_scaler
-- _load_trained_coupling_model
-- _load_coupling_scaler
-- _compute_prediction_confidence
-- _get_feature_importance
-- _compute_prediction_variance
-- _predict_frequencies_analytical
-- _predict_coupling_analytical
 - _setup_vectorized_processor
 BeatingMLPredictionFeatures:
 - __init__
@@ -1162,6 +1157,15 @@ BeatingMLPredictionFeatures:
 - _calculate_nonlinear_strength
 - _calculate_mode_mixing_degree
 - _calculate_coupling_efficiency
+BeatingMLPredictionHelpers:
+- __init__
+- load_trained_frequency_model
+- load_frequency_scaler
+- load_trained_coupling_model
+- load_coupling_scaler
+- compute_prediction_confidence
+- get_feature_importance
+- compute_prediction_variance
 BeatingMLPredictionOptimizer: []
 BeatingMLPredictionOptimizerBase:
 - __init__
@@ -1199,13 +1203,7 @@ BeatingMLPredictionOptimizerVectorizedMixin:
 BeatingMLVectorizedMethods:
 - __init__
 - compute_7d_phase_field_symmetry_vectorized
-- _compute_spatial_symmetry_vectorized
-- _compute_spectral_symmetry_vectorized
-- _compute_phase_symmetry_vectorized
 - compute_7d_phase_field_regularity_vectorized
-- _compute_spatial_regularity_vectorized
-- _compute_temporal_regularity_vectorized
-- _compute_spectral_regularity_vectorized
 - extract_ml_pattern_features_vectorized
 - compute_7d_phase_field_energy_vectorized
 - compute_7d_phase_field_momentum_vectorized
@@ -1408,10 +1406,12 @@ BlockedFieldGenerator:
 - __init__
 - get_block
 - get_block_by_indices
+- iter_gpu_blocks
 - iterate_blocks
 - get_field
 - clear_cache
 - cleanup
+- _transfer_block_to_gpu
 BlockedFieldProcessorCUDA:
 - __init__
 - process_blocked_field_blocks
@@ -1426,18 +1426,6 @@ BoundaryAnalysis:
 BoundaryAnalysisCore:
 - __init__
 - analyze_boundaries
-- _analyze_level_set_boundaries
-- _analyze_phase_field_boundaries
-- _analyze_topological_boundaries
-- _find_level_set_boundary
-- _analyze_boundary_properties
-- _find_critical_points
-- _is_critical_point
-- _classify_critical_point
-- _analyze_topological_structure
-- _classify_topological_boundaries
-- _analyze_boundary_stability
-- _estimate_boundary_curvature
 - _create_boundary_summary
 BoundaryAnalyzer:
 - __init__
@@ -1536,6 +1524,14 @@ CPUMemoryMonitor:
 - check_memory
 - should_use_memory_mapped
 - get_available_memory
+CUDAAdvancedFeatures:
+- __init__
+- tensor_cores_available
+- compute_capability
+- allocate_unified_memory
+- compute_with_tensor_cores
+- optimize_dimension_order
+- process_7d_field_optimized
 CUDABackend:
 - __init__
 - zeros
@@ -1577,8 +1573,23 @@ CUDABlockProcessor:
 - get_memory_usage_cuda
 - cleanup_cuda_memory
 - __del__
+CUDAMemoryManager:
+- __init__
+- allocate_pinned
+- async_transfer_and_compute
+- async_transfer_to_gpu
+- async_transfer_to_cpu
+- async_context
+- create_stream
+- synchronize
 CUDANotAvailableError:
 - __init__
+CUDAStreamBlockProcessor:
+- __init__
+- process_blocks_streamed
+- _process_stream_blocks
+- _apply_default_operation
+- cleanup
 CarrierPrimacyPostulate:
 - __init__
 - apply
@@ -1796,6 +1807,9 @@ CosmologicalParameters:
 - __init__
 - compute_hubble_parameter
 - compute_cosmological_parameters
+CouplingFeatureExtractor:
+- __init__
+- extract_coupling_features
 CrankNicolsonIntegrator:
 - __init__
 - _setup_spectral_coefficients
@@ -1877,17 +1891,26 @@ DefectInteractions:
 - __init__
 - _setup_interaction_parameters
 - compute_interaction_forces
-- _compute_pair_force
-- _compute_green_function
-- simulate_defect_annihilation
-- _compute_annihilation_energy
-- _compute_energy_release_rate
-- _compute_relaxation_time
 - compute_interaction_potential
-- _compute_fractional_green_normalization
-- _compute_defect_energy_from_field
-- _step_resonator_screening
-- _compute_7d_bvp_normalization
+- simulate_defect_annihilation
+DefectInteractionsEnergy:
+- __init__
+- compute_defect_energy_from_field
+- compute_annihilation_energy
+- compute_energy_release_rate
+- compute_relaxation_time
+- simulate_defect_annihilation
+DefectInteractionsForces:
+- __init__
+- compute_interaction_forces
+- compute_pair_force
+- compute_interaction_potential
+DefectInteractionsGreen:
+- __init__
+- compute_green_function
+- compute_fractional_green_normalization
+- step_resonator_screening
+- compute_7d_bvp_normalization
 DefectModel:
 - __init__
 - _setup_defect_operators
@@ -1916,6 +1939,10 @@ DerivativeOperators7D:
 - spatial
 - phase
 - temporal
+DimensionOptimizer:
+- __init__
+- optimize_order
+- process_7d_field
 DiscretizationAnalyzer:
 - __init__
 - analyze_grid_convergence
@@ -2388,6 +2415,10 @@ FeatureCalculator:
 - calculate_nonlinear_strength
 - calculate_mode_mixing_degree
 - calculate_coupling_efficiency
+FeatureExtractionModels:
+- __init__
+- load_trained_models
+- save_trained_models
 FeatureExtractor:
 - __init__
 - extract_frequency_features
@@ -2414,13 +2445,6 @@ FeatureExtractor:
 - load_trained_models
 - save_trained_models
 - extract_7d_phase_features_advanced
-- _compute_topological_charge_advanced
-- _compute_phase_coherence_advanced
-- _compute_energy_density_advanced
-- _compute_phase_velocity_advanced
-- _compute_phase_acceleration_advanced
-- _compute_interaction_strength_advanced
-- _compute_coupling_symmetry_advanced
 Field:
 - __post_init__
 - _validate_field
@@ -2438,14 +2462,30 @@ Field:
 - __repr__
 FieldArray:
 - __init__
+- from_block_generator
+- iter_batches
 - _should_use_swap
 - _should_use_swap_for_shape
 - _convert_to_swap
-- array
 - shape
 - dtype
 - nbytes
 - is_swapped
+- to_memory
+- to_swap
+- save_pickle
+- load_pickle
+- cleanup
+- __repr__
+- __del__
+FieldArrayBatchIterator:
+- __init__
+- _available_gpu_bytes
+- _auto_block_shape
+- iterate
+- _to_gpu
+FieldArrayMathMixin:
+- array
 - __array__
 - __getitem__
 - __setitem__
@@ -2455,13 +2495,6 @@ FieldArray:
 - __add__
 - __sub__
 - __truediv__
-- to_memory
-- to_swap
-- save_pickle
-- load_pickle
-- cleanup
-- __repr__
-- __del__
 FieldProcessingStrategy:
 - __init__
 - process_gpu_preferred
@@ -2527,6 +2560,15 @@ FrequencyDependentProperties:
 FrequencyDependentResonator:
 - __init__
 - compute_coefficients
+FrequencyFeatureExtraction:
+- extract_frequency_features
+- compute_spectral_entropy
+- compute_frequency_spacing
+- compute_frequency_bandwidth
+- find_spectral_peaks
+FrequencyFeatureExtractor:
+- __init__
+- extract_frequency_features
 GPUBlockOperations:
 - __init__
 - process_single_block_gpu
@@ -2537,6 +2579,8 @@ GPUBlockProcessor:
 - process_blocks
 - _process_block_batch_gpu
 - _process_block_batch_gpu_vectorized
+- _process_batch_with_batched_fft
+- _process_batch_with_streams
 GPUBlockUtils:
 - __init__
 - extract_block_gpu
@@ -2548,6 +2592,15 @@ GPUMemoryMonitor:
 - get_memory_pool_info
 - free_all_blocks
 - get_available_memory
+GPUMemoryPool:
+- __init__
+- _get_max_memory
+- allocate
+- free_all_blocks
+- defragment_memory
+- get_memory_info
+- get_available_memory
+- allocate_pinned_memory
 GalacticModel:
 - __init__
 - _setup_galaxy_model
@@ -2610,6 +2663,22 @@ GravitationalEffectsCUDA:
 - _effective_metric_gpu
 - _anisotropy_gpu
 - _cp
+GravityWavesEnergyComputation:
+- __init__
+- compute_wave_energy
+- compute_time_derivative
+- compute_spatial_gradient
+- step_resonator_boundary_condition
+- step_resonator_spatial_boundary
+GravityWavesSpectrumComputation:
+- compute_frequency_spectrum
+- compute_polarization_modes
+GravityWavesStrainComputation:
+- __init__
+- compute_strain_tensor_from_envelope
+- compute_gw1_amplitude
+- _compute_second_derivative
+- _compute_mixed_derivative
 GridConvergenceAnalyzer:
 - __init__
 - _setup_convergence_metrics
@@ -2622,6 +2691,11 @@ GridConvergenceAnalyzer:
 - _assess_convergence_quality
 - _analyze_overall_convergence
 - _recommend_grid_size
+HigherOrderInteractionComputation:
+- __init__
+- compute_higher_order_interactions
+- compute_three_particle_interaction
+- create_higher_order_potential
 ImpedanceCore:
 - __init__
 - _setup_parameters
@@ -2942,6 +3016,13 @@ LevelGInterface:
 - _analyze_large_scale_structure
 - _analyze_astrophysical_objects
 - _analyze_gravitational_effects
+LevelSetBoundaryAnalyzer:
+- __init__
+- analyze_level_set_boundaries
+- find_level_set_boundary
+- analyze_boundary_properties
+- analyze_boundary_stability
+- estimate_boundary_curvature
 LevelTestResults:
 - add_test_result
 - has_critical_physics_failures
@@ -2975,21 +3056,25 @@ MLTrainer:
 - train_all_models
 - validate_models
 - get_model_performance
-- _generate_frequency_training_data
-- _generate_coupling_training_data
-- _generate_synthetic_envelope
-- _extract_frequency_features
-- _extract_coupling_features
-- _generate_target_frequencies
-- _generate_target_coupling
-- _validate_frequency_model
-- _validate_coupling_model
 - __init__
 - train_frequency_model
 - train_coupling_model
 - train_all_models
 - validate_models
 - get_model_performance
+MLTrainerDataGeneration:
+- __init__
+- generate_frequency_training_data
+- generate_coupling_training_data
+- generate_synthetic_envelope
+- extract_frequency_features
+- extract_coupling_features
+- generate_target_frequencies
+- generate_target_coupling
+MLTrainerValidation:
+- __init__
+- validate_frequency_model
+- validate_coupling_model
 MemoryAnalyzer:
 - __init__
 - analyze_memory
@@ -3624,6 +3709,12 @@ OptimizationScalingAnalyzer:
 - _create_optimization_roadmap
 - _compute_scaling_exponent
 - _compute_optimization_grade
+Optimized7DKernels:
+- __init__
+- _initialize_kernels
+- compute_7d_laplacian
+- compute_7d_gradient
+- normalize_phase
 OptimizedBlockProcessor:
 - __init__
 - _calculate_optimal_block_size
@@ -3655,6 +3746,10 @@ OverallComparator:
 - __init__
 - calculate_overall_comparison
 - _calculate_consistency
+PairInteractionPotentialComputation:
+- __init__
+- compute_pair_interaction
+- create_pair_potential
 ParameterAnalysis:
 - __init__
 - analyze_parameter_evolution
@@ -3778,6 +3873,23 @@ PatternComparator:
 - compare_phase_coherence
 - compare_beating_frequencies
 - _compare_frequency_lists
+PatternFeatureHelpers:
+- compute_topological_charge
+- compute_energy_symmetry
+PatternScoreComputation:
+- __init__
+- calculate_symmetry_score
+- calculate_regularity_score
+- calculate_complexity_score
+- compute_7d_phase_field_symmetry
+- compute_vbp_envelope_symmetry
+- combine_7d_symmetries
+- compute_7d_phase_field_regularity
+- compute_vbp_envelope_regularity
+- combine_7d_regularities
+- compute_7d_phase_field_complexity
+- compute_vbp_envelope_complexity
+- combine_7d_complexities
 PatternStabilityAnalyzer:
 - __init__
 - analyze_pattern_stability
@@ -3916,6 +4028,12 @@ PhaseEnvelopeBalanceSolverSolveMixin:
 - _solve_envelope_balance
 - _apply_balance_operator
 - _compute_effective_metric_from_solution
+PhaseFieldBoundaryAnalyzer:
+- __init__
+- analyze_phase_field_boundaries
+- analyze_boundary_properties
+- analyze_boundary_stability
+- estimate_boundary_curvature
 PhaseFieldEvolution:
 - __init__
 - initialize_phase_field
@@ -4125,17 +4243,6 @@ PotentialComputationAnalyzer:
 - _initialize_potential_analysis
 - _setup_interaction_matrices
 - _setup_potential_functions
-- _compute_single_particle_potential
-- _create_single_particle_potential
-- _compute_pair_interaction
-- _create_pair_potential
-- _compute_higher_order_interactions
-- _compute_three_particle_interaction
-- _create_higher_order_potential
-- _calculate_interaction_strength
-- _step_interaction_potential
-- _step_three_body_interaction_potential
-- _step_three_particle_interaction_potential
 PotentialEvolution:
 - __init__
 - solve_poisson_equation
@@ -4720,6 +4827,11 @@ SensitivityAnalyzer:
 - analyze_energy_complexity_correlation
 - save_results
 - _make_serializable
+SevenDBlockTiling:
+- __init__
+- compute_7d_block_tiling
+- get_processing_order
+- _calculate_available_memory
 SignatureAnalyzer:
 - __init__
 - analyze_field_signatures
@@ -4750,6 +4862,10 @@ SimpleBlockProcessor:
 - optimize_for_field
 - cleanup
 SimpleConfig: []
+SingleParticlePotentialComputation:
+- __init__
+- compute_single_particle_potential
+- create_single_particle_potential
 SingleSolitonCore:
 - __init__
 - compute_7d_soliton_ode
@@ -4998,6 +5114,8 @@ Source:
 - get_config
 - __repr__
 SpatialConfig: []
+SpatialFeatureExtraction:
+- extract_spatial_features
 SpatialFieldExtractor:
 - __init__
 - extract_spatial_from_7d_block
@@ -5170,6 +5288,12 @@ StellarModel:
 - _compute_phase_energy
 - _compute_nonlinear_energy
 - _compute_defect_density
+StepResonatorPotentialFunctions:
+- __init__
+- step_interaction_potential
+- step_three_body_interaction_potential
+- step_three_particle_interaction_potential
+- calculate_interaction_strength
 StepwiseVisualizer:
 - __init__
 - visualize_power_law_analysis
@@ -5312,6 +5436,14 @@ TemporalOperators:
 - apply_derivative
 - get_time_step
 - get_time_points
+TensorCoreSupport:
+- __init__
+- _get_compute_capability
+- _check_tensor_cores
+- available
+- compute_capability
+- compute_matmul
+- compute_conv
 Test7DBVPPhysics:
 - domain_7d
 - parameters_7d
@@ -5392,14 +5524,13 @@ TestA01PlaneWaveAdvanced:
 - test_energy_conservation
 TestA01PlaneWaveBasic:
 - setup_method
-- test_plane_wave_single_mode
-- test_plane_wave_multiple_modes
-- test_anisotropy_check
-- test_grid_convergence
-- test_fractional_laplacian_operator
-- test_spectral_coefficients
-- test_solver_validation
-- test_solver_info
+- test_plane_wave_single_mode_matches_analytical_solution
+- test_plane_wave_multiple_modes_superposition
+- test_anisotropy_invariance_between_axes
+- test_grid_convergence_for_plane_wave
+- test_fractional_laplacian_operator_matches_multiplier
+- test_spectral_coefficients_match_operator_value
+- test_solver_info_contains_metadata
 TestA01SimplePlaneWave:
 - setup_method
 - create_plane_wave_source
@@ -8069,6 +8200,14 @@ TopologicalAnalyzer:
 - _compute_7d_winding_number_from_parameters
 - _compute_7d_defect_density_from_distance
 - _compute_7d_invariants_from_parameters
+TopologicalBoundaryAnalyzer:
+- __init__
+- analyze_topological_boundaries
+- find_critical_points
+- is_critical_point
+- classify_critical_point
+- analyze_topological_structure
+- classify_topological_boundaries
 TopologicalChargeAnalyzer:
 - __init__
 - _setup_analysis_parameters
@@ -8161,6 +8300,14 @@ TransitionZonePostulate:
 - _compute_nonlinearity_strength
 - _compute_current_efficiency
 - _validate_nonlinear_interface
+TransmissionBlockedComputation:
+- __init__
+- compute_transmission_matrices_blocked
+- _compute_batch_size
+- _compute_standard_batch_size
+TransmissionWaveNumberComputation:
+- __init__
+- compute_7d_wave_number
 TrendAnalyzer:
 - __init__
 - analyze_trends
@@ -8182,6 +8329,11 @@ U1PhaseStructurePostulate:
 - _check_u1_properties
 - _validate_u1_phase_structure
 - __repr__
+UnifiedMemoryManager:
+- __init__
+- allocate
+- prefetch_to_gpu
+- prefetch_to_cpu
 UnifiedSpectralOperations:
 - __init__
 - forward_fft
@@ -8226,17 +8378,7 @@ VBPGravitationalWavesCalculator:
 - __init__
 - _setup_wave_parameters
 - compute_phase_field_oscillations
-- _compute_strain_tensor_from_envelope
-- _compute_envelope_oscillations
-- _compute_wave_amplitude_with_gw1_law
-- _compute_frequency_spectrum
-- _compute_polarization_modes
-- _compute_wave_energy
-- _compute_time_derivative
-- _compute_spatial_gradient
 - compute_detection_sensitivity
-- _step_resonator_boundary_condition
-- _step_resonator_spatial_boundary
 Vectorized7DProcessor:
 - __init__
 - _compute_optimal_block_size
@@ -8270,6 +8412,14 @@ Vectorized7DProcessor:
 - _check_memory_usage
 - _cleanup_memory
 - get_memory_info
+VectorizedBlockOperations:
+- __init__
+- extract_blocks_vectorized
+- merge_blocks_vectorized
+- _extract_blocks_cuda_vectorized
+- _extract_blocks_cpu_vectorized
+- _merge_blocks_cuda_vectorized
+- _merge_blocks_cpu_vectorized
 VectorizedBlockProcessor:
 - __init__
 - process_blocks_vectorized
@@ -8288,6 +8438,23 @@ VectorizedBlockProcessor:
 - merge_blocks_cuda
 - _create_weight_mask_cuda
 - get_vectorization_info
+VectorizedEnergyComputation:
+- compute_7d_phase_field_energy_vectorized
+- compute_7d_phase_field_momentum_vectorized
+- compute_7d_phase_field_angular_momentum_vectorized
+- compute_7d_phase_field_entropy_vectorized
+VectorizedFeatureExtraction:
+- extract_ml_pattern_features_vectorized
+VectorizedRegularityComputation:
+- compute_7d_phase_field_regularity_vectorized
+- compute_spatial_regularity_vectorized
+- compute_temporal_regularity_vectorized
+- compute_spectral_regularity_vectorized
+VectorizedSymmetryComputation:
+- compute_7d_phase_field_symmetry_vectorized
+- compute_spatial_symmetry_vectorized
+- compute_spectral_symmetry_vectorized
+- compute_phase_symmetry_vectorized
 VelocityEvolution:
 - __init__
 - evolve_velocity_field
@@ -8321,6 +8488,9 @@ WeeklyReport:
 - set_quality_evolution
 - set_performance_trends
 - set_recommendations
+WeightMaskOperations:
+- create_weight_mask_cuda
+- create_weight_mask_cpu
 ZoneAnalysis:
 - __init__
 - identify_zone_boundaries
@@ -8343,7 +8513,6 @@ ZoneSeparationAnalyzer:
 - compute_zone_statistics
 - _compute_region_statistics
 _Domain:
-- __init__
 - __init__
 - __init__
 - __init__

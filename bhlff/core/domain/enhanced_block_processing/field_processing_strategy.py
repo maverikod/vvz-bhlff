@@ -131,6 +131,12 @@ class FieldProcessingStrategy:
 
         # CUDA is required - NO CPU fallback allowed
         # All operations must use GPU
+        if not self.cuda_available:
+            raise CUDANotAvailableError(
+                "CUDA is required for field processing. CPU fallback is NOT ALLOWED. "
+                "Please install CuPy and ensure CUDA is properly configured."
+            )
+        
         try:
             # Default to 7D operations for optimal performance
             kwargs.setdefault("use_7d_operations", True)

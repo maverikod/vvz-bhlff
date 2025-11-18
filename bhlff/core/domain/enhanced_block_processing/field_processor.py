@@ -118,26 +118,19 @@ class FieldProcessor:
         # Default to 7D operations for optimal performance with vectorization
         kwargs.setdefault("use_7d_operations", True)
 
-        # Try GPU processing first (preferred for all contexts)
+        # CUDA is required - NO CPU fallback allowed
+        if not self.cuda_available:
+            from ...exceptions import CUDANotAvailableError
+            raise CUDANotAvailableError(
+                "CUDA is required for field processing. CPU fallback is NOT ALLOWED. "
+                "Please install CuPy and ensure CUDA is properly configured."
+            )
+        
+        # Try GPU processing
         try:
-            if self.cuda_available:
-                return self.processing_strategy.process_gpu_preferred(
-                    field, operation, **kwargs
-                )
-            else:
-                # CPU processing only if CUDA not available and explicitly enabled
-                if not non_level_c:
-                    self.logger.error(
-                        "CUDA not available and CPU fallback is disabled by default. "
-                        "Set non_level_c=True to explicitly enable CPU processing."
-                    )
-                    raise RuntimeError(
-                        "CUDA not available and CPU processing is disabled by default. "
-                        "Set non_level_c=True in kwargs to explicitly enable CPU processing."
-                    )
-                return self.processing_strategy.process_cpu_optimized(
-                    field, operation, **kwargs
-                )
+            return self.processing_strategy.process_gpu_preferred(
+                field, operation, **kwargs
+            )
         except (CUDANotAvailableError, InsufficientGPUMemoryError):
             # Re-raise CUDA and memory errors as-is
             raise

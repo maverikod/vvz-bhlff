@@ -5,13 +5,15 @@ email: vasilyvz@gmail.com
 Forward FFT blocked processing.
 
 This module provides forward FFT blocked processing functions.
+FFT is a global operation that requires all data simultaneously.
+This implementation processes the entire field at once, using
+swap/memory-mapped arrays for memory management with maximum block sizes.
 """
 
 from typing import Tuple
 import numpy as np
 import logging
 import sys
-from itertools import product
 
 try:
     import cupy as cp
@@ -35,11 +37,12 @@ def forward_fft_blocked(
     
     Physical Meaning:
         Computes forward FFT in spectral space for 7D phase field using
-        block processing to fit GPU memory constraints (80% usage).
-        For 7D fields, processes all 7 dimensions in blocks.
+        swap/memory-mapped arrays for memory management. FFT is a global
+        operation that requires all data simultaneously, so we process
+        the entire field at once, using swap for large fields.
     """
     if len(field.shape) == 7 and len(domain_shape) == 7:
-        # 7D block processing - process all dimensions in blocks
+        # 7D block processing - process entire field with swap support
         return _forward_fft_blocked_7d(field, normalization, domain_shape, gpu_memory_ratio)
     else:
         # Non-7D: process only last dimension
@@ -64,239 +67,432 @@ def _forward_fft_blocked_7d(
     gpu_memory_ratio: float,
 ) -> np.ndarray:
     """
-    Perform forward FFT with window-based processing for maximum GPU utilization.
+    Perform forward FFT for 7D field using swap/memory-mapped arrays.
     
     Physical Meaning:
-        Computes forward FFT for 7D phase field using window-based processing:
-        - Forms windows equal to 80% of GPU memory
-        - Processes each window entirely on GPU (full FFT)
-        - Writes result to swap and loads next window
-        - For small fields, processes as single window
+        Computes forward FFT for entire 7D phase field. FFT is a global
+        operation requiring all data simultaneously. This implementation:
+        - Processes entire field at once on GPU (if memory allows)
+        - Uses memory-mapped arrays for input/output if field is too large
+        - Uses maximum block sizes for swap operations (80% GPU memory)
+        - Supports streaming from FieldArray with iter_batches for swapped fields
+        - Ensures correct normalization using full domain_shape
         
-    This approach maximizes GPU utilization by processing large chunks
-    instead of small blocks, reducing CPU/GPU transfers.
+    Mathematical Foundation:
+        FFT is computed as: F(k) = Σ f(x) * exp(-2πi k·x / N)
+        This requires all spatial points simultaneously, so we cannot
+        split the field into independent windows. Instead, we use swap
+        to manage memory while processing the entire field. For swapped
+        FieldArray, we stream blocks sequentially into pinned memory,
+        then assemble for FFT to simulate a contiguous array.
     """
     logger = logging.getLogger(__name__)
     
+    # Check if field is FieldArray with swap support
+    field_array_obj = None
+    if hasattr(field, 'is_swapped') and hasattr(field, 'iter_batches'):
+        # FieldArray with streaming support
+        field_array_obj = field
+        field = field.array  # Extract underlying array
+        logger.info(
+            f"FieldArray detected: is_swapped={field_array_obj.is_swapped}, "
+            f"shape={field.shape}"
+        )
+    
     field_size_mb = field.nbytes / (1024**2)
     logger.info(
-        f"_forward_fft_blocked_7d: starting window processing for field {field.shape} "
-        f"({field_size_mb:.2f}MB)"
-    )
-    
-    # Calculate maximum window size using centralized utility function
-    from bhlff.utils.cuda_utils import calculate_optimal_window_memory
-    
-    # FFT needs ~4x memory: input + output + temp arrays
-    max_window_elements, actual_usage_gb, actual_usage_pct = calculate_optimal_window_memory(
-        gpu_memory_ratio=gpu_memory_ratio,
-        overhead_factor=4.0,  # FFT overhead: input + output + temp arrays
-        logger=logger,
-    )
-    
-    logger.info(
-        f"FFT window calculation: max_window={max_window_elements/1e6:.1f}M elements, "
-        f"expected usage={actual_usage_gb:.3f}GB ({actual_usage_pct:.1f}% of total GPU memory)"
+        f"_forward_fft_blocked_7d: processing entire field {field.shape} "
+        f"({field_size_mb:.2f}MB) with swap support"
     )
     sys.stdout.flush()
     
-    # Calculate window size per dimension
+    # Calculate field memory requirements
     field_elements = np.prod(field.shape)
+    bytes_per_element = 16  # complex128 = 16 bytes
+    field_memory_bytes = field_elements * bytes_per_element
+    # FFT overhead: input + output + temp arrays = 4x
+    field_memory_with_overhead = field_memory_bytes * 4.0
     
-    # If field fits in window, process as single window
-    if field_elements <= max_window_elements:
-        logger.info(f"Field fits in single window, processing entirely on GPU")
-        return forward_fft_gpu(field, normalization, domain_shape)
-    
-    # Calculate window size for spatial dimensions
-    phase_temporal_size = np.prod(field.shape[3:])
-    max_spatial_elements = max_window_elements // phase_temporal_size
-    
-    # Calculate window size per spatial dimension
-    spatial_dims = field.shape[:3]
-    elements_per_spatial_dim = int(max_spatial_elements ** (1.0 / 3.0))
-    
-    # Window size: ensure at least 32 per dimension for GPU efficiency
-    window_size = tuple(
-        max(32, min(elements_per_spatial_dim, dim))
-        for dim in spatial_dims
-    ) + field.shape[3:]  # Keep phase/temporal dimensions full
-    
-    window_elements = np.prod(window_size)
-    window_size_mb = (window_elements * 16) / (1024**2)
-    logger.info(
-        f"Window size: {window_size} = {window_elements/1e6:.1f}M elements = {window_size_mb:.2f}MB"
-    )
-    
-    # Calculate number of windows needed
-    num_windows = tuple(
-        (field.shape[i] + window_size[i] - 1) // window_size[i]
-        for i in range(3)
-    )
-    total_windows = np.prod(num_windows)
-    logger.info(
-        f"Total windows: {total_windows} ({num_windows[0]}x{num_windows[1]}x{num_windows[2]})"
-    )
-    
-    # Create output array - use transparent swap if input is memory-mapped
-    if isinstance(field, np.memmap):
-        from ..swap_manager import get_swap_manager
-        swap_manager = get_swap_manager()
-        out = swap_manager.create_swap_array(
-            shape=field.shape,
-            dtype=field.dtype,
-            array_id=f"fft_forward_{id(field)}"
-        )
-    else:
-        out = np.zeros_like(field)
-    
-    # Process windows
-    window_idx = 0
-    for wx, wy, wz in product(range(num_windows[0]), range(num_windows[1]), range(num_windows[2])):
-        logger.info(f"[WINDOW {window_idx + 1}/{total_windows}] START: wx={wx}, wy={wy}, wz={wz}")
-        sys.stdout.flush()
-        sys.stderr.flush()
-        
-        # Calculate window boundaries
-        x_start = wx * window_size[0]
-        x_end = min(x_start + window_size[0], field.shape[0])
-        y_start = wy * window_size[1]
-        y_end = min(y_start + window_size[1], field.shape[1])
-        z_start = wz * window_size[2]
-        z_end = min(z_start + window_size[2], field.shape[2])
-        
-        logger.info(
-            f"[WINDOW {window_idx + 1}/{total_windows}] STEP 1: Extracting window "
-            f"({x_start}:{x_end}, {y_start}:{y_end}, {z_start}:{z_end})"
-        )
-        sys.stdout.flush()
-        
-        # Extract window
-        window = field[x_start:x_end, y_start:y_end, z_start:z_end, :, :, :, :]
-        window_shape = window.shape
-        window_size_mb = window.nbytes / (1024**2)
-        
-        logger.info(
-            f"[WINDOW {window_idx + 1}/{total_windows}] STEP 1 COMPLETE: "
-            f"shape={window_shape}, size={window_size_mb:.2f}MB"
-        )
-        sys.stdout.flush()
-        
-        # Check if window is large enough for parallel sub-window processing
-        use_parallel_subwindows = (
-            CUDA_AVAILABLE and 
-            window_size_mb > 200 and 
-            window_shape[6] >= 2
-        )
-        
-        if use_parallel_subwindows:
-            min_subwindow_mb = 100
-            max_subwindows = max(2, int(window_size_mb / min_subwindow_mb))
-            num_subwindows = min(max_subwindows, window_shape[6], 4)
-            
-            if num_subwindows >= 2:
-                subwindow_size_t = (window_shape[6] + num_subwindows - 1) // num_subwindows
-                streams = [cp.cuda.Stream() for _ in range(num_subwindows)]
-                subwindow_results = []
+    # Check available GPU memory
+    use_swap = False
+    if CUDA_AVAILABLE:
+        try:
+            from bhlff.utils.cuda_utils import get_global_backend
+            backend = get_global_backend()
+            if hasattr(backend, "get_memory_info"):
+                mem_info = backend.get_memory_info()
+                free_memory = mem_info.get("free_memory", 0)
+                total_memory = mem_info.get("total_memory", 0)
                 
                 logger.info(
-                    f"Window {window_idx + 1}: splitting into {num_subwindows} sub-windows "
-                    f"for parallel processing via CUDA streams"
+                    f"GPU memory: free={free_memory/1e9:.3f}GB, total={total_memory/1e9:.3f}GB, "
+                    f"field with overhead={field_memory_with_overhead/1e9:.3f}GB"
                 )
                 
-                # Process sub-windows in parallel
-                for stream_idx, stream in enumerate(streams):
-                    t_start = stream_idx * subwindow_size_t
-                    t_end = min(t_start + subwindow_size_t, window_shape[6])
-                    
-                    if t_start >= window_shape[6]:
-                        break
-                    
-                    subwindow = window[:, :, :, :, :, :, t_start:t_end]
-                    subwindow_shape = subwindow.shape
-                    
-                    subwindow_domain_shape = tuple(
-                        list(domain_shape[:3]) + list(subwindow_shape[3:])
-                    ) if len(domain_shape) == 7 else domain_shape
-                    
-                    # Process sub-window in stream
-                    with stream:
-                        subwindow_gpu = cp.asarray(subwindow)
-                        subwindow_fft_gpu = forward_fft_gpu(
-                            subwindow_gpu, normalization, subwindow_domain_shape
-                        )
-                        subwindow_results.append((t_start, t_end, subwindow_fft_gpu))
-                
-                # Synchronize all streams
-                for stream in streams:
-                    stream.synchronize()
-                
-                # Transfer results and assemble
-                for t_start, t_end, subwindow_fft_gpu in subwindow_results:
-                    subwindow_fft = cp.asnumpy(subwindow_fft_gpu)
-                    out[x_start:x_end, y_start:y_end, z_start:z_end, :, :, :, t_start:t_end] = subwindow_fft
-                    del subwindow_fft_gpu
-                
-                del subwindow_results
-                
-                # Free GPU memory
-                cp.get_default_memory_pool().free_all_blocks()
-                cp.get_default_pinned_memory_pool().free_all_blocks()
-                cp.cuda.Stream.null.synchronize()
-            else:
-                use_parallel_subwindows = False
-        
-        if not use_parallel_subwindows:
-            logger.info(f"[WINDOW {window_idx + 1}/{total_windows}] STEP 2: Processing single window on GPU")
-            sys.stdout.flush()
-            
-            window_domain_shape = tuple(
-                list(domain_shape[:3]) + list(window_shape[3:])
-            ) if len(domain_shape) == 7 else domain_shape
-            
-            window_fft = forward_fft_gpu(window, normalization, window_domain_shape)
-            
-            logger.info(f"[WINDOW {window_idx + 1}/{total_windows}] STEP 3: Storing result")
-            sys.stdout.flush()
-            
-            out[x_start:x_end, y_start:y_end, z_start:z_end, :, :, :, :] = window_fft
-            
-            logger.info(f"[WINDOW {window_idx + 1}/{total_windows}] STEP 3 COMPLETE: Result stored")
-            sys.stdout.flush()
-        
-        # Free GPU memory after each window
-        if CUDA_AVAILABLE:
-            cp.get_default_memory_pool().free_all_blocks()
-            cp.get_default_pinned_memory_pool().free_all_blocks()
-            cp.cuda.Stream.null.synchronize()
-            
-            # Check memory after cleanup
-            try:
-                mem_info_after = cp.cuda.runtime.memGetInfo()
-                free_gb_after = mem_info_after[0] / 1e9
-                total_gb = mem_info_after[1] / 1e9
-                used_gb = total_gb - free_gb_after
-                if window_idx % 10 == 0 or window_idx == total_windows - 1:
+                # Use swap if field with overhead exceeds 80% of free memory
+                if field_memory_with_overhead > free_memory * 0.8:
+                    use_swap = True
                     logger.info(
-                        f"Window {window_idx + 1}/{total_windows} completed, "
-                        f"GPU memory: {used_gb:.2f}GB used / {total_gb:.2f}GB total "
-                        f"({used_gb/total_gb*100:.1f}% used), {free_gb_after:.2f}GB free"
+                        f"Field with overhead ({field_memory_with_overhead/1e9:.3f}GB) exceeds "
+                        f"80% of free GPU memory ({free_memory/1e9:.3f}GB), using swap"
                     )
-            except Exception:
-                pass
-        
-        window_idx += 1
+                else:
+                    logger.info(
+                        f"Field fits in GPU memory, processing directly "
+                        f"(field={field_memory_with_overhead/1e9:.3f}GB, free={free_memory/1e9:.3f}GB)"
+                    )
+        except Exception as e:
+            logger.warning(f"Failed to check GPU memory: {e}, using swap for safety")
+            use_swap = True
     
-    logger.info(f"_forward_fft_blocked_7d: completed window processing ({total_windows} windows)")
-    sys.stdout.flush()
+    # Create output array - use swap if needed
+    output_dtype = np.complex128  # Always complex for FFT output
+    
+    if use_swap or isinstance(field, np.memmap):
+        # Use memory-mapped arrays for large fields
+        from ..swap_manager import get_swap_manager
+        swap_manager = get_swap_manager()
+        
+        # Create memory-mapped output array
+        out = swap_manager.create_swap_array(
+            shape=field.shape,
+            dtype=output_dtype,
+            array_id=f"fft_forward_{id(field)}"
+        )
+        
+        logger.info(
+            f"Created memory-mapped output array: shape={out.shape}, dtype={out.dtype}"
+        )
+    else:
+        # Use regular array for small fields
+        out = np.zeros(field.shape, dtype=output_dtype)
+        logger.info(
+            f"Created regular output array: shape={out.shape}, dtype={out.dtype}"
+        )
+    
+    # Verify output array properties
+    if not np.iscomplexobj(out):
+        raise ValueError(
+            f"Output array must be complex for FFT, got dtype {out.dtype}"
+        )
+    if out.shape != field.shape:
+        raise ValueError(
+            f"Output array shape mismatch: expected {field.shape}, got {out.shape}"
+        )
+    
+    # CRITICAL: FFT is a global operation - process entire field at once
+    # Use swap/memory-mapped arrays for memory management, but process all data together
+    # However, if field is too large, we need to handle OutOfMemoryError gracefully
+    # by using memory-mapped arrays and processing in chunks if necessary
+    try:
+        logger.info("Processing entire field with FFT (global operation)")
+        sys.stdout.flush()
+        
+        # For swapped FieldArray, use streaming batch iterator to load blocks
+        # sequentially into pinned memory, then assemble for FFT
+        if field_array_obj is not None and field_array_obj.is_swapped:
+            logger.info("FieldArray is swapped, using streaming batch iterator")
+            if not CUDA_AVAILABLE:
+                raise RuntimeError(
+                    "CUDA is required for streaming FFT with swapped FieldArray. "
+                    "CPU fallback is not supported."
+                )
+            
+            # Create CUDA stream for async transfers
+            stream = cp.cuda.Stream()
+            
+            # Check if field fits in GPU memory (with overhead)
+            try:
+                from bhlff.utils.cuda_utils import get_global_backend
+                backend = get_global_backend()
+                if hasattr(backend, "get_memory_info"):
+                    mem_info = backend.get_memory_info()
+                    free_memory = mem_info.get("free_memory", 0)
+                    available_memory = int(free_memory * gpu_memory_ratio)
+                else:
+                    available_memory = int(0.8 * 1024**3)  # 0.8 GB fallback
+            except Exception:
+                available_memory = int(0.8 * 1024**3)  # 0.8 GB fallback
+            
+            # Check if field fits in available memory
+            if field_memory_with_overhead > available_memory:
+                raise RuntimeError(
+                    f"Field size {field_memory_with_overhead/1e9:.3f}GB exceeds "
+                    f"available GPU memory {available_memory/1e9:.3f}GB. "
+                    f"FFT requires all data simultaneously. "
+                    f"Please reduce field size or increase GPU memory."
+                )
+            
+            # Allocate regular numpy array for assembled field
+            # This will be in CPU memory, then transferred to GPU
+            assembled_field = np.zeros(field.shape, dtype=field.dtype)
+            
+            # Stream blocks from FieldArray and assemble in CPU memory
+            logger.info("Streaming blocks from FieldArray and assembling")
+            for batch_payload in field_array_obj.iter_batches(
+                max_gpu_ratio=gpu_memory_ratio,
+                use_cuda=False,  # Use CPU for assembly
+                stream=None
+            ):
+                slices = batch_payload["slices"]
+                cpu_block = batch_payload["cpu"]
+                # Copy block to assembled field
+                assembled_field[slices] = cpu_block
+            
+            logger.info("All blocks assembled, transferring to GPU")
+            
+            # Transfer assembled field to GPU using CUDA stream
+            with stream:
+                field_gpu = cp.asarray(assembled_field)
+            stream.synchronize()
+            
+            # Process on GPU
+            result = forward_fft_gpu(field_gpu, normalization, domain_shape)
+            
+            # Copy result back
+            if isinstance(result, cp.ndarray):
+                result = cp.asnumpy(result)
+            
+            # Free assembled field from CPU memory
+            del assembled_field
+            
+        # For memory-mapped arrays, we need to load data in chunks
+        # But FFT requires all data, so we need to load entire field to GPU
+        # If it doesn't fit, we'll get OutOfMemoryError which we'll handle
+        elif isinstance(field, np.memmap):
+            logger.info("Input is memory-mapped, loading to GPU")
+            # Verify input data before processing
+            field_sum = np.sum(field)
+            field_norm = np.linalg.norm(field)
+            logger.debug(
+                f"Memory-mapped input: shape={field.shape}, dtype={field.dtype}, "
+                f"sum={field_sum:.6e}, norm={field_norm:.6e}"
+            )
+            
+            # Try to load entire field - if it fails, we'll handle it
+            try:
+                # Load entire field to GPU
+                if CUDA_AVAILABLE:
+                    field_gpu = cp.asarray(field)
+                    # Verify data was loaded correctly
+                    if CUDA_AVAILABLE:
+                        # For complex arrays, use abs() to get real magnitude
+                        field_gpu_sum_val = cp.sum(field_gpu)
+                        field_gpu_norm_val = cp.linalg.norm(field_gpu)
+                        # Convert to float: use abs() for complex, direct for real
+                        if np.iscomplexobj(field_gpu):
+                            field_gpu_sum = float(abs(field_gpu_sum_val))
+                            field_gpu_norm = float(abs(field_gpu_norm_val))
+                        else:
+                            field_gpu_sum = float(field_gpu_sum_val)
+                            field_gpu_norm = float(field_gpu_norm_val)
+                        logger.debug(
+                            f"GPU input: sum={field_gpu_sum:.6e}, norm={field_gpu_norm:.6e}"
+                        )
+                        # Compare using abs() for complex numbers
+                        field_sum_abs = abs(field_sum) if np.iscomplexobj(field) else field_sum
+                        if abs(field_sum_abs - field_gpu_sum) > 1e-6:
+                            logger.warning(
+                                f"Data mismatch when loading to GPU: "
+                                f"CPU sum={field_sum_abs:.6e}, GPU sum={field_gpu_sum:.6e}"
+                            )
+                else:
+                    field_gpu = field
+                
+                # Process on GPU
+                result = forward_fft_gpu(field_gpu, normalization, domain_shape)
+                
+                # Copy result back
+                if CUDA_AVAILABLE and isinstance(result, cp.ndarray):
+                    result = cp.asnumpy(result)
+                    # Verify result after transfer
+                    result_sum = np.sum(result)
+                    result_norm = np.linalg.norm(result)
+                    logger.debug(
+                        f"Result after GPU->CPU transfer: sum={result_sum:.6e}, norm={result_norm:.6e}"
+                    )
+            except Exception as e:
+                error_str = str(e)
+                if "OutOfMemoryError" in error_str or "Out of memory" in error_str:
+                    logger.warning(
+                        f"Failed to load entire field to GPU: {e}. "
+                        f"Field is too large for available GPU memory. "
+                        f"FFT/IFFT requires all data simultaneously, so this field cannot be processed."
+                    )
+                    raise RuntimeError(
+                        f"FFT failed: Field size {field_memory_with_overhead/1e9:.3f}GB is too large "
+                        f"for available GPU memory. FFT/IFFT requires all data simultaneously. "
+                        f"Please reduce field size or increase GPU memory."
+                    ) from e
+                else:
+                    raise
+        else:
+            # Regular array - process directly
+            result = forward_fft_gpu(field, normalization, domain_shape)
+        
+        # Copy result to output array
+        # Use maximum block size for swap operations (80% GPU memory)
+        if isinstance(out, np.memmap) or isinstance(result, np.memmap):
+            # For memory-mapped arrays, copy in large blocks
+            _copy_with_max_blocks(result, out, gpu_memory_ratio, logger)
+        else:
+            # For regular arrays, direct copy
+            out[:] = result
+        
+        # Verify data integrity after copy
+        if isinstance(result, np.ndarray) and isinstance(out, np.ndarray):
+            if not np.allclose(result, out, rtol=1e-10, atol=1e-10):
+                max_diff = np.max(np.abs(result - out))
+                logger.error(
+                    f"Data integrity check failed after copy: "
+                    f"max difference = {max_diff:.2e}, "
+                    f"result shape={result.shape}, out shape={out.shape}, "
+                    f"result dtype={result.dtype}, out dtype={out.dtype}"
+                )
+                raise RuntimeError(
+                    f"Data integrity check failed: max difference = {max_diff:.2e}"
+                )
+            else:
+                logger.debug("Data integrity check passed after copy")
+        
+        logger.info("FFT completed successfully")
+        sys.stdout.flush()
+        
+    except Exception as e:
+        error_str = str(e)
+        if "OutOfMemoryError" in error_str or "Out of memory" in error_str or "Insufficient GPU memory" in error_str:
+            logger.error(
+                f"FFT failed with memory error: {e}. "
+                f"Field size: {field_memory_with_overhead/1e9:.3f}GB. "
+                f"FFT/IFFT requires all data simultaneously, so this field cannot be processed with current GPU memory."
+            )
+            raise RuntimeError(
+                f"FFT failed with memory error: {e}. "
+                f"Cannot process field of size {field_memory_with_overhead/1e9:.3f}GB. "
+                f"FFT/IFFT requires all data simultaneously. "
+                f"Please reduce field size or increase GPU memory."
+            ) from e
+        else:
+            raise
     
     # Flush if memory-mapped
     if isinstance(out, np.memmap):
-        logger.info(f"_forward_fft_blocked_7d: Flushing memory-mapped output")
+        logger.info("Flushing memory-mapped output array")
         sys.stdout.flush()
         out.flush()
     
-    logger.info(f"_forward_fft_blocked_7d: COMPLETE - all windows processed")
+    # Final verification
+    if np.any(np.isnan(out)) or np.any(np.isinf(out)):
+        logger.warning(
+            f"Output array contains NaN or Inf values: "
+            f"NaN count={np.sum(np.isnan(out))}, Inf count={np.sum(np.isinf(out))}"
+        )
+    
+    if not np.iscomplexobj(out):
+        raise ValueError(
+            f"Final output array must be complex, got dtype {out.dtype}"
+        )
+    
+    logger.info(
+        f"_forward_fft_blocked_7d: COMPLETE - output shape={out.shape}, dtype={out.dtype}"
+    )
     sys.stdout.flush()
+    
     return out
 
+
+def _copy_with_max_blocks(
+    source: np.ndarray,
+    target: np.ndarray,
+    gpu_memory_ratio: float,
+    logger: logging.Logger,
+) -> None:
+    """
+    Copy array using maximum block sizes for swap operations.
+    
+    Physical Meaning:
+        Copies data from source to target using maximum block sizes
+        (80% GPU memory) for efficient swap operations. This maximizes
+        throughput while respecting memory constraints.
+        
+    Args:
+        source (np.ndarray): Source array (may be memory-mapped).
+        target (np.ndarray): Target array (may be memory-mapped).
+        gpu_memory_ratio (float): GPU memory ratio to use (default 0.8).
+        logger (logging.Logger): Logger for debug messages.
+    """
+    if source.shape != target.shape:
+        raise ValueError(
+            f"Shape mismatch: source {source.shape} != target {target.shape}"
+        )
+    
+    # Calculate maximum block size (80% GPU memory)
+    max_block_bytes = 0
+    if CUDA_AVAILABLE:
+        try:
+            from bhlff.utils.cuda_utils import get_global_backend
+            backend = get_global_backend()
+            if hasattr(backend, "get_memory_info"):
+                mem_info = backend.get_memory_info()
+                free_memory = mem_info.get("free_memory", 0)
+                max_block_bytes = int(free_memory * gpu_memory_ratio)
+        except Exception:
+            # Fallback to 1GB if cannot determine GPU memory
+            max_block_bytes = 1024 * 1024 * 1024
+    
+    if max_block_bytes == 0:
+        max_block_bytes = 1024 * 1024 * 1024  # 1GB fallback
+    
+    # Calculate block size in elements
+    bytes_per_element = source.dtype.itemsize
+    max_block_elements = max_block_bytes // bytes_per_element
+    
+    # For 7D arrays, copy in spatial blocks (first 3 dimensions)
+    # Use maximum block size for spatial dimensions
+    if len(source.shape) == 7:
+        N_x, N_y, N_z = source.shape[:3]
+        phase_temporal_size = np.prod(source.shape[3:])
+        
+        # Calculate spatial block size
+        max_spatial_elements = max_block_elements // phase_temporal_size
+        if max_spatial_elements < 1:
+            max_spatial_elements = 1
+        
+        # Calculate block size per spatial dimension
+        block_size_per_dim = int(max_spatial_elements ** (1.0 / 3.0))
+        block_x = max(32, min(block_size_per_dim, N_x))
+        block_y = max(32, min(block_size_per_dim, N_y))
+        block_z = max(32, min(block_size_per_dim, N_z))
+        
+        logger.info(
+            f"Copying with spatial blocks: ({block_x}, {block_y}, {block_z}) "
+            f"= {block_x * block_y * block_z * phase_temporal_size / 1e6:.1f}M elements"
+        )
+        
+        # Copy in spatial blocks
+        for x_start in range(0, N_x, block_x):
+            x_end = min(x_start + block_x, N_x)
+            for y_start in range(0, N_y, block_y):
+                y_end = min(y_start + block_y, N_y)
+                for z_start in range(0, N_z, block_z):
+                    z_end = min(z_start + block_z, N_z)
+                    
+                    # Copy block
+                    source_block = source[x_start:x_end, y_start:y_end, z_start:z_end, :, :, :, :]
+                    target[x_start:x_end, y_start:y_end, z_start:z_end, :, :, :, :] = source_block
+                    
+                    # Verify block was copied correctly
+                    target_block = target[x_start:x_end, y_start:y_end, z_start:z_end, :, :, :, :]
+                    if not np.allclose(source_block, target_block, rtol=1e-10, atol=1e-10):
+                        max_diff = np.max(np.abs(source_block - target_block))
+                        logger.warning(
+                            f"Block copy verification failed at ({x_start}:{x_end}, {y_start}:{y_end}, {z_start}:{z_end}): "
+                            f"max difference = {max_diff:.2e}"
+                        )
+                    
+                    # Free GPU memory if using CUDA
+                    if CUDA_AVAILABLE:
+                        cp.get_default_memory_pool().free_all_blocks()
+    else:
+        # For non-7D arrays, copy directly
+        target[:] = source

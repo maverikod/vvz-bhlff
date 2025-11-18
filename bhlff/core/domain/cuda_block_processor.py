@@ -199,10 +199,11 @@ class CUDABlockProcessor(BlockProcessor):
             CpArray: CUDA-processed block data.
         """
         if not self.cuda_available:
-            # Fallback to CPU processing
-            cpu_data = cp.asnumpy(block_data)
-            cpu_result = super().process_block(cpu_data, block_info, operation)
-            return cp.asarray(cpu_result)
+            from ...exceptions import CUDANotAvailableError
+            raise CUDANotAvailableError(
+                "CUDA is required for block processing. CPU fallback is NOT ALLOWED. "
+                "Please install CuPy and ensure CUDA is properly configured."
+            )
 
         if operation == "fft":
             return self._process_block_fft_cuda(block_data, block_info)

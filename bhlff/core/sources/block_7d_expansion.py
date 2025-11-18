@@ -6,7 +6,7 @@ email: vasilyvz@gmail.com
 
 This module provides utilities for explicit 7D block construction from 3D spatial
 blocks, replacing blind broadcasting with explicit phase and time dimension
-expansion. Supports both CPU and CUDA implementations with optimized vectorization.
+expansion. CUDA is required - no CPU fallback. Uses optimized GPU vectorization.
 
 Physical Meaning:
     In 7D space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ, spatial blocks need to be expanded
@@ -73,9 +73,17 @@ def compute_optimal_7d_block_size(
     Returns:
         Tuple[int, int]: Optimal (N_phi_block, N_t_block) for 7D expansion.
     """
-    if not use_cuda or not CUDA_AVAILABLE:
-        # CPU fallback: use full phase and time dimensions
-        return (N_phi, N_t)
+    # CUDA is required - no CPU fallback
+    if not CUDA_AVAILABLE:
+        raise RuntimeError(
+            "CUDA is required for 7D block expansion. "
+            "CPU fallback is not supported. Please ensure CUDA is properly configured."
+        )
+    
+    if not use_cuda:
+        raise ValueError(
+            "use_cuda must be True. CPU fallback is not supported."
+        )
 
     try:
         # Get GPU memory info
@@ -167,41 +175,29 @@ def expand_spatial_to_7d(
 
     N_x, N_y, N_z = spatial_block.shape
 
-    # Use CUDA if requested and available
-    if use_cuda and CUDA_AVAILABLE:
-        from .block_7d_expansion_cuda import expand_spatial_to_7d_cuda
-
-        return expand_spatial_to_7d_cuda(
-            spatial_block,
-            N_phi,
-            N_t,
-            phase_coords,
-            time_coords,
-            optimize_block_size=optimize_block_size,
+    # CUDA is required - no CPU fallback
+    if not CUDA_AVAILABLE:
+        raise RuntimeError(
+            "CUDA is required for 7D block expansion. "
+            "CPU fallback is not supported. Please ensure CUDA is properly configured."
         )
+    
+    if not use_cuda:
+        raise ValueError(
+            "use_cuda must be True. CPU fallback is not supported."
+        )
+    
+    # Use CUDA for expansion
+    from .block_7d_expansion_cuda import expand_spatial_to_7d_cuda
 
-    # CPU implementation: explicit 7D construction with vectorization
-    # Replace blind tile with explicit 7D block construction using direct array creation
-    # Physical meaning: Create 7D block with concrete phase/time extents: (N_x, N_y, N_z, N_phi, N_phi, N_phi, N_t)
-    # This explicitly constructs the 7D structure M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ
-
-    N_x, N_y, N_z = spatial_block.shape
-
-    # Explicit 7D block construction: create array with concrete phase/time extents
-    # Allocate 7D array directly with explicit shape
-    block_7d = np.zeros(
-        (N_x, N_y, N_z, N_phi, N_phi, N_phi, N_t), dtype=spatial_block.dtype
+    return expand_spatial_to_7d_cuda(
+        spatial_block,
+        N_phi,
+        N_t,
+        phase_coords,
+        time_coords,
+        optimize_block_size=optimize_block_size,
     )
-
-    # Explicit assignment: fill 7D block by expanding spatial block across phase/time dimensions
-    # Vectorized operation: spatial values are constant across all phase and time dimensions
-    # This is explicit 7D construction that respects dimensionality
-    # Use advanced indexing to assign spatial values to all phase/time combinations
-    block_7d[:, :, :, :, :, :, :] = spatial_block[
-        :, :, :, np.newaxis, np.newaxis, np.newaxis, np.newaxis
-    ]
-
-    return block_7d
 
 
 def expand_block_to_7d_explicit(
@@ -350,14 +346,14 @@ def generate_7d_block_on_device(
     N_t: int,
     domain: "Domain",
     use_cuda: bool = True,
-) -> Union[np.ndarray, "cp.ndarray"]:
+) -> "cp.ndarray":
     """
-    Generate 7D block directly on device (CPU or GPU) with explicit construction.
+    Generate 7D block directly on GPU with explicit construction.
 
     Physical Meaning:
-        Generates 7D block directly on the target device (GPU if CUDA available,
-        CPU otherwise) with explicit phase and time dimensions, avoiding
-        unnecessary transfers and respecting 7D structure.
+        Generates 7D block directly on GPU with explicit phase and time dimensions,
+        avoiding unnecessary transfers and respecting 7D structure.
+        CUDA is required - no CPU fallback.
 
     Mathematical Foundation:
         Creates 7D block a(x, y, z, φ₁, φ₂, φ₃, t) from 3D spatial block a(x, y, z)
@@ -369,15 +365,28 @@ def generate_7d_block_on_device(
         N_phi (int): Number of grid points per phase dimension.
         N_t (int): Number of grid points for temporal dimension.
         domain (Domain): Domain object with 7D structure information.
-        use_cuda (bool): Whether to generate on GPU (if available).
+        use_cuda (bool): Must be True. CUDA is required.
 
     Returns:
-        np.ndarray or cp.ndarray: 7D block on target device with shape
-            (N_x, N_y, N_z, N_phi, N_phi, N_phi, N_t).
-    """
-    if use_cuda and CUDA_AVAILABLE:
-        from .block_7d_expansion_cuda import expand_spatial_to_7d_cuda
+        cp.ndarray: 7D block on GPU with shape (N_x, N_y, N_z, N_phi, N_phi, N_phi, N_t).
 
-        return expand_spatial_to_7d_cuda(spatial_block, N_phi, N_t)
-    else:
-        return expand_spatial_to_7d(spatial_block, N_phi, N_t, use_cuda=False)
+    Raises:
+        RuntimeError: If CUDA is not available.
+        ValueError: If use_cuda is False.
+    """
+    # CUDA is required - no CPU fallback
+    if not CUDA_AVAILABLE:
+        raise RuntimeError(
+            "CUDA is required for 7D block generation. "
+            "CPU fallback is not supported. Please ensure CUDA is properly configured."
+        )
+    
+    if not use_cuda:
+        raise ValueError(
+            "use_cuda must be True. CPU fallback is not supported."
+        )
+    
+    # Use CUDA for expansion
+    from .block_7d_expansion_cuda import expand_spatial_to_7d_cuda
+
+    return expand_spatial_to_7d_cuda(spatial_block, N_phi, N_t)

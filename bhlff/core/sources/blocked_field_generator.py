@@ -19,7 +19,7 @@ Example:
 """
 
 import numpy as np
-from typing import Dict, Any, Callable, Optional, Tuple, Iterator, Union
+from typing import Dict, Any, Callable, Optional, Tuple, Iterator, Union, TYPE_CHECKING
 import logging
 import tempfile
 from pathlib import Path
@@ -41,6 +41,9 @@ from .block_cache_manager import BlockCacheManager
 from .block_generator import BlockGenerator
 from .block_config import BlockConfig
 from .block_iterator import BlockIterator
+
+if TYPE_CHECKING:
+    from cupy.cuda import Stream  # pragma: no cover
 
 
 class BlockedFieldGenerator:
@@ -170,7 +173,13 @@ class BlockedFieldGenerator:
 
         return self.get_block_by_indices(block_indices)
 
-    def get_block_by_indices(self, block_indices: Tuple[int, ...]) -> np.ndarray:
+    def get_block_by_indices(
+        self,
+        block_indices: Tuple[int, ...],
+        *,
+        as_gpu: bool = False,
+        stream: Optional["Stream"] = None,
+    ) -> Union[np.ndarray, "cp.ndarray"]:
         """
         Get block by block indices with CUDA support and metadata validation.
 
@@ -194,8 +203,15 @@ class BlockedFieldGenerator:
         Args:
             block_indices (Tuple[int, ...]): Block indices in each dimension (7-tuple).
 
+        Args:
+            block_indices (Tuple[int, ...]): Block indices in each dimension (7-tuple).
+            as_gpu (bool): When True, returns block transferred to GPU memory using
+                pinned transfers capped at 80% of available GPU memory.
+            stream (Optional[cp.cuda.Stream]): Optional CUDA stream for asynchronous
+                H2D transfer when `as_gpu` is True.
+
         Returns:
-            np.ndarray: Field block (on CPU, converted from GPU if CUDA was used).
+            Union[np.ndarray, cp.ndarray]: Field block located on CPU or GPU.
 
         Raises:
             ValueError: If block_indices length != 7 or invalid block structure.
@@ -426,7 +442,40 @@ class BlockedFieldGenerator:
                 f"Block has invalid 7D structure: "
                 f"ndim={result.ndim}, shape_len={len(result.shape)}"
             )
+
+        if as_gpu:
+            return self._transfer_block_to_gpu(result, stream=stream)
         return result
+
+    def iter_gpu_blocks(
+        self,
+        *,
+        max_blocks: Optional[int] = None,
+        stream: Optional["Stream"] = None,
+    ) -> Iterator[Tuple["cp.ndarray", Dict[str, Any]]]:
+        """
+        Iterate over blocks streamed directly to GPU memory.
+
+        Physical Meaning:
+            Provides sequential access to 7D phase-field blocks residing on GPU,
+            keeping only one block (<=80% free GPU memory) in device RAM at a time.
+
+        Args:
+            max_blocks (Optional[int]): Limit for number of blocks to stream.
+            stream (Optional[cp.cuda.Stream]): Optional CUDA stream used for transfers.
+
+        Yields:
+            Tuple[cp.ndarray, Dict[str, Any]]: GPU block and metadata.
+        """
+
+        if not (self.use_cuda and CUDA_AVAILABLE):
+            raise RuntimeError(
+                "iter_gpu_blocks requires CUDA-enabled generator; CPU streaming is not allowed."
+            )
+
+        for block, metadata in self.iterate_blocks(max_blocks):
+            gpu_block = self._transfer_block_to_gpu(block, stream=stream)
+            yield gpu_block, metadata
 
     def iterate_blocks(
         self, max_blocks: Optional[int] = None
@@ -486,3 +535,37 @@ class BlockedFieldGenerator:
         if self.cache_dir.exists():
             self.cache_dir.rmdir()
         self.logger.info("Cleanup completed")
+
+    def _transfer_block_to_gpu(
+        self,
+        block: np.ndarray,
+        *,
+        stream: Optional["Stream"] = None,
+    ) -> "cp.ndarray":
+        """
+        Transfer CPU block to GPU using optional CUDA stream.
+
+        Physical Meaning:
+            Moves a 7D block into GPU memory so FFT and solver paths can process
+            it while keeping peak device memory below the mandated 80% threshold.
+
+        Args:
+            block (np.ndarray): CPU-resident block.
+            stream (Optional[cp.cuda.Stream]): CUDA stream for asynchronous copy.
+
+        Returns:
+            cp.ndarray: GPU array with the same shape/dtype as `block`.
+        """
+
+        if not CUDA_AVAILABLE:
+            raise RuntimeError(
+                "CUDA is required to transfer blocks to GPU; CPU fallback is not permitted."
+            )
+
+        if stream is None:
+            return cp.asarray(block)
+
+        with stream:
+            gpu_block = cp.asarray(block)
+        stream.synchronize()
+        return gpu_block

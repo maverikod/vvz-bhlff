@@ -37,6 +37,8 @@ from bhlff.core.domain import Domain
 from bhlff.core.domain.enhanced_block_processor import EnhancedBlockProcessor
 from bhlff.core.domain.enhanced_block_processing import ProcessingConfig, ProcessingMode
 from bhlff.core.fft.fft_solver_7d_advanced import FFTSolver7DAdvanced
+from bhlff.core.sources.bvp_source_generators import BVPSourceGenerators
+from bhlff.core.arrays import FieldArray
 
 
 def _load_config() -> dict:
@@ -48,48 +50,54 @@ def _load_config() -> dict:
 
 
 def _create_localized_source_7d(
-    shape: Tuple[int, int, int, int, int, int, int],
-    center: Tuple[float, float, float, float, float, float, float],
+    domain: Domain,
+    center: Tuple[float, float, float],
     sigma: float,
     L: float,
-) -> np.ndarray:
+) -> FieldArray:
     """
-    Create localized source in 7D for impedance calculation.
+    Create localized source in 7D for impedance calculation using BVPSourceGenerators.
     
     Physical Meaning:
         Creates a localized source in 7D space-time M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ,
-        localized in spatial dimensions only.
+        localized in spatial dimensions only. Uses ready-made generators
+        and FieldArray for automatic memory management.
+    
+    Args:
+        domain (Domain): 7D computational domain.
+        center (Tuple[float, float, float]): Spatial center coordinates (normalized 0-1).
+        sigma (float): Gaussian width (in normalized coordinates).
+        L (float): Domain size.
+        
+    Returns:
+        FieldArray: 7D localized source with automatic memory management.
     """
-    N_spatial = shape[0]
-    N_phase = shape[3]
-    N_t = shape[6]
+    # Use BVPSourceGenerators to create Gaussian source
+    # Convert sigma from absolute to normalized coordinates
+    sigma_normalized = sigma / L
     
-    # Create spatial grid
-    x = np.linspace(0, L, N_spatial, endpoint=False)
-    y = np.linspace(0, L, N_spatial, endpoint=False)
-    z = np.linspace(0, L, N_spatial, endpoint=False)
-    X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
+    source_config = {
+        "gaussian_amplitude": 1.0,
+        "gaussian_center": list(center),  # Normalized coordinates
+        "gaussian_width": sigma_normalized,  # Normalized width
+        "use_cuda": True,  # Use CUDA if available
+    }
     
-    # Compute distances from center (spatial only)
-    dx = X - center[0]
-    dy = Y - center[1]
-    dz = Z - center[2]
-    r_sq = dx**2 + dy**2 + dz**2
+    generators = BVPSourceGenerators(domain, source_config)
     
-    # Gaussian with underflow protection
-    exponent = -r_sq / (2 * sigma**2)
-    exponent = np.clip(exponent, -700, 700)
-    s_spatial = np.exp(exponent)
+    # Generate Gaussian source (returns FieldArray, 3D spatial)
+    source_field = generators.generate_gaussian_source()
     
-    # Expand to 7D: broadcast spatial to all phase and temporal dimensions
-    s_7d = np.zeros(shape, dtype=np.complex128)
-    for i_phi1 in range(N_phase):
-        for i_phi2 in range(N_phase):
-            for i_phi3 in range(N_phase):
-                for i_t in range(N_t):
-                    s_7d[:, :, :, i_phi1, i_phi2, i_phi3, i_t] = s_spatial
+    # Generator returns 7D FieldArray for 7D domain
+    # Framework automatically expands 3D to 7D and handles memory management
+    # No manual expansion needed - generator handles it automatically
+    if isinstance(source_field, FieldArray):
+        source_7d = source_field
+    else:
+        # If not FieldArray, wrap it
+        source_7d = FieldArray(array=source_field)
     
-    return s_7d
+    return source_7d
 
 
 def _compute_dissipative_power(
@@ -158,14 +166,21 @@ def test_A07_impedance_calculation() -> None:
     # Use minimal phase and temporal dimensions for Level A
     N_phi = 2  # Minimal phase dimensions
     N_t = 2    # Minimal temporal dimension
-    shape_7d = (N, N, N, N_phi, N_phi, N_phi, N_t)
     dx = L / N
     
     # Create 7D domain for BVP solving
     domain = Domain(L=L, N=N, N_phi=N_phi, N_t=N_t, T=1.0, dimensions=7)
     
-    # Create 7D localized source
-    s_7d = _create_localized_source_7d(shape_7d, center_7d, sigma, L)
+    # Create 7D localized source using ready-made generators and FieldArray
+    # Convert center from absolute to normalized coordinates (0-1)
+    center_normalized = tuple(c / L for c in center_3d)
+    s_7d_field = _create_localized_source_7d(domain, center_normalized, sigma, L)
+    
+    # Extract array from FieldArray if needed
+    if isinstance(s_7d_field, FieldArray):
+        s_7d = s_7d_field.array
+    else:
+        s_7d = s_7d_field
     
     # Frequency sweep
     omegas = np.logspace(np.log10(omega_min), np.log10(omega_max), num_points)
@@ -192,15 +207,21 @@ def test_A07_impedance_calculation() -> None:
         # Simplified approach: solve stationary and then apply frequency-dependent correction
         a_7d = solver.solve_stationary(s_7d)
         
+        # Extract array from FieldArray if needed before applying frequency correction
+        if isinstance(a_7d, FieldArray):
+            a_7d_array = a_7d.array
+        else:
+            a_7d_array = a_7d
+        
         # Apply frequency-dependent correction for time-dependent case
         # This is a simplified approach - full implementation would require time-dependent solver
         # For Level A, we use this approximation
-        a_7d = a_7d / (1.0 + 1j * omega * domain.dt)
+        a_7d_array = a_7d_array / (1.0 + 1j * omega * domain.dt)
         
         # Extract spatial slice for reference amplitude computation
-        a_spatial = a_7d[:, :, :, 0, 0, 0, 0]
+        a_spatial = a_7d_array[:, :, :, 0, 0, 0, 0]
         
-        # Compute reference amplitude U_ref in ball at center (spatial)
+        # VECTORIZED: Compute reference amplitude U_ref in ball at center (spatial)
         x = np.linspace(0, L, N, endpoint=False)
         X, Y, Z = np.meshgrid(x, x, x, indexing="ij")
         dx_center = X - center_3d[0]
@@ -208,6 +229,7 @@ def test_A07_impedance_calculation() -> None:
         dz_center = Z - center_3d[2]
         r_from_center = np.sqrt(dx_center**2 + dy_center**2 + dz_center**2)
         
+        # VECTORIZED: Use boolean indexing instead of loops
         mask_ref = r_from_center <= R_ref
         U_ref = np.mean(a_spatial[mask_ref]) if np.any(mask_ref) else a_spatial[N//2, N//2, N//2]
         
@@ -245,9 +267,15 @@ def test_A07_impedance_calculation() -> None:
             # use_cuda is automatically determined by framework via get_global_backend()
         })
         a_7d = solver.solve_stationary(s_7d)
-        a_7d = a_7d / (1.0 + 1j * omega * domain.dt)
-        a_spatial = a_7d[:, :, :, 0, 0, 0, 0]
+        # Handle both FieldArray and numpy array
+        if isinstance(a_7d, FieldArray):
+            a_7d_array = a_7d.array
+        else:
+            a_7d_array = a_7d
+        a_7d_array = a_7d_array / (1.0 + 1j * omega * domain.dt)
+        a_spatial = a_7d_array[:, :, :, 0, 0, 0, 0]
         
+        # VECTORIZED: Reuse precomputed grid (could be optimized further)
         x = np.linspace(0, L, N, endpoint=False)
         X, Y, Z = np.meshgrid(x, x, x, indexing="ij")
         dx_center = X - center_3d[0]
@@ -255,6 +283,7 @@ def test_A07_impedance_calculation() -> None:
         dz_center = Z - center_3d[2]
         r_from_center = np.sqrt(dx_center**2 + dy_center**2 + dz_center**2)
         
+        # VECTORIZED: Use boolean indexing instead of loops
         mask_ref_2 = r_from_center <= R_ref_2
         U_ref_2 = np.mean(a_spatial[mask_ref_2]) if np.any(mask_ref_2) else a_spatial[N//2, N//2, N//2]
         power = nu * np.sum(np.abs(a_spatial)**2) * (dx**3)
@@ -272,46 +301,53 @@ def test_A07_impedance_calculation() -> None:
     # The exact invariance requires proper dissipative power computation
     radius_invariance_ok = max_rel_change <= 100.0  # More lenient for Level A simplified computation
     
-    # Find resonance peaks (simplified: find local maxima with prominence)
+    # VECTORIZED: Find resonance peaks using vectorized operations
     # For Level A, we do a simple peak detection
+    admittances_abs = np.abs(admittances)
+    
+    # VECTORIZED: Find local maxima using vectorized comparison
+    # Compare each point with neighbors
+    is_local_max = np.zeros(len(admittances), dtype=bool)
+    is_local_max[1:-1] = (
+        (admittances_abs[1:-1] > admittances_abs[:-2]) &
+        (admittances_abs[1:-1] > admittances_abs[2:])
+    )
+    peak_indices = np.where(is_local_max)[0]
+    
     peaks = []
-    for i in range(1, len(admittances) - 1):
-        if (np.abs(admittances[i]) > np.abs(admittances[i-1]) and 
-            np.abs(admittances[i]) > np.abs(admittances[i+1])):
-            # Simple Q estimation (half-width at half-maximum)
-            peak_val = np.abs(admittances[i])
-            half_max = peak_val / np.sqrt(2)
+    for i in peak_indices:
+        # Simple Q estimation (half-width at half-maximum)
+        peak_val = admittances_abs[i]
+        half_max = peak_val / np.sqrt(2)
+        
+        # VECTORIZED: Find half-max points using vectorized search
+        # Find left half-max point
+        left_mask = (admittances_abs[:i] < half_max)
+        left_idx = np.where(left_mask)[0]
+        left_idx = left_idx[-1] if len(left_idx) > 0 else 0
+        
+        # Find right half-max point
+        right_mask = (admittances_abs[i+1:] < half_max)
+        right_idx_local = np.where(right_mask)[0]
+        right_idx = (i + 1 + right_idx_local[0]) if len(right_idx_local) > 0 else len(admittances) - 1
+        
+        if right_idx > left_idx:
+            omega_n = omegas[i]
+            delta_omega = omegas[right_idx] - omegas[left_idx]
+            Q_n = omega_n / (delta_omega + 1e-12) if delta_omega > 0 else 1.0
             
-            # Find half-max points
-            left_idx = i
-            right_idx = i
-            for j in range(i-1, -1, -1):
-                if np.abs(admittances[j]) < half_max:
-                    left_idx = j
-                    break
-            for j in range(i+1, len(admittances)):
-                if np.abs(admittances[j]) < half_max:
-                    right_idx = j
-                    break
+            # VECTORIZED: Check prominence using vectorized min
+            nearby_start = max(0, i-5)
+            nearby_end = min(len(admittances), i+6)
+            nearby_min = np.min(admittances_abs[nearby_start:nearby_end])
+            prominence_db = 20 * np.log10(peak_val / (nearby_min + 1e-12))
             
-            if right_idx > left_idx:
-                omega_n = omegas[i]
-                delta_omega = omegas[right_idx] - omegas[left_idx]
-                Q_n = omega_n / (delta_omega + 1e-12) if delta_omega > 0 else 1.0
-                
-                # Check prominence (simplified: compare to nearby minimum)
-                nearby_min = min(
-                    np.abs(admittances[max(0, i-5):i]).min() if i > 5 else np.abs(admittances[0]),
-                    np.abs(admittances[i+1:min(len(admittances), i+6)]).min() if i+6 < len(admittances) else np.abs(admittances[-1])
-                )
-                prominence_db = 20 * np.log10(peak_val / (nearby_min + 1e-12))
-                
-                if prominence_db >= 8.0 and Q_n > 1.0:  # 8 dB prominence threshold
-                    peaks.append({
-                        "omega": float(omega_n),
-                        "Q": float(Q_n),
-                        "prominence_db": float(prominence_db),
-                    })
+            if prominence_db >= 8.0 and Q_n > 1.0:  # 8 dB prominence threshold
+                peaks.append({
+                    "omega": float(omega_n),
+                    "Q": float(Q_n),
+                    "prominence_db": float(prominence_db),
+                })
     
     # Test mode stability: check that peaks are consistent
     # (For Level A, we just check that peaks are found)

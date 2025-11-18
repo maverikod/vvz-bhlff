@@ -92,40 +92,34 @@ def test_A01_plane_wave() -> None:
     
     generators = BVPSourceGenerators(domain, source_config)
     
-    # Generate plane wave source (returns FieldArray)
+    # Generate plane wave source (returns FieldArray with 7D shape for 7D domain)
+    # Framework automatically:
+    # - Expands 3D to 7D if domain is 7D
+    # - Handles block processing, vectorization, and batching
+    # - Manages memory with FieldArray swap
     source_field = generators.generate_plane_wave_source()
     
-    # Extract spatial slice (3D) from 7D field for 3D problem
-    if isinstance(source_field, FieldArray):
-        source_array = source_field.array
-    else:
-        source_array = source_field
-    
-    # Extract 3D spatial slice
-    source_3d = source_array[:, :, :, 0, 0, 0, 0] if source_array.ndim == 7 else source_array
-    
-    # Expand back to 7D for solver (solver expects 7D)
-    # Use FieldArray for automatic memory management
-    source_7d = FieldArray(shape=domain.shape, dtype=np.complex128)
-    source_7d.array[:, :, :, 0, 0, 0, 0] = source_3d
-    
     # Create solver with physics parameters
+    # Framework automatically uses CUDA, block processing, and vectorization
     solver = FFTSolver7DBasic(
         domain,
         {
             "mu": mu,
             "beta": beta,
             "lambda": lam,
-            "use_cuda": True,  # Use CUDA if available
+            "use_cuda": True,  # Framework automatically handles CUDA/CPU
         }
     )
     
-    # Solve stationary problem (returns FieldArray)
-    # Extract array from FieldArray if needed
-    source_7d_array = source_7d.array if isinstance(source_7d, FieldArray) else source_7d
-    solution_field = solver.solve_stationary(source_7d_array)
+    # Solve stationary problem - framework automatically:
+    # - Uses block processing for large fields
+    # - Vectorizes all operations
+    # - Batches FFT operations
+    # - Manages memory with FieldArray swap
+    solution_field = solver.solve_stationary(source_field)
     
-    # Extract 3D spatial slice from solution
+    # Extract 3D spatial slice from solution for comparison
+    # Framework handles all 7D operations automatically
     if isinstance(solution_field, FieldArray):
         solution_array = solution_field.array
     else:
@@ -134,35 +128,46 @@ def test_A01_plane_wave() -> None:
     solution_3d = solution_array[:, :, :, 0, 0, 0, 0] if solution_array.ndim == 7 else solution_array
     a_num = solution_3d.astype(np.complex128)
     
-    # Compute reference solution using exact spectral formula
-    # For plane wave source, the solution should be proportional to the source
-    # with amplitude given by the spectral operator response
-    shape = (N, N, N)
+    # Get spectral representation for reporting
+    # Framework automatically handles block processing for FFT
+    from bhlff.core.fft.unified_spectral_operations import UnifiedSpectralOperations
+    ops = UnifiedSpectralOperations(domain, precision="float64")
     
-    class _Domain:
-        def __init__(self, shape: Tuple[int, int, int], L: float, N: int):
-            self.shape = shape
-            self.L = L
-            self.N = N
+    # Get source array for spectral representation
+    if isinstance(source_field, FieldArray):
+        source_array = source_field.array
+    else:
+        source_array = source_field
     
-    domain_3d = _Domain(shape, L, N)
-    ops = UnifiedSpectralOperations(domain_3d, precision="float64")
+    # Framework automatically handles block processing for FFT
+    s_hat_7d = ops.forward_fft(source_array, "ortho")
+    a_hat_7d = ops.forward_fft(solution_array, "ortho")
     
-    # Build spectral representation of source
-    s_hat = ops.forward_fft(source_3d, "ortho")
+    # Extract 3D slices for reporting
+    s_hat_3d = s_hat_7d[:, :, :, 0, 0, 0, 0] if s_hat_7d.ndim == 7 else s_hat_7d
+    a_hat_3d = a_hat_7d[:, :, :, 0, 0, 0, 0] if a_hat_7d.ndim == 7 else a_hat_7d
     
-    # Build reference solution using exact spectral formula
-    # Use FieldArray for automatic memory management
-    a_hat = FieldArray(array=np.zeros_like(s_hat))
-    idx = tuple((mi % n) for mi, n in zip(mode, shape))
-    ksq = (2.0 * np.pi / L) ** 2 * float(
-        np.dot(np.array(mode, dtype=float), np.array(mode, dtype=float))
-    )
-    denom = mu * (ksq**beta) + lam
-    a_hat[idx] = s_hat[idx] / denom
-    a_ref = ops.inverse_fft(a_hat, "ortho").astype(np.complex128)
+    # Build reference solution using analytical formula
+    # For plane wave with mode m, reference amplitude is: A = 1 / (μ|k|^{2β} + λ)
+    # where k = 2π/L * m
+    a_ref_amp = _compute_reference_amplitude(mu, beta, lam, mode, L, N)
+    
+    # Reference solution is amplitude times the source (plane wave)
+    # Extract 3D spatial slice from source for reference
+    if isinstance(source_field, FieldArray):
+        source_array = source_field.array
+    else:
+        source_array = source_field
+    
+    source_3d = source_array[:, :, :, 0, 0, 0, 0] if source_array.ndim == 7 else source_array
+    a_ref = (a_ref_amp * source_3d).astype(np.complex128)
+    
+    # Use 3D spectral representation for reporting
+    a_hat = a_hat_3d
+    s_hat = s_hat_3d
 
-    # Metrics
+    # Metrics - compare complex solutions (both numerical and reference should be complex)
+    # For complex source (plane wave), solution must be complex to preserve phase information
     err_L2 = np.linalg.norm(a_num - a_ref) / max(
         np.linalg.norm(a_ref), np.finfo(float).eps
     )

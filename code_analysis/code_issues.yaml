@@ -42,19 +42,16 @@ issues:
     line: 183
   - class: _Domain
     file: tests/unit/test_level_a/test_A02_multi_plane.py
-    line: 153
+    line: 154
   - class: _Domain
     file: tests/unit/test_level_a/test_A03_zero_mode.py
-    line: 74
+    line: 97
   - class: _Domain
     file: tests/unit/test_level_a/test_A04_time_harmonic.py
-    line: 49
-  - class: _Domain
-    file: tests/unit/test_level_a/test_A01_plane_wave.py
-    line: 142
+    line: 52
   - class: _Domain
     file: tests/unit/test_level_a/test_A05_residual_energy.py
-    line: 74
+    line: 109
   - class: MockSystem
     file: examples/level_g_example.py
     line: 174
@@ -166,6 +163,14 @@ issues:
     file: tests/unit/test_level_a/test_reporting_advanced.py
     limit: 400
     lines: 443
+  - exceeds_limit: 12
+    file: tests/unit/test_level_a/test_A01_plane_wave_basic.py
+    limit: 400
+    lines: 412
+  - exceeds_limit: 10
+    file: tests/unit/test_level_a/test_A07_impedance_calculation.py
+    limit: 400
+    lines: 410
   - exceeds_limit: 70
     file: tests/unit/test_level_a/test_A02_multi_plane_advanced.py
     limit: 400
@@ -182,10 +187,6 @@ issues:
     file: bhlff/utils/memory_monitor.py
     limit: 400
     lines: 401
-  - exceeds_limit: 125
-    file: bhlff/models/level_c/boundaries_core.py
-    limit: 400
-    lines: 525
   - exceeds_limit: 17
     file: bhlff/models/level_c/boundary/radial_analysis_core.py
     limit: 400
@@ -206,30 +207,10 @@ issues:
     file: bhlff/models/level_c/beating/background_analysis.py
     limit: 400
     lines: 450
-  - exceeds_limit: 107
-    file: bhlff/models/level_c/beating/ml/beating_ml_pattern_feature_extractor.py
-    limit: 400
-    lines: 507
-  - exceeds_limit: 108
-    file: bhlff/models/level_c/beating/ml/beating_ml_vectorized_methods.py
-    limit: 400
-    lines: 508
-  - exceeds_limit: 121
-    file: bhlff/models/level_c/beating/ml/beating_ml_prediction/beating_ml_prediction_core.py
-    limit: 400
-    lines: 521
-  - exceeds_limit: 119
-    file: bhlff/models/level_c/beating/ml/beating_ml_prediction/ml_trainer.py
-    limit: 400
-    lines: 519
   - exceeds_limit: 5
     file: bhlff/models/level_c/beating/ml/beating_ml_prediction/feature_extractor.py
     limit: 400
     lines: 405
-  - exceeds_limit: 110
-    file: bhlff/models/level_c/beating/ml/core/feature_extraction.py
-    limit: 400
-    lines: 510
   - exceeds_limit: 89
     file: bhlff/models/level_c/beating/ml/core/prediction_engine.py
     limit: 400
@@ -238,10 +219,6 @@ issues:
     file: bhlff/models/level_c/beating/basic/optimization_methods.py
     limit: 400
     lines: 485
-  - exceeds_limit: 120
-    file: bhlff/models/level_c/abcd_model/transmission_computation.py
-    limit: 400
-    lines: 520
   - exceeds_limit: 5
     file: bhlff/models/level_c/abcd_model/delegation_methods.py
     limit: 400
@@ -298,10 +275,6 @@ issues:
     file: bhlff/models/level_f/multi_particle/potential_analysis_landscape.py
     limit: 400
     lines: 491
-  - exceeds_limit: 108
-    file: bhlff/models/level_f/multi_particle/potential_analysis_computation.py
-    limit: 400
-    lines: 508
   - exceeds_limit: 74
     file: bhlff/models/level_f/multi_particle/data_structures.py
     limit: 400
@@ -358,10 +331,6 @@ issues:
     file: bhlff/models/level_e/bvp_integration.py
     limit: 400
     lines: 426
-  - exceeds_limit: 110
-    file: bhlff/models/level_e/defect_interactions.py
-    limit: 400
-    lines: 510
   - exceeds_limit: 40
     file: bhlff/models/level_e/phase_mapping_components/boundary_analysis/boundary_analyzer.py
     limit: 400
@@ -386,10 +355,6 @@ issues:
     file: bhlff/models/level_g/bvp_integration.py
     limit: 400
     lines: 423
-  - exceeds_limit: 110
-    file: bhlff/models/level_g/gravity_waves.py
-    limit: 400
-    lines: 510
   - exceeds_limit: 28
     file: bhlff/models/level_g/particle_inversion_computations.py
     limit: 400
@@ -418,10 +383,10 @@ issues:
     file: bhlff/testing/quality/quality_monitor.py
     limit: 400
     lines: 571
-  - exceeds_limit: 21
+  - exceeds_limit: 26
     file: bhlff/cli/quench_detect.py
     limit: 400
-    lines: 421
+    lines: 426
   - exceeds_limit: 14
     file: bhlff/core/time/bvp_envelope_integrator.py
     limit: 400
@@ -458,38 +423,42 @@ issues:
     file: bhlff/core/bvp/bvp_core/bvp_vectorized_processor.py
     limit: 400
     lines: 482
-  - exceeds_limit: 63
+  - exceeds_limit: 52
     file: bhlff/core/domain/vectorized_block_processor.py
     limit: 400
-    lines: 463
+    lines: 452
   - exceeds_limit: 90
     file: bhlff/core/domain/7d_vectorized_processor.py
     limit: 400
     lines: 490
-  - exceeds_limit: 58
+  - exceeds_limit: 69
     file: bhlff/core/domain/optimized_block_processor.py
     limit: 400
-    lines: 458
+    lines: 469
   - exceeds_limit: 90
     file: bhlff/core/domain/vectorized_7d_processor.py
     limit: 400
     lines: 490
+  - exceeds_limit: 2
+    file: bhlff/core/domain/enhanced_block_processor.py
+    limit: 400
+    lines: 402
+  - exceeds_limit: 54
+    file: bhlff/core/domain/enhanced_block_processing/gpu_block_processor.py
+    limit: 400
+    lines: 454
   - exceeds_limit: 60
     file: bhlff/core/sources/bvp_source_envelope.py
     limit: 400
     lines: 460
-  - exceeds_limit: 89
+  - exceeds_limit: 172
     file: bhlff/core/sources/blocked_field_generator.py
     limit: 400
-    lines: 489
+    lines: 572
   - exceeds_limit: 86
     file: bhlff/core/sources/bvp_source_core.py
     limit: 400
     lines: 486
-  - exceeds_limit: 23
-    file: bhlff/core/arrays/field_array.py
-    limit: 400
-    lines: 423
   - exceeds_limit: 3
     file: bhlff/core/fft/spectral_filtering.py
     limit: 400
@@ -498,15 +467,19 @@ issues:
     file: bhlff/core/fft/fft_plan_7d.py
     limit: 400
     lines: 422
+  - exceeds_limit: 24
+    file: bhlff/core/fft/unified/facade.py
+    limit: 400
+    lines: 424
+  - exceeds_limit: 99
+    file: bhlff/core/fft/unified/blocked/blocked_forward.py
+    limit: 400
+    lines: 499
   - exceeds_limit: 28
     file: examples/level_g_example.py
     limit: 400
     lines: 428
-  files_without_docstrings:
-  - bhlff/models/level_f/collective/__init__.py
-  - bhlff/models/level_e/phase_mapping_components/__init__.py
-  - bhlff/models/level_e/sensitivity/__init__.py
-  - bhlff/models/level_e/experiments/__init__.py
+  files_without_docstrings: []
   generic_exception_usage: []
   imports_in_middle: []
   methods_with_pass: []
@@ -853,59 +826,59 @@ issues:
     method: test_A02_multi_plane
   - class: _Domain
     file: tests/unit/test_level_a/test_A02_multi_plane.py
-    line: 154
+    line: 155
     method: __init__
   - class: null
     file: tests/unit/test_level_a/test_A02_multi_plane.py
-    line: 154
+    line: 155
     method: __init__
   - class: null
     file: tests/unit/test_level_a/test_A03_zero_mode.py
-    line: 24
+    line: 28
     method: _load_config
-  - class: null
-    file: tests/unit/test_level_a/test_A03_zero_mode.py
-    line: 32
-    method: _make_domain_shape
   - class: null
     file: tests/unit/test_level_a/test_A03_zero_mode.py
     line: 36
+    method: _make_domain_shape
+  - class: null
+    file: tests/unit/test_level_a/test_A03_zero_mode.py
+    line: 40
     method: _ensure_output_dir
   - class: null
     file: tests/unit/test_level_a/test_A03_zero_mode.py
-    line: 66
+    line: 89
     method: test_A03_zero_mode
   - class: _Domain
     file: tests/unit/test_level_a/test_A03_zero_mode.py
-    line: 75
+    line: 98
     method: __init__
   - class: null
     file: tests/unit/test_level_a/test_A03_zero_mode.py
-    line: 75
+    line: 98
     method: __init__
   - class: null
     file: tests/unit/test_level_a/test_A07_impedance_calculation.py
-    line: 42
+    line: 44
     method: _load_config
   - class: null
     file: tests/unit/test_level_a/test_A04_time_harmonic.py
-    line: 23
+    line: 26
     method: _load_config
   - class: null
     file: tests/unit/test_level_a/test_A04_time_harmonic.py
-    line: 31
+    line: 34
     method: _make_domain_shape
   - class: null
     file: tests/unit/test_level_a/test_A04_time_harmonic.py
-    line: 35
+    line: 38
     method: test_A04_time_harmonic_steady_state
   - class: _Domain
     file: tests/unit/test_level_a/test_A04_time_harmonic.py
-    line: 50
+    line: 53
     method: __init__
   - class: null
     file: tests/unit/test_level_a/test_A04_time_harmonic.py
-    line: 50
+    line: 53
     method: __init__
   - class: null
     file: tests/unit/test_level_a/test_A12_units_invariance.py
@@ -931,49 +904,37 @@ issues:
     file: tests/unit/test_level_a/test_A01_plane_wave.py
     line: 73
     method: test_A01_plane_wave
-  - class: _Domain
-    file: tests/unit/test_level_a/test_A01_plane_wave.py
-    line: 143
-    method: __init__
-  - class: null
-    file: tests/unit/test_level_a/test_A01_plane_wave.py
-    line: 143
-    method: __init__
   - class: null
     file: tests/unit/test_level_a/test_A11_scale_length.py
     line: 33
     method: _load_config
   - class: null
     file: tests/unit/test_level_a/test_A11_scale_length.py
-    line: 144
+    line: 147
     method: test_A11_scale_length
   - class: null
     file: tests/unit/test_level_a/test_A05_residual_energy.py
-    line: 24
+    line: 31
     method: _load_config
   - class: null
     file: tests/unit/test_level_a/test_A05_residual_energy.py
-    line: 32
+    line: 39
     method: _make_domain_shape
   - class: null
     file: tests/unit/test_level_a/test_A05_residual_energy.py
-    line: 36
+    line: 43
     method: _rand_modes
   - class: null
     file: tests/unit/test_level_a/test_A05_residual_energy.py
-    line: 47
-    method: _build_spectral_source
-  - class: null
-    file: tests/unit/test_level_a/test_A05_residual_energy.py
-    line: 60
+    line: 95
     method: test_A05_residual_energy
   - class: _Domain
     file: tests/unit/test_level_a/test_A05_residual_energy.py
-    line: 75
+    line: 110
     method: __init__
   - class: null
     file: tests/unit/test_level_a/test_A05_residual_energy.py
-    line: 75
+    line: 110
     method: __init__
   - class: MultiParticleModesAnalyzer
     file: bhlff/models/level_f/multi_particle_modes.py
@@ -1912,6 +1873,18 @@ issues:
     line: 32
     method: main
   - class: null
+    file: bhlff/cli/main.py
+    line: 25
+    method: _load_json_config
+  - class: null
+    file: bhlff/cli/main.py
+    line: 31
+    method: build_parser
+  - class: null
+    file: bhlff/cli/main.py
+    line: 168
+    method: main
+  - class: null
     file: bhlff/cli/run.py
     line: 16
     method: build_parser
@@ -1969,11 +1942,7 @@ issues:
     method: _build_integrator
   - class: null
     file: bhlff/cli/step03.py
-    line: 68
-    method: _prepare_fields
-  - class: null
-    file: bhlff/cli/step03.py
-    line: 106
+    line: 119
     method: main
   - class: null
     file: bhlff/core/bvp/memory_decorator.py
@@ -2123,6 +2092,10 @@ issues:
     file: bhlff/core/bvp/envelope_equation/bvp_envelope_equation_7d_facade.py
     line: 125
     method: jacobian_func
+  - class: null
+    file: bhlff/core/domain/enhanced_block_processing/gpu_block_processor.py
+    line: 432
+    method: operation_func
   - class: TopologicalSubstrateGenerator
     file: bhlff/core/sources/substrate_generators.py
     line: 45
@@ -2147,6 +2120,94 @@ issues:
     file: bhlff/core/sources/substrate_generators.py
     line: 180
     method: _layer_wall
+  - class: BVPSourceGeneratorsBasicMixin
+    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
+    line: 192
+    method: _ensure_cuda
+  - class: BVPSourceGeneratorsBasicMixin
+    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
+    line: 198
+    method: _materialize_field_array
+  - class: BVPSourceGeneratorsBasicMixin
+    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
+    line: 218
+    method: _get_block_size
+  - class: BVPSourceGeneratorsBasicMixin
+    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
+    line: 226
+    method: _create_spatial_axes
+  - class: BVPSourceGeneratorsBasicMixin
+    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
+    line: 246
+    method: _expand_spatial_block
+  - class: null
+    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
+    line: 192
+    method: _ensure_cuda
+  - class: null
+    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
+    line: 198
+    method: _materialize_field_array
+  - class: null
+    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
+    line: 218
+    method: _get_block_size
+  - class: null
+    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
+    line: 226
+    method: _create_spatial_axes
+  - class: null
+    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
+    line: 246
+    method: _expand_spatial_block
+  - class: null
+    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
+    line: 46
+    method: gaussian_block
+  - class: null
+    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
+    line: 116
+    method: distributed_block
+  - class: null
+    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
+    line: 174
+    method: plane_wave_block
+  - class: FieldArrayBatchIterator
+    file: bhlff/core/arrays/field_array_batch_iterator.py
+    line: 113
+    method: __init__
+  - class: FieldArrayBatchIterator
+    file: bhlff/core/arrays/field_array_batch_iterator.py
+    line: 132
+    method: _available_gpu_bytes
+  - class: FieldArrayBatchIterator
+    file: bhlff/core/arrays/field_array_batch_iterator.py
+    line: 142
+    method: _auto_block_shape
+  - class: FieldArrayBatchIterator
+    file: bhlff/core/arrays/field_array_batch_iterator.py
+    line: 170
+    method: _to_gpu
+  - class: null
+    file: bhlff/core/arrays/field_array_batch_iterator.py
+    line: 113
+    method: __init__
+  - class: null
+    file: bhlff/core/arrays/field_array_batch_iterator.py
+    line: 132
+    method: _available_gpu_bytes
+  - class: null
+    file: bhlff/core/arrays/field_array_batch_iterator.py
+    line: 142
+    method: _auto_block_shape
+  - class: null
+    file: bhlff/core/arrays/field_array_batch_iterator.py
+    line: 170
+    method: _to_gpu
+  - class: null
+    file: bhlff/core/arrays/field_array_batch_iterator.py
+    line: 203
+    method: _to_cpu
   - class: FractionalLaplacian7D
     file: bhlff/core/fft/frac_laplacian.py
     line: 44
@@ -2277,39 +2338,39 @@ issues:
     method: forward_fft
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 141
+    line: 196
     method: inverse_fft
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 204
+    line: 277
     method: compute_spectral_derivatives
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 219
+    line: 292
     method: apply_spectral_filter
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 239
+    line: 312
     method: compute_spectral_energy
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 243
+    line: 316
     method: get_spectral_info
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 252
+    line: 325
     method: __repr__
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 256
+    line: 329
     method: _validate_shape
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 313
+    line: 392
     method: _forward_backend
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 327
+    line: 406
     method: _inverse_backend
   - class: null
     file: bhlff/core/fft/unified/facade.py
@@ -2321,39 +2382,39 @@ issues:
     method: forward_fft
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 141
+    line: 196
     method: inverse_fft
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 204
+    line: 277
     method: compute_spectral_derivatives
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 219
+    line: 292
     method: apply_spectral_filter
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 239
+    line: 312
     method: compute_spectral_energy
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 243
+    line: 316
     method: get_spectral_info
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 252
+    line: 325
     method: __repr__
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 256
+    line: 329
     method: _validate_shape
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 313
+    line: 392
     method: _forward_backend
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 327
+    line: 406
     method: _inverse_backend
   - class: null
     file: bhlff/core/fft/unified/fft_cpu.py
@@ -2422,13 +2483,13 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   any_type_usage: 0
-  classes_without_docstrings: 20
-  files_too_large: 110
-  files_without_docstrings: 4
+  classes_without_docstrings: 19
+  files_too_large: 105
+  files_without_docstrings: 0
   generic_exception_usage: 0
   imports_in_middle: 0
   max_lines_limit: 400
   methods_with_pass: 0
-  methods_without_docstrings: 477
+  methods_without_docstrings: 499
   not_implemented_in_non_abstract: 0
-  total_issues: 611
+  total_issues: 623

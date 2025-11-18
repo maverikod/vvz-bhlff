@@ -95,7 +95,7 @@ def build_parser() -> argparse.ArgumentParser:
                     if args.output is not None
                     else []
                 ),
-                *("--verbose",) if args.verbose else (),
+                *(["--verbose"] if args.verbose else []),
             ]
         )
     )

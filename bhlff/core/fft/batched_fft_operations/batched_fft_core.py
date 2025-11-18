@@ -70,8 +70,12 @@ class BatchedFFTCore:
                 stacked, axes=tuple(range(1, stacked.ndim)), norm=normalization
             )
         
-        # Convert back to CPU and split
-        results = [cp.asnumpy(result_stacked[i]) for i in range(len(batch_fields))]
+        # Convert back to CPU using vectorized operation
+        # Use asnumpy on entire stack for better performance
+        result_stacked_cpu = cp.asnumpy(result_stacked)
+        
+        # Split using vectorized indexing
+        results = [result_stacked_cpu[i] for i in range(len(batch_fields))]
         
         # Clean up GPU memory
         del batch_gpu, stacked, result_stacked

@@ -99,6 +99,12 @@ def test_A01_plane_wave() -> None:
     # - Manages memory with FieldArray swap
     source_field = generators.generate_plane_wave_source()
     
+    # Verify FieldArray is used and check swap status for large fields
+    assert isinstance(source_field, FieldArray), "Source should be FieldArray for swap support"
+    if source_field.nbytes > 1e9:  # > 1GB
+        # For large fields, swap should be used
+        print(f"Source field size: {source_field.nbytes/1e9:.3f}GB, swapped: {source_field.is_swapped}")
+    
     # Create solver with physics parameters
     # Framework automatically uses CUDA, block processing, and vectorization
     solver = FFTSolver7DBasic(
@@ -117,6 +123,12 @@ def test_A01_plane_wave() -> None:
     # - Batches FFT operations
     # - Manages memory with FieldArray swap
     solution_field = solver.solve_stationary(source_field)
+    
+    # Verify solution is FieldArray and check swap status for large fields
+    assert isinstance(solution_field, FieldArray), "Solution should be FieldArray for swap support"
+    if solution_field.nbytes > 1e9:  # > 1GB
+        # For large fields, swap should be used
+        print(f"Solution field size: {solution_field.nbytes/1e9:.3f}GB, swapped: {solution_field.is_swapped}")
     
     # Extract 3D spatial slice from solution for comparison
     # Framework handles all 7D operations automatically

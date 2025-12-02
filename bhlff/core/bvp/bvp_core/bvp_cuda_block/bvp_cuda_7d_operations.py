@@ -39,7 +39,7 @@ else:
         cp = None
 
 from ....domain import Domain
-from ......utils.cuda_backend_7d_ops import CUDABackend7DOps
+from bhlff.utils.cuda_backend_7d_ops import CUDABackend7DOps
 
 
 class BVPCuda7DOperations:

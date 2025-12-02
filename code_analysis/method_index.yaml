@@ -1544,6 +1544,7 @@ CUDABackend:
 - ifftshift
 - get_memory_info
 - _check_memory_for_fft
+- require_cuda
 CUDABackend7DOps:
 - laplacian_7d
 - compute_optimal_block_tiling_7d
@@ -2350,6 +2351,8 @@ FFTSolver7DBasicOperatorMixin:
 - _apply_spectral_operator_blocked
 FFTSolver7DBasicSolveMixin:
 - solve_stationary
+- _apply_preconditioner_batches
+- _apply_preconditioner_spectral_lazy
 - solve
 FFTSolverTimeMethods:
 - __init__
@@ -8349,6 +8352,7 @@ UnifiedSpectralOperations:
 - compute_spectral_derivatives
 - apply_spectral_filter
 - compute_spectral_energy
+- compute_power_spectrum
 - get_spectral_info
 - __repr__
 - _validate_shape

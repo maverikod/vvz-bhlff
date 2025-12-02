@@ -88,8 +88,21 @@ class FractionalLaplacian:
 
         self.domain = domain
         self.logger = logging.getLogger(__name__)
+        
+        # Extract use_cuda from parameters if available
+        use_cuda_flag = True  # Default to CUDA
+        if hasattr(beta, "use_cuda"):
+            use_cuda_flag = beta.use_cuda
+        elif isinstance(beta, dict) and "use_cuda" in beta:
+            use_cuda_flag = beta["use_cuda"]
+        
         # Unified spectral backend (CPU/CUDA with consistent normalization)
-        self._spectral_ops = UnifiedSpectralOperations(domain, precision="float64")
+        # CRITICAL: Pass use_cuda flag to ensure CUDA is used when available
+        self._spectral_ops = UnifiedSpectralOperations(
+            domain, 
+            precision="float64",
+            use_cuda=use_cuda_flag
+        )
         self._spectral_coeffs: np.ndarray
         self._setup_spectral_coefficients()
 
@@ -143,11 +156,17 @@ class FractionalLaplacian:
                 f"domain shape {self.domain.shape}"
             )
 
-        # Use full 7D FFT over all axes to apply (-Δ)^β consistently
-        field_spectral = np.fft.fftn(field)
+        # Use UnifiedSpectralOperations for consistent normalization ("ortho")
+        # This ensures proper FFT normalization matching solver expectations
+        field_spectral = self._spectral_ops.forward_fft(field, normalization="ortho")
         result_spectral = self._spectral_coeffs * field_spectral
-        result = np.fft.ifftn(result_spectral)
-        return result.real
+        result = self._spectral_ops.inverse_fft(result_spectral, normalization="ortho")
+        
+        # For real input fields, return real part (within numerical precision)
+        # For complex input fields, preserve complex result
+        if np.isrealobj(field):
+            return result.real
+        return result
 
     def get_spectral_coefficients(self) -> np.ndarray:
         """

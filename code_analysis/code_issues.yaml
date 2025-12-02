@@ -183,6 +183,10 @@ issues:
     file: bhlff/utils/cuda_utils.py
     limit: 400
     lines: 439
+  - exceeds_limit: 24
+    file: bhlff/utils/cuda_backend.py
+    limit: 400
+    lines: 424
   - exceeds_limit: 1
     file: bhlff/utils/memory_monitor.py
     limit: 400
@@ -467,10 +471,10 @@ issues:
     file: bhlff/core/fft/fft_plan_7d.py
     limit: 400
     lines: 422
-  - exceeds_limit: 24
+  - exceeds_limit: 93
     file: bhlff/core/fft/unified/facade.py
     limit: 400
-    lines: 424
+    lines: 493
   - exceeds_limit: 28
     file: examples/level_g_example.py
     limit: 400
@@ -2118,55 +2122,35 @@ issues:
     method: _layer_wall
   - class: BVPSourceGeneratorsBasicMixin
     file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
-    line: 192
-    method: _ensure_cuda
-  - class: BVPSourceGeneratorsBasicMixin
-    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
-    line: 198
-    method: _materialize_field_array
-  - class: BVPSourceGeneratorsBasicMixin
-    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
-    line: 218
-    method: _get_block_size
-  - class: BVPSourceGeneratorsBasicMixin
-    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
-    line: 226
+    line: 291
     method: _create_spatial_axes
   - class: BVPSourceGeneratorsBasicMixin
     file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
-    line: 246
+    line: 311
     method: _expand_spatial_block
   - class: null
     file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
-    line: 192
-    method: _ensure_cuda
-  - class: null
-    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
-    line: 198
-    method: _materialize_field_array
-  - class: null
-    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
-    line: 218
-    method: _get_block_size
-  - class: null
-    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
-    line: 226
+    line: 291
     method: _create_spatial_axes
   - class: null
     file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
-    line: 246
+    line: 311
     method: _expand_spatial_block
   - class: null
     file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
-    line: 46
+    line: 50
     method: gaussian_block
   - class: null
     file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
-    line: 116
+    line: 88
+    method: point_source_block
+  - class: null
+    file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
+    line: 131
     method: distributed_block
   - class: null
     file: bhlff/core/sources/bvp_source_generators/bvp_source_generators_basic.py
-    line: 174
+    line: 189
     method: plane_wave_block
   - class: FieldArrayBatchIterator
     file: bhlff/core/arrays/field_array_batch_iterator.py
@@ -2326,91 +2310,91 @@ issues:
     method: _ifft_axis_batched
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 33
+    line: 34
     method: __init__
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 70
+    line: 77
     method: forward_fft
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 196
+    line: 211
     method: inverse_fft
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 277
+    line: 302
     method: compute_spectral_derivatives
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 292
+    line: 317
     method: apply_spectral_filter
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 312
+    line: 337
     method: compute_spectral_energy
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 316
+    line: 385
     method: get_spectral_info
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 325
+    line: 394
     method: __repr__
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 329
+    line: 398
     method: _validate_shape
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 392
+    line: 461
     method: _forward_backend
   - class: UnifiedSpectralOperations
     file: bhlff/core/fft/unified/facade.py
-    line: 406
+    line: 475
     method: _inverse_backend
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 33
+    line: 34
     method: __init__
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 70
+    line: 77
     method: forward_fft
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 196
+    line: 211
     method: inverse_fft
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 277
+    line: 302
     method: compute_spectral_derivatives
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 292
+    line: 317
     method: apply_spectral_filter
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 312
+    line: 337
     method: compute_spectral_energy
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 316
+    line: 385
     method: get_spectral_info
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 325
+    line: 394
     method: __repr__
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 329
+    line: 398
     method: _validate_shape
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 392
+    line: 461
     method: _forward_backend
   - class: null
     file: bhlff/core/fft/unified/facade.py
-    line: 406
+    line: 475
     method: _inverse_backend
   - class: null
     file: bhlff/core/fft/unified/fft_cpu.py
@@ -2480,12 +2464,12 @@ issues:
 summary:
   any_type_usage: 0
   classes_without_docstrings: 19
-  files_too_large: 104
+  files_too_large: 105
   files_without_docstrings: 0
   generic_exception_usage: 0
   imports_in_middle: 0
   max_lines_limit: 400
   methods_with_pass: 0
-  methods_without_docstrings: 499
+  methods_without_docstrings: 494
   not_implemented_in_non_abstract: 0
-  total_issues: 622
+  total_issues: 618

@@ -12,7 +12,11 @@ from typing import Callable, Optional, Tuple
 
 from ...arrays import FieldArray
 from ..blocked_field_generator import BlockedFieldGenerator
-from ...domain.optimal_block_size_calculator import OptimalBlockSizeCalculator
+from ...domain.optimal_block_size_calculator import (
+    OptimalBlockSizeCalculator,
+    get_default_block_calculator,
+)
+from bhlff.utils.cuda_backend import CUDABackend
 
 try:
     import cupy as cp
@@ -64,41 +68,49 @@ class BVPSourceGeneratorsBasicMixin:
         
         Physical Meaning:
             Creates a point source at a specified location with given
-            amplitude, representing a localized excitation.
+            amplitude, representing a localized excitation. Uses block-aware
+            generation to handle large 7D fields efficiently.
         """
+        self._ensure_cuda()
+
         # Get point source parameters
         amplitude = self.config.get("point_amplitude", 1.0)
         location = self.config.get("point_location", [0.5, 0.5, 0.5])
 
-        # Create coordinate arrays
-        x = np.linspace(0, 1, self.domain.N)
-        y = np.linspace(0, 1, self.domain.N)
-        z = np.linspace(0, 1, self.domain.N)
-
         # Find closest grid points to source location
-        i = int(location[0] * (self.domain.N - 1))
-        j = int(location[1] * (self.domain.N - 1))
-        k = int(location[2] * (self.domain.N - 1))
+        grid_size = getattr(self.domain, "N", self.domain.shape[0])
+        i = int(location[0] * (grid_size - 1))
+        j = int(location[1] * (grid_size - 1))
+        k = int(location[2] * (grid_size - 1))
 
-        # Create point source (3D spatial)
-        source_3d = np.zeros((self.domain.N, self.domain.N, self.domain.N), dtype=np.complex128)
-        source_3d[i, j, k] = amplitude
+        swap_threshold = self.config.get("swap_threshold_gb")
 
-        # Determine target shape based on domain
-        # Framework automatically generates correct dimensionality
-        if hasattr(self.domain, 'dimensions') and self.domain.dimensions == 7:
-            # Expand to 7D for 7D domain
-            from ...sources.block_7d_expansion import expand_spatial_to_7d
-            N_phi = getattr(self.domain, 'N_phi', 1)
-            N_t = getattr(self.domain, 'N_t', 1)
-            source = expand_spatial_to_7d(
-                source_3d, N_phi, N_t, use_cuda=self.use_cuda, optimize_block_size=True
-            )
-        else:
-            # Keep 3D for non-7D domain
-            source = source_3d
+        def point_source_block(domain, slice_config, runtime_config):
+            start = tuple(slice_config["start"])
+            shape = tuple(slice_config["shape"])
+            xp = cp
+            
+            # Create zero block
+            spatial_block = xp.zeros(shape[:3], dtype=xp.complex128)
+            
+            # Check if point source location is within this block
+            block_start_x, block_start_y, block_start_z = start[:3]
+            block_end_x = block_start_x + shape[0]
+            block_end_y = block_start_y + shape[1]
+            block_end_z = block_start_z + shape[2]
+            
+            if (block_start_x <= i < block_end_x and
+                block_start_y <= j < block_end_y and
+                block_start_z <= k < block_end_z):
+                # Point source is in this block
+                local_i = i - block_start_x
+                local_j = j - block_start_y
+                local_k = k - block_start_z
+                spatial_block[local_i, local_j, local_k] = amplitude
+            
+            return self._expand_spatial_block(spatial_block, shape, xp)
 
-        return FieldArray(array=source)
+        return self._materialize_field_array(point_source_block, swap_threshold_gb=swap_threshold)
     
     def generate_distributed_source(self) -> 'FieldArray':
         """
@@ -106,12 +118,15 @@ class BVPSourceGeneratorsBasicMixin:
         
         Physical Meaning:
             Creates a distributed source with specified spatial distribution
-            and amplitude profile.
+            and amplitude profile. Uses block-aware generation to handle large
+            7D fields efficiently.
         """
         self._ensure_cuda()
 
         amplitude = self.config.get("distributed_amplitude", 1.0)
         distribution_type = self.config.get("distribution_type", "sine")
+
+        swap_threshold = self.config.get("swap_threshold_gb")
 
         def distributed_block(domain, slice_config, runtime_config):
             start = tuple(slice_config["start"])
@@ -190,10 +205,22 @@ class BVPSourceGeneratorsBasicMixin:
     # ------------------------------------------------------------------ #
 
     def _ensure_cuda(self) -> None:
+        """
+        Ensure CUDA is available for source generation.
+        
+        Physical Meaning:
+            Enforces CUDA requirement for source generation operations,
+            ensuring GPU acceleration is available before proceeding.
+            
+        Raises:
+            RuntimeError: If CUDA is not available.
+        """
         if not self.use_cuda or not CUDA_AVAILABLE:
             raise RuntimeError(
                 "CUDA is required for source generation. CPU fallback is not supported."
             )
+        # Use shared require_cuda() helper for consistent error messages
+        CUDABackend.require_cuda()
 
     def _materialize_field_array(
         self,
@@ -201,7 +228,23 @@ class BVPSourceGeneratorsBasicMixin:
         dtype: np.dtype = np.complex128,
         swap_threshold_gb: Optional[float] = None,
     ) -> FieldArray:
+        """
+        Materialize FieldArray from block generator with swap support.
+        
+        Physical Meaning:
+            Creates FieldArray by streaming blocks from generator, automatically
+            using swap for large fields exceeding threshold. Logs block sizes
+            and swap usage for diagnostics.
+        """
+        import logging
+        logger = logging.getLogger(__name__)
+        
         block_size = self._get_block_size(dtype)
+        logger.info(
+            f"Materializing FieldArray: domain_shape={self.domain.shape}, "
+            f"block_size={block_size}, swap_threshold_gb={swap_threshold_gb}"
+        )
+        
         generator = BlockedFieldGenerator(
             domain=self.domain,
             field_generator=block_fn,
@@ -209,15 +252,37 @@ class BVPSourceGeneratorsBasicMixin:
             config=self.config,
             use_cuda=True,
         )
-        return FieldArray.from_block_generator(
+        field = FieldArray.from_block_generator(
             block_generator=generator,
             dtype=dtype,
             swap_threshold_gb=swap_threshold_gb,
         )
+        
+        logger.info(
+            f"FieldArray materialized: shape={field.shape}, "
+            f"is_swapped={field.is_swapped}, size_mb={field.nbytes/(1024**2):.2f}MB"
+        )
+        
+        return field
 
     def _get_block_size(self, dtype: np.dtype) -> Tuple[int, ...]:
+        """
+        Get optimal block size for 7D domain using unified calculator.
+        
+        Physical Meaning:
+            Calculates optimal block size per dimension for 7D space-time
+            M₇ = ℝ³ₓ × 𝕋³_φ × ℝₜ, ensuring 80% GPU memory usage while
+            preserving 7D geometric structure.
+            
+        Args:
+            dtype (np.dtype): Data type for memory calculation.
+            
+        Returns:
+            Tuple[int, ...]: Optimal block size per dimension (7-tuple).
+        """
         if self._block_size_calculator is None:
-            self._block_size_calculator = OptimalBlockSizeCalculator(gpu_memory_ratio=0.8)
+            # Use default calculator with 80% GPU memory ratio
+            self._block_size_calculator = get_default_block_calculator(gpu_memory_ratio=0.8)
         return self._block_size_calculator.calculate_for_7d(
             domain_shape=tuple(self.domain.shape),
             dtype=dtype,

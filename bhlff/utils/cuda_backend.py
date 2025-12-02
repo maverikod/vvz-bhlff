@@ -382,3 +382,42 @@ class CUDABackend(CUDABackend7DOps):
         except Exception as e:
             logger.error(f"Error checking memory for FFT: {e}")
             return False
+
+    @staticmethod
+    def require_cuda() -> None:
+        """
+        Require CUDA availability, raising RuntimeError if not available.
+        
+        Physical Meaning:
+            Enforces CUDA requirement for operations that must use GPU
+            acceleration. This method should be called at the beginning
+            of GPU-only code paths to fail fast if CUDA is unavailable.
+            
+        Raises:
+            RuntimeError: If CUDA is not available with guidance on
+                how to resolve the issue.
+        """
+        if not CUDA_AVAILABLE:
+            raise RuntimeError(
+                "CUDA is required but not available. "
+                "Please install CuPy and ensure CUDA is properly configured. "
+                "Install with: pip install cupy-cuda11x or cupy-cuda12x "
+                "(matching your CUDA version). CPU fallback is NOT ALLOWED."
+            )
+        
+        # Verify CUDA device is accessible
+        try:
+            import cupy as cp
+            cp.cuda.Device().use()
+            mem_info = cp.cuda.runtime.memGetInfo()
+            if mem_info[0] == 0:
+                raise RuntimeError(
+                    "CUDA device has no free memory. "
+                    "Please free GPU memory or use a different device."
+                )
+        except Exception as e:
+            raise RuntimeError(
+                f"CUDA device is not accessible: {e}. "
+                "Please check CUDA installation and GPU drivers. "
+                "Verify with: nvidia-smi"
+            ) from e

@@ -95,6 +95,7 @@ class Parameters7DBVP:
     max_iterations: int = 100
     tolerance: float = 1e-8
     damping_factor: float = 0.5
+    use_cuda: bool = True  # Use CUDA acceleration if available
 
     def __post_init__(self):
         """Initialize and validate parameters."""

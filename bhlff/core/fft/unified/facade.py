@@ -5,12 +5,13 @@ email: vasilyvz@gmail.com
 Facade class for unified spectral operations in 7D BHLFF Framework.
 """
 
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Tuple, Optional, Iterator
 import os
 import logging
 import numpy as np
 
 from bhlff.utils.cuda_utils import get_global_backend, CPUBackend, CUDABackend
+from bhlff.utils.cuda_backend import CUDABackend as CUDABackendClass
 from ...exceptions import CUDANotAvailableError
 from .plans import setup_fft_plans
 from .volume import compute_volume_element
@@ -30,10 +31,15 @@ class UnifiedSpectralOperations:
     Unified spectral operations for 7D phase field calculations.
     """
 
-    def __init__(self, domain: "Domain", precision: str = "float64"):
+    def __init__(self, domain: "Domain", precision: str = "float64", use_cuda: bool = True):
         self.domain = domain
         self.precision = precision
         self.logger = logging.getLogger(__name__)
+        
+        # CUDA is required - enforce via require_cuda()
+        if use_cuda:
+            CUDABackendClass.require_cuda()
+        
         # CUDA is required - use CUDA backend, raise error if not available
         # NO CPU fallback allowed
         try:
@@ -63,7 +69,8 @@ class UnifiedSpectralOperations:
 
         self._fft_plans = setup_fft_plans()
         self.logger.info(
-            f"UnifiedSpectralOperations initialized for domain {self.domain.shape}"
+            f"UnifiedSpectralOperations initialized for domain {self.domain.shape}, "
+            f"GPU memory ratio: {self._gpu_memory_ratio:.1%}"
         )
 
     # Public API
@@ -105,15 +112,23 @@ class UnifiedSpectralOperations:
         
         # For 7D fields with CUDA backend, prefer block processing for GPU utilization
         if is_7d and self._using_cuda:
+            # Log block size information for diagnostics
+            from ...domain.optimal_block_size_calculator import OptimalBlockSizeCalculator
+            calculator = OptimalBlockSizeCalculator(gpu_memory_ratio=self._gpu_memory_ratio)
+            block_tiling = calculator.calculate_for_7d(field_shape, dtype=np.complex128)
             self.logger.info(
-                f"[FACADE] 7D field detected - using block processing for maximum GPU utilization"
+                f"[FACADE] 7D field detected - using block processing for maximum GPU utilization. "
+                f"Block tiling: {block_tiling}, GPU memory ratio: {self._gpu_memory_ratio:.1%}"
             )
             sys.stdout.flush()
             try:
                 result = forward_fft_blocked(
                     field, normalization, self.domain.shape, self._gpu_memory_ratio
                 )
-                self.logger.info(f"[FACADE] forward_fft: COMPLETE (blocked)")
+                self.logger.info(
+                    f"[FACADE] forward_fft: COMPLETE (blocked), "
+                    f"result shape: {result.shape}, block tiling: {block_tiling}"
+                )
                 sys.stdout.flush()
                 return result
             except Exception as e:
@@ -181,8 +196,17 @@ class UnifiedSpectralOperations:
                 ) from e
         
         if self._using_cuda:
-            self.logger.info("Using direct GPU processing (field fits in memory)")
-            return self._forward_backend(field, normalization)
+            self.logger.info(
+                f"Using direct GPU processing (field fits in memory). "
+                f"Backend type: {type(self.backend).__name__}, "
+                f"CUDA available: {CUDA_AVAILABLE}"
+            )
+            result = self._forward_backend(field, normalization)
+            self.logger.info(
+                f"GPU FFT completed. Result shape: {result.shape}, "
+                f"Result type: {type(result).__name__}"
+            )
+            return result
 
         # CUDA is required - no CPU fallback
         self.logger.error(
@@ -211,7 +235,14 @@ class UnifiedSpectralOperations:
         
         # For 7D fields with CUDA backend, prefer block processing
         if is_7d and self._using_cuda:
-            self.logger.info(f"[FACADE] 7D field detected - using block processing")
+            # Log block size information for diagnostics
+            from ...domain.optimal_block_size_calculator import OptimalBlockSizeCalculator
+            calculator = OptimalBlockSizeCalculator(gpu_memory_ratio=self._gpu_memory_ratio)
+            block_tiling = calculator.calculate_for_7d(spectral_field.shape, dtype=np.complex128)
+            self.logger.info(
+                f"[FACADE] 7D field detected - using block processing. "
+                f"Block tiling: {block_tiling}, GPU memory ratio: {self._gpu_memory_ratio:.1%}"
+            )
             sys.stdout.flush()
             try:
                 result = inverse_fft_blocked(
@@ -220,7 +251,10 @@ class UnifiedSpectralOperations:
                     self.domain.shape,
                     self._gpu_memory_ratio,
                 )
-                self.logger.info(f"[FACADE] inverse_fft: COMPLETE (blocked)")
+                self.logger.info(
+                    f"[FACADE] inverse_fft: COMPLETE (blocked), "
+                    f"result shape: {result.shape}, block tiling: {block_tiling}"
+                )
                 sys.stdout.flush()
                 return result
             except Exception as e:
@@ -313,6 +347,50 @@ class UnifiedSpectralOperations:
         field_spectral = self.forward_fft(field, "ortho")
         return np.abs(field_spectral) ** 2
 
+    def compute_power_spectrum(
+        self,
+        field: np.ndarray,
+        bins: int = 128,
+        batch_iterator: Optional[Iterator[Dict[str, Any]]] = None,
+    ) -> Dict[str, np.ndarray]:
+        """
+        Compute power spectrum with optional batched processing.
+        
+        Physical Meaning:
+            Computes isotropic power spectrum P(k) via FFT and radial binning.
+            If batch_iterator is provided, processes fields in batches using
+            CUDA streams for optimal GPU utilization.
+            
+        Mathematical Foundation:
+            Power spectrum: P(k) = |FFT(field)|²
+            Radial binning: P(k) → P(|k|) with binning for isotropic spectrum.
+            
+        Args:
+            field (np.ndarray): Input field for power spectrum computation.
+            bins (int): Number of bins for radial averaging (default: 128).
+            batch_iterator (Optional[Iterator[Dict[str, Any]]]): Optional batch
+                iterator for batched processing. If None, processes entire field.
+                
+        Returns:
+            Dict[str, np.ndarray]: Dictionary with keys:
+                - 'k': Bin centers (wave number magnitudes)
+                - 'P': Power spectrum values
+        """
+        if batch_iterator is not None:
+            # Use batched processing
+            from .batched_auxiliary import compute_power_spectrum_batched
+            return compute_power_spectrum_batched(
+                batch_iterator, self.domain, bins, self._gpu_memory_ratio
+            )
+        else:
+            # Process entire field at once
+            field_spectral = self.forward_fft(field, "ortho")
+            power = np.abs(field_spectral) ** 2
+            
+            # Compute radial binning using helper function
+            from .power_spectrum import _radial_bin_power_spectrum
+            return _radial_bin_power_spectrum(power, self.domain.shape, bins)
+
     def get_spectral_info(self) -> Dict[str, Any]:
         return {
             "domain_shape": self.domain.shape,
@@ -390,34 +468,48 @@ class UnifiedSpectralOperations:
             return True
 
     def _forward_backend(self, field: np.ndarray, normalization: str) -> np.ndarray:
-        if self._using_cuda:
-            try:
-                return forward_fft_gpu(
-                    field, normalization, self.domain.shape, level_c_required=False
-                )
-            except RuntimeError as exc:
-                self.logger.warning(
-                    "GPU forward FFT failed (%s); falling back to CPU backend", exc
-                )
-                self.backend = CPUBackend()
-                self._using_cuda = False
-        return forward_fft_cpu(field, normalization, self.domain.shape)
+        """
+        Perform forward FFT using CUDA backend.
+        
+        Physical Meaning:
+            Computes forward FFT on GPU using CUDA. CPU fallback is NOT ALLOWED.
+            All operations must use CUDA for proper GPU acceleration.
+        """
+        # CUDA is required - no CPU fallback allowed
+        if not self._using_cuda:
+            raise CUDANotAvailableError(
+                "CUDA is required for FFT operations. CPU fallback is NOT ALLOWED. "
+                "Please ensure CUDA is properly configured."
+            )
+        
+        # Use GPU FFT - this will raise error if CUDA is not available
+        # No try/except - let errors propagate to ensure CUDA is used
+        return forward_fft_gpu(
+            field, normalization, self.domain.shape, level_c_required=False
+        )
 
     def _inverse_backend(
         self, spectral_field: np.ndarray, normalization: str
     ) -> np.ndarray:
-        if self._using_cuda:
-            try:
-                return inverse_fft_gpu(
-                    spectral_field,
-                    normalization,
-                    self.domain.shape,
-                    level_c_required=False,
-                )
-            except RuntimeError as exc:
-                self.logger.warning(
-                    "GPU inverse FFT failed (%s); falling back to CPU backend", exc
-                )
-                self.backend = CPUBackend()
-                self._using_cuda = False
-        return inverse_fft_cpu(spectral_field, normalization, self.domain.shape)
+        """
+        Perform inverse FFT using CUDA backend.
+        
+        Physical Meaning:
+            Computes inverse FFT on GPU using CUDA. CPU fallback is NOT ALLOWED.
+            All operations must use CUDA for proper GPU acceleration.
+        """
+        # CUDA is required - no CPU fallback allowed
+        if not self._using_cuda:
+            raise CUDANotAvailableError(
+                "CUDA is required for FFT operations. CPU fallback is NOT ALLOWED. "
+                "Please ensure CUDA is properly configured."
+            )
+        
+        # Use GPU FFT - this will raise error if CUDA is not available
+        # No try/except - let errors propagate to ensure CUDA is used
+        return inverse_fft_gpu(
+            spectral_field,
+            normalization,
+            self.domain.shape,
+            level_c_required=False,
+        )

@@ -37,7 +37,7 @@ except ImportError:
     CUDA_AVAILABLE = False
     cp = None
 
-from ...utils.cuda_backend_7d_ops import CUDABackend7DOps
+from bhlff.utils.cuda_backend_7d_ops import CUDABackend7DOps
 
 logger = logging.getLogger(__name__)
 
@@ -345,4 +345,33 @@ class OptimalBlockSizeCalculator:
             info["cpu"] = {"error": str(e)}
         
         return info
+
+
+def get_default_block_calculator(gpu_memory_ratio: float = 0.8) -> OptimalBlockSizeCalculator:
+    """
+    Get default block size calculator with configured GPU memory ratio.
+    
+    Physical Meaning:
+        Returns a configured OptimalBlockSizeCalculator instance with
+        specified GPU memory ratio (default: 80%) for consistent block
+        size calculation across all components.
+        
+    Mathematical Foundation:
+        Provides unified interface for calculating optimal block sizes
+        for 7D phase field computations, ensuring consistent GPU memory
+        usage across generators, solvers, and analyzers.
+        
+    Args:
+        gpu_memory_ratio (float): Fraction of GPU memory to use
+            (default: 0.8 for 80% usage). Can be overridden via
+            BHLFF_GPU_MEMORY_RATIO environment variable.
+            
+    Returns:
+        OptimalBlockSizeCalculator: Configured calculator instance.
+        
+    Example:
+        >>> calculator = get_default_block_calculator()
+        >>> block_size = calculator.calculate_for_7d(domain_shape)
+    """
+    return OptimalBlockSizeCalculator(gpu_memory_ratio=gpu_memory_ratio)
 

@@ -22,11 +22,11 @@ except ImportError:
     cp = None
 
 from .domain import Domain
-from ...utils.cuda_backend_7d_ops import CUDABackend7DOps
+from bhlff.utils.cuda_backend_7d_ops import CUDABackend7DOps
 from .enhanced_block_processing import ProcessingConfig
 from .optimal_block_size_calculator import OptimalBlockSizeCalculator
-from ...utils.gpu_memory_monitor import GPUMemoryMonitor
-from ...utils.cpu_memory_monitor import CPUMemoryMonitor
+from bhlff.utils.gpu_memory_monitor import GPUMemoryMonitor
+from bhlff.utils.cpu_memory_monitor import CPUMemoryMonitor
 
 
 class EnhancedBlockProcessorUtils:

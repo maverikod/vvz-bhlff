@@ -87,6 +87,14 @@ def test_A02_multi_plane() -> None:
     # Create 7D domain for 3D spatial problem
     domain = _create_3d_domain(L, N)
     
+    # For large domains, use swap to prevent memory issues
+    # Calculate estimated memory: N^3 * 1^4 * 16 bytes (complex128) for 7D with minimal phase/time
+    # Shape is (N, N, N, 1, 1, 1, 1) for 3D spatial problem
+    estimated_memory_gb = (N ** 3) * 16 / 1e9  # Only spatial dimensions matter
+    # Use swap if estimated memory > 0.1GB to prevent memory overflow
+    # For N=256: 256^3 * 16 / 1e9 ≈ 0.27 GB, so swap will be used
+    swap_threshold_gb = 0.1  # 100MB threshold - ensures swap for fields > 0.1GB
+    
     # Random modes and complex amplitudes on the unit circle
     modes = _rand_modes(N, J, seed)
     rng = np.random.default_rng(seed + 1)
@@ -95,30 +103,49 @@ def test_A02_multi_plane() -> None:
 
     # Build multi-plane wave source by summing individual plane waves
     # Framework automatically handles block processing, vectorization, and batching
-    # Use FieldArray for automatic memory management
-    source_7d = FieldArray(shape=domain.shape, dtype=np.complex128)
+    # Use FieldArray with swap support for automatic memory management
+    source_7d = FieldArray(shape=domain.shape, dtype=np.complex128, swap_threshold_gb=swap_threshold_gb)
     
     for idx, mode in enumerate(modes):
         # Generate plane wave source for this mode with given amplitude
-        # Framework automatically handles all operations
+        # Framework automatically handles all operations with swap support
         source_config = {
             "plane_wave_amplitude": amps[idx],  # Complex amplitude
             "plane_wave_mode": list(mode),
             "use_cuda": True,  # Framework automatically handles CUDA/CPU
+            "swap_threshold_gb": swap_threshold_gb,  # Use swap for large fields
         }
         
         generators = BVPSourceGenerators(domain, source_config)
         mode_source_field = generators.generate_plane_wave_source()
         
-        # Extract array from FieldArray
+        # Extract array from FieldArray - use .array property for efficient access
         if isinstance(mode_source_field, FieldArray):
             mode_source_array = mode_source_field.array
         else:
             mode_source_array = mode_source_field
         
-        # Sum into total source (superposition principle) - vectorized operation
-        # Framework automatically handles memory management
-        source_7d.array[:] = source_7d.array + mode_source_array
+        # Sum into total source (superposition principle)
+        # For swapped arrays, use block-wise addition to avoid loading entire array into memory
+        if source_7d.is_swapped or isinstance(source_7d.array, np.memmap):
+            # For swapped arrays, process in blocks to avoid memory overflow
+            # Use iter_batches to process in chunks that fit in GPU memory (80% limit)
+            for batch_payload in source_7d.iter_batches(max_gpu_ratio=0.8, use_cuda=False):
+                slices = batch_payload["slices"]
+                cpu_block = batch_payload["cpu"]
+                # Add mode source to this block (extract slice from mode source)
+                if isinstance(mode_source_array, np.memmap):
+                    # For memmap, read slice directly
+                    mode_block = np.array(mode_source_array[slices])
+                else:
+                    mode_block = mode_source_array[slices]
+                # In-place addition to avoid temporary arrays
+                cpu_block[:] += mode_block
+                # Write back to swapped array (this is efficient for memmap)
+                source_7d.array[slices] = cpu_block
+        else:
+            # For in-memory arrays, use in-place addition (more efficient)
+            source_7d.array += mode_source_array
     
     # Create solver with physics parameters
     solver = FFTSolver7DBasic(
@@ -172,8 +199,8 @@ def test_A02_multi_plane() -> None:
     
     # Build reference solution using solver (all vectorization is in solver)
     # Use the same solver to compute reference solution
-    # Expand source to 7D for solver
-    source_7d_ref = FieldArray(shape=domain.shape, dtype=np.complex128)
+    # Expand source to 7D for solver with swap support
+    source_7d_ref = FieldArray(shape=domain.shape, dtype=np.complex128, swap_threshold_gb=swap_threshold_gb)
     source_7d_ref.array[:, :, :, 0, 0, 0, 0] = source_3d
     
     # Get reference solution using solver (all vectorization is inside solver)

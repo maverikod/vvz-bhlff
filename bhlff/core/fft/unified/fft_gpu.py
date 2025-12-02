@@ -123,40 +123,59 @@ def forward_fft_gpu(
     sys.stdout.flush()
     if CUDA_AVAILABLE and isinstance(field, cp.ndarray):
         field_gpu = field
-        logger.info(f"[STEP 2] forward_fft_gpu: Field already on GPU")
+        logger.info(f"[STEP 2] forward_fft_gpu: Field already on GPU (cupy array)")
     else:
         field_gpu = backend.array(field)
-        logger.info(f"[STEP 2] forward_fft_gpu: Field transferred to GPU")
+        logger.info(f"[STEP 2] forward_fft_gpu: Field transferred to GPU via backend.array()")
+        # Verify it's actually on GPU
+        if CUDA_AVAILABLE:
+            assert isinstance(field_gpu, cp.ndarray), f"ERROR: Field not on GPU! Type: {type(field_gpu)}"
+            logger.info(f"[STEP 2] forward_fft_gpu: Verified field is on GPU device {field_gpu.device}")
     sys.stdout.flush()
     
-    # Step 3: Perform FFT
-    logger.info(f"[STEP 3] forward_fft_gpu: Performing FFT...")
+    # Step 3: Perform FFT on GPU
+    logger.info(f"[STEP 3] forward_fft_gpu: Performing FFT on GPU using backend.fft()...")
     sys.stdout.flush()
+    if CUDA_AVAILABLE:
+        assert isinstance(field_gpu, cp.ndarray), f"ERROR: Input not on GPU before FFT! Type: {type(field_gpu)}"
     spec_gpu = backend.fft(field_gpu, axes=axes)
-    logger.info(f"[STEP 3] forward_fft_gpu: FFT completed")
+    if CUDA_AVAILABLE:
+        assert isinstance(spec_gpu, cp.ndarray), f"ERROR: FFT result not on GPU! Type: {type(spec_gpu)}"
+        logger.info(f"[STEP 3] forward_fft_gpu: FFT completed on GPU device {spec_gpu.device}")
+    else:
+        logger.info(f"[STEP 3] forward_fft_gpu: FFT completed")
     sys.stdout.flush()
     
-    # Step 4: Normalization
-    logger.info(f"[STEP 4] forward_fft_gpu: Applying normalization '{normalization}'...")
+    # Step 4: Normalization on GPU
+    logger.info(f"[STEP 4] forward_fft_gpu: Applying normalization '{normalization}' on GPU...")
     sys.stdout.flush()
-    # Use backend's sqrt to ensure correct dtype (cp.sqrt for GPU, np.sqrt for CPU)
+    # CRITICAL: Use cupy operations for GPU arrays, not numpy
     if CUDA_AVAILABLE and isinstance(spec_gpu, cp.ndarray):
-        sqrt_n = cp.sqrt(n_total)
+        sqrt_n = cp.sqrt(n_total)  # Use cupy.sqrt for GPU
+        logger.info(f"[STEP 4] forward_fft_gpu: Using cupy.sqrt for GPU normalization")
     else:
-        sqrt_n = np.sqrt(n_total)
-    spec_gpu /= sqrt_n
+        # This should not happen if CUDA is properly configured
+        raise RuntimeError(
+            f"ERROR: spec_gpu is not a cupy array! Type: {type(spec_gpu)}, "
+            f"CUDA_AVAILABLE: {CUDA_AVAILABLE}"
+        )
+    spec_gpu /= sqrt_n  # In-place division on GPU
     if normalization == "physics":
-        spec_gpu *= compute_volume_element(domain_shape)
+        vol = compute_volume_element(domain_shape)
+        spec_gpu *= vol  # Multiplication on GPU
     elif normalization != "ortho":
         raise ValueError(f"Unsupported normalization type: {normalization}")
-    logger.info(f"[STEP 4] forward_fft_gpu: Normalization completed")
+    logger.info(f"[STEP 4] forward_fft_gpu: Normalization completed on GPU")
     sys.stdout.flush()
     
-    # Step 5: Transfer back to CPU
-    logger.info(f"[STEP 5] forward_fft_gpu: Transferring result to CPU...")
+    # Step 5: Transfer back to CPU (only at the end, all computation on GPU)
+    logger.info(f"[STEP 5] forward_fft_gpu: Transferring result to CPU (all GPU ops completed)...")
     sys.stdout.flush()
+    if CUDA_AVAILABLE:
+        assert isinstance(spec_gpu, cp.ndarray), f"ERROR: Result not on GPU before transfer! Type: {type(spec_gpu)}"
+        logger.info(f"[STEP 5] forward_fft_gpu: Result is on GPU device {spec_gpu.device}, transferring to CPU")
     result = backend.to_numpy(spec_gpu)
-    logger.info(f"[STEP 5] forward_fft_gpu: Result transferred to CPU")
+    logger.info(f"[STEP 5] forward_fft_gpu: Result transferred to CPU, shape: {result.shape}")
     sys.stdout.flush()
     
     # Step 6: Final memory check

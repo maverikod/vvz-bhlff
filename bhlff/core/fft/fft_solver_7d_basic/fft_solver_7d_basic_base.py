@@ -79,8 +79,13 @@ class FFTSolver7DBasicBase:
         self._coeffs = None  # type: ignore
         self._coeff_func = None  # type: ignore
         self._use_lazy_coeffs = False
-        # Use unified spectral ops to ensure proper normalization and GPU fallback
-        self._ops = UnifiedSpectralOperations(self.domain, precision="float64")
+        # Use unified spectral ops to ensure proper normalization and GPU usage
+        # CRITICAL: Pass use_cuda flag to ensure CUDA is used when available
+        self._ops = UnifiedSpectralOperations(
+            self.domain, 
+            precision="float64",
+            use_cuda=self.use_cuda
+        )
         self._setup_spectral_coefficients()
     
     def get_spectral_coefficients(self) -> np.ndarray:

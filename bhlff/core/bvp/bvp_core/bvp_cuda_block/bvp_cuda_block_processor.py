@@ -32,7 +32,7 @@ from ....domain.cuda_block_processor import CUDABlockProcessor
 from ....domain.domain import Domain
 from ..bvp_operations import BVPCoreOperations
 from ..bvp_cuda_block_processor_helpers import BVPCudaBlockProcessorHelpers
-from ......utils.cuda_backend_7d_ops import CUDABackend7DOps
+from bhlff.utils.cuda_backend_7d_ops import CUDABackend7DOps
 
 from .bvp_cuda_7d_operations import BVPCuda7DOperations
 from .bvp_cuda_block_operations import BVPCudaBlockOperations

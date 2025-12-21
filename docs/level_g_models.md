@@ -346,7 +346,7 @@ evolution_results = cosmology.evolve_universe()
 
 ## References
 
-1. **Theoretical Background** - See `docs/theory/ALL.md`
+1. **Theoretical Background** - See `docs/theory/All.md`
 2. **Implementation Details** - See `docs/steps/step_10/`
 3. **Configuration Examples** - See `configs/level_g/`
 4. **Test Examples** - See `tests/unit/test_level_g_*.py`

@@ -4839,6 +4839,7 @@ ScalingRelations:
 Segment:
 - length
 - from_dict
+SegmentPlacement: []
 SensitivityAnalyzer:
 - __init__
 - generate_lhs_samples

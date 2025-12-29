@@ -25,6 +25,17 @@ Example:
             --out docs/theory/All.md \\
             --order num \\
             --dedupe off
+
+    Assemble into a chain of files with max 10MB per file (without splitting blocks):
+
+        python3 docs/theory/files/stitch_by_mask.py \\
+            --dir docs/theory/files \\
+            --mask "7d-*.md" \\
+            --out docs/theory/All.chain.md \\
+            --chain \\
+            --max-bytes 10000000 \\
+            --order num \\
+            --dedupe off
 """
 
 import argparse
@@ -54,6 +65,15 @@ LEADING_BLOCK_RX = re.compile(
 class SkipInfo:
     path: Path
     reason: str
+
+
+@dataclass(frozen=True)
+class SegmentPlacement:
+    seg_id: str
+    file: str
+    start_line: int
+    end_line: int
+    size_bytes: int
 
 
 def extract_id_from_name(p: Path) -> Optional[str]:
@@ -109,6 +129,15 @@ def strip_leading_marker_block(text: str) -> Tuple[str, Optional[str]]:
     return text[end_pos:].lstrip("\n"), xx
 
 
+def _utf8_len(s: str) -> int:
+    return len(s.encode("utf-8"))
+
+
+def _write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
 def _iter_candidate_files(
     root: Path,
     mask: str,
@@ -154,6 +183,20 @@ def main() -> None:
         "--mask", default="7d-*.md", help='Глоб-маска файлов, напр. "7d-*.md".'
     )
     ap.add_argument("--out", required=True, help="Путь выходного файла.")
+    ap.add_argument(
+        "--chain",
+        action="store_true",
+        help=(
+            "Писать не один файл, а цепочку файлов по лимиту --max-bytes. "
+            "Файл --out используется как манифест (список частей)."
+        ),
+    )
+    ap.add_argument(
+        "--max-bytes",
+        type=int,
+        default=10_000_000,
+        help="Лимит размера одного выходного файла в байтах (по умолчанию 10_000_000).",
+    )
     ap.add_argument(
         "--order",
         choices=["num", "name"],
@@ -289,13 +332,87 @@ def main() -> None:
         block = header + text_stripped
         if not block.endswith("\n"):
             block += "\n"
-        parts.append(block)
+        parts.append((str(use_id) if use_id else p.stem, block.rstrip() + "\n"))
 
-    joined = "\n".join(part.rstrip() + "\n" for part in parts)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(joined, encoding="utf-8")
+    if not args.chain:
+        joined = "\n".join(block for _, block in parts)
+        _write_text(out_path, joined)
+        print(f"[OK] Собрано {len(parts)} блок(ов) → {out_path}")
+    else:
+        if args.max_bytes <= 0:
+            print("ERROR: --max-bytes must be > 0", file=sys.stderr)
+            sys.exit(2)
 
-    print(f"[OK] Собрано {len(parts)} блок(ов) → {out_path}")
+        base_dir = out_path.parent
+        base_stem = out_path.stem
+
+        part_idx = 1
+        cur_lines: List[str] = []
+        cur_bytes = 0
+        cur_line_no = 1
+
+        manifest_lines: List[str] = []
+        placements: List[SegmentPlacement] = []
+
+        def flush_part() -> None:
+            nonlocal part_idx, cur_lines, cur_bytes, cur_line_no
+            if not cur_lines:
+                return
+            part_name = f"{base_stem}.part{part_idx:03d}.md"
+            part_path = base_dir / part_name
+            _write_text(part_path, "".join(cur_lines))
+            manifest_lines.append(part_name)
+            part_idx += 1
+            cur_lines = []
+            cur_bytes = 0
+            cur_line_no = 1
+
+        for seg_id, block in parts:
+            block_bytes = _utf8_len(block)
+            block_lines = block.count("\n")
+
+            if cur_lines and (cur_bytes + block_bytes) > args.max_bytes:
+                flush_part()
+
+            if not cur_lines and block_bytes > args.max_bytes:
+                print(
+                    "[WARN] Single block exceeds --max-bytes; writing it alone: "
+                    f"id={seg_id} bytes={block_bytes} limit={args.max_bytes}",
+                    file=sys.stderr,
+                )
+
+            start_line = cur_line_no
+            cur_lines.append(block)
+            cur_bytes += block_bytes
+            cur_line_no += block_lines
+            end_line = cur_line_no - 1
+
+            placements.append(
+                SegmentPlacement(
+                    seg_id=seg_id,
+                    file=f"{base_stem}.part{part_idx:03d}.md",
+                    start_line=start_line,
+                    end_line=end_line,
+                    size_bytes=block_bytes,
+                )
+            )
+
+        flush_part()
+
+        _write_text(out_path, "\n".join(manifest_lines) + "\n")
+        print(f"[OK] Собрано {len(parts)} блок(ов) → {len(manifest_lines)} file(s)")
+        print(f"[OK] Manifest → {out_path}")
+
+        map_path = base_dir / f"{base_stem}.parts_map.tsv"
+        map_lines = ["seg_id\tfile\tstart_line\tend_line\tsize_bytes\n"]
+        for pl in placements:
+            map_lines.append(
+                f"{pl.seg_id}\t{pl.file}\t{pl.start_line}\t{pl.end_line}\t"
+                f"{pl.size_bytes}\n"
+            )
+        _write_text(map_path, "".join(map_lines))
+        print(f"[OK] Parts map → {map_path}")
+
     info_out_excluded = (
         "[INFO] Сам выходной файл исключён из " + "входного набора: " + out_path.name
     )

@@ -54,7 +54,10 @@ issues:
     line: 109
   - class: SkipInfo
     file: docs/theory/files/stitch_by_mask.py
-    line: 54
+    line: 65
+  - class: SegmentPlacement
+    file: docs/theory/files/stitch_by_mask.py
+    line: 71
   - class: Segment
     file: docs/theory/search/search_theory_index.py
     line: 44
@@ -488,6 +491,10 @@ issues:
     file: bhlff/core/fft/unified/facade.py
     limit: 400
     lines: 516
+  - exceeds_limit: 32
+    file: docs/theory/files/stitch_by_mask.py
+    limit: 400
+    lines: 432
   - exceeds_limit: 593
     file: docs/theory/search/search_theory_index.py
     limit: 400
@@ -2423,28 +2430,40 @@ issues:
     method: create_bandpass_filter
   - class: null
     file: docs/theory/files/stitch_by_mask.py
-    line: 59
+    line: 79
     method: extract_id_from_name
   - class: null
     file: docs/theory/files/stitch_by_mask.py
-    line: 66
+    line: 86
     method: find_all_markers
   - class: null
     file: docs/theory/files/stitch_by_mask.py
-    line: 82
+    line: 102
     method: normalize_newlines
   - class: null
     file: docs/theory/files/stitch_by_mask.py
-    line: 86
+    line: 106
     method: read_utf8
   - class: null
     file: docs/theory/files/stitch_by_mask.py
-    line: 141
+    line: 132
+    method: _utf8_len
+  - class: null
+    file: docs/theory/files/stitch_by_mask.py
+    line: 136
+    method: _write_text
+  - class: null
+    file: docs/theory/files/stitch_by_mask.py
+    line: 170
     method: main
   - class: null
     file: docs/theory/files/stitch_by_mask.py
-    line: 203
+    line: 246
     method: sort_key
+  - class: null
+    file: docs/theory/files/stitch_by_mask.py
+    line: 357
+    method: flush_part
   - class: Segment
     file: docs/theory/search/search_theory_index.py
     line: 55
@@ -2556,13 +2575,13 @@ issues:
   not_implemented_in_non_abstract: []
 summary:
   any_type_usage: 0
-  classes_without_docstrings: 22
-  files_too_large: 107
+  classes_without_docstrings: 23
+  files_too_large: 108
   files_without_docstrings: 0
   generic_exception_usage: 0
   imports_in_middle: 0
   max_lines_limit: 400
   methods_with_pass: 0
-  methods_without_docstrings: 513
+  methods_without_docstrings: 516
   not_implemented_in_non_abstract: 0
-  total_issues: 642
+  total_issues: 647

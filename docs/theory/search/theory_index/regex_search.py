@@ -61,17 +61,19 @@ def regex_search_one(
     if scope == "formulas":
         # Get all formulas and filter by regex
         rows = cur.execute(
-            "SELECT segment_id, text FROM formulas LIMIT 1000"
+            "SELECT segment_id, text FROM formulas LIMIT 500"
         ).fetchall()
         for seg_id, text in rows:
             if regex.search(text or ""):
                 results.append(
                     {"id": str(seg_id), "formula": str(text), "db": db_path.name}
                 )
+            if len(results) >= 200:  # Limit results per DB
+                break
     else:
         # Get all segments and filter by regex
         rows = cur.execute(
-            "SELECT id, category, summary, text FROM segments"
+            "SELECT id, category, summary, text FROM segments LIMIT 500"
         ).fetchall()
         for seg_id, cat, summary, text in rows:
             sid = str(seg_id)
@@ -91,6 +93,8 @@ def regex_search_one(
                         "db": db_path.name,
                     }
                 )
+            if len(results) >= 200:  # Limit results per DB
+                break
 
     conn.close()
     return results

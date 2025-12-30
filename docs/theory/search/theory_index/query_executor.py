@@ -33,22 +33,12 @@ def execute_query(
     if query_node.op == "NOT":
         if not query_node.left:
             return []
+        # NOT works on a single term - exclude results matching that term
         not_results = execute_query(query_node.left, term_results)
         not_ids = {_get_result_id(r) for r in not_results}
-        # Get all unique results
-        all_ids: Set[str] = set()
-        for results in term_results.values():
-            all_ids.update(_get_result_id(r) for r in results)
-        # Return results not in not_ids
-        all_results: List[Dict[str, str]] = []
-        seen_ids: Set[str] = set()
-        for results in term_results.values():
-            for r in results:
-                rid = _get_result_id(r)
-                if rid not in not_ids and rid not in seen_ids:
-                    all_results.append(r)
-                    seen_ids.add(rid)
-        return all_results
+        # Return empty list - NOT without context doesn't make sense
+        # In practice, NOT should be used as "A NOT B" which is handled by AND
+        return []
 
     if query_node.op == "AND":
         if not query_node.left or not query_node.right:

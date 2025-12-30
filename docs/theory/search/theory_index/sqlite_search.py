@@ -18,6 +18,10 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 from .index_io import resolve_db_paths
+from .query_executor import execute_query
+from .query_parser import extract_terms, parse_query
+from .result_formatter import format_results
+from .result_ranking import rank_results
 
 
 def _has_table(cur: sqlite3.Cursor, name: str) -> bool:
@@ -135,16 +139,14 @@ def mode_sqlite_search_chain(
     fmt: str,
     summary_only: bool = False,
     dedupe_by_id: bool = False,
+    limit: Optional[int] = None,
+    offset: int = 0,
+    query_str: Optional[str] = None,
+    highlight: bool = False,
+    sort_by: str = "none",
 ) -> int:
     if not db_path:
         print("ERROR: --db-path is required for sqlite_search mode.", file=sys.stderr)
-        return 1
-    norm_phrases = [p.strip() for p in (phrases or []) if p and p.strip()]
-    if not norm_phrases:
-        print(
-            "ERROR: --phrase or --phrases is required for sqlite_search mode.",
-            file=sys.stderr,
-        )
         return 1
 
     dbs = resolve_db_paths(db_path)
@@ -153,9 +155,43 @@ def mode_sqlite_search_chain(
         return 1
 
     all_results: List[Dict[str, str]] = []
-    for db in dbs:
-        for phr in norm_phrases:
-            all_results.extend(_sqlite_search_one(db, phr, scope, category, tag))
+
+    # Handle logical query
+    if query_str:
+        try:
+            query_node = parse_query(query_str)
+            terms = extract_terms(query_node)
+            if not terms:
+                print(
+                    "ERROR: no terms found in query.",
+                    file=sys.stderr,
+                )
+                return 1
+            # Search for each term
+            term_results: Dict[str, List[Dict[str, str]]] = {}
+            for term in terms:
+                term_results[term] = []
+                for db in dbs:
+                    term_results[term].extend(
+                        _sqlite_search_one(db, term, scope, category, tag)
+                    )
+            # Execute logical query
+            all_results = execute_query(query_node, term_results)
+        except Exception as e:
+            print(f"ERROR: query parsing failed: {e}", file=sys.stderr)
+            return 1
+    else:
+        # Original behavior: OR of phrases
+        norm_phrases = [p.strip() for p in (phrases or []) if p and p.strip()]
+        if not norm_phrases:
+            print(
+                "ERROR: --phrase, --phrases, or --query is required for sqlite_search mode.",
+                file=sys.stderr,
+            )
+            return 1
+        for db in dbs:
+            for phr in norm_phrases:
+                all_results.extend(_sqlite_search_one(db, phr, scope, category, tag))
 
     if dedupe_by_id and scope == "segments":
         seen: Dict[str, Dict[str, str]] = {}
@@ -169,6 +205,31 @@ def mode_sqlite_search_chain(
             seen.values(), key=lambda r: (r.get("id", ""), r.get("db", ""))
         )
 
+    # Apply ranking/sorting
+    if sort_by == "relevance":
+        # Extract phrases for ranking
+        rank_phrases: List[str] = []
+        if query_str:
+            try:
+                query_node = parse_query(query_str)
+                rank_phrases = extract_terms(query_node)
+            except Exception:
+                pass
+        if not rank_phrases:
+            rank_phrases = phrases or []
+        if rank_phrases:
+            all_results = rank_results(all_results, rank_phrases, scope)
+    elif sort_by == "id":
+        all_results = sorted(
+            all_results, key=lambda r: (r.get("id", ""), r.get("db", ""))
+        )
+
+    # Apply pagination
+    if offset > 0:
+        all_results = all_results[offset:]
+    if limit is not None and limit > 0:
+        all_results = all_results[:limit]
+
     if fmt == "json":
         import json
 
@@ -179,18 +240,36 @@ def mode_sqlite_search_chain(
         print("No matches in SQLite search.", file=sys.stderr)
         return 0
 
-    try:
-        for r in all_results:
-            if scope == "segments":
-                print(
-                    f"[{r['id']}] ({r['db']}) {r.get('category', '')} :: "
-                    f"{r.get('summary', '')}"
-                )
-                if not summary_only:
-                    print((r.get("snippet") or "").rstrip())
-                    print("----")
-            else:
-                print(f"[{r['id']}] ({r['db']}) :: {r.get('formula', '')}")
-    except BrokenPipeError:
-        return 0
+    # Extract phrases for highlighting
+    highlight_phrases_list: List[str] = []
+    if highlight:
+        if query_str:
+            try:
+                query_node = parse_query(query_str)
+                highlight_phrases_list = extract_terms(query_node)
+            except Exception:
+                pass
+        else:
+            highlight_phrases_list = phrases or []
+
+    # Format and print results
+    if highlight and highlight_phrases_list:
+        format_results(
+            all_results, highlight_phrases_list, scope, summary_only, highlight
+        )
+    else:
+        try:
+            for r in all_results:
+                if scope == "segments":
+                    print(
+                        f"[{r['id']}] ({r['db']}) {r.get('category', '')} :: "
+                        f"{r.get('summary', '')}"
+                    )
+                    if not summary_only:
+                        print((r.get("snippet") or "").rstrip())
+                        print("----")
+                else:
+                    print(f"[{r['id']}] ({r['db']}) :: {r.get('formula', '')}")
+        except BrokenPipeError:
+            return 0
     return 0

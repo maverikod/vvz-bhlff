@@ -58,6 +58,35 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help="For sqlite_search: deduplicate results by segment id.",
     )
     parser.add_argument(
+        "--limit",
+        type=int,
+        help="For sqlite_search: limit number of results.",
+    )
+    parser.add_argument(
+        "--offset",
+        type=int,
+        default=0,
+        help="For sqlite_search: skip N results (for pagination).",
+    )
+    parser.add_argument(
+        "--query",
+        help=(
+            "For sqlite_search: logical query with AND/OR/NOT operators. "
+            "Example: '(A OR B) AND C NOT D'. Overrides --phrase and --phrases."
+        ),
+    )
+    parser.add_argument(
+        "--highlight",
+        action="store_true",
+        help="For sqlite_search: highlight found phrases in results.",
+    )
+    parser.add_argument(
+        "--sort",
+        choices=["relevance", "id", "none"],
+        default="none",
+        help="For sqlite_search: sort results (relevance, id, or none).",
+    )
+    parser.add_argument(
         "--db-path", help="Path to SQLite db/dir/manifest for sqlite_* modes"
     )
     parser.add_argument(
@@ -109,10 +138,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             idx, lines, args.db_path or "", args.max_db_bytes
         )
     if args.mode == "sqlite_search":
+        query_str = args.query
         phrases = None
-        if args.phrases:
-            phrases = [p.strip() for p in args.phrases.split(",") if p.strip()]
-        phrase_list = phrases if phrases else ([phr] if phr else [])
+        if query_str:
+            # Use logical query
+            phrase_list = []
+        else:
+            if args.phrases:
+                phrases = [p.strip() for p in args.phrases.split(",") if p.strip()]
+            phrase_list = phrases if phrases else ([phr] if phr else [])
         return mode_sqlite_search_chain(
             args.db_path or "",
             phrase_list,
@@ -122,6 +156,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             fmt,
             summary_only=bool(args.summary_only),
             dedupe_by_id=bool(args.dedupe_by_id),
+            limit=args.limit,
+            offset=args.offset,
+            query_str=query_str,
+            highlight=bool(args.highlight),
+            sort_by=args.sort,
         )
     if args.mode == "sqlite_validate":
         return mode_sqlite_validate_chain(idx, args.db_path or "", fmt)

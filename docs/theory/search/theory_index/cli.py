@@ -118,6 +118,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help="For sqlite_search: filter by maximum text length.",
     )
     parser.add_argument(
+        "--export-html",
+        help="For sqlite_search: export results to HTML file.",
+    )
+    parser.add_argument(
         "--db-path", help="Path to SQLite db/dir/manifest for sqlite_* modes"
     )
     parser.add_argument(
@@ -198,6 +202,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             group_by=args.group_by or "none",
             min_length=args.min_length,
             max_length=args.max_length,
+            export_html=args.export_html,
         )
     if args.mode == "sqlite_validate":
         return mode_sqlite_validate_chain(idx, args.db_path or "", fmt)

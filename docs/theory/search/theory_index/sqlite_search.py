@@ -17,6 +17,7 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from .html_export import export_to_html
 from .index_io import resolve_db_paths
 from .proximity_search import filter_by_proximity
 from .query_executor import execute_query
@@ -153,6 +154,7 @@ def mode_sqlite_search_chain(
     group_by: str = "none",
     min_length: Optional[int] = None,
     max_length: Optional[int] = None,
+    export_html: Optional[str] = None,
 ) -> int:
     if not db_path:
         print("ERROR: --db-path is required for sqlite_search mode.", file=sys.stderr)
@@ -282,6 +284,31 @@ def mode_sqlite_search_chain(
         import json
 
         print(json.dumps(all_results, ensure_ascii=False, indent=2))
+        return 0
+
+    # Extract phrases for highlighting/export
+    highlight_phrases_list: List[str] = []
+    if highlight or export_html:
+        if query_str:
+            try:
+                query_node = parse_query(query_str)
+                highlight_phrases_list = extract_terms(query_node)
+            except Exception:
+                pass
+        if not highlight_phrases_list:
+            highlight_phrases_list = phrases or []
+
+    # Export to HTML if requested
+    if export_html:
+        query_desc = query_str if query_str else (", ".join(phrases) if phrases else "search")
+        export_to_html(
+            all_results,
+            highlight_phrases_list,
+            scope,
+            export_html,
+            title=f"Search Results: {query_desc}",
+        )
+        print(f"Results exported to {export_html}", file=sys.stderr)
         return 0
 
     if not all_results:

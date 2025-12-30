@@ -102,6 +102,22 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help="For sqlite_search: show N lines before and after matches.",
     )
     parser.add_argument(
+        "--group-by",
+        choices=["category", "db", "id", "none"],
+        default="none",
+        help="For sqlite_search: group results by field.",
+    )
+    parser.add_argument(
+        "--min-length",
+        type=int,
+        help="For sqlite_search: filter by minimum text length.",
+    )
+    parser.add_argument(
+        "--max-length",
+        type=int,
+        help="For sqlite_search: filter by maximum text length.",
+    )
+    parser.add_argument(
         "--db-path", help="Path to SQLite db/dir/manifest for sqlite_* modes"
     )
     parser.add_argument(
@@ -179,6 +195,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             use_regex=bool(args.regex),
             proximity=args.proximity,
             context_lines=args.context,
+            group_by=args.group_by or "none",
+            min_length=args.min_length,
+            max_length=args.max_length,
         )
     if args.mode == "sqlite_validate":
         return mode_sqlite_validate_chain(idx, args.db_path or "", fmt)

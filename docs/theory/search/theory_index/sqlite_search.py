@@ -23,6 +23,7 @@ from .query_executor import execute_query
 from .query_parser import extract_terms, parse_query
 from .regex_search import regex_search_one
 from .result_formatter import format_results
+from .result_grouping import format_grouped_results, group_results
 from .result_ranking import rank_results
 
 
@@ -149,6 +150,9 @@ def mode_sqlite_search_chain(
     use_regex: bool = False,
     proximity: Optional[int] = None,
     context_lines: Optional[int] = None,
+    group_by: str = "none",
+    min_length: Optional[int] = None,
+    max_length: Optional[int] = None,
 ) -> int:
     if not db_path:
         print("ERROR: --db-path is required for sqlite_search mode.", file=sys.stderr)
@@ -256,6 +260,18 @@ def mode_sqlite_search_chain(
             all_results, key=lambda r: (r.get("id", ""), r.get("db", ""))
         )
 
+    # Apply length filters
+    if min_length is not None or max_length is not None:
+        filtered_results: List[Dict[str, str]] = []
+        for r in all_results:
+            text_len = len(r.get("snippet", "") or r.get("formula", "") or "")
+            if min_length is not None and text_len < min_length:
+                continue
+            if max_length is not None and text_len > max_length:
+                continue
+            filtered_results.append(r)
+        all_results = filtered_results
+
     # Apply pagination
     if offset > 0:
         all_results = all_results[offset:]
@@ -286,6 +302,19 @@ def mode_sqlite_search_chain(
 
     # Format and print results
     context_lines_val = context_lines if context_lines is not None else 0
+
+    # Group results if requested
+    if group_by != "none" and all_results:
+        grouped = group_results(all_results, group_by)
+        format_grouped_results(
+            grouped,
+            highlight_phrases_list,
+            scope,
+            summary_only,
+            highlight,
+        )
+        return 0
+
     if highlight and highlight_phrases_list:
         format_results(
             all_results,

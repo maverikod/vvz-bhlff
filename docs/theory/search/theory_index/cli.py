@@ -16,6 +16,10 @@ from .modes_basic import mode_help, mode_search, mode_stats, mode_tree
 from .presets import apply_preset
 from .sqlite_build import mode_build_sqlite, mode_build_sqlite_chain
 from .sqlite_search import mode_sqlite_search_chain
+from .sqlite_validate_export import (
+    mode_sqlite_export_segment,
+    mode_sqlite_validate_chain,
+)
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
@@ -30,7 +34,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         default="search",
         help=(
             "Mode: search|assemble|stats|validate|tree|sqlite_build|sqlite_build_chain|"
-            "sqlite_search|help"
+            "sqlite_search|sqlite_validate|sqlite_export_segment|help"
         ),
     )
     parser.add_argument("--tag")
@@ -55,6 +59,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
     parser.add_argument(
         "--db-path", help="Path to SQLite db/dir/manifest for sqlite_* modes"
+    )
+    parser.add_argument(
+        "--segment-id",
+        help="Segment id for sqlite_export_segment (e.g., 7d-105).",
     )
     parser.add_argument(
         "--max-db-bytes",
@@ -114,6 +122,14 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             fmt,
             summary_only=bool(args.summary_only),
             dedupe_by_id=bool(args.dedupe_by_id),
+        )
+    if args.mode == "sqlite_validate":
+        return mode_sqlite_validate_chain(idx, args.db_path or "", fmt)
+    if args.mode == "sqlite_export_segment":
+        return mode_sqlite_export_segment(
+            db_path=args.db_path or "",
+            seg_id=str(args.segment_id or ""),
+            out_path=str(args.output_path or ""),
         )
     if args.mode == "validate":
         return mode_validate(idx, lines, fmt)

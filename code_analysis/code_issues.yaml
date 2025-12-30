@@ -2479,6 +2479,22 @@ issues:
     line: 151
     method: segment_to_dict
   - class: null
+    file: docs/theory/search/theory_index/sqlite_validate_export.py
+    line: 25
+    method: _list_segment_ids
+  - class: null
+    file: docs/theory/search/theory_index/sqlite_validate_export.py
+    line: 35
+    method: mode_sqlite_validate_chain
+  - class: null
+    file: docs/theory/search/theory_index/sqlite_validate_export.py
+    line: 92
+    method: _fetch_segment_text
+  - class: null
+    file: docs/theory/search/theory_index/sqlite_validate_export.py
+    line: 104
+    method: mode_sqlite_export_segment
+  - class: null
     file: docs/theory/search/theory_index/modes_assemble_validate.py
     line: 18
     method: mode_assemble
@@ -2532,7 +2548,7 @@ issues:
     method: from_dict
   - class: null
     file: docs/theory/search/theory_index/cli.py
-    line: 21
+    line: 25
     method: main
   - class: null
     file: docs/theory/search/theory_index/modes_basic.py
@@ -2616,6 +2632,6 @@ summary:
   imports_in_middle: 0
   max_lines_limit: 400
   methods_with_pass: 0
-  methods_without_docstrings: 527
+  methods_without_docstrings: 531
   not_implemented_in_non_abstract: 0
-  total_issues: 655
+  total_issues: 659

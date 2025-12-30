@@ -230,11 +230,12 @@ def mode_build_sqlite_chain(
         carry = moved
         shard_index += 1
 
-    # If leftover segments were pushed out of the last shard, build one more.
-    if carry:
+    # If leftover segments were pushed out of the last shard, keep building
+    # until all segments are placed (never drop `moved`).
+    while carry:
         db_name = f"{base_stem}.part{shard_index:03d}.sqlite"
         db_path = base_dir / db_name
-        built, _, _ = _fit_shard_by_size(
+        built, _, moved = _fit_shard_by_size(
             idx=idx,
             lines=lines,
             seg_indices=carry,
@@ -243,6 +244,8 @@ def mode_build_sqlite_chain(
             max_db_bytes=max_db_bytes,
         )
         db_files.append(built)
+        carry = moved
+        shard_index += 1
 
     shard_count = len(db_files)
     # Update shard_count meta for each db

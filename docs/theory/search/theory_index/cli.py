@@ -87,6 +87,21 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help="For sqlite_search: sort results (relevance, id, or none).",
     )
     parser.add_argument(
+        "--regex",
+        action="store_true",
+        help="For sqlite_search: treat phrase as regular expression.",
+    )
+    parser.add_argument(
+        "--proximity",
+        type=int,
+        help="For sqlite_search: find phrases within N words of each other.",
+    )
+    parser.add_argument(
+        "--context",
+        type=int,
+        help="For sqlite_search: show N lines before and after matches.",
+    )
+    parser.add_argument(
         "--db-path", help="Path to SQLite db/dir/manifest for sqlite_* modes"
     )
     parser.add_argument(
@@ -161,6 +176,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             query_str=query_str,
             highlight=bool(args.highlight),
             sort_by=args.sort,
+            use_regex=bool(args.regex),
+            proximity=args.proximity,
+            context_lines=args.context,
         )
     if args.mode == "sqlite_validate":
         return mode_sqlite_validate_chain(idx, args.db_path or "", fmt)

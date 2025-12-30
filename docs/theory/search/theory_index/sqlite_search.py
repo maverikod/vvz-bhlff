@@ -18,8 +18,10 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 from .index_io import resolve_db_paths
+from .proximity_search import filter_by_proximity
 from .query_executor import execute_query
 from .query_parser import extract_terms, parse_query
+from .regex_search import regex_search_one
 from .result_formatter import format_results
 from .result_ranking import rank_results
 
@@ -144,6 +146,9 @@ def mode_sqlite_search_chain(
     query_str: Optional[str] = None,
     highlight: bool = False,
     sort_by: str = "none",
+    use_regex: bool = False,
+    proximity: Optional[int] = None,
+    context_lines: Optional[int] = None,
 ) -> int:
     if not db_path:
         print("ERROR: --db-path is required for sqlite_search mode.", file=sys.stderr)
@@ -156,8 +161,19 @@ def mode_sqlite_search_chain(
 
     all_results: List[Dict[str, str]] = []
 
+    # Handle regex search
+    if use_regex and phrases:
+        try:
+            for db in dbs:
+                for phr in phrases:
+                    all_results.extend(
+                        regex_search_one(db, phr, scope, category, tag)
+                    )
+        except ValueError as e:
+            print(f"ERROR: {e}", file=sys.stderr)
+            return 1
     # Handle logical query
-    if query_str:
+    elif query_str:
         try:
             query_node = parse_query(query_str)
             terms = extract_terms(query_node)
@@ -204,6 +220,22 @@ def mode_sqlite_search_chain(
         all_results = sorted(
             seen.values(), key=lambda r: (r.get("id", ""), r.get("db", ""))
         )
+
+    # Apply proximity filter
+    if proximity is not None and proximity > 0:
+        proximity_phrases: List[str] = []
+        if query_str:
+            try:
+                query_node = parse_query(query_str)
+                proximity_phrases = extract_terms(query_node)
+            except Exception:
+                pass
+        if not proximity_phrases:
+            proximity_phrases = phrases or []
+        if len(proximity_phrases) >= 2:
+            all_results = filter_by_proximity(
+                all_results, proximity_phrases, proximity, scope
+            )
 
     # Apply ranking/sorting
     if sort_by == "relevance":
@@ -253,9 +285,15 @@ def mode_sqlite_search_chain(
             highlight_phrases_list = phrases or []
 
     # Format and print results
+    context_lines_val = context_lines if context_lines is not None else 0
     if highlight and highlight_phrases_list:
         format_results(
-            all_results, highlight_phrases_list, scope, summary_only, highlight
+            all_results,
+            highlight_phrases_list,
+            scope,
+            summary_only,
+            highlight,
+            context_lines_val,
         )
     else:
         try:

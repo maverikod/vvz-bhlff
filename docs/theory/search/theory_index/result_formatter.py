@@ -73,6 +73,7 @@ def format_search_result(
     phrases: List[str],
     summary_only: bool = False,
     highlight: bool = True,
+    context_lines: int = 0,
 ) -> str:
     """
     Format search result with optional highlighting.
@@ -103,6 +104,15 @@ def format_search_result(
     if highlight and phrases:
         body = highlight_phrases(body, phrases)
 
+    # Add context if requested
+    if context_lines > 0:
+        lines = body.split("\n")
+        # For now, just show more lines from snippet
+        # Full context requires access to source file
+        if len(lines) > context_lines * 2:
+            body = "\n".join(lines[: context_lines * 2 + 1])
+            body += f"\n[... {len(lines) - context_lines * 2 - 1} more lines ...]"
+
     return f"{header}\n{body}\n----"
 
 
@@ -112,6 +122,7 @@ def format_results(
     scope: str,
     summary_only: bool = False,
     highlight: bool = True,
+    context_lines: int = 0,
 ) -> None:
     """
     Format and print search results.
@@ -128,7 +139,9 @@ def format_results(
     try:
         for r in results:
             if scope == "segments":
-                output = format_search_result(r, phrases, summary_only, highlight)
+                output = format_search_result(
+                    r, phrases, summary_only, highlight, context_lines
+                )
                 print(output)
             else:
                 seg_id = r.get("id", "")

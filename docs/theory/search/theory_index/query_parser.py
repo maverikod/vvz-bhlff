@@ -10,6 +10,7 @@ from __future__ import annotations
 from typing import List, Optional, Union
 
 try:
+    import re
     from pyparsing import (
         CaselessKeyword,
         Group,
@@ -17,6 +18,7 @@ try:
         Optional as PyOptional,
         ParserElement,
         QuotedString,
+        Regex,
         Suppress,
         Word,
         alphanums,
@@ -57,9 +59,11 @@ class QueryNode:
 
 def _build_parser() -> ParserElement:
     """Build pyparsing grammar for query language."""
-    # Term: quoted string or unquoted word
+    # Term: quoted string or unquoted word (supports Unicode including Cyrillic)
     quoted_term = QuotedString('"', escChar="\\") | QuotedString("'", escChar="\\")
-    unquoted_term = Word(alphas + alphanums + "_" + "-" + "." + ":" + "/")
+    # Unicode word characters using regex (includes Cyrillic, Latin, etc.)
+    # Pattern: word characters, hyphens, dots, colons, slashes
+    unquoted_term = Regex(r'[\w\-\.:/]+', flags=re.UNICODE)
     term = (quoted_term | unquoted_term).setParseAction(
         lambda t: QueryNode("TERM", t[0])
     )

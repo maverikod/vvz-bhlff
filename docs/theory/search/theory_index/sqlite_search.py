@@ -51,17 +51,30 @@ def _sqlite_search_one(
 
     results: List[Dict[str, str]] = []
 
+    def _like_escape(s: str) -> str:
+        return s.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
     if scope == "formulas":
-        if has_formulas_fts:
+        q_like = f"%{_like_escape(q)}%"
+        rows = []
+        used_fts = False
+        if has_formulas_fts and ("\\" not in q):
+            try:
+                rows = cur.execute(
+                    "SELECT segment_id, text FROM formulas_fts "
+                    "WHERE formulas_fts MATCH ? LIMIT 200",
+                    (q,),
+                ).fetchall()
+                used_fts = True
+            except sqlite3.OperationalError:
+                rows = []
+                used_fts = False
+
+        if (not used_fts) or (not rows):
             rows = cur.execute(
-                "SELECT segment_id, text FROM formulas_fts "
-                "WHERE formulas_fts MATCH ? LIMIT 200",
-                (q,),
-            ).fetchall()
-        else:
-            rows = cur.execute(
-                "SELECT segment_id, text FROM formulas WHERE text LIKE ? LIMIT 200",
-                (f"%{q}%",),
+                "SELECT segment_id, text FROM formulas "
+                "WHERE text LIKE ? ESCAPE '\\' LIMIT 200",
+                (q_like,),
             ).fetchall()
         for seg_id, text in rows:
             results.append(
@@ -71,17 +84,26 @@ def _sqlite_search_one(
         return results
 
     # scope == segments
-    if has_segments_fts:
-        rows = cur.execute(
-            "SELECT id, category, summary, text FROM segments_fts "
-            "WHERE segments_fts MATCH ?",
-            (q,),
-        ).fetchall()
-    else:
+    q_like = f"%{_like_escape(q)}%"
+    rows = []
+    used_fts = False
+    if has_segments_fts and ("\\" not in q):
+        try:
+            rows = cur.execute(
+                "SELECT id, category, summary, text FROM segments_fts "
+                "WHERE segments_fts MATCH ?",
+                (q,),
+            ).fetchall()
+            used_fts = True
+        except sqlite3.OperationalError:
+            rows = []
+            used_fts = False
+
+    if (not used_fts) or (not rows):
         rows = cur.execute(
             "SELECT id, category, summary, text FROM segments "
-            "WHERE text LIKE ? OR summary LIKE ?",
-            (f"%{q}%", f"%{q}%"),
+            "WHERE text LIKE ? ESCAPE '\\' OR summary LIKE ? ESCAPE '\\'",
+            (q_like, q_like),
         ).fetchall()
 
     for seg_id, cat, summary, text in rows:

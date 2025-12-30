@@ -4562,6 +4562,9 @@ QuenchesPostulate:
 - __init__
 - apply
 - _validate_quenches
+QueryNode:
+- __init__
+- __repr__
 RadialAnalysisCore:
 - __init__
 - analyze_radial_profile

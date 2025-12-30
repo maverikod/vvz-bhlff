@@ -2479,6 +2479,10 @@ issues:
     line: 151
     method: segment_to_dict
   - class: null
+    file: docs/theory/search/theory_index/proximity_search.py
+    line: 108
+    method: _search_combination
+  - class: null
     file: docs/theory/search/theory_index/sqlite_validate_export.py
     line: 25
     method: _list_segment_ids
@@ -2502,21 +2506,37 @@ issues:
     file: docs/theory/search/theory_index/modes_assemble_validate.py
     line: 79
     method: mode_validate
+  - class: QueryNode
+    file: docs/theory/search/theory_index/query_parser.py
+    line: 42
+    method: __init__
+  - class: QueryNode
+    file: docs/theory/search/theory_index/query_parser.py
+    line: 52
+    method: __repr__
+  - class: null
+    file: docs/theory/search/theory_index/query_parser.py
+    line: 42
+    method: __init__
+  - class: null
+    file: docs/theory/search/theory_index/query_parser.py
+    line: 52
+    method: __repr__
   - class: null
     file: docs/theory/search/theory_index/sqlite_search.py
-    line: 23
+    line: 31
     method: _has_table
   - class: null
     file: docs/theory/search/theory_index/sqlite_search.py
-    line: 34
+    line: 42
     method: _sqlite_search_one
   - class: null
     file: docs/theory/search/theory_index/sqlite_search.py
-    line: 129
+    line: 137
     method: mode_sqlite_search_chain
   - class: null
     file: docs/theory/search/theory_index/sqlite_search.py
-    line: 54
+    line: 62
     method: _like_escape
   - class: null
     file: docs/theory/search/theory_index/sqlite_build.py
@@ -2550,6 +2570,10 @@ issues:
     file: docs/theory/search/theory_index/cli.py
     line: 25
     method: main
+  - class: null
+    file: docs/theory/search/theory_index/result_formatter.py
+    line: 36
+    method: escape_regex
   - class: null
     file: docs/theory/search/theory_index/modes_basic.py
     line: 19
@@ -2632,6 +2656,6 @@ summary:
   imports_in_middle: 0
   max_lines_limit: 400
   methods_with_pass: 0
-  methods_without_docstrings: 531
+  methods_without_docstrings: 537
   not_implemented_in_non_abstract: 0
-  total_issues: 659
+  total_issues: 665

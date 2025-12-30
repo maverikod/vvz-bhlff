@@ -23,6 +23,7 @@ def mode_assemble(
     phrase: Optional[str],
     out_path: Optional[str],
     fmt: str,
+    segment_ids: Optional[List[str]] = None,
 ) -> int:
     if lines is None:
         print("ERROR: --theory is required for assemble mode.", file=sys.stderr)
@@ -35,24 +36,33 @@ def mode_assemble(
     # (We use a minimal in-memory filter to keep behavior consistent.)
     used: List[Segment] = []
     cache: Dict[str, str] = {}
-    for seg in idx.segments:
-        if tag and tag.lower() not in seg.id.lower():
-            continue
-        if category and category.lower() not in seg.category.lower():
-            continue
-        # reuse phrase matching from mode_search: call directly in json mode is overkill
-        # so we do a simple local match: search in keywords+summary+text
-        if phrase:
-            if seg.id not in cache:
-                parts = [str(kw) for kw in (seg.keywords or [])] + [str(seg.summary)]
-                for s, e in seg.ranges:
-                    s0 = max(0, s - 1)
-                    e0 = min(len(lines), e)
-                    parts.append("".join(lines[s0:e0]))
-                cache[seg.id] = " ".join(parts).lower()
-            if phrase.lower() not in cache[seg.id]:
+    
+    # If explicit segment IDs provided, use them directly
+    if segment_ids:
+        seg_id_set = {sid.strip() for sid in segment_ids if sid.strip()}
+        for seg in idx.segments:
+            if seg.id in seg_id_set:
+                used.append(seg)
+    else:
+        # Use filters (tag, category, phrase)
+        for seg in idx.segments:
+            if tag and tag.lower() not in seg.id.lower():
                 continue
-        used.append(seg)
+            if category and category.lower() not in seg.category.lower():
+                continue
+            # reuse phrase matching from mode_search: call directly in json mode is overkill
+            # so we do a simple local match: search in keywords+summary+text
+            if phrase:
+                if seg.id not in cache:
+                    parts = [str(kw) for kw in (seg.keywords or [])] + [str(seg.summary)]
+                    for s, e in seg.ranges:
+                        s0 = max(0, s - 1)
+                        e0 = min(len(lines), e)
+                        parts.append("".join(lines[s0:e0]))
+                    cache[seg.id] = " ".join(parts).lower()
+                if phrase.lower() not in cache[seg.id]:
+                    continue
+            used.append(seg)
 
     used = sorted(used, key=lambda s: s.start_line)
     chunks: List[str] = []

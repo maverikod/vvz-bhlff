@@ -143,6 +143,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser.add_argument("--preset", choices=["earth", "sun", "particles"])
     parser.add_argument("--output-path", help="Output path for assemble mode")
     parser.add_argument(
+        "--segment-ids",
+        help=(
+            "For assemble mode: comma-separated list of segment IDs to compile. "
+            "Example: '7d-02,7d-09,7d-84'. Overrides --tag, --category, --phrase."
+        ),
+    )
+    parser.add_argument(
         "--format",
         dest="fmt",
         choices=["text", "json"],
@@ -163,7 +170,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if args.mode == "search":
         return mode_search(idx, lines, tag, cat, phr, fmt)
     if args.mode == "assemble":
-        return mode_assemble(idx, lines, tag, cat, phr, args.output_path, fmt)
+        segment_ids_list = None
+        if args.segment_ids:
+            segment_ids_list = [sid.strip() for sid in args.segment_ids.split(",") if sid.strip()]
+        return mode_assemble(idx, lines, tag, cat, phr, args.output_path, fmt, segment_ids_list)
     if args.mode == "stats":
         return mode_stats(idx, fmt)
     if args.mode == "sqlite_build":

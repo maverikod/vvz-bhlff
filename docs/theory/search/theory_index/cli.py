@@ -37,6 +37,23 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser.add_argument("--category")
     parser.add_argument("--phrase")
     parser.add_argument(
+        "--phrases",
+        help=(
+            "Comma-separated phrases for sqlite_search (OR). "
+            "If provided, overrides --phrase."
+        ),
+    )
+    parser.add_argument(
+        "--summary-only",
+        action="store_true",
+        help="For sqlite_search: print only id/category/summary lines (no snippets).",
+    )
+    parser.add_argument(
+        "--dedupe-by-id",
+        action="store_true",
+        help="For sqlite_search: deduplicate results by segment id.",
+    )
+    parser.add_argument(
         "--db-path", help="Path to SQLite db/dir/manifest for sqlite_* modes"
     )
     parser.add_argument(
@@ -84,8 +101,19 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             idx, lines, args.db_path or "", args.max_db_bytes
         )
     if args.mode == "sqlite_search":
+        phrases = None
+        if args.phrases:
+            phrases = [p.strip() for p in args.phrases.split(",") if p.strip()]
+        phrase_list = phrases if phrases else ([phr] if phr else [])
         return mode_sqlite_search_chain(
-            args.db_path or "", phr, args.scope, cat, tag, fmt
+            args.db_path or "",
+            phrase_list,
+            args.scope,
+            cat,
+            tag,
+            fmt,
+            summary_only=bool(args.summary_only),
+            dedupe_by_id=bool(args.dedupe_by_id),
         )
     if args.mode == "validate":
         return mode_validate(idx, lines, fmt)

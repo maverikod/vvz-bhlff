@@ -128,18 +128,23 @@ def _sqlite_search_one(
 
 def mode_sqlite_search_chain(
     db_path: str,
-    phrase: Optional[str],
+    phrases: List[str],
     scope: str,
     category: Optional[str],
     tag: Optional[str],
     fmt: str,
+    summary_only: bool = False,
+    dedupe_by_id: bool = False,
 ) -> int:
     if not db_path:
         print("ERROR: --db-path is required for sqlite_search mode.", file=sys.stderr)
         return 1
-    phr = (phrase or "").strip()
-    if not phr:
-        print("ERROR: --phrase is required for sqlite_search mode.", file=sys.stderr)
+    norm_phrases = [p.strip() for p in (phrases or []) if p and p.strip()]
+    if not norm_phrases:
+        print(
+            "ERROR: --phrase or --phrases is required for sqlite_search mode.",
+            file=sys.stderr,
+        )
         return 1
 
     dbs = resolve_db_paths(db_path)
@@ -149,7 +154,20 @@ def mode_sqlite_search_chain(
 
     all_results: List[Dict[str, str]] = []
     for db in dbs:
-        all_results.extend(_sqlite_search_one(db, phr, scope, category, tag))
+        for phr in norm_phrases:
+            all_results.extend(_sqlite_search_one(db, phr, scope, category, tag))
+
+    if dedupe_by_id and scope == "segments":
+        seen: Dict[str, Dict[str, str]] = {}
+        for r in all_results:
+            sid = r.get("id") or ""
+            if not sid:
+                continue
+            if sid not in seen:
+                seen[sid] = r
+        all_results = sorted(
+            seen.values(), key=lambda r: (r.get("id", ""), r.get("db", ""))
+        )
 
     if fmt == "json":
         import json
@@ -165,11 +183,12 @@ def mode_sqlite_search_chain(
         for r in all_results:
             if scope == "segments":
                 print(
-                    f"[{r['id']}] ({r['db']}) "
-                    f"{r.get('category', '')} :: {r.get('summary', '')}"
+                    f"[{r['id']}] ({r['db']}) {r.get('category', '')} :: "
+                    f"{r.get('summary', '')}"
                 )
-                print((r.get("snippet") or "").rstrip())
-                print("----")
+                if not summary_only:
+                    print((r.get("snippet") or "").rstrip())
+                    print("----")
             else:
                 print(f"[{r['id']}] ({r['db']}) :: {r.get('formula', '')}")
     except BrokenPipeError:

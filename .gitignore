@@ -179,4 +179,7 @@ config/local.json
 .Trashes
 ehthumbs.db
 Thumbs.db
-docs/theory/
+
+# Theory SQLite DBs (large; built from index + All.md; do not commit)
+docs/theory/*.sqlite
+docs/theory/*.chain.*.sqlite

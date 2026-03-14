@@ -43,15 +43,25 @@ def regex_search_one(
         tag: Optional tag filter
 
     Returns:
-        List of matching results
+        List of matching results with source_db and part_id fields
     """
     try:
         regex = re.compile(pattern, re.IGNORECASE | re.UNICODE)
     except re.error as e:
         raise ValueError(f"Invalid regex pattern: {e}") from e
 
-    conn = sqlite3.connect(str(db_path))
-    cur = conn.cursor()
+    # Extract part_id from chain.partXXX.sqlite pattern
+    part_id: Optional[str] = None
+    chain_match = re.search(r"chain\.part(\d+)\.sqlite$", db_path.name, re.IGNORECASE)
+    if chain_match:
+        part_id = chain_match.group(1)
+
+    try:
+        conn = sqlite3.connect(str(db_path))
+        cur = conn.cursor()
+    except Exception:
+        # Fail-soft: return empty results
+        return []
 
     has_segments_fts = _has_table(cur, "segments_fts")
     has_formulas_fts = _has_table(cur, "formulas_fts")
@@ -65,9 +75,15 @@ def regex_search_one(
         ).fetchall()
         for seg_id, text in rows:
             if regex.search(text or ""):
-                results.append(
-                    {"id": str(seg_id), "formula": str(text), "db": db_path.name}
-                )
+                result = {
+                    "id": str(seg_id),
+                    "formula": str(text),
+                    "db": db_path.name,
+                    "source_db": str(db_path),
+                }
+                if part_id:
+                    result["part_id"] = part_id
+                results.append(result)
             if len(results) >= 200:  # Limit results per DB
                 break
     else:
@@ -84,15 +100,17 @@ def regex_search_one(
             # Check if regex matches text or summary
             full_text = f"{summary or ''} {text or ''}"
             if regex.search(full_text):
-                results.append(
-                    {
-                        "id": sid,
-                        "category": str(cat or ""),
-                        "summary": str(summary or ""),
-                        "snippet": str(text or "")[:2000],
-                        "db": db_path.name,
-                    }
-                )
+                result = {
+                    "id": sid,
+                    "category": str(cat or ""),
+                    "summary": str(summary or ""),
+                    "snippet": str(text or "")[:2000],
+                    "db": db_path.name,
+                    "source_db": str(db_path),
+                }
+                if part_id:
+                    result["part_id"] = part_id
+                results.append(result)
             if len(results) >= 200:  # Limit results per DB
                 break
 

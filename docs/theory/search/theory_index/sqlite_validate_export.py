@@ -41,7 +41,7 @@ def mode_sqlite_validate_chain(
         print("ERROR: --db-path is required for sqlite_validate mode.", file=sys.stderr)
         return 1
 
-    dbs = resolve_db_paths(db_path)
+    dbs = resolve_db_paths(db_path, None)
     if not dbs:
         print(f"ERROR: no sqlite db files resolved from: {db_path}", file=sys.stderr)
         return 1
@@ -125,7 +125,7 @@ def mode_sqlite_export_segment(
         )
         return 1
 
-    dbs = resolve_db_paths(db_path)
+    dbs = resolve_db_paths(db_path, None)
     if not dbs:
         print(f"ERROR: no sqlite db files resolved from: {db_path}", file=sys.stderr)
         return 1

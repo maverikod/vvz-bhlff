@@ -14,8 +14,10 @@ Supports:
 
 from __future__ import annotations
 
+import glob
 import os
 import pickle
+import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -73,6 +75,15 @@ def _is_sqlite_file(p: Path) -> bool:
         return False
 
 
+def _is_chain_manifest_file(p: Path) -> bool:
+    """Exclude chain manifest (*.chain.sqlite) that is not a DB shard (*.chain.partN.sqlite)."""
+    if not p.name.endswith(".sqlite"):
+        return False
+    if re.search(r"\.chain\.part\d+\.sqlite$", p.name, re.IGNORECASE):
+        return False
+    return bool(re.search(r"\.chain\.sqlite$", p.name, re.IGNORECASE))
+
+
 def _load_manifest_paths(manifest_path: Path) -> List[Path]:
     base_dir = manifest_path.parent
     lines = [
@@ -128,23 +139,66 @@ def load_theory_lines(path: str) -> List[str]:
     return out
 
 
-def resolve_db_paths(db_path: str) -> List[Path]:
+def resolve_db_paths(
+    db_path: str, db_path_glob: Optional[str] = None
+) -> List[Path]:
     """
-    Resolve `--db-path` into a list of sqlite files.
+    Resolve `--db-path` or `--db-path-glob` into a list of sqlite files.
 
     Supported:
     - a single `.sqlite` file;
     - a directory (all `*.sqlite` inside, sorted);
-    - a manifest text file listing `.sqlite` filenames (one per line).
+    - a manifest text file listing `.sqlite` filenames (one per line);
+    - a glob pattern (via `--db-path-glob`);
+    - auto-detect chain mode: if `db_path` is `chain.partXXX.sqlite`,
+      automatically finds all `chain.part*.sqlite` in the same directory.
+
+    Args:
+        db_path: Path to single file, directory, or manifest.
+        db_path_glob: Optional glob pattern (e.g., "*.chain.part*.sqlite").
+
+    Returns:
+        Sorted list of Path objects to SQLite files.
     """
 
+    # Priority 1: explicit glob pattern
+    if db_path_glob:
+        matches = sorted(Path(p).resolve() for p in glob.glob(db_path_glob))
+        sqlite_matches = [p for p in matches if p.is_file() and _is_sqlite_file(p)]
+        if sqlite_matches:
+            return sqlite_matches
+
     p = Path(db_path).resolve()
+
+    # Priority 2: directory — all *.sqlite except chain manifest (search uses all chain parts)
     if p.is_dir():
-        return sorted(p.glob("*.sqlite"))
+        candidates = sorted(p.glob("*.sqlite"))
+        return [c for c in candidates if not _is_chain_manifest_file(c)]
+
+    # Priority 3: single SQLite file
     if p.is_file() and _is_sqlite_file(p):
+        # Auto-detect chain mode: if filename matches chain.partXXX.sqlite pattern
+        # and there are other chain.part*.sqlite files in the same directory,
+        # include all of them
+        chain_match = re.search(r"chain\.part\d+\.sqlite$", p.name, re.IGNORECASE)
+        if chain_match:
+            parent_dir = p.parent
+            chain_pattern = re.sub(
+                r"chain\.part\d+\.sqlite$",
+                "chain.part*.sqlite",
+                p.name,
+                flags=re.IGNORECASE,
+            )
+            chain_files = sorted(parent_dir.glob(chain_pattern))
+            if len(chain_files) > 1:
+                # Found multiple chain parts, return all of them
+                return chain_files
         return [p]
+
+    # Priority 4: manifest file
     if p.is_file():
         return _load_manifest_paths(p)
+
     return []
 
 

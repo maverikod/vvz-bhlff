@@ -12,6 +12,7 @@ SQLite search across a single DB or a chain of DB shards.
 
 from __future__ import annotations
 
+import re
 import sqlite3
 import sys
 from pathlib import Path
@@ -46,8 +47,28 @@ def _sqlite_search_one(
     category: Optional[str],
     tag: Optional[str],
 ) -> List[Dict[str, str]]:
-    conn = sqlite3.connect(str(db_path))
-    cur = conn.cursor()
+    """
+    Search in a single SQLite database.
+
+    Returns results with:
+    - id, category, summary, snippet (for segments)
+    - id, formula (for formulas)
+    - db: filename only
+    - source_db: full path (for multi-DB mode)
+    - part_id: extracted from chain.partXXX.sqlite pattern if applicable
+    """
+    # Extract part_id from chain.partXXX.sqlite pattern
+    part_id: Optional[str] = None
+    chain_match = re.search(r"chain\.part(\d+)\.sqlite$", db_path.name, re.IGNORECASE)
+    if chain_match:
+        part_id = chain_match.group(1)
+
+    try:
+        conn = sqlite3.connect(str(db_path))
+        cur = conn.cursor()
+    except Exception as e:
+        # Fail-soft: return empty results instead of raising
+        return []
 
     has_segments_fts = _has_table(cur, "segments_fts")
     has_formulas_fts = _has_table(cur, "formulas_fts")
@@ -85,9 +106,15 @@ def _sqlite_search_one(
                 (q_like,),
             ).fetchall()
         for seg_id, text in rows:
-            results.append(
-                {"id": str(seg_id), "formula": str(text), "db": db_path.name}
-            )
+            result = {
+                "id": str(seg_id),
+                "formula": str(text),
+                "db": db_path.name,
+                "source_db": str(db_path),
+            }
+            if part_id:
+                result["part_id"] = part_id
+            results.append(result)
         conn.close()
         return results
 
@@ -120,15 +147,17 @@ def _sqlite_search_one(
             continue
         if category and category.lower() not in (str(cat) or "").lower():
             continue
-        results.append(
-            {
-                "id": sid,
-                "category": str(cat or ""),
-                "summary": str(summary or ""),
-                "snippet": str(text or "")[:2000],
-                "db": db_path.name,
-            }
-        )
+        result = {
+            "id": sid,
+            "category": str(cat or ""),
+            "summary": str(summary or ""),
+            "snippet": str(text or "")[:2000],
+            "db": db_path.name,
+            "source_db": str(db_path),
+        }
+        if part_id:
+            result["part_id"] = part_id
+        results.append(result)
 
     conn.close()
     return results
@@ -155,12 +184,20 @@ def mode_sqlite_search_chain(
     min_length: Optional[int] = None,
     max_length: Optional[int] = None,
     export_html: Optional[str] = None,
+    db_path_glob: Optional[str] = None,
 ) -> int:
-    if not db_path:
-        print("ERROR: --db-path is required for sqlite_search mode.", file=sys.stderr)
-        return 1
+    # If db_path is empty but db_path_glob is provided, that's OK
+    # If both are empty, try to use default directory
+    if not db_path and not db_path_glob:
+        from pathlib import Path
+        default_dir = Path("/mnt/data")
+        if default_dir.exists() and default_dir.is_dir():
+            db_path = str(default_dir)
+        else:
+            # Fallback to current directory
+            db_path = "."
 
-    dbs = resolve_db_paths(db_path)
+    dbs = resolve_db_paths(db_path if db_path else "", db_path_glob)
     if not dbs:
         print(f"ERROR: no sqlite db files resolved from: {db_path}", file=sys.stderr)
         return 1
@@ -171,10 +208,18 @@ def mode_sqlite_search_chain(
     if use_regex and phrases:
         try:
             for db in dbs:
-                for phr in phrases:
-                    all_results.extend(
-                        regex_search_one(db, phr, scope, category, tag)
+                try:
+                    for phr in phrases:
+                        all_results.extend(
+                            regex_search_one(db, phr, scope, category, tag)
+                        )
+                except Exception as e:
+                    # Fail-soft: log error but continue with other DBs
+                    print(
+                        f"WARNING: search failed in {db}: {e}",
+                        file=sys.stderr,
                     )
+                    continue
         except ValueError as e:
             print(f"ERROR: {e}", file=sys.stderr)
             return 1
@@ -194,9 +239,17 @@ def mode_sqlite_search_chain(
             for term in terms:
                 term_results[term] = []
                 for db in dbs:
-                    term_results[term].extend(
-                        _sqlite_search_one(db, term, scope, category, tag)
-                    )
+                    try:
+                        term_results[term].extend(
+                            _sqlite_search_one(db, term, scope, category, tag)
+                        )
+                    except Exception as e:
+                        # Fail-soft: log error but continue with other DBs
+                        print(
+                            f"WARNING: search failed in {db}: {e}",
+                            file=sys.stderr,
+                        )
+                        continue
             # Execute logical query
             all_results = execute_query(query_node, term_results)
         except Exception as e:
@@ -212,8 +265,18 @@ def mode_sqlite_search_chain(
             )
             return 1
         for db in dbs:
-            for phr in norm_phrases:
-                all_results.extend(_sqlite_search_one(db, phr, scope, category, tag))
+            try:
+                for phr in norm_phrases:
+                    all_results.extend(
+                        _sqlite_search_one(db, phr, scope, category, tag)
+                    )
+            except Exception as e:
+                # Fail-soft: log error but continue with other DBs
+                print(
+                    f"WARNING: search failed in {db}: {e}",
+                    file=sys.stderr,
+                )
+                continue
 
     if dedupe_by_id and scope == "segments":
         seen: Dict[str, Dict[str, str]] = {}

@@ -8,6 +8,7 @@ CLI entrypoint for the theory index/search tools.
 from __future__ import annotations
 
 import argparse
+import sys
 from typing import Optional, Sequence
 
 from .index_io import load_index, load_theory_lines
@@ -24,7 +25,11 @@ from .sqlite_validate_export import (
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--index", required=True, help="Path to ALL_index.yaml")
+    parser.add_argument(
+        "--index",
+        required=False,  # Optional for sqlite_search mode
+        help="Path to ALL_index.yaml (required for most modes, optional for sqlite_search)",
+    )
     parser.add_argument(
         "--theory",
         help="Path to All.md or to a manifest listing chained part files",
@@ -125,6 +130,23 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "--db-path", help="Path to SQLite db/dir/manifest for sqlite_* modes"
     )
     parser.add_argument(
+        "--db-path-glob",
+        help=(
+            "Glob pattern for SQLite files (e.g., '*.chain.part*.sqlite'). "
+            "If provided, overrides --db-path."
+        ),
+    )
+    parser.add_argument(
+        "--db-dir",
+        default="/mnt/data",
+        help=(
+            "Directory to scan for SQLite files (default: /mnt/data). "
+            "If provided, automatically finds all *.sqlite files in this directory. "
+            "For sqlite_search: if neither --db-path nor --db-path-glob is provided, "
+            "uses --db-dir (defaults to /mnt/data)."
+        ),
+    )
+    parser.add_argument(
         "--segment-id",
         help="Segment id for sqlite_export_segment (e.g., 7d-105).",
     )
@@ -163,7 +185,19 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if args.mode == "help":
         return mode_help()
 
-    idx = load_index(args.index)
+    # For sqlite_search, index is optional (not used in search logic)
+    # For other modes, index is required
+    if args.mode != "sqlite_search":
+        if not args.index:
+            print(
+                "ERROR: --index is required for mode '{}'".format(args.mode),
+                file=sys.stderr,
+            )
+            return 1
+        idx = load_index(args.index)
+    else:
+        idx = None  # Not used for sqlite_search
+
     lines = load_theory_lines(args.theory) if args.theory else None
     tag, cat, phr = apply_preset(args.preset, args.tag, args.category, args.phrase)
 
@@ -192,8 +226,18 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             if args.phrases:
                 phrases = [p.strip() for p in args.phrases.split(",") if p.strip()]
             phrase_list = phrases if phrases else ([phr] if phr else [])
+        
+        # Determine database path: priority: db_path_glob > db_path > db_dir (default: /mnt/data)
+        db_path = args.db_path or ""
+        db_path_glob = args.db_path_glob
+        db_dir = args.db_dir or "/mnt/data"  # Default to /mnt/data
+        
+        # If db_dir specified and no explicit db_path/db_path_glob, use db_dir
+        if db_dir and not db_path and not db_path_glob:
+            db_path = db_dir
+        
         return mode_sqlite_search_chain(
-            args.db_path or "",
+            db_path,
             phrase_list,
             args.scope,
             cat,
@@ -213,6 +257,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             min_length=args.min_length,
             max_length=args.max_length,
             export_html=args.export_html,
+            db_path_glob=db_path_glob,
         )
     if args.mode == "sqlite_validate":
         return mode_sqlite_validate_chain(idx, args.db_path or "", fmt)

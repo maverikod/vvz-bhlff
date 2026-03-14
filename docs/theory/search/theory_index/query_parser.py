@@ -57,12 +57,25 @@ class QueryNode:
         return f"{self.op}({self.left}, {self.right})"
 
 
+def _insert_implicit_and(query: str) -> str:
+    """Insert AND between adjacent non-operator words so 'уровень 0' and 'L0 OR ...' parse correctly."""
+    ops = {"AND", "OR", "NOT"}
+    tokens = query.split()
+    if len(tokens) <= 1:
+        return query
+    out = [tokens[0]]
+    for i in range(1, len(tokens)):
+        if out[-1].upper() not in ops and tokens[i].upper() not in ops:
+            out.append("AND")
+        out.append(tokens[i])
+    return " ".join(out)
+
+
 def _build_parser() -> ParserElement:
     """Build pyparsing grammar for query language."""
-    # Term: quoted string or unquoted word (supports Unicode including Cyrillic)
+    # Term: quoted string or unquoted word (supports Unicode, digits, L0, etc.)
     quoted_term = QuotedString('"', escChar="\\") | QuotedString("'", escChar="\\")
-    # Unicode word characters using regex (includes Cyrillic, Latin, etc.)
-    # Pattern: word characters, hyphens, dots, colons, slashes
+    # Unquoted: letters, digits, hyphen, dot, colon, slash
     unquoted_term = Regex(r'[\w\-\.:/]+', flags=re.UNICODE)
     term = (quoted_term | unquoted_term).setParseAction(
         lambda t: QueryNode("TERM", t[0])
@@ -143,6 +156,8 @@ def parse_query(query: str) -> QueryNode:
     query = query.strip()
     if not query:
         raise ValueError("Empty query")
+
+    query = _insert_implicit_and(query)
 
     try:
         parser = _get_parser()
